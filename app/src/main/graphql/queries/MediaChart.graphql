@@ -1,0 +1,21 @@
+query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType) {
+  Page(page: $page, perPage: $perPage) {
+    media(sort: $sort, type: $type) {
+      id
+      title {
+        userPreferred
+      }
+      format
+      startDate {
+        year
+      }
+      coverImage {
+        large
+      }
+    }
+    pageInfo {
+      hasNextPage
+      currentPage
+    }
+  }
+}

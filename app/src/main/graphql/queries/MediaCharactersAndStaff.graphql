@@ -1,0 +1,49 @@
+query MediaCharactersAndStaff($mediaId: Int) {
+  Media(id: $mediaId) {
+    characters(page: 1, perPage: 25) {
+      edges {
+        ...MediaCharacter
+      }
+    }
+    staff(page: 1, perPage: 25) {
+      edges {
+        ...MediaStaff
+      }
+    }
+  }
+}
+
+fragment MediaCharacter on CharacterEdge {
+  role
+  node {
+    id
+    name {
+      userPreferred
+    }
+    image {
+      medium
+    }
+  }
+  voiceActors(language: JAPANESE) {
+    id
+    name {
+      userPreferred
+    }
+    image {
+      medium
+    }
+  }
+}
+
+fragment MediaStaff on StaffEdge {
+  role
+  node {
+    id
+    name {
+      userPreferred
+    }
+    image {
+      medium
+    }
+  }
+}

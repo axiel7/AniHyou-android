@@ -1,0 +1,5 @@
+query UserAbout($userId: Int) {
+  User(id: $userId) {
+    about(asHtml: true)
+  }
+}

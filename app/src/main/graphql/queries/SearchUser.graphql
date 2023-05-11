@@ -1,0 +1,11 @@
+query SearchUser($page: Int, $perPage: Int, $search: String) {
+  Page(page: $page, perPage: $perPage) {
+    users(search: $search, sort: SEARCH_MATCH) {
+      id
+      name
+      avatar {
+        medium
+      }
+    }
+  }
+}

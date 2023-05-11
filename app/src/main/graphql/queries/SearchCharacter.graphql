@@ -1,0 +1,13 @@
+query SearchCharacter($page: Int, $perPage: Int, $search: String) {
+  Page(page: $page, perPage: $perPage) {
+    characters(search: $search, sort: SEARCH_MATCH) {
+      id
+      name {
+        userPreferred
+      }
+      image {
+        medium
+      }
+    }
+  }
+}

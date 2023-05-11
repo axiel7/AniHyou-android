@@ -1,0 +1,24 @@
+query Viewer {
+  Viewer {
+    ...UserInfo
+  }
+}
+
+fragment UserInfo on User {
+  id
+  name
+  avatar {
+    large
+  }
+  bannerImage
+  about
+  options {
+    profileColor
+    staffNameLanguage
+    titleLanguage
+  }
+  mediaListOptions {
+    scoreFormat
+  }
+  unreadNotificationCount
+}

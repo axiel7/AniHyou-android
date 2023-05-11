@@ -1,0 +1,87 @@
+query MediaDetails($mediaId: Int) {
+  Media(id: $mediaId) {
+    id
+    title {
+      userPreferred
+      romaji
+      english
+      native
+    }
+    format
+    status
+    description
+    startDate {
+      ...FuzzyDate
+    }
+    endDate {
+      ...FuzzyDate
+    }
+    season
+    seasonYear
+    episodes
+    duration
+    chapters
+    volumes
+    coverImage {
+      large
+      extraLarge
+      color
+    }
+    bannerImage
+    averageScore
+    meanScore
+    popularity
+    genres
+    studios {
+      nodes {
+        name
+        isAnimationStudio
+      }
+    }
+    favourites
+    type
+    nextAiringEpisode {
+      timeUntilAiring
+      episode
+    }
+    mediaListEntry {
+      ...BasicMediaListEntry
+      startedAt {
+        ...FuzzyDate
+      }
+      completedAt {
+        ...FuzzyDate
+      }
+    }
+    source
+    externalLinks {
+      id
+      url
+      site
+      type
+    }
+    trailer {
+      id
+      site
+      thumbnail
+    }
+    streamingEpisodes {
+      url
+      title
+      site
+      thumbnail
+    }
+    tags {
+      id
+      name
+      rank
+      isMediaSpoiler
+    }
+  }
+}
+
+fragment FuzzyDate on FuzzyDate {
+  day
+  month
+  year
+}

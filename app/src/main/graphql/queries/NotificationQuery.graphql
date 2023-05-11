@@ -1,0 +1,247 @@
+query Notifications($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    notifications(resetNotificationCount: true) {
+      ... on AiringNotification {
+        id
+        contexts
+        animeId
+        episode
+        media {
+          title {
+            userPreferred
+          }
+          coverImage {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on FollowingNotification {
+        id
+        context
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityMessageNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityMentionNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityReplyNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityReplySubscribedNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityLikeNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ActivityReplyLikeNotification {
+        id
+        context
+        activityId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ThreadCommentMentionNotification {
+        id
+        context
+        commentId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ThreadCommentReplyNotification {
+        id
+        context
+        commentId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ThreadCommentSubscribedNotification {
+        id
+        context
+        commentId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ThreadCommentLikeNotification {
+        id
+        context
+        commentId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on ThreadLikeNotification {
+        id
+        context
+        threadId
+        userId
+        user {
+          name
+          avatar {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on RelatedMediaAdditionNotification {
+        id
+        context
+        mediaId
+        media {
+          title {
+            userPreferred
+          }
+          coverImage {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on MediaDataChangeNotification {
+        id
+        context
+        mediaId
+        media {
+          title {
+            userPreferred
+          }
+          coverImage {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on MediaMergeNotification {
+        id
+        context
+        reason
+        mediaId
+        media {
+          title {
+            userPreferred
+          }
+          coverImage {
+            medium
+          }
+        }
+        type
+        createdAt
+      }
+      ... on MediaDeletionNotification {
+        id
+        context
+        reason
+        deletedMediaTitle
+        type
+        createdAt
+      }
+    }
+    pageInfo {
+      currentPage
+      hasNextPage
+    }
+  }
+}

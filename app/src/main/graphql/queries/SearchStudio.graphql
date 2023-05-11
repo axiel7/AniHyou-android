@@ -1,0 +1,8 @@
+query SearchStudio($page: Int, $perPage: Int, $search: String) {
+  Page(page: $page, perPage: $perPage) {
+    studios(search: $search, sort: SEARCH_MATCH) {
+      id
+      name
+    }
+  }
+}

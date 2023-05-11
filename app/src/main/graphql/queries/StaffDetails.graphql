@@ -1,0 +1,26 @@
+query StaffDetails($staffId: Int) {
+  Staff(id: $staffId) {
+    id
+    name {
+      userPreferred
+      native
+      alternative
+    }
+    image {
+      large
+    }
+    description(asHtml: true)
+    primaryOccupations
+    gender
+    dateOfBirth {
+      ...FuzzyDate
+    }
+    dateOfDeath {
+      ...FuzzyDate
+    }
+    age
+    yearsActive
+    homeTown
+    bloodType
+  }
+}

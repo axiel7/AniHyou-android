@@ -1,0 +1,17 @@
+query SeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear: Int, $sort: [MediaSort]) {
+  Page(page: $page, perPage: $perPage) {
+    media(season: $season, seasonYear: $seasonYear, sort: $sort) {
+      id
+      title {
+        userPreferred
+      }
+      coverImage {
+        large
+      }
+      meanScore
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}

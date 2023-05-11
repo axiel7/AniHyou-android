@@ -1,0 +1,21 @@
+query UserFavoritesManga($userId: Int, $page: Int, $perPage: Int) {
+  User(id: $userId) {
+    favourites {
+      manga(page: $page, perPage: $perPage) {
+        nodes {
+          id
+          title {
+            userPreferred
+          }
+          coverImage {
+            large
+          }
+        }
+        pageInfo {
+          currentPage
+          hasNextPage
+        }
+      }
+    }
+  }
+}

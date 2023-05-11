@@ -1,0 +1,22 @@
+query MediaStats($mediaId: Int) {
+  Media(id: $mediaId) {
+    stats {
+      statusDistribution {
+        status
+        amount
+      }
+      scoreDistribution {
+        score
+        amount
+      }
+    }
+    rankings {
+      id
+      rank
+      context
+      type
+      season
+      year
+    }
+  }
+}
