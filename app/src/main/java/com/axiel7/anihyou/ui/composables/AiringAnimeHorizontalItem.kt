@@ -108,30 +108,6 @@ fun AiringAnimeHorizontalItemPlaceholder() {
     }
 }
 
-@Composable
-fun SmallScoreIndicator(
-    score: String,
-    modifier: Modifier = Modifier,
-    fontSize: TextUnit = 14.sp,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.star_filled_20),
-            contentDescription = stringResource(R.string.mean_score),
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Text(
-            text = score,
-            modifier = Modifier.padding(horizontal = 4.dp),
-            color = MaterialTheme.colorScheme.outline,
-            fontSize = fontSize
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun AiringAnimeHorizontalItemPreview() {

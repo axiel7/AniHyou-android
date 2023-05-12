@@ -23,7 +23,7 @@ class HomeViewModel : BaseViewModel() {
     var nextAnimeSeason = now.nextAnimeSeason()
 
     val airingAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
-    var isLoadingAiring by mutableStateOf(false)
+    var isLoadingAiring by mutableStateOf(true)
 
     suspend fun getAiringAnime() {
         isLoadingAiring = true
@@ -42,10 +42,10 @@ class HomeViewModel : BaseViewModel() {
     }
 
     val thisSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
-    var isLoadingSeasonAnime by mutableStateOf(false)
+    var isLoadingThisSeason by mutableStateOf(true)
 
     suspend fun getThisSeasonAnime() {
-        isLoadingSeasonAnime = true
+        isLoadingThisSeason = true
         val response = SeasonalAnimeQuery(
             page = Optional.present(1),
             perPage = Optional.present(10),
@@ -56,11 +56,11 @@ class HomeViewModel : BaseViewModel() {
 
         thisSeasonAnime.clear()
         response?.data?.Page?.media?.filterNotNull()?.let { thisSeasonAnime.addAll(it) }
-        isLoadingSeasonAnime = false
+        isLoadingThisSeason = false
     }
 
     val trendingAnime = mutableStateListOf<MediaSortedQuery.Medium>()
-    var isLoadingTrendingAnime by mutableStateOf(false)
+    var isLoadingTrendingAnime by mutableStateOf(true)
 
     suspend fun getTrendingAnime() {
         isLoadingTrendingAnime = true
@@ -77,7 +77,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     val nextSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
-    var isLoadingNextSeason by mutableStateOf(false)
+    var isLoadingNextSeason by mutableStateOf(true)
 
     suspend fun getNextSeasonAnime() {
         isLoadingNextSeason = true
@@ -95,7 +95,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     val trendingManga = mutableStateListOf<MediaSortedQuery.Medium>()
-    var isLoadingTrendingManga by mutableStateOf(false)
+    var isLoadingTrendingManga by mutableStateOf(true)
 
     suspend fun getTrendingManga() {
         isLoadingTrendingManga = true

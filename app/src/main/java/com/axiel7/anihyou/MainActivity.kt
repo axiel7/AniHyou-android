@@ -119,7 +119,11 @@ fun MainView(
             modifier = Modifier.padding(padding)
         ) {
             composable(BottomDestination.Home.route) {
-                HomeView()
+                HomeView(
+                    navigateToDetails = { id ->
+                        navController.navigate("details/$id")
+                    }
+                )
             }
 
             composable(BottomDestination.AnimeList.route) {

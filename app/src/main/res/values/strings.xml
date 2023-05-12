@@ -14,4 +14,12 @@
     <string name="airing_soon">Airing soon</string>
     <string name="mean_score">Mean score</string>
     <string name="airing_in">Airing in %s</string>
+    <string name="winter">Winter</string>
+    <string name="spring">Spring</string>
+    <string name="summer">Summer</string>
+    <string name="fall">Fall</string>
+    <string name="profile">Profile</string>
+    <string name="trending_now">Trending Now</string>
+    <string name="next_season">Next Season</string>
+    <string name="trending_manga">Trending Manga</string>
 </resources>
