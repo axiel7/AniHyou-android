@@ -106,7 +106,9 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.3.0")
 
-    implementation("com.apollographql.apollo3:apollo-runtime:3.8.1")
+    val apolloVersion = "3.8.1"
+    implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
+    implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
