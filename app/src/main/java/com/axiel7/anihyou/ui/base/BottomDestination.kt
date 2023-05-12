@@ -28,6 +28,12 @@ sealed class BottomDestination(
         icon = R.drawable.book_24,
         iconSelected = R.drawable.book_filled_24
     )
+    object Profile: BottomDestination(
+        route = "profile",
+        title = R.string.profile,
+        icon = R.drawable.person_24,
+        iconSelected = R.drawable.person_filled_24
+    )
     object Explore: BottomDestination(
         route = "explore",
         title = R.string.explore,
@@ -37,10 +43,11 @@ sealed class BottomDestination(
 
     companion object {
         fun String.toBottomDestinationIndex() = when (this) {
-            "home" -> 0
-            "anime" -> 1
-            "manga" -> 2
-            "more" -> 3
+            Home.route -> 0
+            AnimeList.route -> 1
+            MangaList.route -> 2
+            Profile.route -> 3
+            Explore.route -> 4
             else -> null
         }
     }

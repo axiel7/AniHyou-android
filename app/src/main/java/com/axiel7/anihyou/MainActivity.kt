@@ -129,6 +129,18 @@ fun MainView(
             composable(BottomDestination.AnimeList.route) {
                 UserMediaListView()
             }
+
+            composable(BottomDestination.MangaList.route) {
+                UserMediaListView()
+            }
+
+            composable(BottomDestination.Profile.route) {
+                Text(text = "Profile")
+            }
+
+            composable(BottomDestination.Explore.route) {
+                Text(text = "Explore")
+            }
         }
     }
 }
@@ -137,6 +149,7 @@ private val bottomDestinations = listOf(
     BottomDestination.Home,
     BottomDestination.AnimeList,
     BottomDestination.MangaList,
+    BottomDestination.Profile,
     BottomDestination.Explore
 )
 
