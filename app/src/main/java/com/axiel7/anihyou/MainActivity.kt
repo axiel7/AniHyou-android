@@ -1,5 +1,7 @@
 package com.axiel7.anihyou
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,15 +15,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -37,16 +37,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.home.HomeView
+import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListView
+import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,10 +58,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        parseIntentData(intent.data)
+
         //get necessary preferences while on splashscreen
-        val startTab = defaultPreferencesDataStore.getValueSync(LAST_TAB_PREFERENCE_KEY)
+        val startTab = App.dataStore.getValueSync(LAST_TAB_PREFERENCE_KEY)
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
-        val theme = defaultPreferencesDataStore.getValueSync(THEME_PREFERENCE_KEY) ?: "follow_system"
+        val theme = App.dataStore.getValueSync(THEME_PREFERENCE_KEY) ?: "follow_system"
 
         var mediaId: Int? = null
         var mediaType: String? = null
@@ -92,6 +98,19 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        parseIntentData(intent?.data)
+    }
+
+    private fun parseIntentData(data: Uri?) {
+        if (data?.scheme == ANIHYOU_SCHEME) {
+            lifecycleScope.launch {
+                LoginRepository.parseRedirectUri(data)
+            }
+        }
+    }
 }
 
 @Composable
@@ -99,6 +118,8 @@ fun MainView(
     navController: NavHostController,
     lastTabOpened: Int = 0
 ) {
+    val accessTokenPreference = rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
+
     com.google.accompanist.insets.ui.Scaffold(
         bottomBar = {
             BottomNavBar(
@@ -127,15 +148,27 @@ fun MainView(
             }
 
             composable(BottomDestination.AnimeList.route) {
-                UserMediaListView()
+                if (accessTokenPreference.value == null) {
+                    LoginView()
+                } else {
+                    UserMediaListView()
+                }
             }
 
             composable(BottomDestination.MangaList.route) {
-                UserMediaListView()
+                if (accessTokenPreference.value == null) {
+                    LoginView()
+                } else {
+                    UserMediaListView()
+                }
             }
 
             composable(BottomDestination.Profile.route) {
-                Text(text = "Profile")
+                if (accessTokenPreference.value == null) {
+                    LoginView()
+                } else {
+                    Text(text = "Profile")
+                }
             }
 
             composable(BottomDestination.Explore.route) {

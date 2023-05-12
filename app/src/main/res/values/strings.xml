@@ -22,4 +22,6 @@
     <string name="trending_now">Trending Now</string>
     <string name="next_season">Next Season</string>
     <string name="trending_manga">Trending Manga</string>
+    <string name="not_logged_text">Please login to use this feature</string>
+    <string name="login">Login</string>
 </resources>

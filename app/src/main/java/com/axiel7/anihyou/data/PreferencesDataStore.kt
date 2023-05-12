@@ -21,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 
 object PreferencesDataStore {
 
+    val ACCESS_TOKEN_PREFERENCE_KEY = stringPreferencesKey("access_token")
     val USER_ID_PREFERENCE_KEY = intPreferencesKey("user_id")
     val NSFW_PREFERENCE_KEY = booleanPreferencesKey("nsfw")
     val THEME_PREFERENCE_KEY = stringPreferencesKey("theme")
@@ -41,8 +42,8 @@ object PreferencesDataStore {
     @Composable
     fun <T> rememberPreference(
         key: Preferences.Key<T>,
-        defaultValue: T,
-    ): MutableState<T> {
+        defaultValue: T?,
+    ): MutableState<T?> {
         val coroutineScope = rememberCoroutineScope()
         val context = LocalContext.current
         val state = remember {
@@ -53,19 +54,19 @@ object PreferencesDataStore {
         }.collectAsState(initial = defaultValue)
 
         return remember {
-            object : MutableState<T> {
-                override var value: T
+            object : MutableState<T?> {
+                override var value: T?
                     get() = state.value
                     set(value) {
                         coroutineScope.launch {
                             context.defaultPreferencesDataStore.edit {
-                                it[key] = value
+                                if (value != null) it[key] = value
                             }
                         }
                     }
 
                 override fun component1() = value
-                override fun component2(): (T) -> Unit = { value = it }
+                override fun component2(): (T?) -> Unit = { value = it }
             }
         }
     }
