@@ -43,12 +43,13 @@ import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.ui.usermedialist.UserMediaListView
+import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import kotlinx.coroutines.launch
 
@@ -151,7 +152,7 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    UserMediaListView()
+                    UserMediaListHostView(mediaType = MediaType.ANIME)
                 }
             }
 
@@ -159,7 +160,7 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    UserMediaListView()
+                    UserMediaListHostView(mediaType = MediaType.MANGA)
                 }
             }
 

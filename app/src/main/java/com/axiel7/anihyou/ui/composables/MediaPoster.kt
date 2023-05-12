@@ -27,6 +27,7 @@ const val MEDIA_POSTER_BIG_WIDTH = 150
 @Composable
 fun MediaPoster(
     url: String?,
+    showShadow: Boolean = true,
     contentScale: ContentScale = ContentScale.Crop,
     modifier: Modifier
 ) {
@@ -35,10 +36,12 @@ fun MediaPoster(
         contentDescription = "poster",
         placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
         contentScale = contentScale,
-        modifier = modifier
-            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 8.dp)
-            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-            .clip(RoundedCornerShape(8.dp))
+        modifier = modifier.then(
+            if (showShadow) Modifier
+                .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 8.dp)
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            else Modifier
+        ).clip(RoundedCornerShape(8.dp))
     )
 }
 

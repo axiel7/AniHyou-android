@@ -24,4 +24,12 @@
     <string name="trending_manga">Trending Manga</string>
     <string name="not_logged_text">Please login to use this feature</string>
     <string name="login">Login</string>
+    <string name="current">Current</string>
+    <string name="planning">Planning</string>
+    <string name="completed">Completed</string>
+    <string name="dropped">Dropped</string>
+    <string name="paused">Paused</string>
+    <string name="repeating">Repeating</string>
+    <string name="anime_list">Anime list</string>
+    <string name="manga_list">Manga list</string>
 </resources>

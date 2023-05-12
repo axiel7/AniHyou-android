@@ -23,7 +23,8 @@ object PreferencesDataStore {
 
     val ACCESS_TOKEN_PREFERENCE_KEY = stringPreferencesKey("access_token")
     val USER_ID_PREFERENCE_KEY = intPreferencesKey("user_id")
-    val NSFW_PREFERENCE_KEY = booleanPreferencesKey("nsfw")
+    val PROFILE_COLOR_PREFERENCE_KEY = stringPreferencesKey("profile_color")
+    val SCORE_FORMAT_PREFERENCE_KEY = stringPreferencesKey("score_format")
     val THEME_PREFERENCE_KEY = stringPreferencesKey("theme")
     val LAST_TAB_PREFERENCE_KEY = intPreferencesKey("last_tab")
     val ANIME_LIST_SORT_PREFERENCE_KEY = stringPreferencesKey("anime_list_sort")
