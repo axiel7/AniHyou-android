@@ -39,4 +39,18 @@
     <string name="sort_updated">Update date</string>
     <string name="sort_added">Added date</string>
     <string name="sort">Sort</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="copied">Copied</string>
+    <string name="tv">TV</string>
+    <string name="tv_short">TV Short</string>
+    <string name="movie">Movie</string>
+    <string name="special">Special</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
+    <string name="music">Music</string>
+    <string name="novel">Novel</string>
+    <string name="one_shot">One Shot</string>
+    <string name="num_episodes">%s episodes</string>
+    <string name="num_chapters">%s chapters</string>
 </resources>

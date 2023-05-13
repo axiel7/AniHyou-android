@@ -33,10 +33,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
@@ -50,6 +53,8 @@ import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
+import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
@@ -156,7 +161,12 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    UserMediaListHostView(mediaType = MediaType.ANIME)
+                    UserMediaListHostView(
+                        mediaType = MediaType.ANIME,
+                        navigateToDetails = { id ->
+                            navController.navigate("details/$id")
+                        }
+                    )
                 }
             }
 
@@ -164,7 +174,12 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    UserMediaListHostView(mediaType = MediaType.MANGA)
+                    UserMediaListHostView(
+                        mediaType = MediaType.MANGA,
+                        navigateToDetails = { id ->
+                            navController.navigate("details/$id")
+                        }
+                    )
                 }
             }
 
@@ -178,6 +193,20 @@ fun MainView(
 
             composable(BottomDestination.Explore.route) {
                 Text(text = "Explore")
+            }
+
+            composable(MEDIA_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("media_id") { type = NavType.IntType }
+                ),
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "https://anilist.co/anime/{media_id}" },
+                    navDeepLink { uriPattern = "https://anilist.co/manga/{media_id}" }
+                )
+            ) { navEntry ->
+                MediaDetailsView(
+                    mediaId = navEntry.arguments?.getInt("media_id") ?: 0
+                )
             }
         }
     }

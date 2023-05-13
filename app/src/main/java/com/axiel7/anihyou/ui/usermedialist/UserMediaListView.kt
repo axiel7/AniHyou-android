@@ -59,7 +59,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserMediaListHostView(
-    mediaType: MediaType
+    mediaType: MediaType,
+    navigateToDetails: (mediaId: Int) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -108,7 +109,8 @@ fun UserMediaListHostView(
                 UserMediaListView(
                     mediaType = mediaType,
                     status = tabRowItems[it],
-                    sort = if (sortPreference != null) MediaListSort.safeValueOf(sortPreference!!) else null
+                    sort = if (sortPreference != null) MediaListSort.safeValueOf(sortPreference!!) else null,
+                    navigateToDetails = navigateToDetails
                 )
             }//: Pager
         }//: Column
@@ -133,7 +135,8 @@ fun UserMediaListHostView(
 fun UserMediaListView(
     mediaType: MediaType,
     status: MediaListStatus,
-    sort: MediaListSort?
+    sort: MediaListSort?,
+    navigateToDetails: (mediaId: Int) -> Unit
 ) {
     val viewModel: UserMediaListViewModel = viewModel(key = "${mediaType.name}${status.name}") {
         UserMediaListViewModel(mediaType, status)
@@ -162,7 +165,7 @@ fun UserMediaListView(
             ) { item ->
                 StandardUserMediaListItem(
                     item = item,
-                    onClick = { /*TODO*/ },
+                    onClick = { navigateToDetails(item.mediaId) },
                     onLongClick = { /*TODO*/ },
                     onClickPlus = { /*TODO*/ }
                 )
@@ -201,7 +204,8 @@ fun UserMediaListViewPreview() {
         UserMediaListView(
             mediaType = MediaType.ANIME,
             status = MediaListStatus.CURRENT,
-            sort = MediaListSort.MEDIA_TITLE_ROMAJI_DESC
+            sort = MediaListSort.MEDIA_TITLE_ROMAJI_DESC,
+            navigateToDetails = { }
         )
     }
 }
