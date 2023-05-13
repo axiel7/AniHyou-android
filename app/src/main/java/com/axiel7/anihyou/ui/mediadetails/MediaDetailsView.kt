@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -66,6 +67,7 @@ import com.axiel7.anihyou.ui.composables.VerticalDivider
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.banner_shadow_color
+import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.ContextUtils.getCurrentLanguageTag
 import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
@@ -147,24 +149,35 @@ fun MediaDetailsView(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(padding.calculateTopPadding() + 100.dp)
+                    .height(padding.calculateTopPadding() + 80.dp)
                     .padding(bottom = 16.dp),
                 contentAlignment = Alignment.TopStart
             ) {
-                AsyncImage(
-                    model = viewModel.mediaDetails?.bannerImage,
-                    contentDescription = "banner",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
+                if (viewModel.mediaDetails?.bannerImage != null) {
+                    AsyncImage(
+                        model = viewModel.mediaDetails?.bannerImage,
+                        contentDescription = "banner",
+                        placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = if (viewModel.mediaDetails?.coverImage?.color != null)
+                                    colorFromHex(viewModel.mediaDetails?.coverImage?.color!!)
+                                else MaterialTheme.colorScheme.outline
+                            )
+                            .fillMaxSize()
+                    )
+                }
                 //top shadow
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            listOf(
-                                banner_shadow_color, Color.Transparent
-                            )
+                            listOf(banner_shadow_color, Color.Transparent)
                         )
                     )
                 )
