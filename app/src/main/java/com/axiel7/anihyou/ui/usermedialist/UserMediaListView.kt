@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.ui.usermedialist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +12,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -91,6 +97,7 @@ fun UserMediaListHostView(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserMediaListView(
     mediaType: MediaType,
@@ -100,29 +107,48 @@ fun UserMediaListView(
         UserMediaListViewModel(mediaType, status)
     }
     val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = viewModel.isLoading,
+        onRefresh = { scope.launch { viewModel.getUserList() } }
+    )
 
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        state = listState,
-        contentPadding = PaddingValues(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .clipToBounds()
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
     ) {
-        items(viewModel.mediaList,
-            contentType = { it.basicMediaListEntry }
-        ) { item ->
-            StandardUserMediaListItem(
-                item = item,
-                onClick = { /*TODO*/ },
-                onLongClick = { /*TODO*/ },
-                onClickPlus = { /*TODO*/ }
-            )
-        }
-        item {
-            if (viewModel.isLoading) {
-                CircularProgressIndicator()
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            state = listState,
+            contentPadding = PaddingValues(vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(viewModel.mediaList,
+                contentType = { it.basicMediaListEntry }
+            ) { item ->
+                StandardUserMediaListItem(
+                    item = item,
+                    onClick = { /*TODO*/ },
+                    onLongClick = { /*TODO*/ },
+                    onClickPlus = { /*TODO*/ }
+                )
             }
-        }
-    }
+            item {
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator()
+                }
+            }
+        }//: LazyColumn
+        PullRefreshIndicator(
+            refreshing = viewModel.isLoading,
+            state = pullRefreshState,
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.TopCenter)
+        )
+    }//: Box
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getUserList()

@@ -48,10 +48,10 @@ fun DefaultScaffoldWithMediumTopAppBar(
 @Composable
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,
-    actions: @Composable() (RowScope.() -> Unit) = {},
+    actions: @Composable (RowScope.() -> Unit) = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
 
