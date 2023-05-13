@@ -38,7 +38,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
@@ -65,6 +67,8 @@ class MainActivity : ComponentActivity() {
         val startTab = App.dataStore.getValueSync(LAST_TAB_PREFERENCE_KEY)
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
         val theme = App.dataStore.getValueSync(THEME_PREFERENCE_KEY) ?: "follow_system"
+        App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let { App.animeListSort = it }
+        App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
 
         var mediaId: Int? = null
         var mediaType: String? = null

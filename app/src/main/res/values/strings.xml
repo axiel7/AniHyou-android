@@ -32,4 +32,11 @@
     <string name="repeating">Repeating</string>
     <string name="anime_list">Anime list</string>
     <string name="manga_list">Manga list</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_score">Score</string>
+    <string name="sort_updated">Update date</string>
+    <string name="sort_added">Added date</string>
+    <string name="sort">Sort</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
+import com.axiel7.anihyou.type.MediaListSort
 
 class App : Application(), ImageLoaderFactory {
 
@@ -24,5 +25,7 @@ class App : Application(), ImageLoaderFactory {
 
     companion object {
         lateinit var dataStore: DataStore<Preferences>
+        var animeListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
+        var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
     }
 }

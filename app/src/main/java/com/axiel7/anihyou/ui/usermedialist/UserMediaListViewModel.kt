@@ -1,10 +1,8 @@
 package com.axiel7.anihyou.ui.usermedialist
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaListSort
@@ -21,7 +19,9 @@ class UserMediaListViewModel(
     var hasNextPage = true
     var mediaList = mutableStateListOf<UserMediaListQuery.MediaList>()
 
-    var sort by mutableStateOf(MediaListSort.UPDATED_TIME_DESC)
+    var sort = MediaListSort.safeValueOf(
+        if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
+    )
 
     suspend fun getUserList() {
         val userId = LoginRepository.getUserId()

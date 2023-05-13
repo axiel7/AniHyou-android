@@ -24,20 +24,32 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.UserMediaListSort
 import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.StandardUserMediaListItem
@@ -52,12 +64,17 @@ fun UserMediaListHostView(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabRowItems = remember { MediaListStatus.knownValues() }
+    var openSortDialog by remember { mutableStateOf(false) }
+    var sortPreference by rememberPreference(
+        key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
+        defaultValue = if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
+    )
 
     DefaultScaffoldWithSmallTopAppBar(
         title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { openSortDialog = true }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
             }
         }
@@ -90,10 +107,24 @@ fun UserMediaListHostView(
             ) {
                 UserMediaListView(
                     mediaType = mediaType,
-                    status = tabRowItems[it]
+                    status = tabRowItems[it],
+                    sort = if (sortPreference != null) MediaListSort.safeValueOf(sortPreference!!) else null
                 )
             }//: Pager
         }//: Column
+    }//: Scaffold
+
+    if (openSortDialog) {
+        DialogWithRadioSelection(
+            values = UserMediaListSort.values(),
+            defaultValue = UserMediaListSort.valueOf(sortPreference),
+            title = stringResource(R.string.sort),
+            onConfirm = {
+                sortPreference = it.value.rawValue
+                openSortDialog = false
+            },
+            onDismiss = { openSortDialog = false }
+        )
     }
 }
 
@@ -101,7 +132,8 @@ fun UserMediaListHostView(
 @Composable
 fun UserMediaListView(
     mediaType: MediaType,
-    status: MediaListStatus
+    status: MediaListStatus,
+    sort: MediaListSort?
 ) {
     val viewModel: UserMediaListViewModel = viewModel(key = "${mediaType.name}${status.name}") {
         UserMediaListViewModel(mediaType, status)
@@ -153,6 +185,13 @@ fun UserMediaListView(
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getUserList()
     }
+
+    LaunchedEffect(sort) {
+        if (!viewModel.isLoading && sort != null) {
+            viewModel.sort = sort
+            viewModel.refreshList()
+        }
+    }
 }
 
 @Preview
@@ -161,7 +200,8 @@ fun UserMediaListViewPreview() {
     AniHyouTheme {
         UserMediaListView(
             mediaType = MediaType.ANIME,
-            status = MediaListStatus.CURRENT
+            status = MediaListStatus.CURRENT,
+            sort = MediaListSort.MEDIA_TITLE_ROMAJI_DESC
         )
     }
 }
