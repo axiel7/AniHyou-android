@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
@@ -102,18 +103,60 @@ fun TextIconVertical(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun TextIconHorizontalPreview() {
-    AniHyouTheme {
-        TextIconHorizontal(text = "This is an example", icon = R.drawable.star_filled_20)
+fun TextSubtitleVertical(
+    text: String,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 4.dp)
+            .defaultPlaceholder(visible = isLoading),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = subtitle,
+            color = MaterialTheme.colorScheme.outline,
+            fontSize = 13.sp
+        )
     }
 }
 
-@Preview(showBackground = true)
+@Preview
+@Composable
+fun TextSubtitleVerticalPreview() {
+    AniHyouTheme {
+        Surface {
+            TextSubtitleVertical(
+                text = "89%",
+                subtitle = "Mean score"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun TextIconHorizontalPreview() {
+    AniHyouTheme {
+        Surface {
+            TextIconHorizontal(text = "This is an example", icon = R.drawable.star_filled_20)
+        }
+    }
+}
+
+@Preview
 @Composable
 fun TextIconVerticalPreview() {
     AniHyouTheme {
-        TextIconVertical(text = "This is an example", icon = R.drawable.star_filled_20)
+        Surface {
+            TextIconVertical(text = "This is an example", icon = R.drawable.star_filled_20)
+        }
     }
 }

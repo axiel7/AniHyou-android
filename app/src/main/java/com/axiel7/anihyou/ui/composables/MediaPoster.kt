@@ -37,8 +37,8 @@ fun MediaPoster(
         model = url,
         contentDescription = "poster",
         placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
-        error = painterResource(R.drawable.error_24),
-        fallback = painterResource(R.drawable.error_24),
+        error = ColorPainter(MaterialTheme.colorScheme.outline),
+        fallback = ColorPainter(MaterialTheme.colorScheme.outline),
         contentScale = contentScale,
         modifier = modifier
             .then(
