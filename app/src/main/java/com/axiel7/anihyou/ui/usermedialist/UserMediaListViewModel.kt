@@ -24,6 +24,7 @@ class UserMediaListViewModel(
     )
 
     suspend fun getUserList() {
+        isLoading = true
         val userId = LoginRepository.getUserId()
         val response = UserMediaListQuery(
             page = Optional.present(page),
@@ -37,6 +38,7 @@ class UserMediaListViewModel(
         response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
         page += 1
         hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
+        isLoading = false
     }
 
     suspend fun refreshList() {

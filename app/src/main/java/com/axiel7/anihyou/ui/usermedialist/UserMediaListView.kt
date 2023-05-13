@@ -170,11 +170,6 @@ fun UserMediaListView(
                     onClickPlus = { /*TODO*/ }
                 )
             }
-            item {
-                if (viewModel.isLoading) {
-                    CircularProgressIndicator()
-                }
-            }
         }//: LazyColumn
         PullRefreshIndicator(
             refreshing = viewModel.isLoading,
