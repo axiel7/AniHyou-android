@@ -8,19 +8,11 @@ import coil.ImageLoaderFactory
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.type.MediaListSort
 
-class App : Application(), ImageLoaderFactory {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
         dataStore = defaultPreferencesDataStore
-    }
-
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(applicationContext)
-            .crossfade(true)
-            .crossfade(300)
-            .error(R.drawable.ic_launcher_foreground)
-            .build()
     }
 
     companion object {
