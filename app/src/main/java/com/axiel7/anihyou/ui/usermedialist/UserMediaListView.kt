@@ -106,12 +106,13 @@ fun UserMediaListHostView(
                 beyondBoundsPageCount = 0,
                 key = { tabRowItems[it].name }
             ) {
-                UserMediaListView(
-                    mediaType = mediaType,
-                    status = tabRowItems[it],
-                    sort = if (sortPreference != null) MediaListSort.safeValueOf(sortPreference!!) else null,
-                    navigateToDetails = navigateToDetails
-                )
+                if (sortPreference != null)
+                    UserMediaListView(
+                        mediaType = mediaType,
+                        status = tabRowItems[it],
+                        sort = MediaListSort.safeValueOf(sortPreference!!),
+                        navigateToDetails = navigateToDetails
+                    )
             }//: Pager
         }//: Column
     }//: Scaffold
@@ -135,7 +136,7 @@ fun UserMediaListHostView(
 fun UserMediaListView(
     mediaType: MediaType,
     status: MediaListStatus,
-    sort: MediaListSort?,
+    sort: MediaListSort,
     navigateToDetails: (mediaId: Int) -> Unit
 ) {
     val viewModel: UserMediaListViewModel = viewModel(key = "${mediaType.name}${status.name}") {
@@ -160,7 +161,9 @@ fun UserMediaListView(
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(viewModel.mediaList,
+            items(
+                items = viewModel.mediaList,
+                key = { it.basicMediaListEntry.id },
                 contentType = { it.basicMediaListEntry }
             ) { item ->
                 StandardUserMediaListItem(
@@ -185,7 +188,7 @@ fun UserMediaListView(
     }
 
     LaunchedEffect(sort) {
-        if (!viewModel.isLoading && sort != null) {
+        if (!viewModel.isLoading) {
             viewModel.sort = sort
             viewModel.refreshList()
         }

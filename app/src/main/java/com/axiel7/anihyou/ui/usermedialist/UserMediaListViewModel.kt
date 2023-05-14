@@ -24,7 +24,7 @@ class UserMediaListViewModel(
     )
 
     suspend fun getUserList() {
-        isLoading = true
+        isLoading = page == 1
         val userId = LoginRepository.getUserId()
         val response = UserMediaListQuery(
             page = Optional.present(page),
