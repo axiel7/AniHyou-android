@@ -82,15 +82,7 @@ fun StandardUserMediaListItem(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
-                    item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-                        Text(
-                            text = stringResource(R.string.airing_in,
-                                nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
-                            ),
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    AiringScheduleText(item = item)
                 }//:Column
 
                 Column {
@@ -132,6 +124,30 @@ fun StandardUserMediaListItem(
             }//:Column
         }//:Row
     }//: Card
+}
+
+@Composable
+fun AiringScheduleText(
+    item: UserMediaListQuery.MediaList
+) {
+    item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
+        val isBehind = (item.basicMediaListEntry.progress ?: 0) < (nextAiringEpisode.episode - 1)
+        Text(
+            text =
+                if (isBehind)
+                    stringResource(R.string.num_episodes_behind,
+                        (nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0)
+                    )
+                else
+                    stringResource(R.string.episode_in_time,
+                        nextAiringEpisode.episode,
+                        nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                    ),
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = if (isBehind) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 }
 
 @Preview(showBackground = true)
