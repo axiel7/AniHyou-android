@@ -160,6 +160,18 @@ object DateUtils {
         }
     }
 
+    fun FuzzyDate.toLocalDate(): LocalDate? {
+        return if (day != null && month != null && year != null)
+            LocalDate.of(year, month, day)
+        else null
+    }
+
+    fun LocalDate.toFuzzyDate() = FuzzyDateInput(
+        year = Optional.present(year),
+        month = Optional.present(monthValue),
+        day = Optional.present(dayOfMonth)
+    )
+
     @Composable
     fun FuzzyDate.formatted(): String = when {
         month != null && year != null && day != null -> {

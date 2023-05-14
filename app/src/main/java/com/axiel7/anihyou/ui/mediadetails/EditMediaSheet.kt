@@ -72,6 +72,7 @@ fun EditMediaSheet(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val datePickerState = rememberDatePickerState()
     val viewModel: EditMediaViewModel = viewModel {
         EditMediaViewModel(
@@ -105,7 +106,7 @@ fun EditMediaSheet(
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
 
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { scope.launch { viewModel.updateListEntry() } }) {
                     Text(text = stringResource(R.string.save))
                 }
             }
@@ -223,8 +224,8 @@ fun EditMediaSheet(
                 modifier = Modifier.padding(16.dp),
                 totalProgress = null,
                 onValueChange = { viewModel.onChangeRepeatCount(it.toIntOrNull()) },
-                onMinusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount - 1) },
-                onPlusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount + 1) }
+                onMinusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount?.minus(1)) },
+                onPlusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount?.plus(1)) }
             )
 
             // Delete
