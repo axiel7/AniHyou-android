@@ -36,8 +36,8 @@ class UserMediaListViewModel(
         ).tryQuery()
 
         response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
-        page += 1
         hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
+        if (hasNextPage) page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
         isLoading = false
     }
 

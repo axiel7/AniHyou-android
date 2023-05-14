@@ -23,6 +23,7 @@ query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $
       }
     }
     pageInfo {
+      currentPage
       hasNextPage
     }
   }
