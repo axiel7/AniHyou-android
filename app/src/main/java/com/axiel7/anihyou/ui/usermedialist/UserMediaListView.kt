@@ -24,7 +24,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +64,7 @@ import com.axiel7.anihyou.ui.mediadetails.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
@@ -73,6 +78,9 @@ fun UserMediaListHostView(
         key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
         defaultValue = if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+        rememberTopAppBarState()
+    )
 
     DefaultScaffoldWithSmallTopAppBar(
         title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
@@ -81,7 +89,8 @@ fun UserMediaListHostView(
             IconButton(onClick = { openSortDialog = true }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
             }
-        }
+        },
+        scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(
             modifier = Modifier.padding(top = padding.calculateTopPadding())
@@ -114,7 +123,8 @@ fun UserMediaListHostView(
                         mediaType = mediaType,
                         status = tabRowItems[it],
                         sort = MediaListSort.safeValueOf(sortPreference!!),
-                        navigateToDetails = navigateToDetails
+                        navigateToDetails = navigateToDetails,
+                        nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
                     )
             }//: Pager
         }//: Column
@@ -140,7 +150,8 @@ fun UserMediaListView(
     mediaType: MediaType,
     status: MediaListStatus,
     sort: MediaListSort,
-    navigateToDetails: (mediaId: Int) -> Unit
+    navigateToDetails: (mediaId: Int) -> Unit,
+    nestedScrollConnection: NestedScrollConnection
 ) {
     val viewModel: UserMediaListViewModel = viewModel(key = "${mediaType.name}${status.name}") {
         UserMediaListViewModel(mediaType, status)
@@ -160,7 +171,9 @@ fun UserMediaListView(
             .fillMaxSize()
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .nestedScroll(nestedScrollConnection),
             state = listState,
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally

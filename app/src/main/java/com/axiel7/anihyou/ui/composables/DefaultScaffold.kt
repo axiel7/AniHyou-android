@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,15 +49,13 @@ fun DefaultScaffoldWithMediumTopAppBar(
 @Composable
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,
+    modifier: Modifier = Modifier,
     actions: @Composable (RowScope.() -> Unit) = {},
+    scrollBehavior: TopAppBarScrollBehavior,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
-        rememberTopAppBarState()
-    )
-
     Scaffold(
-        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -68,7 +67,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
                     )
                 },
                 actions = actions,
-                scrollBehavior = topAppBarScrollBehavior
+                scrollBehavior = scrollBehavior
             )
         },
         content = content
