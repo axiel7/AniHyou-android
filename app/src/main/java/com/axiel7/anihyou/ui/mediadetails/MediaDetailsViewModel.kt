@@ -18,7 +18,10 @@ class MediaDetailsViewModel : BaseViewModel() {
         ).tryQuery()
 
         mediaDetails = response?.data?.Media
-        isLoading = false
+        if (mediaDetails != null) isLoading = false
     }
 
+    fun getStudios() = mediaDetails?.studios?.nodes?.filterNotNull()?.filter { it.isAnimationStudio }
+
+    fun getProducers() = mediaDetails?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
 }

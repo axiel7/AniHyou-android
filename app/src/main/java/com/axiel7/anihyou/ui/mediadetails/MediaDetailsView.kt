@@ -15,14 +15,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -58,9 +63,11 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.ui.composables.MediaPoster
+import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.VerticalDivider
@@ -71,25 +78,44 @@ import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.ContextUtils.getCurrentLanguageTag
 import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
+import com.axiel7.anihyou.utils.DateUtils.formatted
+import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.NumberUtils
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+import kotlinx.coroutines.launch
 
 const val MEDIA_DETAILS_DESTINATION = "details/{media_id}"
+
+private enum class DetailsType {
+    INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;
+
+    companion object {
+        val tabRows = arrayOf(
+            TabRowItem(INFO, icon = R.drawable.info_24),
+            TabRowItem(STAFF_CHARACTERS, icon = R.drawable.group_24),
+            TabRowItem(RELATIONS, icon = R.drawable.shuffle_24),
+            TabRowItem(STATS, icon = R.drawable.bar_chart_24),
+            TabRowItem(REVIEWS, icon = R.drawable.rate_review_24)
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MediaDetailsView(
-    mediaId: Int
+    mediaId: Int,
+    navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
+    val pagerState = rememberPagerState()
 
     var maxLinesSynopsis by remember { mutableStateOf(5) }
     val iconExpand by remember {
@@ -101,16 +127,15 @@ fun MediaDetailsView(
     val isNewEntry by remember {
         derivedStateOf { viewModel.mediaDetails?.mediaListEntry == null }
     }
+    val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
 
     Scaffold(
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
              TopAppBar(
-                 title = { /*TODO*/ },
+                 title = {},
                  navigationIcon = {
-                     IconButton(
-                         onClick = { /*TODO*/ },
-                     ) {
+                     IconButton(onClick = navigateBack) {
                          Icon(
                              painter = painterResource(R.drawable.arrow_back_24),
                              contentDescription = "back",
@@ -126,7 +151,7 @@ fun MediaDetailsView(
              )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = { /*TODO*/ }) {
+            ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
                 Icon(
                     painter = painterResource(if (isNewEntry) R.drawable.add_24
                     else R.drawable.edit_24),
@@ -177,7 +202,7 @@ fun MediaDetailsView(
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            listOf(banner_shadow_color, Color.Transparent)
+                            listOf(banner_shadow_color, MaterialTheme.colorScheme.surface)
                         )
                     )
                 )
@@ -241,7 +266,7 @@ fun MediaDetailsView(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 val dividerHeight = 36
                 viewModel.mediaDetails?.nextAiringEpisode?.let { nextAiringEpisode ->
@@ -253,12 +278,12 @@ fun MediaDetailsView(
                         subtitle = stringResource(R.string.airing),
                         isLoading = viewModel.isLoading
                     )
+                    VerticalDivider(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .height(dividerHeight.dp)
+                    )
                 }
-                VerticalDivider(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .height(dividerHeight.dp)
-                )
                 TextSubtitleVertical(
                     text = "${viewModel.mediaDetails?.averageScore ?: 0}%",
                     subtitle = stringResource(R.string.average_score),
@@ -300,12 +325,14 @@ fun MediaDetailsView(
             Text(
                 text = viewModel.mediaDetails?.description?.htmlStripped() ?: stringResource(R.string.lorem_ipsun),
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .defaultPlaceholder(visible = viewModel.isLoading),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 15.sp,
+                lineHeight = 18.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxLinesSynopsis
             )
-            val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -344,8 +371,54 @@ fun MediaDetailsView(
                 ) {
                     Icon(painter = painterResource(R.drawable.content_copy_24), contentDescription = "copy")
                 }
+            }//: Row
+
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 8.dp)
+            ) {
+                viewModel.mediaDetails?.genres?.forEach {
+                    AssistChip(
+                        onClick = { },
+                        label = { Text(text = it ?: "") },
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             }
-        }
+
+            // Other info
+            ScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                edgePadding = 16.dp,
+                indicator = { tabPositions ->
+                    RoundedTabRowIndicator(tabPositions[pagerState.currentPage])
+                }
+            ) {
+                DetailsType.tabRows.forEachIndexed { index, item ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                        icon = { Icon(painter = painterResource(item.icon!!), contentDescription = item.value.name) },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }//: TabRow
+
+            HorizontalPager(
+                pageCount = DetailsType.tabRows.size,
+                state = pagerState,
+                key = { DetailsType.tabRows[it].value }
+            ) {
+                when (DetailsType.tabRows[it].value) {
+                    DetailsType.INFO -> MediaInformationView(viewModel = viewModel)
+                    DetailsType.STAFF_CHARACTERS -> CharacterStaffView(viewModel = viewModel)
+                    DetailsType.RELATIONS -> MediaRelationsView(viewModel = viewModel)
+                    DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
+                    DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
+                }
+            }//: Pager
+        }//: Column
     }//: Scaffold
 
     LaunchedEffect(mediaId) {
@@ -353,12 +426,100 @@ fun MediaDetailsView(
     }
 }
 
+@Composable
+fun MediaInformationView(
+    viewModel: MediaDetailsViewModel
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        InfoTitle(text = stringResource(R.string.information))
+
+        MediaInfoItemView(
+            title = stringResource(R.string.duration),
+            info = viewModel.mediaDetails?.duration?.toLong()?.minutesToLegibleText()
+        )
+        MediaInfoItemView(
+            title = stringResource(R.string.start_date),
+            info = viewModel.mediaDetails?.startDate?.fuzzyDate?.formatted()
+        )
+        MediaInfoItemView(
+            title = stringResource(R.string.end_date),
+            info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted()
+        )
+        if (viewModel.mediaDetails?.type == MediaType.ANIME) {
+            MediaInfoItemView(
+                title = stringResource(R.string.season),
+                info = "${viewModel.mediaDetails?.season?.localized()} ${viewModel.mediaDetails?.seasonYear}"
+            )
+            MediaInfoItemView(
+                title = stringResource(R.string.studios),
+                info = viewModel.getStudios()?.joinToString { it.name }
+            )
+            MediaInfoItemView(
+                title = stringResource(R.string.producers),
+                info = viewModel.getProducers()?.joinToString { it.name }
+            )
+        }
+        MediaInfoItemView(
+            title = stringResource(R.string.source),
+            info = viewModel.mediaDetails?.source?.localized()
+        )
+        MediaInfoItemView(
+            title = stringResource(R.string.romaji),
+            info = viewModel.mediaDetails?.title?.romaji
+        )
+        MediaInfoItemView(
+            title = stringResource(R.string.english),
+            info = viewModel.mediaDetails?.title?.english
+        )
+        MediaInfoItemView(
+            title = stringResource(R.string.native_title),
+            info = viewModel.mediaDetails?.title?.native
+        )
+    }
+}
+
+@Composable
+fun MediaInfoItemView(
+    title: String,
+    info: String?,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .then(modifier)
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = info ?: stringResource(R.string.unknown),
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+fun InfoTitle(text: String) {
+    Text(
+        text = text,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold
+    )
+}
+
 @Preview
 @Composable
 fun MediaDetailsViewPreview() {
     AniHyouTheme {
         MediaDetailsView(
-            mediaId = 1
+            mediaId = 1,
+            navigateBack = {}
         )
     }
 }

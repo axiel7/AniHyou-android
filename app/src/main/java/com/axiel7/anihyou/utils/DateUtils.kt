@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.AnimeSeason
-import com.axiel7.anihyou.type.FuzzyDate
+import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.FuzzyDateInput
 import com.axiel7.anihyou.type.MediaSeason
 import java.time.DayOfWeek
@@ -28,9 +28,9 @@ object DateUtils {
 
     fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
-    fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek) = with(TemporalAdjusters.nextOrSame(dayOfWeek))
+    fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate = with(TemporalAdjusters.nextOrSame(dayOfWeek))
 
-    fun LocalDateTime.toCalendar() = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
+    fun LocalDateTime.toCalendar(): GregorianCalendar = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
     fun LocalDateTime.tomorrow(): LocalDateTime = toCalendar()
         .apply {
@@ -130,7 +130,7 @@ object DateUtils {
 
     fun Long.minutesToDays() = this / 1440
 
-    fun Long.timestampToDateString() = LocalDate.ofEpochDay(this / 86400).format(
+    fun Long.timestampToDateString(): String? = LocalDate.ofEpochDay(this / 86400).format(
         DateTimeFormatter.ofPattern(
             DateFormat.getBestDateTimePattern(Locale.getDefault(), "EE, d MMM")
         )
@@ -139,28 +139,22 @@ object DateUtils {
     fun Long.timestampIntervalSinceNow() = (System.nanoTime() - this).absoluteValue
 
     @Composable
-    fun FuzzyDateInput.formatted(): String {
-        val dayValue = day.getOrNull()
-        val monthValue = month.getOrNull()
-        val yearValue = year.getOrNull()
-        return when {
-            monthValue != null && yearValue != null && dayValue != null -> {
-                LocalDate.of(yearValue, monthValue, dayValue).format(
-                    DateTimeFormatter.ofPattern(
-                        DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM yyyy")
-                    )
+    fun FuzzyDate.formatted(): String = when {
+        month != null && year != null && day != null -> {
+            LocalDate.of(year, month, day).format(
+                DateTimeFormatter.ofPattern(
+                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM yyyy")
                 )
-            }
-            monthValue != null && yearValue != null -> {
-                LocalDate.of(yearValue, monthValue, 1).format(
-                    DateTimeFormatter.ofPattern(
-                        DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMM yyyy")
-                    )
-                )
-            }
-            dayValue == null && monthValue == null && yearValue != null -> "$yearValue"
-            else -> stringResource(R.string.unknown)
+            )
         }
-
+        month != null && year != null -> {
+            LocalDate.of(year, month, 1).format(
+                DateTimeFormatter.ofPattern(
+                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMM yyyy")
+                )
+            )
+        }
+        day == null && month == null && year != null -> "$year"
+        else -> stringResource(R.string.unknown)
     }
 }

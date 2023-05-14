@@ -205,7 +205,10 @@ fun MainView(
                 )
             ) { navEntry ->
                 MediaDetailsView(
-                    mediaId = navEntry.arguments?.getInt("media_id") ?: 0
+                    mediaId = navEntry.arguments?.getInt("media_id") ?: 0,
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }
