@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.usermedialist
 import androidx.compose.runtime.mutableStateListOf
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.App
+import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaListSort
@@ -46,6 +47,23 @@ class UserMediaListViewModel(
         hasNextPage = true
         mediaList.clear()
         getUserList()
+    }
+
+    suspend fun updateEntryProgress(entryId: Int, progress: Int) {
+        isLoading = true
+        val response = UpdateEntryProgressMutation(
+            saveMediaListEntryId = Optional.present(entryId),
+            progress = Optional.present(progress)
+        ).tryMutation()
+
+        if (response != null) {
+            val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
+            if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
+                basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)
+            )
+        }
+
+        isLoading = false
     }
 
     var selectedItem: UserMediaListQuery.MediaList? = null

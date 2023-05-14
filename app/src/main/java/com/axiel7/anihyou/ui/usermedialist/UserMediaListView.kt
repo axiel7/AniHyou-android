@@ -177,7 +177,14 @@ fun UserMediaListView(
                         viewModel.selectedItem = item
                         scope.launch { sheetState.show() }
                     },
-                    onClickPlus = { /*TODO*/ }
+                    onClickPlus = {
+                        scope.launch {
+                            viewModel.updateEntryProgress(
+                                entryId = item.basicMediaListEntry.id,
+                                progress = (item.basicMediaListEntry.progress ?: 0) + 1
+                            )
+                        }
+                    }
                 )
             }
         }//: LazyColumn
