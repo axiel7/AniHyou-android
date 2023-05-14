@@ -17,12 +17,14 @@ import androidx.compose.material.Surface
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,6 +55,7 @@ import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.StandardUserMediaListItem
+import com.axiel7.anihyou.ui.mediadetails.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -131,7 +134,7 @@ fun UserMediaListHostView(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListView(
     mediaType: MediaType,
@@ -148,6 +151,7 @@ fun UserMediaListView(
         refreshing = viewModel.isLoading,
         onRefresh = { scope.launch { viewModel.getUserList() } }
     )
+    val sheetState = rememberModalBottomSheetState()
 
     Box(
         modifier = Modifier
@@ -169,7 +173,10 @@ fun UserMediaListView(
                 StandardUserMediaListItem(
                     item = item,
                     onClick = { navigateToDetails(item.mediaId) },
-                    onLongClick = { /*TODO*/ },
+                    onLongClick = {
+                        viewModel.selectedItem = item
+                        scope.launch { sheetState.show() }
+                    },
                     onClickPlus = { /*TODO*/ }
                 )
             }
@@ -185,6 +192,15 @@ fun UserMediaListView(
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getUserList()
+    }
+
+    if (sheetState.isVisible && viewModel.selectedItem != null) {
+        EditMediaSheet(
+            sheetState = sheetState,
+            mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
+            listEntry = viewModel.selectedItem!!.basicMediaListEntry,
+            onDismiss = { scope.launch { sheetState.hide() } }
+        )
     }
 
     LaunchedEffect(sort) {

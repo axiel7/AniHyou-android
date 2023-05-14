@@ -74,7 +74,7 @@ fun EditMediaSheet(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val datePickerState = rememberDatePickerState()
-    val viewModel: EditMediaViewModel = viewModel {
+    val viewModel: EditMediaViewModel = viewModel(key = "${mediaDetails.id}") {
         EditMediaViewModel(
             mediaDetails = mediaDetails,
             listEntry = listEntry

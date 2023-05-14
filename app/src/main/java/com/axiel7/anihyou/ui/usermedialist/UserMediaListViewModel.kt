@@ -47,4 +47,6 @@ class UserMediaListViewModel(
         mediaList.clear()
         getUserList()
     }
+
+    var selectedItem: UserMediaListQuery.MediaList? = null
 }

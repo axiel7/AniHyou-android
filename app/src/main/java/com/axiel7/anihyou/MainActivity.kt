@@ -38,6 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.get
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
@@ -164,7 +165,13 @@ fun MainView(
                     UserMediaListHostView(
                         mediaType = MediaType.ANIME,
                         navigateToDetails = { id ->
-                            navController.navigate("details/$id")
+                            navController.navigate("details/$id") {
+                                popUpTo(navController.graph[BottomDestination.AnimeList.route].id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                     )
                 }
@@ -177,7 +184,13 @@ fun MainView(
                     UserMediaListHostView(
                         mediaType = MediaType.MANGA,
                         navigateToDetails = { id ->
-                            navController.navigate("details/$id")
+                            navController.navigate("details/$id") {
+                                popUpTo(navController.graph[BottomDestination.MangaList.route].id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                     )
                 }
