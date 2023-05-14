@@ -95,4 +95,7 @@
     <string name="repeat_count">Repeat Count</string>
     <string name="delete">Delete</string>
     <string name="delete_confirmation">Are you sure you want to delete this entry?</string>
+    <string name="tags">Tags</string>
+    <string name="show_spoiler">Show Spoiler</string>
+    <string name="hide_spoiler">Hide Spoiler</string>
 </resources>

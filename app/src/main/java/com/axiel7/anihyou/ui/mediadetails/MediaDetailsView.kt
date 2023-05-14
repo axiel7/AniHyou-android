@@ -8,7 +8,10 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +23,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -60,11 +65,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.duration
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_WIDTH
@@ -440,10 +443,13 @@ fun MediaDetailsView(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MediaInformationView(
     viewModel: MediaDetailsViewModel
 ) {
+    var showSpoiler by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -491,6 +497,40 @@ fun MediaInformationView(
             title = stringResource(R.string.native_title),
             info = viewModel.mediaDetails?.title?.native
         )
+
+        // Tags
+        InfoTitle(
+            text = stringResource(R.string.tags),
+            trailingIcon = {
+                TextButton(onClick = { showSpoiler = !showSpoiler }) {
+                    Text(text = stringResource(
+                        if (showSpoiler) R.string.hide_spoiler else R.string.show_spoiler)
+                    )
+                }
+            }
+        )
+        FlowRow {
+            viewModel.mediaDetails?.tags?.forEach { tag ->
+                if (tag != null && (showSpoiler || tag.isMediaSpoiler == false)) {
+                    if (tag.isMediaSpoiler == false) {
+                        ElevatedAssistChip(
+                            onClick = { },
+                            label = { Text(text = tag.name) },
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            leadingIcon = { Text(text = "${tag.rank}%") }
+                        )
+                    }
+                    else {
+                        AssistChip(
+                            onClick = { },
+                            label = { Text(text = tag.name) },
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            leadingIcon = { Text(text = "${tag.rank}%") }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -518,13 +558,24 @@ fun MediaInfoItemView(
 }
 
 @Composable
-fun InfoTitle(text: String) {
-    Text(
-        text = text,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Bold
-    )
+fun InfoTitle(
+    text: String,
+    trailingIcon: @Composable RowScope.() -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        trailingIcon()
+    }
 }
 
 @Preview
