@@ -13,10 +13,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Surface
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -196,11 +196,11 @@ fun UserMediaListView(
 @Composable
 fun UserMediaListViewPreview() {
     AniHyouTheme {
-        UserMediaListView(
-            mediaType = MediaType.ANIME,
-            status = MediaListStatus.CURRENT,
-            sort = MediaListSort.MEDIA_TITLE_ROMAJI_DESC,
-            navigateToDetails = { }
-        )
+        Surface {
+            UserMediaListHostView(
+                mediaType = MediaType.ANIME,
+                navigateToDetails = {}
+            )
+        }
     }
 }
