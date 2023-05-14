@@ -1,6 +1,6 @@
 query MediaDetails($mediaId: Int) {
   Media(id: $mediaId) {
-    id
+    ...BasicMediaDetails
     title {
       userPreferred
       romaji
@@ -18,10 +18,7 @@ query MediaDetails($mediaId: Int) {
     }
     season
     seasonYear
-    episodes
     duration
-    chapters
-    volumes
     coverImage {
       large
       extraLarge
@@ -39,7 +36,6 @@ query MediaDetails($mediaId: Int) {
       }
     }
     favourites
-    type
     nextAiringEpisode {
       timeUntilAiring
       episode
@@ -84,4 +80,15 @@ fragment FuzzyDate on FuzzyDate {
   day
   month
   year
+}
+
+fragment BasicMediaDetails on Media {
+  id
+  title {
+    userPreferred
+  }
+  episodes
+  chapters
+  volumes
+  type
 }

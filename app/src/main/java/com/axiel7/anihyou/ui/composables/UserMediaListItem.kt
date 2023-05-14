@@ -30,6 +30,10 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.calculateProgressBarValue
+import com.axiel7.anihyou.data.model.duration
+import com.axiel7.anihyou.data.model.isAnime
+import com.axiel7.anihyou.data.model.isManga
+import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaStatus
@@ -74,7 +78,7 @@ fun StandardUserMediaListItem(
             ) {
                 Column {
                     Text(
-                        text = item.media?.title?.userPreferred ?: "",
+                        text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         color = MaterialTheme.colorScheme.onSurface,
@@ -93,16 +97,9 @@ fun StandardUserMediaListItem(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
-                        if (item.media?.type == MediaType.ANIME) {
-                            Text(
-                                text = "${item.basicMediaListEntry.progress ?: 0}/${item.media.episodes ?: 0}",
-                            )
-                        } else if (item.media?.type == MediaType.MANGA) {
-                            //TODO: show volumes when apply
-                            Text(
-                                text = "${item.basicMediaListEntry.progress ?: 0}/${item.media.chapters ?: 0}",
-                            )
-                        }
+                        Text(
+                            text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                        )
 
                         if (item.basicMediaListEntry.status == MediaListStatus.CURRENT
                             || item.basicMediaListEntry.status == MediaListStatus.REPEATING
@@ -157,16 +154,18 @@ fun UserMediaListItemPreview() {
         __typename = "",
         mediaId = 1,
         media = UserMediaListQuery.Media(
-            title = UserMediaListQuery.Title(
-                userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"
-            ),
-            episodes = 12,
-            chapters = null,
-            volumes = null,
+            __typename = "",
             coverImage = null,
             nextAiringEpisode = null,
             status = MediaStatus.RELEASING,
-            type = MediaType.ANIME
+            basicMediaDetails = BasicMediaDetails(
+                id = 1,
+                title = BasicMediaDetails.Title(userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"),
+                episodes = 12,
+                chapters = null,
+                volumes = null,
+                type = MediaType.ANIME
+            )
         ),
         basicMediaListEntry = BasicMediaListEntry(
             id = 1,

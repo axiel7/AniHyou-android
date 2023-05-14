@@ -9,13 +9,16 @@ import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.FuzzyDateInput
 import com.axiel7.anihyou.type.MediaSeason
+import java.time.DateTimeException
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.temporal.TemporalAdjusters
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -29,6 +32,14 @@ object DateUtils {
     fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
     fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate = with(TemporalAdjusters.nextOrSame(dayOfWeek))
+
+    fun LocalDate?.toLocalized(
+        style: FormatStyle = FormatStyle.MEDIUM
+    ): String = try {
+        this?.format(DateTimeFormatter.ofLocalizedDate(style)) ?: ""
+    } catch (e: DateTimeException) {
+        ""
+    }
 
     fun LocalDateTime.toCalendar(): GregorianCalendar = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
@@ -137,6 +148,17 @@ object DateUtils {
     )
 
     fun Long.timestampIntervalSinceNow() = (System.nanoTime() - this).absoluteValue
+
+    /**
+     * @return the date in LocalDate, null if fails
+     */
+    fun Long.millisToLocalDate(): LocalDate? {
+        return try {
+            Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     @Composable
     fun FuzzyDate.formatted(): String = when {

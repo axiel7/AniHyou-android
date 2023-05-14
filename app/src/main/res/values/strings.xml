@@ -88,4 +88,11 @@
     <string name="romaji">Romaji</string>
     <string name="english">English</string>
     <string name="native_title">Native</string>
+    <string name="save">Save</string>
+    <string name="episodes">Episodes</string>
+    <string name="chapters">Chapters</string>
+    <string name="volumes">Volumes</string>
+    <string name="repeat_count">Repeat Count</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirmation">Are you sure you want to delete this entry?</string>
 </resources>

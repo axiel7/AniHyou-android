@@ -60,7 +60,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.duration
 import com.axiel7.anihyou.data.model.durationText
+import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
@@ -158,7 +160,9 @@ fun MediaDetailsView(
                     contentDescription = "edit"
                 )
                 Text(
-                    text = stringResource(if (isNewEntry) R.string.add else R.string.edit),
+                    text = if (isNewEntry) stringResource(R.string.add)
+                    else viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry?.status?.localized()
+                        ?: stringResource(R.string.edit),
                     modifier = Modifier.padding(start = 16.dp, end = 8.dp)
                 )
             }
@@ -239,14 +243,15 @@ fun MediaDetailsView(
                     )
                     TextIconHorizontal(
                         text = viewModel.mediaDetails?.format?.localized() ?: "Loading",
-                        icon = if (viewModel.mediaDetails?.type == MediaType.ANIME) R.drawable.live_tv_24
+                        icon = if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true)
+                            R.drawable.live_tv_24
                         else R.drawable.book_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
                             .defaultPlaceholder(visible = viewModel.isLoading)
                     )
                     TextIconHorizontal(
-                        text = viewModel.mediaDetails?.durationText() ?: UNKNOWN_CHAR,
+                        text = viewModel.mediaDetails?.basicMediaDetails?.durationText() ?: UNKNOWN_CHAR,
                         icon = R.drawable.timer_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
@@ -421,6 +426,15 @@ fun MediaDetailsView(
         }//: Column
     }//: Scaffold
 
+    if (sheetState.isVisible && viewModel.mediaDetails != null) {
+        EditMediaSheet(
+            sheetState = sheetState,
+            mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
+            listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
+            onDismiss = { scope.launch { sheetState.hide() } }
+        )
+    }
+
     LaunchedEffect(mediaId) {
         viewModel.getDetails(mediaId)
     }
@@ -447,7 +461,7 @@ fun MediaInformationView(
             title = stringResource(R.string.end_date),
             info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted()
         )
-        if (viewModel.mediaDetails?.type == MediaType.ANIME) {
+        if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true) {
             MediaInfoItemView(
                 title = stringResource(R.string.season),
                 info = "${viewModel.mediaDetails?.season?.localized()} ${viewModel.mediaDetails?.seasonYear}"

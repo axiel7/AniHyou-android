@@ -4,12 +4,7 @@ query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $
       ...BasicMediaListEntry
       mediaId
       media {
-        title {
-          userPreferred
-        }
-        episodes
-        chapters
-        volumes
+        ...BasicMediaDetails
         coverImage {
           large
           color
@@ -19,7 +14,6 @@ query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $
           timeUntilAiring
         }
         status
-        type
       }
     }
     pageInfo {
