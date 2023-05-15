@@ -50,5 +50,14 @@ sealed class BottomDestination(
             Explore.route -> 4
             else -> null
         }
+
+        fun Int.toBottomDestinationRoute() = when (this) {
+            0 -> Home.route
+            1 -> AnimeList.route
+            2 -> MangaList.route
+            3 -> Profile.route
+            4 -> Explore.route
+            else -> Home.route
+        }
     }
 }

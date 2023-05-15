@@ -98,4 +98,8 @@
     <string name="tags">Tags</string>
     <string name="show_spoiler">Show Spoiler</string>
     <string name="hide_spoiler">Hide Spoiler</string>
+    <string name="anime_manga_and_more">Anime, Manga, and More</string>
+    <string name="characters">Characters</string>
+    <string name="staff">Staff</string>
+    <string name="users">Users</string>
 </resources>

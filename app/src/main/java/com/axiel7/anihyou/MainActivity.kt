@@ -52,6 +52,8 @@ import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
+import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.ui.explore.ExploreView
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
@@ -142,12 +144,7 @@ fun MainView(
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = when (lastTabOpened) {
-                1 -> BottomDestination.AnimeList.route
-                2 -> BottomDestination.MangaList.route
-                3 -> BottomDestination.Explore.route
-                else -> BottomDestination.Home.route
-            },
+            startDestination = lastTabOpened.toBottomDestinationRoute(),
             modifier = Modifier.padding(padding)
         ) {
             composable(BottomDestination.Home.route) {
@@ -205,7 +202,11 @@ fun MainView(
             }
 
             composable(BottomDestination.Explore.route) {
-                Text(text = "Explore")
+                ExploreView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
             composable(MEDIA_DETAILS_DESTINATION,
