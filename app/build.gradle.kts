@@ -122,6 +122,7 @@ dependencies {
 }
 
 apollo {
+    generateSourcesDuringGradleSync.set(false)
     service("service") {
         packageName.set("com.axiel7.anihyou")
     }
