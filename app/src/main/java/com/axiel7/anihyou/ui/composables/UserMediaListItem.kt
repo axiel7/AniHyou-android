@@ -45,6 +45,7 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 @Composable
 fun StandardUserMediaListItem(
     item: UserMediaListQuery.MediaList,
+    status: MediaListStatus,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -101,9 +102,8 @@ fun StandardUserMediaListItem(
                             text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
                         )
 
-                        if (item.basicMediaListEntry.status == MediaListStatus.CURRENT
-                            || item.basicMediaListEntry.status == MediaListStatus.REPEATING
-                            ) {
+                        if (status == MediaListStatus.CURRENT
+                            || status == MediaListStatus.REPEATING) {
                             FilledTonalButton(onClick = onClickPlus) {
                                 Text(text = "+1")
                             }
@@ -183,6 +183,7 @@ fun UserMediaListItemPreview() {
             items(3) {
                 StandardUserMediaListItem(
                     item = exampleItem,
+                    status = MediaListStatus.CURRENT,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { }

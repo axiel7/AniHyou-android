@@ -184,6 +184,7 @@ fun UserMediaListView(
             ) { item ->
                 StandardUserMediaListItem(
                     item = item,
+                    status = status,
                     onClick = { navigateToDetails(item.mediaId) },
                     onLongClick = {
                         viewModel.selectedItem = item
