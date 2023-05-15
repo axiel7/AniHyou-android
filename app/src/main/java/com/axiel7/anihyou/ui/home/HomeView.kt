@@ -78,7 +78,9 @@ fun HomeView(
                         subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
                         imageUrl = item.media?.coverImage?.large,
                         score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
-                        onClick = { }
+                        onClick = {
+                            navigateToDetails(item.media!!.id)
+                        }
                     )
                 }
             }
