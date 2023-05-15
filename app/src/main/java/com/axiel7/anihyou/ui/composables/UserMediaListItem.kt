@@ -31,8 +31,6 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.duration
-import com.axiel7.anihyou.data.model.isAnime
-import com.axiel7.anihyou.data.model.isManga
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus

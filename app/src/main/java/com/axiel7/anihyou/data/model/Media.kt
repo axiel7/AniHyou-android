@@ -2,7 +2,6 @@ package com.axiel7.anihyou.data.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.type.MediaType

@@ -3,8 +3,6 @@ package com.axiel7.anihyou
 import android.app.Application
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import coil.ImageLoader
-import coil.ImageLoaderFactory
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.type.MediaListSort
 
