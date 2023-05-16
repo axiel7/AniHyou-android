@@ -205,6 +205,15 @@ fun MainView(
                 ExploreView(
                     navigateBack = {
                         navController.popBackStack()
+                    },
+                    navigateToMediaDetails = {
+                        navController.navigate("details/$id") {
+                            popUpTo(navController.graph[BottomDestination.Explore.route].id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 )
             }

@@ -8,6 +8,7 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
       title {
         userPreferred
       }
+      meanScore
       format
       coverImage {
         large

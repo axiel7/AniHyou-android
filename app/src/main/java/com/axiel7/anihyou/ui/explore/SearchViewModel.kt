@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.explore
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.SearchMediaQuery
@@ -33,6 +32,7 @@ class SearchViewModel : BaseViewModel() {
     var searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
     suspend fun searchMedia(mediaType: MediaType, query: String) {
+        isLoading = true
         val response = SearchMediaQuery(
             page = Optional.present(1),
             perPage = Optional.present(perPage),
@@ -43,7 +43,9 @@ class SearchViewModel : BaseViewModel() {
             tag_in = Optional.absent(),// TODO: search by tags
         ).tryQuery()
 
+        searchedMedia.clear()
         response?.data?.Page?.media?.filterNotNull()?.let { searchedMedia.addAll(it) }
+        isLoading = false
     }
 
     suspend fun searchCharacter(query: String) {

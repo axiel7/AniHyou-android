@@ -102,4 +102,13 @@
     <string name="characters">Characters</string>
     <string name="staff">Staff</string>
     <string name="users">Users</string>
+    <string name="id">Id</string>
+    <string name="title_romaji">Title Romaji</string>
+    <string name="title_english">Title English</string>
+    <string name="title_native">Title Native</string>
+    <string name="sort_type">Type</string>
+    <string name="format">Format</string>
+    <string name="trending">Trending</string>
+    <string name="sort_status">Status</string>
+    <string name="search_match">Search Match</string>
 </resources>
