@@ -193,12 +193,12 @@ fun SearchView(
         }
     }
 
-    LaunchedEffect(viewModel.searchType, performSearch.value) {
-        if (performSearch.value) {
+    LaunchedEffect(performSearch.value, viewModel.searchType, viewModel.mediaSort) {
+        if (performSearch.value && query.isNotBlank()) {
             listState.scrollToItem(0)
             viewModel.runSearch(query)
-            performSearch.value = false
         }
+        performSearch.value = false
     }
 }
 
