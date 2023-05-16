@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,14 +31,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontalPlaceholder
@@ -115,9 +119,98 @@ fun ExploreView(
         }
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
         ) {
+            // Anime
+            Text(
+                text = stringResource(R.string.anime),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Medium
+            )
+            
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.top_100),
+                    icon = R.drawable.star_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+                IconCard(
+                    title = stringResource(R.string.top_popular),
+                    icon = R.drawable.trending_up_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.spring),
+                    icon = R.drawable.local_florist_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+                IconCard(
+                    title = stringResource(R.string.summer),
+                    icon = R.drawable.sunny_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.fall),
+                    icon = R.drawable.rainy_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+                IconCard(
+                    title = stringResource(R.string.winter),
+                    icon = R.drawable.ac_unit_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+            }
 
+            // Manga
+            Text(
+                text = stringResource(R.string.manga),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.top_100),
+                    icon = R.drawable.star_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+                IconCard(
+                    title = stringResource(R.string.top_popular),
+                    icon = R.drawable.trending_up_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+            }
         }
     }
 }
@@ -186,10 +279,10 @@ fun SearchView(
                     )
                 }
             }
-            SearchType.CHARACTER -> { /*TODO*/ }
-            SearchType.STAFF -> { /*TODO*/ }
-            SearchType.STUDIO -> { /*TODO*/ }
-            SearchType.USER -> { /*TODO*/ }
+            SearchType.CHARACTER -> { item { Text(text = "Coming soon") } }
+            SearchType.STAFF -> { item { Text(text = "Coming soon") } }
+            SearchType.STUDIO -> { item { Text(text = "Coming soon") } }
+            SearchType.USER -> { item { Text(text = "Coming soon") } }
         }
     }
 

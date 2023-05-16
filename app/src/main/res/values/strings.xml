@@ -111,4 +111,6 @@
     <string name="trending">Trending</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Search Match</string>
+    <string name="top_100">Top 100</string>
+    <string name="top_popular">Top Popular</string>
 </resources>
