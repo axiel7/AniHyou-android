@@ -1,21 +1,26 @@
 package com.axiel7.anihyou.ui.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,6 +36,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
+    badgeContent: @Composable (RowScope.() -> Unit)? = null,
     score: Int,
     format: MediaFormat,
     year: Int?,
@@ -45,15 +51,34 @@ fun MediaItemHorizontal(
         Row(
             modifier = Modifier.height(MEDIA_POSTER_SMALL_HEIGHT.dp)
         ) {
-            MediaPoster(
-                url = imageUrl,
-                showShadow = false,
+            Box(
                 modifier = Modifier
                     .size(
                         width = MEDIA_POSTER_SMALL_WIDTH.dp,
                         height = MEDIA_POSTER_SMALL_HEIGHT.dp
+                ),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                MediaPoster(
+                    url = imageUrl,
+                    showShadow = false,
+                    modifier = Modifier
+                        .size(
+                            width = MEDIA_POSTER_SMALL_WIDTH.dp,
+                            height = MEDIA_POSTER_SMALL_HEIGHT.dp
+                        )
+                )
+                if (badgeContent != null) {
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(topEnd = 16.dp))
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = badgeContent
                     )
-            )
+                }
+            }
 
             Column(
                 modifier = Modifier
@@ -137,6 +162,7 @@ fun MediaItemHorizontalPreview() {
                 MediaItemHorizontal(
                     title = "This is a very large anime title that should serve as a preview example",
                     imageUrl = null,
+                    badgeContent = { Text(text = "#1") },
                     score = 76,
                     format = MediaFormat.TV,
                     year = 2014,

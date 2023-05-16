@@ -48,12 +48,15 @@ import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.explore.ExploreView
+import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
+import com.axiel7.anihyou.ui.explore.MediaChartListView
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
@@ -203,10 +206,7 @@ fun MainView(
 
             composable(BottomDestination.Explore.route) {
                 ExploreView(
-                    navigateBack = {
-                        navController.popBackStack()
-                    },
-                    navigateToMediaDetails = {
+                    navigateToMediaDetails = { id ->
                         navController.navigate("details/$id") {
                             popUpTo(navController.graph[BottomDestination.Explore.route].id) {
                                 saveState = true
@@ -214,6 +214,9 @@ fun MainView(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    navigateToMediaChart = {
+                        navController.navigate("media_chart/${it.name}")
                     }
                 )
             }
@@ -233,6 +236,30 @@ fun MainView(
                         navController.popBackStack()
                     }
                 )
+            }
+
+            composable(MEDIA_CHART_DESTINATION,
+                arguments = listOf(
+                    navArgument("type") { type = NavType.StringType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getString("type")?.let {
+                    MediaChartListView(
+                        type = ChartType.valueOf(it),
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToMediaDetails = {
+                            navController.navigate("details/$id") {
+                                popUpTo(navController.graph[MEDIA_CHART_DESTINATION].id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
             }
         }
     }

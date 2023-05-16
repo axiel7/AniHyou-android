@@ -69,6 +69,7 @@ import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.ui.composables.MediaPoster
@@ -140,13 +141,7 @@ fun MediaDetailsView(
              TopAppBar(
                  title = {},
                  navigationIcon = {
-                     IconButton(onClick = navigateBack) {
-                         Icon(
-                             painter = painterResource(R.drawable.arrow_back_24),
-                             contentDescription = "back",
-                             tint = Color.White
-                         )
-                     }
+                     BackIconButton(onClick = navigateBack)
                  },
                  colors = TopAppBarDefaults.topAppBarColors(
                      containerColor = Color.Transparent,

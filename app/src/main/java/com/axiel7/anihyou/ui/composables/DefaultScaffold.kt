@@ -20,14 +20,13 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun DefaultScaffoldWithMediumTopAppBar(
     title: String,
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
+    scrollBehavior: TopAppBarScrollBehavior,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        rememberTopAppBarState()
-    )
-
     Scaffold(
-        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
             MediumTopAppBar(
                 title = {
@@ -38,7 +37,8 @@ fun DefaultScaffoldWithMediumTopAppBar(
                         lineHeight = 32.sp
                     )
                 },
-                scrollBehavior = topAppBarScrollBehavior
+                navigationIcon = navigationIcon,
+                scrollBehavior = scrollBehavior
             )
         },
         content = content

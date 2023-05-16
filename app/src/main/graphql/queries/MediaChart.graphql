@@ -12,6 +12,7 @@ query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType
       coverImage {
         large
       }
+      meanScore
     }
     pageInfo {
       hasNextPage

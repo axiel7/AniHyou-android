@@ -17,12 +17,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,19 +47,25 @@ import com.axiel7.anihyou.ui.composables.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
     navigateToDetails: (mediaId: Int) -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel()
     val scrollState = rememberScrollState()
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        rememberTopAppBarState()
+    )
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = stringResource(R.string.home)
+        title = stringResource(R.string.home),
+        scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(
             modifier = Modifier
                 .verticalScroll(state = scrollState)
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .padding(padding)
         ) {
             // Airing

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.localized
@@ -50,10 +51,9 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
-    navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToMediaChart: (ChartType) -> Unit,
 ) {
-    //val viewModel: ExploreViewModel = viewModel()
     var query by remember { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(false) }
     var isSearchActive by remember { mutableStateOf(false) }
@@ -139,14 +139,20 @@ fun ExploreView(
                     icon = R.drawable.star_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.TOP_ANIME)
+                    }
                 )
                 IconCard(
                     title = stringResource(R.string.top_popular),
                     icon = R.drawable.trending_up_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.POPULAR_ANIME)
+                    }
                 )
             }
             Row(
@@ -201,14 +207,20 @@ fun ExploreView(
                     icon = R.drawable.star_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.TOP_MANGA)
+                    }
                 )
                 IconCard(
                     title = stringResource(R.string.top_popular),
                     icon = R.drawable.trending_up_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.POPULAR_MANGA)
+                    }
                 )
             }
         }
@@ -257,12 +269,7 @@ fun SearchView(
         }
         when (viewModel.searchType) {
             SearchType.ANIME, SearchType.MANGA -> {
-                if (viewModel.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
-                else items(
+                items(
                     items = viewModel.searchedMedia,
                     key = { it.id },
                     contentType = { it }
@@ -277,6 +284,11 @@ fun SearchView(
                             navigateToMediaDetails(item.id)
                         }
                     )
+                }
+                if (viewModel.isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
                 }
             }
             SearchType.CHARACTER -> { item { Text(text = "Coming soon") } }
@@ -342,8 +354,8 @@ fun ExploreViewPreview() {
     AniHyouTheme {
         Surface {
             ExploreView(
-                navigateBack = {},
-                navigateToMediaDetails = {}
+                navigateToMediaDetails = {},
+                navigateToMediaChart = {}
             )
         }
     }
