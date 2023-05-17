@@ -11,7 +11,6 @@ android.buildFeatures.buildConfig = true
 android {
     namespace = "com.axiel7.anihyou"
     compileSdk = 33
-    buildToolsVersion = "34.0.0-rc04"
 
     defaultConfig {
         applicationId = "com.axiel7.anihyou"
