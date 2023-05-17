@@ -22,6 +22,8 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
+private val gridHeight = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
+
 @Composable
 fun CharacterStaffView(
     mediaId: Int,
@@ -35,7 +37,7 @@ fun CharacterStaffView(
             InfoTitle(text = stringResource(R.string.staff))
             Box(
                 modifier = Modifier
-                    .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
+                    .height(gridHeight.dp)
             ) {
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
@@ -61,7 +63,7 @@ fun CharacterStaffView(
             InfoTitle(text = stringResource(R.string.characters))
             Box(
                 modifier = Modifier
-                    .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
+                    .height(gridHeight.dp)
             ) {
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
