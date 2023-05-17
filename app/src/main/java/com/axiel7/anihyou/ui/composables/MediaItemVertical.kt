@@ -25,8 +25,8 @@ const val MEDIA_ITEM_VERTICAL_HEIGHT = 200
 
 @Composable
 fun MediaItemVertical(
-    url: String?,
     title: String,
+    imageUrl: String?,
     modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
     onClick: () -> Unit,
@@ -42,7 +42,7 @@ fun MediaItemVertical(
         horizontalAlignment = Alignment.Start
     ) {
         MediaPoster(
-            url = url,
+            url = imageUrl,
             modifier = Modifier
                 .size(
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
@@ -58,7 +58,8 @@ fun MediaItemVertical(
             fontSize = 15.sp,
             lineHeight = 18.sp,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 2
+            maxLines = 2,
+            minLines = 2
         )
 
         if (subtitle != null) {
@@ -105,8 +106,8 @@ fun MediaItemVerticalPreview() {
     AniHyouTheme {
         Surface {
             MediaItemVertical(
-                url = null,
                 title = "This is a very large anime title that should serve as a preview example",
+                imageUrl = null,
                 subtitle = {
                     SmallScoreIndicator(
                         score = "83%",

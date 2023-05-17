@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.ui.composables.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
@@ -50,7 +51,8 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
-    navigateToDetails: (mediaId: Int) -> Unit
+    navigateToDetails: (mediaId: Int) -> Unit,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val scrollState = rememberScrollState()
@@ -97,7 +99,9 @@ fun HomeView(
             // This season
             HorizontalListHeader(
                 text = viewModel.nowAnimeSeason.localized(),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navigateToAnimeSeason(viewModel.nowAnimeSeason)
+                }
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -109,8 +113,8 @@ fun HomeView(
                 }
                 else items(viewModel.thisSeasonAnime) { item ->
                     MediaItemVertical(
-                        url = item.coverImage?.large,
                         title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {
                             item.meanScore?.let { score ->
@@ -137,8 +141,8 @@ fun HomeView(
                 }
                 else items(viewModel.trendingAnime) { item ->
                     MediaItemVertical(
-                        url = item.coverImage?.large,
                         title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {
                             item.meanScore?.let { score ->
@@ -153,7 +157,9 @@ fun HomeView(
             // Next season
             HorizontalListHeader(
                 text = stringResource(R.string.next_season),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navigateToAnimeSeason(viewModel.nextAnimeSeason)
+                }
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -165,8 +171,8 @@ fun HomeView(
                 }
                 else items(viewModel.nextSeasonAnime) { item ->
                     MediaItemVertical(
-                        url = item.coverImage?.large,
                         title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {
                             item.meanScore?.let { score ->
@@ -193,8 +199,8 @@ fun HomeView(
                 }
                 else items(viewModel.trendingManga) { item ->
                     MediaItemVertical(
-                        url = item.coverImage?.large,
                         title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {
                             item.meanScore?.let { score ->
@@ -260,7 +266,8 @@ fun HomeLazyRow(
 fun HomeViewPreview() {
     AniHyouTheme {
         HomeView(
-            navigateToDetails = { }
+            navigateToDetails = { },
+            navigateToAnimeSeason = { }
         )
     }
 }

@@ -48,8 +48,10 @@ import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
@@ -57,6 +59,8 @@ import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinatio
 import com.axiel7.anihyou.ui.explore.ExploreView
 import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.explore.MediaChartListView
+import com.axiel7.anihyou.ui.explore.SEASON_ANIME_DESTINATION
+import com.axiel7.anihyou.ui.explore.SeasonAnimeView
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
@@ -154,6 +158,9 @@ fun MainView(
                 HomeView(
                     navigateToDetails = { id ->
                         navController.navigate("details/$id")
+                    },
+                    navigateToAnimeSeason = { animeSeason ->
+                        navController.navigate("season/${animeSeason.year}/${animeSeason.season.name}")
                     }
                 )
             }
@@ -217,6 +224,9 @@ fun MainView(
                     },
                     navigateToMediaChart = {
                         navController.navigate("media_chart/${it.name}")
+                    },
+                    navigateToAnimeSeason = { year, season ->
+                        navController.navigate("season/$year/$season")
                     }
                 )
             }
@@ -259,6 +269,36 @@ fun MainView(
                             }
                         }
                     )
+                }
+            }
+
+            composable(SEASON_ANIME_DESTINATION,
+                arguments = listOf(
+                    navArgument("season") { type = NavType.StringType },
+                    navArgument("year") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getString("season")?.let {  season ->
+                    navEntry.arguments?.getInt("year")?.let { year ->
+                        SeasonAnimeView(
+                            initialSeason = AnimeSeason(
+                                year = year,
+                                season = MediaSeason.valueOf(season)
+                            ),
+                            navigateBack = {
+                                navController.popBackStack()
+                            },
+                            navigateToMediaDetails = { id ->
+                                navController.navigate("details/$id") {
+                                    popUpTo(navController.graph[SEASON_ANIME_DESTINATION].id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }

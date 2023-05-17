@@ -42,17 +42,20 @@ import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
+    navigateToAnimeSeason: (year: Int, season: String) -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(false) }
@@ -163,14 +166,20 @@ fun ExploreView(
                     icon = R.drawable.local_florist_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.SPRING.name)
+                    }
                 )
                 IconCard(
                     title = stringResource(R.string.summer),
                     icon = R.drawable.sunny_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.SUMMER.name)
+                    }
                 )
             }
             Row(
@@ -181,14 +190,20 @@ fun ExploreView(
                     icon = R.drawable.rainy_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.FALL.name)
+                    }
                 )
                 IconCard(
                     title = stringResource(R.string.winter),
                     icon = R.drawable.ac_unit_24,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.WINTER.name)
+                    }
                 )
             }
 
@@ -355,7 +370,8 @@ fun ExploreViewPreview() {
         Surface {
             ExploreView(
                 navigateToMediaDetails = {},
-                navigateToMediaChart = {}
+                navigateToMediaChart = {},
+                navigateToAnimeSeason = { _, _ -> }
             )
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 fun DefaultScaffoldWithMediumTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
+    floatingActionButton: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior,
     content: @Composable (PaddingValues) -> Unit
@@ -38,6 +39,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
                 scrollBehavior = scrollBehavior
             )
         },
+        floatingActionButton = floatingActionButton,
         content = content
     )
 }
