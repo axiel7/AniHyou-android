@@ -135,4 +135,5 @@
     <string name="relation_compilation">Compilation</string>
     <string name="relation_contains">Contains</string>
     <string name="recommendations">Recommendations</string>
+    <string name="settings">Settings</string>
 </resources>

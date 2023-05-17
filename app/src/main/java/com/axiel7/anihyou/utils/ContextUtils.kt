@@ -23,8 +23,12 @@ object ContextUtils {
         message?.let { Toast.makeText(this, message, Toast.LENGTH_SHORT) }
 
     fun Context.openActionView(url: String) {
+        openActionView(Uri.parse(url))
+    }
+
+    fun Context.openActionView(uri: Uri) {
         try {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            Intent(Intent.ACTION_VIEW, uri).apply {
                 startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {

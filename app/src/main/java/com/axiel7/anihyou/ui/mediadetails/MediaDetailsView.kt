@@ -3,26 +3,20 @@ package com.axiel7.anihyou.ui.mediadetails
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
@@ -33,8 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -52,11 +44,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -66,23 +55,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
-import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
+import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
+import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.VerticalDivider
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.ui.theme.banner_shadow_color
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.ContextUtils.getCurrentLanguageTag
@@ -125,12 +113,6 @@ fun MediaDetailsView(
     )
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val pagerState = rememberPagerState()
-    val isPagerScrolling by remember {
-        derivedStateOf {
-            pagerState.currentPageOffsetFraction != 0f
-        }
-    }
 
     var maxLinesSynopsis by remember { mutableStateOf(5) }
     val iconExpand by remember {
@@ -182,42 +164,11 @@ fun MediaDetailsView(
                 .padding(bottom = 88.dp)
         ) {
             // Banner
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(padding.calculateTopPadding() + 80.dp)
-                    .padding(bottom = 16.dp),
-                contentAlignment = Alignment.TopStart
-            ) {
-                if (viewModel.mediaDetails?.bannerImage != null) {
-                    AsyncImage(
-                        model = viewModel.mediaDetails?.bannerImage,
-                        contentDescription = "banner",
-                        placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .background(
-                                color = if (viewModel.mediaDetails?.coverImage?.color != null)
-                                    colorFromHex(viewModel.mediaDetails?.coverImage?.color!!)
-                                else MaterialTheme.colorScheme.outline
-                            )
-                            .fillMaxSize()
-                    )
-                }
-                //top shadow
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(banner_shadow_color, MaterialTheme.colorScheme.surface)
-                        )
-                    )
-                )
-            }
+            TopBannerView(
+                imageUrl = viewModel.mediaDetails?.bannerImage,
+                fallbackColor = colorFromHex(viewModel.mediaDetails?.coverImage?.color),
+                height = padding.calculateTopPadding() + 80.dp
+            )
 
             // Poster and basic info
             Row {
@@ -400,53 +351,29 @@ fun MediaDetailsView(
             }
 
             // Other info
-            ScrollableTabRow(
-                selectedTabIndex = pagerState.currentPage,
-                edgePadding = 16.dp,
-                indicator = { tabPositions ->
-                    RoundedTabRowIndicator(tabPositions[pagerState.currentPage])
-                }
+            DefaultTabRowWithPager(
+                tabs = DetailsType.tabRows
             ) {
-                DetailsType.tabRows.forEachIndexed { index, item ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                        icon = { Icon(painter = painterResource(item.icon!!), contentDescription = item.value.name) },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                when (DetailsType.tabRows[it].value) {
+                    DetailsType.INFO ->
+                        MediaInformationView(
+                            viewModel = viewModel
+                        )
+                    DetailsType.STAFF_CHARACTERS ->
+                        CharacterStaffView(
+                            mediaId = mediaId,
+                            viewModel = viewModel
+                        )
+                    DetailsType.RELATIONS ->
+                        MediaRelationsView(
+                            mediaId = mediaId,
+                            viewModel = viewModel,
+                            navigateToDetails = navigateToMediaDetails
+                        )
+                    DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
+                    DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
                 }
-            }//: TabRow
-
-            HorizontalPager(
-                pageCount = DetailsType.tabRows.size,
-                state = pagerState,
-                key = { DetailsType.tabRows[it].value }
-            ) {
-                Column(
-                    // workaround for this bug https://github.com/google/accompanist/issues/1050
-                    modifier = if (isPagerScrolling) Modifier.height(500.dp) else Modifier
-                ) {
-                    when (DetailsType.tabRows[it].value) {
-                        DetailsType.INFO ->
-                            MediaInformationView(
-                                viewModel = viewModel
-                            )
-                        DetailsType.STAFF_CHARACTERS ->
-                            CharacterStaffView(
-                                mediaId = mediaId,
-                                viewModel = viewModel
-                            )
-                        DetailsType.RELATIONS ->
-                            MediaRelationsView(
-                                mediaId = mediaId,
-                                viewModel = viewModel,
-                                navigateToDetails = navigateToMediaDetails
-                            )
-                        DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
-                        DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
-                    }
-                }
-            }//: Pager
+            }
         }//: Column
     }//: Scaffold
 

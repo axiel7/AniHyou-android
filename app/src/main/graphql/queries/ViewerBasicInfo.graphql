@@ -11,7 +11,7 @@ fragment UserInfo on User {
     large
   }
   bannerImage
-  about
+  about(asHtml: true)
   options {
     profileColor
     staffNameLanguage

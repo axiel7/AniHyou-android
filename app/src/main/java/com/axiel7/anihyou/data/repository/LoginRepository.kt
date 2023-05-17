@@ -43,4 +43,13 @@ object LoginRepository {
             }
         }
     }
+
+    suspend fun removeUserInfo() {
+        App.dataStore.edit {
+            it.remove(ACCESS_TOKEN_PREFERENCE_KEY)
+            it.remove(USER_ID_PREFERENCE_KEY)
+            it.remove(PROFILE_COLOR_PREFERENCE_KEY)
+            it.remove(SCORE_FORMAT_PREFERENCE_KEY)
+        }
+    }
 }
