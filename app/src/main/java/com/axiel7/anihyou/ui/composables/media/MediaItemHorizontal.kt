@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.composables.media
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,6 @@ import com.axiel7.anihyou.ui.composables.SmallScoreIndicator
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaItemHorizontal(
     title: String,
@@ -42,81 +42,78 @@ fun MediaItemHorizontal(
     year: Int?,
     onClick: () -> Unit,
 ) {
-    OutlinedCard(
-        onClick = onClick,
+    Row(
         modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .padding(8.dp)
+            .height(MEDIA_POSTER_SMALL_HEIGHT.dp)
+            .clickable(onClick = onClick)
     ) {
-        Row(
-            modifier = Modifier.height(MEDIA_POSTER_SMALL_HEIGHT.dp)
+        Box(
+            modifier = Modifier
+                .size(
+                    width = MEDIA_POSTER_SMALL_WIDTH.dp,
+                    height = MEDIA_POSTER_SMALL_HEIGHT.dp
+            ),
+            contentAlignment = Alignment.BottomStart
         ) {
-            Box(
+            MediaPoster(
+                url = imageUrl,
+                showShadow = false,
                 modifier = Modifier
                     .size(
                         width = MEDIA_POSTER_SMALL_WIDTH.dp,
                         height = MEDIA_POSTER_SMALL_HEIGHT.dp
-                ),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                MediaPoster(
-                    url = imageUrl,
-                    showShadow = false,
-                    modifier = Modifier
-                        .size(
-                            width = MEDIA_POSTER_SMALL_WIDTH.dp,
-                            height = MEDIA_POSTER_SMALL_HEIGHT.dp
-                        )
-                )
-                if (badgeContent != null) {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(topEnd = 16.dp))
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        content = badgeContent
                     )
-                }
+            )
+            if (badgeContent != null) {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = badgeContent
+                )
             }
+        }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 17.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 17.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
 
-                Text(
-                    text = buildString {
-                        append(format.localized())
-                        if (year != null) append(" · $year")
-                    },
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                SmallScoreIndicator(
-                    score = "$score%",
-                    fontSize = 15.sp
-                )
+            Text(
+                text = buildString {
+                    append(format.localized())
+                    if (year != null) append(" · $year")
+                },
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            SmallScoreIndicator(
+                score = "$score%",
+                fontSize = 15.sp
+            )
 
-            }//: Column
-        }//: Row
-    }//: Card
+        }//: Column
+    }//: Row
 }
 
 @Composable
 fun MediaItemHorizontalPlaceholder() {
     Row(
         modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .padding(8.dp)
             .height(MEDIA_POSTER_SMALL_HEIGHT.dp)
     ) {
         Box(
