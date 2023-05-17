@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables
+package com.axiel7.anihyou.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable

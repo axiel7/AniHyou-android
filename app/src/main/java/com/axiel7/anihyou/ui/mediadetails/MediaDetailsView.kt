@@ -70,9 +70,9 @@ import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
-import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_HEIGHT
-import com.axiel7.anihyou.ui.composables.MEDIA_POSTER_BIG_WIDTH
-import com.axiel7.anihyou.ui.composables.MediaPoster
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
+import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical

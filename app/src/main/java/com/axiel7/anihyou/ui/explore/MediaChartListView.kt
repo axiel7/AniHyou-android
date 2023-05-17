@@ -21,8 +21,8 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
-import com.axiel7.anihyou.ui.composables.MediaItemHorizontal
-import com.axiel7.anihyou.ui.composables.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 

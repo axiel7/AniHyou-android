@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables
+package com.axiel7.anihyou.ui.composables.media
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.ui.composables.SmallScoreIndicator
+import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

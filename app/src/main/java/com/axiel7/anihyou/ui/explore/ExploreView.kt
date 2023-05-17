@@ -40,13 +40,12 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
-import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
-import com.axiel7.anihyou.ui.composables.MediaItemHorizontal
-import com.axiel7.anihyou.ui.composables.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
