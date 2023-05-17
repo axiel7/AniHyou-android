@@ -414,8 +414,15 @@ fun MediaDetailsView(
                 key = { DetailsType.tabRows[it].value }
             ) {
                 when (DetailsType.tabRows[it].value) {
-                    DetailsType.INFO -> MediaInformationView(viewModel = viewModel)
-                    DetailsType.STAFF_CHARACTERS -> CharacterStaffView(viewModel = viewModel)
+                    DetailsType.INFO ->
+                        MediaInformationView(
+                            viewModel = viewModel
+                        )
+                    DetailsType.STAFF_CHARACTERS ->
+                        CharacterStaffView(
+                            mediaId = mediaId,
+                            viewModel = viewModel
+                        )
                     DetailsType.RELATIONS -> MediaRelationsView(viewModel = viewModel)
                     DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
                     DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
