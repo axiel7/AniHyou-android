@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Surface
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -19,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,8 +42,8 @@ import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaFormat
-import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

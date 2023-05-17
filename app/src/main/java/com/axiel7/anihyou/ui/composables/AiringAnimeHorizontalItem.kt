@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -106,12 +107,14 @@ fun AiringAnimeHorizontalItemPlaceholder() {
 @Composable
 fun AiringAnimeHorizontalItemPreview() {
     AniHyouTheme {
-        AiringAnimeHorizontalItem(
-            title = "Kimetsu no Yaiba: Katanakaji no Sato-hen",
-            subtitle = "Airing in 12 min",
-            imageUrl = null,
-            score = "79%",
-            onClick = { }
-        )
+        Surface {
+            AiringAnimeHorizontalItem(
+                title = "Kimetsu no Yaiba: Katanakaji no Sato-hen",
+                subtitle = "Airing in 12 min",
+                imageUrl = null,
+                score = "79%",
+                onClick = { }
+            )
+        }
     }
 }

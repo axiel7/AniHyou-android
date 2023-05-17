@@ -16,6 +16,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -177,15 +178,17 @@ fun UserMediaListItemPreview() {
         )
     )
     AniHyouTheme {
-        LazyColumn {
-            items(3) {
-                StandardUserMediaListItem(
-                    item = exampleItem,
-                    status = MediaListStatus.CURRENT,
-                    onClick = { },
-                    onLongClick = { },
-                    onClickPlus = { }
-                )
+        Surface {
+            LazyColumn {
+                items(3) {
+                    StandardUserMediaListItem(
+                        item = exampleItem,
+                        status = MediaListStatus.CURRENT,
+                        onClick = { },
+                        onLongClick = { },
+                        onClickPlus = { }
+                    )
+                }
             }
         }
     }
