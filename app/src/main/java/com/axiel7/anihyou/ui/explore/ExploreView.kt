@@ -238,8 +238,8 @@ fun ExploreView(
                     }
                 )
             }
-        }
-    }
+        }//: Column
+    }//: Scaffold
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -279,7 +279,10 @@ fun SearchView(
                 }
             }
             if (viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA) {
-                MediaSearchSortChip(viewModel = viewModel)
+                MediaSearchSortChip(
+                    viewModel = viewModel,
+                    performSearch = performSearch
+                )
             }
         }
         when (viewModel.searchType) {
@@ -313,26 +316,33 @@ fun SearchView(
         }
     }
 
-    LaunchedEffect(performSearch.value, viewModel.searchType, viewModel.mediaSort) {
-        if (performSearch.value && query.isNotBlank()) {
-            listState.scrollToItem(0)
-            viewModel.runSearch(query)
+    LaunchedEffect(performSearch.value, viewModel.searchType) {
+        if (performSearch.value) {
+            if (query.isNotBlank()) {
+                listState.scrollToItem(0)
+                viewModel.runSearch(query)
+            }
+            performSearch.value = false
         }
-        performSearch.value = false
     }
 }
 
 @Composable
 fun MediaSearchSortChip(
-    viewModel: SearchViewModel
+    viewModel: SearchViewModel,
+    performSearch: MutableState<Boolean>,
 ) {
     var openDialog by remember { mutableStateOf(false) }
+    var selectedSort by remember {
+        mutableStateOf(MediaSortSearch.valueOf(viewModel.mediaSort) ?: MediaSortSearch.SEARCH_MATCH)
+    }
+    var isDescending by remember { mutableStateOf(true) }
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AssistChip(
             onClick = { openDialog = !openDialog },
-            label = { Text(text = viewModel.mediaSort.localized()) },
+            label = { Text(text = selectedSort.localized()) },
             modifier = Modifier.padding(8.dp),
             leadingIcon = {
                 Icon(
@@ -348,15 +358,32 @@ fun MediaSearchSortChip(
                 )
             }
         )
+
+        AssistChip(
+            onClick = {
+                isDescending = !isDescending
+                viewModel.mediaSort = if (isDescending) selectedSort.desc else selectedSort.asc
+                performSearch.value = true
+            },
+            label = {
+                Text(
+                    text = if (isDescending) stringResource(R.string.descending)
+                    else stringResource(R.string.ascending)
+                )
+            },
+            modifier = Modifier.padding(8.dp),
+        )
     }
     if (openDialog) {
         DialogWithRadioSelection(
             values = MediaSortSearch.values(),
-            defaultValue = MediaSortSearch.valueOf(viewModel.mediaSort),
+            defaultValue = selectedSort,
             title = stringResource(R.string.sort),
             onConfirm = {
-                viewModel.mediaSort = it.value
+                selectedSort = it
+                viewModel.mediaSort = if (isDescending) it.desc else it.asc
                 openDialog = false
+                performSearch.value = true
             },
             onDismiss = { openDialog = false }
         )

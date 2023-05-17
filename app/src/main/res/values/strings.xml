@@ -114,4 +114,7 @@
     <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popular</string>
     <string name="apply">Apply</string>
+    <string name="sort_default">Default</string>
+    <string name="descending">Descending</string>
+    <string name="ascending">Ascending</string>
 </resources>

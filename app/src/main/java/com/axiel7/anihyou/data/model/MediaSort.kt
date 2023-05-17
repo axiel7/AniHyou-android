@@ -49,28 +49,49 @@ fun MediaSort.localized() = when (this) {
 }
 
 enum class MediaSortSearch(
-    val value: MediaSort
+    val asc: MediaSort,
+    val desc: MediaSort
 ): Localizable {
-    SEARCH_MATCH(MediaSort.SEARCH_MATCH) {
-        @Composable override fun localized() = value.localized()
+    SEARCH_MATCH(
+        asc = MediaSort.SEARCH_MATCH,
+        desc = MediaSort.SEARCH_MATCH,
+    ) {
+        @Composable override fun localized() = stringResource(R.string.sort_default)
     },
-    POPULARITY(MediaSort.POPULARITY_DESC) {
-        @Composable override fun localized() = value.localized()
+    POPULARITY(
+        asc = MediaSort.POPULARITY,
+        desc = MediaSort.POPULARITY_DESC,
+    ) {
+        @Composable override fun localized() = asc.localized()
     },
-    SCORE(MediaSort.SCORE_DESC) {
-        @Composable override fun localized() = value.localized()
+    SCORE(
+        asc = MediaSort.SCORE,
+        desc = MediaSort.SCORE_DESC,
+    ) {
+        @Composable override fun localized() = asc.localized()
     },
-    TRENDING(MediaSort.TRENDING_DESC) {
-        @Composable override fun localized() = value.localized()
+    TRENDING(
+        asc = MediaSort.TRENDING,
+        desc = MediaSort.TRENDING_DESC,
+    ) {
+        @Composable override fun localized() = asc.localized()
     },
-    FAVOURITES(MediaSort.FAVOURITES_DESC) {
-        @Composable override fun localized() = value.localized()
+    FAVOURITES(
+        asc = MediaSort.FAVOURITES,
+        desc = MediaSort.FAVOURITES_DESC,
+    ) {
+        @Composable override fun localized() = asc.localized()
     },
-    START_DATE(MediaSort.START_DATE_DESC) {
-        @Composable override fun localized() = value.localized()
+    START_DATE(
+        asc = MediaSort.START_DATE,
+        desc = MediaSort.START_DATE_DESC,
+    ) {
+        @Composable override fun localized() = asc.localized()
     };
 
     companion object {
-        fun valueOf(value: MediaSort) = MediaSortSearch.values().find { it.value == value }
+        fun valueOf(value: MediaSort) = MediaSortSearch.values().find {
+            it.desc == value || it.asc == value
+        }
     }
 }
