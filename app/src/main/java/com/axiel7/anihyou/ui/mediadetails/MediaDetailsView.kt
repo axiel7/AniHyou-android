@@ -504,14 +504,16 @@ fun MediaInformationView(
                 }
             }
         )
-        FlowRow {
+        FlowRow(
+            Modifier.padding(horizontal = 8.dp)
+        ) {
             viewModel.mediaDetails?.tags?.forEach { tag ->
                 if (tag != null && (showSpoiler || tag.isMediaSpoiler == false)) {
                     if (tag.isMediaSpoiler == false) {
                         ElevatedAssistChip(
                             onClick = { },
                             label = { Text(text = tag.name) },
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 4.dp),
                             leadingIcon = { Text(text = "${tag.rank}%") }
                         )
                     }
@@ -519,7 +521,7 @@ fun MediaInformationView(
                         AssistChip(
                             onClick = { },
                             label = { Text(text = tag.name) },
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 4.dp),
                             leadingIcon = { Text(text = "${tag.rank}%") }
                         )
                     }
