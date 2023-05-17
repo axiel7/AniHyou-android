@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -125,6 +126,11 @@ fun MediaDetailsView(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     val pagerState = rememberPagerState()
+    val isPagerScrolling by remember {
+        derivedStateOf {
+            pagerState.currentPageOffsetFraction != 0f
+        }
+    }
 
     var maxLinesSynopsis by remember { mutableStateOf(5) }
     val iconExpand by remember {
@@ -416,24 +422,29 @@ fun MediaDetailsView(
                 state = pagerState,
                 key = { DetailsType.tabRows[it].value }
             ) {
-                when (DetailsType.tabRows[it].value) {
-                    DetailsType.INFO ->
-                        MediaInformationView(
-                            viewModel = viewModel
-                        )
-                    DetailsType.STAFF_CHARACTERS ->
-                        CharacterStaffView(
-                            mediaId = mediaId,
-                            viewModel = viewModel
-                        )
-                    DetailsType.RELATIONS ->
-                        MediaRelationsView(
-                            mediaId = mediaId,
-                            viewModel = viewModel,
-                            navigateToDetails = navigateToMediaDetails
-                        )
-                    DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
-                    DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
+                Column(
+                    // workaround for this bug https://github.com/google/accompanist/issues/1050
+                    modifier = if (isPagerScrolling) Modifier.height(500.dp) else Modifier
+                ) {
+                    when (DetailsType.tabRows[it].value) {
+                        DetailsType.INFO ->
+                            MediaInformationView(
+                                viewModel = viewModel
+                            )
+                        DetailsType.STAFF_CHARACTERS ->
+                            CharacterStaffView(
+                                mediaId = mediaId,
+                                viewModel = viewModel
+                            )
+                        DetailsType.RELATIONS ->
+                            MediaRelationsView(
+                                mediaId = mediaId,
+                                viewModel = viewModel,
+                                navigateToDetails = navigateToMediaDetails
+                            )
+                        DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
+                        DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
+                    }
                 }
             }//: Pager
         }//: Column
