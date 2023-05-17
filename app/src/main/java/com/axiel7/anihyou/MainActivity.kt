@@ -5,7 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -34,8 +40,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.get
@@ -69,8 +73,12 @@ import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -95,7 +103,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
-            val navController = rememberNavController()
+            val navController = rememberAnimatedNavController()
 
             AniHyouTheme(
                 darkTheme = if (themePreference == "follow_system") isSystemInDarkTheme()
@@ -134,6 +142,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainView(
     navController: NavHostController,
@@ -150,10 +159,22 @@ fun MainView(
         },
         backgroundColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        NavHost(
+        AnimatedNavHost(
             navController = navController,
             startDestination = lastTabOpened.toBottomDestinationRoute(),
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(padding),
+            enterTransition = {
+                fadeIn(tween(400))
+            },
+            exitTransition = {
+                fadeOut(tween(400))
+            },
+            popEnterTransition = {
+                fadeIn(tween(400))
+            },
+            popExitTransition = {
+                fadeOut(tween(400))
+            }
         ) {
             composable(BottomDestination.Home.route) {
                 HomeView(

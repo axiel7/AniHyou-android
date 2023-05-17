@@ -102,6 +102,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     implementation("io.coil-kt:coil-compose:2.3.0")
 
