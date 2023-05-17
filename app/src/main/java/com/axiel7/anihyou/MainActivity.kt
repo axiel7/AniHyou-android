@@ -65,6 +65,7 @@ import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
@@ -207,7 +208,7 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    Text(text = "Profile")
+                    ProfileView()
                 }
             }
 
