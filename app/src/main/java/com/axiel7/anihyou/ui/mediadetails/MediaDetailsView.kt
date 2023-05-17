@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.ui.mediadetails
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,14 +72,14 @@ import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
-import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
-import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
-import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.VerticalDivider
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
+import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.banner_shadow_color
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
@@ -518,10 +520,12 @@ fun MediaInformationView(
             }
         )
         FlowRow(
-            Modifier.padding(horizontal = 8.dp)
+            Modifier
+                .padding(horizontal = 8.dp)
+                .animateContentSize()
         ) {
             viewModel.mediaDetails?.tags?.forEach { tag ->
-                if (tag != null && (showSpoiler || tag.isMediaSpoiler == false)) {
+                if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
                         ElevatedAssistChip(
                             onClick = { },
@@ -531,12 +535,14 @@ fun MediaInformationView(
                         )
                     }
                     else {
-                        AssistChip(
-                            onClick = { },
-                            label = { Text(text = tag.name) },
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            leadingIcon = { Text(text = "${tag.rank}%") }
-                        )
+                        AnimatedVisibility(visible = showSpoiler) {
+                            AssistChip(
+                                onClick = { },
+                                label = { Text(text = tag.name) },
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                leadingIcon = { Text(text = "${tag.rank}%") }
+                            )
+                        }
                     }
                 }
             }
