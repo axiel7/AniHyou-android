@@ -244,6 +244,9 @@ fun MainView(
                     mediaId = navEntry.arguments?.getInt("media_id") ?: 0,
                     navigateBack = {
                         navController.popBackStack()
+                    },
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("details/$id")
                     }
                 )
             }
@@ -259,7 +262,7 @@ fun MainView(
                         navigateBack = {
                             navController.popBackStack()
                         },
-                        navigateToMediaDetails = {
+                        navigateToMediaDetails = { id ->
                             navController.navigate("details/$id") {
                                 popUpTo(navController.graph[MEDIA_CHART_DESTINATION].id) {
                                     saveState = true

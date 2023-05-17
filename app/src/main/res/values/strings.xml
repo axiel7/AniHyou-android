@@ -120,4 +120,19 @@
     <string name="role_main">Main</string>
     <string name="role_supporting">Supporting</string>
     <string name="role_background">Background</string>
+    <string name="related">Related</string>
+    <string name="relation_adaptation">Adaptation</string>
+    <string name="prequel">Prequel</string>
+    <string name="sequel">Sequel</string>
+    <string name="relation_parent">Parent</string>
+    <string name="side_story">Side story</string>
+    <string name="relation_character">Character</string>
+    <string name="relation_summary">Summary</string>
+    <string name="relation_alternative">Alternative</string>
+    <string name="spin_off">Spin Off</string>
+    <string name="relation_other">Other</string>
+    <string name="relation_source">Source</string>
+    <string name="relation_compilation">Compilation</string>
+    <string name="relation_contains">Contains</string>
+    <string name="recommendations">Recommendations</string>
 </resources>

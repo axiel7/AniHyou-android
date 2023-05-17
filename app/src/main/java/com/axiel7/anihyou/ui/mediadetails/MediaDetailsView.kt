@@ -113,6 +113,7 @@ private enum class DetailsType {
 fun MediaDetailsView(
     mediaId: Int,
     navigateBack: () -> Unit,
+    navigateToMediaDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
@@ -423,7 +424,12 @@ fun MediaDetailsView(
                             mediaId = mediaId,
                             viewModel = viewModel
                         )
-                    DetailsType.RELATIONS -> MediaRelationsView(viewModel = viewModel)
+                    DetailsType.RELATIONS ->
+                        MediaRelationsView(
+                            mediaId = mediaId,
+                            viewModel = viewModel,
+                            navigateToDetails = navigateToMediaDetails
+                        )
                     DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
                     DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
                 }
@@ -588,7 +594,8 @@ fun MediaDetailsViewPreview() {
     AniHyouTheme {
         MediaDetailsView(
             mediaId = 1,
-            navigateBack = {}
+            navigateBack = {},
+            navigateToMediaDetails = {}
         )
     }
 }

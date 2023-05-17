@@ -28,6 +28,7 @@ fragment MediaRelated on MediaEdge {
 }
 
 fragment MediaRecommended on Recommendation {
+  rating
   mediaRecommendation {
     id
     title {

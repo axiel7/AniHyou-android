@@ -104,6 +104,7 @@ fun SeasonAnimeView(
                     subtitle = {
                         SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
                     },
+                    minLines = 2,
                     onClick = {
                         navigateToMediaDetails(item.id)
                     }

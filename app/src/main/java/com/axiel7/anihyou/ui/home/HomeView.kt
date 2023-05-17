@@ -121,6 +121,7 @@ fun HomeView(
                                 SmallScoreIndicator(score = "${score}%")
                             }
                         },
+                        minLines = 2,
                         onClick = { navigateToDetails(item.id) }
                     )
                 }
@@ -149,6 +150,7 @@ fun HomeView(
                                 SmallScoreIndicator(score = "${score}%")
                             }
                         },
+                        minLines = 2,
                         onClick = { navigateToDetails(item.id) }
                     )
                 }
@@ -179,6 +181,7 @@ fun HomeView(
                                 SmallScoreIndicator(score = "${score}%")
                             }
                         },
+                        minLines = 2,
                         onClick = { navigateToDetails(item.id) }
                     )
                 }
@@ -207,6 +210,7 @@ fun HomeView(
                                 SmallScoreIndicator(score = "${score}%")
                             }
                         },
+                        minLines = 2,
                         onClick = { navigateToDetails(item.id) }
                     )
                 }

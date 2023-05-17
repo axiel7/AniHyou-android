@@ -31,54 +31,56 @@ fun CharacterStaffView(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Staff
-        InfoTitle(text = stringResource(R.string.staff))
-        Box(
-            modifier = Modifier
-                .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
-        ) {
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(2)
+        if (viewModel.isLoadingStaffCharacter || viewModel.mediaStaff.isNotEmpty()) {
+            InfoTitle(text = stringResource(R.string.staff))
+            Box(
+                modifier = Modifier
+                    .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
             ) {
-                if (viewModel.mediaStaff.isEmpty()) {
-                    items(6) {
-                        PersonItemHorizontalPlaceholder()
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(2)
+                ) {
+                    if (viewModel.isLoadingStaffCharacter) {
+                        items(6) {
+                            PersonItemHorizontalPlaceholder()
+                        }
+                    } else items(viewModel.mediaStaff) { item ->
+                        PersonItemHorizontal(
+                            title = item.mediaStaff.node?.name?.userPreferred ?: "",
+                            imageUrl = item.mediaStaff.node?.image?.medium,
+                            subtitle = item.mediaStaff.role,
+                            onClick = {}
+                        )
                     }
-                }
-                else items(viewModel.mediaStaff) { item ->
-                    PersonItemHorizontal(
-                        title = item.mediaStaff.node?.name?.userPreferred ?: "",
-                        imageUrl = item.mediaStaff.node?.image?.medium,
-                        subtitle = item.mediaStaff.role,
-                        onClick = {}
-                    )
-                }
-            }//: Grid
-        }//: Box
+                }//: Grid
+            }//: Box
+        }
 
         // Characters
-        InfoTitle(text = stringResource(R.string.characters))
-        Box(
-            modifier = Modifier
-                .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
-        ) {
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(2)
+        if (viewModel.isLoadingStaffCharacter || viewModel.mediaCharacters.isNotEmpty()) {
+            InfoTitle(text = stringResource(R.string.characters))
+            Box(
+                modifier = Modifier
+                    .height(((PERSON_IMAGE_SIZE_SMALL + 16) * 2).dp)
             ) {
-                if (viewModel.mediaCharacters.isEmpty()) {
-                    items(6) {
-                        PersonItemHorizontalPlaceholder()
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(2)
+                ) {
+                    if (viewModel.mediaCharacters.isEmpty()) {
+                        items(6) {
+                            PersonItemHorizontalPlaceholder()
+                        }
+                    } else items(viewModel.mediaCharacters) { item ->
+                        PersonItemHorizontal(
+                            title = item.mediaCharacter.node?.name?.userPreferred ?: "",
+                            imageUrl = item.mediaCharacter.node?.image?.medium,
+                            subtitle = item.mediaCharacter.role?.localized(),
+                            onClick = {}
+                        )
                     }
-                }
-                else items(viewModel.mediaCharacters) { item ->
-                    PersonItemHorizontal(
-                        title = item.mediaCharacter.node?.name?.userPreferred ?: "",
-                        imageUrl = item.mediaCharacter.node?.image?.medium,
-                        subtitle = item.mediaCharacter.role?.localized(),
-                        onClick = {}
-                    )
-                }
-            }//: Grid
-        }//: Box
+                }//: Grid
+            }//: Box
+        }
     }//: Column
 
     LaunchedEffect(Unit) {

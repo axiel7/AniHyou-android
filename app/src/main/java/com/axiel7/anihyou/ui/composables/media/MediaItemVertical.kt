@@ -31,6 +31,7 @@ fun MediaItemVertical(
     imageUrl: String?,
     modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
+    minLines: Int = 1,
     onClick: () -> Unit,
 ) {
     Column(
@@ -61,7 +62,7 @@ fun MediaItemVertical(
             lineHeight = 18.sp,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
-            minLines = 2
+            minLines = minLines
         )
 
         if (subtitle != null) {
@@ -87,6 +88,7 @@ fun MediaItemVerticalPlaceholder() {
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
                     height = MEDIA_POSTER_SMALL_HEIGHT.dp
                 )
+                .clip(RoundedCornerShape(8.dp))
                 .defaultPlaceholder(visible = true)
         )
 
