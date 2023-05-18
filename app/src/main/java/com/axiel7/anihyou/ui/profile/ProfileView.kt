@@ -37,6 +37,7 @@ import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TopBannerView
+import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -108,10 +109,12 @@ fun ProfileView(
                 verticalAlignment = Alignment.Top
             ) {
                 Text(
-                    text = viewModel.userInfo?.name ?: "axiel7",
-                    modifier = Modifier.padding(16.dp),
+                    text = viewModel.userInfo?.name ?: "Loading",
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .defaultPlaceholder(visible = viewModel.isLoading),
                     fontSize = 22.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                 )
 
                 if (isMyProfile) {
