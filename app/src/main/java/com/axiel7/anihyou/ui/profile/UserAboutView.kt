@@ -7,7 +7,6 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.ui.composables.generateHtml
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
@@ -25,7 +23,7 @@ import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 
 @Composable
-fun ProfileAboutView(
+fun UserAboutView(
     aboutHtml: String?
 ) {
     if (aboutHtml == null) {
@@ -65,10 +63,10 @@ fun ProfileAboutView(
 
 @Preview
 @Composable
-fun ProfileAboutViewPreview() {
+fun UserAboutViewPreview() {
     AniHyouTheme {
         Surface {
-            ProfileAboutView(
+            UserAboutView(
                 aboutHtml = "<p>こんにちは！アクです。</p>\n" +
                         "<blockquote>\n" +
                         "<p>Developing an iOS AniList client:<br />\n" +

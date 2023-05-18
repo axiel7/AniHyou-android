@@ -345,7 +345,10 @@ fun MainView(
                 )
             ) { navEntry ->
                 ProfileView(
-                    userId = navEntry.arguments?.getInt("id")
+                    userId = navEntry.arguments?.getInt("id"),
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
 
