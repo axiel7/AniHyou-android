@@ -83,7 +83,7 @@ import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import kotlinx.coroutines.launch
 
-const val MEDIA_DETAILS_DESTINATION = "details/{media_id}"
+const val MEDIA_DETAILS_DESTINATION = "media_details/{media_id}"
 
 private enum class DetailsType {
     INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;

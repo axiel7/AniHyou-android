@@ -14,6 +14,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.hexColor
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.TopBannerView
@@ -45,11 +51,14 @@ private enum class ProfileInfoType {
     }
 }
 
+const val USER_DETAILS_DESTINATION = "profile/{id}"
+
 @Composable
 fun ProfileView(
     userId: Int? = null
 ) {
     val viewModel: ProfileViewModel = viewModel()
+    val isMyProfile by remember { derivedStateOf { userId == null } }
 
     Scaffold(
 
@@ -62,7 +71,7 @@ fun ProfileView(
             ) {
                 TopBannerView(
                     imageUrl = viewModel.userInfo?.bannerImage,
-                    fallbackColor = colorFromHex(viewModel.userInfo?.options?.profileColor),
+                    fallbackColor = colorFromHex(viewModel.userInfo?.hexColor()),
                     height = padding.calculateTopPadding() + 150.dp
                 )
                 PersonImage(
@@ -86,11 +95,13 @@ fun ProfileView(
                     fontWeight = FontWeight.Medium,
                 )
 
-                OutlinedButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(text = stringResource(R.string.settings))
+                if (isMyProfile) {
+                    OutlinedButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Text(text = stringResource(R.string.settings))
+                    }
                 }
             }//: Row
 

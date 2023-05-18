@@ -46,6 +46,8 @@ import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
+import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
@@ -53,6 +55,7 @@ import com.axiel7.anihyou.utils.DateUtils
 @Composable
 fun ExploreView(
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
 ) {
@@ -114,7 +117,8 @@ fun ExploreView(
                     SearchView(
                         query = query,
                         performSearch = performSearch,
-                        navigateToMediaDetails = navigateToMediaDetails
+                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToUserDetails = navigateToUserDetails
                     )
                 }
             }
@@ -247,6 +251,7 @@ fun SearchView(
     query: String,
     performSearch: MutableState<Boolean>,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: SearchViewModel = viewModel()
     val listState = rememberLazyListState()
@@ -311,7 +316,27 @@ fun SearchView(
             SearchType.CHARACTER -> { item { Text(text = "Coming soon") } }
             SearchType.STAFF -> { item { Text(text = "Coming soon") } }
             SearchType.STUDIO -> { item { Text(text = "Coming soon") } }
-            SearchType.USER -> { item { Text(text = "Coming soon") } }
+            SearchType.USER -> {
+                items(
+                    items = viewModel.searchedUsers,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    PersonItemHorizontal(
+                        title = item.name,
+                        modifier = Modifier.fillMaxWidth(),
+                        imageUrl = item.avatar?.medium,
+                        onClick = {
+                            navigateToUserDetails(item.id)
+                        }
+                    )
+                }
+                if (viewModel.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                }
+            }
         }
     }
 
@@ -397,7 +422,8 @@ fun ExploreViewPreview() {
             ExploreView(
                 navigateToMediaDetails = {},
                 navigateToMediaChart = {},
-                navigateToAnimeSeason = { _, _ -> }
+                navigateToAnimeSeason = { _, _ -> },
+                navigateToUserDetails = {}
             )
         }
     }

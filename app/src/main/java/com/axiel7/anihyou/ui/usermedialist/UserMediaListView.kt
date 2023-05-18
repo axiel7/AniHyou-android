@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
-    navigateToDetails: (mediaId: Int) -> Unit
+    navigateToMediaDetails: (mediaId: Int) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -122,7 +122,7 @@ fun UserMediaListHostView(
                         mediaType = mediaType,
                         status = tabRowItems[it],
                         sort = MediaListSort.safeValueOf(sortPreference!!),
-                        navigateToDetails = navigateToDetails,
+                        navigateToDetails = navigateToMediaDetails,
                         nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
                     )
             }//: Pager
@@ -238,7 +238,7 @@ fun UserMediaListViewPreview() {
         Surface {
             UserMediaListHostView(
                 mediaType = MediaType.ANIME,
-                navigateToDetails = {}
+                navigateToMediaDetails = {}
             )
         }
     }

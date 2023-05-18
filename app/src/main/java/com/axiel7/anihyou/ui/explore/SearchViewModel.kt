@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.SearchMediaQuery
+import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -60,7 +61,19 @@ class SearchViewModel : BaseViewModel() {
 
     }
 
-    suspend fun searchUser(query: String) {
+    var searchedUsers = mutableStateListOf<SearchUserQuery.User>()
 
+    suspend fun searchUser(query: String) {
+        isLoading = true
+
+        val response = SearchUserQuery(
+            page = Optional.present(1),
+            perPage = Optional.present(perPage),
+            search = Optional.present(query)
+        ).tryQuery()
+
+        searchedUsers.clear()
+        response?.data?.Page?.users?.filterNotNull()?.let { searchedUsers.addAll(it) }
+        isLoading = false
     }
 }

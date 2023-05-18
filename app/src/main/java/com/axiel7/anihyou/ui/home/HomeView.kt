@@ -51,7 +51,7 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
-    navigateToDetails: (mediaId: Int) -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
@@ -90,7 +90,7 @@ fun HomeView(
                         imageUrl = item.media?.coverImage?.large,
                         score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
                         onClick = {
-                            navigateToDetails(item.media!!.id)
+                            navigateToMediaDetails(item.media!!.id)
                         }
                     )
                 }
@@ -122,7 +122,7 @@ fun HomeView(
                             }
                         },
                         minLines = 2,
-                        onClick = { navigateToDetails(item.id) }
+                        onClick = { navigateToMediaDetails(item.id) }
                     )
                 }
             }
@@ -151,7 +151,7 @@ fun HomeView(
                             }
                         },
                         minLines = 2,
-                        onClick = { navigateToDetails(item.id) }
+                        onClick = { navigateToMediaDetails(item.id) }
                     )
                 }
             }
@@ -182,7 +182,7 @@ fun HomeView(
                             }
                         },
                         minLines = 2,
-                        onClick = { navigateToDetails(item.id) }
+                        onClick = { navigateToMediaDetails(item.id) }
                     )
                 }
             }
@@ -211,7 +211,7 @@ fun HomeView(
                             }
                         },
                         minLines = 2,
-                        onClick = { navigateToDetails(item.id) }
+                        onClick = { navigateToMediaDetails(item.id) }
                     )
                 }
             }
@@ -270,7 +270,7 @@ fun HomeLazyRow(
 fun HomeViewPreview() {
     AniHyouTheme {
         HomeView(
-            navigateToDetails = { },
+            navigateToMediaDetails = { },
             navigateToAnimeSeason = { }
         )
     }

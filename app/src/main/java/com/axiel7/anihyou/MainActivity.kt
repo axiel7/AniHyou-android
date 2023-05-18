@@ -5,9 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -70,6 +68,7 @@ import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.profile.ProfileView
+import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
@@ -178,8 +177,8 @@ fun MainView(
         ) {
             composable(BottomDestination.Home.route) {
                 HomeView(
-                    navigateToDetails = { id ->
-                        navController.navigate("details/$id")
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("media_details/$id")
                     },
                     navigateToAnimeSeason = { animeSeason ->
                         navController.navigate("season/${animeSeason.year}/${animeSeason.season.name}")
@@ -193,8 +192,8 @@ fun MainView(
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.ANIME,
-                        navigateToDetails = { id ->
-                            navController.navigate("details/$id") {
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id") {
                                 popUpTo(navController.graph[BottomDestination.AnimeList.route].id) {
                                     saveState = true
                                 }
@@ -212,8 +211,8 @@ fun MainView(
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.MANGA,
-                        navigateToDetails = { id ->
-                            navController.navigate("details/$id") {
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id") {
                                 popUpTo(navController.graph[BottomDestination.MangaList.route].id) {
                                     saveState = true
                                 }
@@ -236,13 +235,16 @@ fun MainView(
             composable(BottomDestination.Explore.route) {
                 ExploreView(
                     navigateToMediaDetails = { id ->
-                        navController.navigate("details/$id") {
+                        navController.navigate("media_details/$id") {
                             popUpTo(navController.graph[BottomDestination.Explore.route].id) {
                                 saveState = true
                             }
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    navigateToUserDetails = { id ->
+                        navController.navigate("profile/$id")
                     },
                     navigateToMediaChart = {
                         navController.navigate("media_chart/${it.name}")
@@ -268,7 +270,7 @@ fun MainView(
                         navController.popBackStack()
                     },
                     navigateToMediaDetails = { id ->
-                        navController.navigate("details/$id")
+                        navController.navigate("media_details/$id")
                     }
                 )
             }
@@ -285,7 +287,7 @@ fun MainView(
                             navController.popBackStack()
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("details/$id") {
+                            navController.navigate("media_details/$id") {
                                 popUpTo(navController.graph[MEDIA_CHART_DESTINATION].id) {
                                     saveState = true
                                 }
@@ -314,7 +316,7 @@ fun MainView(
                                 navController.popBackStack()
                             },
                             navigateToMediaDetails = { id ->
-                                navController.navigate("details/$id") {
+                                navController.navigate("media_details/$id") {
                                     popUpTo(navController.graph[SEASON_ANIME_DESTINATION].id) {
                                         saveState = true
                                     }
@@ -325,6 +327,16 @@ fun MainView(
                         )
                     }
                 }
+            }
+
+            composable(USER_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                ProfileView(
+                    userId = navEntry.arguments?.getInt("id")
+                )
             }
         }
     }
