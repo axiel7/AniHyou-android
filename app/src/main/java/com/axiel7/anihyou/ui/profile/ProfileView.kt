@@ -31,6 +31,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.hexColor
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
@@ -59,6 +60,7 @@ fun ProfileView(
 ) {
     val viewModel: ProfileViewModel = viewModel()
     val isMyProfile by remember { derivedStateOf { userId == null } }
+    var selectedTabItem by remember { mutableStateOf(ProfileInfoType.tabRows[0]) }
 
     Scaffold(
 
@@ -105,20 +107,35 @@ fun ProfileView(
                 }
             }//: Row
 
-            DefaultTabRowWithPager(
-                tabs = ProfileInfoType.tabRows
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when (ProfileInfoType.tabRows[it].value) {
+                SegmentedButtons(
+                    items = ProfileInfoType.tabRows,
+                    onItemSelection = {
+                        selectedTabItem = it
+                    }
+                )
+                when (selectedTabItem.value) {
                     ProfileInfoType.ABOUT ->
                         ProfileAboutView(
                             aboutHtml = viewModel.userInfo?.about
                         )
-                    ProfileInfoType.ACTIVITY -> { /*TODO*/ }
-                    ProfileInfoType.STATS -> { /*TODO*/ }
-                    ProfileInfoType.FAVORITES -> { /*TODO*/ }
-                    ProfileInfoType.SOCIAL -> { /*TODO*/ }
+
+                    ProfileInfoType.ACTIVITY -> { /*TODO*/
+                    }
+
+                    ProfileInfoType.STATS -> { /*TODO*/
+                    }
+
+                    ProfileInfoType.FAVORITES -> { /*TODO*/
+                    }
+
+                    ProfileInfoType.SOCIAL -> { /*TODO*/
+                    }
                 }
-            }
+            }//: Column
         }//: Column
     }//: Scaffold
 

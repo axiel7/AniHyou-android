@@ -62,6 +62,7 @@ import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.TopBannerView
@@ -113,6 +114,7 @@ fun MediaDetailsView(
     )
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
+    var selectedTabItem by remember { mutableStateOf(DetailsType.tabRows[0]) }
 
     var maxLinesSynopsis by remember { mutableStateOf(5) }
     val iconExpand by remember {
@@ -351,29 +353,41 @@ fun MediaDetailsView(
             }
 
             // Other info
-            DefaultTabRowWithPager(
-                tabs = DetailsType.tabRows
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when (DetailsType.tabRows[it].value) {
+                SegmentedButtons(
+                    items = DetailsType.tabRows,
+                    onItemSelection = {
+                        selectedTabItem = it
+                    }
+                )
+                when (selectedTabItem.value) {
                     DetailsType.INFO ->
                         MediaInformationView(
                             viewModel = viewModel
                         )
+
                     DetailsType.STAFF_CHARACTERS ->
                         CharacterStaffView(
                             mediaId = mediaId,
                             viewModel = viewModel
                         )
+
                     DetailsType.RELATIONS ->
                         MediaRelationsView(
                             mediaId = mediaId,
                             viewModel = viewModel,
                             navigateToDetails = navigateToMediaDetails
                         )
+
                     DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
                     DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
                 }
-            }
+            }//: Column
         }//: Column
     }//: Scaffold
 

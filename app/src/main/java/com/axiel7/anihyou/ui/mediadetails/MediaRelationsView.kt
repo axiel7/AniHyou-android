@@ -93,8 +93,9 @@ fun MediaRelationsView(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.getMediaRelationsRecommendations(mediaId)
+    LaunchedEffect(mediaId) {
+        if (viewModel.mediaRelated.isEmpty())
+            viewModel.getMediaRelationsRecommendations(mediaId)
     }
 }
 

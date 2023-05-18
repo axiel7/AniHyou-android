@@ -85,8 +85,9 @@ fun CharacterStaffView(
         }
     }//: Column
 
-    LaunchedEffect(Unit) {
-        viewModel.getMediaCharactersAndStaff(mediaId)
+    LaunchedEffect(mediaId) {
+        if (viewModel.mediaStaff.isEmpty())
+            viewModel.getMediaCharactersAndStaff(mediaId)
     }
 }
 
