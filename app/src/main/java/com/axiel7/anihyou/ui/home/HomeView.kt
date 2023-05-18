@@ -66,8 +66,8 @@ fun HomeView(
     ) { padding ->
         Column(
             modifier = Modifier
-                .verticalScroll(state = scrollState)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                .verticalScroll(state = scrollState)
                 .padding(padding)
         ) {
             // Airing
