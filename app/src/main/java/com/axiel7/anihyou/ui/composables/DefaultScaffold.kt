@@ -49,6 +49,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
     content: @Composable (PaddingValues) -> Unit
@@ -65,6 +66,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
                         lineHeight = 28.sp
                     )
                 },
+                navigationIcon = navigationIcon,
                 actions = actions,
                 scrollBehavior = scrollBehavior
             )

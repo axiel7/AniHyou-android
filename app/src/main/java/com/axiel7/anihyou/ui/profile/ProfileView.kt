@@ -56,15 +56,14 @@ const val USER_DETAILS_DESTINATION = "profile/{id}"
 
 @Composable
 fun ProfileView(
-    userId: Int? = null
+    userId: Int? = null,
+    navigateToSettings: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
     val isMyProfile by remember { derivedStateOf { userId == null } }
     var selectedTabItem by remember { mutableStateOf(ProfileInfoType.tabRows[0]) }
 
-    Scaffold(
-
-    ) { padding ->
+    Scaffold { padding ->
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -99,7 +98,7 @@ fun ProfileView(
 
                 if (isMyProfile) {
                     OutlinedButton(
-                        onClick = { /*TODO*/ },
+                        onClick = navigateToSettings,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Text(text = stringResource(R.string.settings))

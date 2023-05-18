@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -79,20 +80,28 @@ private val DarkColorScheme = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private fun ColorScheme.toBlackScheme() = this.copy(
+    background = md_theme_black_background,
+    surface = md_theme_black_background,
+)
+
 @Composable
 fun AniHyouTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
+    blackColors: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context).let {
+                return@let if (blackColors) it.toBlackScheme() else it
+            }
+            else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> if (blackColors) DarkColorScheme.toBlackScheme() else DarkColorScheme
         else -> LightColorScheme
     }
     val view = LocalView.current

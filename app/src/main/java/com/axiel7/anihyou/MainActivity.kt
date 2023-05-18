@@ -69,9 +69,14 @@ import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.settings.SETTINGS_DESTINATION
+import com.axiel7.anihyou.ui.settings.SettingsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
+import com.axiel7.anihyou.utils.THEME_BLACK
+import com.axiel7.anihyou.utils.THEME_DARK
+import com.axiel7.anihyou.utils.THEME_FOLLOW_SYSTEM
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -105,8 +110,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberAnimatedNavController()
 
             AniHyouTheme(
-                darkTheme = if (themePreference == "follow_system") isSystemInDarkTheme()
-                else themePreference == "dark"
+                darkTheme = if (themePreference == THEME_FOLLOW_SYSTEM) isSystemInDarkTheme()
+                else themePreference == THEME_DARK || themePreference == THEME_BLACK,
+                blackColors = themePreference == THEME_BLACK
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -228,7 +234,11 @@ fun MainView(
                 if (accessTokenPreference.value == null) {
                     LoginView()
                 } else {
-                    ProfileView()
+                    ProfileView(
+                        navigateToSettings = {
+                            navController.navigate(SETTINGS_DESTINATION)
+                        }
+                    )
                 }
             }
 
@@ -336,6 +346,14 @@ fun MainView(
             ) { navEntry ->
                 ProfileView(
                     userId = navEntry.arguments?.getInt("id")
+                )
+            }
+
+            composable(SETTINGS_DESTINATION) {
+                SettingsView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }
