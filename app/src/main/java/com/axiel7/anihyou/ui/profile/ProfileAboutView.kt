@@ -53,9 +53,7 @@ fun ProfileAboutView(
 
         WebView(
             state = webViewState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             captureBackPresses = false,
             onCreated = { webView ->
                 webView.background = ColorDrawable(Color.TRANSPARENT)

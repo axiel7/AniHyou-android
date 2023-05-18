@@ -30,7 +30,7 @@ fun generateCSS(): String {
             )
         }
         body {
-            margin: 0;
+            margin: 16;
             padding: 0;
         }
     </style>
@@ -48,4 +48,6 @@ fun baseCss(
     iframe{width:100%; height:250px;}
     a:link {color: $linkColor;}
     A {text-decoration: none;}
+    .markdown_spoiler {color: $fontColor; background-color: $fontColor;}
+    .markdown_spoiler:hover, .markdown_spoiler:focus, .markdown_spoiler:active {background-color: transparent;}
 """.trimIndent()

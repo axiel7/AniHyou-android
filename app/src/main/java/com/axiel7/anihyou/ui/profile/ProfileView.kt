@@ -44,7 +44,7 @@ private enum class ProfileInfoType {
     companion object {
         val tabRows = arrayOf(
             TabRowItem(ABOUT, icon = R.drawable.info_24),
-            TabRowItem(ACTIVITY, icon = R.drawable.timeline_24),
+            TabRowItem(ACTIVITY, icon = R.drawable.forum_24),
             TabRowItem(STATS, icon = R.drawable.bar_chart_24),
             TabRowItem(FAVORITES, icon = R.drawable.star_24),
             TabRowItem(SOCIAL, icon = R.drawable.group_24)
@@ -117,22 +117,11 @@ fun ProfileView(
                     }
                 )
                 when (selectedTabItem.value) {
-                    ProfileInfoType.ABOUT ->
-                        ProfileAboutView(
-                            aboutHtml = viewModel.userInfo?.about
-                        )
-
-                    ProfileInfoType.ACTIVITY -> { /*TODO*/
-                    }
-
-                    ProfileInfoType.STATS -> { /*TODO*/
-                    }
-
-                    ProfileInfoType.FAVORITES -> { /*TODO*/
-                    }
-
-                    ProfileInfoType.SOCIAL -> { /*TODO*/
-                    }
+                    ProfileInfoType.ABOUT -> ProfileAboutView(aboutHtml = viewModel.userInfo?.about)
+                    ProfileInfoType.ACTIVITY -> UserActivityView(viewModel = viewModel)
+                    ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)
+                    ProfileInfoType.FAVORITES -> UserFavoritesView(viewModel = viewModel)
+                    ProfileInfoType.SOCIAL -> UserSocialView(viewModel = viewModel)
                 }
             }//: Column
         }//: Column

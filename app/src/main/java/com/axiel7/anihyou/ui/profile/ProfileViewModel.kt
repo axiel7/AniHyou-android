@@ -9,15 +9,18 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserBasicInfoQuery
 import com.axiel7.anihyou.ViewerQuery
 import com.axiel7.anihyou.data.PreferencesDataStore
+import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class ProfileViewModel : BaseViewModel() {
 
+    private var userId = 0
     var userInfo by mutableStateOf<UserInfo?>(null)
 
     suspend fun getMyUserInfo() {
         isLoading = true
+        userId = LoginRepository.getUserId() ?: 0
         val response = ViewerQuery().tryQuery()
 
         response?.data?.Viewer?.userInfo?.let { info ->
@@ -33,6 +36,7 @@ class ProfileViewModel : BaseViewModel() {
 
     suspend fun getUserInfo(userId: Int) {
         isLoading = true
+        this.userId = userId
         val response = UserBasicInfoQuery(
             userId = Optional.present(userId)
         ).tryQuery()
