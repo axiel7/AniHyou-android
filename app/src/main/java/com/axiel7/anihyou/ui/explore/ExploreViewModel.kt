@@ -55,7 +55,7 @@ class ExploreViewModel : BaseViewModel() {
         ).tryQuery()
 
         response?.data?.Page?.media?.filterNotNull()?.let { animeSeasonal.addAll(it) }
-        page = response?.data?.Page?.pageInfo?.currentPage ?: page
+        page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
         hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
         isLoading = false
     }
