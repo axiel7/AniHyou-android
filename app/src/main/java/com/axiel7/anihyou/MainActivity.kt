@@ -58,6 +58,8 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.explore.ExploreView
 import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.explore.MediaChartListView
@@ -257,6 +259,9 @@ fun MainView(
                     navigateToUserDetails = { id ->
                         navController.navigate("profile/$id")
                     },
+                    navigateToCharacterDetails = { id ->
+                        navController.navigate("character/$id")
+                    },
                     navigateToMediaChart = {
                         navController.navigate("media_chart/${it.name}")
                     },
@@ -351,6 +356,24 @@ fun MainView(
                         navController.popBackStack()
                     }
                 )
+            }
+
+            composable(CHARACTER_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let { characterId ->
+                    CharacterDetailsView(
+                        characterId = characterId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id")
+                        }
+                    )
+                }
             }
 
             composable(SETTINGS_DESTINATION) {

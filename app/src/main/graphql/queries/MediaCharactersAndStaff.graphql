@@ -24,15 +24,6 @@ fragment MediaCharacter on CharacterEdge {
       medium
     }
   }
-  voiceActors(language: JAPANESE) {
-    id
-    name {
-      userPreferred
-    }
-    image {
-      medium
-    }
-  }
 }
 
 fragment MediaStaff on StaffEdge {

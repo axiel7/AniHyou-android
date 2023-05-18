@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
+import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
@@ -49,8 +50,19 @@ class SearchViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    suspend fun searchCharacter(query: String) {
+    var searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
 
+    suspend fun searchCharacter(query: String) {
+        isLoading = true
+        val response = SearchCharacterQuery(
+            page = Optional.present(1),
+            perPage = Optional.present(perPage),
+            search = Optional.present(query)
+        ).tryQuery()
+
+        searchedCharacters.clear()
+        response?.data?.Page?.characters?.filterNotNull()?.let { searchedCharacters.addAll(it) }
+        isLoading = false
     }
 
     suspend fun searchStaff(query: String) {

@@ -22,7 +22,7 @@ const val PERSON_IMAGE_SIZE_BIG = 124
 @Composable
 fun PersonImage(
     url: String?,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     showShadow: Boolean = false,
     contentScale: ContentScale = ContentScale.Crop,
 ) {

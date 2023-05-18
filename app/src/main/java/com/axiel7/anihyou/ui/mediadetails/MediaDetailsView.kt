@@ -189,6 +189,10 @@ fun MediaDetailsView(
     }
     val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
 
+    LaunchedEffect(mediaId) {
+        viewModel.getDetails(mediaId)
+    }
+
     Scaffold(
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
@@ -459,10 +463,6 @@ fun MediaDetailsView(
             listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
             onDismiss = { scope.launch { sheetState.hide() } }
         )
-    }
-
-    LaunchedEffect(mediaId) {
-        viewModel.getDetails(mediaId)
     }
 }
 

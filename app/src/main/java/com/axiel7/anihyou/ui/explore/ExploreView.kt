@@ -55,6 +55,7 @@ import com.axiel7.anihyou.utils.DateUtils
 @Composable
 fun ExploreView(
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
@@ -118,6 +119,7 @@ fun ExploreView(
                         query = query,
                         performSearch = performSearch,
                         navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToCharacterDetails = navigateToCharacterDetails,
                         navigateToUserDetails = navigateToUserDetails
                     )
                 }
@@ -251,6 +253,7 @@ fun SearchView(
     query: String,
     performSearch: MutableState<Boolean>,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: SearchViewModel = viewModel()
@@ -313,7 +316,22 @@ fun SearchView(
                     }
                 }
             }
-            SearchType.CHARACTER -> { item { Text(text = "Coming soon") } }
+            SearchType.CHARACTER -> {
+                items(
+                    items = viewModel.searchedCharacters,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    PersonItemHorizontal(
+                        title = item.name?.userPreferred ?: "",
+                        modifier = Modifier.fillMaxWidth(),
+                        imageUrl = item.image?.medium,
+                        onClick = {
+                            navigateToCharacterDetails(item.id)
+                        }
+                    )
+                }
+            }
             SearchType.STAFF -> { item { Text(text = "Coming soon") } }
             SearchType.STUDIO -> { item { Text(text = "Coming soon") } }
             SearchType.USER -> {
@@ -423,6 +441,7 @@ fun ExploreViewPreview() {
                 navigateToMediaDetails = {},
                 navigateToMediaChart = {},
                 navigateToAnimeSeason = { _, _ -> },
+                navigateToCharacterDetails = {},
                 navigateToUserDetails = {}
             )
         }

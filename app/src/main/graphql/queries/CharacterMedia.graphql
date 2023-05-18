@@ -1,0 +1,20 @@
+query CharacterMedia($characterId: Int, $page: Int, $perPage: Int) {
+    Character(id: $characterId) {
+        media(page: $page, perPage: $perPage, sort: [POPULARITY_DESC]) {
+            edges {
+                characterName
+                characterRole
+                voiceActors(sort: [RELEVANCE, LANGUAGE]) {
+                    id
+                    name {
+                        userPreferred
+                    }
+                }
+            }
+            pageInfo {
+                currentPage
+                hasNextPage
+            }
+        }
+    }
+}
