@@ -13,10 +13,16 @@ fun generateHtml(html: String) = """
     </head>
     ${generateCSS()}
     <BODY>
-    <div id="anihyou">$html</div>
+    <div id="anihyou">${formatCompatibleHtml(html)}</div>
     </BODY>
     </HTML>
 """.trimIndent()
+
+fun formatCompatibleHtml(html: String): String {
+    return html
+        // replace AniList markdown [text](link) with html <a>
+        .replace(Regex("\\[([^]]+)]\\(([^)]+)\\)"), "<a href=\"\$2\">\$1</a>")
+}
 
 @Composable
 fun generateCSS(): String {
@@ -26,7 +32,7 @@ fun generateCSS(): String {
             baseCss(
                 backgroundColor = MaterialTheme.colorScheme.background.toArgb().hexToString(),
                 fontColor = MaterialTheme.colorScheme.onBackground.toArgb().hexToString(),
-                linkColor = MaterialTheme.colorScheme.secondary.toArgb().hexToString()
+                linkColor = MaterialTheme.colorScheme.primary.toArgb().hexToString()
             )
         }
         body {
