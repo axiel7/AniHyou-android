@@ -231,7 +231,7 @@ fun MediaDetailsView(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 val dividerHeight = 36
                 viewModel.mediaDetails?.nextAiringEpisode?.let { nextAiringEpisode ->
