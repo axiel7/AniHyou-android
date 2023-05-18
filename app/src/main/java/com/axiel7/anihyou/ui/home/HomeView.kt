@@ -73,7 +73,7 @@ fun HomeView(
             // Airing
             HorizontalListHeader(
                 text = stringResource(R.string.airing_soon),
-                onClick = { /*TODO*/ }
+                onClick = null
             )
             HomeLazyRow(
                 minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
@@ -130,7 +130,7 @@ fun HomeView(
             // Trending Anime
             HorizontalListHeader(
                 text = stringResource(R.string.trending_now),
-                onClick = { /*TODO*/ }
+                onClick = null
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -190,7 +190,7 @@ fun HomeView(
             // Trending Manga
             HorizontalListHeader(
                 text = stringResource(R.string.trending_manga),
-                onClick = { /*TODO*/ }
+                onClick = null
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -230,10 +230,10 @@ fun HomeView(
 @Composable
 fun HorizontalListHeader(
     text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
-    Box(modifier = Modifier.clickable(onClick = onClick)) {
+    Box(modifier = Modifier.clickable(onClick = onClick ?: {})) {
         Row(
             modifier = modifier
                 .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -242,7 +242,12 @@ fun HorizontalListHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-            Icon(painter = painterResource(R.drawable.arrow_forward_24), contentDescription = "arrow")
+            if (onClick != null) {
+                Icon(
+                    painter = painterResource(R.drawable.arrow_forward_24),
+                    contentDescription = "arrow"
+                )
+            }
         }
     }
 }
