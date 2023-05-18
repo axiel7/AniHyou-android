@@ -66,6 +66,7 @@ import com.axiel7.anihyou.ui.explore.SeasonAnimeView
 import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsHostView
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
@@ -274,7 +275,7 @@ fun MainView(
                     navDeepLink { uriPattern = "https://anilist.co/manga/{media_id}" }
                 )
             ) { navEntry ->
-                MediaDetailsView(
+                MediaDetailsHostView(
                     mediaId = navEntry.arguments?.getInt("media_id") ?: 0,
                     navigateBack = {
                         navController.popBackStack()
