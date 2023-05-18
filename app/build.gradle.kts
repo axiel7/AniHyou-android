@@ -120,6 +120,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    implementation("com.github.jeziellago:compose-markdown:0.3.3")
 }
 
 apollo {
