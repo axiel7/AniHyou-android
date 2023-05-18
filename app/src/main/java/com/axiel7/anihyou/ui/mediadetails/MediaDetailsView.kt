@@ -419,15 +419,18 @@ fun MediaInformationView(
 
         MediaInfoItemView(
             title = stringResource(R.string.duration),
-            info = viewModel.mediaDetails?.duration?.toLong()?.minutesToLegibleText()
+            info = viewModel.mediaDetails?.duration?.toLong()?.minutesToLegibleText(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         MediaInfoItemView(
             title = stringResource(R.string.start_date),
-            info = viewModel.mediaDetails?.startDate?.fuzzyDate?.formatted()
+            info = viewModel.mediaDetails?.startDate?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         MediaInfoItemView(
             title = stringResource(R.string.end_date),
-            info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted()
+            info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true) {
             MediaInfoItemView(
@@ -445,19 +448,23 @@ fun MediaInformationView(
         }
         MediaInfoItemView(
             title = stringResource(R.string.source),
-            info = viewModel.mediaDetails?.source?.localized()
+            info = viewModel.mediaDetails?.source?.localized(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         MediaInfoItemView(
             title = stringResource(R.string.romaji),
-            info = viewModel.mediaDetails?.title?.romaji
+            info = viewModel.mediaDetails?.title?.romaji,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         MediaInfoItemView(
             title = stringResource(R.string.english),
-            info = viewModel.mediaDetails?.title?.english
+            info = viewModel.mediaDetails?.title?.english,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         MediaInfoItemView(
             title = stringResource(R.string.native_title),
-            info = viewModel.mediaDetails?.title?.native
+            info = viewModel.mediaDetails?.title?.native,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
 
         // Tags
