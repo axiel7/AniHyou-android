@@ -160,4 +160,5 @@
     <string name="hometown">Hometown</string>
     <string name="occupations">Occupations</string>
     <string name="no_information">No information</string>
+    <string name="score">Score</string>
 </resources>
