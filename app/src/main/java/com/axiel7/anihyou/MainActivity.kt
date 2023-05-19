@@ -60,6 +60,8 @@ import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinatio
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
+import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
+import com.axiel7.anihyou.ui.composables.FullScreenImageView
 import com.axiel7.anihyou.ui.explore.ExploreView
 import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.explore.MediaChartListView
@@ -83,6 +85,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
@@ -239,7 +242,11 @@ fun MainView(
                     ProfileView(
                         navigateToSettings = {
                             navController.navigate(SETTINGS_DESTINATION)
-                        }
+                        },
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                            navController.navigate("full_image/$encodedUrl")
+                        },
                     )
                 }
             }
@@ -286,6 +293,10 @@ fun MainView(
                     },
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
+                    },
+                    navigateToFullscreenImage = { url ->
+                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        navController.navigate("full_image/$encodedUrl")
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate("character/$id")
@@ -354,6 +365,10 @@ fun MainView(
             ) { navEntry ->
                 ProfileView(
                     userId = navEntry.arguments?.getInt("id"),
+                    navigateToFullscreenImage = { url ->
+                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        navController.navigate("full_image/$encodedUrl")
+                    },
                     navigateBack = {
                         navController.popBackStack()
                     }
@@ -373,7 +388,11 @@ fun MainView(
                         },
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id")
-                        }
+                        },
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                            navController.navigate("full_image/$encodedUrl")
+                        },
                     )
                 }
             }
@@ -381,6 +400,19 @@ fun MainView(
             composable(SETTINGS_DESTINATION) {
                 SettingsView(
                     navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(FULLSCREEN_IMAGE_DESTINATION,
+                arguments = listOf(
+                    navArgument("url") { type = NavType.StringType }
+                )
+            ) { navEntry ->
+                FullScreenImageView(
+                    imageUrl = navEntry.arguments?.getString("url"),
+                    onDismiss = {
                         navController.popBackStack()
                     }
                 )

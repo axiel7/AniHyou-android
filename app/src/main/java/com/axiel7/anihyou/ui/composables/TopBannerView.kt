@@ -25,11 +25,12 @@ import com.axiel7.anihyou.ui.theme.banner_shadow_color
 @Composable
 fun TopBannerView(
     imageUrl: String?,
+    modifier: Modifier = Modifier,
     fallbackColor: Color? = null,
     height: Dp,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(height)
             .padding(bottom = 16.dp),

@@ -67,6 +67,7 @@ fun CharacterDetailsView(
     characterId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String?) -> Unit,
 ) {
     val viewModel: CharacterDetailsViewModel = viewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -87,7 +88,8 @@ fun CharacterDetailsView(
                     CharacterInfoView(
                         characterId = characterId,
                         viewModel = viewModel,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 CharacterInfoType.MEDIA ->
                     CharacterMediaView(
@@ -105,7 +107,8 @@ fun CharacterDetailsView(
 fun CharacterInfoView(
     characterId: Int,
     viewModel: CharacterDetailsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToFullscreenImage: (String?) -> Unit,
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
 
@@ -125,7 +128,10 @@ fun CharacterInfoView(
                 url = viewModel.characterDetails?.image?.large,
                 modifier = Modifier
                     .padding(16.dp)
-                    .size(PERSON_IMAGE_SIZE_BIG.dp),
+                    .size(PERSON_IMAGE_SIZE_BIG.dp)
+                    .clickable {
+                        navigateToFullscreenImage(viewModel.characterDetails?.image?.large)
+                    },
                 showShadow = true
             )
 
@@ -258,7 +264,8 @@ fun CharacterDetailsViewPreview() {
             CharacterDetailsView(
                 characterId = 1,
                 navigateBack = {},
-                navigateToMediaDetails = {}
+                navigateToMediaDetails = {},
+                navigateToFullscreenImage = {}
             )
         }
     }

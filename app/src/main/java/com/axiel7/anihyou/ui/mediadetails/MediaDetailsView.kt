@@ -3,19 +3,15 @@ package com.axiel7.anihyou.ui.mediadetails
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -32,12 +26,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.surfaceColorAtElevation
@@ -66,7 +58,6 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
-import com.axiel7.anihyou.ui.FullScreenImageView
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.InfoItemView
@@ -115,6 +106,7 @@ fun MediaDetailsView(
     mediaId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String?) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
@@ -183,6 +175,9 @@ fun MediaDetailsView(
             // Banner
             TopBannerView(
                 imageUrl = viewModel.mediaDetails?.bannerImage,
+                modifier = Modifier.clickable {
+                    navigateToFullscreenImage(viewModel.mediaDetails?.bannerImage)
+                },
                 fallbackColor = colorFromHex(viewModel.mediaDetails?.coverImage?.color),
                 height = padding.calculateTopPadding() + 80.dp
             )
@@ -198,7 +193,9 @@ fun MediaDetailsView(
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
                         .defaultPlaceholder(visible = viewModel.isLoading)
-                        .clickable { }
+                        .clickable {
+                            navigateToFullscreenImage(viewModel.mediaDetails?.coverImage?.extraLarge)
+                        }
                 )
                 Column {
                     Text(
@@ -529,6 +526,7 @@ fun MediaDetailsViewPreview() {
             mediaId = 1,
             navigateBack = {},
             navigateToMediaDetails = {},
+            navigateToFullscreenImage = {},
             navigateToCharacterDetails = {}
         )
     }

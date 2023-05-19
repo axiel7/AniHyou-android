@@ -36,6 +36,14 @@ object ContextUtils {
         }
     }
 
+    fun Context.openShareSheet(text: String) {
+        Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+            startActivity(Intent.createChooser(this, null))
+        }
+    }
+
     /** Open external link by default browser or intent chooser */
     fun Context.openLink(url: String) {
         val uri = Uri.parse(url)

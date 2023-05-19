@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.profile
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,6 +65,7 @@ const val USER_DETAILS_DESTINATION = "profile/{id}"
 fun ProfileView(
     userId: Int? = null,
     navigateToSettings: () -> Unit = {},
+    navigateToFullscreenImage: (String?) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
@@ -98,7 +100,10 @@ fun ProfileView(
                     url = viewModel.userInfo?.avatar?.large,
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, end = 16.dp)
-                        .size(PERSON_IMAGE_SIZE_SMALL.dp),
+                        .size(PERSON_IMAGE_SIZE_SMALL.dp)
+                        .clickable {
+                            navigateToFullscreenImage(viewModel.userInfo?.avatar?.large)
+                        },
                     showShadow = true
                 )
             }//: Box
@@ -159,7 +164,9 @@ fun ProfileView(
 fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
-            ProfileView()
+            ProfileView(
+                navigateToFullscreenImage = {}
+            )
         }
     }
 }
