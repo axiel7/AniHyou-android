@@ -108,6 +108,7 @@ fun MediaDetailsView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String?) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
@@ -384,10 +385,11 @@ fun MediaDetailsView(
                         )
 
                     DetailsType.STAFF_CHARACTERS ->
-                        CharacterStaffView(
+                        MediaCharacterStaffView(
                             mediaId = mediaId,
                             viewModel = viewModel,
-                            navigateToCharacterDetails = navigateToCharacterDetails
+                            navigateToCharacterDetails = navigateToCharacterDetails,
+                            navigateToStaffDetails = navigateToStaffDetails
                         )
 
                     DetailsType.RELATIONS ->
@@ -527,7 +529,8 @@ fun MediaDetailsViewPreview() {
             navigateBack = {},
             navigateToMediaDetails = {},
             navigateToFullscreenImage = {},
-            navigateToCharacterDetails = {}
+            navigateToCharacterDetails = {},
+            navigateToStaffDetails = {}
         )
     }
 }

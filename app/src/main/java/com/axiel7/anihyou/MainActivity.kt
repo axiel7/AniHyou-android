@@ -74,6 +74,8 @@ import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.settings.SettingsView
+import com.axiel7.anihyou.ui.staffdetails.STAFF_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
@@ -278,6 +280,9 @@ fun MainView(
                     navigateToCharacterDetails = { id ->
                         navController.navigate("character/$id")
                     },
+                    navigateToStaffDetails = { id ->
+                        navController.navigate("staff/$id")
+                    },
                     navigateToMediaChart = {
                         navController.navigate("media_chart/${it.name}")
                     },
@@ -306,7 +311,10 @@ fun MainView(
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate("character/$id")
-                    }
+                    },
+                    navigateToStaffDetails = { id ->
+                        navController.navigate("staff/$id")
+                    },
                 )
             }
 
@@ -399,6 +407,31 @@ fun MainView(
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
                             navController.navigate("full_image/$encodedUrl")
                         },
+                    )
+                }
+            }
+
+            composable(STAFF_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let { staffId ->
+                    StaffDetailsView(
+                        staffId = staffId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id")
+                        },
+                        navigateToCharacterDetails = { id ->
+                            navController.navigate("character/$id")
+                        },
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                            navController.navigate("full_image/$encodedUrl")
+                        }
                     )
                 }
             }

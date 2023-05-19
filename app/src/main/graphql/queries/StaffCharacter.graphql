@@ -1,0 +1,28 @@
+query StaffCharacter($staffId: Int, $page: Int, $perPage: Int) {
+    Staff(id: $staffId) {
+        characterMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+            edges {
+                id
+                node {
+                    id
+                    title {
+                        userPreferred
+                    }
+                }
+                characters {
+                    id
+                    image {
+                        large
+                    }
+                    name {
+                        userPreferred
+                    }
+                }
+            }
+            pageInfo {
+                currentPage
+                hasNextPage
+            }
+        }
+    }
+}

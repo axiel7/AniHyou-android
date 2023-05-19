@@ -1,0 +1,23 @@
+query StaffMedia($staffId: Int, $page: Int, $perPage: Int) {
+    Staff(id: $staffId) {
+        staffMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+            edges {
+                id
+                node {
+                    id
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                }
+                staffRole
+            }
+            pageInfo {
+                currentPage
+                hasNextPage
+            }
+        }
+    }
+}

@@ -56,6 +56,7 @@ import com.axiel7.anihyou.utils.DateUtils
 fun ExploreView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
@@ -120,6 +121,7 @@ fun ExploreView(
                         performSearch = performSearch,
                         navigateToMediaDetails = navigateToMediaDetails,
                         navigateToCharacterDetails = navigateToCharacterDetails,
+                        navigateToStaffDetails = navigateToStaffDetails,
                         navigateToUserDetails = navigateToUserDetails
                     )
                 }
@@ -254,6 +256,7 @@ fun SearchView(
     performSearch: MutableState<Boolean>,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: SearchViewModel = viewModel()
@@ -331,8 +334,33 @@ fun SearchView(
                         }
                     )
                 }
+                if (viewModel.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                }
             }
-            SearchType.STAFF -> { item { Text(text = "Coming soon") } }
+            SearchType.STAFF -> {
+                items(
+                    items = viewModel.searchedStaff,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    PersonItemHorizontal(
+                        title = item.name?.userPreferred ?: "",
+                        modifier = Modifier.fillMaxWidth(),
+                        imageUrl = item.image?.medium,
+                        onClick = {
+                            navigateToStaffDetails(item.id)
+                        }
+                    )
+                }
+                if (viewModel.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                }
+            }
             SearchType.STUDIO -> { item { Text(text = "Coming soon") } }
             SearchType.USER -> {
                 items(
@@ -442,6 +470,7 @@ fun ExploreViewPreview() {
                 navigateToMediaChart = {},
                 navigateToAnimeSeason = { _, _ -> },
                 navigateToCharacterDetails = {},
+                navigateToStaffDetails = {},
                 navigateToUserDetails = {}
             )
         }

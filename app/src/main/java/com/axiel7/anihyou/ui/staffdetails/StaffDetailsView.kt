@@ -1,10 +1,11 @@
-package com.axiel7.anihyou.ui.characterdetails
+package com.axiel7.anihyou.ui.staffdetails
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,13 +21,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.StaffCharacterQuery
+import com.axiel7.anihyou.data.model.yearsActiveFormatted
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
@@ -47,32 +44,36 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
+import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.formatted
-import com.google.accompanist.placeholder.material.placeholder
+import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
 
-private enum class CharacterInfoType {
-    INFO, MEDIA;
+private enum class StaffInfoType {
+    INFO, MEDIA, CHARACTER;
 
     companion object {
         val tabRows = arrayOf(
             TabRowItem(INFO, title = R.string.information, icon = R.drawable.info_24),
             TabRowItem(MEDIA, title = R.string.character_media, icon = R.drawable.movie_24),
+            TabRowItem(CHARACTER, title = R.string.characters, icon = R.drawable.record_voice_over_24),
         )
     }
 }
 
-const val CHARACTER_DETAILS_DESTINATION = "character/{id}"
+const val STAFF_DETAILS_DESTINATION = "staff/{id}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharacterDetailsView(
-    characterId: Int,
+fun StaffDetailsView(
+    staffId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
-    val viewModel: CharacterDetailsViewModel = viewModel()
+    val viewModel: StaffDetailsViewModel = viewModel()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -83,40 +84,42 @@ fun CharacterDetailsView(
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         DefaultTabRowWithPager(
-            tabs = CharacterInfoType.tabRows,
+            tabs = StaffInfoType.tabRows,
             modifier = Modifier.padding(padding)
         ) {
-            when (CharacterInfoType.tabRows[it].value) {
-                CharacterInfoType.INFO ->
-                    CharacterInfoView(
-                        characterId = characterId,
+            when (StaffInfoType.tabRows[it].value) {
+                StaffInfoType.INFO ->
+                    StaffInfoView(
+                        staffId = staffId,
                         viewModel = viewModel,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        navigateToFullscreenImage = navigateToFullscreenImage,
+                        navigateToFullscreenImage = navigateToFullscreenImage
                     )
-                CharacterInfoType.MEDIA ->
-                    CharacterMediaView(
-                        characterId = characterId,
+                StaffInfoType.MEDIA ->
+                    StaffMediaView(
+                        staffId = staffId,
                         viewModel = viewModel,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         navigateToMediaDetails = navigateToMediaDetails
+                    )
+                StaffInfoType.CHARACTER ->
+                    StaffCharacterView(
+                        staffId = staffId,
+                        viewModel = viewModel,
+                        navigateToCharacterDetails = navigateToCharacterDetails
                     )
             }
         }
-    }//: Scaffold
+    }
 }
 
 @Composable
-fun CharacterInfoView(
-    characterId: Int,
-    viewModel: CharacterDetailsViewModel,
+fun StaffInfoView(
+    staffId: Int,
+    viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
-    var showSpoiler by remember { mutableStateOf(false) }
-
-    LaunchedEffect(characterId) {
-        viewModel.getCharacterDetails(characterId)
+    LaunchedEffect(staffId) {
+        viewModel.getStaffDetails(staffId)
     }
 
     Column(
@@ -128,12 +131,12 @@ fun CharacterInfoView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PersonImage(
-                url = viewModel.characterDetails?.image?.large,
+                url = viewModel.staffDetails?.image?.large,
                 modifier = Modifier
                     .padding(16.dp)
                     .size(PERSON_IMAGE_SIZE_BIG.dp)
                     .clickable {
-                        navigateToFullscreenImage(viewModel.characterDetails?.image?.large)
+                        navigateToFullscreenImage(viewModel.staffDetails?.image?.large)
                     },
                 showShadow = true
             )
@@ -143,7 +146,7 @@ fun CharacterInfoView(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = viewModel.characterDetails?.name?.userPreferred ?: "Loading",
+                    text = viewModel.staffDetails?.name?.userPreferred ?: "Loading",
                     modifier = Modifier
                         .padding(8.dp)
                         .defaultPlaceholder(visible = viewModel.isLoading),
@@ -151,31 +154,18 @@ fun CharacterInfoView(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                if (!viewModel.characterDetails?.name?.native.isNullOrBlank() || viewModel.isLoading) {
+                if (!viewModel.staffDetails?.name?.native.isNullOrBlank() || viewModel.isLoading) {
                     Text(
-                        text = viewModel.characterDetails?.name?.native ?: "Loading...",
+                        text = viewModel.staffDetails?.name?.native ?: "Loading...",
                         modifier = Modifier
                             .padding(8.dp)
                             .defaultPlaceholder(visible = viewModel.isLoading),
                     )
                 }
-
-                if (viewModel.alternativeNames?.isNotBlank() == true) {
+                if (!viewModel.staffDetails?.name?.alternative.isNullOrEmpty()) {
                     Text(
-                        text = viewModel.alternativeNames ?: "",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading),
-                    )
-                }
-
-                if (viewModel.alternativeNamesSpoiler?.isNotBlank() == true) {
-                    Text(
-                        text = viewModel.alternativeNamesSpoiler ?: "",
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .placeholder(visible = !showSpoiler)
-                            .clickable { showSpoiler = !showSpoiler }
+                        text = viewModel.staffDetails?.name?.alternative?.joinToString() ?: "",
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
             }//: Column
@@ -183,22 +173,37 @@ fun CharacterInfoView(
 
         InfoItemView(
             title = stringResource(R.string.birthday),
-            info = viewModel.characterDetails?.dateOfBirth?.fuzzyDate?.formatted(),
+            info = viewModel.staffDetails?.dateOfBirth?.fuzzyDate?.formatted(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.age),
-            info = viewModel.characterDetails?.age,
+            info = viewModel.staffDetails?.age.toStringOrNull(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.gender),
-            info = viewModel.characterDetails?.gender,
+            info = viewModel.staffDetails?.gender,
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.blood_type),
-            info = viewModel.characterDetails?.bloodType,
+            info = viewModel.staffDetails?.bloodType,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.years_active),
+            info = viewModel.staffDetails?.yearsActiveFormatted(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.hometown),
+            info = viewModel.staffDetails?.homeTown,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.occupations),
+            info = viewModel.staffDetails?.primaryOccupations?.filterNotNull()?.joinToString(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
 
@@ -210,23 +215,23 @@ fun CharacterInfoView(
                     .defaultPlaceholder(visible = true),
                 lineHeight = 18.sp
             )
-        } else if (viewModel.characterDetails?.description != null) {
-            HtmlWebView(html = viewModel.characterDetails!!.description!!)
+        } else if (viewModel.staffDetails?.description != null) {
+            HtmlWebView(html = viewModel.staffDetails!!.description!!)
         }
     }//: Column
 }
 
 @Composable
-fun CharacterMediaView(
-    characterId: Int,
-    viewModel: CharacterDetailsViewModel,
+fun StaffMediaView(
+    staffId: Int,
+    viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getCharacterMedia(characterId)
+        if (viewModel.hasNextPageMedia) viewModel.getStaffMedia(staffId)
     }
 
     LazyColumn(
@@ -234,7 +239,7 @@ fun CharacterMediaView(
         state = listState,
     ) {
         items(
-            items = viewModel.characterMedia,
+            items = viewModel.staffMedia,
             key = { it.id!! },
             contentType = { it }
         ) { item ->
@@ -243,16 +248,8 @@ fun CharacterMediaView(
                 imageUrl = item.node?.coverImage?.large,
                 subtitle1 = {
                     Text(
-                        text = item.characterRole?.localized() ?: "",
+                        text = item.staffRole ?: "",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 15.sp
-                    )
-                },
-                subtitle2 = {
-                    Text(
-                        text = item.voiceActors
-                            ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" } ?: "",
-                        color = MaterialTheme.colorScheme.outline,
                         fontSize = 15.sp
                     )
                 },
@@ -265,7 +262,56 @@ fun CharacterMediaView(
             items(10) {
                 MediaItemHorizontalPlaceholder()
             }
-        } else if (viewModel.characterMedia.isEmpty()) {
+        } else if (viewModel.staffMedia.isEmpty()) {
+            item {
+                Text(
+                    text = stringResource(R.string.no_information),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StaffCharacterView(
+    staffId: Int,
+    viewModel: StaffDetailsViewModel,
+    modifier: Modifier = Modifier,
+    navigateToCharacterDetails: (Int) -> Unit,
+) {
+    val listState = rememberLazyListState()
+
+    listState.OnBottomReached(buffer = 3) {
+        if (viewModel.hasNextPageCharacter) viewModel.getStaffCharacters(staffId)
+    }
+
+    LazyColumn(
+        modifier = modifier,
+        state = listState,
+    ) {
+        items(
+            items = viewModel.staffCharacters,
+            key = { it.id!! },
+            contentType = { it }
+        ) { item ->
+            item.characters?.forEach { character ->
+                PersonItemHorizontal(
+                    title = character?.name?.userPreferred ?: "",
+                    modifier = Modifier.fillMaxWidth(),
+                    imageUrl = character?.image?.large,
+                    subtitle = item.node?.title?.userPreferred ?: "",
+                    onClick = {
+                        navigateToCharacterDetails(character!!.id)
+                    }
+                )
+            }
+        }
+        if (viewModel.isLoading) {
+            items(10) {
+                MediaItemHorizontalPlaceholder()
+            }
+        } else if (viewModel.staffCharacters.isEmpty()) {
             item {
                 Text(
                     text = stringResource(R.string.no_information),
@@ -278,13 +324,14 @@ fun CharacterMediaView(
 
 @Preview
 @Composable
-fun CharacterDetailsViewPreview() {
+fun StaffDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            CharacterDetailsView(
-                characterId = 1,
+            StaffDetailsView(
+                staffId = 0,
                 navigateBack = {},
                 navigateToMediaDetails = {},
+                navigateToCharacterDetails = {},
                 navigateToFullscreenImage = {}
             )
         }

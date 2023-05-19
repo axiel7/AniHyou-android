@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
+import com.axiel7.anihyou.SearchStaffQuery
 import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaSort
@@ -31,7 +32,7 @@ class SearchViewModel : BaseViewModel() {
         }
     }
 
-    var searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
+    val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
     suspend fun searchMedia(mediaType: MediaType, query: String) {
         isLoading = true
@@ -50,7 +51,7 @@ class SearchViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    var searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
+    val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
 
     suspend fun searchCharacter(query: String) {
         isLoading = true
@@ -65,15 +66,26 @@ class SearchViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    suspend fun searchStaff(query: String) {
+    val searchedStaff = mutableStateListOf<SearchStaffQuery.Staff>()
 
+    suspend fun searchStaff(query: String) {
+        isLoading = true
+        val response = SearchStaffQuery(
+            page = Optional.present(1),
+            perPage = Optional.present(perPage),
+            search = Optional.present(query)
+        ).tryQuery()
+
+        searchedStaff.clear()
+        response?.data?.Page?.staff?.filterNotNull()?.let { searchedStaff.addAll(it) }
+        isLoading = false
     }
 
     suspend fun searchStudio(query: String) {
 
     }
 
-    var searchedUsers = mutableStateListOf<SearchUserQuery.User>()
+    val searchedUsers = mutableStateListOf<SearchUserQuery.User>()
 
     suspend fun searchUser(query: String) {
         isLoading = true

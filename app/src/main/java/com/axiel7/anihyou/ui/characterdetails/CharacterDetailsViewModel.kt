@@ -34,6 +34,7 @@ class CharacterDetailsViewModel : BaseViewModel() {
     var characterMedia =  mutableStateListOf<CharacterMediaQuery.Edge>()
 
     suspend fun getCharacterMedia(characterId: Int) {
+        isLoading = page == 1
         val response = CharacterMediaQuery(
             characterId = Optional.present(characterId),
             page = Optional.present(page),
@@ -43,5 +44,6 @@ class CharacterDetailsViewModel : BaseViewModel() {
         response?.data?.Character?.media?.edges?.filterNotNull()?.let { characterMedia.addAll(it) }
         page = response?.data?.Character?.media?.pageInfo?.currentPage?.plus(1) ?: page
         hasNextPage = response?.data?.Character?.media?.pageInfo?.hasNextPage ?: false
+        isLoading = false
     }
 }

@@ -26,10 +26,11 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
 
 @Composable
-fun CharacterStaffView(
+fun MediaCharacterStaffView(
     mediaId: Int,
     viewModel: MediaDetailsViewModel,
     navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -53,7 +54,9 @@ fun CharacterStaffView(
                             title = item.mediaStaff.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaStaff.node?.image?.medium,
                             subtitle = item.mediaStaff.role,
-                            onClick = {}
+                            onClick = {
+                                navigateToStaffDetails(item.mediaStaff.node!!.id)
+                            }
                         )
                     }
                 }//: Grid
@@ -97,13 +100,14 @@ fun CharacterStaffView(
 
 @Preview
 @Composable
-fun CharacterStaffViewPreview() {
+fun MediaCharacterStaffViewPreview() {
     AniHyouTheme {
         Surface {
-            CharacterStaffView(
+            MediaCharacterStaffView(
                 mediaId = 1,
                 viewModel = viewModel(),
-                navigateToCharacterDetails = {}
+                navigateToCharacterDetails = {},
+                navigateToStaffDetails = {}
             )
         }
     }
