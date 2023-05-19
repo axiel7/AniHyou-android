@@ -42,7 +42,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.get
 import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
@@ -94,7 +93,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        parseIntentData(intent.data)
+        var detailsType: String? = null
+        var detailsId: Int? = null
+        if (intent.data != null) {
+            parseLoginIntentData(intent.data)
+            // Manually handle deep links because the uri pattern in the compose navigation
+            // matches this -> https://anilist.co/manga/41514/
+            // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
+            // TODO: find a better solution :)
+            val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
+            if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
+                val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
+                detailsType = linkSplit[1]
+                detailsId = linkSplit[2].toIntOrNull()
+            }
+        }
 
         //get necessary preferences while on splashscreen
         val startTab = App.dataStore.getValueSync(LAST_TAB_PREFERENCE_KEY)
@@ -103,16 +116,19 @@ class MainActivity : ComponentActivity() {
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let { App.animeListSort = it }
         App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
 
-        var mediaId: Int? = null
-        var mediaType: String? = null
-        if (intent.action == "details") {
-            mediaId = intent.getIntExtra("media_id", 0)
-            mediaType = intent.getStringExtra("media_type")
-        }
-
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
             val navController = rememberAnimatedNavController()
+
+            LaunchedEffect(detailsId) {
+                if (detailsId != 0 && detailsType != null) {
+                    when (detailsType) {
+                        "anime", "manga" -> {
+                            navController.navigate("media_details/$detailsId")
+                        }
+                    }
+                }
+            }
 
             AniHyouTheme(
                 darkTheme = if (themePreference == THEME_FOLLOW_SYSTEM) isSystemInDarkTheme()
@@ -129,21 +145,15 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-
-            LaunchedEffect(mediaId) {
-                if (mediaId != null && mediaId != 0) {
-                    navController.navigate("details/$mediaType/$mediaId")
-                }
-            }
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        parseIntentData(intent?.data)
+        parseLoginIntentData(intent?.data)
     }
 
-    private fun parseIntentData(data: Uri?) {
+    private fun parseLoginIntentData(data: Uri?) {
         if (data?.scheme == ANIHYOU_SCHEME) {
             lifecycleScope.launch {
                 LoginRepository.parseRedirectUri(data)
@@ -281,10 +291,6 @@ fun MainView(
                 arguments = listOf(
                     navArgument("media_id") { type = NavType.IntType }
                 ),
-                deepLinks = listOf(
-                    navDeepLink { uriPattern = "https://anilist.co/anime/{media_id}" },
-                    navDeepLink { uriPattern = "https://anilist.co/manga/{media_id}" }
-                )
             ) { navEntry ->
                 MediaDetailsView(
                     mediaId = navEntry.arguments?.getInt("media_id") ?: 0,
