@@ -109,67 +109,15 @@ private enum class DetailsType {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MediaDetailsHostView(
-    mediaId: Int,
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-) {
-    val scope = rememberCoroutineScope()
-    val viewModel: MediaDetailsViewModel = viewModel()
-    val dismissState = rememberDismissState(initialValue = DismissValue.DismissedToStart)
-
-    SwipeToDismiss(
-        state = dismissState,
-        background = {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                MediaDetailsView(
-                    viewModel = viewModel,
-                    mediaId = mediaId,
-                    navigateBack = navigateBack,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    onClickCoverImage = {
-                        scope.launch { dismissState.reset() }
-                    }
-                )
-                if (dismissState.currentValue == DismissValue.Default) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
-                            )
-                    )
-                }
-            }
-        },
-        dismissContent = {
-            FullScreenImageView(
-                imageUrl = viewModel.mediaDetails?.coverImage?.extraLarge,
-                dismissState = dismissState
-            )
-        },
-        modifier = Modifier.fillMaxSize(),
-        directions = setOf(
-            DismissDirection.EndToStart,
-            DismissDirection.StartToEnd,
-        )
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MediaDetailsView(
-    viewModel: MediaDetailsViewModel,
     mediaId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
-    onClickCoverImage: () -> Unit,
 ) {
     val context = LocalContext.current
+    val viewModel: MediaDetailsViewModel = viewModel()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -249,7 +197,7 @@ fun MediaDetailsView(
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
                         .defaultPlaceholder(visible = viewModel.isLoading)
-                        .clickable(onClick = onClickCoverImage)
+                        .clickable { }
                 )
                 Column {
                     Text(
@@ -576,11 +524,9 @@ fun MediaInformationView(
 fun MediaDetailsViewPreview() {
     AniHyouTheme {
         MediaDetailsView(
-            viewModel = viewModel(),
             mediaId = 1,
             navigateBack = {},
             navigateToMediaDetails = {},
-            onClickCoverImage = {}
         )
     }
 }
