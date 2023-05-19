@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,10 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.HtmlWebView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -56,6 +61,7 @@ fun CharacterDetailsView(
     
     LaunchedEffect(characterId) {
         viewModel.getCharacterDetails(characterId)
+        viewModel.getCharacterMedia(characterId)
     }
 
     DefaultScaffoldWithSmallTopAppBar(
@@ -63,65 +69,94 @@ fun CharacterDetailsView(
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                .verticalScroll(rememberScrollState()),
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PersonImage(
-                    url = viewModel.characterDetails?.image?.large,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(PERSON_IMAGE_SIZE_BIG.dp),
-                    showShadow = true
-                )
-
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = viewModel.characterDetails?.name?.userPreferred ?: "Loading",
+                    PersonImage(
+                        url = viewModel.characterDetails?.image?.large,
                         modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
+                            .padding(16.dp)
+                            .size(PERSON_IMAGE_SIZE_BIG.dp),
+                        showShadow = true
                     )
-                    Text(
-                        text = viewModel.alternativeNames ?: "Loading...",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading),
-                    )
-                    if (viewModel.alternativeNamesSpoiler?.isNotBlank() == true) {
-                        Text(
-                            text = viewModel.alternativeNamesSpoiler ?: "",
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .placeholder(visible = !showSpoiler)
-                                .clickable { showSpoiler = !showSpoiler }
-                        )
-                    }
-                }//: Column
-            }//: Row
 
-            if (viewModel.characterDetails?.description == null) {
-                Text(
-                    text = stringResource(R.string.lorem_ipsun),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .defaultPlaceholder(visible = viewModel.isLoading),
-                    lineHeight = 18.sp
-                )
-            } else {
-                HtmlWebView(html = viewModel.characterDetails!!.description!!)
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = viewModel.characterDetails?.name?.userPreferred ?: "Loading",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading),
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = viewModel.alternativeNames ?: "Loading...",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading),
+                        )
+                        if (viewModel.alternativeNamesSpoiler?.isNotBlank() == true) {
+                            Text(
+                                text = viewModel.alternativeNamesSpoiler ?: "",
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .placeholder(visible = !showSpoiler)
+                                    .clickable { showSpoiler = !showSpoiler }
+                            )
+                        }
+                    }//: Column
+                }//: Row
+
+                if (viewModel.characterDetails?.description == null) {
+                    Text(
+                        text = stringResource(R.string.lorem_ipsun),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .defaultPlaceholder(visible = viewModel.isLoading),
+                        lineHeight = 18.sp
+                    )
+                } else {
+                    HtmlWebView(html = viewModel.characterDetails!!.description!!)
+                }
             }
 
+            items(
+                items = viewModel.characterMedia,
+                key = { it.id!! },
+                contentType = { it }
+            ) { item ->
+                MediaItemHorizontal(
+                    title = item.node?.title?.userPreferred ?: "",
+                    imageUrl = item.node?.coverImage?.large,
+                    subtitle1 = {
+                        Text(
+                            text = item.characterRole?.localized() ?: "",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 15.sp
+                        )
+                    },
+                    subtitle2 = {
+                        Text(
+                            text = item.voiceActors
+                                ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" } ?: "",
+                            color = MaterialTheme.colorScheme.outline,
+                            fontSize = 15.sp
+                        )
+                    },
+                    onClick = {
+                        navigateToMediaDetails(item.node?.id!!)
+                    }
+                )
+            }
         }//: Column
     }//: Scaffold
 }

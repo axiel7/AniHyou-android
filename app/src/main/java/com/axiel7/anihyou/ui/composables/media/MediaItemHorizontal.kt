@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -36,11 +37,10 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
+    subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
+    subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
-    score: Int,
-    format: MediaFormat,
-    year: Int?,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -54,7 +54,7 @@ fun MediaItemHorizontal(
                 .size(
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
                     height = MEDIA_POSTER_SMALL_HEIGHT.dp
-            ),
+                ),
             contentAlignment = Alignment.BottomStart
         ) {
             MediaPoster(
@@ -92,6 +92,26 @@ fun MediaItemHorizontal(
                 maxLines = 2
             )
 
+            if (subtitle1 != null) subtitle1()
+            if (subtitle2 != null) subtitle2()
+        }//: Column
+    }//: Row
+}
+
+@Composable
+fun MediaItemHorizontal(
+    title: String,
+    imageUrl: String?,
+    badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    score: Int,
+    format: MediaFormat,
+    year: Int?,
+    onClick: () -> Unit,
+) {
+    MediaItemHorizontal(
+        title = title,
+        imageUrl = imageUrl,
+        subtitle1 = {
             Text(
                 text = buildString {
                     append(format.localized())
@@ -99,13 +119,16 @@ fun MediaItemHorizontal(
                 },
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        },
+        subtitle2 = {
             SmallScoreIndicator(
                 score = "$score%",
                 fontSize = 15.sp
             )
-
-        }//: Column
-    }//: Row
+        },
+        badgeContent = badgeContent,
+        onClick = onClick
+    )
 }
 
 @Composable
