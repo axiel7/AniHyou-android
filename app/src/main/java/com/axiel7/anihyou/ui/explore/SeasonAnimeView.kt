@@ -1,11 +1,13 @@
 package com.axiel7.anihyou.ui.explore
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -91,16 +93,21 @@ fun SeasonAnimeView(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
             modifier = Modifier
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                .padding(padding),
+                .padding(top = padding.calculateTopPadding())
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
             state = listState,
-            horizontalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            items(viewModel.animeSeasonal) { item ->
+            items(
+                items = viewModel.animeSeasonal,
+                key = { it.id },
+                contentType = { it }
+            ) { item ->
                 MediaItemVertical(
                     title = item.title?.userPreferred ?: "",
                     imageUrl = item.coverImage?.large,
-                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+                    modifier = Modifier.wrapContentWidth(),
                     subtitle = {
                         SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
                     },
