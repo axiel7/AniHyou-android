@@ -81,6 +81,19 @@ fun UserMediaListHostView(
         rememberTopAppBarState()
     )
 
+    if (openSortDialog) {
+        DialogWithRadioSelection(
+            values = UserMediaListSort.values(),
+            defaultValue = UserMediaListSort.valueOf(sortPreference),
+            title = stringResource(R.string.sort),
+            onConfirm = {
+                sortPreference = it.value.rawValue
+                openSortDialog = false
+            },
+            onDismiss = { openSortDialog = false }
+        )
+    }
+
     DefaultScaffoldWithSmallTopAppBar(
         title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
@@ -128,19 +141,6 @@ fun UserMediaListHostView(
             }//: Pager
         }//: Column
     }//: Scaffold
-
-    if (openSortDialog) {
-        DialogWithRadioSelection(
-            values = UserMediaListSort.values(),
-            defaultValue = UserMediaListSort.valueOf(sortPreference),
-            title = stringResource(R.string.sort),
-            onConfirm = {
-                sortPreference = it.value.rawValue
-                openSortDialog = false
-            },
-            onDismiss = { openSortDialog = false }
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -162,6 +162,26 @@ fun UserMediaListView(
         onRefresh = { scope.launch { viewModel.getUserList() } }
     )
     val sheetState = rememberModalBottomSheetState()
+
+    listState.OnBottomReached(buffer = 3) {
+        if (viewModel.hasNextPage) viewModel.getUserList()
+    }
+
+    if (sheetState.isVisible && viewModel.selectedItem != null) {
+        EditMediaSheet(
+            sheetState = sheetState,
+            mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
+            listEntry = viewModel.selectedItem!!.basicMediaListEntry,
+            onDismiss = { scope.launch { sheetState.hide() } }
+        )
+    }
+
+    LaunchedEffect(sort) {
+        if (!viewModel.isLoading) {
+            viewModel.sort = sort
+            viewModel.refreshList()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -209,26 +229,6 @@ fun UserMediaListView(
                 .align(Alignment.TopCenter)
         )
     }//: Box
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getUserList()
-    }
-
-    if (sheetState.isVisible && viewModel.selectedItem != null) {
-        EditMediaSheet(
-            sheetState = sheetState,
-            mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
-            listEntry = viewModel.selectedItem!!.basicMediaListEntry,
-            onDismiss = { scope.launch { sheetState.hide() } }
-        )
-    }
-
-    LaunchedEffect(sort) {
-        if (!viewModel.isLoading) {
-            viewModel.sort = sort
-            viewModel.refreshList()
-        }
-    }
 }
 
 @Preview

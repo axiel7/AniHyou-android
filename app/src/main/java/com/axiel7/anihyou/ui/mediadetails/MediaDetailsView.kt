@@ -136,6 +136,15 @@ fun MediaDetailsView(
         viewModel.getDetails(mediaId)
     }
 
+    if (sheetState.isVisible && viewModel.mediaDetails != null) {
+        EditMediaSheet(
+            sheetState = sheetState,
+            mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
+            listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
+            onDismiss = { scope.launch { sheetState.hide() } }
+        )
+    }
+
     Scaffold(
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
@@ -405,15 +414,6 @@ fun MediaDetailsView(
             }//: Column
         }//: Column
     }//: Scaffold
-
-    if (sheetState.isVisible && viewModel.mediaDetails != null) {
-        EditMediaSheet(
-            sheetState = sheetState,
-            mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
-            listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { scope.launch { sheetState.hide() } }
-        )
-    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

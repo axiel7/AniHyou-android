@@ -31,6 +31,11 @@ fun MediaRelationsView(
     viewModel: MediaDetailsViewModel,
     navigateToDetails: (Int) -> Unit,
 ) {
+    LaunchedEffect(mediaId) {
+        if (viewModel.mediaRelated.isEmpty())
+            viewModel.getMediaRelationsRecommendations(mediaId)
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -92,12 +97,7 @@ fun MediaRelationsView(
                 }
             }
         }
-    }
-
-    LaunchedEffect(mediaId) {
-        if (viewModel.mediaRelated.isEmpty())
-            viewModel.getMediaRelationsRecommendations(mediaId)
-    }
+    }//: Column
 }
 
 @Preview

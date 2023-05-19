@@ -72,6 +72,11 @@ fun ProfileView(
     val isMyProfile by remember { derivedStateOf { userId == null } }
     var selectedTabItem by remember { mutableStateOf(ProfileInfoType.tabRows[0]) }
 
+    LaunchedEffect(userId) {
+        if (userId == null) viewModel.getMyUserInfo()
+        else viewModel.getUserInfo(userId)
+    }
+
     Scaffold(
         topBar = {
             if (!isMyProfile) {
@@ -152,11 +157,6 @@ fun ProfileView(
             }//: Column
         }//: Column
     }//: Scaffold
-
-    LaunchedEffect(userId) {
-        if (userId == null) viewModel.getMyUserInfo()
-        else viewModel.getUserInfo(userId)
-    }
 }
 
 @Preview

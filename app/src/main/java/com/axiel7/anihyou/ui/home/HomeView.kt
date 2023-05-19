@@ -60,6 +60,14 @@ fun HomeView(
         rememberTopAppBarState()
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.getAiringAnime()
+        viewModel.getThisSeasonAnime()
+        viewModel.getTrendingAnime()
+        viewModel.getNextSeasonAnime()
+        viewModel.getTrendingManga()
+    }
+
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(R.string.home),
         scrollBehavior = topAppBarScrollBehavior
@@ -217,14 +225,6 @@ fun HomeView(
             }
         }//: Column
     }//: Scaffold
-
-    LaunchedEffect(Unit) {
-        viewModel.getAiringAnime()
-        viewModel.getThisSeasonAnime()
-        viewModel.getTrendingAnime()
-        viewModel.getNextSeasonAnime()
-        viewModel.getTrendingManga()
-    }
 }
 
 @Composable

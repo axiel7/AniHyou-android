@@ -262,6 +262,16 @@ fun SearchView(
     val viewModel: SearchViewModel = viewModel()
     val listState = rememberLazyListState()
 
+    LaunchedEffect(performSearch.value, viewModel.searchType) {
+        if (performSearch.value) {
+            if (query.isNotBlank()) {
+                listState.scrollToItem(0)
+                viewModel.runSearch(query)
+            }
+            performSearch.value = false
+        }
+    }
+
     LazyColumn(
         state = listState
     ) {
@@ -384,17 +394,7 @@ fun SearchView(
                 }
             }
         }
-    }
-
-    LaunchedEffect(performSearch.value, viewModel.searchType) {
-        if (performSearch.value) {
-            if (query.isNotBlank()) {
-                listState.scrollToItem(0)
-                viewModel.runSearch(query)
-            }
-            performSearch.value = false
-        }
-    }
+    }//: LazyColumn
 }
 
 @Composable
@@ -407,6 +407,22 @@ fun MediaSearchSortChip(
         mutableStateOf(MediaSortSearch.valueOf(viewModel.mediaSort) ?: MediaSortSearch.SEARCH_MATCH)
     }
     var isDescending by remember { mutableStateOf(true) }
+
+    if (openDialog) {
+        DialogWithRadioSelection(
+            values = MediaSortSearch.values(),
+            defaultValue = selectedSort,
+            title = stringResource(R.string.sort),
+            onConfirm = {
+                selectedSort = it
+                viewModel.mediaSort = if (isDescending) it.desc else it.asc
+                openDialog = false
+                performSearch.value = true
+            },
+            onDismiss = { openDialog = false }
+        )
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -443,21 +459,7 @@ fun MediaSearchSortChip(
             },
             modifier = Modifier.padding(8.dp),
         )
-    }
-    if (openDialog) {
-        DialogWithRadioSelection(
-            values = MediaSortSearch.values(),
-            defaultValue = selectedSort,
-            title = stringResource(R.string.sort),
-            onConfirm = {
-                selectedSort = it
-                viewModel.mediaSort = if (isDescending) it.desc else it.asc
-                openDialog = false
-                performSearch.value = true
-            },
-            onDismiss = { openDialog = false }
-        )
-    }
+    }//: Row
 }
 
 @Preview

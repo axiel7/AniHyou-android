@@ -81,6 +81,37 @@ fun EditMediaSheet(
         )
     }
 
+    if (viewModel.openDatePicker) {
+        EditMediaDatePicker(
+            viewModel = viewModel,
+            datePickerState = datePickerState,
+            onDateSelected = {
+                when (viewModel.selectedDateType) {
+                    1 -> { viewModel.startDate = it.millisToLocalDate() }
+                    2 -> { viewModel.endDate = it.millisToLocalDate() }
+                }
+            }
+        )
+    }
+
+    if (viewModel.openDeleteDialog) {
+        DeleteMediaEntryDialog(viewModel = viewModel)
+    }
+
+    LaunchedEffect(viewModel.message) {
+        if (viewModel.message != null) {
+            context.showToast(viewModel.message)
+            viewModel.message = null
+        }
+    }
+
+    LaunchedEffect(viewModel.updateSuccess) {
+        if (viewModel.updateSuccess) {
+            onDismiss()
+            viewModel.updateSuccess = false
+        }
+    }
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss
@@ -244,37 +275,6 @@ fun EditMediaSheet(
             }
         }//:Column
     }//:Sheet
-
-    if (viewModel.openDatePicker) {
-        EditMediaDatePicker(
-            viewModel = viewModel,
-            datePickerState = datePickerState,
-            onDateSelected = {
-                when (viewModel.selectedDateType) {
-                    1 -> { viewModel.startDate = it.millisToLocalDate() }
-                    2 -> { viewModel.endDate = it.millisToLocalDate() }
-                }
-            }
-        )
-    }
-
-    if (viewModel.openDeleteDialog) {
-        DeleteMediaEntryDialog(viewModel = viewModel)
-    }
-
-    LaunchedEffect(viewModel.message) {
-        if (viewModel.message != null) {
-            context.showToast(viewModel.message)
-            viewModel.message = null
-        }
-    }
-
-    LaunchedEffect(viewModel.updateSuccess) {
-        if (viewModel.updateSuccess) {
-            onDismiss()
-            viewModel.updateSuccess = false
-        }
-    }
 }
 
 @Composable

@@ -32,6 +32,11 @@ fun MediaCharacterStaffView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
 ) {
+    LaunchedEffect(mediaId) {
+        if (viewModel.mediaStaff.isEmpty())
+            viewModel.getMediaCharactersAndStaff(mediaId)
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -91,11 +96,6 @@ fun MediaCharacterStaffView(
             }//: Box
         }
     }//: Column
-
-    LaunchedEffect(mediaId) {
-        if (viewModel.mediaStaff.isEmpty())
-            viewModel.getMediaCharactersAndStaff(mediaId)
-    }
 }
 
 @Preview

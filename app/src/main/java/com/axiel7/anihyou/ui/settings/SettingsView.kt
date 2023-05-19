@@ -161,8 +161,8 @@ fun SettingsView(
                     }
                 )
             }
-        }
-    }
+        }//: Column
+    }//: Scaffold
 }
 
 @Preview

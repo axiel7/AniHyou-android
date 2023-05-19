@@ -77,6 +77,35 @@ fun SeasonAnimeView(
 
     var season by remember { mutableStateOf(initialSeason) }
 
+    listState.OnBottomReached(buffer = 3) {
+        if (viewModel.hasNextPage) viewModel.getAnimeSeasonal(
+            season = season.season,
+            year = season.year
+        )
+    }
+
+    LaunchedEffect(season) {
+        if (!viewModel.isLoading) {
+            viewModel.getAnimeSeasonal(
+                season = season.season,
+                year = season.year,
+                resetPage = true
+            )
+        }
+    }
+
+    if (sheetState.isVisible) {
+        SeasonChartFilterSheet(
+            sheetState = sheetState,
+            initialSeason = season,
+            onDismiss = { scope.launch { sheetState.hide() } },
+            onConfirm = {
+                season = it
+                scope.launch { sheetState.hide() }
+            }
+        )
+    }
+
     DefaultScaffoldWithMediumTopAppBar(
         title = season.localized(),
         floatingActionButton = {
@@ -122,36 +151,7 @@ fun SeasonAnimeView(
                 }
             }
         }//: Grid
-    }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getAnimeSeasonal(
-            season = season.season,
-            year = season.year
-        )
-    }
-
-    if (sheetState.isVisible) {
-        SeasonChartFilterSheet(
-            sheetState = sheetState,
-            initialSeason = season,
-            onDismiss = { scope.launch { sheetState.hide() } },
-            onConfirm = {
-                season = it
-                scope.launch { sheetState.hide() }
-            }
-        )
-    }
-
-    LaunchedEffect(season) {
-        if (!viewModel.isLoading) {
-            viewModel.getAnimeSeasonal(
-                season = season.season,
-                year = season.year,
-                resetPage = true
-            )
-        }
-    }
+    }//: Scaffold
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -225,7 +225,7 @@ fun SeasonChartFilterSheet(
                 }
             }
         }
-    }
+    }//: Column
 }
 
 @Preview
