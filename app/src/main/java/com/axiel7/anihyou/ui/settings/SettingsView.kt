@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
