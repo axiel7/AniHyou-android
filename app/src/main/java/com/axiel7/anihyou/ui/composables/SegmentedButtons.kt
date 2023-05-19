@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
@@ -82,7 +83,7 @@ fun <T> SegmentedButtons(
                 }
                 item.title?.let { title ->
                     Text(
-                        text = title,
+                        text = stringResource(title),
                         color = if (selectedIndex == index)
                             MaterialTheme.colorScheme.onSecondaryContainer
                         else MaterialTheme.colorScheme.onSurface

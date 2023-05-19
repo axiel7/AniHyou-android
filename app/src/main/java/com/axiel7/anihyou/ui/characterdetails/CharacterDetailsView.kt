@@ -34,15 +34,30 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.HtmlWebView
+import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.google.accompanist.placeholder.material.placeholder
+
+private enum class CharacterInfoType {
+    INFO, MEDIA;
+
+    companion object {
+        val tabRows = arrayOf(
+            TabRowItem(INFO, title = R.string.information, icon = R.drawable.info_24),
+            TabRowItem(MEDIA, title = R.string.character_media, icon = R.drawable.movie_24),
+        )
+    }
+}
 
 const val CHARACTER_DETAILS_DESTINATION = "character/{id}"
 
@@ -57,108 +72,182 @@ fun CharacterDetailsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var showSpoiler by remember { mutableStateOf(false) }
-    
-    LaunchedEffect(characterId) {
-        viewModel.getCharacterDetails(characterId)
-        viewModel.getCharacterMedia(characterId)
-    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        DefaultTabRowWithPager(
+            tabs = CharacterInfoType.tabRows,
+            modifier = Modifier.padding(padding)
         ) {
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    PersonImage(
-                        url = viewModel.characterDetails?.image?.large,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(PERSON_IMAGE_SIZE_BIG.dp),
-                        showShadow = true
+            when (CharacterInfoType.tabRows[it].value) {
+                CharacterInfoType.INFO ->
+                    CharacterInfoView(
+                        characterId = characterId,
+                        viewModel = viewModel,
+                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                     )
-
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = viewModel.characterDetails?.name?.userPreferred ?: "Loading",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading),
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = viewModel.alternativeNames ?: "Loading...",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading),
-                        )
-                        if (viewModel.alternativeNamesSpoiler?.isNotBlank() == true) {
-                            Text(
-                                text = viewModel.alternativeNamesSpoiler ?: "",
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .placeholder(visible = !showSpoiler)
-                                    .clickable { showSpoiler = !showSpoiler }
-                            )
-                        }
-                    }//: Column
-                }//: Row
-
-                if (viewModel.characterDetails?.description == null) {
-                    Text(
-                        text = stringResource(R.string.lorem_ipsun),
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading),
-                        lineHeight = 18.sp
+                CharacterInfoType.MEDIA ->
+                    CharacterMediaView(
+                        characterId = characterId,
+                        viewModel = viewModel,
+                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        navigateToMediaDetails = navigateToMediaDetails
                     )
-                } else {
-                    HtmlWebView(html = viewModel.characterDetails!!.description!!)
-                }
             }
-
-            items(
-                items = viewModel.characterMedia,
-                key = { it.id!! },
-                contentType = { it }
-            ) { item ->
-                MediaItemHorizontal(
-                    title = item.node?.title?.userPreferred ?: "",
-                    imageUrl = item.node?.coverImage?.large,
-                    subtitle1 = {
-                        Text(
-                            text = item.characterRole?.localized() ?: "",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 15.sp
-                        )
-                    },
-                    subtitle2 = {
-                        Text(
-                            text = item.voiceActors
-                                ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" } ?: "",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontSize = 15.sp
-                        )
-                    },
-                    onClick = {
-                        navigateToMediaDetails(item.node?.id!!)
-                    }
-                )
-            }
-        }//: Column
+        }
     }//: Scaffold
+}
+
+@Composable
+fun CharacterInfoView(
+    characterId: Int,
+    viewModel: CharacterDetailsViewModel,
+    modifier: Modifier = Modifier
+) {
+    var showSpoiler by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getCharacterDetails(characterId)
+    }
+
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+    ) {
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PersonImage(
+                url = viewModel.characterDetails?.image?.large,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(PERSON_IMAGE_SIZE_BIG.dp),
+                showShadow = true
+            )
+
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = viewModel.characterDetails?.name?.userPreferred ?: "Loading",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .defaultPlaceholder(visible = viewModel.isLoading),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                if (!viewModel.characterDetails?.name?.native.isNullOrBlank() || viewModel.isLoading) {
+                    Text(
+                        text = viewModel.characterDetails?.name?.native ?: "Loading...",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .defaultPlaceholder(visible = viewModel.isLoading),
+                    )
+                }
+
+                if (viewModel.alternativeNames?.isNotBlank() == true) {
+                    Text(
+                        text = viewModel.alternativeNames ?: "",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .defaultPlaceholder(visible = viewModel.isLoading),
+                    )
+                }
+
+                if (viewModel.alternativeNamesSpoiler?.isNotBlank() == true) {
+                    Text(
+                        text = viewModel.alternativeNamesSpoiler ?: "",
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .placeholder(visible = !showSpoiler)
+                            .clickable { showSpoiler = !showSpoiler }
+                    )
+                }
+            }//: Column
+        }//: Row
+
+        InfoItemView(
+            title = stringResource(R.string.birthday),
+            info = viewModel.characterDetails?.dateOfBirth?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.age),
+            info = viewModel.characterDetails?.age,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.gender),
+            info = viewModel.characterDetails?.gender,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+        InfoItemView(
+            title = stringResource(R.string.blood_type),
+            info = viewModel.characterDetails?.bloodType,
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
+
+        if (viewModel.isLoading) {
+            Text(
+                text = stringResource(R.string.lorem_ipsun),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .defaultPlaceholder(visible = true),
+                lineHeight = 18.sp
+            )
+        } else if (viewModel.characterDetails?.description != null) {
+            HtmlWebView(html = viewModel.characterDetails!!.description!!)
+        }
+    }//: Column
+}
+
+@Composable
+fun CharacterMediaView(
+    characterId: Int,
+    viewModel: CharacterDetailsViewModel,
+    modifier: Modifier = Modifier,
+    navigateToMediaDetails: (Int) -> Unit,
+) {
+    LaunchedEffect(viewModel) {
+        viewModel.getCharacterMedia(characterId)
+    }
+
+    LazyColumn(modifier = modifier) {
+        items(
+            items = viewModel.characterMedia,
+            key = { it.id!! },
+            contentType = { it }
+        ) { item ->
+            MediaItemHorizontal(
+                title = item.node?.title?.userPreferred ?: "",
+                imageUrl = item.node?.coverImage?.large,
+                subtitle1 = {
+                    Text(
+                        text = item.characterRole?.localized() ?: "",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 15.sp
+                    )
+                },
+                subtitle2 = {
+                    Text(
+                        text = item.voiceActors
+                            ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" } ?: "",
+                        color = MaterialTheme.colorScheme.outline,
+                        fontSize = 15.sp
+                    )
+                },
+                onClick = {
+                    navigateToMediaDetails(item.node?.id!!)
+                }
+            )
+        }
+    }
 }
 
 @Preview

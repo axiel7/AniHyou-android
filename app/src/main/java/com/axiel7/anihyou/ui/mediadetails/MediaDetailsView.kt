@@ -69,7 +69,8 @@ import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.ui.FullScreenImageView
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
-import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.InfoItemView
+import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
@@ -478,51 +479,51 @@ fun MediaInformationView(
     ) {
         InfoTitle(text = stringResource(R.string.information))
 
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.duration),
             info = viewModel.mediaDetails?.duration?.toLong()?.minutesToLegibleText(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.start_date),
             info = viewModel.mediaDetails?.startDate?.fuzzyDate?.formatted(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.end_date),
             info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
         if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true) {
-            MediaInfoItemView(
+            InfoItemView(
                 title = stringResource(R.string.season),
                 info = "${viewModel.mediaDetails?.season?.localized()} ${viewModel.mediaDetails?.seasonYear}"
             )
-            MediaInfoItemView(
+            InfoItemView(
                 title = stringResource(R.string.studios),
                 info = viewModel.getStudios()?.joinToString { it.name }
             )
-            MediaInfoItemView(
+            InfoItemView(
                 title = stringResource(R.string.producers),
                 info = viewModel.getProducers()?.joinToString { it.name }
             )
         }
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.source),
             info = viewModel.mediaDetails?.source?.localized(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.romaji),
             info = viewModel.mediaDetails?.title?.romaji,
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.english),
             info = viewModel.mediaDetails?.title?.english,
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        MediaInfoItemView(
+        InfoItemView(
             title = stringResource(R.string.native_title),
             info = viewModel.mediaDetails?.title?.native,
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
@@ -567,51 +568,7 @@ fun MediaInformationView(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun MediaInfoItemView(
-    title: String,
-    info: String?,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .then(modifier)
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = info ?: stringResource(R.string.unknown),
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-@Composable
-fun InfoTitle(
-    text: String,
-    trailingIcon: @Composable RowScope.() -> Unit = {}
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-        trailingIcon()
-    }
+    }//: Column
 }
 
 @Preview
