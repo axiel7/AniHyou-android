@@ -1,9 +1,51 @@
 package com.axiel7.anihyou.ui.composables
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.utils.ColorUtils.hexToString
+import com.axiel7.anihyou.utils.ContextUtils.openActionView
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewStateWithHTMLData
+
+@Composable
+fun HtmlWebView(
+    html: String
+) {
+    val context = LocalContext.current
+    val htmlConverted = generateHtml(html = html)
+    val webViewState = rememberWebViewStateWithHTMLData(data = htmlConverted)
+    val webClient = remember {
+        object : AccompanistWebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                request?.url?.let { context.openActionView(it) }
+                return true
+            }
+        }
+    }
+
+    WebView(
+        state = webViewState,
+        modifier = Modifier.fillMaxWidth(),
+        captureBackPresses = false,
+        onCreated = { webView ->
+            webView.background = ColorDrawable(Color.TRANSPARENT)
+        },
+        client = webClient
+    )
+}
 
 @Composable
 fun generateHtml(html: String) = """
