@@ -115,6 +115,7 @@ fun MediaDetailsView(
     mediaId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
@@ -388,7 +389,8 @@ fun MediaDetailsView(
                     DetailsType.STAFF_CHARACTERS ->
                         CharacterStaffView(
                             mediaId = mediaId,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            navigateToCharacterDetails = navigateToCharacterDetails
                         )
 
                     DetailsType.RELATIONS ->
@@ -527,6 +529,7 @@ fun MediaDetailsViewPreview() {
             mediaId = 1,
             navigateBack = {},
             navigateToMediaDetails = {},
+            navigateToCharacterDetails = {}
         )
     }
 }

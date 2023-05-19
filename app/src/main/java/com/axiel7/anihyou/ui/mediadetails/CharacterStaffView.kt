@@ -23,12 +23,13 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-private val gridHeight = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
+private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
 
 @Composable
 fun CharacterStaffView(
     mediaId: Int,
-    viewModel: MediaDetailsViewModel
+    viewModel: MediaDetailsViewModel,
+    navigateToCharacterDetails: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -38,7 +39,7 @@ fun CharacterStaffView(
             InfoTitle(text = stringResource(R.string.staff))
             Box(
                 modifier = Modifier
-                    .height(gridHeight.dp)
+                    .height(GRID_HEIGHT.dp)
             ) {
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
@@ -64,7 +65,7 @@ fun CharacterStaffView(
             InfoTitle(text = stringResource(R.string.characters))
             Box(
                 modifier = Modifier
-                    .height(gridHeight.dp)
+                    .height(GRID_HEIGHT.dp)
             ) {
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
@@ -78,7 +79,9 @@ fun CharacterStaffView(
                             title = item.mediaCharacter.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaCharacter.node?.image?.medium,
                             subtitle = item.mediaCharacter.role?.localized(),
-                            onClick = {}
+                            onClick = {
+                                navigateToCharacterDetails(item.mediaCharacter.node!!.id)
+                            }
                         )
                     }
                 }//: Grid
@@ -99,7 +102,8 @@ fun CharacterStaffViewPreview() {
         Surface {
             CharacterStaffView(
                 mediaId = 1,
-                viewModel = viewModel()
+                viewModel = viewModel(),
+                navigateToCharacterDetails = {}
             )
         }
     }

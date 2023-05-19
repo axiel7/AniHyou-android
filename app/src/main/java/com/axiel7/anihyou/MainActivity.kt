@@ -286,6 +286,9 @@ fun MainView(
                     },
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
+                    },
+                    navigateToCharacterDetails = { id ->
+                        navController.navigate("character/$id")
                     }
                 )
             }
