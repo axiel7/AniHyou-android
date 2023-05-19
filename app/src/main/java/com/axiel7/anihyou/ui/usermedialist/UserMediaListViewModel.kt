@@ -36,7 +36,17 @@ class UserMediaListViewModel(
             sort = Optional.present(listOf(sort))
         ).tryQuery()
 
-        response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
+        response?.data?.Page?.mediaList?.filterNotNull()?.let {
+            // Workaround: AniList API bug that always returns the status as PLANNING
+            // when the order is set to title
+            if (sort == MediaListSort.MEDIA_TITLE_ROMAJI) {
+                it.forEach { item ->
+                    mediaList.add(item.copy(
+                        basicMediaListEntry = item.basicMediaListEntry.copy(status = status)
+                    ))
+                }
+            } else mediaList.addAll(it)
+        }
         hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
         if (hasNextPage) page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
         isLoading = false
