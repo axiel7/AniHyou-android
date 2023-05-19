@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.type.MediaListSort
+import com.axiel7.anihyou.type.ScoreFormat
 
 class App : Application() {
 
@@ -17,5 +18,6 @@ class App : Application() {
         lateinit var dataStore: DataStore<Preferences>
         var animeListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
+        var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
     }
 }

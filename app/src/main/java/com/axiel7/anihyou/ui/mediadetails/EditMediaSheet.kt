@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.mediadetails
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,18 +44,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.duration
 import com.axiel7.anihyou.data.model.icon
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.isManga
 import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.maxValue
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.ClickableOutlinedTextField
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
+import com.axiel7.anihyou.ui.composables.media.FiveStarRatingView
+import com.axiel7.anihyou.ui.composables.media.SliderRatingView
+import com.axiel7.anihyou.ui.composables.media.SmileyRatingView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
@@ -80,6 +89,7 @@ fun EditMediaSheet(
             listEntry = listEntry
         )
     }
+    val scoreFormat by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
 
     if (viewModel.openDatePicker) {
         EditMediaDatePicker(
@@ -187,21 +197,50 @@ fun EditMediaSheet(
                 )
             }
 
-            //TODO: score formats
-            /*Text(
-                text = stringResource(R.string.score_value).format(viewModel.score.scoreText()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                fontWeight = FontWeight.Bold
-            )
-            Slider(
-                value = viewModel.score.toFloat(),
-                onValueChange = { viewModel.score = it.toInt() },
-                modifier = Modifier.padding(horizontal = 16.dp),
-                valueRange = 0f..10f,
-                steps = 10
-            )*/
+            // Score
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                when (scoreFormat) {
+                    ScoreFormat.POINT_10.name,
+                    ScoreFormat.POINT_10_DECIMAL.name,
+                    ScoreFormat.POINT_100.name -> {
+                        SliderRatingView(
+                            maxValue = ScoreFormat.valueOf(scoreFormat!!).maxValue(),
+                            modifier = Modifier
+                                .padding(start = 8.dp, top = 16.dp, end = 8.dp),
+                            initialRating = viewModel.score ?: 0.0,
+                            showAsDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL.name,
+                            onRatingChanged = {
+                                viewModel.score = it
+                            }
+                        )
+                    }
+
+                    ScoreFormat.POINT_5.name -> {
+                        FiveStarRatingView(
+                            modifier = Modifier.fillMaxWidth(),
+                            initialRating = viewModel.score ?: 0.0,
+                            onRatingChanged = {
+                                viewModel.score = it
+                            }
+                        )
+                    }
+
+                    ScoreFormat.POINT_3.name -> {
+                        SmileyRatingView(
+                            modifier = Modifier.fillMaxWidth(),
+                            initialRating = viewModel.score ?: 0.0,
+                            onRatingChanged = {
+                                viewModel.score = it
+                            }
+                        )
+                    }
+
+                    else -> {}
+                }
+            }
 
             Divider(modifier = Modifier.padding(vertical = 16.dp))
 

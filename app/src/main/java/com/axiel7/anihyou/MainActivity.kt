@@ -46,6 +46,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
@@ -54,6 +55,7 @@ import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
@@ -117,6 +119,7 @@ class MainActivity : ComponentActivity() {
         val theme = App.dataStore.getValueSync(THEME_PREFERENCE_KEY) ?: "follow_system"
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let { App.animeListSort = it }
         App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
+        App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let { App.scoreFormat = ScoreFormat.valueOf(it) }
 
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
