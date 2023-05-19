@@ -128,6 +128,15 @@ class MainActivity : ComponentActivity() {
                         "anime", "manga" -> {
                             navController.navigate("media_details/$detailsId")
                         }
+                        "character" -> {
+                            navController.navigate("character/$detailsId")
+                        }
+                        "staff" -> {
+                            navController.navigate("staff/$detailsId")
+                        }
+                        "user" -> {
+                            navController.navigate("profile/$detailsId")
+                        }
                     }
                 }
             }
