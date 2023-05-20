@@ -38,6 +38,7 @@ import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.HtmlWebView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.OnBottomReached
+import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -80,6 +81,9 @@ fun StaffDetailsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
+        actions = {
+            ShareIconButton(url = viewModel.staffDetails?.siteUrl ?: "")
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         DefaultTabRowWithPager(

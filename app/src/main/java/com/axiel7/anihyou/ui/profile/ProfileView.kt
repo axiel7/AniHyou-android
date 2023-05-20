@@ -37,6 +37,7 @@ import com.axiel7.anihyou.data.hexColor
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
+import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
@@ -79,15 +80,18 @@ fun ProfileView(
 
     Scaffold(
         topBar = {
-            if (!isMyProfile) {
-                TopAppBar(
-                    title = { },
-                    navigationIcon = { BackIconButton(onClick = navigateBack) },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent
-                    )
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    if (!isMyProfile) BackIconButton(onClick = navigateBack)
+                },
+                actions = {
+                    ShareIconButton(url = viewModel.userInfo?.siteUrl ?: "")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
                 )
-            }
+            )
         }
     ) { padding ->
         Column(

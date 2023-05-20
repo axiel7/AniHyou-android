@@ -73,6 +73,7 @@ query MediaDetails($mediaId: Int) {
       rank
       isMediaSpoiler
     }
+    siteUrl
   }
 }
 

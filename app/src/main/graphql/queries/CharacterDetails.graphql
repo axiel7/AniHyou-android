@@ -17,5 +17,6 @@ query CharacterDetails($characterId: Int) {
     }
     age
     bloodType
+    siteUrl
   }
 }

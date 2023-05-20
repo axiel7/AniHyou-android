@@ -66,6 +66,7 @@ import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
+import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.TopBannerView
@@ -156,6 +157,9 @@ fun MediaDetailsView(
                  title = {},
                  navigationIcon = {
                      BackIconButton(onClick = navigateBack)
+                 },
+                 actions = {
+                     ShareIconButton(url = viewModel.mediaDetails?.siteUrl ?: "")
                  },
                  colors = TopAppBarDefaults.topAppBarColors(
                      containerColor = Color.Transparent,

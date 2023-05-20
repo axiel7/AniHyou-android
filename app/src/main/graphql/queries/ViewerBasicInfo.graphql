@@ -21,4 +21,5 @@ fragment UserInfo on User {
     scoreFormat
   }
   unreadNotificationCount
+  siteUrl
 }
