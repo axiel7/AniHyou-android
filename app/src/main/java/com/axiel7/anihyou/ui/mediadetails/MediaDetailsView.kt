@@ -420,7 +420,10 @@ fun MediaDetailsView(
                             navigateToDetails = navigateToMediaDetails
                         )
 
-                    DetailsType.STATS -> MediaStatsView(viewModel = viewModel)
+                    DetailsType.STATS -> MediaStatsView(
+                        mediaId = mediaId,
+                        viewModel = viewModel
+                    )
                     DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
                 }
             }//: Column

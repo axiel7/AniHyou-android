@@ -69,3 +69,23 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val md_theme_black_background = Color(0xFF000000)
 
 val seed = Color(0xFF526CFD)
+
+val stat_light_blue = Color(0xFFD6E3FF)
+val stat_light_onBlue = Color(0xFF001B3E)
+val stat_dark_blue = Color(0xFF00468D)
+val stat_dark_onBlue = Color(0xFFD6E3FF)
+
+val stat_light_green = Color(0xFF6CFF82)
+val stat_light_onGreen = Color(0xFF002106)
+val stat_dark_green = Color(0xFF00531B)
+val stat_dark_onGreen = Color(0xFF6CFF82)
+
+val stat_light_red = Color(0xFFFFDAD5)
+val stat_light_onRed = Color(0xFF410001)
+val stat_dark_red = Color(0xFF930008)
+val stat_dark_onRed = Color(0xFFFFDAD5)
+
+val stat_light_yellow = Color(0xFFFFE175)
+val stat_light_onYellow = Color(0xFF221B00)
+val stat_dark_yellow = Color(0xFF554500)
+val stat_dark_onYellow = Color(0xFFFFE175)

@@ -161,4 +161,6 @@
     <string name="occupations">Occupations</string>
     <string name="no_information">No information</string>
     <string name="score">Score</string>
+    <string name="total_entries">Total: %s</string>
+    <string name="status_distribution">Status distribution</string>
 </resources>

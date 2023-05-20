@@ -8,6 +8,9 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
+import com.axiel7.anihyou.MediaStatsQuery
+import com.axiel7.anihyou.data.model.Stat
+import com.axiel7.anihyou.data.model.StatusDistribution
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class MediaDetailsViewModel : BaseViewModel() {
@@ -63,5 +66,24 @@ class MediaDetailsViewModel : BaseViewModel() {
         response?.data?.Media?.recommendations?.nodes?.filterNotNull()?.let { mediaRecommendations.addAll(it) }
 
         isLoadingRelationsRecommendations = false
+    }
+
+    var isLoadingStats by mutableStateOf(true)
+    var mediaStatusDistribution = mutableStateListOf<Stat<StatusDistribution>>()
+
+    suspend fun getMediaStats(mediaId: Int) {
+        isLoadingStats = true
+        val response = MediaStatsQuery(
+            mediaId = Optional.present(mediaId)
+        ).tryQuery()
+
+        mediaStatusDistribution.clear()
+        response?.data?.Media?.stats?.statusDistribution?.filterNotNull()?.forEach {
+            val status = StatusDistribution.valueOf(it.status?.rawValue)
+            if (status != null) {
+                mediaStatusDistribution.add(Stat(type = status, value = it.amount?.toFloat() ?: 0f))
+            }
+        }
+        isLoadingStats = false
     }
 }
