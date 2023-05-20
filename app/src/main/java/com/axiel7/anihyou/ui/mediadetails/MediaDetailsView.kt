@@ -48,6 +48,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +56,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.PreferencesDataStore
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.durationText
@@ -84,7 +84,9 @@ import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.NumberUtils
+import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
+import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import kotlinx.coroutines.launch
 
@@ -322,7 +324,10 @@ fun MediaDetailsView(
 
             // Synopsis
             Text(
-                text = viewModel.mediaDetails?.description?.htmlStripped() ?: stringResource(R.string.lorem_ipsun),
+                text = viewModel.mediaDetails?.description?.htmlDecoded()?.toAnnotatedString()
+                    ?: buildAnnotatedString {
+                        append(stringResource(R.string.lorem_ipsun))
+                },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .defaultPlaceholder(visible = viewModel.isLoading),

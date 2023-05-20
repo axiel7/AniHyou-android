@@ -9,7 +9,7 @@ query MediaDetails($mediaId: Int) {
     }
     format
     status
-    description
+    description(asHtml: true)
     startDate {
       ...FuzzyDate
     }
