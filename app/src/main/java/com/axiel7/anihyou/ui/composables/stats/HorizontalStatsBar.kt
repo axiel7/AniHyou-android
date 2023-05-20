@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.composables.stats
 
+import android.content.res.Configuration
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import com.axiel7.anihyou.data.model.Stat
 import com.axiel7.anihyou.data.model.StatusDistribution
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
 import com.axiel7.anihyou.ui.composables.Rectangle
+import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -34,6 +36,7 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
     stats: List<Stat<T>>,
     horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 0.dp,
+    isLoading: Boolean = false,
 ) {
     val totalValue by remember {
         derivedStateOf { stats.map { it.value }.sum() }
@@ -48,7 +51,17 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
                 .padding(horizontal = horizontalPadding),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            stats.forEach {
+            if (isLoading) {
+                for (i in 1..5) {
+                    Text(
+                        text = "Loading",
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .defaultPlaceholder(visible = true)
+                    )
+                }
+            }
+            else stats.forEach {
                 AssistChip(
                     onClick = { },
                     label = { Text(text = it.type.localized()) },

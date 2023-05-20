@@ -163,4 +163,5 @@
     <string name="score">Score</string>
     <string name="total_entries">Total: %s</string>
     <string name="status_distribution">Status distribution</string>
+    <string name="rankings">Rankings</string>
 </resources>

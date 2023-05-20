@@ -70,6 +70,7 @@ class MediaDetailsViewModel : BaseViewModel() {
 
     var isLoadingStats by mutableStateOf(true)
     var mediaStatusDistribution = mutableStateListOf<Stat<StatusDistribution>>()
+    var mediaRankings = mutableStateListOf<MediaStatsQuery.Ranking>()
 
     suspend fun getMediaStats(mediaId: Int) {
         isLoadingStats = true
@@ -84,6 +85,7 @@ class MediaDetailsViewModel : BaseViewModel() {
                 mediaStatusDistribution.add(Stat(type = status, value = it.amount?.toFloat() ?: 0f))
             }
         }
+        response?.data?.Media?.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
         isLoadingStats = false
     }
 }
