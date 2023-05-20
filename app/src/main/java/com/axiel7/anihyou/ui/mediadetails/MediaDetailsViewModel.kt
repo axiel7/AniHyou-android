@@ -9,7 +9,9 @@ import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaStatsQuery
+import com.axiel7.anihyou.data.model.ScoreDistribution
 import com.axiel7.anihyou.data.model.Stat
+import com.axiel7.anihyou.data.model.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.StatusDistribution
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
@@ -70,6 +72,7 @@ class MediaDetailsViewModel : BaseViewModel() {
 
     var isLoadingStats by mutableStateOf(true)
     var mediaStatusDistribution = mutableStateListOf<Stat<StatusDistribution>>()
+    var mediaScoreDistribution = mutableStateListOf<Stat<ScoreDistribution>>()
     var mediaRankings = mutableStateListOf<MediaStatsQuery.Ranking>()
 
     suspend fun getMediaStats(mediaId: Int) {
@@ -82,8 +85,18 @@ class MediaDetailsViewModel : BaseViewModel() {
         response?.data?.Media?.stats?.statusDistribution?.filterNotNull()?.forEach {
             val status = StatusDistribution.valueOf(it.status?.rawValue)
             if (status != null) {
-                mediaStatusDistribution.add(Stat(type = status, value = it.amount?.toFloat() ?: 0f))
+                mediaStatusDistribution.add(
+                    StatLocalizableAndColorable(type = status, value = it.amount?.toFloat() ?: 0f)
+                )
             }
+        }
+        response?.data?.Media?.stats?.scoreDistribution?.filterNotNull()?.forEach {
+            mediaScoreDistribution.add(
+                StatLocalizableAndColorable(
+                    type = ScoreDistribution(score = it.score ?: 0),
+                    value = it.amount?.toFloat() ?: 0f
+                )
+            )
         }
         response?.data?.Media?.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
         isLoadingStats = false

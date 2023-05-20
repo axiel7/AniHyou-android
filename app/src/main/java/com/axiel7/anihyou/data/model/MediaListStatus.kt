@@ -25,14 +25,3 @@ fun MediaListStatus.icon() = when (this) {
     MediaListStatus.REPEATING -> R.drawable.repeat_24
     MediaListStatus.UNKNOWN__ -> R.drawable.play_circle_24
 }
-
-@Composable
-fun MediaListStatus.colorScheme() = when (this) {
-    MediaListStatus.CURRENT -> StatColors.greenScheme()
-    MediaListStatus.PLANNING -> StatColors.grayScheme()
-    MediaListStatus.COMPLETED -> StatColors.blueScheme()
-    MediaListStatus.DROPPED -> StatColors.redScheme()
-    MediaListStatus.PAUSED -> StatColors.yellowScheme()
-    MediaListStatus.REPEATING -> StatColors.blueScheme()
-    MediaListStatus.UNKNOWN__ -> StatColors.grayScheme()
-}

@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.composables.stats
 
-import android.content.res.Configuration
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +23,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.Stat
+import com.axiel7.anihyou.data.model.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.StatusDistribution
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
 import com.axiel7.anihyou.ui.composables.Rectangle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun <T: LocalizableAndColorable> HorizontalStatsBar(
@@ -65,7 +65,7 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
                 AssistChip(
                     onClick = { },
                     label = { Text(text = it.type.localized()) },
-                    leadingIcon = { Text(text = String.format("%.0f", it.value)) },
+                    leadingIcon = { Text(text = it.value.toInt().format()) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = it.type.primaryColor(),
                         labelColor = it.type.onPrimaryColor(),
@@ -87,7 +87,7 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
         }
 
         Text(
-            text = stringResource(R.string.total_entries).format(String.format("%.0f", totalValue)),
+            text = stringResource(R.string.total_entries).format(totalValue.toInt().format()),
             modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp)
         )
     }
@@ -98,11 +98,11 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
 fun HorizontalStatsBarPreview() {
     val stats by remember {
         mutableStateOf(listOf(
-            Stat(type = StatusDistribution.CURRENT, value = 12f),
-            Stat(type = StatusDistribution.COMPLETED, value = 420f),
-            Stat(type = StatusDistribution.PAUSED, value = 5f),
-            Stat(type = StatusDistribution.DROPPED, value = 3f),
-            Stat(type = StatusDistribution.PLANNING, value = 30f),
+            StatLocalizableAndColorable(type = StatusDistribution.CURRENT, value = 12f),
+            StatLocalizableAndColorable(type = StatusDistribution.COMPLETED, value = 420f),
+            StatLocalizableAndColorable(type = StatusDistribution.PAUSED, value = 5f),
+            StatLocalizableAndColorable(type = StatusDistribution.DROPPED, value = 3f),
+            StatLocalizableAndColorable(type = StatusDistribution.PLANNING, value = 30f),
         ))
     }
     AniHyouTheme {

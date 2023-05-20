@@ -89,3 +89,33 @@ val stat_light_yellow = Color(0xFFFFE175)
 val stat_light_onYellow = Color(0xFF221B00)
 val stat_dark_yellow = Color(0xFF554500)
 val stat_dark_onYellow = Color(0xFFFFE175)
+
+val stat_light_10 = Color(0xFFBD0E22)
+val stat_dark_10 = Color(0xFFFFB3AE)
+
+val stat_light_20 = Color(0xFFA14000)
+val stat_dark_20 = Color(0xFFFFB694)
+
+val stat_light_30 = Color(0xFFA04108)
+val stat_dark_30 = Color(0xFFFFB695)
+
+val stat_light_40 = Color(0xFF8B5000)
+val stat_dark_40 = Color(0xFFFFB871)
+
+val stat_light_50 = Color(0xFF795900)
+val stat_dark_50 = Color(0xFFF2BF48)
+
+val stat_light_60 = Color(0xFF3B6A1C)
+val stat_dark_60 = Color(0xFFA0D57B)
+
+val stat_light_70 = Color(0xFF006C52)
+val stat_dark_70 = Color(0xFF64DBB4)
+
+val stat_light_80 = Color(0xFF006A69)
+val stat_dark_80 = Color(0xFF4DDAD9)
+
+val stat_light_90 = Color(0xFF006590)
+val stat_dark_90 = Color(0xFF88CEFF)
+
+val stat_light_100 = Color(0xFF006686)
+val stat_dark_100 = Color(0xFF71D2FF)

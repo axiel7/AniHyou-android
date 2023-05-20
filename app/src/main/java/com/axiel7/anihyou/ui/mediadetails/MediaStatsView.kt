@@ -23,6 +23,7 @@ import com.axiel7.anihyou.type.MediaRankType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
+import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -86,6 +87,14 @@ fun MediaStatsView(
         HorizontalStatsBar(
             stats = viewModel.mediaStatusDistribution,
             horizontalPadding = 16.dp,
+            isLoading = viewModel.isLoadingStats
+        )
+
+        // Score distribution
+        InfoTitle(text = stringResource(R.string.score_distribution))
+        VerticalStatsBar(
+            stats = viewModel.mediaScoreDistribution,
+            modifier = Modifier.padding(16.dp),
             isLoading = viewModel.isLoadingStats
         )
     }

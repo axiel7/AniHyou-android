@@ -5,7 +5,9 @@ import java.text.NumberFormat
 
 object NumberUtils {
 
-    val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
+    private val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
+
+    fun Int.format() = defaultNumberFormat.format(this)
 
     /**
      * @return if true 1 else 0

@@ -83,7 +83,7 @@ import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
-import com.axiel7.anihyou.utils.NumberUtils
+import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
@@ -306,7 +306,7 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = NumberUtils.defaultNumberFormat.format(viewModel.mediaDetails?.popularity ?: 0),
+                    text = viewModel.mediaDetails?.popularity?.format() ?: "0",
                     subtitle = stringResource(R.string.popularity),
                     isLoading = viewModel.isLoading
                 )
@@ -316,7 +316,7 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = NumberUtils.defaultNumberFormat.format(viewModel.mediaDetails?.favourites ?: 0),
+                    text = viewModel.mediaDetails?.favourites?.format() ?: "0",
                     subtitle = stringResource(R.string.favorites),
                     isLoading = viewModel.isLoading
                 )
