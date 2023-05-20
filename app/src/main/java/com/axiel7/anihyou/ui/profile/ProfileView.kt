@@ -107,7 +107,7 @@ fun ProfileView(
                 TopBannerView(
                     imageUrl = viewModel.userInfo?.bannerImage,
                     fallbackColor = colorFromHex(viewModel.userInfo?.hexColor()),
-                    height = padding.calculateTopPadding() + 150.dp
+                    height = padding.calculateTopPadding() + 100.dp
                 )
                 PersonImage(
                     url = viewModel.userInfo?.avatar?.large,
