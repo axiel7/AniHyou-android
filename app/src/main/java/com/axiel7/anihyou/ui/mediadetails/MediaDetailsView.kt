@@ -55,6 +55,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore
+import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
@@ -131,6 +134,7 @@ fun MediaDetailsView(
         derivedStateOf { viewModel.mediaDetails?.mediaListEntry == null }
     }
     val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
+    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
 
     LaunchedEffect(mediaId) {
         viewModel.getDetails(mediaId)
@@ -161,18 +165,22 @@ fun MediaDetailsView(
              )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
-                Icon(
-                    painter = painterResource(if (isNewEntry) R.drawable.add_24
-                    else R.drawable.edit_24),
-                    contentDescription = "edit"
-                )
-                Text(
-                    text = if (isNewEntry) stringResource(R.string.add)
-                    else viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry?.status?.localized()
-                        ?: stringResource(R.string.edit),
-                    modifier = Modifier.padding(start = 16.dp, end = 8.dp)
-                )
+            if (accessTokenPreference != null) {
+                ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
+                    Icon(
+                        painter = painterResource(
+                            if (isNewEntry) R.drawable.add_24
+                            else R.drawable.edit_24
+                        ),
+                        contentDescription = "edit"
+                    )
+                    Text(
+                        text = if (isNewEntry) stringResource(R.string.add)
+                        else viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry?.status?.localized()
+                            ?: stringResource(R.string.edit),
+                        modifier = Modifier.padding(start = 16.dp, end = 8.dp)
+                    )
+                }
             }
         }
     ) { padding ->

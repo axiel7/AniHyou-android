@@ -143,12 +143,16 @@ fun EditMediaSheet(
                     Text(text = stringResource(R.string.cancel))
                 }
 
-                if (viewModel.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-
                 Button(onClick = { scope.launch { viewModel.updateListEntry() } }) {
-                    Text(text = stringResource(R.string.save))
+                    if (viewModel.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(text = stringResource(R.string.save))
+                    }
                 }
             }
 

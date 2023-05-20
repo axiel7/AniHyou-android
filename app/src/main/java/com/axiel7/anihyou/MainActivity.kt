@@ -182,7 +182,7 @@ fun MainView(
     navController: NavHostController,
     lastTabOpened: Int = 0
 ) {
-    val accessTokenPreference = rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
+    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
 
     com.google.accompanist.insets.ui.Scaffold(
         bottomBar = {
@@ -222,7 +222,7 @@ fun MainView(
             }
 
             composable(BottomDestination.AnimeList.route) {
-                if (accessTokenPreference.value == null) {
+                if (accessTokenPreference == null) {
                     LoginView()
                 } else {
                     UserMediaListHostView(
@@ -241,7 +241,7 @@ fun MainView(
             }
 
             composable(BottomDestination.MangaList.route) {
-                if (accessTokenPreference.value == null) {
+                if (accessTokenPreference == null) {
                     LoginView()
                 } else {
                     UserMediaListHostView(
@@ -260,7 +260,7 @@ fun MainView(
             }
 
             composable(BottomDestination.Profile.route) {
-                if (accessTokenPreference.value == null) {
+                if (accessTokenPreference == null) {
                     LoginView()
                 } else {
                     ProfileView(
