@@ -30,7 +30,7 @@ class CharacterDetailsViewModel : BaseViewModel() {
     }
 
     var page = 1
-    var hasNextPage = false
+    var hasNextPage = true
     var characterMedia =  mutableStateListOf<CharacterMediaQuery.Edge>()
 
     suspend fun getCharacterMedia(characterId: Int) {
