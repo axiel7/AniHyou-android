@@ -97,5 +97,6 @@ fun baseCss(
     a:link {color: $linkColor;}
     A {text-decoration: none;}
     .markdown_spoiler {color: $fontColor; background-color: $fontColor;}
+    .markdown_spoiler:not(:hover):not(:focus):not(:active) a:link {color: $fontColor;}
     .markdown_spoiler:hover, .markdown_spoiler:focus, .markdown_spoiler:active {background-color: transparent;}
 """.trimIndent()
