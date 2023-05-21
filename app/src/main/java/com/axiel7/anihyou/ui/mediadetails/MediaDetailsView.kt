@@ -62,6 +62,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.seasonAndYear
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
@@ -483,7 +484,7 @@ fun MediaInformationView(
         if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true) {
             InfoItemView(
                 title = stringResource(R.string.season),
-                info = "${viewModel.mediaDetails?.season?.localized()} ${viewModel.mediaDetails?.seasonYear}"
+                info = viewModel.mediaDetails?.seasonAndYear()
             )
             InfoItemView(
                 title = stringResource(R.string.studios),

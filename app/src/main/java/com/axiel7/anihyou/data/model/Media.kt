@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.type.MediaType
@@ -22,4 +23,11 @@ fun BasicMediaDetails.durationText() = when (this.type) {
     MediaType.ANIME -> stringResource(R.string.num_episodes, episodes ?: UNKNOWN_CHAR)
     MediaType.MANGA -> stringResource(R.string.num_chapters, chapters ?: UNKNOWN_CHAR)
     else -> UNKNOWN_CHAR
+}
+
+@Composable
+fun MediaDetailsQuery.Media.seasonAndYear(): String? {
+    return if (season != null && seasonYear != null) "${season.localized()} $seasonYear"
+    else season?.localized() ?: if (seasonYear != null) "$seasonYear"
+    else null
 }
