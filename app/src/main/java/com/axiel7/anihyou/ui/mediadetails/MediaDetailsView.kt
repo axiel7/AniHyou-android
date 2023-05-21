@@ -326,7 +326,10 @@ fun MediaDetailsView(
             Text(
                 text = viewModel.mediaDetails?.description?.htmlDecoded()?.toAnnotatedString()
                     ?: buildAnnotatedString {
-                        append(stringResource(R.string.lorem_ipsun))
+                        if (viewModel.isLoading)
+                            append(stringResource(R.string.lorem_ipsun))
+                        else
+                            append(stringResource(R.string.no_description))
                 },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
