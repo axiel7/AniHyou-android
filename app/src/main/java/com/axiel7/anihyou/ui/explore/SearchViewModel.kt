@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.GenreTagCollectionQuery
 import com.axiel7.anihyou.SearchCharacterQuery
@@ -16,6 +17,8 @@ import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SearchViewModel : BaseViewModel() {
 
@@ -146,5 +149,12 @@ class SearchViewModel : BaseViewModel() {
         externalTag?.let { tagCollection[externalTag] = true }
 
         isLoadingGenres = false
+    }
+
+    fun unselectAllGenresAndTags() {
+        viewModelScope.launch(Dispatchers.IO) {
+            genreCollection.forEach { (t, _) -> genreCollection[t] = false }
+            tagCollection.forEach { (t, _) -> tagCollection[t] = false }
+        }
     }
 }
