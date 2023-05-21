@@ -447,20 +447,22 @@ fun MediaSearchSortChip(
             }
         )
 
-        AssistChip(
-            onClick = {
-                isDescending = !isDescending
-                viewModel.mediaSort = if (isDescending) selectedSort.desc else selectedSort.asc
-                performSearch.value = true
-            },
-            label = {
-                Text(
-                    text = if (isDescending) stringResource(R.string.descending)
-                    else stringResource(R.string.ascending)
-                )
-            },
-            modifier = Modifier.padding(8.dp),
-        )
+        if (viewModel.mediaSort != MediaSort.SEARCH_MATCH) {
+            AssistChip(
+                onClick = {
+                    isDescending = !isDescending
+                    viewModel.mediaSort = if (isDescending) selectedSort.desc else selectedSort.asc
+                    performSearch.value = true
+                },
+                label = {
+                    Text(
+                        text = if (isDescending) stringResource(R.string.descending)
+                        else stringResource(R.string.ascending)
+                    )
+                },
+                modifier = Modifier.padding(8.dp),
+            )
+        }
     }//: Row
 }
 
