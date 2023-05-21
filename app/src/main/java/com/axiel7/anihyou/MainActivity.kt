@@ -141,6 +141,9 @@ class MainActivity : ComponentActivity() {
                         "staff" -> {
                             navController.navigate("staff/$detailsId")
                         }
+                        "studio" -> {
+                            navController.navigate("studio/$detailsId")
+                        }
                         "user" -> {
                             navController.navigate("profile/$detailsId")
                         }
