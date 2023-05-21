@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.mediadetails
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,8 +40,8 @@ fun ReviewThreadListView(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
+        InfoTitle(text = stringResource(R.string.reviews))
         if (viewModel.isLoadingReviews || viewModel.mediaReviews.isNotEmpty()) {
-            InfoTitle(text = stringResource(R.string.reviews))
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(2),
                 modifier = Modifier
@@ -66,6 +68,15 @@ fun ReviewThreadListView(
                         }
                     )
                 }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .height(POST_ITEM_HEIGHT.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(R.string.no_reviews))
             }
         }
     }//: Column
