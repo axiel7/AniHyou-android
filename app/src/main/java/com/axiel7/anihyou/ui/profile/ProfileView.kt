@@ -105,6 +105,9 @@ fun ProfileView(
             ) {
                 TopBannerView(
                     imageUrl = viewModel.userInfo?.bannerImage,
+                    modifier = Modifier.clickable {
+                        navigateToFullscreenImage(viewModel.userInfo?.bannerImage)
+                    },
                     fallbackColor = colorFromHex(viewModel.userInfo?.hexColor()),
                     height = padding.calculateTopPadding() + 100.dp
                 )
