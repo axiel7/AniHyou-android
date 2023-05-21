@@ -80,6 +80,8 @@ import com.axiel7.anihyou.ui.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.settings.SettingsView
 import com.axiel7.anihyou.ui.staffdetails.STAFF_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.staffdetails.StaffDetailsView
+import com.axiel7.anihyou.ui.studiodetails.STUDIO_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
@@ -315,6 +317,9 @@ fun MainView(
                     navigateToStaffDetails = { id ->
                         navController.navigate("staff/$id")
                     },
+                    navigateToStudioDetails = { id ->
+                        navController.navigate("studio/$id")
+                    },
                     navigateToMediaChart = {
                         navController.navigate("media_chart/${it.name}")
                     },
@@ -488,6 +493,24 @@ fun MainView(
                         reviewId = it,
                         navigateBack = {
                             navController.popBackStack()
+                        }
+                    )
+                }
+            }
+
+            composable(STUDIO_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let {
+                    StudioDetailsView(
+                        studioId = it,
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id")
                         }
                     )
                 }

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.explore
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
+import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
@@ -70,6 +72,7 @@ fun ExploreView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
@@ -140,6 +143,7 @@ fun ExploreView(
                         navigateToMediaDetails = navigateToMediaDetails,
                         navigateToCharacterDetails = navigateToCharacterDetails,
                         navigateToStaffDetails = navigateToStaffDetails,
+                        navigateToStudioDetails = navigateToStudioDetails,
                         navigateToUserDetails = navigateToUserDetails
                     )
                 }
@@ -278,6 +282,7 @@ fun SearchView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: SearchViewModel = viewModel()
@@ -407,7 +412,31 @@ fun SearchView(
                     }
                 }
             }
-            SearchType.STUDIO -> { item { Text(text = "Coming soon") } }
+            SearchType.STUDIO -> {
+                items(
+                    items = viewModel.searchedStudios,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    Text(
+                        text = item.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { navigateToStudioDetails(item.id) }
+                            .padding(16.dp)
+                    )
+                }
+                if (viewModel.isLoading) {
+                    items(10) {
+                        Text(
+                            text = "Loading placeholder",
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .defaultPlaceholder(visible = true)
+                        )
+                    }
+                }
+            }
             SearchType.USER -> {
                 items(
                     items = viewModel.searchedUsers,
@@ -579,6 +608,7 @@ fun ExploreViewPreview() {
                 navigateToAnimeSeason = { _, _ -> },
                 navigateToCharacterDetails = {},
                 navigateToStaffDetails = {},
+                navigateToStudioDetails = {},
                 navigateToUserDetails = {}
             )
         }

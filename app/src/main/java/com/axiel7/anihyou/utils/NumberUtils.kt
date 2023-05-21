@@ -1,13 +1,27 @@
 package com.axiel7.anihyou.utils
 
+
+import android.icu.text.CompactDecimalFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
 import java.text.NumberFormat
+import java.util.Locale
 
 object NumberUtils {
 
     private val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
 
-    fun Int.format() = defaultNumberFormat.format(this)
+    private val defaultDecimalFormat @RequiresApi(Build.VERSION_CODES.N)
+    get() = CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT)
+
+    fun Int.format(): String = defaultNumberFormat.format(this)
+
+    fun Int.abbreviated(): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        defaultDecimalFormat.format(this)
+    } else {
+        this.format()
+    }
 
     /**
      * @return if true 1 else 0

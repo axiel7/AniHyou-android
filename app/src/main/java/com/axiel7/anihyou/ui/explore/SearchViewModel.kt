@@ -10,6 +10,7 @@ import com.axiel7.anihyou.GenreTagCollectionQuery
 import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SearchStaffQuery
+import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaSort
@@ -93,8 +94,19 @@ class SearchViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    suspend fun searchStudio(query: String) {
+    val searchedStudios = mutableStateListOf<SearchStudioQuery.Studio>()
 
+    suspend fun searchStudio(query: String) {
+        isLoading = true
+        val response = SearchStudioQuery(
+            page = Optional.present(1),
+            perPage = Optional.present(perPage),
+            search = Optional.present(query)
+        ).tryQuery()
+
+        searchedStudios.clear()
+        response?.data?.Page?.studios?.filterNotNull()?.let { searchedStudios.addAll(it) }
+        isLoading = false
     }
 
     val searchedUsers = mutableStateListOf<SearchUserQuery.User>()

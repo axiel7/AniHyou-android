@@ -13,8 +13,12 @@ query StudioDetails($studioId: Int, $page: Int, $perPage: Int) {
         title {
           userPreferred
         }
+        startDate {
+          year
+        }
       }
       pageInfo {
+        currentPage
         hasNextPage
       }
     }
