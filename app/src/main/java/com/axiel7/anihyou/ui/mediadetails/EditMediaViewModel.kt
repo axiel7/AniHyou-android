@@ -31,6 +31,7 @@ class EditMediaViewModel(
     var startDate by mutableStateOf(listEntry?.startedAt?.fuzzyDate?.toLocalDate())
     var endDate by mutableStateOf(listEntry?.completedAt?.fuzzyDate?.toLocalDate())
     var repeatCount by mutableStateOf(listEntry?.repeat)
+    var isPrivate by mutableStateOf(listEntry?.private)
 
     fun onChangeStatus(value: MediaListStatus) {
         status = value
@@ -98,6 +99,7 @@ class EditMediaViewModel(
             startedAt = if (startDate != null) Optional.present(startDate!!.toFuzzyDate()) else Optional.absent(),
             completedAt = if (endDate != null) Optional.present(endDate!!.toFuzzyDate()) else Optional.absent(),
             repeat = if (repeatCount != null) Optional.present(repeatCount) else Optional.absent(),
+            private = if (isPrivate != null) Optional.present(isPrivate) else Optional.absent(),
         ).tryMutation()
 
         updateSuccess = response != null

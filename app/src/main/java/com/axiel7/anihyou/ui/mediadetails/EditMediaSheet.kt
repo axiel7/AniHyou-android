@@ -61,6 +61,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.ClickableOutlinedTextField
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
+import com.axiel7.anihyou.ui.composables.TextCheckbox
 import com.axiel7.anihyou.ui.composables.media.FiveStarRatingView
 import com.axiel7.anihyou.ui.composables.media.SliderRatingView
 import com.axiel7.anihyou.ui.composables.media.SmileyRatingView
@@ -300,6 +301,15 @@ fun EditMediaSheet(
                 onValueChange = { viewModel.onChangeRepeatCount(it.toIntOrNull()) },
                 onMinusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount?.minus(1)) },
                 onPlusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount?.plus(1)) }
+            )
+
+            TextCheckbox(
+                text = stringResource(R.string.list_private),
+                checked = viewModel.isPrivate ?: false,
+                onCheckedChange = {
+                    viewModel.isPrivate = it
+                },
+                modifier = Modifier.padding(16.dp)
             )
 
             // Delete

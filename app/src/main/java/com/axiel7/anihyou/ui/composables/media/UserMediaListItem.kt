@@ -174,7 +174,8 @@ fun UserMediaListItemPreview() {
             progressVolumes = null,
             repeat = null,
             startedAt = null,
-            completedAt = null
+            completedAt = null,
+            private = false,
         )
     )
     AniHyouTheme {

@@ -26,7 +26,7 @@ fun TextCheckbox(
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(start = 8.dp)
         )
         Text(text = text)
     }
