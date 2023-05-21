@@ -403,6 +403,7 @@ fun MediaDetailsView(
             ) {
                 SegmentedButtons(
                     items = DetailsType.tabRows,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     onItemSelection = {
                         selectedTabItem = it
                     }
