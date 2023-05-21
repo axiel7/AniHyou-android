@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -125,7 +126,7 @@ fun MediaDetailsView(
     )
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    var selectedTabItem by remember { mutableStateOf(DetailsType.tabRows[0]) }
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
     var maxLinesSynopsis by remember { mutableStateOf(5) }
     val iconExpand by remember {
@@ -406,10 +407,10 @@ fun MediaDetailsView(
                     items = DetailsType.tabRows,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     onItemSelection = {
-                        selectedTabItem = it
+                        selectedTabIndex = it
                     }
                 )
-                when (selectedTabItem.value) {
+                when (DetailsType.tabRows[selectedTabIndex].value) {
                     DetailsType.INFO ->
                         MediaInformationView(
                             viewModel = viewModel

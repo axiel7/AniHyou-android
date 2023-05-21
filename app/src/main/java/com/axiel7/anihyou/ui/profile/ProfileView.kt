@@ -24,6 +24,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +75,7 @@ fun ProfileView(
 ) {
     val viewModel: ProfileViewModel = viewModel()
     val isMyProfile by remember { derivedStateOf { userId == null } }
-    var selectedTabItem by remember { mutableStateOf(ProfileInfoType.tabRows[0]) }
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
     LaunchedEffect(userId) {
         if (userId == null) viewModel.getMyUserInfo()
@@ -159,10 +160,10 @@ fun ProfileView(
                     items = ProfileInfoType.tabRows,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     onItemSelection = {
-                        selectedTabItem = it
+                        selectedTabIndex = it
                     }
                 )
-                when (selectedTabItem.value) {
+                when (ProfileInfoType.tabRows[selectedTabIndex].value) {
                     ProfileInfoType.ABOUT -> UserAboutView(aboutHtml = viewModel.userInfo?.about)
                     ProfileInfoType.ACTIVITY -> UserActivityView(viewModel = viewModel)
                     ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)

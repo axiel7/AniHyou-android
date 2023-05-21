@@ -31,7 +31,7 @@ fun <T> SegmentedButtons(
     items: Array<TabRowItem<T>>,
     modifier: Modifier = Modifier,
     defaultSelectedIndex: Int = 0,
-    onItemSelection: (TabRowItem<T>) -> Unit,
+    onItemSelection: (Int) -> Unit,
 ) {
     var selectedIndex by remember { mutableStateOf(defaultSelectedIndex) }
 
@@ -47,7 +47,7 @@ fun <T> SegmentedButtons(
                 ),
                 onClick = {
                     selectedIndex = index
-                    onItemSelection(items[selectedIndex])
+                    onItemSelection(selectedIndex)
                 },
                 shape = when (index) {
                     // leading button
