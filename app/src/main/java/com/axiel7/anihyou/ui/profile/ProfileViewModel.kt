@@ -45,4 +45,18 @@ class ProfileViewModel : BaseViewModel() {
 
         isLoading = false
     }
+
+    suspend fun getUserInfo(username: String) {
+        isLoading = true
+        val response = UserBasicInfoQuery(
+            name = Optional.present(username)
+        ).tryQuery()
+
+        response?.data?.User?.userInfo?.let {
+            userInfo = it
+            userId = it.id
+        }
+
+        isLoading = false
+    }
 }

@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         var detailsType: String? = null
-        var detailsId: Int? = null
+        var detailsId: String? = null
         if (intent.data != null) {
             parseLoginIntentData(intent.data)
             // Manually handle deep links because the uri pattern in the compose navigation
@@ -113,7 +113,7 @@ class MainActivity : ComponentActivity() {
             if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
                 val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
                 detailsType = linkSplit[1]
-                detailsId = linkSplit[2].toIntOrNull()
+                detailsId = linkSplit[2]
             }
         }
 
@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberAnimatedNavController()
 
             LaunchedEffect(detailsId) {
-                if (detailsId != 0 && detailsType != null) {
+                if (detailsId != null && detailsType != null) {
                     when (detailsType) {
                         "anime", "manga" -> {
                             navController.navigate("media_details/$detailsId")
@@ -145,7 +145,11 @@ class MainActivity : ComponentActivity() {
                             navController.navigate("studio/$detailsId")
                         }
                         "user" -> {
-                            navController.navigate("profile/$detailsId")
+                            val userId = detailsId.toIntOrNull()
+                            var dest = USER_DETAILS_DESTINATION
+                            dest = if (userId != null) dest.replace("{id}", userId.toString())
+                            else dest.replace("{name}", detailsId)
+                            navController.navigate(dest)
                         }
                     }
                 }
@@ -312,7 +316,7 @@ fun MainView(
                         }
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate("profile/$id")
+                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate("character/$id")
@@ -424,11 +428,19 @@ fun MainView(
 
             composable(USER_DETAILS_DESTINATION,
                 arguments = listOf(
-                    navArgument("id") { type = NavType.IntType }
+                    navArgument("id") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("name") {
+                        type = NavType.StringType
+                        nullable = true
+                    }
                 )
             ) { navEntry ->
                 ProfileView(
-                    userId = navEntry.arguments?.getInt("id"),
+                    userId = navEntry.arguments?.getString("id")?.toIntOrNull(),
+                    username = navEntry.arguments?.getString("name"),
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
                         navController.navigate("full_image/$encodedUrl")

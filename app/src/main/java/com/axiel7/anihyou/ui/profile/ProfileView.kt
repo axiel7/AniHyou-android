@@ -63,23 +63,25 @@ private enum class ProfileInfoType {
     }
 }
 
-const val USER_DETAILS_DESTINATION = "profile/{id}"
+const val USER_DETAILS_DESTINATION = "user?id={id}?name={name}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
     userId: Int? = null,
+    username: String? = null,
     navigateToSettings: () -> Unit = {},
     navigateToFullscreenImage: (String?) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
-    val isMyProfile by remember { derivedStateOf { userId == null } }
+    val isMyProfile by remember { derivedStateOf { userId == null && username == null } }
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
-    LaunchedEffect(userId) {
-        if (userId == null) viewModel.getMyUserInfo()
-        else viewModel.getUserInfo(userId)
+    LaunchedEffect(userId, username) {
+        if (userId != null) viewModel.getUserInfo(userId)
+        else if (username != null) viewModel.getUserInfo(username)
+        else viewModel.getMyUserInfo()
     }
 
     Scaffold(
