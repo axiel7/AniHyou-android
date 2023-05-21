@@ -1,7 +1,10 @@
 package com.axiel7.anihyou.ui.explore
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,17 +18,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,6 +58,7 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -265,12 +272,14 @@ fun SearchView(
 ) {
     val viewModel: SearchViewModel = viewModel()
     val listState = rememberLazyListState()
+    val searchByGenre = remember { mutableStateOf(false) }
 
     LaunchedEffect(performSearch.value, viewModel.searchType) {
         if (performSearch.value) {
-            if (query.isNotBlank()) {
+            if (query.isNotBlank() || searchByGenre.value) {
                 listState.scrollToItem(0)
                 viewModel.runSearch(query)
+                searchByGenre.value = false
             }
             performSearch.value = false
         }
@@ -306,6 +315,11 @@ fun SearchView(
                 MediaSearchSortChip(
                     viewModel = viewModel,
                     performSearch = performSearch
+                )
+                MediaSearchGenresChips(
+                    viewModel = viewModel,
+                    performSearch = performSearch,
+                    searchByGenre = searchByGenre,
                 )
             }
         }
@@ -466,6 +480,74 @@ fun MediaSearchSortChip(
             )
         }
     }//: Row
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+fun MediaSearchGenresChips(
+    viewModel: SearchViewModel,
+    performSearch: MutableState<Boolean>,
+    searchByGenre: MutableState<Boolean>
+) {
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
+
+    if (sheetState.isVisible) {
+        GenresTagsSheet(
+            viewModel = viewModel,
+            sheetState = sheetState,
+            onDismiss = {
+                scope.launch {
+                    sheetState.hide()
+                    searchByGenre.value = true
+                    performSearch.value = true
+                }
+            }
+        )
+    }
+
+    FlowRow(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        viewModel.genreCollection.forEach { (genre, isSelected) ->
+            if (isSelected) {
+                InputChip(
+                    selected = false,
+                    onClick = { viewModel.genreCollection[genre] = false },
+                    label = { Text(text = genre) },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.close_20),
+                            contentDescription = "remove"
+                        )
+                    }
+                )
+            }
+        }
+        viewModel.tagCollection.forEach { (tag, isSelected) ->
+            if (isSelected) {
+                InputChip(
+                    selected = false,
+                    onClick = { viewModel.tagCollection[tag] = false },
+                    label = { Text(text = tag) },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.close_20),
+                            contentDescription = "remove"
+                        )
+                    }
+                )
+            }
+        }
+        AssistChip(
+            onClick = { scope.launch { sheetState.show() } },
+            label = { Text(text = stringResource(R.string.add_genre)) },
+            leadingIcon = {
+                Icon(painter = painterResource(R.drawable.add_24), contentDescription = "add")
+            }
+        )
+    }//: FlowRow
 }
 
 @Preview

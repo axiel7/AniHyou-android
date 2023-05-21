@@ -2,9 +2,11 @@ package com.axiel7.anihyou.ui.explore
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
+import com.axiel7.anihyou.GenreTagCollectionQuery
 import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SearchStaffQuery
@@ -20,6 +22,8 @@ class SearchViewModel : BaseViewModel() {
 
     var searchType by mutableStateOf(SearchType.ANIME)
     var mediaSort by mutableStateOf(MediaSort.SEARCH_MATCH)
+    val genreCollection = mutableStateMapOf<String, Boolean>()
+    val tagCollection = mutableStateMapOf<String, Boolean>()
 
     suspend fun runSearch(query: String) {
         when (searchType) {
@@ -36,14 +40,19 @@ class SearchViewModel : BaseViewModel() {
 
     suspend fun searchMedia(mediaType: MediaType, query: String) {
         isLoading = true
+        val selectedGenres = genreCollection.filterValues { it }.keys.toList()
+        val selectedTags = tagCollection.filterValues { it }.keys.toList()
+
         val response = SearchMediaQuery(
             page = Optional.present(1),
             perPage = Optional.present(perPage),
             search = if (query.isNotBlank()) Optional.present(query) else Optional.absent(),
             type = Optional.present(mediaType),
             sort = Optional.present(listOf(mediaSort)),
-            genre_in = Optional.absent(),// TODO: search by genre
-            tag_in = Optional.absent(),// TODO: search by tags
+            genre_in = if (selectedGenres.isEmpty()) Optional.absent()
+            else Optional.present(selectedGenres),
+            tag_in = if (selectedTags.isEmpty()) Optional.absent()
+            else Optional.present(selectedTags),
         ).tryQuery()
 
         searchedMedia.clear()
@@ -99,5 +108,23 @@ class SearchViewModel : BaseViewModel() {
         searchedUsers.clear()
         response?.data?.Page?.users?.filterNotNull()?.let { searchedUsers.addAll(it) }
         isLoading = false
+    }
+
+    var isLoadingGenres by mutableStateOf(false)
+
+    suspend fun getGenreTagCollection() {
+        isLoadingGenres = true
+        val response = GenreTagCollectionQuery().tryQuery()
+
+        genreCollection.clear()
+        response?.data?.GenreCollection?.filterNotNull()?.forEach {
+            genreCollection[it] = false
+        }
+        tagCollection.clear()
+        response?.data?.MediaTagCollection?.filterNotNull()?.forEach { tag ->
+            tagCollection[tag.name] = false
+        }
+
+        isLoadingGenres = false
     }
 }

@@ -170,4 +170,7 @@
     <string name="loading">Loading</string>
     <string name="users_likes">Users likes</string>
     <string name="no_reviews">No reviews</string>
+    <string name="close">Close</string>
+    <string name="genres">Genres</string>
+    <string name="add_genre">Add genre</string>
 </resources>
