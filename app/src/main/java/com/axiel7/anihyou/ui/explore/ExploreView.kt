@@ -84,8 +84,10 @@ fun ExploreView(
                         isSearchActive = it
                         if (!isSearchActive) query = ""
                     },
-                    modifier = if (!isSearchActive) Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
-                    else Modifier,
+                    modifier = if (!isSearchActive) Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                    else Modifier.fillMaxWidth(),
                     placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                     leadingIcon = {
                         if (isSearchActive) {
