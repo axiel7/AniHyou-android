@@ -42,6 +42,9 @@ class SearchViewModel : BaseViewModel() {
         isLoading = true
         val selectedGenres = genreCollection.filterValues { it }.keys.toList()
         val selectedTags = tagCollection.filterValues { it }.keys.toList()
+        if (selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()) {
+            if (mediaSort == MediaSort.SEARCH_MATCH) mediaSort = MediaSort.POPULARITY_DESC
+        }
 
         val response = SearchMediaQuery(
             page = Optional.present(1),
@@ -116,14 +119,19 @@ class SearchViewModel : BaseViewModel() {
         isLoadingGenres = true
         val response = GenreTagCollectionQuery().tryQuery()
 
-        genreCollection.clear()
         response?.data?.GenreCollection?.filterNotNull()?.forEach {
             genreCollection[it] = false
         }
-        tagCollection.clear()
+        val externalGenre = if (genreCollection.size == 1) genreCollection.firstNotNullOf { it.key }
+        else null
+        externalGenre?.let { genreCollection[externalGenre] = true }
+
         response?.data?.MediaTagCollection?.filterNotNull()?.forEach { tag ->
             tagCollection[tag.name] = false
         }
+        val externalTag = if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
+        else null
+        externalTag?.let { tagCollection[externalTag] = true }
 
         isLoadingGenres = false
     }

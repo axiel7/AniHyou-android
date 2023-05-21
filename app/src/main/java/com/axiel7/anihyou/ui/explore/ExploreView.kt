@@ -50,6 +50,7 @@ import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
@@ -63,6 +64,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
+    mediaType: MediaType? = null,
+    genre: String? = null,
+    tag: String? = null,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -71,8 +75,8 @@ fun ExploreView(
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val performSearch = remember { mutableStateOf(false) }
-    var isSearchActive by rememberSaveable { mutableStateOf(false) }
+    val performSearch = remember { mutableStateOf(genre != null || tag != null) }
+    var isSearchActive by rememberSaveable { mutableStateOf(genre != null || tag != null) }
 
     Scaffold(
         topBar = {
@@ -130,6 +134,9 @@ fun ExploreView(
                     SearchView(
                         query = query,
                         performSearch = performSearch,
+                        mediaType = mediaType,
+                        genre = genre,
+                        tag = tag,
                         navigateToMediaDetails = navigateToMediaDetails,
                         navigateToCharacterDetails = navigateToCharacterDetails,
                         navigateToStaffDetails = navigateToStaffDetails,
@@ -265,6 +272,9 @@ fun ExploreView(
 fun SearchView(
     query: String,
     performSearch: MutableState<Boolean>,
+    mediaType: MediaType?,
+    genre: String?,
+    tag: String?,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -272,11 +282,19 @@ fun SearchView(
 ) {
     val viewModel: SearchViewModel = viewModel()
     val listState = rememberLazyListState()
-    val searchByGenre = remember { mutableStateOf(false) }
+    val searchByGenre = remember { mutableStateOf(genre != null || tag != null) }
 
-    LaunchedEffect(performSearch.value, viewModel.searchType) {
+    LaunchedEffect(mediaType, genre, tag) {
+        if (mediaType == MediaType.ANIME) viewModel.searchType = SearchType.ANIME
+        else if (mediaType == MediaType.MANGA) viewModel.searchType = SearchType.MANGA
+
+        if (genre != null) viewModel.genreCollection[genre] = true
+        if (tag != null) viewModel.tagCollection[tag] = true
+    }
+
+    LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank() || searchByGenre.value) {
+            if (query.isNotBlank() || searchByGenre.value || genre != null || tag != null) {
                 listState.scrollToItem(0)
                 viewModel.runSearch(query)
                 searchByGenre.value = false

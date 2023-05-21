@@ -62,6 +62,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.durationText
 import com.axiel7.anihyou.data.model.isAnime
 import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.InfoItemView
@@ -117,6 +118,7 @@ fun MediaDetailsView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
+    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
@@ -382,6 +384,7 @@ fun MediaDetailsView(
                 }
             }//: Row
 
+            // Genres
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
@@ -389,7 +392,9 @@ fun MediaDetailsView(
             ) {
                 viewModel.mediaDetails?.genres?.forEach {
                     AssistChip(
-                        onClick = { },
+                        onClick = {
+                            navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, it, null)
+                        },
                         label = { Text(text = it ?: "") },
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -413,7 +418,8 @@ fun MediaDetailsView(
                 when (DetailsType.tabRows[selectedTabIndex].value) {
                     DetailsType.INFO ->
                         MediaInformationView(
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            navigateToExplore = navigateToExplore
                         )
 
                     DetailsType.STAFF_CHARACTERS ->
@@ -449,7 +455,8 @@ fun MediaDetailsView(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MediaInformationView(
-    viewModel: MediaDetailsViewModel
+    viewModel: MediaDetailsViewModel,
+    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
 
@@ -528,7 +535,9 @@ fun MediaInformationView(
                 if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
                         ElevatedAssistChip(
-                            onClick = { },
+                            onClick = {
+                                navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
+                            },
                             label = { Text(text = tag.name) },
                             modifier = Modifier.padding(horizontal = 4.dp),
                             leadingIcon = { Text(text = "${tag.rank}%") }
@@ -537,7 +546,9 @@ fun MediaInformationView(
                     else {
                         AnimatedVisibility(visible = showSpoiler) {
                             AssistChip(
-                                onClick = { },
+                                onClick = {
+                                    navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
+                                },
                                 label = { Text(text = tag.name) },
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 leadingIcon = { Text(text = "${tag.rank}%") }
@@ -546,7 +557,7 @@ fun MediaInformationView(
                     }
                 }
             }
-        }
+        }//: FlowRow
     }//: Column
 }
 
@@ -562,6 +573,7 @@ fun MediaDetailsViewPreview() {
             navigateToCharacterDetails = {},
             navigateToStaffDetails = {},
             navigateToReviewDetails = {},
+            navigateToExplore = { _, _, _ -> }
         )
     }
 }

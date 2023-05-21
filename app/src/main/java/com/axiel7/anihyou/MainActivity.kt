@@ -277,8 +277,26 @@ fun MainView(
                 }
             }
 
-            composable(BottomDestination.Explore.route) {
+            composable(BottomDestination.Explore.route,
+                arguments = listOf(
+                    navArgument("mediaType") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("genre") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("tag") {
+                        type = NavType.StringType
+                        nullable = true
+                    }
+                )
+            ) { navEntry ->
                 ExploreView(
+                    mediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
+                    genre = navEntry.arguments?.getString("genre"),
+                    tag = navEntry.arguments?.getString("tag"),
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id") {
                             popUpTo(navController.graph[BottomDestination.Explore.route].id) {
@@ -331,6 +349,13 @@ fun MainView(
                     },
                     navigateToReviewDetails = { id ->
                         navController.navigate("review/$id")
+                    },
+                    navigateToExplore = { mediaType, genre, tag ->
+                        var dest = BottomDestination.Explore.route
+                        if (mediaType != null) dest = dest.replace("{mediaType}", mediaType.rawValue)
+                        if (genre != null) dest = dest.replace("{genre}", genre)
+                        if (tag != null) dest = dest.replace("{tag}", tag)
+                        navController.navigate(dest)
                     }
                 )
             }
@@ -528,12 +553,15 @@ fun BottomNavBar(
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            painter = painterResource(if (selectedItem == index) dest.iconSelected else dest.icon),
+                            painter = painterResource(
+                                if (navBackStackEntry?.destination?.route == dest.route) dest.iconSelected
+                                else dest.icon
+                            ),
                             contentDescription = stringResource(dest.title)
                         )
                     },
                     label = { Text(text = stringResource(dest.title)) },
-                    selected = selectedItem == index,
+                    selected = navBackStackEntry?.destination?.route == dest.route,
                     onClick = {
                         selectedItem = index
                         navController.navigate(dest.route) {

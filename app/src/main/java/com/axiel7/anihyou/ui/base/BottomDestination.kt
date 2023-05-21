@@ -35,7 +35,7 @@ sealed class BottomDestination(
         iconSelected = R.drawable.person_filled_24
     )
     object Explore: BottomDestination(
-        route = "explore",
+        route = "explore?mediaType={mediaType}?genre={genre}?tag={tag}",
         title = R.string.explore,
         icon = R.drawable.explore_24,
         iconSelected = R.drawable.explore_filled_24

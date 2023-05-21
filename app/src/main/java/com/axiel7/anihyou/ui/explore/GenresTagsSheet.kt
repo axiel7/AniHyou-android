@@ -62,7 +62,7 @@ fun GenresTagsSheet(
     }
 
     LaunchedEffect(viewModel) {
-        if (viewModel.genreCollection.isEmpty())
+        if (viewModel.genreCollection.isEmpty() || viewModel.tagCollection.isEmpty())
             viewModel.getGenreTagCollection()
     }
 
