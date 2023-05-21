@@ -74,6 +74,8 @@ import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.reviewdetails.REVIEW_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.ui.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.settings.SettingsView
 import com.axiel7.anihyou.ui.staffdetails.STAFF_DETAILS_DESTINATION
@@ -327,6 +329,9 @@ fun MainView(
                     navigateToStaffDetails = { id ->
                         navController.navigate("staff/$id")
                     },
+                    navigateToReviewDetails = { id ->
+                        navController.navigate("review/$id")
+                    }
                 )
             }
 
@@ -443,6 +448,21 @@ fun MainView(
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
                             navController.navigate("full_image/$encodedUrl")
+                        }
+                    )
+                }
+            }
+
+            composable(REVIEW_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let {
+                    ReviewDetailsView(
+                        reviewId = it,
+                        navigateBack = {
+                            navController.popBackStack()
                         }
                     )
                 }

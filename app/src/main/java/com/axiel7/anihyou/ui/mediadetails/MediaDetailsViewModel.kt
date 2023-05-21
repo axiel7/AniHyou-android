@@ -8,6 +8,7 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
+import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.ScoreDistribution
 import com.axiel7.anihyou.data.model.Stat
@@ -100,5 +101,20 @@ class MediaDetailsViewModel : BaseViewModel() {
         }
         response?.data?.Media?.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
         isLoadingStats = false
+    }
+
+    var isLoadingReviews by mutableStateOf(true)
+    var mediaReviews = mutableStateListOf<MediaReviewsQuery.Node>()
+
+    suspend fun getMediaReviews(mediaId: Int) {
+        isLoadingReviews = true
+        val response = MediaReviewsQuery(
+            mediaId = Optional.present(mediaId),
+            page = Optional.present(1),
+            perPage = Optional.present(25)
+        ).tryQuery()
+
+        response?.data?.Media?.reviews?.nodes?.filterNotNull()?.let { mediaReviews.addAll(it) }
+        isLoadingReviews = false
     }
 }

@@ -19,7 +19,8 @@ import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 
 @Composable
 fun HtmlWebView(
-    html: String
+    html: String,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val htmlConverted = generateHtml(html = html)
@@ -38,7 +39,7 @@ fun HtmlWebView(
 
     WebView(
         state = webViewState,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         captureBackPresses = false,
         onCreated = { webView ->
             webView.background = ColorDrawable(Color.TRANSPARENT)

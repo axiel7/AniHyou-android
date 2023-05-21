@@ -166,4 +166,7 @@
     <string name="rankings">Rankings</string>
     <string name="score_distribution">Score distribution</string>
     <string name="no_description">No description</string>
+    <string name="reviews">Reviews</string>
+    <string name="loading">Loading</string>
+    <string name="users_likes">Users likes</string>
 </resources>

@@ -118,12 +118,12 @@ fun TextSubtitleVertical(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = 4.dp)
-            .defaultPlaceholder(visible = isLoading),
+            .padding(horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = text,
+            modifier = Modifier.defaultPlaceholder(visible = isLoading),
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(

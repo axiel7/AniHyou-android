@@ -115,6 +115,7 @@ fun MediaDetailsView(
     navigateToFullscreenImage: (String?) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
+    navigateToReviewDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = viewModel()
@@ -433,7 +434,11 @@ fun MediaDetailsView(
                         mediaId = mediaId,
                         viewModel = viewModel
                     )
-                    DetailsType.REVIEWS -> ReviewThreadView(viewModel = viewModel)
+                    DetailsType.REVIEWS -> ReviewThreadListView(
+                        mediaId = mediaId,
+                        viewModel = viewModel,
+                        navigateToReviewDetails = navigateToReviewDetails
+                    )
                 }
             }//: Column
         }//: Column
@@ -554,7 +559,8 @@ fun MediaDetailsViewPreview() {
             navigateToMediaDetails = {},
             navigateToFullscreenImage = {},
             navigateToCharacterDetails = {},
-            navigateToStaffDetails = {}
+            navigateToStaffDetails = {},
+            navigateToReviewDetails = {},
         )
     }
 }
