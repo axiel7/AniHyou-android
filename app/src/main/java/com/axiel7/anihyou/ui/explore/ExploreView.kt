@@ -26,6 +26,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import com.axiel7.anihyou.data.model.MediaSortSearch
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
@@ -61,9 +63,9 @@ fun ExploreView(
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
 ) {
-    var query by remember { mutableStateOf("") }
+    var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(false) }
-    var isSearchActive by remember { mutableStateOf(false) }
+    var isSearchActive by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
