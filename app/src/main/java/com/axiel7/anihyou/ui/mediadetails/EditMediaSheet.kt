@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -130,6 +132,7 @@ fun EditMediaSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -303,14 +306,19 @@ fun EditMediaSheet(
                 onPlusClick = { viewModel.onChangeRepeatCount(viewModel.repeatCount?.plus(1)) }
             )
 
-            TextCheckbox(
-                text = stringResource(R.string.list_private),
-                checked = viewModel.isPrivate ?: false,
-                onCheckedChange = {
-                    viewModel.isPrivate = it
-                },
-                modifier = Modifier.padding(16.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                TextCheckbox(
+                    text = stringResource(R.string.list_private),
+                    checked = viewModel.isPrivate ?: false,
+                    onCheckedChange = {
+                        viewModel.isPrivate = it
+                    }
+                )
+            }
 
             // Delete
             Button(
@@ -321,7 +329,9 @@ fun EditMediaSheet(
                 enabled = !viewModel.isNewEntry,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.error
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    disabledContainerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.12f),
+                    disabledContentColor = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.38f)
                 )
             ) {
                 Text(text = stringResource(R.string.delete))
