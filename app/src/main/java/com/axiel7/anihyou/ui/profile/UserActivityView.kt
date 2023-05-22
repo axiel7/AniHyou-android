@@ -24,6 +24,7 @@ import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 @Composable
 fun UserActivityView(
     viewModel: ProfileViewModel,
+    modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -34,7 +35,7 @@ fun UserActivityView(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         state = listState,
         contentPadding = PaddingValues(8.dp)
     ) {

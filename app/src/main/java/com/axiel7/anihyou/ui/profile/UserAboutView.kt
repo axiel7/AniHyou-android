@@ -17,13 +17,17 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 @Composable
 fun UserAboutView(
     aboutHtml: String?,
+    modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
     if (aboutHtml != null) {
-        HtmlWebView(html = aboutHtml)
+        HtmlWebView(
+            html = aboutHtml,
+            modifier = modifier
+        )
     } else {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             if (isLoading)
