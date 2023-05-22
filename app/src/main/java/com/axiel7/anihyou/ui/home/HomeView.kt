@@ -61,7 +61,7 @@ fun HomeView(
         rememberTopAppBarState()
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         viewModel.getAiringAnime()
         viewModel.getThisSeasonAnime()
         viewModel.getTrendingAnime()
@@ -88,12 +88,7 @@ fun HomeView(
             HomeLazyRow(
                 minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
             ) {
-                if (viewModel.isLoadingAiring) {
-                    items(10) {
-                        AiringAnimeHorizontalItemPlaceholder()
-                    }
-                }
-                else items(viewModel.airingAnime) { item ->
+                items(viewModel.airingAnime) { item ->
                     AiringAnimeHorizontalItem(
                         title = item.media?.title?.userPreferred ?: "",
                         subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
@@ -103,6 +98,11 @@ fun HomeView(
                             navigateToMediaDetails(item.media!!.id)
                         }
                     )
+                }
+                if (viewModel.isLoadingAiring) {
+                    items(10) {
+                        AiringAnimeHorizontalItemPlaceholder()
+                    }
                 }
             }
 
@@ -116,12 +116,7 @@ fun HomeView(
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
             ) {
-                if (viewModel.isLoadingThisSeason) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
-                }
-                else items(viewModel.thisSeasonAnime) { item ->
+                items(viewModel.thisSeasonAnime) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -134,6 +129,11 @@ fun HomeView(
                         minLines = 2,
                         onClick = { navigateToMediaDetails(item.id) }
                     )
+                }
+                if (viewModel.isLoadingThisSeason) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
                 }
             }
 
@@ -145,12 +145,7 @@ fun HomeView(
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
             ) {
-                if (viewModel.isLoadingTrendingAnime) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
-                }
-                else items(viewModel.trendingAnime) { item ->
+                items(viewModel.trendingAnime) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -163,6 +158,11 @@ fun HomeView(
                         minLines = 2,
                         onClick = { navigateToMediaDetails(item.id) }
                     )
+                }
+                if (viewModel.isLoadingTrendingAnime) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
                 }
             }
 
@@ -176,12 +176,7 @@ fun HomeView(
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
             ) {
-                if (viewModel.isLoadingNextSeason) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
-                }
-                else items(viewModel.nextSeasonAnime) { item ->
+                items(viewModel.nextSeasonAnime) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -194,6 +189,11 @@ fun HomeView(
                         minLines = 2,
                         onClick = { navigateToMediaDetails(item.id) }
                     )
+                }
+                if (viewModel.isLoadingNextSeason) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
                 }
             }
 
@@ -205,12 +205,7 @@ fun HomeView(
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
             ) {
-                if (viewModel.isLoadingTrendingManga) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
-                }
-                else items(viewModel.trendingManga) { item ->
+                items(viewModel.trendingManga) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -223,6 +218,11 @@ fun HomeView(
                         minLines = 2,
                         onClick = { navigateToMediaDetails(item.id) }
                     )
+                }
+                if (viewModel.isLoadingTrendingManga) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
                 }
             }
         }//: Column
