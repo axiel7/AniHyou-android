@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -145,7 +146,8 @@ fun ProfileView(
                 if (isMyProfile) {
                     OutlinedIconButton(
                         onClick = navigateToSettings,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.settings_24),

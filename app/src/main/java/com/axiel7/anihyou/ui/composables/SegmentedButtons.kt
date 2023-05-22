@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,6 +69,7 @@ fun <T> SegmentedButtons(
                         MaterialTheme.colorScheme.secondaryContainer
                     else Color.Transparent
                 ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
             ) {
                 item.icon?.let { icon ->
                     Icon(
