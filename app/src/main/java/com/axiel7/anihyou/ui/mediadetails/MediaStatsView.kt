@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.ui.mediadetails
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -14,10 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.color
+import com.axiel7.anihyou.data.model.icon
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaRankType
 import com.axiel7.anihyou.ui.composables.InfoTitle
@@ -48,24 +53,33 @@ fun MediaStatsView(
                     AssistChip(
                         onClick = { },
                         label = {
-                            Text(text = buildString {
-                                append("#${it.rank} ${it.context.capitalize(Locale.current)}")
-                                it.season?.let { season ->
-                                    append(" ${season.localized()}")
-                                }
-                                it.year?.let { year ->
-                                    append(" $year")
-                                }
-                            })
+                            Text(
+                                text = buildString {
+                                    append("#${it.rank} ${it.context.capitalize(Locale.current)}")
+                                    it.season?.let { season ->
+                                        append(" ${season.localized()}")
+                                    }
+                                    it.year?.let { year ->
+                                        append(" $year")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
                         },
+                        modifier = Modifier.fillMaxWidth(),
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(
-                                    if (it.type == MediaRankType.POPULAR) R.drawable.favorite_24
-                                    else R.drawable.star_24
-                                ),
-                                contentDescription = "rank"
+                                painter = painterResource(it.type.icon()),
+                                contentDescription = "rank",
+                                modifier = if (it.type == MediaRankType.POPULAR)
+                                    Modifier.padding(start = 2.dp)
+                                else Modifier,
+                                tint = it.type.color()
                             )
+                        },
+                        trailingIcon = {
+                            Spacer(modifier = Modifier.size(24.dp))
                         }
                     )
                 }
@@ -75,6 +89,7 @@ fun MediaStatsView(
                             text = "This is a loading placeholder",
                             modifier = Modifier
                                 .padding(vertical = 4.dp)
+                                .fillMaxWidth()
                                 .defaultPlaceholder(visible = true)
                         )
                     }

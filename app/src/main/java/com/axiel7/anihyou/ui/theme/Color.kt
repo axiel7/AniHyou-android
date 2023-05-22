@@ -119,9 +119,3 @@ val stat_dark_90 = Color(0xFF88CEFF)
 
 val stat_light_100 = Color(0xFF006686)
 val stat_dark_100 = Color(0xFF71D2FF)
-
-val light_heart = Color(0xFFBE003A)
-val dark_heart = Color(0xFFFFB2B7)
-
-val light_star = Color(0xFF705D00)
-val dark_star = Color(0xFFAAC300)
