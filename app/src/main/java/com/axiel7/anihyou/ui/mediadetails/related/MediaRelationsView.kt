@@ -33,7 +33,7 @@ fun MediaRelationsView(
     navigateToDetails: (Int) -> Unit,
 ) {
     LaunchedEffect(mediaId) {
-        if (viewModel.mediaRelated.isEmpty())
+        if (viewModel.mediaRelated.isEmpty() || viewModel.mediaRecommendations.isEmpty())
             viewModel.getMediaRelationsRecommendations(mediaId)
     }
 
