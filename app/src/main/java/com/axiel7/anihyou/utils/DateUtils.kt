@@ -151,7 +151,10 @@ object DateUtils {
         )
     )
 
-    fun Long.timestampIntervalSinceNow() = (System.nanoTime() - this).absoluteValue
+    /**
+     * Difference in seconds since now
+     */
+    fun Long.timestampIntervalSinceNow() = (System.currentTimeMillis() - this * 1000).absoluteValue / 1000
 
     /**
      * @return the date in LocalDate, null if fails

@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
+const val MEDIA_POSTER_TINY_HEIGHT = 80
+const val MEDIA_POSTER_TINY_WIDTH = 80
+
 const val MEDIA_POSTER_COMPACT_HEIGHT = 100
 const val MEDIA_POSTER_COMPACT_WIDTH = 100
 

@@ -74,6 +74,7 @@ fun ProfileView(
     username: String? = null,
     navigateToSettings: () -> Unit = {},
     navigateToFullscreenImage: (String?) -> Unit,
+    navigateToMediaDetails: (Int) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
@@ -176,7 +177,11 @@ fun ProfileView(
                             aboutHtml = viewModel.userInfo?.about,
                             isLoading = viewModel.isLoading
                         )
-                    ProfileInfoType.ACTIVITY -> UserActivityView(viewModel = viewModel)
+                    ProfileInfoType.ACTIVITY ->
+                        UserActivityView(
+                            viewModel = viewModel,
+                            navigateToMediaDetails = navigateToMediaDetails
+                        )
                     ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)
                     ProfileInfoType.FAVORITES -> UserFavoritesView(viewModel = viewModel)
                     ProfileInfoType.SOCIAL -> UserSocialView(viewModel = viewModel)
@@ -192,7 +197,8 @@ fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
             ProfileView(
-                navigateToFullscreenImage = {}
+                navigateToFullscreenImage = {},
+                navigateToMediaDetails = {}
             )
         }
     }

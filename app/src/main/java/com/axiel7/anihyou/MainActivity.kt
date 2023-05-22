@@ -304,6 +304,9 @@ fun MainView(
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
                             navController.navigate("full_image/$encodedUrl")
                         },
+                        navigateToMediaDetails = { id ->
+                            navController.navigate("media_details/$id")
+                        }
                     )
                 }
             }
@@ -468,6 +471,9 @@ fun MainView(
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
                         navController.navigate("full_image/$encodedUrl")
+                    },
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("media_details/$id")
                     },
                     navigateBack = {
                         navController.popBackStack()
