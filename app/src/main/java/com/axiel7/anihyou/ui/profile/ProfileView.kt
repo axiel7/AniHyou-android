@@ -85,6 +85,7 @@ fun ProfileView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
@@ -208,7 +209,12 @@ fun ProfileView(
                             navigateToStaffDetails = navigateToStaffDetails,
                             navigateToStudioDetails = navigateToStudioDetails,
                         )
-                    ProfileInfoType.SOCIAL -> UserSocialView(viewModel = viewModel)
+                    ProfileInfoType.SOCIAL ->
+                        UserSocialView(
+                            userId = viewModel.userId,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToUserDetails = navigateToUserDetails
+                        )
                 }
             }//: Column
         }//: Column
@@ -226,6 +232,7 @@ fun ProfileViewPreview() {
                 navigateToCharacterDetails = {},
                 navigateToStaffDetails = {},
                 navigateToStudioDetails = {},
+                navigateToUserDetails = {},
             )
         }
     }

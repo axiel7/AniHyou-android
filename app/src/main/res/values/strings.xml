@@ -175,4 +175,6 @@
     <string name="add_genre">Add genre</string>
     <string name="clear">Clear</string>
     <string name="list_private">Private</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
 </resources>

@@ -315,7 +315,10 @@ fun MainView(
                         },
                         navigateToStudioDetails = { id ->
                             navController.navigate("studio/$id")
-                        }
+                        },
+                        navigateToUserDetails = { id ->
+                            navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                        },
                     )
                 }
             }
@@ -492,6 +495,9 @@ fun MainView(
                     },
                     navigateToStudioDetails = { id ->
                         navController.navigate("studio/$id")
+                    },
+                    navigateToUserDetails = { id ->
+                        navController.navigate("user/$id")
                     },
                     navigateBack = {
                         navController.popBackStack()
