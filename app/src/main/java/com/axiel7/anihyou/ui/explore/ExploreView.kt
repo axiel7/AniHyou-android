@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.explore
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -98,10 +99,14 @@ fun ExploreView(
                         isSearchActive = it
                         if (!isSearchActive) query = ""
                     },
-                    modifier = if (!isSearchActive) Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-                    else Modifier.fillMaxWidth(),
+                        .then(
+                            if (!isSearchActive) Modifier
+                                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                            else Modifier
+                        )
+                        .animateContentSize(),
                     placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                     leadingIcon = {
                         if (isSearchActive) {
