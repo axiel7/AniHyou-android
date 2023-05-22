@@ -20,7 +20,7 @@ import com.axiel7.anihyou.R
 object ContextUtils {
 
     fun Context.showToast(message: String?) =
-        message?.let { Toast.makeText(this, message, Toast.LENGTH_SHORT) }
+        message?.let { Toast.makeText(this, message, Toast.LENGTH_SHORT).show() }
 
     fun Context.openActionView(url: String) {
         openActionView(Uri.parse(url))
