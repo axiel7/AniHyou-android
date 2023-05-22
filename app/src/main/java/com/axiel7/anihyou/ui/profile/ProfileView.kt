@@ -81,6 +81,9 @@ fun ProfileView(
     navigateToSettings: () -> Unit = {},
     navigateToFullscreenImage: (String?) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = viewModel()
@@ -195,7 +198,15 @@ fun ProfileView(
                             navigateToMediaDetails = navigateToMediaDetails
                         )
                     ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)
-                    ProfileInfoType.FAVORITES -> UserFavoritesView(viewModel = viewModel)
+                    ProfileInfoType.FAVORITES ->
+                        UserFavoritesView(
+                            userId = viewModel.userId,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToCharacterDetails = navigateToCharacterDetails,
+                            navigateToStaffDetails = navigateToStaffDetails,
+                            navigateToStudioDetails = navigateToStudioDetails,
+                        )
                     ProfileInfoType.SOCIAL -> UserSocialView(viewModel = viewModel)
                 }
             }//: Column
@@ -210,7 +221,10 @@ fun ProfileViewPreview() {
         Surface {
             ProfileView(
                 navigateToFullscreenImage = {},
-                navigateToMediaDetails = {}
+                navigateToMediaDetails = {},
+                navigateToCharacterDetails = {},
+                navigateToStaffDetails = {},
+                navigateToStudioDetails = {},
             )
         }
     }

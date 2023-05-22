@@ -41,9 +41,7 @@ fun HtmlWebView(
 
     WebView(
         state = webViewState,
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
+        modifier = modifier.fillMaxWidth(),
         captureBackPresses = false,
         onCreated = { webView ->
             webView.background = ColorDrawable(Color.TRANSPARENT)

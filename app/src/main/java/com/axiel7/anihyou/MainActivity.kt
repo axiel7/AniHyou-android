@@ -306,6 +306,15 @@ fun MainView(
                         },
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id")
+                        },
+                        navigateToCharacterDetails = { id ->
+                            navController.navigate("character/$id")
+                        },
+                        navigateToStaffDetails = { id ->
+                            navController.navigate("staff/$id")
+                        },
+                        navigateToStudioDetails = { id ->
+                            navController.navigate("studio/$id")
                         }
                     )
                 }
@@ -475,9 +484,18 @@ fun MainView(
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
                     },
+                    navigateToCharacterDetails = { id ->
+                        navController.navigate("character/$id")
+                    },
+                    navigateToStaffDetails = { id ->
+                        navController.navigate("staff/$id")
+                    },
+                    navigateToStudioDetails = { id ->
+                        navController.navigate("studio/$id")
+                    },
                     navigateBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
