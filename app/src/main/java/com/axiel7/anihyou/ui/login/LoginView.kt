@@ -20,11 +20,13 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 
 @Composable
-fun LoginView() {
+fun LoginView(
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

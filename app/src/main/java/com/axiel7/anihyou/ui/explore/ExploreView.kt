@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
+    modifier: Modifier = Modifier,
     mediaType: MediaType? = null,
     genre: String? = null,
     tag: String? = null,
@@ -83,6 +84,7 @@ fun ExploreView(
     var isSearchActive by rememberSaveable { mutableStateOf(genre != null || tag != null) }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             Column(
                 modifier = Modifier.fillMaxWidth(),

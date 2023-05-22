@@ -51,6 +51,7 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
+    modifier: Modifier = Modifier,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
 ) {
@@ -70,6 +71,7 @@ fun HomeView(
 
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(R.string.home),
+        modifier = modifier,
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(

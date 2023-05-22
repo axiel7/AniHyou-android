@@ -7,12 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -28,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -204,10 +208,18 @@ fun MainView(
         },
         backgroundColor = MaterialTheme.colorScheme.background
     ) { padding ->
+        val bottomPadding by animateDpAsState(
+            targetValue = padding.calculateBottomPadding(),
+            label = "bottom_bar_padding"
+        )
         AnimatedNavHost(
             navController = navController,
             startDestination = lastTabOpened.toBottomDestinationRoute(),
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(
+                start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                top = padding.calculateTopPadding(),
+                end = padding.calculateEndPadding(LocalLayoutDirection.current),
+            ),
             enterTransition = {
                 fadeIn(tween(400))
             },
@@ -223,6 +235,7 @@ fun MainView(
         ) {
             composable(BottomDestination.Home.route) {
                 HomeView(
+                    modifier = Modifier.padding(bottom = bottomPadding),
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
                     },
@@ -234,10 +247,13 @@ fun MainView(
 
             composable(BottomDestination.AnimeList.route) {
                 if (accessTokenPreference == null) {
-                    LoginView()
+                    LoginView(
+                        modifier = Modifier.padding(bottom = bottomPadding),
+                    )
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.ANIME,
+                        modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id") {
                                 popUpTo(navController.graph[BottomDestination.AnimeList.route].id) {
@@ -253,10 +269,13 @@ fun MainView(
 
             composable(BottomDestination.MangaList.route) {
                 if (accessTokenPreference == null) {
-                    LoginView()
+                    LoginView(
+                        modifier = Modifier.padding(bottom = bottomPadding),
+                    )
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.MANGA,
+                        modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id") {
                                 popUpTo(navController.graph[BottomDestination.MangaList.route].id) {
@@ -272,9 +291,12 @@ fun MainView(
 
             composable(BottomDestination.Profile.route) {
                 if (accessTokenPreference == null) {
-                    LoginView()
+                    LoginView(
+                        modifier = Modifier.padding(bottom = bottomPadding),
+                    )
                 } else {
                     ProfileView(
+                        modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToSettings = {
                             navController.navigate(SETTINGS_DESTINATION)
                         },
@@ -303,6 +325,7 @@ fun MainView(
                 )
             ) { navEntry ->
                 ExploreView(
+                    modifier = Modifier.padding(bottom = bottomPadding),
                     mediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
                     genre = navEntry.arguments?.getString("genre"),
                     tag = navEntry.arguments?.getString("tag"),
@@ -439,6 +462,7 @@ fun MainView(
                 )
             ) { navEntry ->
                 ProfileView(
+                    modifier = Modifier.padding(bottom = bottomPadding),
                     userId = navEntry.arguments?.getString("id")?.toIntOrNull(),
                     username = navEntry.arguments?.getString("name"),
                     navigateToFullscreenImage = { url ->

@@ -68,6 +68,7 @@ const val USER_DETAILS_DESTINATION = "user?id={id}?name={name}"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
+    modifier: Modifier = Modifier,
     userId: Int? = null,
     username: String? = null,
     navigateToSettings: () -> Unit = {},
@@ -85,6 +86,7 @@ fun ProfileView(
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { },

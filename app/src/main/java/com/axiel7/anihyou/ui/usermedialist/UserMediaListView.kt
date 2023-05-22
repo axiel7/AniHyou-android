@@ -67,7 +67,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
-    navigateToMediaDetails: (mediaId: Int) -> Unit
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -97,6 +98,7 @@ fun UserMediaListHostView(
     DefaultScaffoldWithSmallTopAppBar(
         title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
+        modifier = modifier,
         actions = {
             IconButton(onClick = { openSortDialog = true }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
