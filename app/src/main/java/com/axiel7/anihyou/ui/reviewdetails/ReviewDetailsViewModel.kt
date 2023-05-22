@@ -13,7 +13,7 @@ class ReviewDetailsViewModel : BaseViewModel() {
     var reviewDetails by mutableStateOf<ReviewDetailsQuery.Review?>(null)
     val userAcceptance by derivedStateOf {
         if (reviewDetails?.ratingAmount != null && reviewDetails?.rating != null) {
-            (reviewDetails!!.ratingAmount!! * 100) / reviewDetails!!.rating!!
+            (reviewDetails!!.rating!! * 100) / reviewDetails!!.ratingAmount!!
         } else 0
     }
 
