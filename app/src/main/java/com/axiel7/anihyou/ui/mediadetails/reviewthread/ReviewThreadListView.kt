@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.ui.composables.post.PostItem
 import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
@@ -34,8 +36,11 @@ fun ReviewThreadListView(
     viewModel: MediaDetailsViewModel,
     navigateToReviewDetails: (Int) -> Unit,
 ) {
-    LaunchedEffect(mediaId) {
-        viewModel.getMediaReviews(mediaId)
+    val listState = rememberLazyGridState()
+
+    listState.OnBottomReached(buffer = 2) {
+        if (viewModel.hasNextPageReviews)
+            viewModel.getMediaReviews(mediaId)
     }
 
     Column(
@@ -48,6 +53,7 @@ fun ReviewThreadListView(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 16.dp)
                     .height((POST_ITEM_HEIGHT * 2).dp),
+                state = listState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)

@@ -105,16 +105,20 @@ class MediaDetailsViewModel : BaseViewModel() {
 
     var isLoadingReviews by mutableStateOf(true)
     var mediaReviews = mutableStateListOf<MediaReviewsQuery.Node>()
+    var pageReviews = 1
+    var hasNextPageReviews = true
 
     suspend fun getMediaReviews(mediaId: Int) {
         isLoadingReviews = true
         val response = MediaReviewsQuery(
             mediaId = Optional.present(mediaId),
-            page = Optional.present(1),
+            page = Optional.present(pageReviews),
             perPage = Optional.present(25)
         ).tryQuery()
 
         response?.data?.Media?.reviews?.nodes?.filterNotNull()?.let { mediaReviews.addAll(it) }
+        hasNextPageReviews = response?.data?.Media?.reviews?.pageInfo?.hasNextPage ?: false
+        pageReviews = response?.data?.Media?.reviews?.pageInfo?.currentPage?.plus(1) ?: pageReviews
         isLoadingReviews = false
     }
 }
