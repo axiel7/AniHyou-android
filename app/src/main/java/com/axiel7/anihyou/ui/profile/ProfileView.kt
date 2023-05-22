@@ -163,6 +163,7 @@ fun ProfileView(
                 SegmentedButtons(
                     items = ProfileInfoType.tabRows,
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    defaultSelectedIndex = selectedTabIndex,
                     onItemSelection = {
                         selectedTabIndex = it
                     }
