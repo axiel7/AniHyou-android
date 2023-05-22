@@ -168,7 +168,11 @@ fun ProfileView(
                     }
                 )
                 when (ProfileInfoType.tabRows[selectedTabIndex].value) {
-                    ProfileInfoType.ABOUT -> UserAboutView(aboutHtml = viewModel.userInfo?.about)
+                    ProfileInfoType.ABOUT ->
+                        UserAboutView(
+                            aboutHtml = viewModel.userInfo?.about,
+                            isLoading = viewModel.isLoading
+                        )
                     ProfileInfoType.ACTIVITY -> UserActivityView(viewModel = viewModel)
                     ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)
                     ProfileInfoType.FAVORITES -> UserFavoritesView(viewModel = viewModel)
