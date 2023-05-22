@@ -47,6 +47,7 @@ fun PostItem(
         ) {
             Text(
                 text = title,
+                modifier = Modifier.fillMaxWidth(),
                 fontStyle = FontStyle.Italic,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
