@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.explore
+package com.axiel7.anihyou.ui.explore.search
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

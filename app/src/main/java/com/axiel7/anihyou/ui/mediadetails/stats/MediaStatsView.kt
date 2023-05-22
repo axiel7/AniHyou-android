@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.stats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +29,7 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable

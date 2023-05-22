@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.profile
+package com.axiel7.anihyou.ui.profile.favorites
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

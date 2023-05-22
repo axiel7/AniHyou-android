@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.profile
+package com.axiel7.anihyou.ui.profile.favorites
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement

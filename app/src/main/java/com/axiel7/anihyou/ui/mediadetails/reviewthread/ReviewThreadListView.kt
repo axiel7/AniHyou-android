@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.reviewthread
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.ui.composables.post.PostItem
 import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable

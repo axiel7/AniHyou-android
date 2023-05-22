@@ -78,6 +78,11 @@ import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.ui.mediadetails.characterstaff.MediaCharacterStaffView
+import com.axiel7.anihyou.ui.mediadetails.edit.EditMediaSheet
+import com.axiel7.anihyou.ui.mediadetails.related.MediaRelationsView
+import com.axiel7.anihyou.ui.mediadetails.reviewthread.ReviewThreadListView
+import com.axiel7.anihyou.ui.mediadetails.stats.MediaStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard

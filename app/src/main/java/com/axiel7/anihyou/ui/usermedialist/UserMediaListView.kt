@@ -59,7 +59,7 @@ import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
-import com.axiel7.anihyou.ui.mediadetails.EditMediaSheet
+import com.axiel7.anihyou.ui.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 

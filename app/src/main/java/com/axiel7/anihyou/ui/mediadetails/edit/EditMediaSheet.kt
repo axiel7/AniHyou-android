@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

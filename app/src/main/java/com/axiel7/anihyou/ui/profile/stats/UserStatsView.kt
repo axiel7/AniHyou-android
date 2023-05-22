@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.profile
+package com.axiel7.anihyou.ui.profile.stats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.ui.profile.ProfileViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
-fun UserSocialView(
+fun UserStatsView(
     viewModel: ProfileViewModel
 ) {
     Column(
@@ -30,10 +31,10 @@ fun UserSocialView(
 
 @Preview
 @Composable
-fun UserSocialViewPreview() {
+fun UserStatsViewPreview() {
     AniHyouTheme {
         Surface {
-            UserSocialView(
+            UserStatsView(
                 viewModel = viewModel()
             )
         }

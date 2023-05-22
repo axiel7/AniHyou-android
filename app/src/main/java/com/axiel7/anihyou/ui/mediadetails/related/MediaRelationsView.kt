@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.related
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +22,7 @@ import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.home.HomeLazyRow
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 

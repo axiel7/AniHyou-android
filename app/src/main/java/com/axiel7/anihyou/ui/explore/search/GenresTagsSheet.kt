@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.explore
+package com.axiel7.anihyou.ui.explore.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

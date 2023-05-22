@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.edit
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue

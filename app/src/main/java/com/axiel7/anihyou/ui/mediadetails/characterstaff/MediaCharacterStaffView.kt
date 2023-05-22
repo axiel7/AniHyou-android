@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.mediadetails
+package com.axiel7.anihyou.ui.mediadetails.characterstaff
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.profile
+package com.axiel7.anihyou.ui.profile.about
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
