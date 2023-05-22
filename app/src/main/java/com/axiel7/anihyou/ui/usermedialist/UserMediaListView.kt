@@ -179,7 +179,7 @@ fun UserMediaListView(
     }
 
     LaunchedEffect(sort) {
-        if (!viewModel.isLoading) {
+        if (!viewModel.isLoading && viewModel.sort != sort) {
             viewModel.sort = sort
             viewModel.refreshList()
         }
