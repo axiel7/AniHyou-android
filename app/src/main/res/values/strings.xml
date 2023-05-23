@@ -177,4 +177,7 @@
     <string name="list_private">Private</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
+    <string name="trailer">Trailer</string>
+    <string name="streaming_sites">Streaming sites</string>
+    <string name="external_links">External links</string>
 </resources>
