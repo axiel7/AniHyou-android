@@ -91,6 +91,7 @@ class MediaDetailsViewModel : BaseViewModel() {
                 )
             }
         }
+        mediaScoreDistribution.clear()
         response?.data?.Media?.stats?.scoreDistribution?.filterNotNull()?.forEach {
             mediaScoreDistribution.add(
                 StatLocalizableAndColorable(
@@ -99,6 +100,7 @@ class MediaDetailsViewModel : BaseViewModel() {
                 )
             )
         }
+        mediaRankings.clear()
         response?.data?.Media?.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
         isLoadingStats = false
     }

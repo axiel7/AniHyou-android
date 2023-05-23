@@ -38,7 +38,8 @@ fun MediaStatsView(
     viewModel: MediaDetailsViewModel,
 ) {
     LaunchedEffect(mediaId) {
-        viewModel.getMediaStats(mediaId)
+        if (viewModel.mediaScoreDistribution.isEmpty())
+            viewModel.getMediaStats(mediaId)
     }
 
     Column(
