@@ -33,7 +33,7 @@ class UserMediaListViewModel(
             userId = Optional.present(userId),
             type = Optional.present(mediaType),
             status = Optional.present(status),
-            sort = Optional.present(listOf(sort))
+            sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
         ).tryQuery()
 
         response?.data?.Page?.mediaList?.filterNotNull()?.let {
