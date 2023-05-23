@@ -33,7 +33,6 @@ fun MediaActivityItem(
 ) {
     Row(
         modifier = modifier
-            .height(MEDIA_POSTER_TINY_HEIGHT.dp)
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
     ) {
@@ -45,7 +44,6 @@ fun MediaActivityItem(
 
         Column(
             modifier = Modifier
-                .fillMaxHeight()
                 .padding(start = 16.dp, end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -73,7 +71,7 @@ fun MediaActivityItemPlaceholder(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.height(MEDIA_POSTER_TINY_HEIGHT.dp)
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -84,14 +82,13 @@ fun MediaActivityItemPlaceholder(
 
         Column(
             modifier = Modifier
-                .fillMaxHeight()
                 .padding(start = 16.dp, end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = "This is a  loading placeholder",
                 modifier = Modifier
-                    .padding(bottom = 4.dp)
+                    .padding(bottom = 8.dp)
                     .defaultPlaceholder(visible = true)
             )
 
