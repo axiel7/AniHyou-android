@@ -45,6 +45,7 @@ fun MediaItemHorizontal(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(MEDIA_POSTER_SMALL_HEIGHT.dp)
+            .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
     ) {
         Box(

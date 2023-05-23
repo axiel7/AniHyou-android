@@ -48,7 +48,9 @@ fun UserActivityView(
                     title = activity.text(),
                     imageUrl = activity.media?.coverImage?.large,
                     subtitle = activity.createdAt.toLong().timestampIntervalSinceNow().secondsToLegibleText(),
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     onClick = {
                         navigateToMediaDetails(activity.media?.id!!)
                     }
