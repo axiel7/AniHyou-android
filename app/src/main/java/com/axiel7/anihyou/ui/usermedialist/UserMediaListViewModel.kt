@@ -48,15 +48,14 @@ class UserMediaListViewModel(
             } else mediaList.addAll(it)
         }
         hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-        if (hasNextPage) page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
+        page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
         isLoading = false
     }
 
-    suspend fun refreshList() {
+    fun refreshList() {
         page = 1
         hasNextPage = true
         mediaList.clear()
-        getUserList()
     }
 
     suspend fun updateEntryProgress(entryId: Int, progress: Int) {
