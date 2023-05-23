@@ -49,6 +49,7 @@ import androidx.navigation.navArgument
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
@@ -63,6 +64,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.ui.base.ListMode
 import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
@@ -128,6 +130,7 @@ class MainActivity : ComponentActivity() {
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let { App.animeListSort = it }
         App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
         App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let { App.scoreFormat = ScoreFormat.valueOf(it) }
+        App.dataStore.getValueSync(LIST_DISPLAY_MODE_PREFERENCE_KEY)?.let { App.listDisplayMode = ListMode.valueOf(it) }
 
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)

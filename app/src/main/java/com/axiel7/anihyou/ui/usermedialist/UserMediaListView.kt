@@ -47,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.UserMediaListSort
@@ -54,10 +55,13 @@ import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.base.ListMode
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
+import com.axiel7.anihyou.ui.composables.media.CompactUserMediaListItem
+import com.axiel7.anihyou.ui.composables.media.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
 import com.axiel7.anihyou.ui.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -164,6 +168,7 @@ fun UserMediaListView(
         onRefresh = { scope.launch { viewModel.getUserList() } }
     )
     val sheetState = rememberModalBottomSheetState()
+    val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getUserList()
@@ -204,23 +209,65 @@ fun UserMediaListView(
                 key = { it.basicMediaListEntry.id },
                 contentType = { it.basicMediaListEntry }
             ) { item ->
-                StandardUserMediaListItem(
-                    item = item,
-                    status = status,
-                    onClick = { navigateToDetails(item.mediaId) },
-                    onLongClick = {
-                        viewModel.selectedItem = item
-                        scope.launch { sheetState.show() }
-                    },
-                    onClickPlus = {
-                        scope.launch {
-                            viewModel.updateEntryProgress(
-                                entryId = item.basicMediaListEntry.id,
-                                progress = (item.basicMediaListEntry.progress ?: 0) + 1
-                            )
-                        }
+                when (listDisplayMode) {
+                    ListMode.STANDARD.name -> {
+                        StandardUserMediaListItem(
+                            item = item,
+                            status = status,
+                            onClick = { navigateToDetails(item.mediaId) },
+                            onLongClick = {
+                                viewModel.selectedItem = item
+                                scope.launch { sheetState.show() }
+                            },
+                            onClickPlus = {
+                                scope.launch {
+                                    viewModel.updateEntryProgress(
+                                        entryId = item.basicMediaListEntry.id,
+                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
+                                    )
+                                }
+                            }
+                        )
                     }
-                )
+                    ListMode.COMPACT.name -> {
+                        CompactUserMediaListItem(
+                            item = item,
+                            status = status,
+                            onClick = { navigateToDetails(item.mediaId) },
+                            onLongClick = {
+                                viewModel.selectedItem = item
+                                scope.launch { sheetState.show() }
+                            },
+                            onClickPlus = {
+                                scope.launch {
+                                    viewModel.updateEntryProgress(
+                                        entryId = item.basicMediaListEntry.id,
+                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
+                                    )
+                                }
+                            }
+                        )
+                    }
+                    ListMode.MINIMAL.name -> {
+                        MinimalUserMediaListItem(
+                            item = item,
+                            status = status,
+                            onClick = { navigateToDetails(item.mediaId) },
+                            onLongClick = {
+                                viewModel.selectedItem = item
+                                scope.launch { sheetState.show() }
+                            },
+                            onClickPlus = {
+                                scope.launch {
+                                    viewModel.updateEntryProgress(
+                                        entryId = item.basicMediaListEntry.id,
+                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }//: LazyColumn
         PullRefreshIndicator(

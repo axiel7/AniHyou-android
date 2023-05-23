@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,11 +77,13 @@ fun StandardUserMediaListItem(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
                     Text(
                         text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .padding(vertical = 8.dp),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
                         overflow = TextOverflow.Ellipsis,
@@ -111,7 +114,9 @@ fun StandardUserMediaListItem(
 
                     LinearProgressIndicator(
                         progress = item.calculateProgressBarValue(),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(vertical = 1.dp)
+                            .fillMaxWidth(),
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp),
                         strokeCap = StrokeCap.Round
@@ -122,9 +127,127 @@ fun StandardUserMediaListItem(
     }//: Card
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CompactUserMediaListItem(
+    item: UserMediaListQuery.MediaList,
+    status: MediaListStatus,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onClickPlus: () -> Unit,
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
+    ) {
+        Row(
+            modifier = Modifier.height(MEDIA_POSTER_COMPACT_HEIGHT.dp)
+        ) {
+            MediaPoster(
+                url = item.media?.coverImage?.large,
+                showShadow = false,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .size(MEDIA_POSTER_SMALL_WIDTH.dp)
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                    modifier = Modifier
+                        .padding(top = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 17.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
+                )
+
+                AiringScheduleText(item = item)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                    )
+
+                    if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
+                        FilledTonalButton(onClick = onClickPlus) {
+                            Text(text = "+1")
+                        }
+                    }
+                }
+            }//:Column
+        }//:Row
+    }//:Card
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MinimalUserMediaListItem(
+    item: UserMediaListQuery.MediaList,
+    status: MediaListStatus,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onClickPlus: () -> Unit,
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
+    ) {
+        Row(
+            modifier = Modifier
+                .height(84.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 17.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
+                )
+
+                AiringScheduleText(item = item)
+
+                Text(
+                    text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                )
+            }//:Column
+
+            if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
+                FilledTonalButton(onClick = onClickPlus) {
+                    Text(text = "+1")
+                }
+            }
+        }//:Row
+    }//:Card
+}
+
 @Composable
 fun AiringScheduleText(
-    item: UserMediaListQuery.MediaList
+    item: UserMediaListQuery.MediaList,
+    modifier: Modifier = Modifier
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
         val isBehind = (item.basicMediaListEntry.progress ?: 0) < (nextAiringEpisode.episode - 1)
@@ -139,7 +262,7 @@ fun AiringScheduleText(
                         nextAiringEpisode.episode,
                         nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
                     ),
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = modifier,
             color = if (isBehind) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -181,8 +304,22 @@ fun UserMediaListItemPreview() {
     AniHyouTheme {
         Surface {
             LazyColumn {
-                items(3) {
+                item {
                     StandardUserMediaListItem(
+                        item = exampleItem,
+                        status = MediaListStatus.CURRENT,
+                        onClick = { },
+                        onLongClick = { },
+                        onClickPlus = { }
+                    )
+                    CompactUserMediaListItem(
+                        item = exampleItem,
+                        status = MediaListStatus.CURRENT,
+                        onClick = { },
+                        onLongClick = { },
+                        onClickPlus = { }
+                    )
+                    MinimalUserMediaListItem(
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
                         onClick = { },

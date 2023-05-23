@@ -180,4 +180,8 @@
     <string name="trailer">Trailer</string>
     <string name="streaming_sites">Streaming sites</string>
     <string name="external_links">External links</string>
+    <string name="standard">Standard</string>
+    <string name="compact">Compact</string>
+    <string name="minimal">Minimal</string>
+    <string name="list_style">List style</string>
 </resources>

@@ -6,6 +6,8 @@ import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
@@ -13,14 +15,18 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.ui.base.ListMode
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
@@ -47,6 +53,12 @@ val themeEntries = mapOf(
     THEME_BLACK to R.string.theme_black
 )
 
+val listModeEntries = mapOf(
+    ListMode.STANDARD.name to R.string.standard,
+    ListMode.COMPACT.name to R.string.compact,
+    ListMode.MINIMAL.name to R.string.minimal,
+)
+
 const val SETTINGS_DESTINATION = "settings"
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +72,7 @@ fun SettingsView(
         rememberTopAppBarState()
     )
     val themePreference = rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
-    //val listModePreference = rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, ListMode.STANDARD.value)
+    val listModePreference = rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
@@ -70,7 +82,10 @@ fun SettingsView(
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(padding)
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                .verticalScroll(rememberScrollState())
         ) {
             PreferencesTitle(text = stringResource(R.string.display))
 
@@ -84,15 +99,15 @@ fun SettingsView(
                 }
             )
 
-            /*ListPreference(
+            ListPreference(
                 title = stringResource(R.string.list_style),
-                entriesValues = viewModel.listModeEntries,
+                entriesValues = listModeEntries,
                 preferenceValue = listModePreference,
-                icon = R.drawable.round_format_list_bulleted_24,
+                icon = R.drawable.format_list_bulleted_24,
                 onValueChange = { value ->
-                    ListMode.forValue(value)?.value?.let { listModePreference.value = it }
+                    value?.let { listModePreference.value = ListMode.valueOf(it).name }
                 }
-            )*/
+            )
 
             PreferencesTitle(text = stringResource(R.string.account))
             PlainPreference(
