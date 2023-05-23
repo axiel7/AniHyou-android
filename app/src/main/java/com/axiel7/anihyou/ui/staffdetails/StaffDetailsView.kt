@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.staffdetails
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,6 +16,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -229,6 +233,7 @@ fun StaffInfoView(
     }//: Column
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffMediaView(
     staffId: Int,
@@ -247,23 +252,41 @@ fun StaffMediaView(
         state = listState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                FilterChip(
+                    selected = viewModel.mediaOnMyList,
+                    onClick = {
+                        viewModel.mediaOnMyList = !viewModel.mediaOnMyList
+                        viewModel.refreshStaffMedia()
+                    },
+                    label = { Text(text = stringResource(R.string.on_my_list)) },
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    leadingIcon = {
+                        if (viewModel.mediaOnMyList) {
+                            Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
+                        }
+                    }
+                )
+            }
+        }
         items(
             items = viewModel.staffMedia,
-            key = { it.id!! },
-            contentType = { it }
+            key = { it.second.value.id!! },
+            contentType = { it.second }
         ) { item ->
             MediaItemHorizontal(
-                title = item.node?.title?.userPreferred ?: "",
-                imageUrl = item.node?.coverImage?.large,
+                title = item.second.value.node?.title?.userPreferred ?: "",
+                imageUrl = item.second.value.node?.coverImage?.large,
                 subtitle1 = {
                     Text(
-                        text = item.staffRole ?: "",
+                        text = item.second.staffRoles.joinToString(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 15.sp
                     )
                 },
                 onClick = {
-                    navigateToMediaDetails(item.node?.id!!)
+                    navigateToMediaDetails(item.first)
                 }
             )
         }

@@ -184,4 +184,5 @@
     <string name="compact">Compact</string>
     <string name="minimal">Minimal</string>
     <string name="list_style">List style</string>
+    <string name="on_my_list">On my list</string>
 </resources>

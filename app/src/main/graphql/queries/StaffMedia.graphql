@@ -1,6 +1,6 @@
-query StaffMedia($staffId: Int, $page: Int, $perPage: Int) {
+query StaffMedia($staffId: Int, $onList: Boolean, $page: Int, $perPage: Int) {
     Staff(id: $staffId) {
-        staffMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+        staffMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC], onList: $onList) {
             edges {
                 id
                 node {
