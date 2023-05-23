@@ -41,6 +41,14 @@ object DateUtils {
         ""
     }
 
+    fun LocalDateTime?.toLocalized(
+        style: FormatStyle = FormatStyle.MEDIUM
+    ): String = try {
+        this?.format(DateTimeFormatter.ofLocalizedDate(style)) ?: ""
+    } catch (e: DateTimeException) {
+        ""
+    }
+
     fun LocalDateTime.toCalendar(): GregorianCalendar = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -162,6 +170,17 @@ object DateUtils {
     fun Long.millisToLocalDate(): LocalDate? {
         return try {
             Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * @return the date in LocalDate, null if fails
+     */
+    fun Long.secondsToLocalDateTime(): LocalDateTime? {
+        return try {
+            Instant.ofEpochSecond(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
         } catch (e: Exception) {
             null
         }

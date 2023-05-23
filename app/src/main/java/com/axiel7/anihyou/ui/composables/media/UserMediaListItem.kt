@@ -33,6 +33,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.duration
+import com.axiel7.anihyou.data.model.isBehind
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
@@ -250,7 +251,7 @@ fun AiringScheduleText(
     modifier: Modifier = Modifier
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-        val isBehind = (item.basicMediaListEntry.progress ?: 0) < (nextAiringEpisode.episode - 1)
+        val isBehind = item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
         Text(
             text =
                 if (isBehind)

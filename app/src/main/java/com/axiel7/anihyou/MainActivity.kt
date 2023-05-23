@@ -109,7 +109,12 @@ class MainActivity : ComponentActivity() {
 
         var detailsType: String? = null
         var detailsId: String? = null
-        if (intent.data != null) {
+        // Widget intent
+        if (intent.action == "media_details") {
+            detailsType = "anime"
+            detailsId = intent.getIntExtra("media_id", 0).toString()
+        }
+        else if (intent.data != null) {
             parseLoginIntentData(intent.data)
             // Manually handle deep links because the uri pattern in the compose navigation
             // matches this -> https://anilist.co/manga/41514/
