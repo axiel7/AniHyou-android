@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.composables.media
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,8 +77,10 @@ fun AiringAnimeHorizontalItemPlaceholder() {
         Box(
             modifier = Modifier
                 .size(width = MEDIA_POSTER_SMALL_WIDTH.dp, height = MEDIA_POSTER_SMALL_HEIGHT.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .defaultPlaceholder(visible = true)
+                .background(
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(8.dp)
+                )
         )
 
         Column(

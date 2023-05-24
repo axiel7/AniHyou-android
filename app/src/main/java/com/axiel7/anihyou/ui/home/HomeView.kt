@@ -132,7 +132,9 @@ fun HomeView(
                 }
                 if (viewModel.isLoadingThisSeason) {
                     items(10) {
-                        MediaItemVerticalPlaceholder()
+                        MediaItemVerticalPlaceholder(
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 }
             }
@@ -161,7 +163,9 @@ fun HomeView(
                 }
                 if (viewModel.isLoadingTrendingAnime) {
                     items(10) {
-                        MediaItemVerticalPlaceholder()
+                        MediaItemVerticalPlaceholder(
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 }
             }
@@ -192,7 +196,9 @@ fun HomeView(
                 }
                 if (viewModel.isLoadingNextSeason) {
                     items(10) {
-                        MediaItemVerticalPlaceholder()
+                        MediaItemVerticalPlaceholder(
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 }
             }
@@ -221,7 +227,9 @@ fun HomeView(
                 }
                 if (viewModel.isLoadingTrendingManga) {
                     items(10) {
-                        MediaItemVerticalPlaceholder()
+                        MediaItemVerticalPlaceholder(
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 }
             }

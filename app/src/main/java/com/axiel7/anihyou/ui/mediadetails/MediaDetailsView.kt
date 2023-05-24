@@ -216,7 +216,6 @@ fun MediaDetailsView(
                             width = MEDIA_POSTER_BIG_WIDTH.dp,
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
-                        .defaultPlaceholder(visible = viewModel.isLoading)
                         .clickable {
                             viewModel.mediaDetails?.coverImage?.extraLarge?.let {
                                 navigateToFullscreenImage(it)
