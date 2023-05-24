@@ -13,12 +13,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
@@ -32,6 +35,8 @@ import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
+import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
+import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
@@ -68,16 +73,29 @@ fun SettingsView(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val viewModel: SettingsViewModel = viewModel()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
     val themePreference = rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
     val listModePreference = rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
 
+    LaunchedEffect(viewModel) {
+        if (!viewModel.isLoading) viewModel.getUserOptions()
+    }
+
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
         navigationIcon = {
             BackIconButton(onClick = navigateBack)
+        },
+        actions = {
+            if (viewModel.isLoading) {
+                SmallCircularProgressIndicator(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -110,6 +128,17 @@ fun SettingsView(
             )
 
             PreferencesTitle(text = stringResource(R.string.account))
+            SwitchPreference(
+                title = stringResource(R.string.display_adult_content),
+                preferenceValue = viewModel.displayAdultContent,
+                icon = R.drawable.no_adult_content_24,
+                onValueChange = {
+                    scope.launch {
+                        viewModel.displayAdultContent.value = it
+                        viewModel.updateUser()
+                    }
+                }
+            )
             PlainPreference(
                 title = stringResource(R.string.anilist_account_settings),
                 icon = R.drawable.manage_accounts_24,

@@ -1,0 +1,8 @@
+mutation UpdateUser($displayAdultContent: Boolean) {
+    UpdateUser(displayAdultContent: $displayAdultContent) {
+        id
+        options {
+            displayAdultContent
+        }
+    }
+}

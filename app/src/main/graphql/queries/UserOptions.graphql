@@ -1,0 +1,12 @@
+query UserOptions {
+    Viewer {
+        options {
+            activityMergeTime
+            airingNotifications
+            displayAdultContent
+            profileColor
+            staffNameLanguage
+            titleLanguage
+        }
+    }
+}

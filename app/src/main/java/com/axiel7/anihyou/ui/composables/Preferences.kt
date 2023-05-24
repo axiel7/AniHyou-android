@@ -107,9 +107,9 @@ fun SwitchPreference(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    preferenceValue: MutableState<Boolean?>,
+    preferenceValue: MutableState<Boolean>,
     @DrawableRes icon: Int? = null,
-    onValueChange: (Boolean?) -> Unit
+    onValueChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
