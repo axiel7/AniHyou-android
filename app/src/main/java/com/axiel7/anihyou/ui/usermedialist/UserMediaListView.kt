@@ -167,7 +167,7 @@ fun UserMediaListView(
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = viewModel.isLoading,
-        onRefresh = { scope.launch { viewModel.getUserList() } }
+        onRefresh = { scope.launch { viewModel.refreshList() } }
     )
     val sheetState = rememberModalBottomSheetState()
     val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
