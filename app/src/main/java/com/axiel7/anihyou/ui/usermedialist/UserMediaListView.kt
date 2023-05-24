@@ -29,6 +29,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,6 +84,7 @@ fun UserMediaListHostView(
         key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
         defaultValue = if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
+    val sort = remember { derivedStateOf { sortPreference?.let { MediaListSort.safeValueOf(it) } } }
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -136,14 +139,13 @@ fun UserMediaListHostView(
                 beyondBoundsPageCount = 0,
                 key = { tabRowItems[it].name }
             ) {
-                if (sortPreference != null)
-                    UserMediaListView(
-                        mediaType = mediaType,
-                        status = tabRowItems[it],
-                        sort = MediaListSort.safeValueOf(sortPreference!!),
-                        navigateToDetails = navigateToMediaDetails,
-                        nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
-                    )
+                UserMediaListView(
+                    mediaType = mediaType,
+                    status = tabRowItems[it],
+                    sort = sort,
+                    navigateToDetails = navigateToMediaDetails,
+                    nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
+                )
             }//: Pager
         }//: Column
     }//: Scaffold
@@ -154,7 +156,7 @@ fun UserMediaListHostView(
 fun UserMediaListView(
     mediaType: MediaType,
     status: MediaListStatus,
-    sort: MediaListSort,
+    sort: State<MediaListSort?>,
     navigateToDetails: (mediaId: Int) -> Unit,
     nestedScrollConnection: NestedScrollConnection
 ) {
@@ -183,9 +185,9 @@ fun UserMediaListView(
         )
     }
 
-    LaunchedEffect(sort) {
-        if (!viewModel.isLoading && viewModel.sort != sort) {
-            viewModel.sort = sort
+    LaunchedEffect(sort.value) {
+        if (!viewModel.isLoading && sort.value != null && viewModel.sort != sort.value) {
+            viewModel.sort = sort.value!!
             viewModel.refreshList()
         }
     }

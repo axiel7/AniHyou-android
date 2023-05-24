@@ -52,10 +52,11 @@ class UserMediaListViewModel(
         isLoading = false
     }
 
-    fun refreshList() {
+    suspend fun refreshList() {
+        hasNextPage = false
         page = 1
-        hasNextPage = true
         mediaList.clear()
+        getUserList()
     }
 
     suspend fun updateEntryProgress(entryId: Int, progress: Int) {
