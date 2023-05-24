@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.staffdetails
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
@@ -12,11 +11,13 @@ import com.axiel7.anihyou.StaffMediaQuery
 import com.axiel7.anihyou.data.model.StaffMediaGrouped
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
-class StaffDetailsViewModel : BaseViewModel() {
+class StaffDetailsViewModel(
+    private val staffId: Int
+) : BaseViewModel() {
 
     var staffDetails by mutableStateOf<StaffDetailsQuery.Staff?>(null)
 
-    suspend fun getStaffDetails(staffId: Int) {
+    suspend fun getStaffDetails() {
         isLoading = true
         val response = StaffDetailsQuery(
             staffId = Optional.present(staffId)
@@ -31,7 +32,7 @@ class StaffDetailsViewModel : BaseViewModel() {
     var hasNextPageMedia = true
     var staffMedia = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
 
-    suspend fun getStaffMedia(staffId: Int) {
+    suspend fun getStaffMedia() {
         isLoading = pageMedia == 1
         val response = StaffMediaQuery(
             staffId = Optional.present(staffId),
@@ -56,17 +57,18 @@ class StaffDetailsViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    fun refreshStaffMedia() {
+    suspend fun refreshStaffMedia() {
         pageMedia = 1
         hasNextPageMedia = true
-        staffMedia.clear()
+        if (staffMedia.isEmpty()) getStaffMedia()
+        else staffMedia.clear()
     }
 
     var pageCharacter = 1
     var hasNextPageCharacter = true
     var staffCharacters = mutableStateListOf<StaffCharacterQuery.Edge>()
 
-    suspend fun getStaffCharacters(staffId: Int) {
+    suspend fun getStaffCharacters() {
         isLoading = pageCharacter == 1
         val response = StaffCharacterQuery(
             staffId = Optional.present(staffId),

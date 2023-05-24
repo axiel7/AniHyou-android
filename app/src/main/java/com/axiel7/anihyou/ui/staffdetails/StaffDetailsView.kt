@@ -25,6 +25,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -54,6 +55,7 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
+import kotlinx.coroutines.launch
 
 private enum class StaffInfoType {
     INFO, MEDIA, CHARACTER;
@@ -78,7 +80,7 @@ fun StaffDetailsView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
-    val viewModel: StaffDetailsViewModel = viewModel()
+    val viewModel: StaffDetailsViewModel = viewModel { StaffDetailsViewModel(staffId) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -106,14 +108,12 @@ fun StaffDetailsView(
                     )
                 StaffInfoType.MEDIA ->
                     StaffMediaView(
-                        staffId = staffId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         navigateToMediaDetails = navigateToMediaDetails
                     )
                 StaffInfoType.CHARACTER ->
                     StaffCharacterView(
-                        staffId = staffId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         navigateToCharacterDetails = navigateToCharacterDetails
@@ -131,7 +131,7 @@ fun StaffInfoView(
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
     LaunchedEffect(staffId) {
-        viewModel.getStaffDetails(staffId)
+        viewModel.getStaffDetails()
     }
 
     Column(
@@ -236,15 +236,15 @@ fun StaffInfoView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffMediaView(
-    staffId: Int,
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPageMedia) viewModel.getStaffMedia(staffId)
+        if (viewModel.hasNextPageMedia) viewModel.getStaffMedia()
     }
 
     LazyColumn(
@@ -257,8 +257,10 @@ fun StaffMediaView(
                 FilterChip(
                     selected = viewModel.mediaOnMyList,
                     onClick = {
-                        viewModel.mediaOnMyList = !viewModel.mediaOnMyList
-                        viewModel.refreshStaffMedia()
+                        scope.launch {
+                            viewModel.mediaOnMyList = !viewModel.mediaOnMyList
+                            viewModel.refreshStaffMedia()
+                        }
                     },
                     label = { Text(text = stringResource(R.string.on_my_list)) },
                     modifier = Modifier.padding(horizontal = 8.dp),
@@ -307,7 +309,6 @@ fun StaffMediaView(
 
 @Composable
 fun StaffCharacterView(
-    staffId: Int,
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
     navigateToCharacterDetails: (Int) -> Unit,
@@ -315,7 +316,7 @@ fun StaffCharacterView(
     val listState = rememberLazyListState()
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPageCharacter) viewModel.getStaffCharacters(staffId)
+        if (viewModel.hasNextPageCharacter) viewModel.getStaffCharacters()
     }
 
     LazyColumn(
