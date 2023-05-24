@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.stats
 
 import androidx.annotation.IntRange
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -34,17 +34,17 @@ data class ScoreDistribution(
     @Composable
     override fun primaryColor(): Color {
         val isDark = isSystemInDarkTheme()
-        return when (score) {
-            10 -> if (isDark) stat_dark_10 else stat_light_10
-            20 -> if (isDark) stat_dark_20 else stat_light_20
-            30 -> if (isDark) stat_dark_30 else stat_light_30
-            40 -> if (isDark) stat_dark_40 else stat_light_40
-            50 -> if (isDark) stat_dark_50 else stat_light_50
-            60 -> if (isDark) stat_dark_60 else stat_light_60
-            70 -> if (isDark) stat_dark_70 else stat_light_70
-            80 -> if (isDark) stat_dark_80 else stat_light_80
-            90 -> if (isDark) stat_dark_90 else stat_light_90
-            100 -> if (isDark) stat_dark_100 else stat_light_100
+        return when {
+            score < 20 -> if (isDark) stat_dark_10 else stat_light_10
+            score < 30 -> if (isDark) stat_dark_20 else stat_light_20
+            score < 40 -> if (isDark) stat_dark_30 else stat_light_30
+            score < 50 -> if (isDark) stat_dark_40 else stat_light_40
+            score < 60 -> if (isDark) stat_dark_50 else stat_light_50
+            score < 70 -> if (isDark) stat_dark_60 else stat_light_60
+            score < 80 -> if (isDark) stat_dark_70 else stat_light_70
+            score < 90 -> if (isDark) stat_dark_80 else stat_light_80
+            score < 100 -> if (isDark) stat_dark_90 else stat_light_90
+            score == 100 -> if (isDark) stat_dark_100 else stat_light_100
             else -> MaterialTheme.colorScheme.outline
         }
     }

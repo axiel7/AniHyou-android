@@ -41,6 +41,7 @@ import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -48,7 +49,6 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(
     query: String,
@@ -95,18 +95,12 @@ fun SearchView(
                     .padding(horizontal = 4.dp)
             ) {
                 SearchType.values().forEach {
-                    FilterChip(
+                    FilterSelectionChip(
                         selected = viewModel.searchType == it,
+                        text = it.localized(),
                         onClick = {
                             viewModel.searchType = it
                             performSearch.value = true
-                        },
-                        label = { Text(text = it.localized()) },
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        leadingIcon = {
-                            if (viewModel.searchType == it) {
-                                Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
-                            }
                         }
                     )
                 }

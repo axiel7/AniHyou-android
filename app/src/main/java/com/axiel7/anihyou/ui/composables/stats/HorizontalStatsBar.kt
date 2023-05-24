@@ -11,7 +11,6 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.Stat
-import com.axiel7.anihyou.data.model.StatLocalizableAndColorable
-import com.axiel7.anihyou.data.model.StatusDistribution
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
+import com.axiel7.anihyou.data.model.stats.Stat
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
+import com.axiel7.anihyou.data.model.stats.StatusDistribution
 import com.axiel7.anihyou.ui.composables.Rectangle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -36,11 +35,10 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
     stats: List<Stat<T>>,
     horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 0.dp,
+    showTotal: Boolean = true,
     isLoading: Boolean = false,
 ) {
-    val totalValue by remember {
-        derivedStateOf { stats.map { it.value }.sum() }
-    }
+    val totalValue = stats.map { it.value }.sum()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
@@ -86,10 +84,12 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
             }
         }
 
-        Text(
-            text = stringResource(R.string.total_entries).format(totalValue.toInt().format()),
-            modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp)
-        )
+        if (showTotal) {
+            Text(
+                text = stringResource(R.string.total_entries).format(totalValue.toInt().format()),
+                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp)
+            )
+        }
     }
 }
 

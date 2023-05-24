@@ -14,15 +14,12 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
+import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -87,18 +85,10 @@ fun UserFavoritesView(
                 .padding(8.dp)
         ) {
             FavoritesType.values().forEach {
-                FilterChip(
+                FilterSelectionChip(
                     selected = viewModel.favoritesType == it,
-                    onClick = {
-                        viewModel.favoritesType = it
-                    },
-                    label = { Text(text = it.localized()) },
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    leadingIcon = {
-                        if (viewModel.favoritesType == it) {
-                            Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
-                        }
-                    }
+                    text = it.localized(),
+                    onClick = { viewModel.favoritesType = it }
                 )
             }
         }//: Row

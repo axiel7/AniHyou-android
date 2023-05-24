@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.stats
 
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable

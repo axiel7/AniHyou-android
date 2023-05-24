@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,9 +19,9 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.data.model.ScoreDistribution
-import com.axiel7.anihyou.data.model.Stat
-import com.axiel7.anihyou.data.model.StatColorable
+import com.axiel7.anihyou.data.model.stats.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.Stat
+import com.axiel7.anihyou.data.model.stats.StatColorable
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
 import com.axiel7.anihyou.ui.composables.Rectangle
 import com.axiel7.anihyou.ui.composables.RoundedRectangle
@@ -30,7 +29,7 @@ import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
-const val MAX_VERTICAL_STAT_HEIGHT = 100
+const val MAX_VERTICAL_STAT_HEIGHT = 124
 
 @Composable
 fun <T: LocalizableAndColorable> VerticalStatsBar(
@@ -38,12 +37,12 @@ fun <T: LocalizableAndColorable> VerticalStatsBar(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val maxValue by remember {
-        derivedStateOf { stats.maxOf { it.value } }
-    }
+    val maxValue = stats.maxOfOrNull { it.value } ?: 0f
 
     Row(
-        modifier = modifier.horizontalScroll(rememberScrollState()),
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .then(modifier),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom,
     ) {

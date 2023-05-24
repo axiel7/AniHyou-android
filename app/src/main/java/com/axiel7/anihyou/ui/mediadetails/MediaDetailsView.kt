@@ -308,7 +308,7 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = viewModel.mediaDetails?.popularity?.format() ?: "0",
+                    text = viewModel.mediaDetails?.popularity?.format(),
                     subtitle = stringResource(R.string.popularity),
                     isLoading = viewModel.isLoading
                 )
@@ -318,7 +318,7 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = viewModel.mediaDetails?.favourites?.format() ?: "0",
+                    text = viewModel.mediaDetails?.favourites?.format(),
                     subtitle = stringResource(R.string.favorites),
                     isLoading = viewModel.isLoading
                 )

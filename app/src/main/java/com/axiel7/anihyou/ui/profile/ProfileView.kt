@@ -199,7 +199,11 @@ fun ProfileView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             navigateToMediaDetails = navigateToMediaDetails
                         )
-                    ProfileInfoType.STATS -> UserStatsView(viewModel = viewModel)
+                    ProfileInfoType.STATS ->
+                        UserStatsView(
+                            userId = viewModel.userId,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                        )
                     ProfileInfoType.FAVORITES ->
                         UserFavoritesView(
                             userId = viewModel.userId,

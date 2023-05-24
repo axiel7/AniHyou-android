@@ -188,4 +188,17 @@
     <string name="refresh">Refresh</string>
     <string name="episode_airing_on">Ep %d airing on %s</string>
     <string name="display_adult_content">Display adult content</string>
+    <string name="overview">Overview</string>
+    <string name="voice_actors">Voice actors</string>
+    <string name="total">Total</string>
+    <string name="chapters_read">Chapters read</string>
+    <string name="episodes_watched">Episodes watched</string>
+    <string name="days_watched">Days watched</string>
+    <string name="volumes_read">Volumes read</string>
+    <string name="days_planned">Days planned</string>
+    <string name="chapters_planned">Chapters planned</string>
+    <string name="standard_deviation">Standard deviation</string>
+    <string name="title_count">Title count</string>
+    <string name="time_spent">Time spent</string>
+    <string name="format_distribution">Format distribution</string>
 </resources>

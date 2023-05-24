@@ -10,10 +10,10 @@ import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
-import com.axiel7.anihyou.data.model.ScoreDistribution
-import com.axiel7.anihyou.data.model.Stat
-import com.axiel7.anihyou.data.model.StatLocalizableAndColorable
-import com.axiel7.anihyou.data.model.StatusDistribution
+import com.axiel7.anihyou.data.model.stats.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.Stat
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
+import com.axiel7.anihyou.data.model.stats.StatusDistribution
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class MediaDetailsViewModel : BaseViewModel() {
