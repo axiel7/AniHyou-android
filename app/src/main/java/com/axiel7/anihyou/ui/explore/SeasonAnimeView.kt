@@ -78,10 +78,11 @@ fun SeasonAnimeView(
     var season by remember { mutableStateOf(initialSeason) }
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getAnimeSeasonal(
-            season = season.season,
-            year = season.year
-        )
+        if (viewModel.hasNextPage && !viewModel.isLoading)
+            viewModel.getAnimeSeasonal(
+                season = season.season,
+                year = season.year
+            )
     }
 
     LaunchedEffect(season) {
