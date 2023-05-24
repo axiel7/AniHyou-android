@@ -80,7 +80,7 @@ fun ProfileView(
     userId: Int? = null,
     username: String? = null,
     navigateToSettings: () -> Unit = {},
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -128,7 +128,7 @@ fun ProfileView(
                 TopBannerView(
                     imageUrl = viewModel.userInfo?.bannerImage,
                     modifier = Modifier.clickable {
-                        navigateToFullscreenImage(viewModel.userInfo?.bannerImage)
+                        viewModel.userInfo?.bannerImage?.let { navigateToFullscreenImage(it) }
                     },
                     fallbackColor = colorFromHex(viewModel.userInfo?.hexColor()),
                     height = padding.calculateTopPadding() + 100.dp
@@ -139,7 +139,7 @@ fun ProfileView(
                         .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         .size(PERSON_IMAGE_SIZE_SMALL.dp)
                         .clickable {
-                            navigateToFullscreenImage(viewModel.userInfo?.avatar?.large)
+                            viewModel.userInfo?.avatar?.large?.let { navigateToFullscreenImage(it) }
                         },
                     showShadow = true
                 )

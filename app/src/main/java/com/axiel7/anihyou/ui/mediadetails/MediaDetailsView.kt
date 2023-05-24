@@ -110,7 +110,7 @@ fun MediaDetailsView(
     mediaId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
@@ -200,7 +200,7 @@ fun MediaDetailsView(
             TopBannerView(
                 imageUrl = viewModel.mediaDetails?.bannerImage,
                 modifier = Modifier.clickable {
-                    navigateToFullscreenImage(viewModel.mediaDetails?.bannerImage)
+                    viewModel.mediaDetails?.bannerImage?.let { navigateToFullscreenImage(it) }
                 },
                 fallbackColor = colorFromHex(viewModel.mediaDetails?.coverImage?.color),
                 height = padding.calculateTopPadding() + 80.dp
@@ -218,7 +218,9 @@ fun MediaDetailsView(
                         )
                         .defaultPlaceholder(visible = viewModel.isLoading)
                         .clickable {
-                            navigateToFullscreenImage(viewModel.mediaDetails?.coverImage?.extraLarge)
+                            viewModel.mediaDetails?.coverImage?.extraLarge?.let {
+                                navigateToFullscreenImage(it)
+                            }
                         }
                 )
                 Column {
