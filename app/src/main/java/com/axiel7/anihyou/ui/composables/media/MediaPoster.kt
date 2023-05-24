@@ -45,8 +45,8 @@ fun MediaPoster(
         modifier = modifier
             .then(
                 if (showShadow) Modifier
-                    .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 8.dp)
-                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .padding(start = 2.dp, end = 2.dp, bottom = 4.dp)
+                    .shadow(2.dp, shape = RoundedCornerShape(8.dp))
                 else Modifier
             )
             .clip(RoundedCornerShape(8.dp))

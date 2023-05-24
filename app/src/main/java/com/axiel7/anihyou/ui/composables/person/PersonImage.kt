@@ -36,7 +36,8 @@ fun PersonImage(
         modifier = modifier
             .then(
                 if (showShadow) Modifier
-                    .shadow(8.dp, shape = CircleShape)
+                    .padding(start = 2.dp, end = 2.dp, bottom = 4.dp)
+                    .shadow(2.dp, shape = CircleShape)
                 else Modifier
             )
             .clip(CircleShape)
@@ -51,8 +52,7 @@ fun PersonImagePreview() {
             PersonImage(
                 url = null,
                 modifier = Modifier
-                    .size(PERSON_IMAGE_SIZE_SMALL.dp)
-                    .padding(8.dp),
+                    .size(PERSON_IMAGE_SIZE_SMALL.dp),
                 showShadow = true
             )
         }

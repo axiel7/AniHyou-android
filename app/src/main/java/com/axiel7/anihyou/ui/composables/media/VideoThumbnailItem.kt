@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -25,8 +26,8 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.banner_shadow_color
 
-const val VIDEO_SMALL_WIDTH = 192
-const val VIDEO_SMALL_HEIGHT = 108
+const val VIDEO_SMALL_WIDTH = 193
+const val VIDEO_SMALL_HEIGHT = 109
 
 @Composable
 fun VideoThumbnailItem(
@@ -38,6 +39,8 @@ fun VideoThumbnailItem(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .size(width = VIDEO_SMALL_WIDTH.dp, height = VIDEO_SMALL_HEIGHT.dp)
+            .padding(start = 2.dp, end = 2.dp, bottom = 4.dp)
+            .shadow(2.dp, shape = RoundedCornerShape(8.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
@@ -70,7 +73,6 @@ fun VideoThumbnailItemPreview() {
         Surface {
             VideoThumbnailItem(
                 imageUrl = null,
-                modifier = Modifier.padding(16.dp),
                 onClick = {}
             )
         }
