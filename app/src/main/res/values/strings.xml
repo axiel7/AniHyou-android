@@ -201,4 +201,5 @@
     <string name="title_count">Title count</string>
     <string name="time_spent">Time spent</string>
     <string name="format_distribution">Format distribution</string>
+    <string name="notes">Notes</string>
 </resources>

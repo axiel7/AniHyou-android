@@ -37,4 +37,5 @@ fragment BasicMediaListEntry on MediaList {
   completedAt {
     ...FuzzyDate
   }
+  notes
 }

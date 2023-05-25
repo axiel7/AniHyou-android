@@ -333,6 +333,17 @@ fun EditMediaSheet(
             ) {
                 Text(text = stringResource(R.string.delete))
             }
+
+            OutlinedTextField(
+                value = viewModel.notes ?: "",
+                onValueChange = {
+                    viewModel.notes = it
+                },
+                modifier = Modifier.padding(horizontal = 16.dp),
+                label = { Text(text = stringResource(R.string.notes)) },
+                singleLine = false,
+                minLines = 3
+            )
         }//:Column
     }//:Sheet
 }

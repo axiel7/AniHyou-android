@@ -349,6 +349,7 @@ fun UserMediaListItemPreview() {
             startedAt = null,
             completedAt = null,
             private = false,
+            notes = null,
         )
     )
     AniHyouTheme {
