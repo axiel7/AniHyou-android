@@ -251,7 +251,7 @@ fun MainView(
                     },
                     navigateToAnimeSeason = { animeSeason ->
                         navController.navigate("season/${animeSeason.year}/${animeSeason.season.name}") {
-                            popUpTo(MEDIA_DETAILS_DESTINATION) { saveState = true }
+                            popUpTo(BottomDestination.Home.route) { saveState = true }
                         }
                     }
                 )
@@ -269,8 +269,6 @@ fun MainView(
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id") {
                                 popUpTo(BottomDestination.AnimeList.route) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         }
                     )
@@ -289,8 +287,6 @@ fun MainView(
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id") {
                                 popUpTo(BottomDestination.MangaList.route) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         }
                     )
@@ -306,26 +302,40 @@ fun MainView(
                     ProfileView(
                         modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToSettings = {
-                            navController.navigate(SETTINGS_DESTINATION)
+                            navController.navigate(SETTINGS_DESTINATION) {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate("full_image/$encodedUrl") {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate("media_details/$id") {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToCharacterDetails = { id ->
-                            navController.navigate("character/$id")
+                            navController.navigate("character/$id") {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToStaffDetails = { id ->
-                            navController.navigate("staff/$id")
+                            navController.navigate("staff/$id") {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToStudioDetails = { id ->
-                            navController.navigate("studio/$id")
+                            navController.navigate("studio/$id") {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                         navigateToUserDetails = { id ->
-                            navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                            navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString())) {
+                                popUpTo(BottomDestination.Profile.route) { saveState = true }
+                            }
                         },
                     )
                 }
@@ -355,27 +365,37 @@ fun MainView(
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id") {
                             popUpTo(BottomDestination.Explore.route) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString())) {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     },
                     navigateToCharacterDetails = { id ->
-                        navController.navigate("character/$id")
+                        navController.navigate("character/$id") {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     },
                     navigateToStaffDetails = { id ->
-                        navController.navigate("staff/$id")
+                        navController.navigate("staff/$id") {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     },
                     navigateToStudioDetails = { id ->
-                        navController.navigate("studio/$id")
+                        navController.navigate("studio/$id") {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     },
                     navigateToMediaChart = {
-                        navController.navigate("media_chart/${it.name}")
+                        navController.navigate("media_chart/${it.name}") {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     },
                     navigateToAnimeSeason = { year, season ->
-                        navController.navigate("season/$year/$season")
+                        navController.navigate("season/$year/$season") {
+                            popUpTo(BottomDestination.Explore.route) { saveState = true }
+                        }
                     }
                 )
             }
@@ -397,7 +417,9 @@ fun MainView(
                     },
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                        navController.navigate("full_image/$encodedUrl")
+                        navController.navigate("full_image/$encodedUrl") {
+                            popUpTo(MEDIA_DETAILS_DESTINATION) { saveState = true }
+                        }
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate("character/$id") {
@@ -420,7 +442,10 @@ fun MainView(
                         if (genre != null) dest = dest.replace("{genre}", genre)
                         if (tag != null) dest = dest.replace("{tag}", tag)
                         navController.navigate(dest) {
-                            popUpTo(MEDIA_DETAILS_DESTINATION) { saveState = true }
+                            popUpTo(MEDIA_DETAILS_DESTINATION) {
+                                inclusive = true
+                                saveState = true
+                            }
                         }
                     }
                 )
@@ -440,8 +465,6 @@ fun MainView(
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id") {
                                 popUpTo(MEDIA_CHART_DESTINATION) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         }
                     )
@@ -467,8 +490,6 @@ fun MainView(
                             navigateToMediaDetails = { id ->
                                 navController.navigate("media_details/$id") {
                                     popUpTo(SEASON_ANIME_DESTINATION) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
                             }
                         )
@@ -494,7 +515,9 @@ fun MainView(
                     username = navEntry.arguments?.getString("name"),
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                        navController.navigate("full_image/$encodedUrl")
+                        navController.navigate("full_image/$encodedUrl") {
+                            popUpTo(USER_DETAILS_DESTINATION) { saveState = true }
+                        }
                     },
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id") {
@@ -545,7 +568,9 @@ fun MainView(
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate("full_image/$encodedUrl") {
+                                popUpTo(CHARACTER_DETAILS_DESTINATION) { saveState = true }
+                            }
                         },
                     )
                 }
@@ -574,7 +599,9 @@ fun MainView(
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate("full_image/$encodedUrl") {
+                                popUpTo(STAFF_DETAILS_DESTINATION) { saveState = true }
+                            }
                         }
                     )
                 }
@@ -687,7 +714,9 @@ fun BottomNavBar(
                     onClick = {
                         selectedItem = index
                         navController.navigate(dest.route) {
-                            popUpTo(dest.route) { saveState = true }
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
                             launchSingleTop = true
                             restoreState = true
                         }
