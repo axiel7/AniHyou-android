@@ -34,6 +34,15 @@ import com.axiel7.anihyou.ui.theme.stat_light_70
 import com.axiel7.anihyou.ui.theme.stat_light_80
 import com.axiel7.anihyou.ui.theme.stat_light_90
 import com.axiel7.anihyou.ui.theme.stat_light_blue
+import com.axiel7.anihyou.ui.theme.stat_light_on10
+import com.axiel7.anihyou.ui.theme.stat_light_on20
+import com.axiel7.anihyou.ui.theme.stat_light_on40
+import com.axiel7.anihyou.ui.theme.stat_light_on50
+import com.axiel7.anihyou.ui.theme.stat_light_on60
+import com.axiel7.anihyou.ui.theme.stat_light_on70
+import com.axiel7.anihyou.ui.theme.stat_light_on80
+import com.axiel7.anihyou.ui.theme.stat_light_on90
+import com.axiel7.anihyou.ui.theme.stat_light_onBlue
 
 enum class FormatDistribution(
     val value: MediaFormat
@@ -67,18 +76,17 @@ enum class FormatDistribution(
     }
     @Composable override fun onPrimaryColor(): Color {
         val isDark = isSystemInDarkTheme()
-        if (!isDark) return Color(0xFFFFFFFF)
-        else return when (value) {
-            MediaFormat.TV -> stat_dark_onBlue
-            MediaFormat.TV_SHORT -> stat_dark_on10
-            MediaFormat.MOVIE -> stat_dark_on80
-            MediaFormat.SPECIAL -> stat_dark_on50
-            MediaFormat.OVA -> stat_dark_on40
-            MediaFormat.ONA -> stat_dark_on20
-            MediaFormat.MUSIC -> stat_dark_on60
-            MediaFormat.MANGA -> stat_dark_onBlue
-            MediaFormat.NOVEL -> stat_dark_on90
-            MediaFormat.ONE_SHOT -> stat_dark_on70
+        return when (value) {
+            MediaFormat.TV -> if (isDark) stat_dark_onBlue else stat_light_onBlue
+            MediaFormat.TV_SHORT -> if (isDark) stat_dark_on10 else stat_light_on10
+            MediaFormat.MOVIE -> if (isDark) stat_dark_on80 else stat_light_on80
+            MediaFormat.SPECIAL -> if (isDark) stat_dark_on50 else stat_light_on50
+            MediaFormat.OVA -> if (isDark) stat_dark_on40 else stat_light_on40
+            MediaFormat.ONA -> if (isDark) stat_dark_on20 else stat_light_on20
+            MediaFormat.MUSIC -> if (isDark) stat_dark_on60 else stat_light_on60
+            MediaFormat.MANGA -> if (isDark) stat_dark_onBlue else stat_light_onBlue
+            MediaFormat.NOVEL -> if (isDark) stat_dark_on90 else stat_light_on90
+            MediaFormat.ONE_SHOT -> if (isDark) stat_dark_on70 else stat_light_on70
             MediaFormat.UNKNOWN__ -> MaterialTheme.colorScheme.onSurface
         }
     }

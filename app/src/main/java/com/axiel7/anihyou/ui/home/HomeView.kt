@@ -38,7 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
-import com.axiel7.anihyou.ui.composables.SmallScoreIndicator
+import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT

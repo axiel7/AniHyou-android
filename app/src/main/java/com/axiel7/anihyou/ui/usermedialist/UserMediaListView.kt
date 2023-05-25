@@ -51,12 +51,14 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.UserMediaListSort
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.ListMode
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
@@ -171,6 +173,10 @@ fun UserMediaListView(
     )
     val sheetState = rememberModalBottomSheetState()
     val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
+    val scoreFormatPreference by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
+    val scoreFormat by remember {
+        derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
+    }
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getUserList()
@@ -216,6 +222,7 @@ fun UserMediaListView(
                         StandardUserMediaListItem(
                             item = item,
                             status = status,
+                            scoreFormat = scoreFormat,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item
@@ -235,6 +242,7 @@ fun UserMediaListView(
                         CompactUserMediaListItem(
                             item = item,
                             status = status,
+                            scoreFormat = scoreFormat,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item
@@ -254,6 +262,7 @@ fun UserMediaListView(
                         MinimalUserMediaListItem(
                             item = item,
                             status = status,
+                            scoreFormat = scoreFormat,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item

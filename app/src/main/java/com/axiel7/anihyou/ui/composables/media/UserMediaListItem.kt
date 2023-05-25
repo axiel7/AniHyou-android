@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
@@ -39,6 +40,9 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
+import com.axiel7.anihyou.ui.composables.scores.MinimalScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 
@@ -47,6 +51,7 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 fun StandardUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
+    scoreFormat: ScoreFormat,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -72,6 +77,11 @@ fun StandardUserMediaListItem(
                             height = MEDIA_POSTER_SMALL_HEIGHT.dp
                         )
                 )
+
+                BadgeScoreIndicator(
+                    score = item.basicMediaListEntry.score,
+                    scoreFormat = scoreFormat
+                )
             }//:Box
 
             Column(
@@ -87,10 +97,14 @@ fun StandardUserMediaListItem(
                             .padding(vertical = 8.dp),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
+                        lineHeight = 22.sp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
-                    AiringScheduleText(item = item)
+                    AiringScheduleText(
+                        item = item,
+                        fontSize = 16.sp
+                    )
                 }//:Column
 
                 Column {
@@ -103,6 +117,7 @@ fun StandardUserMediaListItem(
                     ) {
                         Text(
                             text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                            fontSize = 16.sp
                         )
 
                         if (status == MediaListStatus.CURRENT
@@ -133,6 +148,7 @@ fun StandardUserMediaListItem(
 fun CompactUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
+    scoreFormat: ScoreFormat,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -146,13 +162,22 @@ fun CompactUserMediaListItem(
         Row(
             modifier = Modifier.height(MEDIA_POSTER_COMPACT_HEIGHT.dp)
         ) {
-            MediaPoster(
-                url = item.media?.coverImage?.large,
-                showShadow = false,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .size(MEDIA_POSTER_SMALL_WIDTH.dp)
-            )
+            Box(
+                contentAlignment = Alignment.BottomStart
+            ) {
+                MediaPoster(
+                    url = item.media?.coverImage?.large,
+                    showShadow = false,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .size(MEDIA_POSTER_SMALL_WIDTH.dp)
+                )
+
+                BadgeScoreIndicator(
+                    score = item.basicMediaListEntry.score,
+                    scoreFormat = scoreFormat
+                )
+            }//: Box
 
             Column(
                 modifier = Modifier
@@ -165,12 +190,16 @@ fun CompactUserMediaListItem(
                     modifier = Modifier
                         .padding(top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 17.sp,
+                    fontSize = 16.sp,
+                    lineHeight = 19.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
                 )
 
-                AiringScheduleText(item = item)
+                AiringScheduleText(
+                    item = item,
+                    fontSize = 16.sp,
+                )
 
                 Row(
                     modifier = Modifier
@@ -181,6 +210,7 @@ fun CompactUserMediaListItem(
                 ) {
                     Text(
                         text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                        fontSize = 15.sp,
                     )
 
                     if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
@@ -199,6 +229,7 @@ fun CompactUserMediaListItem(
 fun MinimalUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
+    scoreFormat: ScoreFormat,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -224,16 +255,30 @@ fun MinimalUserMediaListItem(
                 Text(
                     text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 17.sp,
+                    fontSize = 15.sp,
+                    lineHeight = 17.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
                 )
 
-                AiringScheduleText(item = item)
-
-                Text(
-                    text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                AiringScheduleText(
+                    item = item,
+                    fontSize = 15.sp
                 )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                        fontSize = 15.sp,
+                        maxLines = 1
+                    )
+                    MinimalScoreIndicator(
+                        score = item.basicMediaListEntry.score,
+                        scoreFormat = scoreFormat
+                    )
+                }
             }//:Column
 
             if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
@@ -248,7 +293,8 @@ fun MinimalUserMediaListItem(
 @Composable
 fun AiringScheduleText(
     item: UserMediaListQuery.MediaList,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = TextUnit.Unspecified,
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
         val isBehind = item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
@@ -265,7 +311,8 @@ fun AiringScheduleText(
                     ),
             modifier = modifier,
             color = if (isBehind) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onSurfaceVariant
+            else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = fontSize,
         )
     }
 }
@@ -309,6 +356,7 @@ fun UserMediaListItemPreview() {
                     StandardUserMediaListItem(
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
+                        scoreFormat = ScoreFormat.POINT_100,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }
@@ -316,6 +364,7 @@ fun UserMediaListItemPreview() {
                     CompactUserMediaListItem(
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
+                        scoreFormat = ScoreFormat.POINT_100,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }
@@ -323,6 +372,7 @@ fun UserMediaListItemPreview() {
                     MinimalUserMediaListItem(
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
+                        scoreFormat = ScoreFormat.POINT_100,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }

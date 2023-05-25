@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables.media
+package com.axiel7.anihyou.ui.composables.scores
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
