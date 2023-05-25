@@ -37,7 +37,7 @@ class UserMediaListViewModel(
         ).tryQuery()
 
         response?.data?.Page?.mediaList?.filterNotNull()?.let {
-            // Workaround: AniList API bug that always returns the status as PLANNING
+            // Workaround: AniList API bug that always returns incorrect status
             // when the order is set to title
             if (sort == MediaListSort.MEDIA_TITLE_ROMAJI) {
                 it.forEach { item ->
