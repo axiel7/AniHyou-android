@@ -325,10 +325,12 @@ fun UserMediaListItemPreview() {
         mediaId = 1,
         media = UserMediaListQuery.Media(
             __typename = "",
+            id = 1,
             coverImage = null,
             nextAiringEpisode = null,
             status = MediaStatus.RELEASING,
             basicMediaDetails = BasicMediaDetails(
+                __typename = "",
                 id = 1,
                 title = BasicMediaDetails.Title(userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"),
                 episodes = 12,

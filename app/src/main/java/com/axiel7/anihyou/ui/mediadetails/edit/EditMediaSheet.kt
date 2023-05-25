@@ -448,6 +448,7 @@ fun EditMediaSheetPreview() {
             EditMediaSheet(
                 sheetState = rememberModalBottomSheetState(),
                 mediaDetails = BasicMediaDetails(
+                    __typename = "",
                     id = 1,
                     title = BasicMediaDetails.Title(userPreferred = ""),
                     episodes = 12,

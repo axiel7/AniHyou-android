@@ -1,0 +1,5 @@
+extend type User @typePolicy(keyFields: "id")
+extend type Media @typePolicy(keyFields: "id")
+extend type Character @typePolicy(keyFields: "id")
+extend type Staff @typePolicy(keyFields: "id")
+extend type Studio @typePolicy(keyFields: "id")
