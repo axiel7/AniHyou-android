@@ -26,6 +26,9 @@ class SettingsViewModel : BaseViewModel() {
             displayAdultContent = Optional.present(displayAdultContent.value)
         ).tryMutation()
 
+        response?.data?.UpdateUser?.options?.let {
+            displayAdultContent.value = it.displayAdultContent ?: false
+        }
         isLoading = false
     }
 }
