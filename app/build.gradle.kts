@@ -106,7 +106,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
 
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     val apolloVersion = "3.8.1"
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
