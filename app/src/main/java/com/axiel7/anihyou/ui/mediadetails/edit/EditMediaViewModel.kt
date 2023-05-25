@@ -14,6 +14,7 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
+import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
 import java.time.LocalDate
 
@@ -92,14 +93,22 @@ class EditMediaViewModel(
         isLoading = true
         val response = UpdateEntryMutation(
             mediaId = Optional.present(mediaDetails.id),
-            status = if (status != null) Optional.present(status) else Optional.absent(),
-            score = if (score != null) Optional.present(score) else Optional.absent(),
-            progress = if (progress != null) Optional.present(progress) else Optional.absent(),
-            progressVolumes = if (volumeProgress != null) Optional.present(volumeProgress) else Optional.absent(),
-            startedAt = if (startDate != null) Optional.present(startDate!!.toFuzzyDate()) else Optional.absent(),
-            completedAt = if (endDate != null) Optional.present(endDate!!.toFuzzyDate()) else Optional.absent(),
-            repeat = if (repeatCount != null) Optional.present(repeatCount) else Optional.absent(),
-            private = if (isPrivate != null) Optional.present(isPrivate) else Optional.absent(),
+            status = if (status != listEntry?.status) Optional.present(status)
+            else Optional.absent(),
+            score = if (score != listEntry?.score) Optional.present(score)
+            else Optional.absent(),
+            progress = if (progress != listEntry?.progress) Optional.present(progress)
+            else Optional.absent(),
+            progressVolumes = if (volumeProgress != listEntry?.progressVolumes) Optional.present(volumeProgress)
+            else Optional.absent(),
+            startedAt = if (startDate?.toFuzzyDate() != listEntry?.startedAt?.fuzzyDate) Optional.present(startDate!!.toFuzzyDateInput())
+            else Optional.absent(),
+            completedAt = if (endDate?.toFuzzyDate() != listEntry?.completedAt?.fuzzyDate) Optional.present(endDate!!.toFuzzyDateInput())
+            else Optional.absent(),
+            repeat = if (repeatCount != listEntry?.repeat) Optional.present(repeatCount)
+            else Optional.absent(),
+            private = if (isPrivate != listEntry?.private) Optional.present(isPrivate)
+            else Optional.absent(),
         ).tryMutation()
 
         updateSuccess = response != null
