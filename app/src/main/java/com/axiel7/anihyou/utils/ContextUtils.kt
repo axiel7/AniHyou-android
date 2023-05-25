@@ -12,8 +12,10 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.os.LocaleListCompat
 import com.axiel7.anihyou.R
 
@@ -33,6 +35,26 @@ object ContextUtils {
             }
         } catch (e: ActivityNotFoundException) {
             showToast("No app found for this action")
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun Context.openByDefaultSettings() {
+        try {
+            // Samsung OneUI 4 bug can't open ACTION_APP_OPEN_BY_DEFAULT_SETTINGS
+            val action = if (Build.MANUFACTURER.equals("samsung", ignoreCase = true)) {
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            } else {
+                Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS
+            }
+            Intent(
+                action,
+                Uri.parse("package:${packageName}")
+            ).apply {
+                startActivity(this)
+            }
+        } catch (e: Exception) {
+            showToast(e.message)
         }
     }
 

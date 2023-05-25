@@ -41,6 +41,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.utils.ContextUtils.openByDefaultSettings
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
@@ -196,12 +197,7 @@ fun SettingsView(
                     title = stringResource(R.string.open_al_links_in_the_app),
                     icon = R.drawable.open_in_new_24,
                     onClick = {
-                        Intent(
-                            Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
-                            Uri.parse("package:${context.packageName}")
-                        ).apply {
-                            context.startActivity(this)
-                        }
+                        context.openByDefaultSettings()
                     }
                 )
             }
