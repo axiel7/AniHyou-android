@@ -42,6 +42,7 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
+import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -82,6 +83,18 @@ fun SearchView(
                 searchByGenre.value = false
             }
             performSearch.value = false
+        }
+    }
+
+    listState.OnBottomReached(buffer = 2) {
+        if (viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA) {
+            if (viewModel.searchedMedia.isNotEmpty())
+                viewModel.searchMedia(
+                    mediaType = if (viewModel.searchType == SearchType.ANIME) MediaType.ANIME
+                    else MediaType.MANGA,
+                    query = query,
+                    clear = false
+                )
         }
     }
 

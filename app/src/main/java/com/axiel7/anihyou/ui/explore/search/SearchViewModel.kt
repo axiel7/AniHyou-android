@@ -31,8 +31,8 @@ class SearchViewModel : BaseViewModel() {
 
     suspend fun runSearch(query: String) {
         when (searchType) {
-            SearchType.ANIME -> searchMedia(MediaType.ANIME, query)
-            SearchType.MANGA -> searchMedia(MediaType.MANGA, query)
+            SearchType.ANIME -> searchMedia(MediaType.ANIME, query, clear = true)
+            SearchType.MANGA -> searchMedia(MediaType.MANGA, query, clear = true)
             SearchType.CHARACTER -> searchCharacter(query)
             SearchType.STAFF -> searchStaff(query)
             SearchType.STUDIO -> searchStudio(query)
@@ -40,9 +40,11 @@ class SearchViewModel : BaseViewModel() {
         }
     }
 
+    var pageMedia = 1
+    var hasNextPageMedia = true
     val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
-    suspend fun searchMedia(mediaType: MediaType, query: String) {
+    suspend fun searchMedia(mediaType: MediaType, query: String, clear: Boolean) {
         isLoading = true
         val selectedGenres = genreCollection.filterValues { it }.keys.toList()
         val selectedTags = tagCollection.filterValues { it }.keys.toList()
@@ -51,7 +53,7 @@ class SearchViewModel : BaseViewModel() {
         }
 
         val response = SearchMediaQuery(
-            page = Optional.present(1),
+            page = Optional.present(pageMedia),
             perPage = Optional.present(perPage),
             search = if (query.isNotBlank()) Optional.present(query) else Optional.absent(),
             type = Optional.present(mediaType),
@@ -62,8 +64,10 @@ class SearchViewModel : BaseViewModel() {
             else Optional.present(selectedTags),
         ).tryQuery()
 
-        searchedMedia.clear()
+        if (clear) searchedMedia.clear()
         response?.data?.Page?.media?.filterNotNull()?.let { searchedMedia.addAll(it) }
+        hasNextPageMedia = response?.data?.Page?.pageInfo?.hasNextPage ?: false
+        pageMedia = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageMedia
         isLoading = false
     }
 
