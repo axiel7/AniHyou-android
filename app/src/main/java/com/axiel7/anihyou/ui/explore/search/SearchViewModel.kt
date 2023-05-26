@@ -45,7 +45,9 @@ class SearchViewModel : BaseViewModel() {
     val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
     suspend fun searchMedia(mediaType: MediaType, query: String, clear: Boolean) {
-        isLoading = true
+        if (clear) pageMedia = 1
+        isLoading = pageMedia == 1
+
         val selectedGenres = genreCollection.filterValues { it }.keys.toList()
         val selectedTags = tagCollection.filterValues { it }.keys.toList()
         if (selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()) {
