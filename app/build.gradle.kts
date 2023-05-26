@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.apollographql.apollo3") version "3.8.1"
+    id("com.apollographql.apollo3") version "3.8.2"
 }
 
 android.buildFeatures.buildConfig = true
@@ -107,7 +107,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
-    val apolloVersion = "3.8.1"
+    val apolloVersion = "3.8.2"
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
