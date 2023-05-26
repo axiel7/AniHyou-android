@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -70,6 +69,7 @@ import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
+import com.axiel7.anihyou.ui.explore.EXPLORE_GENRE_DESTINATION
 import com.axiel7.anihyou.ui.explore.ExploreView
 import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.explore.MediaChartListView
@@ -98,7 +98,6 @@ import com.axiel7.anihyou.utils.THEME_FOLLOW_SYSTEM
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
-@OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -197,7 +196,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainView(
     navController: NavHostController,
@@ -317,12 +315,39 @@ fun MainView(
                 }
             }
 
-            composable(BottomDestination.Explore.route,
-                arguments = listOf(
-                    navArgument("mediaType") {
-                        type = NavType.StringType
-                        nullable = true
+            composable(BottomDestination.Explore.route) {
+                ExploreView(
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                    navigateBack = {
+                        navController.popBackStack()
                     },
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("media_details/$id")
+                    },
+                    navigateToUserDetails = { id ->
+                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                    },
+                    navigateToCharacterDetails = { id ->
+                        navController.navigate("character/$id")
+                    },
+                    navigateToStaffDetails = { id ->
+                        navController.navigate("staff/$id")
+                    },
+                    navigateToStudioDetails = { id ->
+                        navController.navigate("studio/$id")
+                    },
+                    navigateToMediaChart = {
+                        navController.navigate("media_chart/${it.name}")
+                    },
+                    navigateToAnimeSeason = { year, season ->
+                        navController.navigate("season/$year/$season")
+                    }
+                )
+            }
+
+            composable(EXPLORE_GENRE_DESTINATION,
+                arguments = listOf(
+                    navArgument("mediaType") { type = NavType.StringType },
                     navArgument("genre") {
                         type = NavType.StringType
                         nullable = true
@@ -335,9 +360,12 @@ fun MainView(
             ) { navEntry ->
                 ExploreView(
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    mediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
-                    genre = navEntry.arguments?.getString("genre"),
-                    tag = navEntry.arguments?.getString("tag"),
+                    initialMediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
+                    initialGenre = navEntry.arguments?.getString("genre"),
+                    initialTag = navEntry.arguments?.getString("tag"),
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
                     },
@@ -389,17 +417,11 @@ fun MainView(
                         navController.navigate("review/$id")
                     },
                     navigateToExplore = { mediaType, genre, tag ->
-                        var dest = BottomDestination.Explore.route
+                        var dest = EXPLORE_GENRE_DESTINATION
                         if (mediaType != null) dest = dest.replace("{mediaType}", mediaType.rawValue)
                         if (genre != null) dest = dest.replace("{genre}", genre)
                         if (tag != null) dest = dest.replace("{tag}", tag)
-                        navController.navigate(dest) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate(dest)
                     }
                 )
             }

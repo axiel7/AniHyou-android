@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
@@ -54,9 +53,9 @@ import kotlinx.coroutines.launch
 fun SearchView(
     query: String,
     performSearch: MutableState<Boolean>,
-    mediaType: MediaType?,
-    genre: String?,
-    tag: String?,
+    initialMediaType: MediaType?,
+    initialGenre: String?,
+    initialTag: String?,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -65,19 +64,19 @@ fun SearchView(
 ) {
     val viewModel: SearchViewModel = viewModel()
     val listState = rememberLazyListState()
-    val searchByGenre = remember { mutableStateOf(genre != null || tag != null) }
+    val searchByGenre = remember { mutableStateOf(initialMediaType != null) }
 
-    LaunchedEffect(mediaType, genre, tag) {
-        if (mediaType == MediaType.ANIME) viewModel.searchType = SearchType.ANIME
-        else if (mediaType == MediaType.MANGA) viewModel.searchType = SearchType.MANGA
+    LaunchedEffect(initialMediaType, initialGenre, initialTag) {
+        if (initialMediaType == MediaType.ANIME) viewModel.searchType = SearchType.ANIME
+        else if (initialMediaType == MediaType.MANGA) viewModel.searchType = SearchType.MANGA
 
-        if (genre != null) viewModel.genreCollection[genre] = true
-        if (tag != null) viewModel.tagCollection[tag] = true
+        if (initialGenre != null) viewModel.genreCollection[initialGenre] = true
+        if (initialTag != null) viewModel.tagCollection[initialTag] = true
     }
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank() || searchByGenre.value || genre != null || tag != null) {
+            if (query.isNotBlank() || searchByGenre.value || initialGenre != null || initialTag != null) {
                 listState.scrollToItem(0)
                 viewModel.runSearch(query)
                 searchByGenre.value = false

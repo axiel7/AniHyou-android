@@ -37,13 +37,16 @@ import com.axiel7.anihyou.ui.explore.search.SearchView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
+const val EXPLORE_GENRE_DESTINATION = "explore/{mediaType}?genre={genre}?tag={tag}"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
     modifier: Modifier = Modifier,
-    mediaType: MediaType? = null,
-    genre: String? = null,
-    tag: String? = null,
+    initialMediaType: MediaType? = null,
+    initialGenre: String? = null,
+    initialTag: String? = null,
+    navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -53,8 +56,8 @@ fun ExploreView(
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val performSearch = remember { mutableStateOf(genre != null || tag != null) }
-    var isSearchActive by rememberSaveable { mutableStateOf(genre != null || tag != null) }
+    val performSearch = remember { mutableStateOf(initialMediaType != null) }
+    var isSearchActive by rememberSaveable { mutableStateOf(initialMediaType != null) }
 
     Scaffold(
         modifier = modifier,
@@ -71,8 +74,11 @@ fun ExploreView(
                     },
                     active = isSearchActive,
                     onActiveChange = {
-                        isSearchActive = it
-                        if (!isSearchActive) query = ""
+                        if (initialMediaType != null) navigateBack()
+                        else {
+                            isSearchActive = it
+                            if (!isSearchActive) query = ""
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,8 +93,11 @@ fun ExploreView(
                         if (isSearchActive) {
                             IconButton(
                                 onClick = {
-                                    isSearchActive = false
-                                    query = ""
+                                    if (initialMediaType != null) navigateBack()
+                                    else {
+                                        isSearchActive = false
+                                        query = ""
+                                    }
                                 }
                             ) {
                                 Icon(
@@ -117,9 +126,9 @@ fun ExploreView(
                     SearchView(
                         query = query,
                         performSearch = performSearch,
-                        mediaType = mediaType,
-                        genre = genre,
-                        tag = tag,
+                        initialMediaType = initialMediaType,
+                        initialGenre = initialGenre,
+                        initialTag = initialTag,
                         navigateToMediaDetails = navigateToMediaDetails,
                         navigateToCharacterDetails = navigateToCharacterDetails,
                         navigateToStaffDetails = navigateToStaffDetails,
@@ -257,6 +266,7 @@ fun ExploreViewPreview() {
     AniHyouTheme {
         Surface {
             ExploreView(
+                navigateBack = {},
                 navigateToMediaDetails = {},
                 navigateToMediaChart = {},
                 navigateToAnimeSeason = { _, _ -> },
