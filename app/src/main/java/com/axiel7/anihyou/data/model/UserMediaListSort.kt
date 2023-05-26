@@ -9,9 +9,6 @@ import com.axiel7.anihyou.type.MediaListSort
 enum class UserMediaListSort(
     val value: MediaListSort
 ): Localizable {
-    TITLE(MediaListSort.MEDIA_TITLE_ROMAJI) {
-        @Composable override fun localized() = stringResource(R.string.sort_title)
-    },
     SCORE_DESC(MediaListSort.SCORE_DESC) {
         @Composable override fun localized() = stringResource(R.string.sort_score)
     },
