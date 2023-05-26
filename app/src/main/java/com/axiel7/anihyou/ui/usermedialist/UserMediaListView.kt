@@ -78,9 +78,9 @@ fun UserMediaListHostView(
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabRowItems = remember { MediaListStatus.knownValues() }
+    val pagerState = rememberPagerState { tabRowItems.size }
     var openSortDialog by remember { mutableStateOf(false) }
     var sortPreference by rememberPreference(
         key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
@@ -136,7 +136,6 @@ fun UserMediaListHostView(
             }//: TabRow
 
             HorizontalPager(
-                pageCount = tabRowItems.size,
                 state = pagerState,
                 beyondBoundsPageCount = 0,
                 key = { tabRowItems[it].name }

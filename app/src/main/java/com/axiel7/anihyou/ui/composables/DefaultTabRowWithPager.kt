@@ -31,7 +31,7 @@ fun <T> DefaultTabRowWithPager(
     isTabScrollable: Boolean = false,
     pageContent: @Composable (Int) -> Unit,
 ) {
-    val state = rememberPagerState()
+    val state = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
     val isPagerScrolling by remember {
         derivedStateOf {
@@ -77,7 +77,6 @@ fun <T> DefaultTabRowWithPager(
         }
 
         HorizontalPager(
-            pageCount = tabs.size,
             state = state,
             key = { tabs[it].value!! }
         ) {
