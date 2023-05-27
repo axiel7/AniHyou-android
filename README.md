@@ -10,7 +10,10 @@ Follow the development on the official Discord server:
 
 [![Discord Banner 3](https://discordapp.com/api/guilds/741059285122940928/widget.png?style=banner2)](https://discord.gg/CTv3WdfxHh)
 
-**Libraries used:**
+# Screenshots
+![Screenshots](https://github.com/axiel7/AniHyou-android/blob/master/screenshots.webp)
+
+## Libraries used
 * [AniList GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
 * [Apollo Kotlin](https://github.com/apollographql/apollo-kotlin)
 * [Material3 Components](https://github.com/material-components/material-components-android)
