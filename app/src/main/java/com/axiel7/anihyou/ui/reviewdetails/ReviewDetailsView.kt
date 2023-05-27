@@ -83,7 +83,7 @@ fun ReviewDetailsView(
                     isLoading = viewModel.isLoading
                 )
                 TextSubtitleVertical(
-                    text = "${viewModel.userAcceptance}%",
+                    text = "${viewModel.userAcceptance}% (${viewModel.reviewDetails?.rating ?: 0}/${viewModel.reviewDetails?.ratingAmount ?: 0})",
                     subtitle = stringResource(R.string.users_likes),
                     isLoading = viewModel.isLoading
                 )
