@@ -7,6 +7,7 @@ query MediaDetails($mediaId: Int) {
       english
       native
     }
+    synonyms
     format
     status
     description(asHtml: true)

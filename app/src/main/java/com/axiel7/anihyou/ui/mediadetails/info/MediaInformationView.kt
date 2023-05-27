@@ -111,6 +111,11 @@ fun MediaInformationView(
             info = viewModel.mediaDetails?.title?.native,
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
+        InfoItemView(
+            title = "Synonyms",
+            info = viewModel.mediaDetails?.synonyms?.joinToString("\n"),
+            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+        )
 
         // Tags
         InfoTitle(
