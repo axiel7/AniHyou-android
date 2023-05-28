@@ -322,6 +322,7 @@ fun AiringScheduleText(
 fun UserMediaListItemPreview() {
     val exampleItem = UserMediaListQuery.MediaList(
         __typename = "",
+        id = 1,
         mediaId = 1,
         media = UserMediaListQuery.Media(
             __typename = "",
@@ -340,7 +341,9 @@ fun UserMediaListItemPreview() {
             )
         ),
         basicMediaListEntry = BasicMediaListEntry(
+            __typename = "",
             id = 1,
+            mediaId = 1,
             status = MediaListStatus.CURRENT,
             score = 77.0,
             progress = 3,
