@@ -5,6 +5,7 @@ query MediaReviews($mediaId: Int, $page: Int, $perPage: Int) {
         id
         summary
         score
+        rating
         user {
           name
         }

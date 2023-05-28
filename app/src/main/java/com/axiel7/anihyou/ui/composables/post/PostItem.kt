@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.composables.post
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
+import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
@@ -61,7 +65,12 @@ fun PostItem(
             ) {
                 subtitle()
 
-                Text(text = author)
+                Text(
+                    text = author,
+                    fontSize = 15.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
             }
         }
     }
@@ -120,10 +129,26 @@ fun PostItemPreview() {
             Column {
                 PostItem(
                     title = "Love letter to art, culture, and excellence: the Manga. And some more text to test this view",
-                    author = "Hannelore",
+                    author = "thisisaverylargeusername",
                     modifier = Modifier.padding(16.dp),
                     subtitle = {
-                        Text(text = "97/100")
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            TextIconHorizontal(
+                                text = "100",
+                                icon = R.drawable.star_filled_20,
+                                iconPadding = PaddingValues(0.dp),
+                                fontSize = 15.sp
+                            )
+                            TextIconHorizontal(
+                                text = "1,212",
+                                icon = R.drawable.thumb_up_filled_20,
+                                modifier = Modifier.padding(end = 8.dp),
+                                iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
+                                fontSize = 15.sp
+                            )
+                        }
                     },
                     onClick = {}
                 )

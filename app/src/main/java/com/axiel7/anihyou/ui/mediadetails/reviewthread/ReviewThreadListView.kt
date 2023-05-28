@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,15 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.OnBottomReached
+import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.ui.composables.post.PostItem
 import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun ReviewThreadListView(
@@ -68,7 +72,23 @@ fun ReviewThreadListView(
                         title = item.summary ?: "",
                         author = item.user?.name ?: "",
                         subtitle = {
-                            Text(text = "${item.score ?: 0}/100")
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                TextIconHorizontal(
+                                    text = item.score?.toString() ?: "0",
+                                    icon = R.drawable.star_filled_20,
+                                    iconPadding = PaddingValues(0.dp),
+                                    fontSize = 15.sp
+                                )
+                                TextIconHorizontal(
+                                    text = item.rating?.format() ?: "0",
+                                    icon = R.drawable.thumb_up_filled_20,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
+                                    fontSize = 15.sp
+                                )
+                            }
                         },
                         onClick = {
                             navigateToReviewDetails(item.id)

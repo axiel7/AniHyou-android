@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.composables
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +35,7 @@ fun TextIconHorizontal(
     text: String,
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
+    iconPadding: PaddingValues = PaddingValues(end = 8.dp),
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     fontSize: TextUnit = TextUnit.Unspecified
 ) {
@@ -44,12 +46,11 @@ fun TextIconHorizontal(
         Icon(
             painter = painterResource(icon),
             contentDescription = text,
-            modifier = Modifier.padding(end = 4.dp),
+            modifier = Modifier.padding(iconPadding),
             tint = color
         )
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 4.dp),
             color = color,
             fontSize = fontSize
         )
