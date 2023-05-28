@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.mediadetails.edit
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
@@ -86,7 +87,7 @@ class EditMediaViewModel(
     }
 
     var openDatePicker by mutableStateOf(false)
-    var selectedDateType by mutableStateOf(-1)
+    var selectedDateType by mutableIntStateOf(-1)
 
     var updateSuccess by mutableStateOf(false)
 
@@ -102,9 +103,9 @@ class EditMediaViewModel(
             else Optional.absent(),
             progressVolumes = if (volumeProgress != listEntry?.progressVolumes) Optional.present(volumeProgress)
             else Optional.absent(),
-            startedAt = if (startDate?.toFuzzyDate() != listEntry?.startedAt?.fuzzyDate) Optional.present(startDate!!.toFuzzyDateInput())
+            startedAt = if (startDate?.toFuzzyDate() != listEntry?.startedAt?.fuzzyDate) Optional.present(startDate?.toFuzzyDateInput())
             else Optional.absent(),
-            completedAt = if (endDate?.toFuzzyDate() != listEntry?.completedAt?.fuzzyDate) Optional.present(endDate!!.toFuzzyDateInput())
+            completedAt = if (endDate?.toFuzzyDate() != listEntry?.completedAt?.fuzzyDate) Optional.present(endDate?.toFuzzyDateInput())
             else Optional.absent(),
             repeat = if (repeatCount != listEntry?.repeat) Optional.present(repeatCount)
             else Optional.absent(),
