@@ -186,7 +186,12 @@ fun UserMediaListView(
             sheetState = sheetState,
             mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
             listEntry = viewModel.selectedItem!!.basicMediaListEntry,
-            onDismiss = { scope.launch { sheetState.hide() } }
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    viewModel.onUpdateListEntry(updatedListEntry)
+                    sheetState.hide()
+                }
+            }
         )
     }
 

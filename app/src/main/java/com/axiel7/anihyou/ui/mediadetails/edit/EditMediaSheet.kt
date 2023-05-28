@@ -80,7 +80,7 @@ fun EditMediaSheet(
     sheetState: SheetState,
     mediaDetails: BasicMediaDetails,
     listEntry: BasicMediaListEntry?,
-    onDismiss: () -> Unit
+    onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -119,14 +119,14 @@ fun EditMediaSheet(
 
     LaunchedEffect(viewModel.updateSuccess) {
         if (viewModel.updateSuccess) {
-            onDismiss()
+            onDismiss(viewModel.listEntry)
             viewModel.updateSuccess = false
         }
     }
 
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = onDismiss
+        onDismissRequest = { onDismiss(viewModel.listEntry) }
     ) {
         Column(
             modifier = Modifier
@@ -142,7 +142,7 @@ fun EditMediaSheet(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = onDismiss) {
+                TextButton(onClick = { onDismiss(listEntry) }) {
                     Text(text = stringResource(R.string.cancel))
                 }
 

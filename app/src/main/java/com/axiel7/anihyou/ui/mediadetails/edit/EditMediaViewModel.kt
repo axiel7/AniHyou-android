@@ -21,7 +21,7 @@ import java.time.LocalDate
 
 class EditMediaViewModel(
     private val mediaDetails: BasicMediaDetails,
-    private var listEntry: BasicMediaListEntry?
+    var listEntry: BasicMediaListEntry?
 ) : BaseViewModel() {
 
     val isNewEntry by derivedStateOf { listEntry == null }
@@ -115,6 +115,7 @@ class EditMediaViewModel(
             else Optional.absent()
         ).tryMutation()
 
+        response?.data?.SaveMediaListEntry?.basicMediaListEntry?.let { listEntry = it }
         updateSuccess = response != null
 
         isLoading = false
@@ -129,6 +130,7 @@ class EditMediaViewModel(
             mediaListEntryId = Optional.present(listEntry!!.id)
         ).tryMutation()
 
+        if (response != null) listEntry = null
         updateSuccess = response != null
 
         isLoading = false

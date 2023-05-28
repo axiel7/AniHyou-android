@@ -14,6 +14,7 @@ import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class MediaDetailsViewModel : BaseViewModel() {
@@ -33,6 +34,17 @@ class MediaDetailsViewModel : BaseViewModel() {
     fun getStudios() = mediaDetails?.studios?.nodes?.filterNotNull()?.filter { it.isAnimationStudio }
 
     fun getProducers() = mediaDetails?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        if (mediaDetails?.mediaListEntry?.basicMediaListEntry != newListEntry) {
+            mediaDetails = mediaDetails?.copy(
+                mediaListEntry =
+                if (newListEntry != null)
+                    mediaDetails?.mediaListEntry?.copy(basicMediaListEntry = newListEntry)
+                else null
+            )
+        }
+    }
 
     var isLoadingStaffCharacter by mutableStateOf(true)
     var mediaStaff = mutableStateListOf<MediaCharactersAndStaffQuery.Edge1>()

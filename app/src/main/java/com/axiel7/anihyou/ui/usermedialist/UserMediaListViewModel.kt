@@ -6,6 +6,7 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
@@ -67,4 +68,17 @@ class UserMediaListViewModel(
     }
 
     var selectedItem: UserMediaListQuery.MediaList? = null
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        if (selectedItem != null && selectedItem?.basicMediaListEntry != newListEntry) {
+            if (newListEntry != null) {
+                val index = mediaList.indexOf(selectedItem)
+                if (index != -1) {
+                    mediaList[index] = selectedItem!!.copy(basicMediaListEntry = newListEntry)
+                }
+            } else {
+                mediaList.remove(selectedItem)
+            }
+        }
+    }
 }

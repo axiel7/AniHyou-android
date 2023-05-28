@@ -31,7 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -124,9 +124,9 @@ fun MediaDetailsView(
     )
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    var maxLinesSynopsis by remember { mutableStateOf(5) }
+    var maxLinesSynopsis by remember { mutableIntStateOf(5) }
     val iconExpand by remember {
         derivedStateOf {
             if (maxLinesSynopsis == 5) R.drawable.expand_more_24
@@ -148,7 +148,12 @@ fun MediaDetailsView(
             sheetState = sheetState,
             mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
             listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { scope.launch { sheetState.hide() } }
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    viewModel.onUpdateListEntry(updatedListEntry)
+                    sheetState.hide()
+                }
+            }
         )
     }
 
