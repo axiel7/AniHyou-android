@@ -1,6 +1,7 @@
 query ReviewDetails($reviewId: Int) {
   Review(id: $reviewId) {
     id
+    summary
     body(asHtml: true)
     score
     rating
