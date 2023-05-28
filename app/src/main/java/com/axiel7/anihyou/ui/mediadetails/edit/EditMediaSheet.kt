@@ -225,7 +225,7 @@ fun EditMediaSheet(
 
                     ScoreFormat.POINT_5.name -> {
                         FiveStarRatingView(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = viewModel.score ?: 0.0,
                             onRatingChanged = {
                                 viewModel.score = it
@@ -235,7 +235,7 @@ fun EditMediaSheet(
 
                     ScoreFormat.POINT_3.name -> {
                         SmileyRatingView(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = viewModel.score ?: 0.0,
                             onRatingChanged = {
                                 viewModel.score = it
@@ -317,6 +317,18 @@ fun EditMediaSheet(
                 )
             }
 
+            // Notes
+            OutlinedTextField(
+                value = viewModel.notes ?: "",
+                onValueChange = {
+                    viewModel.notes = it
+                },
+                modifier = Modifier.padding(horizontal = 16.dp),
+                label = { Text(text = stringResource(R.string.notes)) },
+                singleLine = false,
+                minLines = 3
+            )
+
             // Delete
             Button(
                 onClick = { viewModel.openDeleteDialog = true },
@@ -333,17 +345,6 @@ fun EditMediaSheet(
             ) {
                 Text(text = stringResource(R.string.delete))
             }
-
-            OutlinedTextField(
-                value = viewModel.notes ?: "",
-                onValueChange = {
-                    viewModel.notes = it
-                },
-                modifier = Modifier.padding(horizontal = 16.dp),
-                label = { Text(text = stringResource(R.string.notes)) },
-                singleLine = false,
-                minLines = 3
-            )
         }//:Column
     }//:Sheet
 }
