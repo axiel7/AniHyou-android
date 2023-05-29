@@ -2,6 +2,8 @@ package com.axiel7.anihyou.ui.composables
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -53,6 +55,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
+    contentWindowInsets: WindowInsets = WindowInsets.systemBars,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -73,6 +76,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
             )
         },
         floatingActionButton = floatingActionButton,
+        contentWindowInsets = contentWindowInsets,
         content = content
     )
 }

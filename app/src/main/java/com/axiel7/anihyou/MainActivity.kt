@@ -13,15 +13,19 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +39,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -205,14 +208,15 @@ fun MainView(
 ) {
     val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
 
-    com.google.accompanist.insets.ui.Scaffold(
+    Scaffold(
         bottomBar = {
             BottomNavBar(
                 navController = navController,
                 lastTabOpened = lastTabOpened
             )
         },
-        backgroundColor = MaterialTheme.colorScheme.background
+        contentWindowInsets = WindowInsets.systemBars
+            .only(WindowInsetsSides.Horizontal)
     ) { padding ->
         val bottomPadding by animateDpAsState(
             targetValue = padding.calculateBottomPadding(),
@@ -259,9 +263,7 @@ fun MainView(
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.ANIME,
-                        modifier = Modifier
-                            .navigationBarsPadding()
-                            .padding(bottom = 54.dp),
+                        modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id")
                         }
@@ -277,9 +279,7 @@ fun MainView(
                 } else {
                     UserMediaListHostView(
                         mediaType = MediaType.MANGA,
-                        modifier = Modifier
-                            .navigationBarsPadding()
-                            .padding(bottom = 54.dp),
+                        modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
                             navController.navigate("media_details/$id")
                         }
