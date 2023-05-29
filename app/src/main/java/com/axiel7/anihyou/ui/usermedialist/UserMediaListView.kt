@@ -1,40 +1,50 @@
 package com.axiel7.anihyou.ui.usermedialist
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,6 +64,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.UserMediaListSort
+import com.axiel7.anihyou.data.model.icon
 import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
@@ -63,7 +74,6 @@ import com.axiel7.anihyou.ui.base.ListMode
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
-import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.composables.media.CompactUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
@@ -71,25 +81,30 @@ import com.axiel7.anihyou.ui.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val tabRowItems = remember { MediaListStatus.knownValues() }
-    val pagerState = rememberPagerState { tabRowItems.size }
+    val scope = rememberCoroutineScope()
+    val selectedStatus = rememberSaveable { mutableStateOf(MediaListStatus.CURRENT) }
     var openSortDialog by remember { mutableStateOf(false) }
     var sortPreference by rememberPreference(
         key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
         defaultValue = if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
     val sort = remember { derivedStateOf { sortPreference?.let { MediaListSort.safeValueOf(it) } } }
+    val statusSheetState = rememberModalBottomSheetState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
+    val isFabVisible by remember {
+        derivedStateOf {
+            topAppBarScrollBehavior.state.heightOffset != topAppBarScrollBehavior.state.heightOffsetLimit
+        }
+    }
 
     if (openSortDialog) {
         DialogWithRadioSelection(
@@ -104,10 +119,36 @@ fun UserMediaListHostView(
         )
     }
 
+    if (statusSheetState.isVisible) {
+        ListStatusSheet(
+            selectedStatus = selectedStatus,
+            sheetState = statusSheetState
+        )
+    }
+
     DefaultScaffoldWithSmallTopAppBar(
         title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
         modifier = modifier,
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = isFabVisible,
+                modifier = Modifier.sizeIn(minWidth = 80.dp, minHeight = 56.dp),
+                enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
+                exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = { scope.launch { statusSheetState.show() } }
+                ) {
+                    Icon(
+                        painter = painterResource(selectedStatus.value.icon()),
+                        contentDescription = "status",
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(text = selectedStatus.value.localized())
+                }
+            }
+        },
         actions = {
             IconButton(onClick = { openSortDialog = true }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
@@ -116,38 +157,15 @@ fun UserMediaListHostView(
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(
-            modifier = Modifier.padding(top = padding.calculateTopPadding())
+            modifier = Modifier.padding(padding)
         ) {
-            ScrollableTabRow(
-                selectedTabIndex = pagerState.currentPage,
-                edgePadding = 16.dp,
-                indicator = { tabPositions ->
-                    RoundedTabRowIndicator(tabPositions[pagerState.currentPage])
-                }
-            ) {
-                tabRowItems.forEachIndexed { index, item ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                        text = { Text(text = item.localized()) },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }//: TabRow
-
-            HorizontalPager(
-                state = pagerState,
-                beyondBoundsPageCount = 0,
-                key = { tabRowItems[it].name }
-            ) {
-                UserMediaListView(
-                    mediaType = mediaType,
-                    status = tabRowItems[it],
-                    sort = sort,
-                    navigateToDetails = navigateToMediaDetails,
-                    nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
-                )
-            }//: Pager
+            UserMediaListView(
+                mediaType = mediaType,
+                status = selectedStatus.value,
+                sort = sort,
+                navigateToDetails = navigateToMediaDetails,
+                nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
+            )
         }//: Column
     }//: Scaffold
 }
@@ -161,8 +179,8 @@ fun UserMediaListView(
     navigateToDetails: (mediaId: Int) -> Unit,
     nestedScrollConnection: NestedScrollConnection
 ) {
-    val viewModel: UserMediaListViewModel = viewModel(key = "${mediaType.name}${status.name}") {
-        UserMediaListViewModel(mediaType, status)
+    val viewModel: UserMediaListViewModel = viewModel {
+        UserMediaListViewModel(mediaType)
     }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -175,6 +193,11 @@ fun UserMediaListView(
     val scoreFormatPreference by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
     val scoreFormat by remember {
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
+    }
+
+    LaunchedEffect(status) {
+        viewModel.status = status
+        viewModel.refreshList()
     }
 
     listState.OnBottomReached(buffer = 3) {
@@ -216,7 +239,7 @@ fun UserMediaListView(
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when (listDisplayMode) {
+           when (listDisplayMode) {
                 ListMode.STANDARD.name -> {
                     items(
                         items = viewModel.mediaList,
@@ -305,6 +328,47 @@ fun UserMediaListView(
                 .align(Alignment.TopCenter)
         )
     }//: Box
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ListStatusSheet(
+    selectedStatus: MutableState<MediaListStatus>,
+    sheetState: SheetState,
+    onDismiss: () -> Unit = {},
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+    ) {
+        Column(
+            modifier = Modifier.padding(bottom = 8.dp)
+        ) {
+            MediaListStatus.knownValues().forEach {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedStatus.value = it }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (selectedStatus.value == it) {
+                        Icon(
+                            painter = painterResource(R.drawable.check_24),
+                            contentDescription = "check",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
+                    }
+                    Text(
+                        text = it.localized(),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview

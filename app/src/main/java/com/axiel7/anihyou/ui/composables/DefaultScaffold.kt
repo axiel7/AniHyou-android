@@ -49,6 +49,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
+    floatingActionButton: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
@@ -71,6 +72,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
                 scrollBehavior = scrollBehavior
             )
         },
+        floatingActionButton = floatingActionButton,
         content = content
     )
 }

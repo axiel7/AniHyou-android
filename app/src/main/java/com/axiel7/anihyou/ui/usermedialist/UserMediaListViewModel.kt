@@ -13,12 +13,13 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class UserMediaListViewModel(
-    private val mediaType: MediaType,
-    private val status: MediaListStatus
+    private val mediaType: MediaType
 ) : BaseViewModel() {
 
+    var status = MediaListStatus.CURRENT
+
     var page = 1
-    var hasNextPage = true
+    var hasNextPage = false
     var mediaList = mutableStateListOf<UserMediaListQuery.MediaList>()
 
     var sort = MediaListSort.safeValueOf(
