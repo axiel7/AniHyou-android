@@ -351,6 +351,7 @@ fun ListStatusSheet(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
             MediaListStatus.knownValues().forEach {
+                val isSelected = selectedStatus.value == it
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -358,18 +359,18 @@ fun ListStatusSheet(
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (selectedStatus.value == it) {
-                        Icon(
-                            painter = painterResource(R.drawable.check_24),
-                            contentDescription = "check",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.size(24.dp))
-                    }
+                    Icon(
+                        painter = painterResource(it.icon()),
+                        contentDescription = "check",
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
                     Text(
                         text = it.localized(),
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
+                        color = if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
