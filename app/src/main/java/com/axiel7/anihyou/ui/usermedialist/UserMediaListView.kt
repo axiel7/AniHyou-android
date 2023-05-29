@@ -216,13 +216,13 @@ fun UserMediaListView(
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(
-                items = viewModel.mediaList,
-                key = { it.basicMediaListEntry.id },
-                contentType = { it.basicMediaListEntry }
-            ) { item ->
-                when (listDisplayMode) {
-                    ListMode.STANDARD.name -> {
+            when (listDisplayMode) {
+                ListMode.STANDARD.name -> {
+                    items(
+                        items = viewModel.mediaList,
+                        key = { it.basicMediaListEntry.id },
+                        contentType = { it.basicMediaListEntry }
+                    ) { item ->
                         StandardUserMediaListItem(
                             item = item,
                             status = status,
@@ -242,7 +242,13 @@ fun UserMediaListView(
                             }
                         )
                     }
-                    ListMode.COMPACT.name -> {
+                }
+                ListMode.COMPACT.name -> {
+                    items(
+                        items = viewModel.mediaList,
+                        key = { it.basicMediaListEntry.id },
+                        contentType = { it.basicMediaListEntry }
+                    ) { item ->
                         CompactUserMediaListItem(
                             item = item,
                             status = status,
@@ -262,7 +268,13 @@ fun UserMediaListView(
                             }
                         )
                     }
-                    ListMode.MINIMAL.name -> {
+                }
+                ListMode.MINIMAL.name -> {
+                    items(
+                        items = viewModel.mediaList,
+                        key = { it.basicMediaListEntry.id },
+                        contentType = { it.basicMediaListEntry }
+                    ) { item ->
                         MinimalUserMediaListItem(
                             item = item,
                             status = status,
