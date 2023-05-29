@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.ui.explore
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,6 +58,14 @@ fun ExploreView(
     var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(initialMediaType != null) }
     var isSearchActive by rememberSaveable { mutableStateOf(initialMediaType != null) }
+    val searchHorizontalPadding by animateDpAsState(
+        targetValue = if (!isSearchActive) 16.dp else 0.dp,
+        label = "searchHorizontalPadding"
+    )
+    val searchBottomPadding by animateDpAsState(
+        targetValue = if (!isSearchActive) 4.dp else 0.dp,
+        label = "searchBottomPadding"
+    )
 
     Scaffold(
         modifier = modifier,
@@ -82,12 +90,8 @@ fun ExploreView(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .then(
-                            if (!isSearchActive) Modifier
-                                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-                            else Modifier
-                        )
-                        .animateContentSize(),
+                        .padding(horizontal = searchHorizontalPadding)
+                        .padding(bottom = searchBottomPadding),
                     placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                     leadingIcon = {
                         if (isSearchActive) {
