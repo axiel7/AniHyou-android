@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.TemporalAdjusters
@@ -27,9 +27,11 @@ import kotlin.math.absoluteValue
 
 object DateUtils {
 
+    private val defaultZoneOffset get() = ZonedDateTime.now(ZoneId.systemDefault()).offset
+
     fun String.toIsoFormat(inputFormat: DateTimeFormatter) = LocalDate.parse(this, inputFormat).toString()
 
-    fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+    fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(defaultZoneOffset).toEpochMilli()
 
     fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate = with(TemporalAdjusters.nextOrSame(dayOfWeek))
 
@@ -97,13 +99,13 @@ object DateUtils {
     /**
      * @returns the requested weekday timestamp (start or end of the day)
      */
-    fun LocalDateTime.thisWeekdayTimestamp(weekDayOfWeek: DayOfWeek, isEndOfDay: Boolean): Long {
-        val diff = weekDayOfWeek.value - this.dayOfWeek.value
+    fun LocalDateTime.thisWeekdayTimestamp(dayOfWeek: DayOfWeek, isEndOfDay: Boolean): Long {
+        val diff = dayOfWeek.value - this.dayOfWeek.value
         val weekdayDate = this.plusDays(diff.toLong()).toLocalDate()
         return if (isEndOfDay) {
-            weekdayDate.plusDays(1).atStartOfDay().minusNanos(1).toEpochSecond(ZoneOffset.UTC)
+            weekdayDate.plusDays(1).atStartOfDay().minusNanos(1).toEpochSecond(defaultZoneOffset)
         } else {
-            weekdayDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
+            weekdayDate.atStartOfDay().minusNanos(1).toEpochSecond(defaultZoneOffset)
         }
     }
 
@@ -158,6 +160,11 @@ object DateUtils {
             DateFormat.getBestDateTimePattern(Locale.getDefault(), "EE, d MMM")
         )
     )
+
+    fun Long.timestampToTimeString(): String? =
+        LocalDateTime.ofEpochSecond(this, 0, defaultZoneOffset).format(
+            DateTimeFormatter.ofPattern("HH:mm")
+        )
 
     /**
      * Difference in seconds since now

@@ -54,6 +54,7 @@ fun HomeView(
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
+    navigateToCalendar: () -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val scrollState = rememberScrollState()
@@ -83,7 +84,7 @@ fun HomeView(
             // Airing
             HorizontalListHeader(
                 text = stringResource(R.string.airing_soon),
-                onClick = null
+                onClick = navigateToCalendar
             )
             HomeLazyRow(
                 minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
@@ -286,7 +287,8 @@ fun HomeViewPreview() {
     AniHyouTheme {
         HomeView(
             navigateToMediaDetails = { },
-            navigateToAnimeSeason = { }
+            navigateToAnimeSeason = { },
+            navigateToCalendar = { }
         )
     }
 }

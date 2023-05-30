@@ -70,6 +70,8 @@ import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.calendar.CALENDAR_DESTINATION
+import com.axiel7.anihyou.ui.calendar.CalendarView
 import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
@@ -251,6 +253,9 @@ fun MainView(
                     },
                     navigateToAnimeSeason = { animeSeason ->
                         navController.navigate("season/${animeSeason.year}/${animeSeason.season.name}")
+                    },
+                    navigateToCalendar = {
+                        navController.navigate(CALENDAR_DESTINATION)
                     }
                 )
             }
@@ -347,6 +352,9 @@ fun MainView(
                     },
                     navigateToAnimeSeason = { year, season ->
                         navController.navigate("season/$year/$season")
+                    },
+                    navigateToCalendar = {
+                        navController.navigate(CALENDAR_DESTINATION)
                     }
                 )
             }
@@ -392,6 +400,9 @@ fun MainView(
                     },
                     navigateToAnimeSeason = { year, season ->
                         navController.navigate("season/$year/$season")
+                    },
+                    navigateToCalendar = {
+                        navController.navigate(CALENDAR_DESTINATION)
                     }
                 )
             }
@@ -472,6 +483,17 @@ fun MainView(
                         )
                     }
                 }
+            }
+
+            composable(CALENDAR_DESTINATION) {
+                CalendarView(
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("media_details/$id")
+                    },
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
             composable(USER_DETAILS_DESTINATION,

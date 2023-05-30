@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.explore
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -54,6 +55,7 @@ fun ExploreView(
     navigateToUserDetails: (Int) -> Unit,
     navigateToMediaChart: (ChartType) -> Unit,
     navigateToAnimeSeason: (year: Int, season: String) -> Unit,
+    navigateToCalendar: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(initialMediaType != null) }
@@ -228,6 +230,25 @@ fun ExploreView(
                     }
                 )
             }
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.calendar),
+                    icon = R.drawable.calendar_month_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToCalendar()
+                    }
+                )
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                )
+            }
 
             // Manga
             Text(
@@ -277,7 +298,8 @@ fun ExploreViewPreview() {
                 navigateToCharacterDetails = {},
                 navigateToStaffDetails = {},
                 navigateToStudioDetails = {},
-                navigateToUserDetails = {}
+                navigateToUserDetails = {},
+                navigateToCalendar = {}
             )
         }
     }

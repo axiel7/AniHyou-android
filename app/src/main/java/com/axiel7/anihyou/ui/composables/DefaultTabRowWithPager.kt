@@ -28,16 +28,12 @@ import kotlinx.coroutines.launch
 fun <T> DefaultTabRowWithPager(
     tabs: Array<TabRowItem<T>>,
     modifier: Modifier = Modifier,
+    initialPage: Int = 0,
     isTabScrollable: Boolean = false,
     pageContent: @Composable (Int) -> Unit,
 ) {
-    val state = rememberPagerState { tabs.size }
+    val state = rememberPagerState(initialPage = initialPage) { tabs.size }
     val scope = rememberCoroutineScope()
-    val isPagerScrolling by remember {
-        derivedStateOf {
-            state.currentPageOffsetFraction != 0f
-        }
-    }
 
     Column(modifier =  modifier) {
         val tabsLayout = @Composable { tabs.forEachIndexed { index, item ->
@@ -80,12 +76,7 @@ fun <T> DefaultTabRowWithPager(
             state = state,
             key = { tabs[it].value!! }
         ) {
-            Column(
-                // workaround for this bug https://github.com/google/accompanist/issues/1050
-                modifier = if (isPagerScrolling) Modifier.height(500.dp) else Modifier
-            ) {
-                pageContent(it)
-            }
+            pageContent(it)
         }
     }//: Column
 }

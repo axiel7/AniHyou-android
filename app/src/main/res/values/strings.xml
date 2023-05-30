@@ -202,4 +202,13 @@
     <string name="time_spent">Time spent</string>
     <string name="format_distribution">Format distribution</string>
     <string name="notes">Notes</string>
+    <string name="calendar">Calendar</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="episode_airing_at">Ep %s airing at %s</string>
 </resources>
