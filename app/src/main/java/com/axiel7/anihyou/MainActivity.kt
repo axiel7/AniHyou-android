@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
             // Manually handle deep links because the uri pattern in the compose navigation
             // matches this -> https://anilist.co/manga/41514/
             // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
-            // TODO: find a better solution :)
+            //TODO: find a better solution :)
             val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
             if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
                 val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
