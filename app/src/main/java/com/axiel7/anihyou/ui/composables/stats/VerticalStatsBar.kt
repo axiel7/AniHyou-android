@@ -19,10 +19,10 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatColorable
-import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
 import com.axiel7.anihyou.ui.composables.Rectangle
 import com.axiel7.anihyou.ui.composables.RoundedRectangle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder

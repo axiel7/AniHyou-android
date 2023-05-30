@@ -38,13 +38,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
-import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
+import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 
