@@ -115,7 +115,7 @@ fun SwitchPreference(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                preferenceValue.value = preferenceValue.value?.not() ?: false
+                preferenceValue.value = preferenceValue.value.not()
                 onValueChange(preferenceValue.value)
             },
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -160,7 +160,7 @@ fun SwitchPreference(
         }//: Row
 
         Switch(
-            checked = preferenceValue.value ?: false,
+            checked = preferenceValue.value,
             onCheckedChange = {
                 preferenceValue.value = it
                 onValueChange(it)

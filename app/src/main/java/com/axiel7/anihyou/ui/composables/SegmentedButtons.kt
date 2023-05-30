@@ -12,7 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,7 +34,7 @@ fun <T> SegmentedButtons(
     defaultSelectedIndex: Int = 0,
     onItemSelection: (Int) -> Unit,
 ) {
-    var selectedIndex by remember { mutableStateOf(defaultSelectedIndex) }
+    var selectedIndex by remember { mutableIntStateOf(defaultSelectedIndex) }
 
     Row(
         modifier = modifier

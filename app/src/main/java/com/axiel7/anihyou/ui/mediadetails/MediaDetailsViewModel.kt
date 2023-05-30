@@ -119,7 +119,7 @@ class MediaDetailsViewModel : BaseViewModel() {
 
     var isLoadingReviews by mutableStateOf(true)
     var mediaReviews = mutableStateListOf<MediaReviewsQuery.Node>()
-    var pageReviews = 1
+    private var pageReviews = 1
     var hasNextPageReviews = true
 
     suspend fun getMediaReviews(mediaId: Int) {

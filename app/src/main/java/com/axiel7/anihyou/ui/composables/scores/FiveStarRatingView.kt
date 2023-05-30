@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,7 +23,7 @@ fun FiveStarRatingView(
     initialRating: Double = 0.0,
     onRatingChanged: (Double) -> Unit,
 ) {
-    var rating by remember { mutableStateOf(initialRating) }
+    var rating by remember { mutableDoubleStateOf(initialRating) }
 
     Row(
         modifier = modifier,

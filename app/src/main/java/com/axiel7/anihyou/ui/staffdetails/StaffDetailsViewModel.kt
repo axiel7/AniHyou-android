@@ -28,7 +28,7 @@ class StaffDetailsViewModel(
     }
 
     var mediaOnMyList by mutableStateOf(false)
-    var pageMedia = 1
+    private var pageMedia = 1
     var hasNextPageMedia = true
     var staffMedia = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
 
@@ -64,7 +64,7 @@ class StaffDetailsViewModel(
         getStaffMedia()
     }
 
-    var pageCharacter = 1
+    private var pageCharacter = 1
     var hasNextPageCharacter = true
     var staffCharacters = mutableStateListOf<StaffCharacterQuery.Edge>()
 

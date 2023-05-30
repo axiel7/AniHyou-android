@@ -40,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
         }
     }
 
-    var pageMedia = 1
+    private var pageMedia = 1
     var hasNextPageMedia = true
     val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 

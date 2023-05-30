@@ -54,7 +54,7 @@ object DateUtils {
     fun LocalDateTime.toCalendar(): GregorianCalendar = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    const val BASE_YEAR = 1917
+    private const val BASE_YEAR = 1917
     val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toList()
 
     fun LocalDateTime.tomorrow(): LocalDateTime = toCalendar()

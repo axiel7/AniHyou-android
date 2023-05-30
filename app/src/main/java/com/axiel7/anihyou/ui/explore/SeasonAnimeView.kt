@@ -29,6 +29,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -163,7 +164,7 @@ fun SeasonChartFilterSheet(
     onDismiss: () -> Unit,
     onConfirm: (AnimeSeason) -> Unit,
 ) {
-    var selectedYear by remember { mutableStateOf(initialSeason.year) }
+    var selectedYear by remember { mutableIntStateOf(initialSeason.year) }
     var selectedSeason by remember { mutableStateOf(initialSeason.season) }
 
     ModalBottomSheet(

@@ -64,7 +64,7 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     var isLoadingActivity by mutableStateOf(false)
-    var pageActivity = 1
+    private var pageActivity = 1
     var hasNextPageActivity = true
     var userActivities = mutableStateListOf<UserActivityQuery.Activity>()
 

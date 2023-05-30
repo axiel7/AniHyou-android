@@ -26,7 +26,7 @@ class UserFavoritesViewModel : BaseViewModel() {
         }
     }
 
-    var pageAnime = 1
+    private var pageAnime = 1
     var hasNextPageAnime = true
     var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
 
@@ -45,7 +45,7 @@ class UserFavoritesViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    var pageManga = 1
+    private var pageManga = 1
     var hasNextPageManga = true
     var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
 
@@ -64,7 +64,7 @@ class UserFavoritesViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    var pageCharacter = 1
+    private var pageCharacter = 1
     var hasNextPageCharacter = true
     var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
 
@@ -83,7 +83,7 @@ class UserFavoritesViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    var pageStaff = 1
+    private var pageStaff = 1
     var hasNextPageStaff = true
     var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
 
@@ -102,7 +102,7 @@ class UserFavoritesViewModel : BaseViewModel() {
         isLoading = false
     }
 
-    var pageStudio = 1
+    private var pageStudio = 1
     var hasNextPageStudio = true
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 

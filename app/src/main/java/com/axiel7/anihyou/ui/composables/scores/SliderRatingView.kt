@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,7 +29,7 @@ fun SliderRatingView(
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double) -> Unit,
 ) {
-    var rating by remember { mutableStateOf(initialRating) }
+    var rating by remember { mutableDoubleStateOf(initialRating) }
 
     Column(
         modifier = modifier,

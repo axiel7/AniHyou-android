@@ -20,7 +20,7 @@ class UserSocialViewModel : BaseViewModel() {
         }
     }
 
-    var pageFollowers = 1
+    private var pageFollowers = 1
     var hasNextPageFollowers = true
     var followers = mutableStateListOf<FollowersQuery.Follower>()
 
@@ -36,7 +36,7 @@ class UserSocialViewModel : BaseViewModel() {
         pageFollowers = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageFollowers
     }
 
-    var pageFollowing = 1
+    private var pageFollowing = 1
     var hasNextPageFollowing = true
     var following = mutableStateListOf<FollowingsQuery.Following>()
 
