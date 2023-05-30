@@ -57,10 +57,11 @@ class StaffDetailsViewModel(
         isLoading = false
     }
 
-    fun refreshStaffMedia() {
+    suspend fun refreshStaffMedia() {
+        hasNextPageMedia = false
         pageMedia = 1
-        hasNextPageMedia = true
         staffMedia.clear()
+        getStaffMedia()
     }
 
     var pageCharacter = 1
