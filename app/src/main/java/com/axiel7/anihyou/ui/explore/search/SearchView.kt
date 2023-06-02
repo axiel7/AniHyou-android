@@ -332,8 +332,10 @@ fun MediaSearchGenresChips(
             onDismiss = {
                 scope.launch {
                     sheetState.hide()
-                    searchByGenre.value = true
-                    performSearch.value = true
+                    if (viewModel.selectedGenres.isNotEmpty() || viewModel.selectedTags.isNotEmpty()) {
+                        searchByGenre.value = true
+                        performSearch.value = true
+                    }
                 }
             }
         )
@@ -343,7 +345,7 @@ fun MediaSearchGenresChips(
         modifier = Modifier.padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        viewModel.genreCollection.forEach { (genre, isSelected) ->
+        viewModel.selectedGenres.forEach { (genre, isSelected) ->
             if (isSelected) {
                 InputChip(
                     selected = false,
@@ -358,7 +360,7 @@ fun MediaSearchGenresChips(
                 )
             }
         }
-        viewModel.tagCollection.forEach { (tag, isSelected) ->
+        viewModel.selectedTags.forEach { (tag, isSelected) ->
             if (isSelected) {
                 InputChip(
                     selected = false,

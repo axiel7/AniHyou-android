@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.explore.search
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -28,6 +29,8 @@ class SearchViewModel : BaseViewModel() {
     var mediaSort by mutableStateOf(MediaSort.SEARCH_MATCH)
     val genreCollection = mutableStateMapOf<String, Boolean>()
     val tagCollection = mutableStateMapOf<String, Boolean>()
+    val selectedGenres by derivedStateOf { genreCollection.filter { it.value } }
+    val selectedTags by derivedStateOf { tagCollection.filter { it.value } }
 
     suspend fun runSearch(query: String) {
         when (searchType) {
