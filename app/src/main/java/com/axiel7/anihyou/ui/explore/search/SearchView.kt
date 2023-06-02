@@ -76,7 +76,10 @@ fun SearchView(
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank() || searchByGenre.value || initialGenre != null || initialTag != null) {
+            if (query.isNotBlank() || searchByGenre.value
+                || initialGenre != null || initialTag != null
+                || viewModel.mediaSort != MediaSort.SEARCH_MATCH
+            ) {
                 listState.scrollToItem(0)
                 viewModel.runSearch(query)
                 searchByGenre.value = false
