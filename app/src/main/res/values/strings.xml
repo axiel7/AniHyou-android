@@ -211,4 +211,5 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="episode_airing_at">Ep %s airing at %s</string>
+    <string name="filter">Filter</string>
 </resources>

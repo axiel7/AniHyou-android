@@ -1,16 +1,25 @@
 package com.axiel7.anihyou.ui.explore.search
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,11 +30,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,7 +58,7 @@ private enum class GenresTagsSheetTab {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GenresTagsSheet(
     viewModel: SearchViewModel,
@@ -61,6 +72,22 @@ fun GenresTagsSheet(
     val tagsList by remember {
         derivedStateOf { viewModel.tagCollection.toList().sortedBy { it.first } }
     }
+    var filter by remember { mutableStateOf("") }
+    val filteredList by remember {
+        derivedStateOf {
+            when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
+                GenresTagsSheetTab.GENRES ->
+                    if (filter.isNotBlank())
+                        genresList.filter { it.first.contains(filter, ignoreCase = true) }
+                else genresList
+                GenresTagsSheetTab.TAGS ->
+                    if (filter.isNotBlank())
+                        tagsList.filter { it.first.contains(filter, ignoreCase = true) }
+                else tagsList
+            }
+        }
+    }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
     LaunchedEffect(viewModel) {
         if (viewModel.genreCollection.isEmpty() || viewModel.tagCollection.isEmpty())
@@ -71,80 +98,103 @@ fun GenresTagsSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                onClick = { viewModel.unselectAllGenresAndTags() },
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.clear),
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-
-            TextButton(
-                onClick = onDismiss,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Text(text = stringResource(R.string.close))
-            }
-        }
-
-        SegmentedButtons(
-            items = GenresTagsSheetTab.tabRows,
+        Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            defaultSelectedIndex = selectedTabIndex,
-            onItemSelection = {
-                selectedTabIndex = it
-            }
-        )
+                .fillMaxHeight()
+                .imePadding()
+                .bringIntoViewRequester(bringIntoViewRequester)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextButton(
+                    onClick = { viewModel.unselectAllGenresAndTags() },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.clear),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
 
-        if (viewModel.isLoadingGenres) {
-            Box(
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(text = stringResource(R.string.close))
+                }
+            }
+
+            SegmentedButtons(
+                items = GenresTagsSheetTab.tabRows,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                defaultSelectedIndex = selectedTabIndex,
+                onItemSelection = {
+                    selectedTabIndex = it
+                }
+            )
+
+            OutlinedTextField(
+                value = filter,
+                onValueChange = {
+                    filter = it
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                placeholder = {
+                    Text(text = stringResource(R.string.filter))
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.search_24),
+                        contentDescription = "search"
+                    )
+                },
+                trailingIcon = {
+                    if (filter.isNotEmpty()) {
+                        IconButton(onClick = { filter = "" }) {
+                            Icon(
+                                painter = painterResource(R.drawable.cancel_24),
+                                contentDescription = "clear"
+                            )
+                        }
+                    }
+                }
+            )
 
-        when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
-            GenresTagsSheetTab.GENRES -> {
-                LazyColumn {
-                    items(genresList) { item ->
-                        TextCheckbox(
-                            text = item.first,
-                            checked = item.second,
-                            onCheckedChange = {
-                                viewModel.genreCollection[item.first] = it
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+            if (viewModel.isLoadingGenres) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-            GenresTagsSheetTab.TAGS -> {
-                LazyColumn {
-                    items(tagsList) { item ->
-                        TextCheckbox(
-                            text = item.first,
-                            checked = item.second,
-                            onCheckedChange = {
-                                viewModel.tagCollection[item.first] = it
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+
+            LazyColumn {
+                items(filteredList) { item ->
+                    TextCheckbox(
+                        text = item.first,
+                        checked = item.second,
+                        onCheckedChange = {
+                            when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
+                                GenresTagsSheetTab.GENRES -> viewModel.genreCollection[item.first] =
+                                    it
+
+                                GenresTagsSheetTab.TAGS -> viewModel.tagCollection[item.first] = it
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
-        }
-    }//: Column
+        }//: Column
+    }//: Sheet
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
