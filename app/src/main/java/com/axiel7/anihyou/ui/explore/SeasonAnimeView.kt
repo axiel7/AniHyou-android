@@ -33,6 +33,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,21 +77,22 @@ fun SeasonAnimeView(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
-    var season by remember { mutableStateOf(initialSeason) }
+    var season by rememberSaveable { mutableStateOf(initialSeason.season) }
+    var year by rememberSaveable { mutableIntStateOf(initialSeason.year) }
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage && !viewModel.isLoading)
             viewModel.getAnimeSeasonal(
-                season = season.season,
-                year = season.year
+                season = season,
+                year = year
             )
     }
 
-    LaunchedEffect(season) {
+    LaunchedEffect(season, year) {
         if (!viewModel.isLoading) {
             viewModel.getAnimeSeasonal(
-                season = season.season,
-                year = season.year,
+                season = season,
+                year = year,
                 resetPage = true
             )
         }
@@ -99,17 +101,18 @@ fun SeasonAnimeView(
     if (sheetState.isVisible) {
         SeasonChartFilterSheet(
             sheetState = sheetState,
-            initialSeason = season,
+            initialSeason = AnimeSeason(year, season),
             onDismiss = { scope.launch { sheetState.hide() } },
             onConfirm = {
-                season = it
+                season = it.season
+                year = it.year
                 scope.launch { sheetState.hide() }
             }
         )
     }
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = season.localized(),
+        title = "${season.localized()} $year",
         floatingActionButton = {
             FloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
                 Icon(painter = painterResource(R.drawable.filter_list_24), contentDescription = "filter")
