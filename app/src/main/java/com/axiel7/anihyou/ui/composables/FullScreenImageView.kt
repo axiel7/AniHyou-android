@@ -13,6 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,12 +35,19 @@ fun FullScreenImageView(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    var hasClicked by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
-            .clickable(onClick = onDismiss),
+            .clickable(enabled = !hasClicked) {
+                if (!hasClicked) {
+                    hasClicked = true
+                    onDismiss()
+                }
+            },
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
