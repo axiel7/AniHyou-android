@@ -1,0 +1,9 @@
+mutation ToggleFavourite($animeId: Int, $mangaId: Int, $characterId: Int, $staffId: Int, $studioId: Int) {
+    ToggleFavourite(animeId: $animeId, mangaId: $mangaId, characterId: $characterId, staffId: $staffId, studioId: $studioId) {
+        anime {
+            pageInfo {
+                currentPage
+            }
+        }
+    }
+}

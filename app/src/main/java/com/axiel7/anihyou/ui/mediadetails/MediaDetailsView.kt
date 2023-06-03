@@ -59,6 +59,7 @@ import com.axiel7.anihyou.data.model.localized
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
@@ -166,6 +167,12 @@ fun MediaDetailsView(
                      BackIconButton(onClick = navigateBack)
                  },
                  actions = {
+                     FavoriteIconButton(
+                         isFavorite = viewModel.mediaDetails?.isFavourite ?: false,
+                         onClick = {
+                             scope.launch { viewModel.toggleFavorite() }
+                         }
+                     )
                      ShareIconButton(url = viewModel.mediaDetails?.siteUrl ?: "")
                  },
                  colors = TopAppBarDefaults.topAppBarColors(

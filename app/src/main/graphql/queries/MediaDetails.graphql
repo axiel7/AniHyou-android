@@ -37,6 +37,7 @@ query MediaDetails($mediaId: Int) {
       }
     }
     favourites
+    isFavourite
     nextAiringEpisode {
       timeUntilAiring
       episode

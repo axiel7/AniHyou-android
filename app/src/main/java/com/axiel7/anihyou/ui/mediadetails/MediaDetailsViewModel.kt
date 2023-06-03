@@ -10,11 +10,13 @@ import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
+import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class MediaDetailsViewModel : BaseViewModel() {
@@ -43,6 +45,21 @@ class MediaDetailsViewModel : BaseViewModel() {
                     mediaDetails?.mediaListEntry?.copy(basicMediaListEntry = newListEntry)
                 else null
             )
+        }
+    }
+
+    suspend fun toggleFavorite() {
+        mediaDetails?.let { details ->
+            val response = ToggleFavouriteMutation(
+                animeId = if (details.basicMediaDetails.type == MediaType.ANIME)
+                    Optional.present(details.id) else Optional.absent(),
+                mangaId = if (details.basicMediaDetails.type == MediaType.MANGA)
+                    Optional.present(details.id) else Optional.absent()
+            ).tryMutation()
+
+            if (response?.data != null) {
+                mediaDetails = details.copy(isFavourite = !details.isFavourite)
+            }
         }
     }
 

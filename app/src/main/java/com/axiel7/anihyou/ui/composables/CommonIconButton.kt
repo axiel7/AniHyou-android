@@ -33,3 +33,20 @@ fun ShareIconButton(url: String) {
         )
     }
 }
+
+@Composable
+fun FavoriteIconButton(
+    isFavorite: Boolean,
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(
+                if (isFavorite) R.drawable.favorite_filled_24
+                else R.drawable.favorite_24
+            ),
+            contentDescription = "heart",
+            tint = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
