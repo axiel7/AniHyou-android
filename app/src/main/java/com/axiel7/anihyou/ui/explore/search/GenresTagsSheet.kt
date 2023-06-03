@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,15 +29,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +51,7 @@ import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextCheckbox
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.coroutines.launch
 
 private enum class GenresTagsSheetTab {
     GENRES, TAGS;
@@ -87,7 +93,13 @@ fun GenresTagsSheet(
             }
         }
     }
+    val scope = rememberCoroutineScope()
+    val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    SideEffect {
+        scope.launch { if (isKeyboardVisible) sheetState.expand() }
+    }
 
     LaunchedEffect(viewModel) {
         if (viewModel.genreCollection.isEmpty() || viewModel.tagCollection.isEmpty())
