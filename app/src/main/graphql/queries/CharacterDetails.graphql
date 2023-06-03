@@ -17,6 +17,7 @@ query CharacterDetails($characterId: Int) {
     }
     age
     bloodType
+    favourites
     isFavourite
     siteUrl
   }

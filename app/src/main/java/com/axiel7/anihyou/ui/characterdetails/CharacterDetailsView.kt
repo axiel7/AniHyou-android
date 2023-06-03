@@ -89,6 +89,7 @@ fun CharacterDetailsView(
         actions = {
             FavoriteIconButton(
                 isFavorite = viewModel.characterDetails?.isFavourite ?: false,
+                favoritesCount = viewModel.characterDetails?.favourites ?: 0,
                 onClick = {
                     scope.launch { viewModel.toggleFavorite() }
                 }

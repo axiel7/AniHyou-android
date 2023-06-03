@@ -22,6 +22,7 @@ query StaffDetails($staffId: Int) {
     yearsActive
     homeTown
     bloodType
+    favourites
     isFavourite
     siteUrl
   }

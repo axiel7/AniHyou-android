@@ -94,6 +94,7 @@ fun StaffDetailsView(
         actions = {
             FavoriteIconButton(
                 isFavorite = viewModel.staffDetails?.isFavourite ?: false,
+                favoritesCount = viewModel.staffDetails?.favourites ?: 0,
                 onClick = {
                     scope.launch { viewModel.toggleFavorite() }
                 }

@@ -1,13 +1,20 @@
 package com.axiel7.anihyou.ui.composables
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
+import com.axiel7.anihyou.utils.NumberUtils.abbreviated
 
 @Composable
 fun BackIconButton(
@@ -37,16 +44,27 @@ fun ShareIconButton(url: String) {
 @Composable
 fun FavoriteIconButton(
     isFavorite: Boolean,
+    favoritesCount: Int = 0,
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick) {
-        Icon(
-            painter = painterResource(
-                if (isFavorite) R.drawable.favorite_filled_24
-                else R.drawable.favorite_24
-            ),
-            contentDescription = "heart",
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (favoritesCount > 0) {
+            Text(
+                text = favoritesCount.abbreviated(),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(
+                    if (isFavorite) R.drawable.favorite_filled_24
+                    else R.drawable.favorite_24
+                ),
+                contentDescription = "heart",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
