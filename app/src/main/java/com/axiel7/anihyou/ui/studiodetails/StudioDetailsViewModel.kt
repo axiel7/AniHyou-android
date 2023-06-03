@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.StudioDetailsQuery
+import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class StudioDetailsViewModel : BaseViewModel() {
@@ -32,5 +33,17 @@ class StudioDetailsViewModel : BaseViewModel() {
         }
 
         isLoading = false
+    }
+
+    suspend fun toggleFavorite() {
+        studioDetails?.let { details ->
+            val response = ToggleFavouriteMutation(
+                studioId = Optional.present(details.id)
+            ).tryMutation()
+
+            if (response?.data != null) {
+                studioDetails = details.copy(isFavourite = !details.isFavourite)
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -29,12 +30,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
+import kotlinx.coroutines.launch
 
 const val STUDIO_DETAILS_DESTINATION = "studio/{id}"
 
@@ -45,6 +48,7 @@ fun StudioDetailsView(
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: StudioDetailsViewModel = viewModel()
     val listState = rememberLazyGridState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -59,18 +63,12 @@ fun StudioDetailsView(
         title = viewModel.studioDetails?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(
-                        text = viewModel.studioDetails?.favourites?.abbreviated() ?: "",
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.favorite_24),
-                        contentDescription = "favorite"
-                    )
+            FavoriteIconButton(
+                isFavorite = viewModel.studioDetails?.isFavourite ?: false,
+                onClick = {
+                    scope.launch { viewModel.toggleFavorite() }
                 }
-            }
+            )
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
