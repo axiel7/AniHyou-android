@@ -8,6 +8,7 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.StaffMediaQuery
+import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.model.StaffMediaGrouped
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
@@ -25,6 +26,18 @@ class StaffDetailsViewModel(
 
         response?.data?.Staff?.let { staffDetails = it }
         isLoading = false
+    }
+
+    suspend fun toggleFavorite() {
+        staffDetails?.let { details ->
+            val response = ToggleFavouriteMutation(
+                staffId = Optional.present(details.id)
+            ).tryMutation()
+
+            if (response?.data != null) {
+                staffDetails = details.copy(isFavourite = !details.isFavourite)
+            }
+        }
     }
 
     var mediaOnMyList by mutableStateOf(false)

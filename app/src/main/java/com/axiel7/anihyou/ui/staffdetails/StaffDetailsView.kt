@@ -42,6 +42,7 @@ import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.HtmlWebView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.OnBottomReached
@@ -80,6 +81,7 @@ fun StaffDetailsView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: StaffDetailsViewModel = viewModel { StaffDetailsViewModel(staffId) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -90,6 +92,12 @@ fun StaffDetailsView(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
+            FavoriteIconButton(
+                isFavorite = viewModel.staffDetails?.isFavourite ?: false,
+                onClick = {
+                    scope.launch { viewModel.toggleFavorite() }
+                }
+            )
             ShareIconButton(url = viewModel.staffDetails?.siteUrl ?: "")
         },
         scrollBehavior = topAppBarScrollBehavior
