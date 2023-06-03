@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.AnimeSeason
+import com.axiel7.anihyou.type.MediaSort
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
@@ -55,6 +57,7 @@ fun HomeView(
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToCalendar: () -> Unit,
+    navigateToExplore: (MediaType, MediaSort) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val scrollState = rememberScrollState()
@@ -143,7 +146,9 @@ fun HomeView(
             // Trending Anime
             HorizontalListHeader(
                 text = stringResource(R.string.trending_now),
-                onClick = null
+                onClick = {
+                    navigateToExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
+                }
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -207,7 +212,9 @@ fun HomeView(
             // Trending Manga
             HorizontalListHeader(
                 text = stringResource(R.string.trending_manga),
-                onClick = null
+                onClick = {
+                    navigateToExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
+                }
             )
             HomeLazyRow(
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
@@ -288,7 +295,8 @@ fun HomeViewPreview() {
         HomeView(
             navigateToMediaDetails = { },
             navigateToAnimeSeason = { },
-            navigateToCalendar = { }
+            navigateToCalendar = { },
+            navigateToExplore = { _, _ -> }
         )
     }
 }

@@ -32,19 +32,21 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.explore.search.SearchView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
-const val EXPLORE_GENRE_DESTINATION = "explore/{mediaType}?genre={genre}?tag={tag}"
+const val EXPLORE_GENRE_DESTINATION = "explore/{mediaType}?mediaSort={mediaSort}?genre={genre}?tag={tag}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
     modifier: Modifier = Modifier,
     initialMediaType: MediaType? = null,
+    initialMediaSort: MediaSort? = null,
     initialGenre: String? = null,
     initialTag: String? = null,
     navigateBack: () -> Unit,
@@ -133,6 +135,7 @@ fun ExploreView(
                         query = query,
                         performSearch = performSearch,
                         initialMediaType = initialMediaType,
+                        initialMediaSort = initialMediaSort,
                         initialGenre = initialGenre,
                         initialTag = initialTag,
                         navigateToMediaDetails = navigateToMediaDetails,

@@ -64,6 +64,7 @@ import com.axiel7.anihyou.data.model.AnimeSeason
 import com.axiel7.anihyou.data.model.ChartType
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination
@@ -256,6 +257,13 @@ fun MainView(
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
+                    },
+                    navigateToExplore = { mediaType, mediaSort ->
+                        navController.navigate(
+                            EXPLORE_GENRE_DESTINATION
+                                .replace("{mediaType}", mediaType.rawValue)
+                                .replace("{mediaSort}", mediaSort.rawValue)
+                        )
                     }
                 )
             }
@@ -362,6 +370,7 @@ fun MainView(
             composable(EXPLORE_GENRE_DESTINATION,
                 arguments = listOf(
                     navArgument("mediaType") { type = NavType.StringType },
+                    navArgument("mediaSort") { type = NavType.StringType },
                     navArgument("genre") {
                         type = NavType.StringType
                         nullable = true
@@ -375,6 +384,7 @@ fun MainView(
                 ExploreView(
                     modifier = Modifier.padding(bottom = bottomPadding),
                     initialMediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
+                    initialMediaSort = navEntry.arguments?.getString("mediaSort")?.let { MediaSort.valueOf(it) },
                     initialGenre = navEntry.arguments?.getString("genre"),
                     initialTag = navEntry.arguments?.getString("tag"),
                     navigateBack = {

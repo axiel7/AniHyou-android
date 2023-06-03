@@ -54,6 +54,7 @@ fun SearchView(
     query: String,
     performSearch: MutableState<Boolean>,
     initialMediaType: MediaType?,
+    initialMediaSort: MediaSort?,
     initialGenre: String?,
     initialTag: String?,
     navigateToMediaDetails: (Int) -> Unit,
@@ -66,10 +67,11 @@ fun SearchView(
     val listState = rememberLazyListState()
     val searchByGenre = remember { mutableStateOf(initialMediaType != null) }
 
-    LaunchedEffect(initialMediaType, initialGenre, initialTag) {
+    LaunchedEffect(initialMediaType, initialMediaSort, initialGenre, initialTag) {
         if (initialMediaType == MediaType.ANIME) viewModel.searchType = SearchType.ANIME
         else if (initialMediaType == MediaType.MANGA) viewModel.searchType = SearchType.MANGA
 
+        if (initialMediaSort != null) viewModel.mediaSort = initialMediaSort
         if (initialGenre != null) viewModel.genreCollection[initialGenre] = true
         if (initialTag != null) viewModel.tagCollection[initialTag] = true
     }
