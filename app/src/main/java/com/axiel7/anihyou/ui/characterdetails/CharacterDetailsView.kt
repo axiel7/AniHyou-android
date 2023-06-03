@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +41,7 @@ import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.HtmlWebView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.OnBottomReached
@@ -52,6 +54,7 @@ import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.google.accompanist.placeholder.material.placeholder
+import kotlinx.coroutines.launch
 
 private enum class CharacterInfoType {
     INFO, MEDIA;
@@ -74,6 +77,7 @@ fun CharacterDetailsView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: CharacterDetailsViewModel = viewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -83,6 +87,12 @@ fun CharacterDetailsView(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
+            FavoriteIconButton(
+                isFavorite = viewModel.characterDetails?.isFavourite ?: false,
+                onClick = {
+                    scope.launch { viewModel.toggleFavorite() }
+                }
+            )
             ShareIconButton(url = viewModel.characterDetails?.siteUrl ?: "")
         },
         scrollBehavior = topAppBarScrollBehavior

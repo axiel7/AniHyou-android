@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
+import com.axiel7.anihyou.ToggleFavouriteMutation
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class CharacterDetailsViewModel : BaseViewModel() {
@@ -27,6 +29,18 @@ class CharacterDetailsViewModel : BaseViewModel() {
             alternativeNamesSpoiler = it.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
         }
         isLoading = false
+    }
+
+    suspend fun toggleFavorite() {
+        characterDetails?.let { details ->
+            val response = ToggleFavouriteMutation(
+                characterId = Optional.present(details.id)
+            ).tryMutation()
+
+            if (response?.data != null) {
+                characterDetails = details.copy(isFavourite = !details.isFavourite)
+            }
+        }
     }
 
     var page = 1
