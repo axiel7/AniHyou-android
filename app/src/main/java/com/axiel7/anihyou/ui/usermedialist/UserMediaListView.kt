@@ -1,10 +1,8 @@
 package com.axiel7.anihyou.ui.usermedialist
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -136,8 +134,8 @@ fun UserMediaListHostView(
             AnimatedVisibility(
                 visible = isFabVisible,
                 modifier = Modifier.sizeIn(minWidth = 80.dp, minHeight = 56.dp),
-                enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
-                exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
+                enter = slideInVertically(initialOffsetY = { it * 2 }),
+                exit = slideOutVertically(targetOffsetY = { it * 2 }),
             ) {
                 ExtendedFloatingActionButton(
                     onClick = { scope.launch { statusSheetState.show() } }
