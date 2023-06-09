@@ -152,7 +152,10 @@ class MainActivity : ComponentActivity() {
                 if (detailsId != null && detailsType != null) {
                     when (detailsType) {
                         "anime", "manga" -> {
-                            navController.navigate("media_details/$detailsId")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", detailsId)
+                            )
                         }
                         "character" -> {
                             navController.navigate("character/$detailsId")
@@ -252,10 +255,17 @@ fun MainView(
                 HomeView(
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToAnimeSeason = { animeSeason ->
-                        navController.navigate("season/${animeSeason.year}/${animeSeason.season.name}")
+                        navController.navigate(
+                            SEASON_ANIME_DESTINATION
+                                .replace("{year}", animeSeason.year.toString())
+                                .replace("{season}", animeSeason.season.name)
+                        )
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
@@ -283,7 +293,10 @@ fun MainView(
                         mediaType = MediaType.ANIME,
                         modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         }
                     )
                 }
@@ -299,7 +312,10 @@ fun MainView(
                         mediaType = MediaType.MANGA,
                         modifier = Modifier.padding(bottom = bottomPadding),
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         }
                     )
                 }
@@ -318,22 +334,40 @@ fun MainView(
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace("{url}", encodedUrl)
+                            )
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         },
                         navigateToCharacterDetails = { id ->
-                            navController.navigate("character/$id")
+                            navController.navigate(
+                                CHARACTER_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
                         },
                         navigateToStaffDetails = { id ->
-                            navController.navigate("staff/$id")
+                            navController.navigate(
+                                STAFF_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
                         },
                         navigateToStudioDetails = { id ->
-                            navController.navigate("studio/$id")
+                            navController.navigate(
+                                STUDIO_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
                         },
                         navigateToUserDetails = { id ->
-                            navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                            navController.navigate(
+                                USER_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
                         },
                     )
                 }
@@ -346,25 +380,47 @@ fun MainView(
                         navController.popBackStack()
                     },
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                        navController.navigate(
+                            USER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToCharacterDetails = { id ->
-                        navController.navigate("character/$id")
+                        navController.navigate(
+                            CHARACTER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStaffDetails = { id ->
-                        navController.navigate("staff/$id")
+                        navController.navigate(
+                            STAFF_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStudioDetails = { id ->
-                        navController.navigate("studio/$id")
+                        navController.navigate(
+                            STUDIO_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
-                    navigateToMediaChart = {
-                        navController.navigate("media_chart/${it.name}")
+                    navigateToMediaChart = { type ->
+                        navController.navigate(
+                            MEDIA_CHART_DESTINATION
+                                .replace("{type}", type.name)
+                        )
                     },
                     navigateToAnimeSeason = { year, season ->
-                        navController.navigate("season/$year/$season")
+                        navController.navigate(
+                            SEASON_ANIME_DESTINATION
+                                .replace("{year}", year.toString())
+                                .replace("{season}", season)
+                        )
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
@@ -399,25 +455,47 @@ fun MainView(
                         navController.popBackStack()
                     },
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate(USER_DETAILS_DESTINATION.replace("{id}", id.toString()))
+                        navController.navigate(
+                            USER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToCharacterDetails = { id ->
-                        navController.navigate("character/$id")
+                        navController.navigate(
+                            CHARACTER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStaffDetails = { id ->
-                        navController.navigate("staff/$id")
+                        navController.navigate(
+                            STAFF_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStudioDetails = { id ->
-                        navController.navigate("studio/$id")
+                        navController.navigate(
+                            STUDIO_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
-                    navigateToMediaChart = {
-                        navController.navigate("media_chart/${it.name}")
+                    navigateToMediaChart = { type ->
+                        navController.navigate(
+                            MEDIA_CHART_DESTINATION
+                                .replace("{type}", type.name)
+                        )
                     },
                     navigateToAnimeSeason = { year, season ->
-                        navController.navigate("season/$year/$season")
+                        navController.navigate(
+                            SEASON_ANIME_DESTINATION
+                                .replace("{year}", year.toString())
+                                .replace("{season}", season)
+                        )
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
@@ -428,10 +506,16 @@ fun MainView(
             composable(NOTIFICATIONS_DESTINATION) {
                 NotificationsView(
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate("user/$id")
+                        navController.navigate(
+                            USER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateBack = {
                         navController.popBackStack()
@@ -450,20 +534,35 @@ fun MainView(
                         navController.popBackStack()
                     },
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                        navController.navigate("full_image/$encodedUrl")
+                        navController.navigate(
+                            FULLSCREEN_IMAGE_DESTINATION
+                                .replace("{url}", encodedUrl)
+                        )
                     },
                     navigateToCharacterDetails = { id ->
-                        navController.navigate("character/$id")
+                        navController.navigate(
+                            CHARACTER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStaffDetails = { id ->
-                        navController.navigate("staff/$id")
+                        navController.navigate(
+                            STAFF_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToReviewDetails = { id ->
-                        navController.navigate("review/$id")
+                        navController.navigate(
+                            REVIEW_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToExplore = { mediaType, genre, tag ->
                         var dest = EXPLORE_GENRE_DESTINATION
@@ -487,7 +586,10 @@ fun MainView(
                             navController.popBackStack()
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         }
                     )
                 }
@@ -510,7 +612,10 @@ fun MainView(
                                 navController.popBackStack()
                             },
                             navigateToMediaDetails = { id ->
-                                navController.navigate("media_details/$id")
+                                navController.navigate(
+                                    MEDIA_DETAILS_DESTINATION
+                                        .replace("{media_id}", id.toString())
+                                )
                             }
                         )
                     }
@@ -520,7 +625,10 @@ fun MainView(
             composable(CALENDAR_DESTINATION) {
                 CalendarView(
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateBack = {
                         navController.popBackStack()
@@ -546,22 +654,40 @@ fun MainView(
                     username = navEntry.arguments?.getString("name"),
                     navigateToFullscreenImage = { url ->
                         val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                        navController.navigate("full_image/$encodedUrl")
+                        navController.navigate(
+                            FULLSCREEN_IMAGE_DESTINATION
+                                .replace("{url}", encodedUrl)
+                        )
                     },
                     navigateToMediaDetails = { id ->
-                        navController.navigate("media_details/$id")
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
                     },
                     navigateToCharacterDetails = { id ->
-                        navController.navigate("character/$id")
+                        navController.navigate(
+                            CHARACTER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStaffDetails = { id ->
-                        navController.navigate("staff/$id")
+                        navController.navigate(
+                            STAFF_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToStudioDetails = { id ->
-                        navController.navigate("studio/$id")
+                        navController.navigate(
+                            STUDIO_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateToUserDetails = { id ->
-                        navController.navigate("user/$id")
+                        navController.navigate(
+                            USER_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
                     },
                     navigateBack = {
                         navController.popBackStack()
@@ -581,11 +707,17 @@ fun MainView(
                             navController.popBackStack()
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace("{url}", encodedUrl)
+                            )
                         },
                     )
                 }
@@ -603,14 +735,23 @@ fun MainView(
                             navController.popBackStack()
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         },
                         navigateToCharacterDetails = { id ->
-                            navController.navigate("character/$id")
+                            navController.navigate(
+                                CHARACTER_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
                         },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-                            navController.navigate("full_image/$encodedUrl")
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace("{url}", encodedUrl)
+                            )
                         }
                     )
                 }
@@ -643,7 +784,10 @@ fun MainView(
                             navController.popBackStack()
                         },
                         navigateToMediaDetails = { id ->
-                            navController.navigate("media_details/$id")
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace("{media_id}", id.toString())
+                            )
                         }
                     )
                 }
