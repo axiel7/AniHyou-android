@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.data.model.text
 import com.axiel7.anihyou.ui.composables.OnBottomReached
-import com.axiel7.anihyou.ui.composables.media.MediaActivityItem
-import com.axiel7.anihyou.ui.composables.media.MediaActivityItemPlaceholder
+import com.axiel7.anihyou.ui.composables.activity.ActivityItem
+import com.axiel7.anihyou.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.ui.profile.ProfileViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
@@ -44,7 +44,7 @@ fun UserActivityView(
             contentType = { it }
         ) { item ->
             item.onListActivity?.let { activity ->
-                MediaActivityItem(
+                ActivityItem(
                     title = activity.text(),
                     imageUrl = activity.media?.coverImage?.large,
                     subtitle = activity.createdAt.toLong().timestampIntervalSinceNow().secondsToLegibleText(),
@@ -59,7 +59,7 @@ fun UserActivityView(
         }
         if (viewModel.isLoadingActivity) {
             items(10) {
-                MediaActivityItemPlaceholder(
+                ActivityItemPlaceholder(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables.media
+package com.axiel7.anihyou.ui.composables.activity
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
+import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
-fun MediaActivityItem(
+fun ActivityItem(
     title: String,
     imageUrl: String?,
     modifier: Modifier = Modifier,
@@ -65,7 +67,7 @@ fun MediaActivityItem(
 }
 
 @Composable
-fun MediaActivityItemPlaceholder(
+fun ActivityItemPlaceholder(
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -101,18 +103,18 @@ fun MediaActivityItemPlaceholder(
 
 @Preview
 @Composable
-fun MediaActivityItemPreview() {
+fun ActivityItemPreview() {
     AniHyouTheme {
         Surface {
             Column {
-                MediaActivityItem(
+                ActivityItem(
                     title = "Plans to watch Alice to Therese no Maboroshi Koujou",
                     imageUrl = null,
                     modifier = Modifier.padding(8.dp),
                     subtitle = "14 h ago",
                     onClick = {}
                 )
-                MediaActivityItemPlaceholder(
+                ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)
                 )
             }

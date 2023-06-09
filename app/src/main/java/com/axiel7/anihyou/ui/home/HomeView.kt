@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -58,6 +59,7 @@ fun HomeView(
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToExplore: (MediaType, MediaSort) -> Unit,
+    navigateToNotifications: () -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val scrollState = rememberScrollState()
@@ -76,6 +78,14 @@ fun HomeView(
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(R.string.home),
         modifier = modifier,
+        actions = {
+              IconButton(onClick = navigateToNotifications) {
+                  Icon(
+                      painter = painterResource(R.drawable.notifications_24),
+                      contentDescription = stringResource(R.string.notifications)
+                  )
+              }
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(
@@ -296,7 +306,8 @@ fun HomeViewPreview() {
             navigateToMediaDetails = { },
             navigateToAnimeSeason = { },
             navigateToCalendar = { },
-            navigateToExplore = { _, _ -> }
+            navigateToExplore = { _, _ -> },
+            navigateToNotifications = {},
         )
     }
 }

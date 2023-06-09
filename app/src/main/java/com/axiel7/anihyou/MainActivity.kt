@@ -87,6 +87,8 @@ import com.axiel7.anihyou.ui.home.HomeView
 import com.axiel7.anihyou.ui.login.LoginView
 import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.ui.notifications.NOTIFICATIONS_DESTINATION
+import com.axiel7.anihyou.ui.notifications.NotificationsView
 import com.axiel7.anihyou.ui.profile.ProfileView
 import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.reviewdetails.REVIEW_DETAILS_DESTINATION
@@ -264,6 +266,9 @@ fun MainView(
                                 .replace("{mediaType}", mediaType.rawValue)
                                 .replace("{mediaSort}", mediaSort.rawValue)
                         )
+                    },
+                    navigateToNotifications = {
+                        navController.navigate(NOTIFICATIONS_DESTINATION)
                     }
                 )
             }
@@ -416,6 +421,17 @@ fun MainView(
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
+                    }
+                )
+            }
+
+            composable(NOTIFICATIONS_DESTINATION) {
+                NotificationsView(
+                    navigateToMediaDetails = { id ->
+                        navController.navigate("media_details/$id")
+                    },
+                    navigateBack = {
+                        navController.popBackStack()
                     }
                 )
             }
