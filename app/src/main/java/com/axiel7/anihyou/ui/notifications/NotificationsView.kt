@@ -42,7 +42,7 @@ fun NotificationsView(
     val viewModel: NotificationsViewModel = viewModel()
     val listState = rememberLazyListState()
 
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
 
