@@ -9,6 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -16,14 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
+import com.axiel7.anihyou.ui.composables.SpoilerDialog
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
-import com.axiel7.anihyou.utils.MarkdownUtils.formatImageTags
 import com.axiel7.anihyou.utils.NumberUtils.format
-import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun ThreadCommentView(
@@ -34,6 +38,17 @@ fun ThreadCommentView(
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val context = LocalContext.current
+    var spoilerText by remember { mutableStateOf<String?>(null) }
+
+    spoilerText?.let {
+        SpoilerDialog(
+            text = it,
+            onDismiss = {
+                spoilerText = null
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -55,20 +70,13 @@ fun ThreadCommentView(
                 fontSize = 15.sp
             )
         }
-        MarkdownText(
-            markdown = body
-                .formatImageTags(),
+        DefaultMarkdownText(
+            markdown = body,
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            onLinkClicked = {
-                if (it.startsWith("anihyouimage")) {
-                    navigateToFullscreenImage(
-                        it.removePrefix("anihyouimage")
-                    )
-                }
-                else context.openActionView(it)
-            }
+            onImageClicked = navigateToFullscreenImage,
+            onSpoilerClicked = { spoilerText = it },
+            onLinkClicked = { context.openActionView(it) }
         )
         TextIconHorizontal(
             text = likeCount.format(),
