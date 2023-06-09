@@ -13,6 +13,9 @@ Follow the development on the official Discord server:
 # Screenshots
 ![Screenshots](https://github.com/axiel7/AniHyou-android/blob/master/screenshots.webp)
 
+## Coming features
+- [See project](https://github.com/users/axiel7/projects/2/views/1)
+
 ## Libraries used
 * [AniList GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
 * [Apollo Kotlin](https://github.com/apollographql/apollo-kotlin)
