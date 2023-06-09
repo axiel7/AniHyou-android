@@ -213,4 +213,6 @@
     <string name="episode_airing_at">Ep %s airing at %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifications</string>
+    <string name="threads">Threads</string>
+    <string name="no_threads">No threads</string>
 </resources>

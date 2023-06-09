@@ -10,6 +10,7 @@ import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
+import com.axiel7.anihyou.MediaThreadsQuery
 import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
@@ -17,6 +18,7 @@ import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ThreadSort
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class MediaDetailsViewModel : BaseViewModel() {
@@ -151,5 +153,25 @@ class MediaDetailsViewModel : BaseViewModel() {
         hasNextPageReviews = response?.data?.Media?.reviews?.pageInfo?.hasNextPage ?: false
         pageReviews = response?.data?.Media?.reviews?.pageInfo?.currentPage?.plus(1) ?: pageReviews
         isLoadingReviews = false
+    }
+
+    var isLoadingThreads by mutableStateOf(true)
+    var mediaThreads = mutableStateListOf<MediaThreadsQuery.Thread>()
+    private var pageThreads = 1
+    var hasNextPageThreads = true
+
+    suspend fun getMediaThreads(mediaId: Int) {
+        isLoadingThreads = true
+        val response = MediaThreadsQuery(
+            page = Optional.present(pageReviews),
+            perPage = Optional.present(25),
+            mediaCategoryId = Optional.present(mediaId),
+            sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
+        ).tryQuery()
+
+        response?.data?.Page?.threads?.filterNotNull()?.let { mediaThreads.addAll(it) }
+        hasNextPageThreads = response?.data?.Page?.pageInfo?.hasNextPage ?: false
+        pageThreads = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageThreads
+        isLoadingThreads = false
     }
 }

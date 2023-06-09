@@ -2,7 +2,7 @@ query ThreadComments($page: Int, $perPage: Int, $threadId: Int) {
   Page(page: $page, perPage: $perPage) {
     threadComments(threadId: $threadId) {
       id
-      comment(asHtml: false)
+      comment
       likeCount
       createdAt
       user {

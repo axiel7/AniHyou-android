@@ -155,11 +155,14 @@ object DateUtils {
 
     fun Long.minutesToDays() = this / 1440
 
-    fun Long.timestampToDateString(): String? = LocalDate.ofEpochDay(this / 86400).format(
-        DateTimeFormatter.ofPattern(
-            DateFormat.getBestDateTimePattern(Locale.getDefault(), "EE, d MMM")
+    fun Long.timestampToDateString(
+        format: String = "EE, d MMM"
+    ): String? =
+        LocalDateTime.ofEpochSecond(this, 0, defaultZoneOffset).format(
+            DateTimeFormatter.ofPattern(
+                DateFormat.getBestDateTimePattern(Locale.getDefault(), format)
+            )
         )
-    )
 
     fun Long.timestampToTimeString(): String? =
         LocalDateTime.ofEpochSecond(this, 0, defaultZoneOffset).format(

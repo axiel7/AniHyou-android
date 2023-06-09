@@ -100,6 +100,8 @@ import com.axiel7.anihyou.ui.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.ui.studiodetails.STUDIO_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.ui.thread.THREAD_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
@@ -564,6 +566,12 @@ fun MainView(
                                 .replace("{id}", id.toString())
                         )
                     },
+                    navigateToThreadDetails = { id ->
+                        navController.navigate(
+                            THREAD_DETAILS_DESTINATION
+                                .replace("{id}", id.toString())
+                        )
+                    },
                     navigateToExplore = { mediaType, genre, tag ->
                         var dest = EXPLORE_GENRE_DESTINATION
                         if (mediaType != null) dest = dest.replace("{mediaType}", mediaType.rawValue)
@@ -765,6 +773,21 @@ fun MainView(
                 navEntry.arguments?.getInt("id")?.let {
                     ReviewDetailsView(
                         reviewId = it,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+
+            composable(THREAD_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let {
+                    ThreadDetailsView(
+                        threadId = it,
                         navigateBack = {
                             navController.popBackStack()
                         }

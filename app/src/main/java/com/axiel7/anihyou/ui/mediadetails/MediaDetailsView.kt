@@ -115,6 +115,7 @@ fun MediaDetailsView(
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
+    navigateToThreadDetails: (Int) -> Unit,
     navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -454,7 +455,8 @@ fun MediaDetailsView(
                     DetailsType.REVIEWS -> ReviewThreadListView(
                         mediaId = mediaId,
                         viewModel = viewModel,
-                        navigateToReviewDetails = navigateToReviewDetails
+                        navigateToReviewDetails = navigateToReviewDetails,
+                        navigateToThreadDetails = navigateToThreadDetails,
                     )
                 }
             }//: Column
@@ -474,6 +476,7 @@ fun MediaDetailsViewPreview() {
             navigateToCharacterDetails = {},
             navigateToStaffDetails = {},
             navigateToReviewDetails = {},
+            navigateToThreadDetails = {},
             navigateToExplore = { _, _, _ -> }
         )
     }

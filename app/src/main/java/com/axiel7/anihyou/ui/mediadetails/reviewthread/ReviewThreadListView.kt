@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,17 +41,81 @@ fun ReviewThreadListView(
     mediaId: Int,
     viewModel: MediaDetailsViewModel,
     navigateToReviewDetails: (Int) -> Unit,
+    navigateToThreadDetails: (Int) -> Unit,
 ) {
-    val listState = rememberLazyGridState()
+    val reviewsListState = rememberLazyGridState()
+    val threadsListState = rememberLazyListState()
 
-    listState.OnBottomReached(buffer = 2) {
+    reviewsListState.OnBottomReached(buffer = 2) {
         if (viewModel.hasNextPageReviews)
             viewModel.getMediaReviews(mediaId)
+    }
+
+    threadsListState.OnBottomReached(buffer = 2) {
+        if (viewModel.hasNextPageThreads)
+            viewModel.getMediaThreads(mediaId)
     }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
+        InfoTitle(text = stringResource(R.string.threads))
+        if (viewModel.isLoadingThreads || viewModel.mediaThreads.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 16.dp),
+                state = threadsListState,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    items = viewModel.mediaThreads,
+                    contentType = { it }
+                ) { item ->
+                    PostItem(
+                        title = item.basicThreadDetails.title ?: "",
+                        author = item.basicThreadDetails.user?.name ?: "",
+                        subtitle = {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                TextIconHorizontal(
+                                    text = item.basicThreadDetails.replyCount?.format() ?: "0",
+                                    icon = R.drawable.chat_bubble_24,
+                                    iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
+                                    fontSize = 15.sp
+                                )
+                                TextIconHorizontal(
+                                    text = item.basicThreadDetails.viewCount?.format() ?: "0",
+                                    icon = R.drawable.visibility_24,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
+                                    fontSize = 15.sp
+                                )
+                            }
+                        },
+                        onClick = {
+                            navigateToThreadDetails(item.basicThreadDetails.id)
+                        }
+                    )
+                }
+                if (viewModel.isLoadingThreads) {
+                    items(2) {
+                        PostItemPlaceholder()
+                    }
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .height(POST_ITEM_HEIGHT.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(R.string.no_threads))
+            }
+        }
+
         InfoTitle(text = stringResource(R.string.reviews))
         if (viewModel.isLoadingReviews || viewModel.mediaReviews.isNotEmpty()) {
             LazyHorizontalGrid(
@@ -56,17 +123,15 @@ fun ReviewThreadListView(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 16.dp)
                     .height((POST_ITEM_HEIGHT * 2).dp),
-                state = listState,
+                state = reviewsListState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (viewModel.isLoadingReviews) {
-                    items(4) {
-                        PostItemPlaceholder()
-                    }
-                }
-                else items(viewModel.mediaReviews) { item ->
+                items(
+                    items = viewModel.mediaReviews,
+                    contentType = { it }
+                ) { item ->
                     PostItem(
                         title = item.summary ?: "",
                         author = item.user?.name ?: "",
@@ -94,6 +159,11 @@ fun ReviewThreadListView(
                         }
                     )
                 }
+                if (viewModel.isLoadingReviews) {
+                    items(4) {
+                        PostItemPlaceholder()
+                    }
+                }
             }
         } else {
             Box(
@@ -116,7 +186,8 @@ fun ReviewThreadListViewPreview() {
             ReviewThreadListView(
                 mediaId = 1,
                 viewModel = viewModel(),
-                navigateToReviewDetails = {}
+                navigateToReviewDetails = {},
+                navigateToThreadDetails = {}
             )
         }
     }
