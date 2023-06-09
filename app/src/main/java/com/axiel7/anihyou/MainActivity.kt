@@ -370,7 +370,10 @@ fun MainView(
             composable(EXPLORE_GENRE_DESTINATION,
                 arguments = listOf(
                     navArgument("mediaType") { type = NavType.StringType },
-                    navArgument("mediaSort") { type = NavType.StringType },
+                    navArgument("mediaSort") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
                     navArgument("genre") {
                         type = NavType.StringType
                         nullable = true
