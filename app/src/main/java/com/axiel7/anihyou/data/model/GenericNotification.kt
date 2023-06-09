@@ -7,6 +7,7 @@ data class GenericNotification(
     val text: String,
     val imageUrl: String?,
     val contentId: Int,
+    val secondaryContentId: Int? = null,
     val type: NotificationType?,
     val createdAt: Int?,
 )

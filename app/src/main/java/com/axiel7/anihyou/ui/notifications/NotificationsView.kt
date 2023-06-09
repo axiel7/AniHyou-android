@@ -36,6 +36,7 @@ const val NOTIFICATIONS_DESTINATION = "notifications"
 @Composable
 fun NotificationsView(
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -84,6 +85,19 @@ fun NotificationsView(
                                 context.showToast("Coming Soon")
                             }
                         }
+                    },
+                    onClickImage = {
+                        when (item.type) {
+                            NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
+                            NotificationType.ACTIVITY_MESSAGE,
+                            NotificationType.ACTIVITY_MENTION,
+                            NotificationType.ACTIVITY_REPLY,
+                            NotificationType.ACTIVITY_LIKE,
+                            NotificationType.THREAD_COMMENT_MENTION,
+                            NotificationType.THREAD_COMMENT_LIKE,
+                            NotificationType.THREAD_LIKE -> navigateToUserDetails(item.secondaryContentId!!)
+                            else -> {}
+                        }
                     }
                 )
             }
@@ -107,6 +121,7 @@ fun NotificationsViewPreview() {
         Surface {
             NotificationsView(
                 navigateToMediaDetails = {},
+                navigateToUserDetails = {},
                 navigateBack = {}
             )
         }

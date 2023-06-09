@@ -430,6 +430,9 @@ fun MainView(
                     navigateToMediaDetails = { id ->
                         navController.navigate("media_details/$id")
                     },
+                    navigateToUserDetails = { id ->
+                        navController.navigate("user/$id")
+                    },
                     navigateBack = {
                         navController.popBackStack()
                     }

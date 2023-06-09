@@ -31,6 +31,7 @@ fun ActivityItem(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     onClick: () -> Unit,
+    onClickImage: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -39,7 +40,9 @@ fun ActivityItem(
     ) {
         MediaPoster(
             url = imageUrl,
-            modifier = Modifier.size(ACTIVITY_IMAGE_SIZE.dp),
+            modifier = Modifier
+                .size(ACTIVITY_IMAGE_SIZE.dp)
+                .clickable(onClick = onClickImage),
             showShadow = false
         )
 

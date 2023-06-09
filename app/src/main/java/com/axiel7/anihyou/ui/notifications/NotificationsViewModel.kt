@@ -60,6 +60,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -70,6 +71,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -80,6 +82,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -90,6 +93,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -100,6 +104,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -110,6 +115,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.activityId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -120,6 +126,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.commentId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -130,6 +137,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.commentId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -140,6 +148,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.commentId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -150,6 +159,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.commentId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
@@ -160,6 +170,7 @@ class NotificationsViewModel : BaseViewModel() {
                     text = "${noti.user?.name}${noti.context}",
                     imageUrl = noti.user?.avatar?.medium,
                     contentId = noti.threadId,
+                    secondaryContentId = noti.userId,
                     type = noti.type,
                     createdAt = noti.createdAt
                 ))
