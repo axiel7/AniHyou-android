@@ -788,6 +788,12 @@ fun MainView(
                 navEntry.arguments?.getInt("id")?.let {
                     ThreadDetailsView(
                         threadId = it,
+                        navigateToUserDetails = { id ->
+                            navController.navigate(
+                                USER_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
+                        },
                         navigateToFullscreenImage = { url ->
                             val encodedUrl = URLEncoder.encode(url, "UTF-8")
                             navController.navigate(

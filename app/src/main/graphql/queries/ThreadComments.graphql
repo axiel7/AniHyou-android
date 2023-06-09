@@ -6,7 +6,11 @@ query ThreadComments($page: Int, $perPage: Int, $threadId: Int) {
       likeCount
       createdAt
       user {
+        id
         name
+        avatar {
+          medium
+        }
       }
     }
     pageInfo {

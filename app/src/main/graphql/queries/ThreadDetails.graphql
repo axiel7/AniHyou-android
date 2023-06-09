@@ -14,6 +14,9 @@ fragment BasicThreadDetails on Thread {
   user {
     id
     name
+    avatar {
+      medium
+    }
   }
   createdAt
 }

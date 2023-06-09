@@ -1,10 +1,12 @@
 package com.axiel7.anihyou.ui.composables.thread
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -13,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +27,8 @@ import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.SpoilerDialog
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
+import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
@@ -33,8 +38,10 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 fun ThreadCommentView(
     body: String,
     username: String,
+    avatarUrl: String?,
     likeCount: Int,
     createdAt: Int,
+    navigateToUserDetails: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val context = LocalContext.current
@@ -59,11 +66,24 @@ fun ThreadCommentView(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = username,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+            Row(
+                modifier = Modifier.clickable {
+                    navigateToUserDetails()
+                },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PersonImage(
+                    url = avatarUrl,
+                    modifier = Modifier
+                        .size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
+                )
+                Text(
+                    text = username,
+                    modifier = Modifier.padding(start = 8.dp),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
             Text(
                 text = createdAt.toLong().timestampToDateString(format = "MMM d, YYYY") ?: "",
                 color = MaterialTheme.colorScheme.outline,
@@ -133,8 +153,10 @@ fun ThreadCommentViewPreview() {
                 ThreadCommentView(
                     body = "Yet again, even more peak",
                     username = "Lap",
+                    avatarUrl = "",
                     likeCount = 23,
                     createdAt = 1212370032,
+                    navigateToUserDetails = {},
                     navigateToFullscreenImage = {}
                 )
                 ThreadCommentViewPlaceholder()
