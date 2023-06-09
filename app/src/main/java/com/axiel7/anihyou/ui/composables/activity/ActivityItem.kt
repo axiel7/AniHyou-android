@@ -19,9 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
-import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+
+const val ACTIVITY_IMAGE_SIZE = 48
 
 @Composable
 fun ActivityItem(
@@ -38,7 +39,7 @@ fun ActivityItem(
     ) {
         MediaPoster(
             url = imageUrl,
-            modifier = Modifier.size(MEDIA_POSTER_TINY_HEIGHT.dp),
+            modifier = Modifier.size(ACTIVITY_IMAGE_SIZE.dp),
             showShadow = false
         )
 
@@ -76,7 +77,7 @@ fun ActivityItemPlaceholder(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .size(MEDIA_POSTER_TINY_HEIGHT.dp)
+                .size(ACTIVITY_IMAGE_SIZE.dp)
                 .defaultPlaceholder(visible = true)
         )
 

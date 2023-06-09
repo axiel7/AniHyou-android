@@ -46,7 +46,7 @@ fun UserActivityView(
             item.onListActivity?.let { activity ->
                 ActivityItem(
                     title = activity.text(),
-                    imageUrl = activity.media?.coverImage?.large,
+                    imageUrl = activity.media?.coverImage?.medium,
                     subtitle = activity.createdAt.toLong().timestampIntervalSinceNow().secondsToLegibleText(),
                     modifier = Modifier
                         .fillMaxWidth()
