@@ -30,6 +30,7 @@ const val THREAD_DETAILS_DESTINATION = "thread/{id}"
 @Composable
 fun ThreadDetailsView(
     threadId: Int,
+    navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val viewModel: ThreadDetailsViewModel = viewModel()
@@ -62,7 +63,10 @@ fun ThreadDetailsView(
                 contentType = viewModel.threadDetails
             ) {
                 if (viewModel.threadDetails != null) {
-                    ParentThreadView(thread = viewModel.threadDetails!!.basicThreadDetails)
+                    ParentThreadView(
+                        thread = viewModel.threadDetails!!.basicThreadDetails,
+                        navigateToFullscreenImage = navigateToFullscreenImage,
+                    )
                 } else {
                     ParentThreadViewPlaceholder()
                 }
@@ -76,7 +80,8 @@ fun ThreadDetailsView(
                     body = item.comment ?: "",
                     username = item.user?.name ?: "",
                     likeCount = item.likeCount,
-                    createdAt = item.createdAt
+                    createdAt = item.createdAt,
+                    navigateToFullscreenImage = navigateToFullscreenImage,
                 )
                 Divider()
             }
@@ -97,6 +102,7 @@ fun ThreadDetailsViewPreview() {
         Surface {
             ThreadDetailsView(
                 threadId = 1,
+                navigateToFullscreenImage = {},
                 navigateBack = {}
             )
         }

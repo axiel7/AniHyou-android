@@ -788,6 +788,13 @@ fun MainView(
                 navEntry.arguments?.getInt("id")?.let {
                     ThreadDetailsView(
                         threadId = it,
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace("{url}", encodedUrl)
+                            )
+                        },
                         navigateBack = {
                             navController.popBackStack()
                         }

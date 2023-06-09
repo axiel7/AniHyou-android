@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,14 +20,18 @@ import com.axiel7.anihyou.fragment.BasicThreadDetails
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
+import com.axiel7.anihyou.utils.MarkdownUtils.formatImageTags
 import com.axiel7.anihyou.utils.NumberUtils.format
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun ParentThreadView(
-    thread: BasicThreadDetails
+    thread: BasicThreadDetails,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -45,10 +50,20 @@ fun ParentThreadView(
         )
 
         MarkdownText(
-            markdown = thread.body ?: "",
+            markdown = thread.body
+                ?.formatImageTags()
+                ?: "",
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 17.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            onLinkClicked = {
+                if (it.startsWith("anihyouimage")) {
+                    navigateToFullscreenImage(
+                        it.removePrefix("anihyouimage")
+                    )
+                }
+                else context.openActionView(it)
+            }
         )
 
         Row(
@@ -136,7 +151,10 @@ fun ParentThreadViewPreview() {
     AniHyouTheme {
         Surface {
             Column {
-                ParentThreadView(thread = thread)
+                ParentThreadView(
+                    thread = thread,
+                    navigateToFullscreenImage = {}
+                )
                 ParentThreadViewPlaceholder()
             }
         }
