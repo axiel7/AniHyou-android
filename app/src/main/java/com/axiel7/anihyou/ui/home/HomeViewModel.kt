@@ -1,19 +1,24 @@
 package com.axiel7.anihyou.ui.home
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.AiringAnimesQuery
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.MediaSortedQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
+import com.axiel7.anihyou.UnreadNotificationCountQuery
+import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
+import kotlinx.coroutines.flow.first
 import java.time.LocalDateTime
 
 class HomeViewModel : BaseViewModel() {
@@ -109,5 +114,15 @@ class HomeViewModel : BaseViewModel() {
         trendingManga.clear()
         response?.data?.Page?.media?.filterNotNull()?.let { trendingManga.addAll(it) }
         isLoadingTrendingManga = false
+    }
+
+    var unreadNotificationCount by mutableIntStateOf(0)
+
+    suspend fun getUnreadNotificationCount() {
+        val accessToken = App.dataStore.data.first()[ACCESS_TOKEN_PREFERENCE_KEY]
+        if (accessToken != null) {
+            val response = UnreadNotificationCountQuery().tryQuery()
+            unreadNotificationCount = response?.data?.Viewer?.unreadNotificationCount ?: 0
+        }
     }
 }

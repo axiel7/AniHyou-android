@@ -17,9 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -68,6 +69,7 @@ fun HomeView(
     )
 
     LaunchedEffect(viewModel) {
+        viewModel.getUnreadNotificationCount()
         viewModel.getAiringAnime()
         viewModel.getThisSeasonAnime()
         viewModel.getTrendingAnime()
@@ -79,12 +81,23 @@ fun HomeView(
         title = stringResource(R.string.home),
         modifier = modifier,
         actions = {
-              IconButton(onClick = navigateToNotifications) {
-                  Icon(
-                      painter = painterResource(R.drawable.notifications_24),
-                      contentDescription = stringResource(R.string.notifications)
-                  )
-              }
+            BadgedBox(
+                badge = {
+                    if (viewModel.unreadNotificationCount > 0) {
+                        Badge {
+                            Text(text = viewModel.unreadNotificationCount.toString())
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clickable(onClick = navigateToNotifications)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.notifications_24),
+                    contentDescription = stringResource(R.string.notifications)
+                )
+            }
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
