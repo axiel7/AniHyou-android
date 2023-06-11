@@ -1,0 +1,16 @@
+query ChildComments($threadCommentId: Int) {
+    ThreadComment(id: $threadCommentId) {
+        id
+        comment
+        likeCount
+        createdAt
+        user {
+            id
+            name
+            avatar {
+                medium
+            }
+        }
+        childComments
+    }
+}

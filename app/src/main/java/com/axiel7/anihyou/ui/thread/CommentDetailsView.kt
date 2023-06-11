@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.thread
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -17,37 +16,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.OnBottomReached
-import com.axiel7.anihyou.ui.composables.thread.ParentThreadView
-import com.axiel7.anihyou.ui.composables.thread.ParentThreadViewPlaceholder
+import com.axiel7.anihyou.ui.composables.thread.ChildCommentView
+import com.axiel7.anihyou.ui.composables.thread.ChildCommentViewPlaceholder
 import com.axiel7.anihyou.ui.composables.thread.ThreadCommentView
 import com.axiel7.anihyou.ui.composables.thread.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val THREAD_DETAILS_DESTINATION = "thread/{id}"
+const val COMMENT_DETAILS_DESTINATION = "comment/{id}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThreadDetailsView(
-    threadId: Int,
-    navigateToCommentDetails: (Int) -> Unit,
+fun CommentDetailsView(
+    commentId: Int,
     navigateToUserDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    val viewModel: ThreadDetailsViewModel = viewModel()
-    val listState = rememberLazyListState()
+    val viewModel: CommentDetailsViewModel = viewModel()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
 
-    LaunchedEffect(threadId) {
-        viewModel.getThreadDetails(threadId)
-    }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getThreadComments(threadId)
+    LaunchedEffect(commentId) {
+        viewModel.getChildComments(commentId)
     }
 
     DefaultScaffoldWithSmallTopAppBar(
@@ -59,54 +51,47 @@ fun ThreadDetailsView(
             modifier = Modifier
                 .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState
         ) {
             item(
-                contentType = viewModel.threadDetails
+                contentType = viewModel.comment
             ) {
-                if (viewModel.threadDetails != null) {
-                    ParentThreadView(
-                        thread = viewModel.threadDetails!!.basicThreadDetails,
+                if (viewModel.comment != null) {
+                    ThreadCommentView(
+                        comment = viewModel.comment!!,
                         navigateToUserDetails = navigateToUserDetails,
                         navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 } else {
-                    ParentThreadViewPlaceholder()
+                    ThreadCommentViewPlaceholder()
                 }
                 Divider()
             }
             items(
-                items = viewModel.threadComments,
+                items = viewModel.childComments,
                 contentType = { it }
             ) { item ->
-                ThreadCommentView(
-                    comment = item.basicComment,
+                ChildCommentView(
+                    comment = item,
                     navigateToUserDetails = navigateToUserDetails,
                     navigateToFullscreenImage = navigateToFullscreenImage,
-                    onClick = {
-                        navigateToCommentDetails(item.basicComment.id)
-                    }
                 )
-                Divider()
             }
             if (viewModel.isLoading) {
                 items(10) {
-                    ThreadCommentViewPlaceholder()
-                    Divider()
+                    ChildCommentViewPlaceholder()
                 }
             }
-        }//: LazyColumn
-    }//: Scaffold
+        }//:LazyColumn
+    }//:Scaffold
 }
 
 @Preview
 @Composable
-fun ThreadDetailsViewPreview() {
+fun CommentDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            ThreadDetailsView(
-                threadId = 1,
-                navigateToCommentDetails = {},
+            CommentDetailsView(
+                commentId = 1,
                 navigateToUserDetails = {},
                 navigateToFullscreenImage = {},
                 navigateBack = {}

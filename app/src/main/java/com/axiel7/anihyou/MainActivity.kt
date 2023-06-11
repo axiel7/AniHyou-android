@@ -100,6 +100,8 @@ import com.axiel7.anihyou.ui.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.ui.studiodetails.STUDIO_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.ui.thread.COMMENT_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.thread.CommentDetailsView
 import com.axiel7.anihyou.ui.thread.THREAD_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
@@ -788,6 +790,40 @@ fun MainView(
                 navEntry.arguments?.getInt("id")?.let {
                     ThreadDetailsView(
                         threadId = it,
+                        navigateToCommentDetails = { id ->
+                            navController.navigate(
+                                COMMENT_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
+                        },
+                        navigateToUserDetails = { id ->
+                            navController.navigate(
+                                USER_DETAILS_DESTINATION
+                                    .replace("{id}", id.toString())
+                            )
+                        },
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace("{url}", encodedUrl)
+                            )
+                        },
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+
+            composable(COMMENT_DETAILS_DESTINATION,
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                navEntry.arguments?.getInt("id")?.let {
+                    CommentDetailsView(
+                        commentId = it,
                         navigateToUserDetails = { id ->
                             navController.navigate(
                                 USER_DETAILS_DESTINATION

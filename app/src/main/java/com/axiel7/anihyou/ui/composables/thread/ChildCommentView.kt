@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.ChildCommentsQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicComment
 import com.axiel7.anihyou.ui.composables.CommentIconButton
@@ -38,8 +39,8 @@ import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
-fun ThreadCommentView(
-    comment: BasicComment,
+fun ChildCommentView(
+    comment: ChildCommentsQuery.ThreadComment,
     navigateToUserDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
     onClick: () -> Unit = {},
@@ -105,8 +106,8 @@ fun ThreadCommentView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CommentIconButton(
-                replyCount = 0,
-                onClick = onClick
+                replyCount = comment.childComments?.size ?: 0,
+                onClick = { /*TODO*/ }
             )
             FavoriteIconButton(
                 isFavorite = false,
@@ -118,7 +119,7 @@ fun ThreadCommentView(
 }
 
 @Composable
-fun ThreadCommentViewPlaceholder() {
+fun ChildCommentViewPlaceholder() {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -158,7 +159,7 @@ fun ThreadCommentViewPlaceholder() {
 
 @Preview
 @Composable
-fun ThreadCommentViewPreview() {
+fun ChildCommentViewPreview() {
     AniHyouTheme {
         Surface {
             Column {
@@ -173,17 +174,18 @@ fun ThreadCommentViewPreview() {
     }
 }
 
-val exampleComment = BasicComment(
+val exampleChildComment = ChildCommentsQuery.ThreadComment(
     id = 1,
     comment = "Yet again, even more peak",
     likeCount = 23,
     createdAt = 1212370032,
-    user = BasicComment.User(
+    user = ChildCommentsQuery.User(
         id = 1,
         name = "Lap",
-        avatar = BasicComment.Avatar(
+        avatar = ChildCommentsQuery.Avatar(
             medium = null
         ),
-        __typename = "User"
-    )
+        __typename = "User",
+    ),
+    childComments = null
 )

@@ -127,6 +127,12 @@ dependencies {
 apollo {
     generateSourcesDuringGradleSync.set(false)
     service("service") {
+        /*mapScalar(
+            graphQLName = "Json",
+            targetName = "com.axiel7.anihyou.data.model.ChildComments",
+            expression = "com.axiel7.anihyou.data.model.jsonChildCommentAdapter"
+        )*/
+        customTypeMapping.put("Json", "com.axiel7.anihyou.data.model.ChildComments")
         packageName.set("com.axiel7.anihyou")
     }
 }
