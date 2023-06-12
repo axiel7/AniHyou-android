@@ -1,5 +1,8 @@
 package com.axiel7.anihyou.ui.thread
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.ui.composables.BackIconButton
@@ -56,9 +60,16 @@ fun ThreadDetailsView(
     ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .padding(padding)
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
+                )
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState
+            state = listState,
+            contentPadding = PaddingValues(
+                bottom = padding.calculateBottomPadding()
+            )
         ) {
             item(
                 contentType = viewModel.threadDetails

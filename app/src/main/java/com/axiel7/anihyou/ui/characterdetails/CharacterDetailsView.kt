@@ -3,7 +3,10 @@ package com.axiel7.anihyou.ui.characterdetails
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,7 +104,12 @@ fun CharacterDetailsView(
     ) { padding ->
         DefaultTabRowWithPager(
             tabs = CharacterInfoType.tabRows,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
+                )
         ) {
             when (CharacterInfoType.tabRows[it].value) {
                 CharacterInfoType.INFO ->
@@ -108,6 +117,9 @@ fun CharacterDetailsView(
                         characterId = characterId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(
+                            bottom = padding.calculateBottomPadding()
+                        ),
                         navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 CharacterInfoType.MEDIA ->
@@ -115,6 +127,9 @@ fun CharacterDetailsView(
                         characterId = characterId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(
+                            bottom = padding.calculateBottomPadding()
+                        ),
                         navigateToMediaDetails = navigateToMediaDetails
                     )
             }
@@ -127,6 +142,7 @@ fun CharacterInfoView(
     characterId: Int,
     viewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
@@ -138,6 +154,7 @@ fun CharacterInfoView(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
+            .padding(contentPadding)
     ) {
         Row(
             modifier = Modifier.padding(vertical = 8.dp),
@@ -237,6 +254,7 @@ fun CharacterMediaView(
     characterId: Int,
     viewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -248,6 +266,7 @@ fun CharacterMediaView(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
+        contentPadding = contentPadding,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(

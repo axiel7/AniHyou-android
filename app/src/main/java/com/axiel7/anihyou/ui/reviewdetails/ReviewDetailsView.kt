@@ -57,9 +57,9 @@ fun ReviewDetailsView(
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
+                .padding(padding)
         ) {
             // Title
             Text(

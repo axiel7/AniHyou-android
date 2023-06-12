@@ -4,7 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -105,7 +109,12 @@ fun StaffDetailsView(
     ) { padding ->
         DefaultTabRowWithPager(
             tabs = StaffInfoType.tabRows,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
+                )
         ) {
             when (StaffInfoType.tabRows[it].value) {
                 StaffInfoType.INFO ->
@@ -113,18 +122,27 @@ fun StaffDetailsView(
                         staffId = staffId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(
+                            bottom = padding.calculateBottomPadding()
+                        ),
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )
                 StaffInfoType.MEDIA ->
                     StaffMediaView(
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(
+                            bottom = padding.calculateBottomPadding()
+                        ),
                         navigateToMediaDetails = navigateToMediaDetails
                     )
                 StaffInfoType.CHARACTER ->
                     StaffCharacterView(
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(
+                            bottom = padding.calculateBottomPadding()
+                        ),
                         navigateToCharacterDetails = navigateToCharacterDetails
                     )
             }
@@ -137,6 +155,7 @@ fun StaffInfoView(
     staffId: Int,
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
     LaunchedEffect(staffId) {
@@ -146,6 +165,7 @@ fun StaffInfoView(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
+            .padding(contentPadding)
     ) {
         Row(
             modifier = Modifier.padding(vertical = 8.dp),
@@ -247,6 +267,7 @@ fun StaffInfoView(
 fun StaffMediaView(
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -259,6 +280,7 @@ fun StaffMediaView(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
+        contentPadding = contentPadding,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
@@ -320,6 +342,7 @@ fun StaffMediaView(
 fun StaffCharacterView(
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToCharacterDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -331,6 +354,7 @@ fun StaffCharacterView(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
+        contentPadding = contentPadding,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(

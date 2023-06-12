@@ -99,9 +99,9 @@ fun SettingsView(
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
+                .padding(padding)
         ) {
             PreferencesTitle(text = stringResource(R.string.display))
 
