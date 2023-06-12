@@ -91,7 +91,10 @@ fun HomeView(
                 },
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .clickable(onClick = navigateToNotifications)
+                    .clickable {
+                        navigateToNotifications()
+                        viewModel.unreadNotificationCount = 0
+                    }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.notifications_24),
