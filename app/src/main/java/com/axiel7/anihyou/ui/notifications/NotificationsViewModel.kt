@@ -16,7 +16,7 @@ class NotificationsViewModel : BaseViewModel() {
 
     val notifications = mutableStateListOf<GenericNotification>()
     var page = 1
-    var hasNextPage = true
+    var hasNextPage = false
 
     suspend fun getNotifications() {
         isLoading = true

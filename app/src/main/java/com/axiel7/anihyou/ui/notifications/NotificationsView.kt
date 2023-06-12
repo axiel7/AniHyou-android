@@ -16,6 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +56,11 @@ fun NotificationsView(
         rememberTopAppBarState()
     )
 
+    LaunchedEffect(viewModel.type) {
+        viewModel.resetPage()
+        viewModel.getNotifications()
+    }
+
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage) viewModel.getNotifications()
     }
@@ -91,7 +97,6 @@ fun NotificationsView(
                             text = it.localized(),
                             onClick = {
                                 viewModel.type = it
-                                viewModel.resetPage()
                             }
                         )
                     }
