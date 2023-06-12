@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
@@ -16,6 +17,7 @@ import com.axiel7.anihyou.data.model.stats.StatusDistribution
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class UserStatsViewModel(
@@ -42,104 +44,106 @@ class UserStatsViewModel(
     val mangaFormatDistribution = mutableStateListOf<Stat<FormatDistribution>>()
 
     suspend fun getOverview() {
-        isLoading = true
-        if (mediaType == MediaType.ANIME) {
-            val response = UserStatsAnimeOverviewQuery(
-                userId = Optional.present(userId)
-            ).tryQuery()
+        viewModelScope.launch {
+            isLoading = true
+            if (mediaType == MediaType.ANIME) {
+                val response = UserStatsAnimeOverviewQuery(
+                    userId = Optional.present(userId)
+                ).tryQuery()
 
-            animeScoreStatsCount.clear()
-            animeScoreStatsTime.clear()
-            animeStatusDistribution.clear()
-            animeFormatDistribution.clear()
-            response?.data?.User?.statistics?.anime?.let {
-                animeOverview = it
-                it.scores?.filterNotNull()?.forEach { scoreStat ->
-                    animeScoreStatsCount.add(
-                        StatLocalizableAndColorable(
-                            type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
-                            value = scoreStat.count.toFloat()
-                        )
-                    )
-                    animeScoreStatsTime.add(
-                        StatLocalizableAndColorable(
-                            type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
-                            value = scoreStat.minutesWatched.toFloat()
-                        )
-                    )
-                }
-                it.statuses?.filterNotNull()?.forEach { statusStat ->
-                    val status = StatusDistribution.valueOf(statusStat.status?.rawValue)
-                    if (status != null) {
-                        animeStatusDistribution.add(
+                animeScoreStatsCount.clear()
+                animeScoreStatsTime.clear()
+                animeStatusDistribution.clear()
+                animeFormatDistribution.clear()
+                response?.data?.User?.statistics?.anime?.let {
+                    animeOverview = it
+                    it.scores?.filterNotNull()?.forEach { scoreStat ->
+                        animeScoreStatsCount.add(
                             StatLocalizableAndColorable(
-                                type = status,
-                                value = statusStat.count.toFloat()
+                                type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
+                                value = scoreStat.count.toFloat()
+                            )
+                        )
+                        animeScoreStatsTime.add(
+                            StatLocalizableAndColorable(
+                                type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
+                                value = scoreStat.minutesWatched.toFloat()
                             )
                         )
                     }
+                    it.statuses?.filterNotNull()?.forEach { statusStat ->
+                        val status = StatusDistribution.valueOf(statusStat.status?.rawValue)
+                        if (status != null) {
+                            animeStatusDistribution.add(
+                                StatLocalizableAndColorable(
+                                    type = status,
+                                    value = statusStat.count.toFloat()
+                                )
+                            )
+                        }
+                    }
+                    it.formats?.filterNotNull()?.forEach { formatStat ->
+                        val format = FormatDistribution.valueOf(formatStat.format?.rawValue)
+                        if (format != null) {
+                            animeFormatDistribution.add(
+                                StatLocalizableAndColorable(
+                                    type = format,
+                                    value = formatStat.count.toFloat()
+                                )
+                            )
+                        }
+                    }
                 }
-                it.formats?.filterNotNull()?.forEach { formatStat ->
-                    val format = FormatDistribution.valueOf(formatStat.format?.rawValue)
-                    if (format != null) {
-                        animeFormatDistribution.add(
+            } else if (mediaType == MediaType.MANGA) {
+                val response = UserStatsMangaOverviewQuery(
+                    userId = Optional.present(userId)
+                ).tryQuery()
+
+                mangaScoreStatsCount.clear()
+                mangaScoreStatsTime.clear()
+                mangaStatusDistribution.clear()
+                mangaFormatDistribution.clear()
+                response?.data?.User?.statistics?.manga?.let {
+                    mangaOverview = it
+                    it.scores?.filterNotNull()?.forEach { scoreStat ->
+                        mangaScoreStatsCount.add(
                             StatLocalizableAndColorable(
-                                type = format,
-                                value = formatStat.count.toFloat()
+                                type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
+                                value = scoreStat.count.toFloat()
                             )
                         )
+                        mangaScoreStatsTime.add(
+                            StatLocalizableAndColorable(
+                                type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
+                                value = scoreStat.chaptersRead.toFloat()
+                            )
+                        )
+                    }
+                    it.statuses?.filterNotNull()?.forEach { statusStat ->
+                        val status = StatusDistribution.valueOf(statusStat.status?.rawValue)
+                        if (status != null) {
+                            mangaStatusDistribution.add(
+                                StatLocalizableAndColorable(
+                                    type = status,
+                                    value = statusStat.count.toFloat()
+                                )
+                            )
+                        }
+                    }
+                    it.formats?.filterNotNull()?.forEach { formatStat ->
+                        val format = FormatDistribution.valueOf(formatStat.format?.rawValue)
+                        if (format != null) {
+                            mangaFormatDistribution.add(
+                                StatLocalizableAndColorable(
+                                    type = format,
+                                    value = formatStat.count.toFloat()
+                                )
+                            )
+                        }
                     }
                 }
             }
-        } else if (mediaType == MediaType.MANGA) {
-            val response = UserStatsMangaOverviewQuery(
-                userId = Optional.present(userId)
-            ).tryQuery()
-
-            mangaScoreStatsCount.clear()
-            mangaScoreStatsTime.clear()
-            mangaStatusDistribution.clear()
-            mangaFormatDistribution.clear()
-            response?.data?.User?.statistics?.manga?.let {
-                mangaOverview = it
-                it.scores?.filterNotNull()?.forEach { scoreStat ->
-                    mangaScoreStatsCount.add(
-                        StatLocalizableAndColorable(
-                            type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
-                            value = scoreStat.count.toFloat()
-                        )
-                    )
-                    mangaScoreStatsTime.add(
-                        StatLocalizableAndColorable(
-                            type = ScoreDistribution(score = scoreStat.meanScore.roundToInt()),
-                            value = scoreStat.chaptersRead.toFloat()
-                        )
-                    )
-                }
-                it.statuses?.filterNotNull()?.forEach { statusStat ->
-                    val status = StatusDistribution.valueOf(statusStat.status?.rawValue)
-                    if (status != null) {
-                        mangaStatusDistribution.add(
-                            StatLocalizableAndColorable(
-                                type = status,
-                                value = statusStat.count.toFloat()
-                            )
-                        )
-                    }
-                }
-                it.formats?.filterNotNull()?.forEach { formatStat ->
-                    val format = FormatDistribution.valueOf(formatStat.format?.rawValue)
-                    if (format != null) {
-                        mangaFormatDistribution.add(
-                            StatLocalizableAndColorable(
-                                type = format,
-                                value = formatStat.count.toFloat()
-                            )
-                        )
-                    }
-                }
-            }
+            isLoading = false
         }
-        isLoading = false
     }
 }

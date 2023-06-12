@@ -33,18 +33,20 @@ class SearchViewModel : BaseViewModel() {
     val selectedTags by derivedStateOf { tagCollection.filter { it.value } }
 
     suspend fun runSearch(query: String) {
-        when (searchType) {
-            SearchType.ANIME -> searchMedia(MediaType.ANIME, query, clear = true)
-            SearchType.MANGA -> searchMedia(MediaType.MANGA, query, clear = true)
-            SearchType.CHARACTER -> searchCharacter(query)
-            SearchType.STAFF -> searchStaff(query)
-            SearchType.STUDIO -> searchStudio(query)
-            SearchType.USER -> searchUser(query)
+        viewModelScope.launch {
+            when (searchType) {
+                SearchType.ANIME -> searchMedia(MediaType.ANIME, query, clear = true)
+                SearchType.MANGA -> searchMedia(MediaType.MANGA, query, clear = true)
+                SearchType.CHARACTER -> searchCharacter(query)
+                SearchType.STAFF -> searchStaff(query)
+                SearchType.STUDIO -> searchStudio(query)
+                SearchType.USER -> searchUser(query)
+            }
         }
     }
 
     private var pageMedia = 1
-    var hasNextPageMedia = true
+    private var hasNextPageMedia = true
     val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
     suspend fun searchMedia(mediaType: MediaType, query: String, clear: Boolean) {
@@ -78,7 +80,7 @@ class SearchViewModel : BaseViewModel() {
 
     val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
 
-    suspend fun searchCharacter(query: String) {
+    private suspend fun searchCharacter(query: String) {
         isLoading = true
         val response = SearchCharacterQuery(
             page = Optional.present(1),
@@ -93,7 +95,7 @@ class SearchViewModel : BaseViewModel() {
 
     val searchedStaff = mutableStateListOf<SearchStaffQuery.Staff>()
 
-    suspend fun searchStaff(query: String) {
+    private suspend fun searchStaff(query: String) {
         isLoading = true
         val response = SearchStaffQuery(
             page = Optional.present(1),
@@ -108,7 +110,7 @@ class SearchViewModel : BaseViewModel() {
 
     val searchedStudios = mutableStateListOf<SearchStudioQuery.Studio>()
 
-    suspend fun searchStudio(query: String) {
+    private suspend fun searchStudio(query: String) {
         isLoading = true
         val response = SearchStudioQuery(
             page = Optional.present(1),
@@ -123,7 +125,7 @@ class SearchViewModel : BaseViewModel() {
 
     val searchedUsers = mutableStateListOf<SearchUserQuery.User>()
 
-    suspend fun searchUser(query: String) {
+    private suspend fun searchUser(query: String) {
         isLoading = true
 
         val response = SearchUserQuery(
@@ -140,24 +142,27 @@ class SearchViewModel : BaseViewModel() {
     var isLoadingGenres by mutableStateOf(false)
 
     suspend fun getGenreTagCollection() {
-        isLoadingGenres = true
-        val response = GenreTagCollectionQuery().tryQuery()
+        viewModelScope.launch {
+            isLoadingGenres = true
+            val response = GenreTagCollectionQuery().tryQuery()
 
-        response?.data?.GenreCollection?.filterNotNull()?.forEach {
-            genreCollection[it] = false
+            response?.data?.GenreCollection?.filterNotNull()?.forEach {
+                genreCollection[it] = false
+            }
+            val externalGenre =
+                if (genreCollection.size == 1) genreCollection.firstNotNullOf { it.key }
+                else null
+            externalGenre?.let { genreCollection[externalGenre] = true }
+
+            response?.data?.MediaTagCollection?.filterNotNull()?.forEach { tag ->
+                tagCollection[tag.name] = false
+            }
+            val externalTag = if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
+            else null
+            externalTag?.let { tagCollection[externalTag] = true }
+
+            isLoadingGenres = false
         }
-        val externalGenre = if (genreCollection.size == 1) genreCollection.firstNotNullOf { it.key }
-        else null
-        externalGenre?.let { genreCollection[externalGenre] = true }
-
-        response?.data?.MediaTagCollection?.filterNotNull()?.forEach { tag ->
-            tagCollection[tag.name] = false
-        }
-        val externalTag = if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
-        else null
-        externalTag?.let { tagCollection[externalTag] = true }
-
-        isLoadingGenres = false
     }
 
     fun unselectAllGenresAndTags() {

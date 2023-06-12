@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.UserFavoritesAnimeQuery
 import com.axiel7.anihyou.UserFavoritesCharacterQuery
@@ -11,26 +12,29 @@ import com.axiel7.anihyou.UserFavoritesMangaQuery
 import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 
 class UserFavoritesViewModel : BaseViewModel() {
 
     var favoritesType by mutableStateOf(FavoritesType.ANIME)
 
     suspend fun onFavoriteTypeChanged(userId: Int) {
-        when (favoritesType) {
-            FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
-            FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
-            FavoritesType.CHARACTERS -> if (hasNextPageCharacter) getCharacters(userId)
-            FavoritesType.STAFF -> if (hasNextPageStaff) getStaff(userId)
-            FavoritesType.STUDIOS -> if (hasNextPageStudio) getStudios(userId)
+        viewModelScope.launch {
+            when (favoritesType) {
+                FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
+                FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
+                FavoritesType.CHARACTERS -> if (hasNextPageCharacter) getCharacters(userId)
+                FavoritesType.STAFF -> if (hasNextPageStaff) getStaff(userId)
+                FavoritesType.STUDIOS -> if (hasNextPageStudio) getStudios(userId)
+            }
         }
     }
 
     private var pageAnime = 1
-    var hasNextPageAnime = true
+    private var hasNextPageAnime = true
     var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
 
-    suspend fun getAnime(userId: Int) {
+    private suspend fun getAnime(userId: Int) {
         isLoading = true
         val response = UserFavoritesAnimeQuery(
             userId = Optional.present(userId),
@@ -46,10 +50,10 @@ class UserFavoritesViewModel : BaseViewModel() {
     }
 
     private var pageManga = 1
-    var hasNextPageManga = true
+    private var hasNextPageManga = true
     var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
 
-    suspend fun getManga(userId: Int) {
+    private suspend fun getManga(userId: Int) {
         isLoading = true
         val response = UserFavoritesMangaQuery(
             userId = Optional.present(userId),
@@ -65,10 +69,10 @@ class UserFavoritesViewModel : BaseViewModel() {
     }
 
     private var pageCharacter = 1
-    var hasNextPageCharacter = true
+    private var hasNextPageCharacter = true
     var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
 
-    suspend fun getCharacters(userId: Int) {
+    private suspend fun getCharacters(userId: Int) {
         isLoading = true
         val response = UserFavoritesCharacterQuery(
             userId = Optional.present(userId),
@@ -84,10 +88,10 @@ class UserFavoritesViewModel : BaseViewModel() {
     }
 
     private var pageStaff = 1
-    var hasNextPageStaff = true
+    private var hasNextPageStaff = true
     var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
 
-    suspend fun getStaff(userId: Int) {
+    private suspend fun getStaff(userId: Int) {
         isLoading = true
         val response = UserFavoritesStaffQuery(
             userId = Optional.present(userId),
@@ -103,10 +107,10 @@ class UserFavoritesViewModel : BaseViewModel() {
     }
 
     private var pageStudio = 1
-    var hasNextPageStudio = true
+    private var hasNextPageStudio = true
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 
-    suspend fun getStudios(userId: Int) {
+    private suspend fun getStudios(userId: Int) {
         isLoading = true
         val response = UserFavoritesStudioQuery(
             userId = Optional.present(userId),

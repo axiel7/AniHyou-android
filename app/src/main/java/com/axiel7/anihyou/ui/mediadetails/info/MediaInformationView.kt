@@ -84,11 +84,11 @@ fun MediaInformationView(
             )
             InfoItemView(
                 title = stringResource(R.string.studios),
-                info = viewModel.getStudios()?.joinToString { it.name }
+                info = viewModel.studios?.joinToString { it.name }
             )
             InfoItemView(
                 title = stringResource(R.string.producers),
-                info = viewModel.getProducers()?.joinToString { it.name }
+                info = viewModel.producers?.joinToString { it.name }
             )
         }
         InfoItemView(

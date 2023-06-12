@@ -4,27 +4,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.FollowersQuery
 import com.axiel7.anihyou.FollowingsQuery
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 
 class UserSocialViewModel : BaseViewModel() {
 
     var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
 
     suspend fun onUserSocialTypeChanged(userId: Int) {
-        when (userSocialType) {
-            UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers(userId)
-            UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing(userId)
+        viewModelScope.launch {
+            when (userSocialType) {
+                UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers(userId)
+                UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing(userId)
+            }
         }
     }
 
     private var pageFollowers = 1
-    var hasNextPageFollowers = true
+    private var hasNextPageFollowers = true
     var followers = mutableStateListOf<FollowersQuery.Follower>()
 
-    suspend fun getFollowers(userId: Int) {
+    private suspend fun getFollowers(userId: Int) {
         val response = FollowersQuery(
             userId = userId,
             page = Optional.present(pageFollowers),
@@ -37,10 +41,10 @@ class UserSocialViewModel : BaseViewModel() {
     }
 
     private var pageFollowing = 1
-    var hasNextPageFollowing = true
+    private var hasNextPageFollowing = true
     var following = mutableStateListOf<FollowingsQuery.Following>()
 
-    suspend fun getFollowing(userId: Int) {
+    private suspend fun getFollowing(userId: Int) {
         val response = FollowingsQuery(
             userId = userId,
             page = Optional.present(pageFollowing),

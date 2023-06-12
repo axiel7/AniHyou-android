@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.usermedialist
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UpdateEntryProgressMutation
@@ -11,6 +12,7 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 
 class UserMediaListViewModel(
     private val mediaType: MediaType
@@ -27,21 +29,23 @@ class UserMediaListViewModel(
     )
 
     suspend fun getUserList() {
-        isLoading = page == 1
-        val userId = LoginRepository.getUserId()
-        val response = UserMediaListQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(15),
-            userId = Optional.present(userId),
-            type = Optional.present(mediaType),
-            status = Optional.present(status),
-            sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
-        ).tryQuery()
+        viewModelScope.launch {
+            isLoading = page == 1
+            val userId = LoginRepository.getUserId()
+            val response = UserMediaListQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(15),
+                userId = Optional.present(userId),
+                type = Optional.present(mediaType),
+                status = Optional.present(status),
+                sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
+            ).tryQuery()
 
-        response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
-        hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-        page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
-        isLoading = false
+            response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
+            hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
+            page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
+            isLoading = false
+        }
     }
 
     suspend fun refreshList() {
@@ -52,20 +56,22 @@ class UserMediaListViewModel(
     }
 
     suspend fun updateEntryProgress(entryId: Int, progress: Int) {
-        isLoading = true
-        val response = UpdateEntryProgressMutation(
-            saveMediaListEntryId = Optional.present(entryId),
-            progress = Optional.present(progress)
-        ).tryMutation()
+        viewModelScope.launch {
+            isLoading = true
+            val response = UpdateEntryProgressMutation(
+                saveMediaListEntryId = Optional.present(entryId),
+                progress = Optional.present(progress)
+            ).tryMutation()
 
-        if (response != null) {
-            val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
-            if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
-                basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)
-            )
+            if (response != null) {
+                val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
+                if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
+                    basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)
+                )
+            }
+
+            isLoading = false
         }
-
-        isLoading = false
     }
 
     var selectedItem: UserMediaListQuery.MediaList? = null
