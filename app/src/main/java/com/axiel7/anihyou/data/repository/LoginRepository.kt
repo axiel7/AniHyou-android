@@ -50,5 +50,6 @@ object LoginRepository {
             it.remove(PROFILE_COLOR_PREFERENCE_KEY)
             it.remove(SCORE_FORMAT_PREFERENCE_KEY)
         }
+        App.accessToken = null
     }
 }

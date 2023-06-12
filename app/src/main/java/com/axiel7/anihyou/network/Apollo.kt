@@ -25,7 +25,9 @@ private class AuthorizationInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
             .apply {
-                addHeader("Authorization", "Bearer ${App.accessToken}")
+                App.accessToken?.let {
+                    addHeader("Authorization", "Bearer $it")
+                }
             }
             .build()
         return chain.proceed(request)
