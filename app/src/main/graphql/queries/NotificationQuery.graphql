@@ -1,6 +1,6 @@
-query Notifications($page: Int, $perPage: Int) {
+query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType]) {
   Page(page: $page, perPage: $perPage) {
-    notifications(resetNotificationCount: true) {
+    notifications(resetNotificationCount: true, type_in: $typeIn) {
       ... on AiringNotification {
         id
         contexts

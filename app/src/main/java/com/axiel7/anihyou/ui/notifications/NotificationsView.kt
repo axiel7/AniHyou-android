@@ -1,11 +1,14 @@
 package com.axiel7.anihyou.ui.notifications
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
@@ -19,9 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.NotificationTypeGroup
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.activity.ActivityItem
 import com.axiel7.anihyou.ui.composables.activity.ActivityItemPlaceholder
@@ -63,6 +68,24 @@ fun NotificationsView(
             state = listState,
             contentPadding = PaddingValues(8.dp)
         ) {
+            item(
+                contentType = viewModel.type
+            ) {
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                ) {
+                    NotificationTypeGroup.values().forEach {
+                        FilterSelectionChip(
+                            selected = viewModel.type == it,
+                            text = it.localized(),
+                            onClick = {
+                                viewModel.type = it
+                                viewModel.resetPage()
+                            }
+                        )
+                    }
+                }
+            }
             items(
                 items = viewModel.notifications,
                 contentType = { it }

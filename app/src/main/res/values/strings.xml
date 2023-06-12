@@ -215,4 +215,9 @@
     <string name="notifications">Notifications</string>
     <string name="threads">Threads</string>
     <string name="no_threads">No threads</string>
+    <string name="notifications_all">All</string>
+    <string name="notifications_airing">Airing</string>
+    <string name="activity">Activity</string>
+    <string name="forum">Forum</string>
+    <string name="notifications_media">Media</string>
 </resources>
