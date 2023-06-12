@@ -64,8 +64,8 @@ import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.UserMediaListSort
-import com.axiel7.anihyou.data.model.icon
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType

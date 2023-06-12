@@ -47,9 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.AnimeSeason
-import com.axiel7.anihyou.data.model.icon
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar

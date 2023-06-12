@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.media
 
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.fragment.BasicMediaListEntry

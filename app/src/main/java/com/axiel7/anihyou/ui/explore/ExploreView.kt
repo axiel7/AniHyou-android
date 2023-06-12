@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.ChartType
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.staff
 
 import com.axiel7.anihyou.StaffMediaQuery
 

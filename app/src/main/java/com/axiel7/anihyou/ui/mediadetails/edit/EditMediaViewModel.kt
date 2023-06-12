@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.DeleteMediaListMutation
 import com.axiel7.anihyou.UpdateEntryMutation
-import com.axiel7.anihyou.data.model.duration
-import com.axiel7.anihyou.data.model.isManga
+import com.axiel7.anihyou.data.model.media.duration
+import com.axiel7.anihyou.data.model.media.isManga
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus

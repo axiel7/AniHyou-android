@@ -5,7 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.theme.stat_dark_blue
 import com.axiel7.anihyou.ui.theme.stat_dark_green

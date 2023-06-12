@@ -21,9 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.color
-import com.axiel7.anihyou.data.model.icon
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.color
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaRankType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder

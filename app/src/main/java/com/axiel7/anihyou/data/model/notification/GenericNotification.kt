@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.notification
 
 import com.axiel7.anihyou.type.NotificationType
 

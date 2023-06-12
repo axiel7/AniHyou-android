@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.AnimeSeason
+import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.FuzzyDateInput
 import com.axiel7.anihyou.type.MediaSeason

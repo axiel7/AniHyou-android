@@ -19,7 +19,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.data.model.ChartType
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType

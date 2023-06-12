@@ -53,9 +53,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.durationText
-import com.axiel7.anihyou.data.model.isAnime
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.durationText
+import com.axiel7.anihyou.data.model.media.isAnime
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton

@@ -60,8 +60,8 @@ import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.AnimeSeason
-import com.axiel7.anihyou.data.model.ChartType
+import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort

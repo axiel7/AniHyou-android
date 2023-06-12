@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.character.localized
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar

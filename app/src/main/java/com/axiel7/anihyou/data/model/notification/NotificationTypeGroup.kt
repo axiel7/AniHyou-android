@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.notification
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

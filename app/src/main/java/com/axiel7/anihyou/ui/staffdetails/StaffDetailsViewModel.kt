@@ -10,7 +10,7 @@ import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.StaffMediaQuery
 import com.axiel7.anihyou.ToggleFavouriteMutation
-import com.axiel7.anihyou.data.model.StaffMediaGrouped
+import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 

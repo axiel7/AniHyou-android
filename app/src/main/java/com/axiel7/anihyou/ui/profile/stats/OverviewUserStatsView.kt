@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
-import com.axiel7.anihyou.data.model.localized
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.InfoTitle

@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.data.model.calculateProgressBarValue
-import com.axiel7.anihyou.data.model.duration
-import com.axiel7.anihyou.data.model.isBehind
+import com.axiel7.anihyou.data.model.media.calculateProgressBarValue
+import com.axiel7.anihyou.data.model.media.duration
+import com.axiel7.anihyou.data.model.media.isBehind
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
