@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicThreadDetails
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SpoilerDialog
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -104,17 +105,11 @@ fun ParentThreadView(
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.favorite_20),
-                        contentDescription = stringResource(R.string.favorites)
-                    )
-                }
-                Text(text = thread.likeCount.format())
-            }
+            FavoriteIconButton(
+                isFavorite = false,
+                favoritesCount = thread.likeCount,
+                onClick = { /*TODO*/ }
+            )
         }
     }
 }

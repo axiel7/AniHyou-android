@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SpoilerDialog
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -58,7 +59,11 @@ fun ThreadCommentView(
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(
+                start = 16.dp,
+                top = 16.dp,
+                end = 16.dp
+            )
             .fillMaxWidth()
     ) {
         Row(
@@ -98,10 +103,16 @@ fun ThreadCommentView(
             onSpoilerClicked = { spoilerText = it },
             onLinkClicked = { context.openActionView(it) }
         )
-        TextIconHorizontal(
-            text = likeCount.format(),
-            icon = R.drawable.favorite_20
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            FavoriteIconButton(
+                isFavorite = false,
+                favoritesCount = likeCount,
+                onClick = { /*TODO*/ }
+            )
+        }
     }
 }
 
