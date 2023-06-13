@@ -26,6 +26,13 @@ import java.time.LocalDateTime
 
 class HomeViewModel : BaseViewModel() {
 
+    val infos = mutableStateListOf(HomeInfo.AIRING, HomeInfo.THIS_SEASON, HomeInfo.TRENDING_ANIME)
+
+    fun addNextInfo() {
+        if (infos.size < HomeInfo.values().size)
+            infos.add(HomeInfo.values()[infos.size])
+    }
+
     private val now = LocalDateTime.now()
     var nowAnimeSeason by mutableStateOf(now.currentAnimeSeason())
     var nextAnimeSeason = now.nextAnimeSeason()

@@ -5,18 +5,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +48,7 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
+import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
@@ -68,20 +71,17 @@ fun HomeView(
     navigateToNotifications: () -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
-    val scrollState = rememberScrollState()
+    val listState = rememberLazyListState()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
         viewModel.getUnreadNotificationCount()
-        if (airingOnMyList == true) viewModel.getAiringAnimeOnMyList()
-        else viewModel.getAiringAnime()
-        viewModel.getThisSeasonAnime()
-        viewModel.getTrendingAnime()
-        viewModel.getNextSeasonAnime()
-        viewModel.getTrendingManga()
+    }
+
+    listState.OnBottomReached(buffer = 0) {
+        viewModel.addNextInfo()
     }
 
     DefaultScaffoldWithMediumTopAppBar(
@@ -109,190 +109,283 @@ fun HomeView(
                 )
             }
         },
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior,
+        contentWindowInsets = WindowInsets.systemBars
+            .only(WindowInsetsSides.Horizontal)
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                .verticalScroll(state = scrollState)
-                .padding(padding)
+                .padding(padding),
+            state = listState,
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            // Airing
-            HorizontalListHeader(
-                text = stringResource(R.string.airing),
-                onClick = navigateToCalendar
-            )
-            HomeLazyRow(
-                minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
-            ) {
-                if (airingOnMyList == true) {
-                    items(viewModel.airingAnimeOnMyList) { item ->
-                        AiringAnimeHorizontalItem(
-                            title = item.title?.userPreferred ?: "",
-                            subtitle = stringResource(R.string.airing_in,
-                                item.nextAiringEpisode?.timeUntilAiring?.toLong()?.secondsToLegibleText() ?: UNKNOWN_CHAR
-                            ),
-                            imageUrl = item.coverImage?.large,
-                            score = if (item.meanScore != null) "${item.meanScore}%" else null,
-                            onClick = {
-                                navigateToMediaDetails(item.id)
-                            }
-                        )
-                    }
-                }
-                else {
-                    items(viewModel.airingAnime) { item ->
-                        AiringAnimeHorizontalItem(
-                            title = item.media?.title?.userPreferred ?: "",
-                            subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
-                            imageUrl = item.media?.coverImage?.large,
-                            score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
-                            onClick = {
-                                navigateToMediaDetails(item.media!!.id)
-                            }
-                        )
-                    }
-                }
-                if (viewModel.isLoadingAiring) {
-                    items(10) {
-                        AiringAnimeHorizontalItemPlaceholder()
-                    }
-                }
-            }
-
-            // This season
-            HorizontalListHeader(
-                text = viewModel.nowAnimeSeason.localized(),
-                onClick = {
-                    navigateToAnimeSeason(viewModel.nowAnimeSeason)
-                }
-            )
-            HomeLazyRow(
-                minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
-            ) {
-                items(viewModel.thisSeasonAnime) { item ->
-                    MediaItemVertical(
-                        title = item.title?.userPreferred ?: "",
-                        imageUrl = item.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
-                        subtitle = {
-                            item.meanScore?.let { score ->
-                                SmallScoreIndicator(score = "${score}%")
-                            }
-                        },
-                        minLines = 2,
-                        onClick = { navigateToMediaDetails(item.id) }
+            items(viewModel.infos) { item ->
+                when (item) {
+                    HomeInfo.AIRING -> HomeAiringContent(
+                        viewModel = viewModel,
+                        navigateToCalendar = navigateToCalendar,
+                        navigateToMediaDetails = navigateToMediaDetails,
+                    )
+                    HomeInfo.THIS_SEASON -> HomeThisSeasonContent(
+                        viewModel = viewModel,
+                        navigateToAnimeSeason = navigateToAnimeSeason,
+                        navigateToMediaDetails = navigateToMediaDetails,
+                    )
+                    HomeInfo.TRENDING_ANIME -> HomeTrendingAnimeContent(
+                        viewModel = viewModel,
+                        navigateToExplore = navigateToExplore,
+                        navigateToMediaDetails = navigateToMediaDetails,
+                    )
+                    HomeInfo.NEXT_SEASON -> HomeNextSeasonContent(
+                        viewModel = viewModel,
+                        navigateToAnimeSeason = navigateToAnimeSeason,
+                        navigateToMediaDetails = navigateToMediaDetails,
+                    )
+                    HomeInfo.TRENDING_MANGA -> HomeTrendingMangaContent(
+                        viewModel = viewModel,
+                        navigateToExplore = navigateToExplore,
+                        navigateToMediaDetails = navigateToMediaDetails,
                     )
                 }
-                if (viewModel.isLoadingThisSeason) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder(
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
             }
-
-            // Trending Anime
-            HorizontalListHeader(
-                text = stringResource(R.string.trending_now),
-                onClick = {
-                    navigateToExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
-                }
-            )
-            HomeLazyRow(
-                minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
-            ) {
-                items(viewModel.trendingAnime) { item ->
-                    MediaItemVertical(
-                        title = item.title?.userPreferred ?: "",
-                        imageUrl = item.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
-                        subtitle = {
-                            item.meanScore?.let { score ->
-                                SmallScoreIndicator(score = "${score}%")
-                            }
-                        },
-                        minLines = 2,
-                        onClick = { navigateToMediaDetails(item.id) }
-                    )
-                }
-                if (viewModel.isLoadingTrendingAnime) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder(
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
-            }
-
-            // Next season
-            HorizontalListHeader(
-                text = stringResource(R.string.next_season),
-                onClick = {
-                    navigateToAnimeSeason(viewModel.nextAnimeSeason)
-                }
-            )
-            HomeLazyRow(
-                minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
-            ) {
-                items(viewModel.nextSeasonAnime) { item ->
-                    MediaItemVertical(
-                        title = item.title?.userPreferred ?: "",
-                        imageUrl = item.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
-                        subtitle = {
-                            item.meanScore?.let { score ->
-                                SmallScoreIndicator(score = "${score}%")
-                            }
-                        },
-                        minLines = 2,
-                        onClick = { navigateToMediaDetails(item.id) }
-                    )
-                }
-                if (viewModel.isLoadingNextSeason) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder(
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
-            }
-
-            // Trending Manga
-            HorizontalListHeader(
-                text = stringResource(R.string.trending_manga),
-                onClick = {
-                    navigateToExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
-                }
-            )
-            HomeLazyRow(
-                minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
-            ) {
-                items(viewModel.trendingManga) { item ->
-                    MediaItemVertical(
-                        title = item.title?.userPreferred ?: "",
-                        imageUrl = item.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
-                        subtitle = {
-                            item.meanScore?.let { score ->
-                                SmallScoreIndicator(score = "${score}%")
-                            }
-                        },
-                        minLines = 2,
-                        onClick = { navigateToMediaDetails(item.id) }
-                    )
-                }
-                if (viewModel.isLoadingTrendingManga) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder(
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
-            }
-        }//: Column
+        }//: LazyColumn
     }//: Scaffold
+}
+
+@Composable
+fun HomeAiringContent(
+    viewModel: HomeViewModel,
+    navigateToCalendar: () -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit
+) {
+    val airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
+
+    LaunchedEffect(airingOnMyList) {
+        if (airingOnMyList == true && viewModel.airingAnimeOnMyList.isEmpty())
+            viewModel.getAiringAnimeOnMyList()
+        else if (viewModel.airingAnime.isEmpty())
+            viewModel.getAiringAnime()
+    }
+
+    // Airing
+    HorizontalListHeader(
+        text = stringResource(R.string.airing),
+        onClick = navigateToCalendar
+    )
+    HomeLazyRow(
+        minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
+    ) {
+        if (airingOnMyList == true) {
+            items(viewModel.airingAnimeOnMyList) { item ->
+                AiringAnimeHorizontalItem(
+                    title = item.title?.userPreferred ?: "",
+                    subtitle = stringResource(R.string.airing_in,
+                        item.nextAiringEpisode?.timeUntilAiring?.toLong()?.secondsToLegibleText() ?: UNKNOWN_CHAR
+                    ),
+                    imageUrl = item.coverImage?.large,
+                    score = if (item.meanScore != null) "${item.meanScore}%" else null,
+                    onClick = {
+                        navigateToMediaDetails(item.id)
+                    }
+                )
+            }
+        }
+        else {
+            items(viewModel.airingAnime) { item ->
+                AiringAnimeHorizontalItem(
+                    title = item.media?.title?.userPreferred ?: "",
+                    subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
+                    imageUrl = item.media?.coverImage?.large,
+                    score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
+                    onClick = {
+                        navigateToMediaDetails(item.media!!.id)
+                    }
+                )
+            }
+        }
+        if (viewModel.isLoadingAiring) {
+            items(10) {
+                AiringAnimeHorizontalItemPlaceholder()
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeThisSeasonContent(
+    viewModel: HomeViewModel,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+) {
+    LaunchedEffect(viewModel) {
+        if (viewModel.thisSeasonAnime.isEmpty()) viewModel.getThisSeasonAnime()
+    }
+
+    // This season
+    HorizontalListHeader(
+        text = viewModel.nowAnimeSeason.localized(),
+        onClick = {
+            navigateToAnimeSeason(viewModel.nowAnimeSeason)
+        }
+    )
+    HomeLazyRow(
+        minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
+    ) {
+        items(viewModel.thisSeasonAnime) { item ->
+            MediaItemVertical(
+                title = item.title?.userPreferred ?: "",
+                imageUrl = item.coverImage?.large,
+                modifier = Modifier.padding(start = 8.dp),
+                subtitle = {
+                    item.meanScore?.let { score ->
+                        SmallScoreIndicator(score = "${score}%")
+                    }
+                },
+                minLines = 2,
+                onClick = { navigateToMediaDetails(item.id) }
+            )
+        }
+        if (viewModel.isLoadingThisSeason) {
+            items(10) {
+                MediaItemVerticalPlaceholder(
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeTrendingAnimeContent(
+    viewModel: HomeViewModel,
+    navigateToExplore: (MediaType, MediaSort) -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+) {
+    LaunchedEffect(viewModel) {
+        if (viewModel.trendingAnime.isEmpty()) viewModel.getTrendingAnime()
+    }
+
+    // Trending Anime
+    HorizontalListHeader(
+        text = stringResource(R.string.trending_now),
+        onClick = {
+            navigateToExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
+        }
+    )
+    HomeLazyRow(
+        minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
+    ) {
+        items(viewModel.trendingAnime) { item ->
+            MediaItemVertical(
+                title = item.title?.userPreferred ?: "",
+                imageUrl = item.coverImage?.large,
+                modifier = Modifier.padding(start = 8.dp),
+                subtitle = {
+                    item.meanScore?.let { score ->
+                        SmallScoreIndicator(score = "${score}%")
+                    }
+                },
+                minLines = 2,
+                onClick = { navigateToMediaDetails(item.id) }
+            )
+        }
+        if (viewModel.isLoadingTrendingAnime) {
+            items(10) {
+                MediaItemVerticalPlaceholder(
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeNextSeasonContent(
+    viewModel: HomeViewModel,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+) {
+    LaunchedEffect(viewModel) {
+        if (viewModel.nextSeasonAnime.isEmpty()) viewModel.getNextSeasonAnime()
+    }
+
+    // Next season
+    HorizontalListHeader(
+        text = stringResource(R.string.next_season),
+        onClick = {
+            navigateToAnimeSeason(viewModel.nextAnimeSeason)
+        }
+    )
+    HomeLazyRow(
+        minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
+    ) {
+        items(viewModel.nextSeasonAnime) { item ->
+            MediaItemVertical(
+                title = item.title?.userPreferred ?: "",
+                imageUrl = item.coverImage?.large,
+                modifier = Modifier.padding(start = 8.dp),
+                subtitle = {
+                    item.meanScore?.let { score ->
+                        SmallScoreIndicator(score = "${score}%")
+                    }
+                },
+                minLines = 2,
+                onClick = { navigateToMediaDetails(item.id) }
+            )
+        }
+        if (viewModel.isLoadingNextSeason) {
+            items(10) {
+                MediaItemVerticalPlaceholder(
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeTrendingMangaContent(
+    viewModel: HomeViewModel,
+    navigateToExplore: (MediaType, MediaSort) -> Unit,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+) {
+    LaunchedEffect(viewModel) {
+        if (viewModel.trendingManga.isEmpty()) viewModel.getTrendingManga()
+    }
+
+    // Trending Manga
+    HorizontalListHeader(
+        text = stringResource(R.string.trending_manga),
+        onClick = {
+            navigateToExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
+        }
+    )
+    HomeLazyRow(
+        minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
+    ) {
+        items(viewModel.trendingManga) { item ->
+            MediaItemVertical(
+                title = item.title?.userPreferred ?: "",
+                imageUrl = item.coverImage?.large,
+                modifier = Modifier.padding(start = 8.dp),
+                subtitle = {
+                    item.meanScore?.let { score ->
+                        SmallScoreIndicator(score = "${score}%")
+                    }
+                },
+                minLines = 2,
+                onClick = { navigateToMediaDetails(item.id) }
+            )
+        }
+        if (viewModel.isLoadingTrendingManga) {
+            items(10) {
+                MediaItemVerticalPlaceholder(
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+    }
 }
 
 @Composable

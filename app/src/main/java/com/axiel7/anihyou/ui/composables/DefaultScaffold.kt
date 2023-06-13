@@ -24,6 +24,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
+    contentWindowInsets: WindowInsets = WindowInsets.systemBars,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -44,6 +45,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
             )
         },
         floatingActionButton = floatingActionButton,
+        contentWindowInsets = contentWindowInsets,
         content = content
     )
 }
