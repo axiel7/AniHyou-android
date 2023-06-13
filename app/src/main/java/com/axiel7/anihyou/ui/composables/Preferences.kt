@@ -107,21 +107,22 @@ fun SwitchPreference(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    preferenceValue: MutableState<Boolean>,
+    preferenceValue: MutableState<Boolean?>,
     @DrawableRes icon: Int? = null,
-    onValueChange: (Boolean) -> Unit
+    onValueChange: (Boolean?) -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                preferenceValue.value = preferenceValue.value.not()
+                preferenceValue.value = preferenceValue.value?.not()
                 onValueChange(preferenceValue.value)
             },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
+            modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -153,14 +154,15 @@ fun SwitchPreference(
                     Text(
                         text = subtitle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 13.sp
+                        fontSize = 13.sp,
+                        lineHeight = 14.sp
                     )
                 }
             }//: Column
         }//: Row
 
         Switch(
-            checked = preferenceValue.value,
+            checked = preferenceValue.value ?: false,
             onCheckedChange = {
                 preferenceValue.value = it
                 onValueChange(it)

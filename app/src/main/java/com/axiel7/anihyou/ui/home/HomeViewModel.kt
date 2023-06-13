@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.AiringAnimesQuery
+import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.MediaSortedQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
@@ -46,6 +47,25 @@ class HomeViewModel : BaseViewModel() {
 
             airingAnime.clear()
             response?.data?.Page?.airingSchedules?.filterNotNull()?.let { airingAnime.addAll(it) }
+            isLoadingAiring = false
+        }
+    }
+
+    val airingAnimeOnMyList = mutableStateListOf<AiringOnMyListQuery.Medium>()
+
+    suspend fun getAiringAnimeOnMyList() {
+        viewModelScope.launch {
+            isLoadingAiring = true
+            val response = AiringOnMyListQuery(
+                page = Optional.present(1),
+                perPage = Optional.present(25)
+            ).tryQuery()
+
+            airingAnime.clear()
+            response?.data?.Page?.media?.filterNotNull()
+                ?.filter { it.nextAiringEpisode != null }
+                ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
+                ?.let { airingAnimeOnMyList.addAll(it) }
             isLoadingAiring = false
         }
     }

@@ -25,5 +25,6 @@ class App : Application() {
         var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
         var listDisplayMode = ListMode.STANDARD
+        var airingOnMyList = false
     }
 }

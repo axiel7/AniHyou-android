@@ -220,4 +220,7 @@
     <string name="activity">Activity</string>
     <string name="forum">Forum</string>
     <string name="notifications_media">Media</string>
+    <string name="content">Content</string>
+    <string name="airing_on_my_list">Airing on my list</string>
+    <string name="airing_on_my_list_summary">Show only airing soon anime that are in your list</string>
 </resources>

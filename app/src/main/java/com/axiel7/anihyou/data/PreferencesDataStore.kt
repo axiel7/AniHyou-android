@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -29,6 +30,7 @@ object PreferencesDataStore {
     val ANIME_LIST_SORT_PREFERENCE_KEY = stringPreferencesKey("anime_list_sort")
     val MANGA_LIST_SORT_PREFERENCE_KEY = stringPreferencesKey("manga_list_sort")
     val LIST_DISPLAY_MODE_PREFERENCE_KEY = stringPreferencesKey("list_display_mode")
+    val AIRING_ON_MY_LIST_PREFERENCE_KEY = booleanPreferencesKey("airing_on_my_list")
 
     val Context.defaultPreferencesDataStore by preferencesDataStore(name = "default")
 

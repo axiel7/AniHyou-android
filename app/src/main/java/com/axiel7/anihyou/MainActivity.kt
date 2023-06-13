@@ -52,6 +52,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
@@ -145,6 +146,7 @@ class MainActivity : ComponentActivity() {
         App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
         App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let { App.scoreFormat = ScoreFormat.valueOf(it) }
         App.dataStore.getValueSync(LIST_DISPLAY_MODE_PREFERENCE_KEY)?.let { App.listDisplayMode = ListMode.valueOf(it) }
+        App.dataStore.getValueSync(AIRING_ON_MY_LIST_PREFERENCE_KEY)?.let { App.airingOnMyList = it }
 
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)

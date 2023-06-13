@@ -1,0 +1,23 @@
+query AiringOnMyList($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        media(type: ANIME, status: RELEASING, onList: true, sort: [POPULARITY_DESC]) {
+            id
+            title {
+                userPreferred
+            }
+            coverImage {
+                large
+            }
+            meanScore
+            nextAiringEpisode {
+                episode
+                timeUntilAiring
+                airingAt
+            }
+        }
+        pageInfo {
+            currentPage
+            hasNextPage
+        }
+    }
+}

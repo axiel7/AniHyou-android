@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
@@ -78,6 +79,7 @@ fun SettingsView(
     )
     val themePreference = rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
     val listModePreference = rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
+    val airingOnMyList = rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
         if (!viewModel.isLoading) viewModel.getUserOptions()
@@ -125,7 +127,7 @@ fun SettingsView(
                 }
             )
 
-            PreferencesTitle(text = stringResource(R.string.account))
+            PreferencesTitle(text = stringResource(R.string.content))
             SwitchPreference(
                 title = stringResource(R.string.display_adult_content),
                 preferenceValue = viewModel.displayAdultContent,
@@ -137,6 +139,16 @@ fun SettingsView(
                     }
                 }
             )
+            SwitchPreference(
+                title = stringResource(R.string.airing_on_my_list),
+                preferenceValue = airingOnMyList,
+                subtitle = stringResource(R.string.airing_on_my_list_summary),
+                onValueChange = {
+                    airingOnMyList.value = it
+                }
+            )
+
+            PreferencesTitle(text = stringResource(R.string.account))
             PlainPreference(
                 title = stringResource(R.string.anilist_account_settings),
                 icon = R.drawable.manage_accounts_24,

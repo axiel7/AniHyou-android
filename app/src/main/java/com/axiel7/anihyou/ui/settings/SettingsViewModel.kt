@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel : BaseViewModel() {
 
-    var displayAdultContent = mutableStateOf(false)
+    var displayAdultContent = mutableStateOf<Boolean?>(false)
 
     suspend fun getUserOptions() {
         viewModelScope.launch {

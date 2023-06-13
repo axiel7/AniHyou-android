@@ -26,6 +26,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,7 +38,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -51,6 +55,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,10 +72,12 @@ fun HomeView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    val airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
         viewModel.getUnreadNotificationCount()
-        viewModel.getAiringAnime()
+        if (airingOnMyList == true) viewModel.getAiringAnimeOnMyList()
+        else viewModel.getAiringAnime()
         viewModel.getThisSeasonAnime()
         viewModel.getTrendingAnime()
         viewModel.getNextSeasonAnime()
@@ -112,22 +119,39 @@ fun HomeView(
         ) {
             // Airing
             HorizontalListHeader(
-                text = stringResource(R.string.airing_soon),
+                text = stringResource(R.string.airing),
                 onClick = navigateToCalendar
             )
             HomeLazyRow(
                 minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
             ) {
-                items(viewModel.airingAnime) { item ->
-                    AiringAnimeHorizontalItem(
-                        title = item.media?.title?.userPreferred ?: "",
-                        subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
-                        imageUrl = item.media?.coverImage?.large,
-                        score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
-                        onClick = {
-                            navigateToMediaDetails(item.media!!.id)
-                        }
-                    )
+                if (airingOnMyList == true) {
+                    items(viewModel.airingAnimeOnMyList) { item ->
+                        AiringAnimeHorizontalItem(
+                            title = item.title?.userPreferred ?: "",
+                            subtitle = stringResource(R.string.airing_in,
+                                item.nextAiringEpisode?.timeUntilAiring?.toLong()?.secondsToLegibleText() ?: UNKNOWN_CHAR
+                            ),
+                            imageUrl = item.coverImage?.large,
+                            score = if (item.meanScore != null) "${item.meanScore}%" else null,
+                            onClick = {
+                                navigateToMediaDetails(item.id)
+                            }
+                        )
+                    }
+                }
+                else {
+                    items(viewModel.airingAnime) { item ->
+                        AiringAnimeHorizontalItem(
+                            title = item.media?.title?.userPreferred ?: "",
+                            subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
+                            imageUrl = item.media?.coverImage?.large,
+                            score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
+                            onClick = {
+                                navigateToMediaDetails(item.media!!.id)
+                            }
+                        )
+                    }
                 }
                 if (viewModel.isLoadingAiring) {
                     items(10) {
