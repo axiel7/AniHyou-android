@@ -40,8 +40,9 @@ fun SliderRatingView(
             else if (showAsDecimal) String.format("%.1f", rating)
             else String.format("%.0f", rating),
             onValueChange = { value ->
-                value.toDoubleOrNull()?.let {
-                    if (it <= maxValue) rating = it
+                value.toDoubleOrNull().let {
+                    if (it == null) rating = 0.0
+                    else if (it <= maxValue) rating = it
                 }
             },
             modifier = Modifier.width(128.dp),
