@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.ui.mediadetails.reviewthread
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +38,7 @@ import com.axiel7.anihyou.ui.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReviewThreadListView(
     mediaId: Int,
@@ -66,7 +69,8 @@ fun ReviewThreadListView(
                     .padding(top = 8.dp, bottom = 16.dp),
                 state = threadsListState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                flingBehavior = rememberSnapFlingBehavior(lazyListState = threadsListState),
             ) {
                 items(
                     items = viewModel.mediaThreads,
