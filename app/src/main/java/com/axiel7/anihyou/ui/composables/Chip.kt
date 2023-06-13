@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 
@@ -24,6 +25,25 @@ fun FilterSelectionChip(
         onClick = onClick,
         label = { Text(text = text) },
         modifier = modifier.padding(horizontal = 4.dp),
+        leadingIcon = {
+            if (selected) {
+                Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OnMyListChip(
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text = stringResource(R.string.on_my_list)) },
+        modifier = Modifier.padding(horizontal = 8.dp),
         leadingIcon = {
             if (selected) {
                 Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")

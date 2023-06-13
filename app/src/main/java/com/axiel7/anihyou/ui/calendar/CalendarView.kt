@@ -19,6 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -34,6 +39,7 @@ import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.OnBottomReached
+import com.axiel7.anihyou.ui.composables.OnMyListChip
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
@@ -64,10 +70,19 @@ fun CalendarView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    var onMyList by remember { mutableStateOf(false) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
+        actions = {
+              OnMyListChip(
+                  selected = onMyList,
+                  onClick = {
+                      onMyList = !onMyList
+                  }
+              )
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         DefaultTabRowWithPager(
@@ -84,6 +99,7 @@ fun CalendarView(
         ) {
             CalendarDayView(
                 weekday = calendarTabs[it].value.value,
+                onMyList = onMyList,
                 navigateToMediaDetails = navigateToMediaDetails,
                 modifier = Modifier
                     .fillMaxHeight()
@@ -100,6 +116,7 @@ fun CalendarView(
 @Composable
 fun CalendarDayView(
     weekday: Int,
+    onMyList: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
@@ -107,9 +124,15 @@ fun CalendarDayView(
     val viewModel: CalendarViewModel = viewModel(key = "$weekday")
 
     val listState = rememberLazyGridState()
+    
+    LaunchedEffect(onMyList) {
+        viewModel.resetPage()
+        viewModel.getAiringAnime(weekday, onMyList)
+    }
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getAiringAnime(weekday)
+        if (viewModel.hasNextPage)
+            viewModel.getAiringAnime(weekday, onMyList)
     }
 
     LazyVerticalGrid(
@@ -122,7 +145,7 @@ fun CalendarDayView(
     ) {
         items(
             items = viewModel.weeklyAnime,
-            //key = { it.mediaId },
+            key = { it.id },
             contentType = { it }
         ) { item ->
             MediaItemVertical(

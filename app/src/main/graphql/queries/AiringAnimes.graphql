@@ -1,6 +1,7 @@
 query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGreater: Int, $airingAtLesser: Int) {
   Page(page: $page, perPage: $perPage) {
     airingSchedules(sort: $sort, airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser) {
+      id
       mediaId
       media {
         title {
@@ -10,6 +11,9 @@ query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGrea
           large
         }
         meanScore
+        mediaListEntry {
+          status
+        }
       }
       episode
       timeUntilAiring
