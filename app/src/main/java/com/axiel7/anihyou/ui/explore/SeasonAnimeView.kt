@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -40,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,28 +120,27 @@ fun SeasonAnimeView(
     DefaultScaffoldWithMediumTopAppBar(
         title = "${season.localized()} $year",
         floatingActionButton = {
-            FloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
+            FloatingActionButton(
+                onClick = { scope.launch { sheetState.show() } },
+                modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())
+            ) {
                 Icon(painter = painterResource(R.drawable.filter_list_24), contentDescription = "filter")
             }
         },
         navigationIcon = {
             BackIconButton(onClick = navigateBack)
         },
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior,
+        contentWindowInsets = WindowInsets.systemBars
+            .only(WindowInsetsSides.Horizontal)
     ) { padding ->
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
             modifier = Modifier
-                .padding(
-                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                    top = padding.calculateTopPadding(),
-                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
-                )
+                .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
             state = listState,
-            contentPadding = PaddingValues(
-                bottom = padding.calculateBottomPadding()
-            ),
+            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
@@ -182,12 +184,14 @@ fun SeasonChartFilterSheet(
 
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = onDismiss
+        onDismissRequest = onDismiss,
+        windowInsets = WindowInsets(0)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 32.dp),
+                .padding(WindowInsets.navigationBars.asPaddingValues())
+                .padding(bottom = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(

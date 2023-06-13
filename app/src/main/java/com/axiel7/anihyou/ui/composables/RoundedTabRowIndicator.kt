@@ -7,14 +7,12 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun RoundedTabRowIndicator(currentTabPosition: TabPosition) {
-    TabRowDefaults.Indicator(
+    TabRowDefaults.SecondaryIndicator(
         modifier = Modifier
             .tabIndicatorOffset(currentTabPosition)
-            .clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)),
-        height = 3.dp,
+            .clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
     )
 }

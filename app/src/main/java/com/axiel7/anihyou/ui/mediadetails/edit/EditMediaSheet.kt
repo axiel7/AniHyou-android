@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -126,7 +128,8 @@ fun EditMediaSheet(
 
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = { onDismiss(viewModel.listEntry) }
+        onDismissRequest = { onDismiss(viewModel.listEntry) },
+        windowInsets = WindowInsets.navigationBars
     ) {
         Column(
             modifier = Modifier
@@ -265,7 +268,7 @@ fun EditMediaSheet(
                     }
                 },
                 onClick = {
-                    datePickerState.setSelection(viewModel.startDate?.toEpochMillis())
+                    datePickerState.selectedDateMillis = viewModel.startDate?.toEpochMillis()
                     viewModel.selectedDateType = 1
                     viewModel.openDatePicker = true
                 }
@@ -286,7 +289,7 @@ fun EditMediaSheet(
                     }
                 },
                 onClick = {
-                    datePickerState.setSelection(viewModel.endDate?.toEpochMillis())
+                    datePickerState.selectedDateMillis = viewModel.endDate?.toEpochMillis()
                     viewModel.selectedDateType = 2
                     viewModel.openDatePicker = true
                 }

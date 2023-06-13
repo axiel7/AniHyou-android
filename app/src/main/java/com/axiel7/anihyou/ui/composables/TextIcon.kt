@@ -13,6 +13,7 @@ import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.PlainTooltipState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -96,7 +97,7 @@ fun TextIconVertical(
     tooltip: String,
     isLoading: Boolean = false,
 ) {
-    val tooltipState = remember { PlainTooltipState() }
+    val tooltipState = rememberPlainTooltipState()
     val scope = rememberCoroutineScope()
 
     PlainTooltipBox(
