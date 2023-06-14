@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.displayName
 import com.axiel7.anihyou.data.model.media.externalLinks
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.link
@@ -212,8 +213,8 @@ fun MediaInformationView(
                     modifier = Modifier.padding(8.dp)
                 ) {
                     streamingLinks.forEach { link ->
-                        TextButton(onClick = { link?.url?.let { context.openActionView(it) } }) {
-                            Text(text = link?.site ?: "")
+                        TextButton(onClick = { link.url?.let { context.openActionView(it) } }) {
+                            Text(text = link.displayName())
                         }
                     }
                 }
@@ -228,8 +229,8 @@ fun MediaInformationView(
                     modifier = Modifier.padding(8.dp)
                 ) {
                     externalLinks.forEach { link ->
-                        TextButton(onClick = { link?.url?.let { context.openActionView(it) } }) {
-                            Text(text = link?.site ?: "")
+                        TextButton(onClick = { link.url?.let { context.openActionView(it) } }) {
+                            Text(text = link.displayName())
                         }
                     }
                 }

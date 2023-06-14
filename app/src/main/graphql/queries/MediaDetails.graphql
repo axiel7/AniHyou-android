@@ -57,6 +57,7 @@ query MediaDetails($mediaId: Int) {
       url
       site
       type
+      language
     }
     trailer {
       id

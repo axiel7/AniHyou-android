@@ -44,7 +44,12 @@ fun MediaDetailsQuery.Trailer.link(): String? {
 }
 
 fun MediaDetailsQuery.Media.streamingLinks() =
-    externalLinks?.filter { it?.type == ExternalLinkType.STREAMING }
+    externalLinks?.filterNotNull()?.filter { it.type == ExternalLinkType.STREAMING }
 
 fun MediaDetailsQuery.Media.externalLinks() =
-    externalLinks?.filter { it?.type != ExternalLinkType.STREAMING }
+    externalLinks?.filterNotNull()?.filter { it.type != ExternalLinkType.STREAMING }
+
+fun MediaDetailsQuery.ExternalLink.displayName() = buildString {
+    append(site)
+    language?.let { lang -> append(" ($lang)") }
+}
