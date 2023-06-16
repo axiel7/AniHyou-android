@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.mediadetails.info
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +37,8 @@ import com.axiel7.anihyou.data.model.media.streamingLinks
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.composables.SpoilerTagChip
+import com.axiel7.anihyou.ui.composables.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.VIDEO_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.VideoThumbnailItem
@@ -137,26 +136,25 @@ fun MediaInformationView(
             viewModel.mediaDetails?.tags?.forEach { tag ->
                 if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
-                        ElevatedAssistChip(
+                        TagChip(
+                            name = tag.name,
+                            description = tag.description,
+                            rank = tag.rank,
                             onClick = {
                                 navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
-                            },
-                            label = { Text(text = tag.name) },
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            leadingIcon = { Text(text = "${tag.rank}%") }
+                            }
                         )
                     }
                     else {
-                        AnimatedVisibility(visible = showSpoiler) {
-                            AssistChip(
-                                onClick = {
-                                    navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
-                                },
-                                label = { Text(text = tag.name) },
-                                modifier = Modifier.padding(horizontal = 4.dp),
-                                leadingIcon = { Text(text = "${tag.rank}%") }
-                            )
-                        }
+                        SpoilerTagChip(
+                            name = tag.name,
+                            description = tag.description,
+                            rank = tag.rank,
+                            visible = showSpoiler,
+                            onClick = {
+                                navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
+                            }
+                        )
                     }
                 }
             }

@@ -73,6 +73,7 @@ query MediaDetails($mediaId: Int) {
     tags {
       id
       name
+      description
       rank
       isMediaSpoiler
     }
