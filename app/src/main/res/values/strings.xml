@@ -223,4 +223,6 @@
     <string name="content">Content</string>
     <string name="airing_on_my_list">Airing on my list</string>
     <string name="airing_on_my_list_summary">Show only airing soon anime that are in your list</string>
+    <string name="follow">Follow</string>
+    <string name="follows_you">Follows you</string>
 </resources>

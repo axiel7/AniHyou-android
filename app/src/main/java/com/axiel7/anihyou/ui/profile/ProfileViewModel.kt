@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.App
+import com.axiel7.anihyou.ToggleFollowMutation
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.UserBasicInfoQuery
 import com.axiel7.anihyou.ViewerQuery
@@ -70,6 +71,18 @@ class ProfileViewModel : BaseViewModel() {
             }
 
             isLoading = false
+        }
+    }
+
+    suspend fun toggleFollow() {
+        viewModelScope.launch {
+            val response = ToggleFollowMutation(
+                userId = Optional.present(userId)
+            ).tryMutation()
+
+            response?.data?.ToggleFollow?.let {
+                userInfo = userInfo?.copy(isFollowing = it.isFollowing)
+            }
         }
     }
 

@@ -20,6 +20,7 @@ fragment UserInfo on User {
   mediaListOptions {
     scoreFormat
   }
-  unreadNotificationCount
+  isFollowing
+  isFollower
   siteUrl
 }

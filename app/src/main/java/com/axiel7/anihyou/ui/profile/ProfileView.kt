@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,6 +28,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,6 +59,7 @@ import com.axiel7.anihyou.ui.profile.social.UserSocialView
 import com.axiel7.anihyou.ui.profile.stats.UserStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
+import kotlinx.coroutines.launch
 
 private enum class ProfileInfoType {
     ABOUT, ACTIVITY, STATS, FAVORITES, SOCIAL;
@@ -88,6 +92,7 @@ fun ProfileView(
     navigateToUserDetails: (Int) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: ProfileViewModel = viewModel()
     val isMyProfile by remember { derivedStateOf { userId == null && username == null } }
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -146,18 +151,31 @@ fun ProfileView(
             }//: Box
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = viewModel.userInfo?.name ?: "Loading",
+                Column(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .defaultPlaceholder(visible = viewModel.isLoading),
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
+                        .weight(1f)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = viewModel.userInfo?.name ?: "Loading",
+                        modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading),
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    if (viewModel.userInfo?.isFollower == true) {
+                        Text(
+                            text = stringResource(R.string.follows_you),
+                            color = MaterialTheme.colorScheme.outline,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
 
                 if (isMyProfile) {
                     OutlinedIconButton(
@@ -170,6 +188,22 @@ fun ProfileView(
                             contentDescription = stringResource(R.string.settings),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                } else {
+                    if (viewModel.userInfo?.isFollowing == true) {
+                        OutlinedButton(
+                            onClick = { scope.launch { viewModel.toggleFollow() } },
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        ) {
+                            Text(text = stringResource(R.string.following))
+                        }
+                    } else if (viewModel.userInfo?.isFollowing == false) {
+                        Button(
+                            onClick = { scope.launch { viewModel.toggleFollow() } },
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        ) {
+                            Text(text = stringResource(R.string.follow))
+                        }
                     }
                 }
             }//: Row
