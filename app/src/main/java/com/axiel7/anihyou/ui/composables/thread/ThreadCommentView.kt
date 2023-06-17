@@ -33,7 +33,6 @@ import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
-import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun ThreadCommentView(

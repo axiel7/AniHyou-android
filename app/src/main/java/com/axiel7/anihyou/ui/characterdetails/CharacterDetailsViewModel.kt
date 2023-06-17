@@ -8,7 +8,6 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.ToggleFavouriteMutation
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 
 class CharacterDetailsViewModel : BaseViewModel() {

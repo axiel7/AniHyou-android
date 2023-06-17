@@ -260,7 +260,6 @@ fun StaffInfoView(
     }//: Column
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffMediaView(
     viewModel: StaffDetailsViewModel,
