@@ -225,4 +225,6 @@
     <string name="airing_on_my_list_summary">Show only airing soon anime that are in your list</string>
     <string name="follow">Follow</string>
     <string name="follows_you">Follows you</string>
+    <string name="view_anime_list">View Anime List</string>
+    <string name="view_manga_list">View Manga List</string>
 </resources>

@@ -29,14 +29,19 @@ class UserMediaListViewModel(
         if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
 
-    suspend fun getUserList(refreshCache: Boolean = false) {
+    suspend fun getUserList(
+        userId: Int?,
+        refreshCache: Boolean = false
+    ) {
         viewModelScope.launch {
             isLoading = page == 1
-            val userId = LoginRepository.getUserId()
             val response = UserMediaListQuery(
                 page = Optional.present(page),
                 perPage = Optional.present(15),
-                userId = Optional.present(userId),
+                userId = Optional.present(
+                    // if no user id specified, use the authenticated user id
+                    userId ?: LoginRepository.getUserId()
+                ),
                 type = Optional.present(mediaType),
                 status = Optional.present(status),
                 sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
@@ -51,11 +56,14 @@ class UserMediaListViewModel(
         }
     }
 
-    suspend fun refreshList(refreshCache: Boolean) {
+    suspend fun refreshList(
+        userId: Int?,
+        refreshCache: Boolean
+    ) {
         hasNextPage = false
         page = 1
         mediaList.clear()
-        getUserList(refreshCache)
+        getUserList(userId, refreshCache)
     }
 
     suspend fun updateEntryProgress(entryId: Int, progress: Int) {

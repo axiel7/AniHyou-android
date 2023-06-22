@@ -103,6 +103,7 @@ import com.axiel7.anihyou.ui.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.thread.THREAD_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.thread.ThreadDetailsView
+import com.axiel7.anihyou.ui.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
@@ -373,6 +374,7 @@ fun MainView(
                                     .replace("{id}", id.toString())
                             )
                         },
+                        navigateToUserMediaList = null
                     )
                 }
             }
@@ -503,6 +505,28 @@ fun MainView(
                     },
                     navigateToCalendar = {
                         navController.navigate(CALENDAR_DESTINATION)
+                    }
+                )
+            }
+
+            composable(USER_MEDIA_LIST_DESTINATION,
+                arguments = listOf(
+                    navArgument("mediaType") { type = NavType.StringType },
+                    navArgument("userId") { type = NavType.IntType }
+                )
+            ) { navEntry ->
+                UserMediaListHostView(
+                    mediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) }!!,
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                    userId = navEntry.arguments?.getInt("userId"),
+                    navigateToMediaDetails = { id ->
+                        navController.navigate(
+                            MEDIA_DETAILS_DESTINATION
+                                .replace("{media_id}", id.toString())
+                        )
+                    },
+                    navigateBack = {
+                        navController.popBackStack()
                     }
                 )
             }
@@ -697,6 +721,13 @@ fun MainView(
                         navController.navigate(
                             USER_DETAILS_DESTINATION
                                 .replace("{id}", id.toString())
+                        )
+                    },
+                    navigateToUserMediaList = { mediaType, userId ->
+                        navController.navigate(
+                            USER_MEDIA_LIST_DESTINATION
+                                .replace("{userId}", userId.toString())
+                                .replace("{mediaType}", mediaType.rawValue)
                         )
                     },
                     navigateBack = {

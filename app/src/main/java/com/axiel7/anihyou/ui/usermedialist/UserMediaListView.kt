@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
@@ -52,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,6 +75,7 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
@@ -82,12 +86,16 @@ import com.axiel7.anihyou.ui.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
+const val USER_MEDIA_LIST_DESTINATION = "media_list/{userId}/{mediaType}"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
-    navigateToMediaDetails: (mediaId: Int) -> Unit,
     modifier: Modifier = Modifier,
+    userId: Int? = null,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+    navigateBack: (() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
     val selectedStatus = rememberSaveable { mutableStateOf(MediaListStatus.CURRENT) }
@@ -106,6 +114,7 @@ fun UserMediaListHostView(
             topAppBarScrollBehavior.state.heightOffset != topAppBarScrollBehavior.state.heightOffsetLimit
         }
     }
+    val isFullscreen = remember { userId != 0 }
 
     if (openSortDialog) {
         DialogWithRadioSelection(
@@ -150,22 +159,38 @@ fun UserMediaListHostView(
                 }
             }
         },
+        navigationIcon = {
+            if (navigateBack != null) {
+                BackIconButton(onClick = navigateBack)
+            }
+        },
         actions = {
             IconButton(onClick = { openSortDialog = true }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
             }
         },
         scrollBehavior = topAppBarScrollBehavior,
-        contentWindowInsets = WindowInsets.systemBars
-            .only(WindowInsetsSides.Horizontal)
+        contentWindowInsets = if (userId != null) WindowInsets.systemBars
+        else WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current),
+                    bottom = if (isFullscreen) 0.dp
+                    else padding.calculateBottomPadding()
+                )
         ) {
             UserMediaListView(
                 mediaType = mediaType,
+                userId = userId,
                 status = selectedStatus.value,
                 sort = sort,
+                contentPadding = if (isFullscreen)
+                    PaddingValues(top = 8.dp, bottom = padding.calculateBottomPadding())
+                else PaddingValues(vertical = 8.dp),
                 navigateToDetails = navigateToMediaDetails,
                 nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
             )
@@ -177,8 +202,10 @@ fun UserMediaListHostView(
 @Composable
 fun UserMediaListView(
     mediaType: MediaType,
+    userId: Int?,
     status: MediaListStatus,
     sort: State<MediaListSort?>,
+    contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     navigateToDetails: (mediaId: Int) -> Unit,
     nestedScrollConnection: NestedScrollConnection
 ) {
@@ -189,7 +216,9 @@ fun UserMediaListView(
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = viewModel.isLoading,
-        onRefresh = { scope.launch { viewModel.refreshList(refreshCache = true) } }
+        onRefresh = { scope.launch {
+            viewModel.refreshList(userId = userId, refreshCache = true)
+        } }
     )
     val sheetState = rememberModalBottomSheetState()
     val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
@@ -200,14 +229,15 @@ fun UserMediaListView(
 
     LaunchedEffect(status) {
         viewModel.status = status
-        viewModel.refreshList(refreshCache = false)
+        viewModel.refreshList(userId = userId, refreshCache = false)
     }
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getUserList()
+        if (viewModel.hasNextPage) viewModel.getUserList(userId = userId)
     }
 
-    if (sheetState.isVisible && viewModel.selectedItem != null) {
+    // open edit sheet only on authenticated user list
+    if (userId == null && sheetState.isVisible && viewModel.selectedItem != null) {
         EditMediaSheet(
             sheetState = sheetState,
             mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
@@ -224,7 +254,7 @@ fun UserMediaListView(
     LaunchedEffect(sort.value) {
         if (!viewModel.isLoading && sort.value != null && viewModel.sort != sort.value) {
             viewModel.sort = sort.value!!
-            viewModel.refreshList(refreshCache = false)
+            viewModel.refreshList(userId = userId, refreshCache = false)
         }
     }
 
@@ -239,7 +269,7 @@ fun UserMediaListView(
                 .fillMaxWidth()
                 .nestedScroll(nestedScrollConnection),
             state = listState,
-            contentPadding = PaddingValues(vertical = 8.dp),
+            contentPadding = contentPadding,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
            when (listDisplayMode) {
@@ -253,6 +283,7 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
+                            isMyList = userId == null,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item
@@ -279,6 +310,7 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
+                            isMyList = userId == null,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item
@@ -305,6 +337,7 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
+                            isMyList = userId == null,
                             onClick = { navigateToDetails(item.mediaId) },
                             onLongClick = {
                                 viewModel.selectedItem = item

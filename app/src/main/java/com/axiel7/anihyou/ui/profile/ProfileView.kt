@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.hexColor
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -90,6 +91,7 @@ fun ProfileView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToUserMediaList: ((MediaType, Int) -> Unit)?,
     navigateBack: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
@@ -225,7 +227,10 @@ fun ProfileView(
                         UserAboutView(
                             aboutHtml = viewModel.userInfo?.about,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            isLoading = viewModel.isLoading
+                            isLoading = viewModel.isLoading,
+                            navigateToUserMediaList = if (navigateToUserMediaList != null) {
+                                { mediaType -> navigateToUserMediaList(mediaType, viewModel.userId) }
+                            } else null,
                         )
                     ProfileInfoType.ACTIVITY ->
                         UserActivityView(
@@ -271,6 +276,7 @@ fun ProfileViewPreview() {
                 navigateToStaffDetails = {},
                 navigateToStudioDetails = {},
                 navigateToUserDetails = {},
+                navigateToUserMediaList = { _, _ -> }
             )
         }
     }

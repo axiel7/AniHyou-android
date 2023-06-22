@@ -52,6 +52,7 @@ fun StandardUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
     scoreFormat: ScoreFormat,
+    isMyList: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -120,8 +121,9 @@ fun StandardUserMediaListItem(
                             fontSize = 16.sp
                         )
 
-                        if (status == MediaListStatus.CURRENT
-                            || status == MediaListStatus.REPEATING) {
+                        if (isMyList && (status == MediaListStatus.CURRENT
+                                    || status == MediaListStatus.REPEATING)
+                            ) {
                             FilledTonalButton(onClick = onClickPlus) {
                                 Text(text = "+1")
                             }
@@ -149,6 +151,7 @@ fun CompactUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
     scoreFormat: ScoreFormat,
+    isMyList: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -213,7 +216,9 @@ fun CompactUserMediaListItem(
                         fontSize = 15.sp,
                     )
 
-                    if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
+                    if (isMyList && (status == MediaListStatus.CURRENT
+                                || status == MediaListStatus.REPEATING)
+                    ) {
                         FilledTonalButton(onClick = onClickPlus) {
                             Text(text = "+1")
                         }
@@ -230,6 +235,7 @@ fun MinimalUserMediaListItem(
     item: UserMediaListQuery.MediaList,
     status: MediaListStatus,
     scoreFormat: ScoreFormat,
+    isMyList: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -281,7 +287,9 @@ fun MinimalUserMediaListItem(
                 }
             }//:Column
 
-            if (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING) {
+            if (isMyList && (status == MediaListStatus.CURRENT
+                        || status == MediaListStatus.REPEATING)
+            ) {
                 FilledTonalButton(onClick = onClickPlus) {
                     Text(text = "+1")
                 }
@@ -363,6 +371,7 @@ fun UserMediaListItemPreview() {
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
                         scoreFormat = ScoreFormat.POINT_100,
+                        isMyList = true,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }
@@ -371,6 +380,7 @@ fun UserMediaListItemPreview() {
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
                         scoreFormat = ScoreFormat.POINT_100,
+                        isMyList = true,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }
@@ -379,6 +389,7 @@ fun UserMediaListItemPreview() {
                         item = exampleItem,
                         status = MediaListStatus.CURRENT,
                         scoreFormat = ScoreFormat.POINT_100,
+                        isMyList = true,
                         onClick = { },
                         onLongClick = { },
                         onClickPlus = { }
