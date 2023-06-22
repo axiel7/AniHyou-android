@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.formatToDecimal
 
 @Composable
 fun SliderRatingView(
@@ -29,6 +31,7 @@ fun SliderRatingView(
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double) -> Unit,
 ) {
+    var ratingString by remember { mutableStateOf(initialRating.toString()) }
     var rating by remember { mutableDoubleStateOf(initialRating) }
 
     Column(
@@ -36,13 +39,13 @@ fun SliderRatingView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            value = if (rating == 0.0) ""
-            else if (showAsDecimal) String.format("%.1f", rating)
-            else String.format("%.0f", rating),
+            value = ratingString,
             onValueChange = { value ->
-                value.toDoubleOrNull().let {
+                ratingString = value.formatToDecimal()
+                ratingString.toDoubleOrNull().let {
                     if (it == null) rating = 0.0
                     else if (it <= maxValue) rating = it
+                    onRatingChanged(rating)
                 }
             },
             modifier = Modifier.width(128.dp),

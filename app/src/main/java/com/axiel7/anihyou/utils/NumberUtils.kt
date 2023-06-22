@@ -5,6 +5,7 @@ import android.icu.text.CompactDecimalFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -14,6 +15,10 @@ object NumberUtils {
 
     private val defaultDecimalFormat @RequiresApi(Build.VERSION_CODES.N)
     get() = CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT)
+
+    private val decimalFormatSymbols = DecimalFormatSymbols.getInstance()
+    private val thousandsSeparator = decimalFormatSymbols.groupingSeparator
+    private val decimalSeparator = decimalFormatSymbols.decimalSeparator
 
     fun Int.format(): String = defaultNumberFormat.format(this)
     fun Long.format(): String = defaultNumberFormat.format(this)
@@ -55,4 +60,26 @@ object NumberUtils {
      * If the Float is `<= 0` or `null` returns `"─"`.
      */
     fun Float?.toStringPositiveValueOrUnknown() = if (this == 0f) UNKNOWN_CHAR else this.toStringOrUnknown()
+
+    fun String.formatToDecimal(): String {
+        if (matches("\\D".toRegex())) return ""
+        if (matches("0+".toRegex())) return "0"
+
+        val sb = StringBuilder()
+
+        var hasDecimalSep = false
+
+        for (char in this) {
+            if (char.isDigit()) {
+                sb.append(char)
+                continue
+            }
+            if (char == decimalSeparator && !hasDecimalSep && sb.isNotEmpty()) {
+                sb.append(char)
+                hasDecimalSep = true
+            }
+        }
+
+        return sb.toString()
+    }
 }
