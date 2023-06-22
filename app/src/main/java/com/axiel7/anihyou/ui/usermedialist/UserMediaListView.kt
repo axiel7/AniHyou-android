@@ -189,7 +189,7 @@ fun UserMediaListView(
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = viewModel.isLoading,
-        onRefresh = { scope.launch { viewModel.refreshList() } }
+        onRefresh = { scope.launch { viewModel.refreshList(refreshCache = true) } }
     )
     val sheetState = rememberModalBottomSheetState()
     val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
@@ -200,7 +200,7 @@ fun UserMediaListView(
 
     LaunchedEffect(status) {
         viewModel.status = status
-        viewModel.refreshList()
+        viewModel.refreshList(refreshCache = false)
     }
 
     listState.OnBottomReached(buffer = 3) {
@@ -224,7 +224,7 @@ fun UserMediaListView(
     LaunchedEffect(sort.value) {
         if (!viewModel.isLoading && sort.value != null && viewModel.sort != sort.value) {
             viewModel.sort = sort.value!!
-            viewModel.refreshList()
+            viewModel.refreshList(refreshCache = false)
         }
     }
 

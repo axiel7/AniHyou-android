@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.usermedialist
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
@@ -28,7 +29,7 @@ class UserMediaListViewModel(
         if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
 
-    suspend fun getUserList() {
+    suspend fun getUserList(refreshCache: Boolean = false) {
         viewModelScope.launch {
             isLoading = page == 1
             val userId = LoginRepository.getUserId()
@@ -39,7 +40,9 @@ class UserMediaListViewModel(
                 type = Optional.present(mediaType),
                 status = Optional.present(status),
                 sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
-            ).tryQuery()
+            ).tryQuery(
+                fetchPolicy = if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst
+            )
 
             response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
             hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
@@ -48,11 +51,11 @@ class UserMediaListViewModel(
         }
     }
 
-    suspend fun refreshList() {
+    suspend fun refreshList(refreshCache: Boolean) {
         hasNextPage = false
         page = 1
         mediaList.clear()
-        getUserList()
+        getUserList(refreshCache)
     }
 
     suspend fun updateEntryProgress(entryId: Int, progress: Int) {
