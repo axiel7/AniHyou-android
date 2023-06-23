@@ -10,12 +10,12 @@ android.buildFeatures.buildConfig = true
 
 android {
     namespace = "com.axiel7.anihyou"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 17
         versionName = "1.1.0-beta04"
         archivesName.set("anihyou-$versionName")
