@@ -114,7 +114,7 @@ fun UserMediaListHostView(
             topAppBarScrollBehavior.state.heightOffset != topAppBarScrollBehavior.state.heightOffsetLimit
         }
     }
-    val isFullscreen = remember { userId != 0 }
+    val isFullscreen = remember { userId != null }
 
     if (openSortDialog) {
         DialogWithRadioSelection(
@@ -170,7 +170,7 @@ fun UserMediaListHostView(
             }
         },
         scrollBehavior = topAppBarScrollBehavior,
-        contentWindowInsets = if (userId != null) WindowInsets.systemBars
+        contentWindowInsets = if (isFullscreen) WindowInsets.systemBars
         else WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
     ) { padding ->
         Column(
