@@ -100,12 +100,15 @@ fun TextIconVertical(
 
     PlainTooltipBox(
         tooltip = { Text(text = tooltip) },
-        tooltipState = tooltipState
+        focusable = true,
+        tooltipState = tooltipState,
     ) {
         TextIconVertical(
             text = text,
             icon = icon,
-            modifier = modifier.clickable { scope.launch { tooltipState.show() } },
+            modifier = modifier
+                .tooltipTrigger()
+                .clickable { scope.launch { tooltipState.show() } },
             isLoading = isLoading
         )
     }
