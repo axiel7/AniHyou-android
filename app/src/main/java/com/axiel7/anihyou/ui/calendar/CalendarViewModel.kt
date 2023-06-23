@@ -16,8 +16,9 @@ class CalendarViewModel : BaseViewModel() {
     var page = 1
     var hasNextPage = false
     val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
+    var onMyList = false
 
-    suspend fun getAiringAnime(weekday: Int, onMyList: Boolean) {
+    suspend fun getAiringAnime(weekday: Int) {
         isLoading = page == 1
         val weekdayStartTimestamp = now.thisWeekdayTimestamp(
             dayOfWeek = DayOfWeek.of(weekday),

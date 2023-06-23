@@ -126,13 +126,14 @@ fun CalendarDayView(
     val listState = rememberLazyGridState()
     
     LaunchedEffect(onMyList) {
+        viewModel.onMyList = onMyList
         viewModel.resetPage()
-        viewModel.getAiringAnime(weekday, onMyList)
+        viewModel.getAiringAnime(weekday)
     }
 
     listState.OnBottomReached(buffer = 3) {
         if (viewModel.hasNextPage)
-            viewModel.getAiringAnime(weekday, onMyList)
+            viewModel.getAiringAnime(weekday)
     }
 
     LazyVerticalGrid(
