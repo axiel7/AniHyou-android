@@ -23,6 +23,7 @@ object NumberUtils {
     fun Int.format(): String = defaultNumberFormat.format(this)
     fun Long.format(): String = defaultNumberFormat.format(this)
     fun Double.format(): String = defaultNumberFormat.format(this)
+    fun Double.format(decimalLength: Int) = String.format("%.${decimalLength}f", this)
 
     fun Int.abbreviated(): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         defaultDecimalFormat.format(this)

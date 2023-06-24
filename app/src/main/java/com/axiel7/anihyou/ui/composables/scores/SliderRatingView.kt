@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,7 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.utils.NumberUtils.formatToDecimal
+import com.axiel7.anihyou.utils.NumberUtils.format
+import kotlin.math.roundToLong
 
 @Composable
 fun SliderRatingView(
@@ -32,7 +32,6 @@ fun SliderRatingView(
     onRatingChanged: (Double) -> Unit,
 ) {
     var ratingString by remember { mutableStateOf(initialRating.toString()) }
-    var rating by remember { mutableDoubleStateOf(initialRating) }
 
     Column(
         modifier = modifier,
@@ -41,26 +40,41 @@ fun SliderRatingView(
         OutlinedTextField(
             value = ratingString,
             onValueChange = { value ->
-                ratingString = value.formatToDecimal()
-                ratingString.toDoubleOrNull().let {
-                    if (it == null) rating = 0.0
-                    else if (it <= maxValue) rating = it
-                    onRatingChanged(rating)
+                if (value.isEmpty()) {
+                    ratingString = value
+                    onRatingChanged(0.0)
+                }
+                else {
+                    value.toDoubleOrNull()?.let {
+                        if (it == 0.0) {
+                            ratingString = ""
+                            onRatingChanged(0.0)
+                        } else {
+                            val valueRoundedString = it.format(decimalLength = 1)
+                            val valueRounded = valueRoundedString.toDouble()
+                            if (valueRounded <= maxValue)
+                                ratingString = valueRoundedString
+                            onRatingChanged(valueRounded)
+                        }
+                    }
                 }
             },
             modifier = Modifier.width(128.dp),
             label = { Text(text = stringResource(R.string.score)) },
-            suffix = { Text(text = "/${String.format("%.0f", maxValue)}") },
+            suffix = { Text(text = "/${maxValue.format(decimalLength = 0)}") },
+            singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
         Slider(
-            value = rating.toFloat(),
-            onValueChange = { rating = it.toDouble() },
+            value = ratingString.toFloatOrNull() ?: 0f,
+            onValueChange = {
+                ratingString = if (it == 0f) "" else it.toDouble().format(decimalLength = 1)
+            },
             valueRange = 0f..maxValue.toFloat(),
             steps = if (maxValue <= 10.0 && !showAsDecimal) maxValue.toInt() else 0,
             onValueChangeFinished = {
-                onRatingChanged(rating)
+                onRatingChanged(ratingString.toDoubleOrNull() ?: 0.0)
             }
         )
     }
