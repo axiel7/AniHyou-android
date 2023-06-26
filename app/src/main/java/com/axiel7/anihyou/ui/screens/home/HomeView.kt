@@ -86,10 +86,6 @@ fun HomeView(
         rememberTopAppBarState()
     )
 
-    LaunchedEffect(viewModel) {
-        viewModel.getUnreadNotificationCount()
-    }
-
     listState.OnBottomReached(buffer = 0) {
         viewModel.addNextInfo()
     }
@@ -100,7 +96,8 @@ fun HomeView(
         actions = {
             BadgedBox(
                 badge = {
-                    if (viewModel.unreadNotificationCount > 0) {
+                    val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsState()
+                    if (unreadNotificationCount > 0) {
                         Badge {
                             Text(text = viewModel.unreadNotificationCount.toString())
                         }
@@ -110,7 +107,6 @@ fun HomeView(
                     .padding(horizontal = 16.dp)
                     .clickable {
                         navigateToNotifications()
-                        viewModel.unreadNotificationCount = 0
                     }
             ) {
                 Icon(
