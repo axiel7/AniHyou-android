@@ -6,17 +6,16 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.DeleteMediaListMutation
-import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.isManga
+import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.base.UiState
+import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
-import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -29,14 +28,7 @@ class EditMediaViewModel(
     val isNewEntry by derivedStateOf { listEntry == null }
 
     var status by mutableStateOf(listEntry?.status)
-    var progress by mutableStateOf(listEntry?.progress)
-    var volumeProgress by mutableStateOf(listEntry?.progressVolumes)
-    var score by mutableStateOf(listEntry?.score)
-    var startDate by mutableStateOf(listEntry?.startedAt?.fuzzyDate?.toLocalDate())
-    var endDate by mutableStateOf(listEntry?.completedAt?.fuzzyDate?.toLocalDate())
-    var repeatCount by mutableStateOf(listEntry?.repeat)
-    var isPrivate by mutableStateOf(listEntry?.private)
-    var notes by mutableStateOf(listEntry?.notes)
+        private set
 
     fun onChangeStatus(value: MediaListStatus) {
         status = value
@@ -51,6 +43,9 @@ class EditMediaViewModel(
             }
         }
     }
+
+    var progress by mutableStateOf(listEntry?.progress)
+        private set
 
     fun onChangeProgress(value: Int?) {
         if (canChangeProgressTo(value, mediaDetails.duration())) {
@@ -71,6 +66,9 @@ class EditMediaViewModel(
         else -> false
     }
 
+    var volumeProgress by mutableStateOf(listEntry?.progressVolumes)
+        private set
+
     fun onChangeVolumeProgress(value: Int?) {
         if (canChangeProgressTo(value, mediaDetails.volumes)) {
             volumeProgress = value
@@ -80,6 +78,30 @@ class EditMediaViewModel(
         }
     }
 
+    var score by mutableStateOf(listEntry?.score)
+        private set
+
+    fun onChangeScore(value: Double) {
+        score = value
+    }
+
+    var startDate by mutableStateOf(listEntry?.startedAt?.fuzzyDate?.toLocalDate())
+        private set
+
+    fun onChangeStartDate(value: Long?) {
+        startDate = value?.millisToLocalDate()
+    }
+
+    var endDate by mutableStateOf(listEntry?.completedAt?.fuzzyDate?.toLocalDate())
+        private set
+
+    fun onChangeEndDate(value: Long?) {
+        endDate = value?.millisToLocalDate()
+    }
+
+    var repeatCount by mutableStateOf(listEntry?.repeat)
+        private set
+
     fun onChangeRepeatCount(value: Int?): Boolean {
         if (value != null && value >= 0) {
             repeatCount = value
@@ -88,63 +110,68 @@ class EditMediaViewModel(
         return false
     }
 
+    var isPrivate by mutableStateOf(listEntry?.private)
+        private set
+
+    fun onChangeIsPrivate(value: Boolean) {
+        isPrivate = value
+    }
+
+    var notes by mutableStateOf(listEntry?.notes)
+        private set
+
+    fun onChangeNotes(value: String) {
+        notes = value
+    }
+
     var openDatePicker by mutableStateOf(false)
     var selectedDateType by mutableIntStateOf(-1)
 
     var updateSuccess by mutableStateOf(false)
 
-    suspend fun updateListEntry() {
-        viewModelScope.launch {
-            isLoading = true
-            val response = UpdateEntryMutation(
-                mediaId = Optional.present(mediaDetails.id),
-                status = if (status != listEntry?.status) Optional.present(status)
-                else Optional.absent(),
-                score = if (score != listEntry?.score) Optional.present(score)
-                else Optional.absent(),
-                progress = if (progress != listEntry?.progress) Optional.present(progress)
-                else Optional.absent(),
-                progressVolumes = if (volumeProgress != listEntry?.progressVolumes) Optional.present(
-                    volumeProgress
-                )
-                else Optional.absent(),
-                startedAt = if (startDate?.toFuzzyDate() != listEntry?.startedAt?.fuzzyDate) Optional.present(
-                    startDate?.toFuzzyDateInput()
-                )
-                else Optional.absent(),
-                completedAt = if (endDate?.toFuzzyDate() != listEntry?.completedAt?.fuzzyDate) Optional.present(
-                    endDate?.toFuzzyDateInput()
-                )
-                else Optional.absent(),
-                repeat = if (repeatCount != listEntry?.repeat) Optional.present(repeatCount)
-                else Optional.absent(),
-                private = if (isPrivate != listEntry?.private) Optional.present(isPrivate)
-                else Optional.absent(),
-                notes = if (notes != listEntry?.notes) Optional.present(notes)
-                else Optional.absent()
-            ).tryMutation()
+    suspend fun updateListEntry() = viewModelScope.launch {
+        MediaListRepository.updateEntry(
+            oldEntry = listEntry,
+            mediaId = mediaDetails.id,
+            status = status,
+            score = score,
+            progress = progress,
+            progressVolumes = volumeProgress,
+            startedAt = startDate?.toFuzzyDate(),
+            completedAt = endDate?.toFuzzyDate(),
+            repeat = repeatCount,
+            private = isPrivate,
+            notes = notes,
+        ).collect {
+            isLoading = it is UiState.Loading
 
-            response?.data?.SaveMediaListEntry?.basicMediaListEntry?.let { listEntry = it }
-            updateSuccess = response != null
-
-            isLoading = false
+            if (it is UiState.Success) {
+                listEntry = it.data
+                updateSuccess = true
+            }
+            else if (it is UiState.Error) {
+                message = it.message
+            }
         }
     }
 
     var openDeleteDialog by mutableStateOf(false)
 
-    suspend fun deleteListEntry() {
-        viewModelScope.launch {
-            if (listEntry == null) return@launch
-            isLoading = true
-            val response = DeleteMediaListMutation(
-                mediaListEntryId = Optional.present(listEntry!!.id)
-            ).tryMutation()
+    suspend fun deleteListEntry() = viewModelScope.launch {
+        if (listEntry == null) return@launch
+        MediaListRepository.deleteEntry(listEntry!!.id).collect {
+            isLoading = it is UiState.Loading
 
-            if (response != null) listEntry = null
-            updateSuccess = response != null
-
-            isLoading = false
+            if (it is UiState.Success) {
+                if (it.data) {
+                    listEntry = null
+                    updateSuccess = true
+                }
+            }
+            else if (it is UiState.Error) {
+                message = it.message
+            }
         }
     }
+
 }

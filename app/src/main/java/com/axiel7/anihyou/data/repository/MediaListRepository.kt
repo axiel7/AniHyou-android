@@ -2,15 +2,20 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.axiel7.anihyou.DeleteMediaListMutation
+import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.UiState
+import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import kotlinx.coroutines.flow.flow
 
 object MediaListRepository {
@@ -65,6 +70,74 @@ object MediaListRepository {
         else {
             val entry = response?.data?.SaveMediaListEntry
             if (entry != null) emit(UiState.Success(entry))
+            else emit(UiState.Error(message = "Error"))
+        }
+    }
+
+    fun updateEntry(
+        oldEntry: BasicMediaListEntry?,
+        mediaId: Int,
+        status: MediaListStatus?,
+        score: Double?,
+        progress: Int?,
+        progressVolumes: Int?,
+        startedAt: FuzzyDate?,
+        completedAt: FuzzyDate?,
+        repeat: Int?,
+        private: Boolean?,
+        notes: String?,
+    ) = flow {
+        emit(UiState.Loading)
+
+        val response = UpdateEntryMutation(
+            mediaId = Optional.present(mediaId),
+            status = if (status != oldEntry?.status) Optional.present(status)
+            else Optional.absent(),
+            score = if (score != oldEntry?.score) Optional.present(score)
+            else Optional.absent(),
+            progress = if (progress != oldEntry?.progress) Optional.present(progress)
+            else Optional.absent(),
+            progressVolumes = if (progressVolumes != oldEntry?.progressVolumes) Optional.present(
+                progressVolumes
+            )
+            else Optional.absent(),
+            startedAt = if (startedAt != oldEntry?.startedAt?.fuzzyDate) Optional.present(
+                startedAt?.toFuzzyDateInput()
+            )
+            else Optional.absent(),
+            completedAt = if (completedAt != oldEntry?.completedAt?.fuzzyDate) Optional.present(
+                completedAt?.toFuzzyDateInput()
+            )
+            else Optional.absent(),
+            repeat = if (repeat != oldEntry?.repeat) Optional.present(repeat)
+            else Optional.absent(),
+            private = if (private != oldEntry?.private) Optional.present(private)
+            else Optional.absent(),
+            notes = if (notes != oldEntry?.notes) Optional.present(notes)
+            else Optional.absent()
+        ).tryMutation()
+
+        val error = response.getError()
+        if (error != null) emit(UiState.Error(message = error))
+        else {
+            val entry = response?.data?.SaveMediaListEntry?.basicMediaListEntry
+            if (entry != null) emit(UiState.Success(entry))
+            else emit(UiState.Error(message = "Error"))
+        }
+    }
+
+    fun deleteEntry(id: Int) = flow {
+        emit(UiState.Loading)
+
+        val response = DeleteMediaListMutation(
+            mediaListEntryId = Optional.present(id)
+        ).tryMutation()
+
+        val error = response.getError()
+        if (error != null) emit(UiState.Error(message = error))
+        else {
+            val entry = response?.data?.DeleteMediaListEntry
+            if (entry != null) emit(UiState.Success(true))
             else emit(UiState.Error(message = "Error"))
         }
     }

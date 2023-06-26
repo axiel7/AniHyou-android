@@ -102,8 +102,8 @@ fun EditMediaSheet(
             datePickerState = datePickerState,
             onDateSelected = {
                 when (viewModel.selectedDateType) {
-                    1 -> { viewModel.startDate = it.millisToLocalDate() }
-                    2 -> { viewModel.endDate = it.millisToLocalDate() }
+                    1 -> { viewModel.onChangeStartDate(it) }
+                    2 -> { viewModel.onChangeEndDate(it) }
                 }
             }
         )
@@ -222,9 +222,7 @@ fun EditMediaSheet(
                                 .padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = viewModel.score ?: 0.0,
                             showAsDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL.name,
-                            onRatingChanged = {
-                                viewModel.score = it
-                            }
+                            onRatingChanged = viewModel::onChangeScore
                         )
                     }
 
@@ -232,9 +230,7 @@ fun EditMediaSheet(
                         FiveStarRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = viewModel.score ?: 0.0,
-                            onRatingChanged = {
-                                viewModel.score = it
-                            }
+                            onRatingChanged = viewModel::onChangeScore
                         )
                     }
 
@@ -242,9 +238,7 @@ fun EditMediaSheet(
                         SmileyRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = viewModel.score ?: 0.0,
-                            onRatingChanged = {
-                                viewModel.score = it
-                            }
+                            onRatingChanged = viewModel::onChangeScore
                         )
                     }
 
@@ -261,7 +255,7 @@ fun EditMediaSheet(
                 label = { Text(text = stringResource(R.string.start_date)) },
                 trailingIcon = {
                     if (viewModel.startDate != null) {
-                        IconButton(onClick = { viewModel.startDate = null }) {
+                        IconButton(onClick = { viewModel.onChangeStartDate(null) }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
                                 contentDescription = stringResource(R.string.delete)
@@ -282,7 +276,7 @@ fun EditMediaSheet(
                 label = { Text(text = stringResource(R.string.end_date)) },
                 trailingIcon = {
                     if (viewModel.endDate != null) {
-                        IconButton(onClick = { viewModel.endDate = null }) {
+                        IconButton(onClick = { viewModel.onChangeEndDate(null) }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
                                 contentDescription = stringResource(R.string.delete)
@@ -316,18 +310,14 @@ fun EditMediaSheet(
                 TextCheckbox(
                     text = stringResource(R.string.list_private),
                     checked = viewModel.isPrivate ?: false,
-                    onCheckedChange = {
-                        viewModel.isPrivate = it
-                    }
+                    onCheckedChange = viewModel::onChangeIsPrivate
                 )
             }
 
             // Notes
             OutlinedTextField(
                 value = viewModel.notes ?: "",
-                onValueChange = {
-                    viewModel.notes = it
-                },
+                onValueChange = viewModel::onChangeNotes,
                 modifier = Modifier.padding(horizontal = 16.dp),
                 label = { Text(text = stringResource(R.string.notes)) },
                 singleLine = false,
