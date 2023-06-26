@@ -72,39 +72,39 @@ import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.base.ListMode
-import com.axiel7.anihyou.ui.calendar.CALENDAR_DESTINATION
-import com.axiel7.anihyou.ui.calendar.CalendarView
-import com.axiel7.anihyou.ui.characterdetails.CHARACTER_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.characterdetails.CharacterDetailsView
+import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
+import com.axiel7.anihyou.ui.screens.calendar.CalendarView
+import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
-import com.axiel7.anihyou.ui.explore.EXPLORE_GENRE_DESTINATION
-import com.axiel7.anihyou.ui.explore.ExploreView
-import com.axiel7.anihyou.ui.explore.MEDIA_CHART_DESTINATION
-import com.axiel7.anihyou.ui.explore.MediaChartListView
-import com.axiel7.anihyou.ui.explore.SEASON_ANIME_DESTINATION
-import com.axiel7.anihyou.ui.explore.SeasonAnimeView
-import com.axiel7.anihyou.ui.home.HomeView
-import com.axiel7.anihyou.ui.login.LoginView
-import com.axiel7.anihyou.ui.mediadetails.MEDIA_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.mediadetails.MediaDetailsView
-import com.axiel7.anihyou.ui.notifications.NOTIFICATIONS_DESTINATION
-import com.axiel7.anihyou.ui.notifications.NotificationsView
-import com.axiel7.anihyou.ui.profile.ProfileView
-import com.axiel7.anihyou.ui.profile.USER_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.reviewdetails.REVIEW_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.reviewdetails.ReviewDetailsView
-import com.axiel7.anihyou.ui.settings.SETTINGS_DESTINATION
-import com.axiel7.anihyou.ui.settings.SettingsView
-import com.axiel7.anihyou.ui.staffdetails.STAFF_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.staffdetails.StaffDetailsView
-import com.axiel7.anihyou.ui.studiodetails.STUDIO_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.studiodetails.StudioDetailsView
+import com.axiel7.anihyou.ui.screens.explore.EXPLORE_GENRE_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.ExploreView
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_CHART_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.MediaChartListView
+import com.axiel7.anihyou.ui.screens.explore.SEASON_ANIME_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.SeasonAnimeView
+import com.axiel7.anihyou.ui.screens.home.HomeView
+import com.axiel7.anihyou.ui.screens.login.LoginView
+import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
+import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
+import com.axiel7.anihyou.ui.screens.profile.ProfileView
+import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
+import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
+import com.axiel7.anihyou.ui.screens.settings.SettingsView
+import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
+import com.axiel7.anihyou.ui.screens.studiodetails.STUDIO_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.ui.thread.THREAD_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.thread.ThreadDetailsView
-import com.axiel7.anihyou.ui.usermedialist.USER_MEDIA_LIST_DESTINATION
-import com.axiel7.anihyou.ui.usermedialist.UserMediaListHostView
+import com.axiel7.anihyou.ui.screens.thread.THREAD_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
+import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
 import com.axiel7.anihyou.utils.THEME_DARK
@@ -434,7 +434,8 @@ fun MainView(
                 )
             }
 
-            composable(EXPLORE_GENRE_DESTINATION,
+            composable(
+                EXPLORE_GENRE_DESTINATION,
                 arguments = listOf(
                     navArgument("mediaType") { type = NavType.StringType },
                     navArgument("mediaSort") {
@@ -509,7 +510,8 @@ fun MainView(
                 )
             }
 
-            composable(USER_MEDIA_LIST_DESTINATION,
+            composable(
+                USER_MEDIA_LIST_DESTINATION,
                 arguments = listOf(
                     navArgument("mediaType") { type = NavType.StringType },
                     navArgument("userId") { type = NavType.IntType }
@@ -551,7 +553,8 @@ fun MainView(
                 )
             }
 
-            composable(MEDIA_DETAILS_DESTINATION,
+            composable(
+                MEDIA_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("media_id") { type = NavType.IntType }
                 ),
@@ -608,7 +611,8 @@ fun MainView(
                 )
             }
 
-            composable(MEDIA_CHART_DESTINATION,
+            composable(
+                MEDIA_CHART_DESTINATION,
                 arguments = listOf(
                     navArgument("type") { type = NavType.StringType }
                 )
@@ -629,7 +633,8 @@ fun MainView(
                 }
             }
 
-            composable(SEASON_ANIME_DESTINATION,
+            composable(
+                SEASON_ANIME_DESTINATION,
                 arguments = listOf(
                     navArgument("season") { type = NavType.StringType },
                     navArgument("year") { type = NavType.IntType }
@@ -670,7 +675,8 @@ fun MainView(
                 )
             }
 
-            composable(USER_DETAILS_DESTINATION,
+            composable(
+                USER_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") {
                         type = NavType.StringType
@@ -736,7 +742,8 @@ fun MainView(
                 )
             }
 
-            composable(CHARACTER_DETAILS_DESTINATION,
+            composable(
+                CHARACTER_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") { type = NavType.IntType }
                 )
@@ -764,7 +771,8 @@ fun MainView(
                 }
             }
 
-            composable(STAFF_DETAILS_DESTINATION,
+            composable(
+                STAFF_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") { type = NavType.IntType }
                 )
@@ -798,7 +806,8 @@ fun MainView(
                 }
             }
 
-            composable(REVIEW_DETAILS_DESTINATION,
+            composable(
+                REVIEW_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") { type = NavType.IntType }
                 )
@@ -813,7 +822,8 @@ fun MainView(
                 }
             }
 
-            composable(THREAD_DETAILS_DESTINATION,
+            composable(
+                THREAD_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") { type = NavType.IntType }
                 )
@@ -841,7 +851,8 @@ fun MainView(
                 }
             }
 
-            composable(STUDIO_DETAILS_DESTINATION,
+            composable(
+                STUDIO_DETAILS_DESTINATION,
                 arguments = listOf(
                     navArgument("id") { type = NavType.IntType }
                 )
