@@ -28,6 +28,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
@@ -59,6 +61,14 @@ import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+
+enum class HomeInfo {
+    AIRING,
+    THIS_SEASON,
+    TRENDING_ANIME,
+    NEXT_SEASON,
+    TRENDING_MANGA,
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,54 +171,84 @@ fun HomeAiringContent(
 ) {
     val airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
-    LaunchedEffect(airingOnMyList) {
-        if (airingOnMyList == true && viewModel.airingAnimeOnMyList.isEmpty())
-            viewModel.getAiringAnimeOnMyList()
-        else if (viewModel.airingAnime.isEmpty())
-            viewModel.getAiringAnime()
-    }
-
-    // Airing
     HorizontalListHeader(
         text = stringResource(R.string.airing),
         onClick = navigateToCalendar
     )
-    HomeLazyRow(
-        minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
-    ) {
-        if (airingOnMyList == true) {
-            items(viewModel.airingAnimeOnMyList) { item ->
-                AiringAnimeHorizontalItem(
-                    title = item.title?.userPreferred ?: "",
-                    subtitle = stringResource(R.string.airing_in,
-                        item.nextAiringEpisode?.timeUntilAiring?.toLong()?.secondsToLegibleText() ?: UNKNOWN_CHAR
-                    ),
-                    imageUrl = item.coverImage?.large,
-                    score = if (item.meanScore != null) "${item.meanScore}%" else null,
-                    onClick = {
-                        navigateToMediaDetails(item.id)
+    if (airingOnMyList == true) {
+        val airingAnime by viewModel.airingAnimeOnMyList.collectAsState()
+        HomeLazyRow(
+            minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
+        ) {
+            when (airingAnime) {
+                is UiState.Loading -> {
+                    items(10) {
+                        AiringAnimeHorizontalItemPlaceholder()
                     }
-                )
-            }
-        }
-        else {
-            items(viewModel.airingAnime) { item ->
-                AiringAnimeHorizontalItem(
-                    title = item.media?.title?.userPreferred ?: "",
-                    subtitle = stringResource(R.string.airing_in, item.timeUntilAiring.toLong().secondsToLegibleText()),
-                    imageUrl = item.media?.coverImage?.large,
-                    score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
-                    onClick = {
-                        navigateToMediaDetails(item.media!!.id)
+                }
+                is UiState.Success -> {
+                    items(
+                        items = (airingAnime as UiState.Success).data,
+                        contentType = { it }
+                    ) { item ->
+                        AiringAnimeHorizontalItem(
+                            title = item.title?.userPreferred ?: "",
+                            subtitle = stringResource(
+                                R.string.airing_in,
+                                item.nextAiringEpisode?.timeUntilAiring?.toLong()
+                                    ?.secondsToLegibleText() ?: UNKNOWN_CHAR
+                            ),
+                            imageUrl = item.coverImage?.large,
+                            score = if (item.meanScore != null) "${item.meanScore}%" else null,
+                            onClick = {
+                                navigateToMediaDetails(item.id)
+                            }
+                        )
                     }
-                )
+                }
+                is UiState.Error -> {
+                    item {
+                        Text(text = (airingAnime as UiState.Error).message)
+                    }
+                }
             }
-        }
-        if (viewModel.isLoadingAiring) {
-            items(10) {
-                AiringAnimeHorizontalItemPlaceholder()
+        }//:LazyRow
+    }
+    else if (airingOnMyList == false) {
+        val airingAnime by viewModel.airingAnime.collectAsState()
+        HomeLazyRow(
+            minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
+        ) {
+            when (airingAnime) {
+                is UiState.Loading -> {
+                    items(10) {
+                        AiringAnimeHorizontalItemPlaceholder()
+                    }
+                }
+                is UiState.Success -> {
+                    items(
+                        items = (airingAnime as UiState.Success).data,
+                        contentType = { it }
+                    ) { item ->
+                        AiringAnimeHorizontalItem(
+                            title = item.media?.title?.userPreferred ?: "",
+                            subtitle = stringResource(R.string.airing_in,
+                                item.timeUntilAiring.toLong().secondsToLegibleText()),
+                            imageUrl = item.media?.coverImage?.large,
+                            score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
+                            onClick = {
+                                navigateToMediaDetails(item.media!!.id)
+                            }
+                        )
+                    }
+                }
+                is UiState.Error -> {
+                    item {
+                        Text(text = (airingAnime as UiState.Error).message)
+                    }
+                }
             }
-        }
+        }//:LazyRow
     }
 }
 
@@ -218,42 +258,47 @@ fun HomeThisSeasonContent(
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        if (viewModel.thisSeasonAnime.isEmpty()) viewModel.getThisSeasonAnime()
-    }
-
-    // This season
     HorizontalListHeader(
         text = viewModel.nowAnimeSeason.localized(),
         onClick = {
             navigateToAnimeSeason(viewModel.nowAnimeSeason)
         }
     )
+    val seasonAnime by viewModel.thisSeasonAnime.collectAsState()
     HomeLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        items(viewModel.thisSeasonAnime) { item ->
-            MediaItemVertical(
-                title = item.title?.userPreferred ?: "",
-                imageUrl = item.coverImage?.large,
-                modifier = Modifier.padding(start = 8.dp),
-                subtitle = {
-                    item.meanScore?.let { score ->
-                        SmallScoreIndicator(score = "${score}%")
-                    }
-                },
-                minLines = 2,
-                onClick = { navigateToMediaDetails(item.id) }
-            )
-        }
-        if (viewModel.isLoadingThisSeason) {
-            items(10) {
-                MediaItemVerticalPlaceholder(
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+        when (seasonAnime) {
+            is UiState.Loading -> {
+                items(10) {
+                    MediaItemVerticalPlaceholder(
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            is UiState.Success -> {
+                items((seasonAnime as UiState.Success).data) { item ->
+                    MediaItemVertical(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        modifier = Modifier.padding(start = 8.dp),
+                        subtitle = {
+                            item.meanScore?.let { score ->
+                                SmallScoreIndicator(score = "${score}%")
+                            }
+                        },
+                        minLines = 2,
+                        onClick = { navigateToMediaDetails(item.id) }
+                    )
+                }
+            }
+            is UiState.Error -> {
+                item {
+                    Text(text = (seasonAnime as UiState.Error).message)
+                }
             }
         }
-    }
+    }//:LazyRow
 }
 
 @Composable
@@ -262,42 +307,47 @@ fun HomeTrendingAnimeContent(
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        if (viewModel.trendingAnime.isEmpty()) viewModel.getTrendingAnime()
-    }
-
-    // Trending Anime
     HorizontalListHeader(
         text = stringResource(R.string.trending_now),
         onClick = {
             navigateToExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
         }
     )
+    val trendingAnime by viewModel.trendingAnime.collectAsState()
     HomeLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        items(viewModel.trendingAnime) { item ->
-            MediaItemVertical(
-                title = item.title?.userPreferred ?: "",
-                imageUrl = item.coverImage?.large,
-                modifier = Modifier.padding(start = 8.dp),
-                subtitle = {
-                    item.meanScore?.let { score ->
-                        SmallScoreIndicator(score = "${score}%")
-                    }
-                },
-                minLines = 2,
-                onClick = { navigateToMediaDetails(item.id) }
-            )
-        }
-        if (viewModel.isLoadingTrendingAnime) {
-            items(10) {
-                MediaItemVerticalPlaceholder(
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+        when (trendingAnime) {
+            is UiState.Loading -> {
+                items(10) {
+                    MediaItemVerticalPlaceholder(
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            is UiState.Success -> {
+                items((trendingAnime as UiState.Success).data) { item ->
+                    MediaItemVertical(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        modifier = Modifier.padding(start = 8.dp),
+                        subtitle = {
+                            item.meanScore?.let { score ->
+                                SmallScoreIndicator(score = "${score}%")
+                            }
+                        },
+                        minLines = 2,
+                        onClick = { navigateToMediaDetails(item.id) }
+                    )
+                }
+            }
+            is UiState.Error -> {
+                item {
+                    Text(text = (trendingAnime as UiState.Error).message)
+                }
             }
         }
-    }
+    }//:LazyRow
 }
 
 @Composable
@@ -306,42 +356,47 @@ fun HomeNextSeasonContent(
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        if (viewModel.nextSeasonAnime.isEmpty()) viewModel.getNextSeasonAnime()
-    }
-
-    // Next season
     HorizontalListHeader(
         text = stringResource(R.string.next_season),
         onClick = {
             navigateToAnimeSeason(viewModel.nextAnimeSeason)
         }
     )
+    val seasonAnime by viewModel.nextSeasonAnime.collectAsState()
     HomeLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        items(viewModel.nextSeasonAnime) { item ->
-            MediaItemVertical(
-                title = item.title?.userPreferred ?: "",
-                imageUrl = item.coverImage?.large,
-                modifier = Modifier.padding(start = 8.dp),
-                subtitle = {
-                    item.meanScore?.let { score ->
-                        SmallScoreIndicator(score = "${score}%")
-                    }
-                },
-                minLines = 2,
-                onClick = { navigateToMediaDetails(item.id) }
-            )
-        }
-        if (viewModel.isLoadingNextSeason) {
-            items(10) {
-                MediaItemVerticalPlaceholder(
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+        when (seasonAnime) {
+            is UiState.Loading -> {
+                items(10) {
+                    MediaItemVerticalPlaceholder(
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            is UiState.Success -> {
+                items((seasonAnime as UiState.Success).data) { item ->
+                    MediaItemVertical(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        modifier = Modifier.padding(start = 8.dp),
+                        subtitle = {
+                            item.meanScore?.let { score ->
+                                SmallScoreIndicator(score = "${score}%")
+                            }
+                        },
+                        minLines = 2,
+                        onClick = { navigateToMediaDetails(item.id) }
+                    )
+                }
+            }
+            is UiState.Error -> {
+                item {
+                    Text(text = (seasonAnime as UiState.Error).message)
+                }
             }
         }
-    }
+    }//:LazyRow
 }
 
 @Composable
@@ -350,42 +405,47 @@ fun HomeTrendingMangaContent(
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        if (viewModel.trendingManga.isEmpty()) viewModel.getTrendingManga()
-    }
-
-    // Trending Manga
     HorizontalListHeader(
         text = stringResource(R.string.trending_manga),
         onClick = {
             navigateToExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
         }
     )
+    val trendingManga by viewModel.trendingManga.collectAsState()
     HomeLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        items(viewModel.trendingManga) { item ->
-            MediaItemVertical(
-                title = item.title?.userPreferred ?: "",
-                imageUrl = item.coverImage?.large,
-                modifier = Modifier.padding(start = 8.dp),
-                subtitle = {
-                    item.meanScore?.let { score ->
-                        SmallScoreIndicator(score = "${score}%")
-                    }
-                },
-                minLines = 2,
-                onClick = { navigateToMediaDetails(item.id) }
-            )
-        }
-        if (viewModel.isLoadingTrendingManga) {
-            items(10) {
-                MediaItemVerticalPlaceholder(
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+        when (trendingManga) {
+            is UiState.Loading -> {
+                items(10) {
+                    MediaItemVerticalPlaceholder(
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            is UiState.Success -> {
+                items((trendingManga as UiState.Success).data) { item ->
+                    MediaItemVertical(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        modifier = Modifier.padding(start = 8.dp),
+                        subtitle = {
+                            item.meanScore?.let { score ->
+                                SmallScoreIndicator(score = "${score}%")
+                            }
+                        },
+                        minLines = 2,
+                        onClick = { navigateToMediaDetails(item.id) }
+                    )
+                }
+            }
+            is UiState.Error -> {
+                item {
+                    Text(text = (trendingManga as UiState.Error).message)
+                }
             }
         }
-    }
+    }//:LazyRow
 }
 
 @Composable
