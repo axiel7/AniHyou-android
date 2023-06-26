@@ -1,87 +1,110 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.axiel7.anihyou.App
-import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
 class UserMediaListViewModel(
-    private val mediaType: MediaType
+    val mediaType: MediaType,
+    val userId: Int?,
 ) : BaseViewModel() {
 
-    var status = MediaListStatus.CURRENT
+    var status by mutableStateOf(MediaListStatus.CURRENT)
+    private set
+
+    fun onStatusChanged(status: MediaListStatus) {
+        this.status = status
+        viewModelScope.launch { refreshList(refreshCache = false) }
+    }
 
     var page = 1
-    var hasNextPage = false
+    var hasNextPage = true
     var mediaList = mutableStateListOf<UserMediaListQuery.MediaList>()
 
     var sort = MediaListSort.safeValueOf(
         if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
+    private set
 
-    suspend fun getUserList(
-        userId: Int?,
-        refreshCache: Boolean = false
-    ) {
+    fun onSortChanged(sort: MediaListSort) {
+        this.sort = sort
         viewModelScope.launch {
-            isLoading = page == 1
-            val response = UserMediaListQuery(
-                page = Optional.present(page),
-                perPage = Optional.present(15),
-                userId = Optional.present(
-                    // if no user id specified, use the authenticated user id
-                    userId ?: LoginRepository.getUserId()
-                ),
-                type = Optional.present(mediaType),
-                status = Optional.present(status),
-                sort = Optional.present(listOf(sort, MediaListSort.MEDIA_ID_DESC))
-            ).tryQuery(
-                fetchPolicy = if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst
-            )
+            App.dataStore.edit {
+                if (mediaType == MediaType.ANIME)
+                    it[ANIME_LIST_SORT_PREFERENCE_KEY] = sort.rawValue
+                else
+                    it[MANGA_LIST_SORT_PREFERENCE_KEY] = sort.rawValue
+            }
 
-            response?.data?.Page?.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
-            hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-            page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
-            isLoading = false
+            refreshList(refreshCache = false)
         }
     }
 
+    suspend fun getUserMediaList(
+        refreshCache: Boolean = false
+    ) = viewModelScope.launch {
+        MediaListRepository.getUserMediaListPage(
+            userId = userId,
+            mediaType = mediaType,
+            status = status,
+            sort = sort,
+            refreshCache = refreshCache,
+            page = page
+        ).collect { uiState ->
+            isLoading = page == 1 && uiState is UiState.Loading
+
+            if (uiState is UiState.Success) {
+                uiState.data.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
+                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
+                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page++
+            }
+            else if (uiState is UiState.Error) {
+                message = uiState.message
+            }
+        }
+    }
+
+
     suspend fun refreshList(
-        userId: Int?,
         refreshCache: Boolean
     ) {
         hasNextPage = false
         page = 1
         mediaList.clear()
-        getUserList(userId, refreshCache)
+        getUserMediaList(refreshCache)
     }
 
-    suspend fun updateEntryProgress(entryId: Int, progress: Int) {
-        viewModelScope.launch {
-            isLoading = true
-            val response = UpdateEntryProgressMutation(
-                saveMediaListEntryId = Optional.present(entryId),
-                progress = Optional.present(progress)
-            ).tryMutation()
+    suspend fun updateEntryProgress(
+        entryId: Int,
+        progress: Int
+    ) = viewModelScope.launch {
+        MediaListRepository.updateEntryProgress(
+            entryId = entryId,
+            progress = progress,
+        ).collect { uiState ->
+            isLoading = uiState is UiState.Loading
 
-            if (response != null) {
+            if (uiState is UiState.Success) {
                 val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
                 if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
                     basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)
                 )
             }
-
-            isLoading = false
         }
     }
 

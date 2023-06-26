@@ -22,5 +22,7 @@ enum class UserMediaListSort(
     companion object {
         fun valueOf(rawValue: String?): UserMediaListSort? =
             UserMediaListSort.values().find { it.value.rawValue == rawValue }
+        fun valueOf(value: MediaListSort?): UserMediaListSort? =
+            UserMediaListSort.values().find { it.value == value }
     }
 }

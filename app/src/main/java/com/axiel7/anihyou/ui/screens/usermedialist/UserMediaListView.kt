@@ -39,15 +39,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,15 +58,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.UserMediaListSort
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.type.MediaListSort
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
@@ -97,15 +92,16 @@ fun UserMediaListHostView(
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateBack: (() -> Unit)? = null,
 ) {
+    val viewModel: UserMediaListViewModel = viewModel {
+        UserMediaListViewModel(mediaType, userId)
+    }
     val scope = rememberCoroutineScope()
-    val selectedStatus = rememberSaveable { mutableStateOf(MediaListStatus.CURRENT) }
+
     var openSortDialog by remember { mutableStateOf(false) }
-    var sortPreference by rememberPreference(
-        key = if (mediaType == MediaType.ANIME) ANIME_LIST_SORT_PREFERENCE_KEY else MANGA_LIST_SORT_PREFERENCE_KEY,
-        defaultValue = if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
-    )
-    val sort = remember { derivedStateOf { sortPreference?.let { MediaListSort.safeValueOf(it) } } }
+
     val statusSheetState = rememberModalBottomSheetState()
+    val editSheetState = rememberModalBottomSheetState()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -114,16 +110,16 @@ fun UserMediaListHostView(
             topAppBarScrollBehavior.state.heightOffset != topAppBarScrollBehavior.state.heightOffsetLimit
         }
     }
-    val isFullscreen = remember { userId != null }
+    val isMyList = remember { userId == null }
 
     if (openSortDialog) {
         DialogWithRadioSelection(
             values = UserMediaListSort.values(),
-            defaultValue = UserMediaListSort.valueOf(sortPreference),
+            defaultValue = UserMediaListSort.valueOf(viewModel.sort),
             title = stringResource(R.string.sort),
             onConfirm = {
-                sortPreference = it.value.rawValue
                 openSortDialog = false
+                viewModel.onSortChanged(it.value)
             },
             onDismiss = { openSortDialog = false }
         )
@@ -131,8 +127,23 @@ fun UserMediaListHostView(
 
     if (statusSheetState.isVisible) {
         ListStatusSheet(
-            selectedStatus = selectedStatus,
-            sheetState = statusSheetState
+            selectedStatus = viewModel.status,
+            sheetState = statusSheetState,
+            onStatusChanged = viewModel::onStatusChanged
+        )
+    }
+
+    if (isMyList && editSheetState.isVisible && viewModel.selectedItem != null) {
+        EditMediaSheet(
+            sheetState = editSheetState,
+            mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
+            listEntry = viewModel.selectedItem!!.basicMediaListEntry,
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    viewModel.onUpdateListEntry(updatedListEntry)
+                    editSheetState.hide()
+                }
+            }
         )
     }
 
@@ -151,11 +162,11 @@ fun UserMediaListHostView(
                     onClick = { scope.launch { statusSheetState.show() } }
                 ) {
                     Icon(
-                        painter = painterResource(selectedStatus.value.icon()),
+                        painter = painterResource(viewModel.status.icon()),
                         contentDescription = "status",
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(text = selectedStatus.value.localized())
+                    Text(text = viewModel.status.localized())
                 }
             }
         },
@@ -170,7 +181,7 @@ fun UserMediaListHostView(
             }
         },
         scrollBehavior = topAppBarScrollBehavior,
-        contentWindowInsets = if (isFullscreen) WindowInsets.systemBars
+        contentWindowInsets = if (!isMyList) WindowInsets.systemBars
         else WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
     ) { padding ->
         Column(
@@ -179,84 +190,70 @@ fun UserMediaListHostView(
                     start = padding.calculateStartPadding(LocalLayoutDirection.current),
                     top = padding.calculateTopPadding(),
                     end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                    bottom = if (isFullscreen) 0.dp
+                    bottom = if (!isMyList) 0.dp
                     else padding.calculateBottomPadding()
                 )
         ) {
             UserMediaListView(
-                mediaType = mediaType,
-                userId = userId,
-                status = selectedStatus.value,
-                sort = sort,
-                contentPadding = if (isFullscreen)
+                mediaList = viewModel.mediaList,
+                status = viewModel.status,
+                isMyList = isMyList,
+                isLoading = viewModel.isLoading,
+                contentPadding = if (!isMyList)
                     PaddingValues(top = 8.dp, bottom = padding.calculateBottomPadding())
                 else PaddingValues(vertical = 8.dp),
+                nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
                 navigateToDetails = navigateToMediaDetails,
-                nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection
+                onLoadMore = {
+                    if (viewModel.hasNextPage) viewModel.getUserMediaList()
+                },
+                onRefresh = {
+                    scope.launch { viewModel.refreshList(refreshCache = true) }
+                },
+                onShowEditSheet = {
+                    viewModel.selectedItem = it
+                    scope.launch { editSheetState.show() }
+                },
+                onUpdateProgress = { entry ->
+                    scope.launch {
+                        viewModel.updateEntryProgress(
+                            entryId = entry.id,
+                            progress = (entry.progress ?: 0) + 1
+                        )
+                    }
+                }
             )
         }//: Column
     }//: Scaffold
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserMediaListView(
-    mediaType: MediaType,
-    userId: Int?,
+    mediaList: List<UserMediaListQuery.MediaList>,
     status: MediaListStatus,
-    sort: State<MediaListSort?>,
+    isMyList: Boolean,
+    isLoading: Boolean,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
+    nestedScrollConnection: NestedScrollConnection,
     navigateToDetails: (mediaId: Int) -> Unit,
-    nestedScrollConnection: NestedScrollConnection
+    onLoadMore: suspend () -> Unit,
+    onRefresh: () -> Unit,
+    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
-    val viewModel: UserMediaListViewModel = viewModel {
-        UserMediaListViewModel(mediaType)
-    }
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = viewModel.isLoading,
-        onRefresh = { scope.launch {
-            viewModel.refreshList(userId = userId, refreshCache = true)
-        } }
+        refreshing = isLoading,
+        onRefresh = onRefresh
     )
-    val sheetState = rememberModalBottomSheetState()
     val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
     val scoreFormatPreference by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
     val scoreFormat by remember {
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
     }
 
-    LaunchedEffect(status) {
-        viewModel.status = status
-        viewModel.refreshList(userId = userId, refreshCache = false)
-    }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getUserList(userId = userId)
-    }
-
-    // open edit sheet only on authenticated user list
-    if (userId == null && sheetState.isVisible && viewModel.selectedItem != null) {
-        EditMediaSheet(
-            sheetState = sheetState,
-            mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
-            listEntry = viewModel.selectedItem!!.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
-                    sheetState.hide()
-                }
-            }
-        )
-    }
-
-    LaunchedEffect(sort.value) {
-        if (!viewModel.isLoading && sort.value != null && viewModel.sort != sort.value) {
-            viewModel.sort = sort.value!!
-            viewModel.refreshList(userId = userId, refreshCache = false)
-        }
-    }
+    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
     Box(
         modifier = Modifier
@@ -275,7 +272,7 @@ fun UserMediaListView(
            when (listDisplayMode) {
                 ListMode.STANDARD.name -> {
                     items(
-                        items = viewModel.mediaList,
+                        items = mediaList,
                         key = { it.basicMediaListEntry.id },
                         contentType = { it.basicMediaListEntry }
                     ) { item ->
@@ -283,26 +280,18 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
-                            isMyList = userId == null,
+                            isMyList = isMyList,
                             onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = {
-                                viewModel.selectedItem = item
-                                scope.launch { sheetState.show() }
-                            },
+                            onLongClick = { onShowEditSheet(item) },
                             onClickPlus = {
-                                scope.launch {
-                                    viewModel.updateEntryProgress(
-                                        entryId = item.basicMediaListEntry.id,
-                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
-                                    )
-                                }
+                                onUpdateProgress(item.basicMediaListEntry)
                             }
                         )
                     }
                 }
                 ListMode.COMPACT.name -> {
                     items(
-                        items = viewModel.mediaList,
+                        items = mediaList,
                         key = { it.basicMediaListEntry.id },
                         contentType = { it.basicMediaListEntry }
                     ) { item ->
@@ -310,26 +299,18 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
-                            isMyList = userId == null,
+                            isMyList = isMyList,
                             onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = {
-                                viewModel.selectedItem = item
-                                scope.launch { sheetState.show() }
-                            },
+                            onLongClick = { onShowEditSheet(item) },
                             onClickPlus = {
-                                scope.launch {
-                                    viewModel.updateEntryProgress(
-                                        entryId = item.basicMediaListEntry.id,
-                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
-                                    )
-                                }
+                                onUpdateProgress(item.basicMediaListEntry)
                             }
                         )
                     }
                 }
                 ListMode.MINIMAL.name -> {
                     items(
-                        items = viewModel.mediaList,
+                        items = mediaList,
                         key = { it.basicMediaListEntry.id },
                         contentType = { it.basicMediaListEntry }
                     ) { item ->
@@ -337,19 +318,11 @@ fun UserMediaListView(
                             item = item,
                             status = status,
                             scoreFormat = scoreFormat,
-                            isMyList = userId == null,
+                            isMyList = isMyList,
                             onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = {
-                                viewModel.selectedItem = item
-                                scope.launch { sheetState.show() }
-                            },
+                            onLongClick = { onShowEditSheet(item) },
                             onClickPlus = {
-                                scope.launch {
-                                    viewModel.updateEntryProgress(
-                                        entryId = item.basicMediaListEntry.id,
-                                        progress = (item.basicMediaListEntry.progress ?: 0) + 1
-                                    )
-                                }
+                                onUpdateProgress(item.basicMediaListEntry)
                             }
                         )
                     }
@@ -357,7 +330,7 @@ fun UserMediaListView(
             }
         }//: LazyColumn
         PullRefreshIndicator(
-            refreshing = viewModel.isLoading,
+            refreshing = isLoading,
             state = pullRefreshState,
             modifier = Modifier
                 .padding(8.dp)
@@ -369,8 +342,9 @@ fun UserMediaListView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListStatusSheet(
-    selectedStatus: MutableState<MediaListStatus>,
+    selectedStatus: MediaListStatus,
     sheetState: SheetState,
+    onStatusChanged: (MediaListStatus) -> Unit,
     onDismiss: () -> Unit = {},
 ) {
     ModalBottomSheet(
@@ -382,11 +356,11 @@ fun ListStatusSheet(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
             MediaListStatus.knownValues().forEach {
-                val isSelected = selectedStatus.value == it
+                val isSelected = selectedStatus == it
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { selectedStatus.value = it }
+                        .clickable { onStatusChanged(it) }
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
