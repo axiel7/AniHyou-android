@@ -20,7 +20,7 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.axiel7.anihyou.MainActivity
+import com.axiel7.anihyou.ui.screens.MainActivity
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
