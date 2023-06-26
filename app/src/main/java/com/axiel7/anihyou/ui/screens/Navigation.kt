@@ -18,6 +18,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.DeepLink
@@ -69,7 +70,7 @@ fun MainNavigation(
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
 ) {
-    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
+    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, App.accessToken)
     val bottomPadding by animateDpAsState(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
