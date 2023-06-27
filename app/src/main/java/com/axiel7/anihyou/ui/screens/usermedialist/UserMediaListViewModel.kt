@@ -10,13 +10,14 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.MediaListRepository
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
 class UserMediaListViewModel(
@@ -65,16 +66,16 @@ class UserMediaListViewModel(
             sort = sort,
             refreshCache = refreshCache,
             page = page
-        ).collect { uiState ->
-            isLoading = page == 1 && uiState is UiState.Loading
+        ).collect { result ->
+            isLoading = page == 1 && result is PagedResult.Loading
 
-            if (uiState is UiState.Success) {
-                uiState.data.mediaList?.filterNotNull()?.let { mediaList.addAll(it) }
-                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
-                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page++
+            if (result is PagedResult.Success) {
+                mediaList.addAll(result.data)
+                hasNextPage = result.nextPage != null
+                page = result.nextPage ?: page
             }
-            else if (uiState is UiState.Error) {
-                message = uiState.message
+            else if (result is PagedResult.Error) {
+                message = result.message
             }
         }
     }
@@ -96,10 +97,10 @@ class UserMediaListViewModel(
         MediaListRepository.updateEntryProgress(
             entryId = entryId,
             progress = progress,
-        ).collect { uiState ->
-            isLoading = uiState is UiState.Loading
+        ).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            if (uiState is UiState.Success) {
+            if (result is DataResult.Success) {
                 val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
                 if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
                     basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)

@@ -9,7 +9,6 @@ import com.axiel7.anihyou.data.PreferencesDataStore
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
@@ -25,33 +24,33 @@ object UserRepository {
     }
 
     fun getUserOptions() = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
 
         val response = UserOptionsQuery().tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val options = response?.data?.Viewer?.options
-            if (options != null) emit(UiState.Success(data = options))
-            else emit(UiState.Error(message = "Error"))
+            if (options != null) emit(DataResult.Success(data = options))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 
     fun updateUser(
         displayAdultContent: Boolean? = null
     ) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = UpdateUserMutation(
             displayAdultContent = Optional.presentIfNotNull(displayAdultContent)
         ).tryMutation()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val user = response?.data?.UpdateUser
-            if (user != null) emit(UiState.Success(data = user))
-            else emit(UiState.Error(message = "Error"))
+            if (user != null) emit(DataResult.Success(data = user))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 }

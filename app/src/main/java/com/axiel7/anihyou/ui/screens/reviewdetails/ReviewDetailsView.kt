@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.ReviewRepository.userAcceptance
-import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.HtmlWebView
@@ -53,10 +53,10 @@ fun ReviewDetailsView(
 
     val reviewDetailsState by viewModel.reviewDetails.collectAsState()
     val reviewDetails by remember {
-        derivedStateOf { (reviewDetailsState as? UiState.Success)?.data }
+        derivedStateOf { (reviewDetailsState as? DataResult.Success)?.data }
     }
     val isLoading by remember {
-        derivedStateOf { reviewDetailsState is UiState.Loading }
+        derivedStateOf { reviewDetailsState is DataResult.Loading }
     }
 
     DefaultScaffoldWithSmallTopAppBar(

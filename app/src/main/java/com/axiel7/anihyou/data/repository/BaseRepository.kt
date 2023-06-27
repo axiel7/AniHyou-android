@@ -37,3 +37,28 @@ object BaseRepository {
         }
         else null
 }
+
+sealed interface DataResult<out T> {
+    object Loading : DataResult<Nothing>
+
+    data class Error(
+        val message: String
+    ) : DataResult<Nothing>
+
+    data class Success<out T>(
+        val data: T
+    ) : DataResult<T>
+}
+
+sealed interface PagedResult<out T> {
+    object Loading : PagedResult<Nothing>
+
+    data class Error(
+        val message: String
+    ) : PagedResult<Nothing>
+
+    data class Success<out T>(
+        val data: T,
+        val nextPage: Int?,
+    ) : PagedResult<T>
+}

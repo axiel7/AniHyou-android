@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.ui.base.UiState
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -36,7 +36,7 @@ fun MediaRelationsView(
 ) {
     val relationsAndRecommendations by viewModel.relationsAndRecommendations.collectAsState()
     val isLoading by remember {
-        derivedStateOf { relationsAndRecommendations is UiState.Loading }
+        derivedStateOf { relationsAndRecommendations is DataResult.Loading }
     }
 
     Column(
@@ -45,7 +45,7 @@ fun MediaRelationsView(
         // Related
         val mediaRelated by remember {
             derivedStateOf {
-                (relationsAndRecommendations as? UiState.Success)?.data?.relations.orEmpty()
+                (relationsAndRecommendations as? DataResult.Success)?.data?.relations.orEmpty()
             }
         }
         if (isLoading || mediaRelated.isNotEmpty()) {
@@ -79,7 +79,7 @@ fun MediaRelationsView(
         // Recommendations
         val mediaRecommendations by remember {
             derivedStateOf {
-                (relationsAndRecommendations as? UiState.Success)?.data?.recommendations.orEmpty()
+                (relationsAndRecommendations as? DataResult.Success)?.data?.recommendations.orEmpty()
             }
         }
         if (isLoading || mediaRecommendations.isNotEmpty()) {

@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
-import com.axiel7.anihyou.data.repository.NotificationRepository.toGenericNotifications
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
 class NotificationsViewModel : BaseViewModel() {
@@ -25,15 +24,13 @@ class NotificationsViewModel : BaseViewModel() {
         NotificationRepository.getNotificationsPage(
             type = type,
             page = page,
-        ).collect { uiState ->
-            isLoading = uiState is UiState.Loading
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-            if (uiState is UiState.Success) {
-                uiState.data.notifications?.filterNotNull()?.toGenericNotifications()?.let {
-                    notifications.addAll(it)
-                }
-                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
-                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page++
+            if (result is PagedResult.Success) {
+                notifications.addAll(result.data)
+                hasNextPage = result.nextPage != null
+                page = result.nextPage ?: page
             }
         }
     }

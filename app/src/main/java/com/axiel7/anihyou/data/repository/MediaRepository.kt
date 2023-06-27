@@ -23,7 +23,6 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ThreadSort
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.flow.flow
 
 object MediaRepository {
@@ -35,7 +34,7 @@ object MediaRepository {
         page: Int = 1,
         perPage: Int = 15,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = AiringAnimesQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
@@ -45,41 +44,52 @@ object MediaRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val airingPage = response?.data?.Page
-            if (airingPage != null) emit(UiState.Success(data = airingPage))
-            else emit(UiState.Error(message = "Empty"))
+            if (airingPage != null) emit(PagedResult.Success(
+                data = airingPage.airingSchedules?.filterNotNull().orEmpty(),
+                nextPage = if (airingPage.pageInfo?.hasNextPage == true)
+                    airingPage.pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
-    fun getAiringAnimeOnMyList(
+    fun getAiringAnimeOnMyListPage(
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = AiringOnMyListQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val airingAnime = response?.data?.Page?.media?.filterNotNull()
                 ?.filter { it.nextAiringEpisode != null }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
-            if (airingAnime != null) emit(UiState.Success(data = airingAnime))
-            else emit(UiState.Error(message = "Empty"))
+            val pageInfo = response?.data?.Page?.pageInfo
+            if (airingAnime != null) emit(PagedResult.Success(
+                data = airingAnime,
+                nextPage = if (pageInfo?.hasNextPage == true)
+                    pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
-    fun getSeasonalAnime(
+    fun getSeasonalAnimePage(
         animeSeason: AnimeSeason,
         page: Int = 1,
         perPage: Int = 15,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = SeasonalAnimeQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
@@ -89,21 +99,27 @@ object MediaRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val seasonalAnime = response?.data?.Page?.media?.filterNotNull()
-            if (seasonalAnime != null) emit(UiState.Success(data = seasonalAnime))
-            else emit(UiState.Error(message = "Empty"))
+            val pageInfo = response?.data?.Page?.pageInfo
+            if (seasonalAnime != null) emit(PagedResult.Success(
+                data = seasonalAnime,
+                nextPage = if (pageInfo?.hasNextPage == true)
+                    pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
-    fun getMediaSorted(
+    fun getMediaSortedPage(
         mediaType: MediaType,
         sort: List<MediaSort>,
         page: Int = 1,
         perPage: Int = 15,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = MediaSortedQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
@@ -112,37 +128,43 @@ object MediaRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val media = response?.data?.Page?.media?.filterNotNull()
-            if (media != null) emit(UiState.Success(data = media))
-            else emit(UiState.Error(message = "Empty"))
+            val pageInfo = response?.data?.Page?.pageInfo
+            if (media != null) emit(PagedResult.Success(
+                data = media,
+                nextPage = if (pageInfo?.hasNextPage == true)
+                    pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
     fun getMediaDetails(mediaId: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = MediaDetailsQuery(
             mediaId = Optional.present(mediaId)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val media = response?.data?.Media
-            if (media != null) emit(UiState.Success(data = media))
-            else emit(UiState.Error(message = "Empty"))
+            if (media != null) emit(DataResult.Success(data = media))
+            else emit(DataResult.Error(message = "Empty"))
         }
     }
 
     fun getMediaCharactersAndStaff(mediaId: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = MediaCharactersAndStaffQuery(
             mediaId = Optional.present(mediaId)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val media = response?.data?.Media
             if (media != null) {
@@ -150,20 +172,20 @@ object MediaRepository {
                     characters = media.characters?.edges?.filterNotNull().orEmpty(),
                     staff = media.staff?.edges?.filterNotNull().orEmpty()
                 )
-                emit(UiState.Success(data = charactersAndStaff))
+                emit(DataResult.Success(data = charactersAndStaff))
             }
-            else emit(UiState.Error(message = "Empty"))
+            else emit(DataResult.Error(message = "Empty"))
         }
     }
 
     fun getMediaRelationsRecommendations(mediaId: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = MediaRelationsAndRecommendationsQuery(
             mediaId = Optional.present(mediaId)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val media = response?.data?.Media
             if (media != null) {
@@ -171,35 +193,35 @@ object MediaRepository {
                     relations = media.relations?.edges?.filterNotNull().orEmpty(),
                     recommendations = media.recommendations?.nodes?.filterNotNull().orEmpty()
                 )
-                emit(UiState.Success(data = relationsAndRecommendations))
+                emit(DataResult.Success(data = relationsAndRecommendations))
             }
-            else emit(UiState.Error(message = "Empty"))
+            else emit(DataResult.Error(message = "Empty"))
         }
     }
 
     fun getMediaStats(mediaId: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = MediaStatsQuery(
             mediaId = Optional.present(mediaId)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val media = response?.data?.Media
             if (media != null) {
-                emit(UiState.Success(data = media))
+                emit(DataResult.Success(data = media))
             }
-            else emit(UiState.Error(message = "Error"))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 
-    fun getMediaReviews(
+    fun getMediaReviewsPage(
         mediaId: Int,
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = MediaReviewsQuery(
             mediaId = Optional.present(mediaId),
             page = Optional.present(page),
@@ -207,13 +229,19 @@ object MediaRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
-            val reviews = response?.data?.Media?.reviews
+            val reviews = response?.data?.Media?.reviews?.nodes?.filterNotNull()
+            val pageInfo = response?.data?.Media?.reviews?.pageInfo
             if (reviews != null) {
-                emit(UiState.Success(data = reviews))
+                emit(PagedResult.Success(
+                    data = reviews,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                ))
             }
-            else emit(UiState.Error(message = "Error"))
+            else emit(PagedResult.Error(message = "Error"))
         }
     }
 
@@ -222,7 +250,7 @@ object MediaRepository {
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
         val response = MediaThreadsQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
@@ -231,13 +259,18 @@ object MediaRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val threadsPage = response?.data?.Page
             if (threadsPage != null) {
-                emit(UiState.Success(data = threadsPage))
+                emit(PagedResult.Success(
+                    data = threadsPage.threads?.filterNotNull().orEmpty(),
+                    nextPage = if (threadsPage.pageInfo?.hasNextPage == true)
+                            threadsPage.pageInfo.currentPage?.plus(1)
+                    else null
+                ))
             }
-            else emit(UiState.Error(message = "Error"))
+            else emit(PagedResult.Error(message = "Error"))
         }
     }
 

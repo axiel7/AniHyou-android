@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
-import com.axiel7.anihyou.ui.base.UiState
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
@@ -37,7 +37,7 @@ fun MediaCharacterStaffView(
 ) {
     val charactersAndStaff by viewModel.charactersAndStaff.collectAsState()
     val isLoading by remember {
-        derivedStateOf { charactersAndStaff is UiState.Loading }
+        derivedStateOf { charactersAndStaff is DataResult.Loading }
     }
 
     Column(
@@ -46,7 +46,7 @@ fun MediaCharacterStaffView(
         // Staff
         val mediaStaff by remember {
             derivedStateOf {
-                (charactersAndStaff as? UiState.Success)?.data?.staff.orEmpty()
+                (charactersAndStaff as? DataResult.Success)?.data?.staff.orEmpty()
             }
         }
         if (isLoading || mediaStaff.isNotEmpty()) {
@@ -79,7 +79,7 @@ fun MediaCharacterStaffView(
         // Characters
         val mediaCharacters by remember {
             derivedStateOf {
-                (charactersAndStaff as? UiState.Success)?.data?.characters.orEmpty()
+                (charactersAndStaff as? DataResult.Success)?.data?.characters.orEmpty()
             }
         }
         if (isLoading || mediaCharacters.isNotEmpty()) {

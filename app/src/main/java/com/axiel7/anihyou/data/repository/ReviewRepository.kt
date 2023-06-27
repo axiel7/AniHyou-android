@@ -4,24 +4,23 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ReviewDetailsQuery
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.flow.flow
 
 object ReviewRepository {
 
     fun getReviewDetails(reviewId: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
 
         val response = ReviewDetailsQuery(
             reviewId = Optional.present(reviewId)
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val review = response?.data?.Review
-            if (review != null) emit(UiState.Success(data = review))
-            else emit(UiState.Error(message = "Error"))
+            if (review != null) emit(DataResult.Success(data = review))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 

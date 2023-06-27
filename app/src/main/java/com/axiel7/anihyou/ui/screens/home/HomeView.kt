@@ -28,9 +28,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -47,9 +45,9 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
@@ -178,14 +176,14 @@ fun HomeAiringContent(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
         ) {
             when (airingAnime) {
-                is UiState.Loading -> {
+                is PagedResult.Loading -> {
                     items(10) {
                         AiringAnimeHorizontalItemPlaceholder()
                     }
                 }
-                is UiState.Success -> {
+                is PagedResult.Success -> {
                     items(
-                        items = (airingAnime as UiState.Success).data,
+                        items = (airingAnime as PagedResult.Success).data,
                         contentType = { it }
                     ) { item ->
                         AiringAnimeHorizontalItem(
@@ -203,9 +201,9 @@ fun HomeAiringContent(
                         )
                     }
                 }
-                is UiState.Error -> {
+                is PagedResult.Error -> {
                     item {
-                        Text(text = (airingAnime as UiState.Error).message)
+                        Text(text = (airingAnime as PagedResult.Error).message)
                     }
                 }
             }
@@ -213,23 +211,18 @@ fun HomeAiringContent(
     }
     else if (airingOnMyList == false) {
         val airingAnimeState by viewModel.airingAnime.collectAsState()
-        val airingAnime by remember {
-            derivedStateOf {
-                (airingAnimeState as? UiState.Success)?.data?.airingSchedules?.filterNotNull().orEmpty()
-            }
-        }
         HomeLazyRow(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
         ) {
             when (airingAnimeState) {
-                is UiState.Loading -> {
+                is PagedResult.Loading -> {
                     items(10) {
                         AiringAnimeHorizontalItemPlaceholder()
                     }
                 }
-                is UiState.Success -> {
+                is PagedResult.Success -> {
                     items(
-                        items = airingAnime,
+                        items = (airingAnimeState as PagedResult.Success).data,
                         contentType = { it }
                     ) { item ->
                         AiringAnimeHorizontalItem(
@@ -244,9 +237,9 @@ fun HomeAiringContent(
                         )
                     }
                 }
-                is UiState.Error -> {
+                is PagedResult.Error -> {
                     item {
-                        Text(text = (airingAnimeState as UiState.Error).message)
+                        Text(text = (airingAnimeState as PagedResult.Error).message)
                     }
                 }
             }
@@ -271,15 +264,15 @@ fun HomeThisSeasonContent(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         when (seasonAnime) {
-            is UiState.Loading -> {
+            is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
-            is UiState.Success -> {
-                items((seasonAnime as UiState.Success).data) { item ->
+            is PagedResult.Success -> {
+                items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -294,9 +287,9 @@ fun HomeThisSeasonContent(
                     )
                 }
             }
-            is UiState.Error -> {
+            is PagedResult.Error -> {
                 item {
-                    Text(text = (seasonAnime as UiState.Error).message)
+                    Text(text = (seasonAnime as PagedResult.Error).message)
                 }
             }
         }
@@ -320,15 +313,15 @@ fun HomeTrendingAnimeContent(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         when (trendingAnime) {
-            is UiState.Loading -> {
+            is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
-            is UiState.Success -> {
-                items((trendingAnime as UiState.Success).data) { item ->
+            is PagedResult.Success -> {
+                items((trendingAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -343,9 +336,9 @@ fun HomeTrendingAnimeContent(
                     )
                 }
             }
-            is UiState.Error -> {
+            is PagedResult.Error -> {
                 item {
-                    Text(text = (trendingAnime as UiState.Error).message)
+                    Text(text = (trendingAnime as PagedResult.Error).message)
                 }
             }
         }
@@ -369,15 +362,15 @@ fun HomeNextSeasonContent(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         when (seasonAnime) {
-            is UiState.Loading -> {
+            is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
-            is UiState.Success -> {
-                items((seasonAnime as UiState.Success).data) { item ->
+            is PagedResult.Success -> {
+                items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -392,9 +385,9 @@ fun HomeNextSeasonContent(
                     )
                 }
             }
-            is UiState.Error -> {
+            is PagedResult.Error -> {
                 item {
-                    Text(text = (seasonAnime as UiState.Error).message)
+                    Text(text = (seasonAnime as PagedResult.Error).message)
                 }
             }
         }
@@ -418,15 +411,15 @@ fun HomeTrendingMangaContent(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         when (trendingManga) {
-            is UiState.Loading -> {
+            is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
-            is UiState.Success -> {
-                items((trendingManga as UiState.Success).data) { item ->
+            is PagedResult.Success -> {
+                items((trendingManga as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -441,9 +434,9 @@ fun HomeTrendingMangaContent(
                     )
                 }
             }
-            is UiState.Error -> {
+            is PagedResult.Error -> {
                 item {
-                    Text(text = (trendingManga as UiState.Error).message)
+                    Text(text = (trendingManga as PagedResult.Error).message)
                 }
             }
         }

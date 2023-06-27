@@ -6,7 +6,6 @@ import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.flow.flow
 
 object NotificationRepository {
@@ -16,7 +15,7 @@ object NotificationRepository {
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
 
         val response = NotificationsQuery(
             page = Optional.present(page),
@@ -26,11 +25,16 @@ object NotificationRepository {
         ).tryQuery()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val notificationsPage = response?.data?.Page
-            if (notificationsPage != null) emit(UiState.Success(data = notificationsPage))
-            else emit(UiState.Error(message = "Empty"))
+            if (notificationsPage != null) emit(PagedResult.Success(
+                data = notificationsPage.notifications?.filterNotNull().orEmpty().toGenericNotifications(),
+                nextPage = if (notificationsPage.pageInfo?.hasNextPage == true)
+                    notificationsPage.pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 

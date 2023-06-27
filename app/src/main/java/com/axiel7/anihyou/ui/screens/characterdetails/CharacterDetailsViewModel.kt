@@ -9,9 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.data.repository.CharacterRepository
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
 class CharacterDetailsViewModel(
@@ -27,25 +28,25 @@ class CharacterDetailsViewModel(
     }
 
     suspend fun getCharacterDetails() = viewModelScope.launch {
-        CharacterRepository.getCharacterDetails(characterId).collect { uiState ->
-            isLoading = uiState is UiState.Loading
+        CharacterRepository.getCharacterDetails(characterId).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            if (uiState is UiState.Success) {
-                characterDetails = uiState.data
+            if (result is DataResult.Success) {
+                characterDetails = result.data
             }
-            else if (uiState is UiState.Error) {
-                message = uiState.message
+            else if (result is DataResult.Error) {
+                message = result.message
             }
         }
     }
 
-    suspend fun toggleFavorite() {
+    suspend fun toggleFavorite() = viewModelScope.launch {
         characterDetails?.let { details ->
             FavoriteRepository.toggleFavorite(
                 characterId = characterId
-            ).collect { uiState ->
-                if (uiState is UiState.Success) {
-                    if (uiState.data) {
+            ).collect { result ->
+                if (result is DataResult.Success) {
+                    if (result.data) {
                         characterDetails = details.copy(isFavourite = !details.isFavourite)
                     }
                 }
@@ -61,16 +62,16 @@ class CharacterDetailsViewModel(
         CharacterRepository.getCharacterMediaPage(
             characterId = characterId,
             page = page,
-        ).collect { uiState ->
-            isLoading = page == 1 && uiState is UiState.Loading
+        ).collect { result ->
+            isLoading = page == 1 && result is PagedResult.Loading
 
-            if (uiState is UiState.Success) {
-                uiState.data.edges?.filterNotNull()?.let { characterMedia.addAll(it) }
-                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page
-                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
+            if (result is PagedResult.Success) {
+                characterMedia.addAll(result.data)
+                page = result.nextPage ?: page
+                hasNextPage = result.nextPage != null
             }
-            else if (uiState is UiState.Error) {
-                message = uiState.message
+            else if (result is PagedResult.Error) {
+                message = result.message
             }
         }
     }

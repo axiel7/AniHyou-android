@@ -4,7 +4,6 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.flow.flow
 
 object FavoriteRepository {
@@ -16,7 +15,7 @@ object FavoriteRepository {
         staffId: Int? = null,
         studioId: Int? = null,
     ) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
         val response = ToggleFavouriteMutation(
             animeId = Optional.presentIfNotNull(animeId),
             mangaId = Optional.presentIfNotNull(mangaId),
@@ -26,11 +25,11 @@ object FavoriteRepository {
         ).tryMutation()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val favorite = response?.data?.ToggleFavourite
-            if (favorite != null) emit(UiState.Success(true))
-            else emit(UiState.Error(message = "Error"))
+            if (favorite != null) emit(DataResult.Success(true))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 }

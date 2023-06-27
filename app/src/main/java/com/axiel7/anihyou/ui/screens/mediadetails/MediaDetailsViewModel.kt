@@ -14,12 +14,13 @@ import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
 class MediaDetailsViewModel(
@@ -35,14 +36,14 @@ class MediaDetailsViewModel(
     }
 
     suspend fun getDetails() = viewModelScope.launch {
-        MediaRepository.getMediaDetails(mediaId).collect { uiState ->
-            isLoading = uiState is UiState.Loading
+        MediaRepository.getMediaDetails(mediaId).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            if (uiState is UiState.Success) {
-                mediaDetails = uiState.data
+            if (result is DataResult.Success) {
+                mediaDetails = result.data
             }
-            else if (uiState is UiState.Error) {
-                message = uiState.message
+            else if (result is DataResult.Error) {
+                message = result.message
             }
         }
     }
@@ -65,14 +66,14 @@ class MediaDetailsViewModel(
                     details.id else null,
                 mangaId = if (details.basicMediaDetails.type == MediaType.MANGA)
                     details.id else null,
-            ).collect { uiState ->
-                if (uiState is UiState.Success) {
-                    if (uiState.data) {
+            ).collect { result ->
+                if (result is DataResult.Success) {
+                    if (result.data) {
                         mediaDetails = details.copy(isFavourite = !details.isFavourite)
                     }
                 }
-                else if (uiState is UiState.Error) {
-                    message = uiState.message
+                else if (result is DataResult.Error) {
+                    message = result.message
                 }
             }
         }
@@ -91,13 +92,13 @@ class MediaDetailsViewModel(
     var mediaRankings = mutableStateListOf<MediaStatsQuery.Ranking>()
 
     suspend fun getMediaStats() = viewModelScope.launch {
-        MediaRepository.getMediaStats(mediaId).collect { uiState ->
-            isLoadingStats = uiState is UiState.Loading
+        MediaRepository.getMediaStats(mediaId).collect { result ->
+            isLoadingStats = result is DataResult.Loading
 
-            if (uiState is UiState.Success) {
+            if (result is DataResult.Success) {
                 isSuccessStats = true
                 mediaStatusDistribution.clear()
-                uiState.data.stats?.statusDistribution?.filterNotNull()?.forEach {
+                result.data.stats?.statusDistribution?.filterNotNull()?.forEach {
                     val status = StatusDistribution.valueOf(it.status?.rawValue)
                     if (status != null) {
                         mediaStatusDistribution.add(
@@ -109,7 +110,7 @@ class MediaDetailsViewModel(
                     }
                 }
                 mediaScoreDistribution.clear()
-                uiState.data.stats?.scoreDistribution?.filterNotNull()?.forEach {
+                result.data.stats?.scoreDistribution?.filterNotNull()?.forEach {
                     mediaScoreDistribution.add(
                         StatLocalizableAndColorable(
                             type = ScoreDistribution(score = it.score ?: 0),
@@ -118,11 +119,11 @@ class MediaDetailsViewModel(
                     )
                 }
                 mediaRankings.clear()
-                uiState.data.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
+                result.data.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
             }
-            else if (uiState is UiState.Error) {
+            else if (result is DataResult.Error) {
                 isSuccessStats = false
-                message = uiState.message
+                message = result.message
             }
         }
     }
@@ -133,16 +134,16 @@ class MediaDetailsViewModel(
     var hasNextPageReviews = true
 
     suspend fun getMediaReviews() = viewModelScope.launch {
-        MediaRepository.getMediaReviews(
+        MediaRepository.getMediaReviewsPage(
             mediaId = mediaId,
             page = pageReviews
-        ).collect { uiState ->
-            isLoadingReviews = pageReviews == 1 && uiState is UiState.Loading
+        ).collect { result ->
+            isLoadingReviews = pageReviews == 1 && result is PagedResult.Loading
 
-            if (uiState is UiState.Success) {
-                uiState.data.nodes?.filterNotNull()?.let { mediaReviews.addAll(it) }
-                hasNextPageReviews = uiState.data.pageInfo?.hasNextPage ?: false
-                pageReviews = uiState.data.pageInfo?.currentPage?.plus(1) ?: pageReviews++
+            if (result is PagedResult.Success) {
+                mediaReviews.addAll(result.data)
+                hasNextPageReviews = result.nextPage != null
+                pageReviews = result.nextPage ?: pageReviews
             }
         }
     }
@@ -156,13 +157,13 @@ class MediaDetailsViewModel(
         MediaRepository.getMediaThreadsPage(
             mediaId = mediaId,
             page = pageReviews
-        ).collect { uiState ->
-            isLoadingThreads = pageThreads == 1 && uiState is UiState.Loading
+        ).collect { result ->
+            isLoadingThreads = pageThreads == 1 && result is PagedResult.Loading
 
-            if (uiState is UiState.Success) {
-                uiState.data.threads?.filterNotNull()?.let { mediaThreads.addAll(it) }
-                hasNextPageThreads = uiState.data.pageInfo?.hasNextPage ?: false
-                pageThreads = uiState.data.pageInfo?.currentPage?.plus(1) ?: pageThreads++
+            if (result is PagedResult.Success) {
+                mediaThreads.addAll(result.data)
+                hasNextPageThreads = result.nextPage != null
+                pageThreads = result.nextPage ?: pageThreads
             }
         }
     }

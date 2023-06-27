@@ -8,12 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.isManga
+import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
@@ -142,15 +142,15 @@ class EditMediaViewModel(
             repeat = repeatCount,
             private = isPrivate,
             notes = notes,
-        ).collect {
-            isLoading = it is UiState.Loading
+        ).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            if (it is UiState.Success) {
-                listEntry = it.data
+            if (result is DataResult.Success) {
+                listEntry = result.data
                 updateSuccess = true
             }
-            else if (it is UiState.Error) {
-                message = it.message
+            else if (result is DataResult.Error) {
+                message = result.message
             }
         }
     }
@@ -159,17 +159,17 @@ class EditMediaViewModel(
 
     suspend fun deleteListEntry() = viewModelScope.launch {
         if (listEntry == null) return@launch
-        MediaListRepository.deleteEntry(listEntry!!.id).collect {
-            isLoading = it is UiState.Loading
+        MediaListRepository.deleteEntry(listEntry!!.id).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            if (it is UiState.Success) {
-                if (it.data) {
+            if (result is DataResult.Success) {
+                if (result.data) {
                     listEntry = null
                     updateSuccess = true
                 }
             }
-            else if (it is UiState.Error) {
-                message = it.message
+            else if (result is DataResult.Error) {
+                message = result.message
             }
         }
     }

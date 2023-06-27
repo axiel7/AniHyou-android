@@ -14,7 +14,6 @@ import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import kotlinx.coroutines.flow.flow
 
@@ -29,7 +28,7 @@ object MediaListRepository {
         page: Int = 1,
         perPage: Int = 15,
     ) = flow {
-        emit(UiState.Loading)
+        emit(PagedResult.Loading)
 
         val response = UserMediaListQuery(
             page = Optional.present(page),
@@ -46,11 +45,16 @@ object MediaListRepository {
         )
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(PagedResult.Error(message = error))
         else {
             val mediaPage = response?.data?.Page
-            if (mediaPage != null) emit(UiState.Success(mediaPage))
-            else emit(UiState.Error(message = "Empty"))
+            if (mediaPage != null) emit(PagedResult.Success(
+                data = mediaPage.mediaList?.filterNotNull().orEmpty(),
+                nextPage = if (mediaPage.pageInfo?.hasNextPage == true)
+                    mediaPage.pageInfo.currentPage?.plus(1)
+                else null
+            ))
+            else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
@@ -58,7 +62,7 @@ object MediaListRepository {
         entryId: Int,
         progress: Int
     ) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
 
         val response = UpdateEntryProgressMutation(
             saveMediaListEntryId = Optional.present(entryId),
@@ -66,11 +70,11 @@ object MediaListRepository {
         ).tryMutation()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val entry = response?.data?.SaveMediaListEntry
-            if (entry != null) emit(UiState.Success(entry))
-            else emit(UiState.Error(message = "Error"))
+            if (entry != null) emit(DataResult.Success(entry))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 
@@ -87,7 +91,7 @@ object MediaListRepository {
         private: Boolean?,
         notes: String?,
     ) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
 
         val response = UpdateEntryMutation(
             mediaId = Optional.present(mediaId),
@@ -118,27 +122,27 @@ object MediaListRepository {
         ).tryMutation()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val entry = response?.data?.SaveMediaListEntry?.basicMediaListEntry
-            if (entry != null) emit(UiState.Success(entry))
-            else emit(UiState.Error(message = "Error"))
+            if (entry != null) emit(DataResult.Success(entry))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 
     fun deleteEntry(id: Int) = flow {
-        emit(UiState.Loading)
+        emit(DataResult.Loading)
 
         val response = DeleteMediaListMutation(
             mediaListEntryId = Optional.present(id)
         ).tryMutation()
 
         val error = response.getError()
-        if (error != null) emit(UiState.Error(message = error))
+        if (error != null) emit(DataResult.Error(message = error))
         else {
             val entry = response?.data?.DeleteMediaListEntry
-            if (entry != null) emit(UiState.Success(true))
-            else emit(UiState.Error(message = "Error"))
+            if (entry != null) emit(DataResult.Success(true))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 }
