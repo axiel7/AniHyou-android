@@ -14,7 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -26,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.repository.ReviewRepository.userAcceptance
+import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.HtmlWebView
@@ -41,17 +46,21 @@ fun ReviewDetailsView(
     reviewId: Int,
     navigateBack: () -> Unit,
 ) {
-    val viewModel: ReviewDetailsViewModel = viewModel()
+    val viewModel = viewModel { ReviewDetailsViewModel(reviewId) }
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
 
-    LaunchedEffect(reviewId) {
-        viewModel.getReviewDetails(reviewId)
+    val reviewDetailsState by viewModel.reviewDetails.collectAsState()
+    val reviewDetails by remember {
+        derivedStateOf { (reviewDetailsState as? UiState.Success)?.data }
+    }
+    val isLoading by remember {
+        derivedStateOf { reviewDetailsState is UiState.Loading }
     }
 
     DefaultScaffoldWithSmallTopAppBar(
-        title = viewModel.reviewDetails?.user?.name ?: stringResource(R.string.loading),
+        title = reviewDetails?.user?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -63,11 +72,11 @@ fun ReviewDetailsView(
         ) {
             // Title
             Text(
-                text = viewModel.reviewDetails?.summary ?: "Loading review",
+                text = reviewDetails?.summary ?: "Loading review",
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .defaultPlaceholder(visible = viewModel.isLoading),
+                    .defaultPlaceholder(visible = isLoading),
                 fontSize = 20.sp,
                 fontStyle = FontStyle.Italic,
                 fontWeight = FontWeight.SemiBold,
@@ -76,7 +85,7 @@ fun ReviewDetailsView(
             Divider(modifier = Modifier.padding(vertical = 8.dp))
 
             // Body
-            if (viewModel.isLoading) {
+            if (isLoading) {
                 Text(
                     text = stringResource(R.string.lorem_ipsun),
                     modifier = Modifier
@@ -86,7 +95,7 @@ fun ReviewDetailsView(
                 )
             } else {
                 HtmlWebView(
-                    html = viewModel.reviewDetails?.body ?: ""
+                    html = reviewDetails?.body ?: ""
                 )
             }
 
@@ -98,14 +107,14 @@ fun ReviewDetailsView(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 TextSubtitleVertical(
-                    text = "${viewModel.reviewDetails?.score}/100",
+                    text = "${reviewDetails?.score}/100",
                     subtitle = stringResource(R.string.score),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoading
                 )
                 TextSubtitleVertical(
-                    text = "${viewModel.userAcceptance}% (${viewModel.reviewDetails?.rating ?: 0}/${viewModel.reviewDetails?.ratingAmount ?: 0})",
+                    text = "${reviewDetails?.userAcceptance()}% (${reviewDetails?.rating ?: 0}/${reviewDetails?.ratingAmount ?: 0})",
                     subtitle = stringResource(R.string.users_likes),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoading
                 )
             }
         }
