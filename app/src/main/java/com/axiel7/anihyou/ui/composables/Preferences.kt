@@ -20,7 +20,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,7 +106,7 @@ fun SwitchPreference(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    preferenceValue: MutableState<Boolean?>,
+    preferenceValue: Boolean?,
     @DrawableRes icon: Int? = null,
     onValueChange: (Boolean?) -> Unit
 ) {
@@ -115,8 +114,7 @@ fun SwitchPreference(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                preferenceValue.value = preferenceValue.value?.not()
-                onValueChange(preferenceValue.value)
+                onValueChange(preferenceValue?.not())
             },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -162,9 +160,8 @@ fun SwitchPreference(
         }//: Row
 
         Switch(
-            checked = preferenceValue.value ?: false,
+            checked = preferenceValue ?: false,
             onCheckedChange = {
-                preferenceValue.value = it
                 onValueChange(it)
             },
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -177,7 +174,7 @@ fun ListPreference(
     title: String,
     entriesValues: Map<String, Int>,
     modifier: Modifier = Modifier,
-    preferenceValue: MutableState<String?>,
+    preferenceValue: String?,
     @DrawableRes icon: Int? = null,
     onValueChange: (String?) -> Unit
 ) {
@@ -213,7 +210,7 @@ fun ListPreference(
             )
 
             Text(
-                text = stringResource(entriesValues[preferenceValue.value]!!),
+                text = stringResource(entriesValues[preferenceValue]!!),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp
             )
@@ -234,12 +231,12 @@ fun ListPreference(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { preferenceValue.value = entry.key },
+                                .clickable { onValueChange(entry.key) },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = preferenceValue.value == entry.key,
-                                onClick = { preferenceValue.value = entry.key }
+                                selected = preferenceValue == entry.key,
+                                onClick = { onValueChange(entry.key) }
                             )
                             Text(text = stringResource(entry.value))
                         }
@@ -249,7 +246,7 @@ fun ListPreference(
             confirmButton = {
                 TextButton(onClick = {
                     openDialog = false
-                    onValueChange(preferenceValue.value)
+                    onValueChange(preferenceValue)
                 }) {
                     Text(text = stringResource(R.string.ok))
                 }

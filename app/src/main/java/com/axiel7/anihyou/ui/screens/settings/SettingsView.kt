@@ -11,7 +11,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -77,9 +79,9 @@ fun SettingsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val themePreference = rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
-    val listModePreference = rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
-    val airingOnMyList = rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
+    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
+    var listModePreference by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
+    var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
         if (!viewModel.isLoading) viewModel.getUserOptions()
@@ -113,7 +115,7 @@ fun SettingsView(
                 preferenceValue = themePreference,
                 icon = R.drawable.palette_24,
                 onValueChange = { value ->
-                    themePreference.value = value
+                    themePreference = value
                 }
             )
 
@@ -123,7 +125,7 @@ fun SettingsView(
                 preferenceValue = listModePreference,
                 icon = R.drawable.format_list_bulleted_24,
                 onValueChange = { value ->
-                    value?.let { listModePreference.value = ListMode.valueOf(it).name }
+                    value?.let { listModePreference = ListMode.valueOf(it).name }
                 }
             )
 
@@ -132,10 +134,10 @@ fun SettingsView(
                 title = stringResource(R.string.display_adult_content),
                 preferenceValue = viewModel.displayAdultContent,
                 icon = R.drawable.no_adult_content_24,
-                onValueChange = {
-                    scope.launch {
-                        viewModel.displayAdultContent.value = it
-                        viewModel.updateUser()
+                onValueChange = { value ->
+                    if (value != null) {
+                        viewModel.onDisplayAdultContentChanged(value)
+                        scope.launch { viewModel.updateUser() }
                     }
                 }
             )
@@ -144,7 +146,7 @@ fun SettingsView(
                 preferenceValue = airingOnMyList,
                 subtitle = stringResource(R.string.airing_on_my_list_summary),
                 onValueChange = {
-                    airingOnMyList.value = it
+                    airingOnMyList = it
                 }
             )
 
