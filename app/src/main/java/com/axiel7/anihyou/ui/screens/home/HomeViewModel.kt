@@ -26,7 +26,9 @@ class HomeViewModel : BaseViewModel() {
     val nowAnimeSeason = now.currentAnimeSeason()
     val nextAnimeSeason = now.nextAnimeSeason()
 
-    val airingAnime = MediaRepository.getAiringAnime().stateInViewModel()
+    val airingAnime = MediaRepository.getAiringAnimePage(
+        airingAtGreater = System.currentTimeMillis() / 1000
+    ).stateInViewModel()
 
     val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyList().stateInViewModel()
 

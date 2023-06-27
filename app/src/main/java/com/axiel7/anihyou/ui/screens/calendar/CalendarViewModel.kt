@@ -1,11 +1,13 @@
 package com.axiel7.anihyou.ui.screens.calendar
 
 import androidx.compose.runtime.mutableStateListOf
-import com.apollographql.apollo3.api.Optional
+import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.AiringAnimesQuery
-import com.axiel7.anihyou.type.AiringSort
+import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.utils.DateUtils.thisWeekdayTimestamp
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
@@ -13,13 +15,12 @@ class CalendarViewModel : BaseViewModel() {
 
     private val now: LocalDateTime = LocalDateTime.now()
 
-    var page = 1
+    private var page = 1
     var hasNextPage = false
     val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
     var onMyList = false
 
-    suspend fun getAiringAnime(weekday: Int) {
-        isLoading = page == 1
+    suspend fun getAiringAnime(weekday: Int) = viewModelScope.launch {
         val weekdayStartTimestamp = now.thisWeekdayTimestamp(
             dayOfWeek = DayOfWeek.of(weekday),
             isEndOfDay = false
@@ -28,21 +29,24 @@ class CalendarViewModel : BaseViewModel() {
             dayOfWeek = DayOfWeek.of(weekday),
             isEndOfDay = true
         )
-        val response = AiringAnimesQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(25),
-            sort = Optional.present(listOf(AiringSort.TIME)),
-            airingAtGreater = Optional.present(weekdayStartTimestamp.toInt()),
-            airingAtLesser = Optional.present(weekdayEndTimestamp.toInt())
-        ).tryQuery()
 
-        response?.data?.Page?.airingSchedules?.filterNotNull()?.let { anime ->
-            if (onMyList) weeklyAnime.addAll(anime.filter { it.media?.mediaListEntry != null })
-            else weeklyAnime.addAll(anime)
+        MediaRepository.getAiringAnimePage(
+            airingAtGreater = weekdayStartTimestamp,
+            airingAtLesser = weekdayEndTimestamp,
+            page = page,
+            perPage = 25
+        ).collect { uiState ->
+            isLoading = page == 1 && uiState is UiState.Loading
+
+            if (uiState is UiState.Success) {
+                uiState.data.airingSchedules?.filterNotNull()?.let { anime ->
+                    if (onMyList) weeklyAnime.addAll(anime.filter { it.media?.mediaListEntry != null })
+                    else weeklyAnime.addAll(anime)
+                }
+                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
+                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page++
+            }
         }
-        hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-        page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
-        isLoading = false
     }
 
     fun resetPage() {

@@ -27,9 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -211,11 +212,16 @@ fun HomeAiringContent(
         }//:LazyRow
     }
     else if (airingOnMyList == false) {
-        val airingAnime by viewModel.airingAnime.collectAsState()
+        val airingAnimeState by viewModel.airingAnime.collectAsState()
+        val airingAnime by remember {
+            derivedStateOf {
+                (airingAnimeState as? UiState.Success)?.data?.airingSchedules?.filterNotNull().orEmpty()
+            }
+        }
         HomeLazyRow(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
         ) {
-            when (airingAnime) {
+            when (airingAnimeState) {
                 is UiState.Loading -> {
                     items(10) {
                         AiringAnimeHorizontalItemPlaceholder()
@@ -223,7 +229,7 @@ fun HomeAiringContent(
                 }
                 is UiState.Success -> {
                     items(
-                        items = (airingAnime as UiState.Success).data,
+                        items = airingAnime,
                         contentType = { it }
                     ) { item ->
                         AiringAnimeHorizontalItem(
@@ -240,7 +246,7 @@ fun HomeAiringContent(
                 }
                 is UiState.Error -> {
                     item {
-                        Text(text = (airingAnime as UiState.Error).message)
+                        Text(text = (airingAnimeState as UiState.Error).message)
                     }
                 }
             }

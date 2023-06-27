@@ -18,11 +18,11 @@ object FavoriteRepository {
     ) = flow {
         emit(UiState.Loading)
         val response = ToggleFavouriteMutation(
-            animeId = if (animeId != null) Optional.present(animeId) else Optional.absent(),
-            mangaId = if (mangaId != null) Optional.present(mangaId) else Optional.absent(),
-            characterId = if (characterId != null) Optional.present(characterId) else Optional.absent(),
-            staffId = if (staffId != null) Optional.present(staffId) else Optional.absent(),
-            studioId = if (studioId != null) Optional.present(studioId) else Optional.absent(),
+            animeId = Optional.presentIfNotNull(animeId),
+            mangaId = Optional.presentIfNotNull(mangaId),
+            characterId = Optional.presentIfNotNull(characterId),
+            staffId = Optional.presentIfNotNull(staffId),
+            studioId = Optional.presentIfNotNull(studioId),
         ).tryMutation()
 
         val error = response.getError()

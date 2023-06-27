@@ -28,24 +28,27 @@ import kotlinx.coroutines.flow.flow
 
 object MediaRepository {
 
-    fun getAiringAnime(
+    fun getAiringAnimePage(
+        airingAtGreater: Long? = null,
+        airingAtLesser: Long? = null,
+        sort: List<AiringSort> = listOf(AiringSort.TIME),
         page: Int = 1,
         perPage: Int = 15,
     ) = flow {
         emit(UiState.Loading)
-        val todayTimestamp = System.currentTimeMillis() / 1000
         val response = AiringAnimesQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
-            sort = Optional.present(listOf(AiringSort.TIME)),
-            airingAtGreater = Optional.present(todayTimestamp.toInt())
+            sort = Optional.present(sort),
+            airingAtGreater = Optional.presentIfNotNull(airingAtGreater?.toInt()),
+            airingAtLesser = Optional.presentIfNotNull(airingAtLesser?.toInt()),
         ).tryQuery()
 
         val error = response.getError()
         if (error != null) emit(UiState.Error(message = error))
         else {
-            val airingAnime = response?.data?.Page?.airingSchedules?.filterNotNull()
-            if (airingAnime != null) emit(UiState.Success(data = airingAnime))
+            val airingPage = response?.data?.Page
+            if (airingPage != null) emit(UiState.Success(data = airingPage))
             else emit(UiState.Error(message = "Empty"))
         }
     }
