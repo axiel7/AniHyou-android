@@ -84,7 +84,7 @@ fun StaffDetailsView(
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel: StaffDetailsViewModel = viewModel { StaffDetailsViewModel(staffId) }
+    val viewModel = viewModel { StaffDetailsViewModel(staffId) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()

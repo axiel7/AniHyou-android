@@ -5,12 +5,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffDetailsQuery
-import com.axiel7.anihyou.StaffMediaQuery
-import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
+import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.repository.StaffRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -20,27 +21,26 @@ class StaffDetailsViewModel(
 
     var staffDetails by mutableStateOf<StaffDetailsQuery.Staff?>(null)
 
-    suspend fun getStaffDetails() {
-        viewModelScope.launch {
-            isLoading = true
-            val response = StaffDetailsQuery(
-                staffId = Optional.present(staffId)
-            ).tryQuery()
+    suspend fun getStaffDetails() = viewModelScope.launch {
+        StaffRepository.getStaffDetails(staffId).collect { result ->
+            isLoading = result is DataResult.Loading
 
-            response?.data?.Staff?.let { staffDetails = it }
-            isLoading = false
+            if (result is DataResult.Success) {
+                staffDetails = result.data
+            }
+            else if (result is DataResult.Error) {
+                message = result.message
+            }
         }
     }
 
-    suspend fun toggleFavorite() {
-        viewModelScope.launch {
-            staffDetails?.let { details ->
-                val response = ToggleFavouriteMutation(
-                    staffId = Optional.present(details.id)
-                ).tryMutation()
-
-                if (response?.data != null) {
-                    staffDetails = details.copy(isFavourite = !details.isFavourite)
+    suspend fun toggleFavorite() = viewModelScope.launch {
+        staffDetails?.let { details ->
+            FavoriteRepository.toggleFavorite(staffId = staffId).collect { result ->
+                if (result is DataResult.Success) {
+                    if (result.data) {
+                        staffDetails = details.copy(isFavourite = !details.isFavourite)
+                    }
                 }
             }
         }
@@ -51,31 +51,22 @@ class StaffDetailsViewModel(
     var hasNextPageMedia = true
     var staffMedia = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
 
-    suspend fun getStaffMedia() {
-        viewModelScope.launch {
-            isLoading = pageMedia == 1
-            val response = StaffMediaQuery(
-                staffId = Optional.present(staffId),
-                onList = if (mediaOnMyList) Optional.present(mediaOnMyList) else Optional.absent(),
-                page = Optional.present(pageMedia),
-                perPage = Optional.present(25)
-            ).tryQuery()
+    suspend fun getStaffMedia() = viewModelScope.launch {
+        StaffRepository.getStaffMediaPage(
+            staffId = staffId,
+            onList = mediaOnMyList,
+            page = pageMedia
+        ).collect { result ->
+            isLoading = pageMedia == 1 && result is PagedResult.Loading
 
-            response?.data?.Staff?.staffMedia?.edges?.filterNotNull()?.let { edges ->
-                // group media to display staff roles joined
-                val mediaGroupMap = mutableMapOf<Int, StaffMediaGrouped>()
-                edges.groupBy { it.node?.id ?: 0 }.forEach { (mediaId, value) ->
-                    mediaGroupMap[mediaId] = StaffMediaGrouped(
-                        value = value[0],
-                        staffRoles = value.map { it.staffRole ?: "" }
-                    )
-                }
-                staffMedia.addAll(mediaGroupMap.toList())
+            if (result is PagedResult.Success) {
+                staffMedia.addAll(result.data)
+                hasNextPageMedia = result.nextPage != null
+                pageMedia = result.nextPage ?: pageMedia
             }
-            pageMedia =
-                response?.data?.Staff?.staffMedia?.pageInfo?.currentPage?.plus(1) ?: pageMedia
-            hasNextPageMedia = response?.data?.Staff?.staffMedia?.pageInfo?.hasNextPage ?: false
-            isLoading = false
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
         }
     }
 
@@ -90,22 +81,21 @@ class StaffDetailsViewModel(
     var hasNextPageCharacter = true
     var staffCharacters = mutableStateListOf<StaffCharacterQuery.Edge>()
 
-    suspend fun getStaffCharacters() {
-        viewModelScope.launch {
-            isLoading = pageCharacter == 1
-            val response = StaffCharacterQuery(
-                staffId = Optional.present(staffId),
-                page = Optional.present(pageCharacter),
-                perPage = Optional.present(25)
-            ).tryQuery()
+    suspend fun getStaffCharacters() = viewModelScope.launch {
+        StaffRepository.getStaffCharactersPage(
+            staffId = staffId,
+            page = pageCharacter
+        ).collect { result ->
+            isLoading = pageCharacter == 1 && result is PagedResult.Loading
 
-            response?.data?.Staff?.characterMedia?.edges?.filterNotNull()
-                ?.let { staffCharacters.addAll(it) }
-            pageCharacter = response?.data?.Staff?.characterMedia?.pageInfo?.currentPage?.plus(1)
-                ?: pageCharacter
-            hasNextPageCharacter =
-                response?.data?.Staff?.characterMedia?.pageInfo?.hasNextPage ?: false
-            isLoading = false
+            if (result is PagedResult.Success) {
+                staffCharacters.addAll(result.data)
+                hasNextPageCharacter = result.nextPage != null
+                pageCharacter = result.nextPage ?: pageCharacter
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
         }
     }
 }
