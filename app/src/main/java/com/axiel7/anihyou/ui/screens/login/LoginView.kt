@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.ANIHYOU_AUTH_URL
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 
 @Composable
@@ -36,7 +36,7 @@ fun LoginView(
         )
 
         Button(
-            onClick = { context.openActionView(LoginRepository.getAuthUrl()) }
+            onClick = { context.openActionView(ANIHYOU_AUTH_URL) }
         ) {
             Text(text = stringResource(R.string.login))
         }

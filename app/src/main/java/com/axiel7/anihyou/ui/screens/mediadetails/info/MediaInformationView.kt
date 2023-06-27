@@ -243,7 +243,7 @@ fun MediaInformationViewPreview() {
     AniHyouTheme {
         Surface {
             MediaInformationView(
-                viewModel = viewModel(),
+                viewModel = MediaDetailsViewModel(mediaId = 1),
                 navigateToExplore = { _, _, _ -> }
             )
         }
