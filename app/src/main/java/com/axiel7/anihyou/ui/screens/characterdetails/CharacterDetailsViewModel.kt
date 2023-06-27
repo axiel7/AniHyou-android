@@ -1,62 +1,77 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.apollographql.apollo3.api.Optional
+import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
-import com.axiel7.anihyou.ToggleFavouriteMutation
+import com.axiel7.anihyou.data.repository.CharacterRepository
+import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.base.UiState
+import kotlinx.coroutines.launch
 
-class CharacterDetailsViewModel : BaseViewModel() {
+class CharacterDetailsViewModel(
+    private val characterId: Int
+) : BaseViewModel() {
 
     var characterDetails by mutableStateOf<CharacterDetailsQuery.Character?>(null)
-    var alternativeNames by mutableStateOf<String?>(null)
-    var alternativeNamesSpoiler by mutableStateOf<String?>(null)
-
-    suspend fun getCharacterDetails(characterId: Int) {
-        isLoading = true
-        val response = CharacterDetailsQuery(
-            characterId = Optional.present(characterId)
-        ).tryQuery()
-
-        response?.data?.Character?.let {
-            characterDetails = it
-            alternativeNames = it.name?.alternative?.filterNotNull()?.joinToString()
-            alternativeNamesSpoiler = it.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
-        }
-        isLoading = false
+    val alternativeNames by derivedStateOf {
+        characterDetails?.name?.alternative?.filterNotNull()?.joinToString()
+    }
+    val alternativeNamesSpoiler by derivedStateOf {
+        characterDetails?.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
     }
 
-    suspend fun toggleFavorite() {
-        characterDetails?.let { details ->
-            val response = ToggleFavouriteMutation(
-                characterId = Optional.present(details.id)
-            ).tryMutation()
+    suspend fun getCharacterDetails() = viewModelScope.launch {
+        CharacterRepository.getCharacterDetails(characterId).collect { uiState ->
+            isLoading = uiState is UiState.Loading
 
-            if (response?.data != null) {
-                characterDetails = details.copy(isFavourite = !details.isFavourite)
+            if (uiState is UiState.Success) {
+                characterDetails = uiState.data
+            }
+            else if (uiState is UiState.Error) {
+                message = uiState.message
             }
         }
     }
 
-    var page = 1
+    suspend fun toggleFavorite() {
+        characterDetails?.let { details ->
+            FavoriteRepository.toggleFavorite(
+                characterId = characterId
+            ).collect { uiState ->
+                if (uiState is UiState.Success) {
+                    if (uiState.data) {
+                        characterDetails = details.copy(isFavourite = !details.isFavourite)
+                    }
+                }
+            }
+        }
+    }
+
+    private var page = 1
     var hasNextPage = true
     var characterMedia =  mutableStateListOf<CharacterMediaQuery.Edge>()
 
-    suspend fun getCharacterMedia(characterId: Int) {
-        isLoading = page == 1
-        val response = CharacterMediaQuery(
-            characterId = Optional.present(characterId),
-            page = Optional.present(page),
-            perPage = Optional.present(25)
-        ).tryQuery()
+    suspend fun getCharacterMedia() = viewModelScope.launch {
+        CharacterRepository.getCharacterMediaPage(
+            characterId = characterId,
+            page = page,
+        ).collect { uiState ->
+            isLoading = page == 1 && uiState is UiState.Loading
 
-        response?.data?.Character?.media?.edges?.filterNotNull()?.let { characterMedia.addAll(it) }
-        page = response?.data?.Character?.media?.pageInfo?.currentPage?.plus(1) ?: page
-        hasNextPage = response?.data?.Character?.media?.pageInfo?.hasNextPage ?: false
-        isLoading = false
+            if (uiState is UiState.Success) {
+                uiState.data.edges?.filterNotNull()?.let { characterMedia.addAll(it) }
+                page = uiState.data.pageInfo?.currentPage?.plus(1) ?: page
+                hasNextPage = uiState.data.pageInfo?.hasNextPage ?: false
+            }
+            else if (uiState is UiState.Error) {
+                message = uiState.message
+            }
+        }
     }
 }

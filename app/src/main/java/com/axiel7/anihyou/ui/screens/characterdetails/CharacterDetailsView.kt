@@ -82,7 +82,7 @@ fun CharacterDetailsView(
     navigateToFullscreenImage: (String?) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel: CharacterDetailsViewModel = viewModel()
+    val viewModel = viewModel { CharacterDetailsViewModel(characterId) }
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -114,7 +114,6 @@ fun CharacterDetailsView(
             when (CharacterInfoType.tabRows[it].value) {
                 CharacterInfoType.INFO ->
                     CharacterInfoView(
-                        characterId = characterId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
@@ -124,7 +123,6 @@ fun CharacterDetailsView(
                     )
                 CharacterInfoType.MEDIA ->
                     CharacterMediaView(
-                        characterId = characterId,
                         viewModel = viewModel,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
@@ -139,7 +137,6 @@ fun CharacterDetailsView(
 
 @Composable
 fun CharacterInfoView(
-    characterId: Int,
     viewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -147,8 +144,9 @@ fun CharacterInfoView(
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
 
-    LaunchedEffect(characterId) {
-        viewModel.getCharacterDetails(characterId)
+    LaunchedEffect(viewModel) {
+        if (viewModel.characterDetails == null)
+            viewModel.getCharacterDetails()
     }
 
     Column(
@@ -251,7 +249,6 @@ fun CharacterInfoView(
 
 @Composable
 fun CharacterMediaView(
-    characterId: Int,
     viewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -260,7 +257,7 @@ fun CharacterMediaView(
     val listState = rememberLazyListState()
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getCharacterMedia(characterId)
+        if (viewModel.hasNextPage) viewModel.getCharacterMedia()
     }
 
     LazyColumn(
