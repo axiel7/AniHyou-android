@@ -5,49 +5,46 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.StudioDetailsQuery
-import com.axiel7.anihyou.ToggleFavouriteMutation
+import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.repository.StudioRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class StudioDetailsViewModel : BaseViewModel() {
+class StudioDetailsViewModel(
+    private val studioId: Int
+) : BaseViewModel() {
 
     var page = 1
     var hasNextPage = true
     var studioDetails by mutableStateOf<StudioDetailsQuery.Studio?>(null)
     val studioMedia = mutableStateListOf<StudioDetailsQuery.Node>()
 
-    suspend fun getStudioDetails(studioId: Int) {
-        viewModelScope.launch {
-            isLoading = page == 1
+    suspend fun getStudioDetails() = viewModelScope.launch {
+        StudioRepository.getStudioDetails(
+            studioId = studioId,
+            page = page
+        ).collect { result ->
+            isLoading = page == 1 && result is PagedResult.Loading
 
-            val response = StudioDetailsQuery(
-                studioId = Optional.present(studioId),
-                page = Optional.present(page),
-                perPage = Optional.present(25)
-            ).tryQuery()
-
-            response?.data?.Studio?.let { studio ->
-                studioDetails = studio
-                studio.media?.nodes?.filterNotNull()?.let { studioMedia.addAll(it) }
-                page = studio.media?.pageInfo?.currentPage?.plus(1) ?: page
-                hasNextPage = studio.media?.pageInfo?.hasNextPage ?: false
+            if (result is PagedResult.Success) {
+                studioDetails = result.data
+                result.data.media?.nodes?.filterNotNull()?.let { studioMedia.addAll(it) }
+                hasNextPage = result.nextPage != null
+                page = result.nextPage ?: page
             }
-
-            isLoading = false
         }
     }
 
-    suspend fun toggleFavorite() {
-        viewModelScope.launch {
-            studioDetails?.let { details ->
-                val response = ToggleFavouriteMutation(
-                    studioId = Optional.present(details.id)
-                ).tryMutation()
-
-                if (response?.data != null) {
-                    studioDetails = details.copy(isFavourite = !details.isFavourite)
+    suspend fun toggleFavorite() = viewModelScope.launch {
+        FavoriteRepository.toggleFavorite(studioId = studioId).collect { result ->
+            if (result is DataResult.Success) {
+                if (result.data) {
+                    studioDetails = studioDetails?.copy(
+                        isFavourite = studioDetails?.isFavourite?.not() ?: false
+                    )
                 }
             }
         }

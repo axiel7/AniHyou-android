@@ -48,14 +48,14 @@ fun StudioDetailsView(
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel: StudioDetailsViewModel = viewModel()
+    val viewModel = viewModel { StudioDetailsViewModel(studioId) }
     val listState = rememberLazyGridState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getStudioDetails(studioId)
+        if (viewModel.hasNextPage) viewModel.getStudioDetails()
     }
 
     DefaultScaffoldWithSmallTopAppBar(
