@@ -62,7 +62,7 @@ import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.UserMediaListSort
+import com.axiel7.anihyou.data.model.user.UserMediaListSort
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.fragment.BasicMediaListEntry

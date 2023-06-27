@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.hexColor
+import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton

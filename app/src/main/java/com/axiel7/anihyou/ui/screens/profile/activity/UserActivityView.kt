@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.data.model.text
+import com.axiel7.anihyou.data.model.user.text
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.activity.ActivityItem
 import com.axiel7.anihyou.ui.composables.activity.ActivityItemPlaceholder

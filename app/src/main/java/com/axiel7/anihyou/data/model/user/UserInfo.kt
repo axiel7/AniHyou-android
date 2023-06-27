@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data
+package com.axiel7.anihyou.data.model.user
 
 import androidx.compose.runtime.Composable
 import com.axiel7.anihyou.fragment.UserInfo
