@@ -80,10 +80,10 @@ class MediaDetailsViewModel(
     }
 
     val charactersAndStaff =
-        MediaRepository.getMediaCharactersAndStaff(mediaId).stateInViewModel()
+        MediaRepository.getMediaCharactersAndStaff(mediaId).dataResultStateInViewModel()
 
     val relationsAndRecommendations =
-        MediaRepository.getMediaRelationsRecommendations(mediaId).stateInViewModel()
+        MediaRepository.getMediaRelationsRecommendations(mediaId).dataResultStateInViewModel()
 
     var isLoadingStats by mutableStateOf(true)
     var isSuccessStats by mutableStateOf(false)

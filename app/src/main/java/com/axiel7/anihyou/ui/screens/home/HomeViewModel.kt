@@ -28,23 +28,23 @@ class HomeViewModel : BaseViewModel() {
 
     val airingAnime = MediaRepository.getAiringAnimePage(
         airingAtGreater = System.currentTimeMillis() / 1000
-    ).stateInViewModel()
+    ).pagedResultStateInViewModel()
 
-    val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyListPage().stateInViewModel()
+    val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyListPage().pagedResultStateInViewModel()
 
-    val thisSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).stateInViewModel()
+    val thisSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).pagedResultStateInViewModel()
 
     val trendingAnime = MediaRepository.getMediaSortedPage(
         mediaType = MediaType.ANIME,
         sort = listOf(MediaSort.TRENDING_DESC)
-    ).stateInViewModel()
+    ).pagedResultStateInViewModel()
 
-    val nextSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).stateInViewModel()
+    val nextSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).pagedResultStateInViewModel()
 
     val trendingManga = MediaRepository.getMediaSortedPage(
         mediaType = MediaType.MANGA,
         sort = listOf(MediaSort.TRENDING_DESC)
-    ).stateInViewModel()
+    ).pagedResultStateInViewModel()
 
     val unreadNotificationCount = UserRepository.getUnreadNotificationCount()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)

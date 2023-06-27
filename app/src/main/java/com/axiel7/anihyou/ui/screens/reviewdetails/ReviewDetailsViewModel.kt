@@ -7,6 +7,6 @@ class ReviewDetailsViewModel(
     reviewId: Int
 ) : BaseViewModel() {
 
-    val reviewDetails = ReviewRepository.getReviewDetails(reviewId).stateInViewModel()
+    val reviewDetails = ReviewRepository.getReviewDetails(reviewId).dataResultStateInViewModel()
 
 }

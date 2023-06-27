@@ -21,10 +21,10 @@ abstract class BaseViewModel : ViewModel() {
     var isLoading by mutableStateOf(false)
     var message by mutableStateOf<String?>(null)
 
-    fun <T> Flow<DataResult<T>>.stateInViewModel() =
+    fun <T> Flow<DataResult<T>>.dataResultStateInViewModel() =
         stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DataResult.Loading)
 
-    fun <T> Flow<PagedResult<T>>.stateInViewModel() =
+    fun <T> Flow<PagedResult<T>>.pagedResultStateInViewModel() =
         stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagedResult.Loading)
 
     //TODO: remove when finish refactor
