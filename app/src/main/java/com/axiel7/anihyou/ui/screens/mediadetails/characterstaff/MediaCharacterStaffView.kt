@@ -9,14 +9,17 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
+import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
@@ -28,21 +31,25 @@ private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
 
 @Composable
 fun MediaCharacterStaffView(
-    mediaId: Int,
     viewModel: MediaDetailsViewModel,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
 ) {
-    LaunchedEffect(mediaId) {
-        if (viewModel.mediaStaff.isEmpty())
-            viewModel.getMediaCharactersAndStaff(mediaId)
+    val charactersAndStaff by viewModel.charactersAndStaff.collectAsState()
+    val isLoading by remember {
+        derivedStateOf { charactersAndStaff is UiState.Loading }
     }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Staff
-        if (viewModel.isLoadingStaffCharacter || viewModel.mediaStaff.isNotEmpty()) {
+        val mediaStaff by remember {
+            derivedStateOf {
+                (charactersAndStaff as? UiState.Success)?.data?.staff.orEmpty()
+            }
+        }
+        if (isLoading || mediaStaff.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.staff))
             Box(
                 modifier = Modifier
@@ -51,11 +58,11 @@ fun MediaCharacterStaffView(
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
                 ) {
-                    if (viewModel.isLoadingStaffCharacter) {
+                    if (isLoading) {
                         items(6) {
                             PersonItemHorizontalPlaceholder()
                         }
-                    } else items(viewModel.mediaStaff) { item ->
+                    } else items(mediaStaff) { item ->
                         PersonItemHorizontal(
                             title = item.mediaStaff.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaStaff.node?.image?.medium,
@@ -70,7 +77,12 @@ fun MediaCharacterStaffView(
         }
 
         // Characters
-        if (viewModel.isLoadingStaffCharacter || viewModel.mediaCharacters.isNotEmpty()) {
+        val mediaCharacters by remember {
+            derivedStateOf {
+                (charactersAndStaff as? UiState.Success)?.data?.characters.orEmpty()
+            }
+        }
+        if (isLoading || mediaCharacters.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.characters))
             Box(
                 modifier = Modifier
@@ -79,11 +91,11 @@ fun MediaCharacterStaffView(
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(2)
                 ) {
-                    if (viewModel.mediaCharacters.isEmpty()) {
+                    if (isLoading) {
                         items(6) {
                             PersonItemHorizontalPlaceholder()
                         }
-                    } else items(viewModel.mediaCharacters) { item ->
+                    } else items(mediaCharacters) { item ->
                         PersonItemHorizontal(
                             title = item.mediaCharacter.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaCharacter.node?.image?.medium,
@@ -105,8 +117,7 @@ fun MediaCharacterStaffViewPreview() {
     AniHyouTheme {
         Surface {
             MediaCharacterStaffView(
-                mediaId = 1,
-                viewModel = viewModel(),
+                viewModel = MediaDetailsViewModel(mediaId = 1),
                 navigateToCharacterDetails = {},
                 navigateToStaffDetails = {}
             )

@@ -8,15 +8,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.ui.base.UiState
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -28,28 +31,32 @@ import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 
 @Composable
 fun MediaRelationsView(
-    mediaId: Int,
     viewModel: MediaDetailsViewModel,
     navigateToDetails: (Int) -> Unit,
 ) {
-    LaunchedEffect(mediaId) {
-        if (viewModel.mediaRelated.isEmpty() || viewModel.mediaRecommendations.isEmpty())
-            viewModel.getMediaRelationsRecommendations(mediaId)
+    val relationsAndRecommendations by viewModel.relationsAndRecommendations.collectAsState()
+    val isLoading by remember {
+        derivedStateOf { relationsAndRecommendations is UiState.Loading }
     }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Related
-        if (viewModel.isLoadingRelationsRecommendations || viewModel.mediaRelated.isNotEmpty()) {
+        val mediaRelated by remember {
+            derivedStateOf {
+                (relationsAndRecommendations as? UiState.Success)?.data?.relations.orEmpty()
+            }
+        }
+        if (isLoading || mediaRelated.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.related))
             HomeLazyRow {
-                if (viewModel.isLoadingRelationsRecommendations) {
+                if (isLoading) {
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
                 }
-                else items(viewModel.mediaRelated) { item ->
+                else items(mediaRelated) { item ->
                     MediaItemVertical(
                         title = item.mediaRelated.node?.title?.userPreferred ?: "",
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
@@ -70,15 +77,20 @@ fun MediaRelationsView(
         }
 
         // Recommendations
-        if (viewModel.isLoadingRelationsRecommendations || viewModel.mediaRecommendations.isNotEmpty()) {
+        val mediaRecommendations by remember {
+            derivedStateOf {
+                (relationsAndRecommendations as? UiState.Success)?.data?.recommendations.orEmpty()
+            }
+        }
+        if (isLoading || mediaRecommendations.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.recommendations))
             HomeLazyRow {
-                if (viewModel.isLoadingRelationsRecommendations) {
+                if (isLoading) {
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
                 }
-                else items(viewModel.mediaRecommendations) { item ->
+                else items(mediaRecommendations) { item ->
                     MediaItemVertical(
                         title = item.mediaRecommended.mediaRecommendation?.title?.userPreferred ?: "",
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
@@ -107,8 +119,7 @@ fun MediaRelationsViewPreview() {
     AniHyouTheme {
         Surface {
             MediaRelationsView(
-                mediaId = 1,
-                viewModel = viewModel(),
+                viewModel = MediaDetailsViewModel(mediaId = 1),
                 navigateToDetails = {}
             )
         }

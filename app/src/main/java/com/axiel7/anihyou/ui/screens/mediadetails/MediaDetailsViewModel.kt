@@ -6,25 +6,25 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaDetailsQuery
-import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
-import com.axiel7.anihyou.ToggleFavouriteMutation
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.type.ThreadSort
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.base.UiState
 import kotlinx.coroutines.launch
 
-class MediaDetailsViewModel : BaseViewModel() {
+class MediaDetailsViewModel(
+    private val mediaId: Int
+) : BaseViewModel() {
 
     var mediaDetails by mutableStateOf<MediaDetailsQuery.Media?>(null)
     val studios by derivedStateOf {
@@ -34,15 +34,16 @@ class MediaDetailsViewModel : BaseViewModel() {
         mediaDetails?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
     }
 
-    suspend fun getDetails(mediaId: Int) {
-        viewModelScope.launch {
-            isLoading = true
-            val response = MediaDetailsQuery(
-                mediaId = Optional.present(mediaId)
-            ).tryQuery()
+    suspend fun getDetails() = viewModelScope.launch {
+        MediaRepository.getMediaDetails(mediaId).collect { uiState ->
+            isLoading = uiState is UiState.Loading
 
-            mediaDetails = response?.data?.Media
-            if (mediaDetails != null) isLoading = false
+            if (uiState is UiState.Success) {
+                mediaDetails = uiState.data
+            }
+            else if (uiState is UiState.Error) {
+                message = uiState.message
+            }
         }
     }
 
@@ -57,103 +58,72 @@ class MediaDetailsViewModel : BaseViewModel() {
         }
     }
 
-    suspend fun toggleFavorite() {
-        viewModelScope.launch {
-            mediaDetails?.let { details ->
-                val response = ToggleFavouriteMutation(
-                    animeId = if (details.basicMediaDetails.type == MediaType.ANIME)
-                        Optional.present(details.id) else Optional.absent(),
-                    mangaId = if (details.basicMediaDetails.type == MediaType.MANGA)
-                        Optional.present(details.id) else Optional.absent()
-                ).tryMutation()
-
-                if (response?.data != null) {
-                    mediaDetails = details.copy(isFavourite = !details.isFavourite)
+    suspend fun toggleFavorite() = viewModelScope.launch {
+        mediaDetails?.let { details ->
+            FavoriteRepository.toggleFavorite(
+                animeId = if (details.basicMediaDetails.type == MediaType.ANIME)
+                    details.id else null,
+                mangaId = if (details.basicMediaDetails.type == MediaType.MANGA)
+                    details.id else null,
+            ).collect { uiState ->
+                if (uiState is UiState.Success) {
+                    if (uiState.data) {
+                        mediaDetails = details.copy(isFavourite = !details.isFavourite)
+                    }
+                }
+                else if (uiState is UiState.Error) {
+                    message = uiState.message
                 }
             }
         }
     }
 
-    var isLoadingStaffCharacter by mutableStateOf(true)
-    var mediaStaff = mutableStateListOf<MediaCharactersAndStaffQuery.Edge1>()
-    var mediaCharacters = mutableStateListOf<MediaCharactersAndStaffQuery.Edge>()
+    val charactersAndStaff =
+        MediaRepository.getMediaCharactersAndStaff(mediaId).stateInViewModel()
 
-    suspend fun getMediaCharactersAndStaff(mediaId: Int) {
-        viewModelScope.launch {
-            isLoadingStaffCharacter = true
-            val response = MediaCharactersAndStaffQuery(
-                mediaId = Optional.present(mediaId)
-            ).tryQuery()
-
-            mediaStaff.clear()
-            response?.data?.Media?.staff?.edges?.filterNotNull()?.let { mediaStaff.addAll(it) }
-
-            mediaCharacters.clear()
-            response?.data?.Media?.characters?.edges?.filterNotNull()
-                ?.let { mediaCharacters.addAll(it) }
-            isLoadingStaffCharacter = false
-        }
-    }
-
-    var isLoadingRelationsRecommendations by mutableStateOf(true)
-    var mediaRelated = mutableStateListOf<MediaRelationsAndRecommendationsQuery.Edge>()
-    var mediaRecommendations = mutableStateListOf<MediaRelationsAndRecommendationsQuery.Node>()
-
-    suspend fun getMediaRelationsRecommendations(mediaId: Int) {
-        viewModelScope.launch {
-            isLoadingRelationsRecommendations = true
-            val response = MediaRelationsAndRecommendationsQuery(
-                mediaId = Optional.present(mediaId)
-            ).tryQuery()
-
-            mediaRelated.clear()
-            response?.data?.Media?.relations?.edges?.filterNotNull()
-                ?.let { mediaRelated.addAll(it) }
-
-            mediaRecommendations.clear()
-            response?.data?.Media?.recommendations?.nodes?.filterNotNull()
-                ?.let { mediaRecommendations.addAll(it) }
-
-            isLoadingRelationsRecommendations = false
-        }
-    }
+    val relationsAndRecommendations =
+        MediaRepository.getMediaRelationsRecommendations(mediaId).stateInViewModel()
 
     var isLoadingStats by mutableStateOf(true)
+    var isSuccessStats by mutableStateOf(false)
     var mediaStatusDistribution = mutableStateListOf<Stat<StatusDistribution>>()
     var mediaScoreDistribution = mutableStateListOf<Stat<ScoreDistribution>>()
     var mediaRankings = mutableStateListOf<MediaStatsQuery.Ranking>()
 
-    suspend fun getMediaStats(mediaId: Int) {
-        viewModelScope.launch {
-            isLoadingStats = true
-            val response = MediaStatsQuery(
-                mediaId = Optional.present(mediaId)
-            ).tryQuery()
+    suspend fun getMediaStats() = viewModelScope.launch {
+        MediaRepository.getMediaStats(mediaId).collect { uiState ->
+            isLoadingStats = uiState is UiState.Loading
 
-            mediaStatusDistribution.clear()
-            response?.data?.Media?.stats?.statusDistribution?.filterNotNull()?.forEach {
-                val status = StatusDistribution.valueOf(it.status?.rawValue)
-                if (status != null) {
-                    mediaStatusDistribution.add(
+            if (uiState is UiState.Success) {
+                isSuccessStats = true
+                mediaStatusDistribution.clear()
+                uiState.data.stats?.statusDistribution?.filterNotNull()?.forEach {
+                    val status = StatusDistribution.valueOf(it.status?.rawValue)
+                    if (status != null) {
+                        mediaStatusDistribution.add(
+                            StatLocalizableAndColorable(
+                                type = status,
+                                value = it.amount?.toFloat() ?: 0f
+                            )
+                        )
+                    }
+                }
+                mediaScoreDistribution.clear()
+                uiState.data.stats?.scoreDistribution?.filterNotNull()?.forEach {
+                    mediaScoreDistribution.add(
                         StatLocalizableAndColorable(
-                            type = status,
+                            type = ScoreDistribution(score = it.score ?: 0),
                             value = it.amount?.toFloat() ?: 0f
                         )
                     )
                 }
+                mediaRankings.clear()
+                uiState.data.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
             }
-            mediaScoreDistribution.clear()
-            response?.data?.Media?.stats?.scoreDistribution?.filterNotNull()?.forEach {
-                mediaScoreDistribution.add(
-                    StatLocalizableAndColorable(
-                        type = ScoreDistribution(score = it.score ?: 0),
-                        value = it.amount?.toFloat() ?: 0f
-                    )
-                )
+            else if (uiState is UiState.Error) {
+                isSuccessStats = false
+                message = uiState.message
             }
-            mediaRankings.clear()
-            response?.data?.Media?.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
-            isLoadingStats = false
         }
     }
 
@@ -162,20 +132,18 @@ class MediaDetailsViewModel : BaseViewModel() {
     private var pageReviews = 1
     var hasNextPageReviews = true
 
-    suspend fun getMediaReviews(mediaId: Int) {
-        viewModelScope.launch {
-            isLoadingReviews = true
-            val response = MediaReviewsQuery(
-                mediaId = Optional.present(mediaId),
-                page = Optional.present(pageReviews),
-                perPage = Optional.present(25)
-            ).tryQuery()
+    suspend fun getMediaReviews() = viewModelScope.launch {
+        MediaRepository.getMediaReviews(
+            mediaId = mediaId,
+            page = pageReviews
+        ).collect { uiState ->
+            isLoadingReviews = pageReviews == 1 && uiState is UiState.Loading
 
-            response?.data?.Media?.reviews?.nodes?.filterNotNull()?.let { mediaReviews.addAll(it) }
-            hasNextPageReviews = response?.data?.Media?.reviews?.pageInfo?.hasNextPage ?: false
-            pageReviews =
-                response?.data?.Media?.reviews?.pageInfo?.currentPage?.plus(1) ?: pageReviews
-            isLoadingReviews = false
+            if (uiState is UiState.Success) {
+                uiState.data.nodes?.filterNotNull()?.let { mediaReviews.addAll(it) }
+                hasNextPageReviews = uiState.data.pageInfo?.hasNextPage ?: false
+                pageReviews = uiState.data.pageInfo?.currentPage?.plus(1) ?: pageReviews++
+            }
         }
     }
 
@@ -184,20 +152,18 @@ class MediaDetailsViewModel : BaseViewModel() {
     private var pageThreads = 1
     var hasNextPageThreads = true
 
-    suspend fun getMediaThreads(mediaId: Int) {
-        viewModelScope.launch {
-            isLoadingThreads = true
-            val response = MediaThreadsQuery(
-                page = Optional.present(pageReviews),
-                perPage = Optional.present(25),
-                mediaCategoryId = Optional.present(mediaId),
-                sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
-            ).tryQuery()
+    suspend fun getMediaThreads() = viewModelScope.launch {
+        MediaRepository.getMediaThreadsPage(
+            mediaId = mediaId,
+            page = pageReviews
+        ).collect { uiState ->
+            isLoadingThreads = pageThreads == 1 && uiState is UiState.Loading
 
-            response?.data?.Page?.threads?.filterNotNull()?.let { mediaThreads.addAll(it) }
-            hasNextPageThreads = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-            pageThreads = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageThreads
-            isLoadingThreads = false
+            if (uiState is UiState.Success) {
+                uiState.data.threads?.filterNotNull()?.let { mediaThreads.addAll(it) }
+                hasNextPageThreads = uiState.data.pageInfo?.hasNextPage ?: false
+                pageThreads = uiState.data.pageInfo?.currentPage?.plus(1) ?: pageThreads++
+            }
         }
     }
 }

@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.OnBottomReached
@@ -41,7 +40,6 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReviewThreadListView(
-    mediaId: Int,
     viewModel: MediaDetailsViewModel,
     navigateToReviewDetails: (Int) -> Unit,
     navigateToThreadDetails: (Int) -> Unit,
@@ -51,12 +49,12 @@ fun ReviewThreadListView(
 
     reviewsListState.OnBottomReached(buffer = 2) {
         if (viewModel.hasNextPageReviews)
-            viewModel.getMediaReviews(mediaId)
+            viewModel.getMediaReviews()
     }
 
     threadsListState.OnBottomReached(buffer = 2) {
         if (viewModel.hasNextPageThreads)
-            viewModel.getMediaThreads(mediaId)
+            viewModel.getMediaThreads()
     }
 
     Column(
@@ -188,8 +186,7 @@ fun ReviewThreadListViewPreview() {
     AniHyouTheme {
         Surface {
             ReviewThreadListView(
-                mediaId = 1,
-                viewModel = viewModel(),
+                viewModel = MediaDetailsViewModel(mediaId = 1),
                 navigateToReviewDetails = {},
                 navigateToThreadDetails = {}
             )

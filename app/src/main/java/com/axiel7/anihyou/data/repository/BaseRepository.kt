@@ -7,11 +7,6 @@ import com.apollographql.apollo3.api.Query
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.network.apolloClient
-import com.axiel7.anihyou.ui.base.UiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 
 object BaseRepository {
 
@@ -41,8 +36,4 @@ object BaseRepository {
             this?.errors?.first()?.message ?: "Unknown error"
         }
         else null
-
-    fun <T> Flow<UiState<T>>.asStateFlow(
-        scope: CoroutineScope
-    ) = stateIn(scope, SharingStarted.WhileSubscribed(5000), UiState.Loading)
 }

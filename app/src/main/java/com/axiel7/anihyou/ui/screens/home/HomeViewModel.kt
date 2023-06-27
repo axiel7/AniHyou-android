@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.screens.home
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.repository.BaseRepository.asStateFlow
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaSort
@@ -27,23 +26,23 @@ class HomeViewModel : BaseViewModel() {
     val nowAnimeSeason = now.currentAnimeSeason()
     val nextAnimeSeason = now.nextAnimeSeason()
 
-    val airingAnime = MediaRepository.getAiringAnime().asStateFlow(viewModelScope)
+    val airingAnime = MediaRepository.getAiringAnime().stateInViewModel()
 
-    val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyList().asStateFlow(viewModelScope)
+    val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyList().stateInViewModel()
 
-    val thisSeasonAnime = MediaRepository.getSeasonalAnime(nowAnimeSeason).asStateFlow(viewModelScope)
+    val thisSeasonAnime = MediaRepository.getSeasonalAnime(nowAnimeSeason).stateInViewModel()
 
     val trendingAnime = MediaRepository.getMediaSorted(
         mediaType = MediaType.ANIME,
         sort = listOf(MediaSort.TRENDING_DESC)
-    ).asStateFlow(viewModelScope)
+    ).stateInViewModel()
 
-    val nextSeasonAnime = MediaRepository.getSeasonalAnime(nowAnimeSeason).asStateFlow(viewModelScope)
+    val nextSeasonAnime = MediaRepository.getSeasonalAnime(nowAnimeSeason).stateInViewModel()
 
     val trendingManga = MediaRepository.getMediaSorted(
         mediaType = MediaType.MANGA,
         sort = listOf(MediaSort.TRENDING_DESC)
-    ).asStateFlow(viewModelScope)
+    ).stateInViewModel()
 
     val unreadNotificationCount = UserRepository.getUnreadNotificationCount()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)

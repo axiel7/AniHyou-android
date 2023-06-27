@@ -119,7 +119,7 @@ fun MediaDetailsView(
     navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel: MediaDetailsViewModel = viewModel()
+    val viewModel = viewModel { MediaDetailsViewModel(mediaId) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -142,7 +142,7 @@ fun MediaDetailsView(
     val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
 
     LaunchedEffect(mediaId) {
-        viewModel.getDetails(mediaId)
+        viewModel.getDetails()
     }
 
     if (sheetState.isVisible && viewModel.mediaDetails != null) {
@@ -435,7 +435,6 @@ fun MediaDetailsView(
 
                     DetailsType.STAFF_CHARACTERS ->
                         MediaCharacterStaffView(
-                            mediaId = mediaId,
                             viewModel = viewModel,
                             navigateToCharacterDetails = navigateToCharacterDetails,
                             navigateToStaffDetails = navigateToStaffDetails
@@ -443,17 +442,14 @@ fun MediaDetailsView(
 
                     DetailsType.RELATIONS ->
                         MediaRelationsView(
-                            mediaId = mediaId,
                             viewModel = viewModel,
                             navigateToDetails = navigateToMediaDetails
                         )
 
                     DetailsType.STATS -> MediaStatsView(
-                        mediaId = mediaId,
                         viewModel = viewModel
                     )
                     DetailsType.REVIEWS -> ReviewThreadListView(
-                        mediaId = mediaId,
                         viewModel = viewModel,
                         navigateToReviewDetails = navigateToReviewDetails,
                         navigateToThreadDetails = navigateToThreadDetails,

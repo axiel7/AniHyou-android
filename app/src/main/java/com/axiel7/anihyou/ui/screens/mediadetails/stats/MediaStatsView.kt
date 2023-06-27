@@ -19,7 +19,6 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.color
 import com.axiel7.anihyou.data.model.media.icon
@@ -34,12 +33,10 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun MediaStatsView(
-    mediaId: Int,
     viewModel: MediaDetailsViewModel,
 ) {
-    LaunchedEffect(mediaId) {
-        if (viewModel.mediaScoreDistribution.isEmpty())
-            viewModel.getMediaStats(mediaId)
+    LaunchedEffect(viewModel) {
+        if (!viewModel.isSuccessStats) viewModel.getMediaStats()
     }
 
     Column(
@@ -123,8 +120,7 @@ fun MediaStatsViewPreview() {
     AniHyouTheme {
         Surface {
             MediaStatsView(
-                mediaId = 1,
-                viewModel = viewModel()
+                viewModel = MediaDetailsViewModel(mediaId = 1)
             )
         }
     }
