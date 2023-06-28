@@ -103,8 +103,8 @@ fun ProfileView(
     )
 
     LaunchedEffect(userId, username) {
-        if (userId != null) viewModel.getUserInfo(userId)
-        else if (username != null) viewModel.getUserInfo(username)
+        if (userId != null || username != null)
+            viewModel.getUserInfo(userId = userId, username = username)
         else viewModel.getMyUserInfo()
     }
 

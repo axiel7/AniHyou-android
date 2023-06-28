@@ -69,11 +69,11 @@ fun UserFavoritesView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
 ) {
-    val viewModel: UserFavoritesViewModel = viewModel()
+    val viewModel = viewModel { UserFavoritesViewModel(userId) }
     val listState = rememberLazyGridState()
 
-    LaunchedEffect(viewModel.favoritesType) {
-        viewModel.onFavoriteTypeChanged(userId)
+    LaunchedEffect(userId) {
+        viewModel.onFavoriteTypeChanged(FavoritesType.ANIME)
     }
 
     Column(
@@ -88,7 +88,7 @@ fun UserFavoritesView(
                 FilterSelectionChip(
                     selected = viewModel.favoritesType == it,
                     text = it.localized(),
-                    onClick = { viewModel.favoritesType = it }
+                    onClick = { viewModel.onFavoriteTypeChanged(it) }
                 )
             }
         }//: Row

@@ -45,11 +45,11 @@ fun UserSocialView(
     modifier: Modifier = Modifier,
     navigateToUserDetails: (Int) -> Unit,
 ) {
-    val viewModel: UserSocialViewModel = viewModel()
+    val viewModel = viewModel { UserSocialViewModel(userId) }
     val listState = rememberLazyGridState()
 
-    LaunchedEffect(viewModel.userSocialType) {
-        viewModel.onUserSocialTypeChanged(userId)
+    LaunchedEffect(userId) {
+        viewModel.onUserSocialTypeChanged(UserSocialType.FOLLOWERS)
     }
 
     Column(
@@ -64,7 +64,7 @@ fun UserSocialView(
                 FilterSelectionChip(
                     selected = viewModel.userSocialType == it,
                     text = it.localized(),
-                    onClick = { viewModel.userSocialType = it }
+                    onClick = { viewModel.onUserSocialTypeChanged(it) }
                 )
             }
         }//: Row

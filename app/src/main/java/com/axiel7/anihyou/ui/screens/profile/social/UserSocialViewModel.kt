@@ -5,21 +5,27 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.FollowersQuery
 import com.axiel7.anihyou.FollowingsQuery
+import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserSocialViewModel : BaseViewModel() {
+class UserSocialViewModel(
+    private val userId: Int
+) : BaseViewModel() {
 
     var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
+    private set
 
-    suspend fun onUserSocialTypeChanged(userId: Int) {
-        viewModelScope.launch {
+    fun onUserSocialTypeChanged(value: UserSocialType) {
+        userSocialType = value
+        viewModelScope.launch(Dispatchers.IO) {
             when (userSocialType) {
-                UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers(userId)
-                UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing(userId)
+                UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers()
+                UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing()
             }
         }
     }
@@ -28,31 +34,43 @@ class UserSocialViewModel : BaseViewModel() {
     private var hasNextPageFollowers = true
     var followers = mutableStateListOf<FollowersQuery.Follower>()
 
-    private suspend fun getFollowers(userId: Int) {
-        val response = FollowersQuery(
+    private suspend fun getFollowers() {
+        UserRepository.getFollowers(
             userId = userId,
-            page = Optional.present(pageFollowers),
-            perPage = Optional.present(25)
-        ).tryQuery()
+            page = pageFollowers
+        ).collect { result ->
+            isLoading = pageFollowers == 1 && result is PagedResult.Loading
 
-        response?.data?.Page?.followers?.filterNotNull()?.let { followers.addAll(it) }
-        hasNextPageFollowers = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-        pageFollowers = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageFollowers
+            if (result is PagedResult.Success) {
+                followers.addAll(result.data)
+                hasNextPageFollowers = result.nextPage != null
+                pageFollowers = result.nextPage ?: pageFollowers
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 
     private var pageFollowing = 1
     private var hasNextPageFollowing = true
     var following = mutableStateListOf<FollowingsQuery.Following>()
 
-    private suspend fun getFollowing(userId: Int) {
-        val response = FollowingsQuery(
+    private suspend fun getFollowing() {
+        UserRepository.getFollowing(
             userId = userId,
-            page = Optional.present(pageFollowing),
-            perPage = Optional.present(25)
-        ).tryQuery()
+            page = pageFollowing
+        ).collect { result ->
+            isLoading = pageFollowing == 1 && result is PagedResult.Loading
 
-        response?.data?.Page?.following?.filterNotNull()?.let { following.addAll(it) }
-        hasNextPageFollowing = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-        pageFollowing = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: pageFollowing
+            if (result is PagedResult.Success) {
+                following.addAll(result.data)
+                hasNextPageFollowing = result.nextPage != null
+                pageFollowing = result.nextPage ?: pageFollowing
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 }

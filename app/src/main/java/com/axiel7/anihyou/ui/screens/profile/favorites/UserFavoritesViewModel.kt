@@ -5,21 +5,27 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.UserFavoritesAnimeQuery
 import com.axiel7.anihyou.UserFavoritesCharacterQuery
 import com.axiel7.anihyou.UserFavoritesMangaQuery
 import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
+import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserFavoritesViewModel : BaseViewModel() {
+class UserFavoritesViewModel(
+    private val userId: Int
+) : BaseViewModel() {
 
     var favoritesType by mutableStateOf(FavoritesType.ANIME)
+    private set
 
-    suspend fun onFavoriteTypeChanged(userId: Int) {
-        viewModelScope.launch {
+    fun onFavoriteTypeChanged(value: FavoritesType) {
+        favoritesType = value
+        viewModelScope.launch(Dispatchers.IO) {
             when (favoritesType) {
                 FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
                 FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
@@ -35,18 +41,21 @@ class UserFavoritesViewModel : BaseViewModel() {
     var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
 
     private suspend fun getAnime(userId: Int) {
-        isLoading = true
-        val response = UserFavoritesAnimeQuery(
-            userId = Optional.present(userId),
-            page = Optional.present(pageAnime),
-            perPage = Optional.present(25)
-        ).tryQuery()
+        FavoriteRepository.getFavoriteAnime(
+            userId = userId,
+            page = pageAnime
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-        response?.data?.User?.favourites?.anime?.nodes?.filterNotNull()?.let { anime.addAll(it) }
-        hasNextPageAnime = response?.data?.User?.favourites?.anime?.pageInfo?.hasNextPage ?: false
-        pageAnime = response?.data?.User?.favourites?.anime?.pageInfo?.currentPage?.plus(1) ?: pageAnime
-
-        isLoading = false
+            if (result is PagedResult.Success) {
+                anime.addAll(result.data)
+                hasNextPageAnime = result.nextPage != null
+                pageAnime = result.nextPage ?: pageAnime
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 
     private var pageManga = 1
@@ -54,18 +63,21 @@ class UserFavoritesViewModel : BaseViewModel() {
     var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
 
     private suspend fun getManga(userId: Int) {
-        isLoading = true
-        val response = UserFavoritesMangaQuery(
-            userId = Optional.present(userId),
-            page = Optional.present(pageManga),
-            perPage = Optional.present(25)
-        ).tryQuery()
+        FavoriteRepository.getFavoriteManga(
+            userId = userId,
+            page = pageManga
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-        response?.data?.User?.favourites?.manga?.nodes?.filterNotNull()?.let { manga.addAll(it) }
-        hasNextPageManga = response?.data?.User?.favourites?.manga?.pageInfo?.hasNextPage ?: false
-        pageManga = response?.data?.User?.favourites?.manga?.pageInfo?.currentPage?.plus(1) ?: pageManga
-
-        isLoading = false
+            if (result is PagedResult.Success) {
+                manga.addAll(result.data)
+                hasNextPageManga = result.nextPage != null
+                pageManga = result.nextPage ?: pageManga
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 
     private var pageCharacter = 1
@@ -73,18 +85,21 @@ class UserFavoritesViewModel : BaseViewModel() {
     var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
 
     private suspend fun getCharacters(userId: Int) {
-        isLoading = true
-        val response = UserFavoritesCharacterQuery(
-            userId = Optional.present(userId),
-            page = Optional.present(pageCharacter),
-            perPage = Optional.present(25)
-        ).tryQuery()
+        FavoriteRepository.getFavoriteCharacters(
+            userId = userId,
+            page = pageCharacter
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-        response?.data?.User?.favourites?.characters?.nodes?.filterNotNull()?.let { characters.addAll(it) }
-        hasNextPageCharacter = response?.data?.User?.favourites?.characters?.pageInfo?.hasNextPage ?: false
-        pageCharacter = response?.data?.User?.favourites?.characters?.pageInfo?.currentPage?.plus(1) ?: pageCharacter
-
-        isLoading = false
+            if (result is PagedResult.Success) {
+                characters.addAll(result.data)
+                hasNextPageCharacter = result.nextPage != null
+                pageCharacter = result.nextPage ?: pageCharacter
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 
     private var pageStaff = 1
@@ -92,18 +107,21 @@ class UserFavoritesViewModel : BaseViewModel() {
     var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
 
     private suspend fun getStaff(userId: Int) {
-        isLoading = true
-        val response = UserFavoritesStaffQuery(
-            userId = Optional.present(userId),
-            page = Optional.present(pageStaff),
-            perPage = Optional.present(25)
-        ).tryQuery()
+        FavoriteRepository.getFavoriteStaff(
+            userId = userId,
+            page = pageStaff
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-        response?.data?.User?.favourites?.staff?.nodes?.filterNotNull()?.let { staff.addAll(it) }
-        hasNextPageStaff = response?.data?.User?.favourites?.staff?.pageInfo?.hasNextPage ?: false
-        pageStaff = response?.data?.User?.favourites?.staff?.pageInfo?.currentPage?.plus(1) ?: pageStaff
-
-        isLoading = false
+            if (result is PagedResult.Success) {
+                staff.addAll(result.data)
+                hasNextPageStaff = result.nextPage != null
+                pageStaff = result.nextPage ?: pageStaff
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 
     private var pageStudio = 1
@@ -111,17 +129,20 @@ class UserFavoritesViewModel : BaseViewModel() {
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 
     private suspend fun getStudios(userId: Int) {
-        isLoading = true
-        val response = UserFavoritesStudioQuery(
-            userId = Optional.present(userId),
-            page = Optional.present(pageStudio),
-            perPage = Optional.present(25)
-        ).tryQuery()
+        FavoriteRepository.getFavoriteStudio(
+            userId = userId,
+            page = pageStudio
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-        response?.data?.User?.favourites?.studios?.nodes?.filterNotNull()?.let { studios.addAll(it) }
-        hasNextPageStudio = response?.data?.User?.favourites?.studios?.pageInfo?.hasNextPage ?: false
-        pageStudio = response?.data?.User?.favourites?.studios?.pageInfo?.currentPage?.plus(1) ?: pageStudio
-
-        isLoading = false
+            if (result is PagedResult.Success) {
+                studios.addAll(result.data)
+                hasNextPageStudio = result.nextPage != null
+                pageStudio = result.nextPage ?: pageStudio
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
+        }
     }
 }
