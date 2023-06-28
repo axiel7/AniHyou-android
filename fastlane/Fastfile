@@ -30,16 +30,16 @@ platform :android do
         properties: {
             "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
             "android.injected.signing.store.password" => ENV["STORE_PASSWORD"],
-            "android.injected.signing key.alias" => ENV["KEY_ALIAS"],
+            "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
             "android.injected.signing.key.password" => ENV["KEY_PASSWORD"],
         }
     )
     upload_to_play_store(
-        json_key: ENVI"ANDROID_JSON_KEY_FILE" 1,
+        json_key: ENV["ANDROID_JSON_KEY_FILE"],
         track: "internal",
         skip_upload_metadata: true,
-        skip_upload _changelogs: true,
-        skip_upload._images: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true,
         skip_upload_screenshots: true
     )
   end
