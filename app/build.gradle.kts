@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -7,6 +8,9 @@ plugins {
 }
 
 android.buildFeatures.buildConfig = true
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").reader())
 
 android {
     namespace = "com.axiel7.anihyou"
@@ -37,6 +41,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("boolean", "IS_DEBUG", "true")
+            buildConfigField("int", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         }
         release {
             isDebuggable = false
@@ -47,6 +52,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("boolean", "IS_DEBUG", "false")
+            buildConfigField("int", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         }
     }
     splits {
