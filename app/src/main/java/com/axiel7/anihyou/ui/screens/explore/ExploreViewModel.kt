@@ -2,9 +2,11 @@ package com.axiel7.anihyou.ui.screens.explore
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
+import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -19,21 +21,24 @@ class ExploreViewModel : BaseViewModel() {
 
     var mediaChart = mutableStateListOf<MediaChartQuery.Medium>()
 
-    suspend fun getMediaChart(type: MediaType, sort: MediaSort) {
-        viewModelScope.launch {
-            isLoading = page == 1
-            val response = MediaChartQuery(
-                page = Optional.present(page),
-                perPage = Optional.present(perPage),
-                sort = Optional.present(listOf(sort)),
-                type = Optional.present(type)
-            ).tryQuery()
+    suspend fun getMediaChart(type: MediaType, sort: MediaSort) = viewModelScope.launch {
+        MediaRepository.getMediaChartPage(
+            type = type,
+            sort = listOf(sort),
+            page = page,
+            perPage = perPage
+        ).collect { result ->
+            isLoading = page == 1 && result is PagedResult.Loading
 
-            response?.data?.Page?.media?.filterNotNull()?.let { mediaChart.addAll(it) }
-            page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
-            hasNextPage = if (page > 100 / perPage) false //limit 100
-            else response?.data?.Page?.pageInfo?.hasNextPage ?: false
-            isLoading = false
+            if (result is PagedResult.Success) {
+                mediaChart.addAll(result.data)
+                hasNextPage = if (page > 100 / perPage) false //limit 100
+                else result.nextPage != null
+                page = result.nextPage ?: page
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
         }
     }
 
@@ -43,26 +48,27 @@ class ExploreViewModel : BaseViewModel() {
         season: MediaSeason,
         year: Int,
         resetPage: Boolean = false
-    ) {
-        viewModelScope.launch {
-            isLoading = true
-            if (resetPage) {
-                page = 1
-                hasNextPage = true
-                animeSeasonal.clear()
-            }
-            val response = SeasonalAnimeQuery(
-                page = Optional.present(page),
-                perPage = Optional.present(perPage),
-                season = Optional.present(season),
-                seasonYear = Optional.present(year),
-                sort = Optional.present(listOf(MediaSort.POPULARITY_DESC))
-            ).tryQuery()
+    ) = viewModelScope.launch {
+        if (resetPage) {
+            page = 1
+            hasNextPage = true
+        }
+        MediaRepository.getSeasonalAnimePage(
+            animeSeason = AnimeSeason(year, season),
+            page = page,
+            perPage = perPage
+        ).collect { result ->
+            isLoading = result is PagedResult.Loading
 
-            response?.data?.Page?.media?.filterNotNull()?.let { animeSeasonal.addAll(it) }
-            page = response?.data?.Page?.pageInfo?.currentPage?.plus(1) ?: page
-            hasNextPage = response?.data?.Page?.pageInfo?.hasNextPage ?: false
-            isLoading = false
+            if (result is PagedResult.Success) {
+                if (resetPage) animeSeasonal.clear()
+                animeSeasonal.addAll(result.data)
+                hasNextPage = result.nextPage != null
+                page = result.nextPage ?: page
+            }
+            else if (result is PagedResult.Error) {
+                message = result.message
+            }
         }
     }
 }

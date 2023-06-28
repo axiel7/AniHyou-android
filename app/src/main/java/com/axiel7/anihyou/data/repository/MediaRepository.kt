@@ -4,6 +4,7 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
+import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
@@ -270,6 +271,36 @@ object MediaRepository {
                     else null
                 ))
             }
+            else emit(PagedResult.Error(message = "Error"))
+        }
+    }
+
+    fun getMediaChartPage(
+        type: MediaType,
+        sort: List<MediaSort> = listOf(MediaSort.ID),
+        page: Int = 1,
+        perPage: Int = 25,
+    ) = flow {
+        emit(PagedResult.Loading)
+
+        val response = MediaChartQuery(
+            page = Optional.present(page),
+            perPage = Optional.present(perPage),
+            sort = Optional.present(sort),
+            type = Optional.present(type)
+        ).tryQuery()
+
+        val error = response.getError()
+        if (error != null) emit(PagedResult.Error(message = error))
+        else {
+            val media = response?.data?.Page?.media?.filterNotNull()
+            val pageInfo = response?.data?.Page?.pageInfo
+            if (media != null) emit(PagedResult.Success(
+                data = media,
+                nextPage = if (pageInfo?.hasNextPage == true)
+                    pageInfo.currentPage?.plus(1)
+                else null
+            ))
             else emit(PagedResult.Error(message = "Error"))
         }
     }
