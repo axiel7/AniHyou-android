@@ -35,6 +35,12 @@ jobs:
       - name: Accept Android SDK license
         run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
 
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: adopt
+
       - name: Build & deploy Android release
         run: bundle exec fastlane deploy
         env:
