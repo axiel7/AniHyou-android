@@ -35,6 +35,9 @@ jobs:
       - name: Accept Android SDK license
         run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
 
+      - name: Accept Android SDK license
+        run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0-rc3"
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
