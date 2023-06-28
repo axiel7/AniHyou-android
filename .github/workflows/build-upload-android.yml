@@ -28,8 +28,11 @@ jobs:
           CLIENT_ID: ${{secrets.CLIENT_ID}}
         run: echo CLIENT_ID=$CLIENT_ID > ./local.properties
 
+      - name: Accept Android SDK license
+        run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
+
       - name: Build & deploy Android release
-        run: fastlane deploy
+        run: bundle exec fastlane deploy
         env:
           KEYSTORE_FILE: ${{steps.android_keystore.outputs.filePath}}
           STORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
