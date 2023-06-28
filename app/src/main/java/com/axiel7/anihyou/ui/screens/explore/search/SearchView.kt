@@ -63,18 +63,16 @@ fun SearchView(
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
-    val viewModel: SearchViewModel = viewModel()
+    val viewModel = viewModel {
+        SearchViewModel(
+            initialMediaSort = initialMediaSort,
+            initialMediaType = initialMediaType,
+            initialGenre = initialGenre,
+            initialTag = initialTag
+        )
+    }
     val listState = rememberLazyListState()
     val searchByGenre = remember { mutableStateOf(initialMediaType != null) }
-
-    LaunchedEffect(initialMediaType, initialMediaSort, initialGenre, initialTag) {
-        if (initialMediaType == MediaType.ANIME) viewModel.searchType = SearchType.ANIME
-        else if (initialMediaType == MediaType.MANGA) viewModel.searchType = SearchType.MANGA
-
-        if (initialMediaSort != null) viewModel.mediaSort = initialMediaSort
-        if (initialGenre != null) viewModel.genreCollection[initialGenre] = true
-        if (initialTag != null) viewModel.tagCollection[initialTag] = true
-    }
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
@@ -97,7 +95,7 @@ fun SearchView(
                     mediaType = if (viewModel.searchType == SearchType.ANIME) MediaType.ANIME
                     else MediaType.MANGA,
                     query = query,
-                    clear = false
+                    resetPage = false
                 )
         }
     }
@@ -116,7 +114,7 @@ fun SearchView(
                         selected = viewModel.searchType == it,
                         text = it.localized(),
                         onClick = {
-                            viewModel.searchType = it
+                            viewModel.onSearchTypeChanged(it)
                             performSearch.value = true
                         }
                     )
@@ -268,7 +266,7 @@ fun MediaSearchSortChip(
             title = stringResource(R.string.sort),
             onConfirm = {
                 selectedSort = it
-                viewModel.mediaSort = if (isDescending) it.desc else it.asc
+                viewModel.onMediaSortChanged(if (isDescending) it.desc else it.asc)
                 openDialog = false
                 performSearch.value = true
             },
@@ -302,7 +300,7 @@ fun MediaSearchSortChip(
             AssistChip(
                 onClick = {
                     isDescending = !isDescending
-                    viewModel.mediaSort = if (isDescending) selectedSort.desc else selectedSort.asc
+                    viewModel.onMediaSortChanged(if (isDescending) selectedSort.desc else selectedSort.asc)
                     performSearch.value = true
                 },
                 label = {
