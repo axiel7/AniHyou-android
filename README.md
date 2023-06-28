@@ -25,10 +25,8 @@ Follow the development on the official Discord server:
 * [Coil](https://github.com/coil-kt/coil)
 
 # Building
-Create a file `app/scr/main/java/com/axiel7/anihyou/ClientId.kt` and put the following content:
+Put the following content on your local.properties file:
 
-```kotlin
-package com.axiel7.anihyou
-
-const val CLIENT_ID = 1234 //your AniList API client ID here
+```
+CLIENT_ID=1234 //your AniList API client ID here
 ```
