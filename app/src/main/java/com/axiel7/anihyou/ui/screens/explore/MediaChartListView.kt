@@ -46,12 +46,7 @@ fun MediaChartListView(
     val listState = rememberLazyListState()
 
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) when (type) {
-            ChartType.TOP_ANIME -> viewModel.getMediaChart(MediaType.ANIME, MediaSort.SCORE_DESC)
-            ChartType.POPULAR_ANIME -> viewModel.getMediaChart(MediaType.ANIME, MediaSort.POPULARITY_DESC)
-            ChartType.TOP_MANGA -> viewModel.getMediaChart(MediaType.MANGA, MediaSort.SCORE_DESC)
-            ChartType.POPULAR_MANGA -> viewModel.getMediaChart(MediaType.MANGA, MediaSort.POPULARITY_DESC)
-        }
+        if (viewModel.hasNextPage) viewModel.loadMoreChart(type)
     }
 
     DefaultScaffoldWithMediumTopAppBar(

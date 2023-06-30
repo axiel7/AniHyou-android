@@ -12,10 +12,22 @@ enum class ChartType : Localizable {
     POPULAR_ANIME {
         @Composable override fun localized() = stringResource(R.string.top_popular)
     },
+    UPCOMING_ANIME {
+        @Composable override fun localized() = stringResource(R.string.upcoming)
+    },
+    AIRING_ANIME {
+        @Composable override fun localized() = stringResource(R.string.airing)
+    },
     TOP_MANGA {
         @Composable override fun localized() = stringResource(R.string.top_100)
     },
     POPULAR_MANGA {
         @Composable override fun localized() = stringResource(R.string.top_popular)
-    }
+    },
+    UPCOMING_MANGA {
+        @Composable override fun localized() =stringResource(R.string.upcoming)
+    },
+    PUBLISHING_MANGA {
+        @Composable override fun localized() =stringResource(R.string.publishing)
+    },
 }

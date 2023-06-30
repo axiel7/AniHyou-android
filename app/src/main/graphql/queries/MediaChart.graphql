@@ -1,6 +1,6 @@
-query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType) {
+query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType, $status: MediaStatus) {
   Page(page: $page, perPage: $perPage) {
-    media(sort: $sort, type: $type) {
+    media(sort: $sort, type: $type, status: $status) {
       id
       title {
         userPreferred

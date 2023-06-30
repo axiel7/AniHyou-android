@@ -278,6 +278,7 @@ object MediaRepository {
     fun getMediaChartPage(
         type: MediaType,
         sort: List<MediaSort> = listOf(MediaSort.ID),
+        status: MediaStatus? = null,
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
@@ -287,7 +288,8 @@ object MediaRepository {
             page = Optional.present(page),
             perPage = Optional.present(perPage),
             sort = Optional.present(sort),
-            type = Optional.present(type)
+            type = Optional.present(type),
+            status = Optional.presentIfNotNull(status)
         ).tryQuery()
 
         val error = response.getError()

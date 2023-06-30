@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
+import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
@@ -21,10 +23,64 @@ class ExploreViewModel : BaseViewModel() {
 
     var mediaChart = mutableStateListOf<MediaChartQuery.Medium>()
 
-    suspend fun getMediaChart(type: MediaType, sort: MediaSort) = viewModelScope.launch {
+    suspend fun loadMoreChart(type: ChartType) {
+        when (type) {
+            ChartType.TOP_ANIME ->
+                getMediaChart(
+                    type = MediaType.ANIME,
+                    sort = listOf(MediaSort.SCORE_DESC)
+                )
+            ChartType.POPULAR_ANIME ->
+                getMediaChart(
+                    type = MediaType.ANIME,
+                    sort = listOf(MediaSort.POPULARITY_DESC)
+                )
+            ChartType.UPCOMING_ANIME ->
+                getMediaChart(
+                    type = MediaType.ANIME,
+                    sort = listOf(MediaSort.POPULARITY_DESC),
+                    status = MediaStatus.NOT_YET_RELEASED
+                )
+            ChartType.AIRING_ANIME ->
+                getMediaChart(
+                    type = MediaType.ANIME,
+                    sort = listOf(MediaSort.SCORE_DESC),
+                    status = MediaStatus.RELEASING
+                )
+            ChartType.TOP_MANGA ->
+                getMediaChart(
+                    type = MediaType.MANGA,
+                    sort = listOf(MediaSort.SCORE_DESC)
+                )
+            ChartType.POPULAR_MANGA ->
+                getMediaChart(
+                    type = MediaType.MANGA,
+                    sort = listOf(MediaSort.POPULARITY_DESC)
+                )
+            ChartType.UPCOMING_MANGA ->
+                getMediaChart(
+                    type = MediaType.MANGA,
+                    sort = listOf(MediaSort.POPULARITY_DESC),
+                    status = MediaStatus.NOT_YET_RELEASED
+                )
+            ChartType.PUBLISHING_MANGA ->
+                getMediaChart(
+                    type = MediaType.MANGA,
+                    sort = listOf(MediaSort.SCORE_DESC),
+                    status = MediaStatus.RELEASING
+                )
+        }
+    }
+
+    private suspend fun getMediaChart(
+        type: MediaType,
+        sort: List<MediaSort>,
+        status: MediaStatus? = null,
+    ) = viewModelScope.launch {
         MediaRepository.getMediaChartPage(
             type = type,
-            sort = listOf(sort),
+            sort = sort,
+            status = status,
             page = page,
             perPage = perPage
         ).collect { result ->

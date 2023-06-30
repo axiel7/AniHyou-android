@@ -227,4 +227,6 @@
     <string name="follows_you">Follows you</string>
     <string name="view_anime_list">View Anime List</string>
     <string name="view_manga_list">View Manga List</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="publishing">Publishing</string>
 </resources>

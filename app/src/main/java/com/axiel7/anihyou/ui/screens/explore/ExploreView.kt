@@ -189,6 +189,30 @@ fun ExploreView(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                 IconCard(
+                    title = stringResource(R.string.upcoming),
+                    icon = R.drawable.schedule_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.UPCOMING_ANIME)
+                    }
+                )
+                IconCard(
+                    title = stringResource(R.string.airing),
+                    icon = R.drawable.rss_feed_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.AIRING_ANIME)
+                    }
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
                     title = stringResource(R.string.spring),
                     icon = R.drawable.local_florist_24,
                     modifier = Modifier
@@ -281,6 +305,30 @@ fun ExploreView(
                         .padding(horizontal = 8.dp),
                     onClick = {
                         navigateToMediaChart(ChartType.POPULAR_MANGA)
+                    }
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                IconCard(
+                    title = stringResource(R.string.upcoming),
+                    icon = R.drawable.schedule_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.UPCOMING_MANGA)
+                    }
+                )
+                IconCard(
+                    title = stringResource(R.string.publishing),
+                    icon = R.drawable.rss_feed_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.PUBLISHING_MANGA)
                     }
                 )
             }
