@@ -53,8 +53,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -103,6 +105,7 @@ fun UserMediaListHostView(
         UserMediaListViewModel(mediaType, userId)
     }
     val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
 
     var openSortDialog by remember { mutableStateOf(false) }
 
@@ -218,6 +221,7 @@ fun UserMediaListHostView(
                     scope.launch { viewModel.refreshList(refreshCache = true) }
                 },
                 onShowEditSheet = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     viewModel.selectedItem = it
                     scope.launch { editSheetState.show() }
                 },
