@@ -33,7 +33,7 @@ fun InfoItemView(
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        SelectionContainer(modifier = Modifier.weight(1f)) {
+        SelectionContainer(modifier = Modifier.weight(1.4f)) {
             Text(text = info ?: stringResource(R.string.unknown))
         }
     }
