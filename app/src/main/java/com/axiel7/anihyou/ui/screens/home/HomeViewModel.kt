@@ -39,7 +39,7 @@ class HomeViewModel : BaseViewModel() {
         sort = listOf(MediaSort.TRENDING_DESC)
     ).pagedResultStateInViewModel()
 
-    val nextSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).pagedResultStateInViewModel()
+    val nextSeasonAnime = MediaRepository.getSeasonalAnimePage(nextAnimeSeason).pagedResultStateInViewModel()
 
     val trendingManga = MediaRepository.getMediaSortedPage(
         mediaType = MediaType.MANGA,

@@ -84,10 +84,7 @@ object DateUtils {
     fun LocalDateTime.nextAnimeSeason(): AnimeSeason {
         val current = currentAnimeSeason()
         when (current.season) {
-            MediaSeason.WINTER -> {
-                current.season = MediaSeason.SPRING
-                current.year += 1
-            }
+            MediaSeason.WINTER -> current.season = MediaSeason.SPRING
             MediaSeason.SPRING -> current.season = MediaSeason.SUMMER
             MediaSeason.SUMMER -> current.season = MediaSeason.FALL
             MediaSeason.FALL -> current.season = MediaSeason.WINTER
