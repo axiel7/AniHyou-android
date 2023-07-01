@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -75,6 +80,8 @@ import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.CompactUserMediaListItem
+import com.axiel7.anihyou.ui.composables.media.GridUserMediaListItem
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
@@ -242,7 +249,6 @@ fun UserMediaListView(
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
     onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
-    val listState = rememberLazyListState()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isLoading,
         onRefresh = onRefresh
@@ -253,82 +259,114 @@ fun UserMediaListView(
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
     }
 
-    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
-
     Box(
         modifier = Modifier
             .clipToBounds()
             .pullRefresh(pullRefreshState)
             .fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .nestedScroll(nestedScrollConnection),
-            state = listState,
-            contentPadding = contentPadding,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-           when (listDisplayMode) {
-                ListMode.STANDARD.name -> {
-                    items(
-                        items = mediaList,
-                        key = { it.basicMediaListEntry.id },
-                        contentType = { it.basicMediaListEntry }
-                    ) { item ->
-                        StandardUserMediaListItem(
-                            item = item,
-                            status = status,
-                            scoreFormat = scoreFormat,
-                            isMyList = isMyList,
-                            onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = { onShowEditSheet(item) },
-                            onClickPlus = {
-                                onUpdateProgress(item.basicMediaListEntry)
-                            }
-                        )
-                    }
-                }
-                ListMode.COMPACT.name -> {
-                    items(
-                        items = mediaList,
-                        key = { it.basicMediaListEntry.id },
-                        contentType = { it.basicMediaListEntry }
-                    ) { item ->
-                        CompactUserMediaListItem(
-                            item = item,
-                            status = status,
-                            scoreFormat = scoreFormat,
-                            isMyList = isMyList,
-                            onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = { onShowEditSheet(item) },
-                            onClickPlus = {
-                                onUpdateProgress(item.basicMediaListEntry)
-                            }
-                        )
-                    }
-                }
-                ListMode.MINIMAL.name -> {
-                    items(
-                        items = mediaList,
-                        key = { it.basicMediaListEntry.id },
-                        contentType = { it.basicMediaListEntry }
-                    ) { item ->
-                        MinimalUserMediaListItem(
-                            item = item,
-                            status = status,
-                            scoreFormat = scoreFormat,
-                            isMyList = isMyList,
-                            onClick = { navigateToDetails(item.mediaId) },
-                            onLongClick = { onShowEditSheet(item) },
-                            onClickPlus = {
-                                onUpdateProgress(item.basicMediaListEntry)
-                            }
-                        )
-                    }
+        val listModifier = Modifier
+            .fillMaxWidth()
+            .nestedScroll(nestedScrollConnection)
+        if (listDisplayMode == ListMode.GRID.name) {
+            val listState = rememberLazyGridState()
+            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
+                modifier = listModifier,
+                state = listState,
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            ) {
+                items(
+                    items = mediaList,
+                    //key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    GridUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) }
+                    )
                 }
             }
-        }//: LazyColumn
+        } else {
+            val listState = rememberLazyListState()
+            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
+            LazyColumn(
+                modifier = listModifier,
+                state = listState,
+                contentPadding = contentPadding,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                when (listDisplayMode) {
+                    ListMode.STANDARD.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            StandardUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+
+                    ListMode.COMPACT.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            CompactUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+
+                    ListMode.MINIMAL.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            MinimalUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+                }
+            }//: LazyColumn
+        }
         PullRefreshIndicator(
             refreshing = isLoading,
             state = pullRefreshState,

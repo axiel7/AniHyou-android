@@ -1,17 +1,21 @@
 package com.axiel7.anihyou.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -22,9 +26,12 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -298,11 +305,93 @@ fun MinimalUserMediaListItem(
     }//:Card
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun GridUserMediaListItem(
+    item: UserMediaListQuery.MediaList,
+    status: MediaListStatus,
+    scoreFormat: ScoreFormat,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box {
+                MediaPoster(
+                    url = item.media?.coverImage?.large,
+                    showShadow = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MEDIA_POSTER_MEDIUM_HEIGHT.dp)
+                )
+
+                BadgeScoreIndicator(
+                    modifier = Modifier.align(Alignment.BottomStart),
+                    score = item.basicMediaListEntry.score,
+                    scoreFormat = scoreFormat
+                )
+
+                if (item.media?.nextAiringEpisode != null) {
+                    Row(
+                        modifier = Modifier
+                            .shadow(elevation = 8.dp)
+                            .align(Alignment.TopCenter)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
+                            .background(MaterialTheme.colorScheme.background),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AiringScheduleText(
+                            item = item,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }//:Box
+
+            Text(
+                text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                minLines = 2,
+            )
+
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                    fontSize = 15.sp,
+                    maxLines = 1
+                )
+            }
+        }//:Column
+    }//:Card
+}
+
 @Composable
 fun AiringScheduleText(
     item: UserMediaListQuery.MediaList,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
+    textAlign: TextAlign? = null,
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
         val isBehind = item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
@@ -321,6 +410,8 @@ fun AiringScheduleText(
             color = if (isBehind) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = fontSize,
+            textAlign = textAlign,
+            lineHeight = fontSize
         )
     }
 }
@@ -365,35 +456,49 @@ fun UserMediaListItemPreview() {
     )
     AniHyouTheme {
         Surface {
-            LazyColumn {
-                item {
-                    StandardUserMediaListItem(
-                        item = exampleItem,
-                        status = MediaListStatus.CURRENT,
-                        scoreFormat = ScoreFormat.POINT_100,
-                        isMyList = true,
-                        onClick = { },
-                        onLongClick = { },
-                        onClickPlus = { }
-                    )
-                    CompactUserMediaListItem(
-                        item = exampleItem,
-                        status = MediaListStatus.CURRENT,
-                        scoreFormat = ScoreFormat.POINT_100,
-                        isMyList = true,
-                        onClick = { },
-                        onLongClick = { },
-                        onClickPlus = { }
-                    )
-                    MinimalUserMediaListItem(
-                        item = exampleItem,
-                        status = MediaListStatus.CURRENT,
-                        scoreFormat = ScoreFormat.POINT_100,
-                        isMyList = true,
-                        onClick = { },
-                        onLongClick = { },
-                        onClickPlus = { }
-                    )
+            Column {
+                StandardUserMediaListItem(
+                    item = exampleItem,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { }
+                )
+                CompactUserMediaListItem(
+                    item = exampleItem,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { }
+                )
+                MinimalUserMediaListItem(
+                    item = exampleItem,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { }
+                )
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
+                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    items(3) {
+                        GridUserMediaListItem(
+                            item = exampleItem,
+                            status = MediaListStatus.CURRENT,
+                            scoreFormat = ScoreFormat.POINT_100,
+                            onClick = { },
+                            onLongClick = { }
+                        )
+                    }
                 }
             }
         }

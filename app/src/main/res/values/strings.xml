@@ -229,4 +229,5 @@
     <string name="view_manga_list">View Manga List</string>
     <string name="upcoming">Upcoming</string>
     <string name="publishing">Publishing</string>
+    <string name="grid">Grid</string>
 </resources>

@@ -29,11 +29,12 @@ import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @Composable
 fun BadgeScoreIndicator(
+    modifier: Modifier = Modifier,
     score: Double?,
     scoreFormat: ScoreFormat,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
             .background(score.scorePrimaryColor(format = scoreFormat))
             .padding(horizontal = 8.dp, vertical = 4.dp),

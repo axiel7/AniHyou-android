@@ -59,11 +59,7 @@ val themeEntries = mapOf(
     THEME_BLACK to R.string.theme_black
 )
 
-val listModeEntries = mapOf(
-    ListMode.STANDARD.name to R.string.standard,
-    ListMode.COMPACT.name to R.string.compact,
-    ListMode.MINIMAL.name to R.string.minimal,
-)
+val listModeEntries = ListMode.values().associate { it.name to it.stringRes }
 
 const val SETTINGS_DESTINATION = "settings"
 
