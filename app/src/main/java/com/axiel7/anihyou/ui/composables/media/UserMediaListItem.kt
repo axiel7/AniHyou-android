@@ -324,21 +324,6 @@ fun GridUserMediaListItem(
                 .clip(RoundedCornerShape(8.dp)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (item.media?.nextAiringEpisode != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AiringScheduleText(
-                        item = item,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
             Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
@@ -353,6 +338,25 @@ fun GridUserMediaListItem(
                     score = item.basicMediaListEntry.score,
                     scoreFormat = scoreFormat
                 )
+                if (item.media?.nextAiringEpisode != null) {
+                    Row(
+                        modifier = Modifier
+                            .shadow(8.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter)
+                            .clip(RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
+                            .background(MaterialTheme.colorScheme.surface),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AiringScheduleText(
+                            item = item,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }//:Box
 
             Text(
