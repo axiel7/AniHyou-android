@@ -26,10 +26,12 @@ import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.ui.base.ItemsPerRow
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
@@ -61,6 +63,7 @@ val themeEntries = mapOf(
 )
 
 val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
+val itemsPerRowEntries = ItemsPerRow.values().associate { it.value.toString() to it.stringRes }
 
 const val SETTINGS_DESTINATION = "settings"
 
@@ -79,7 +82,8 @@ fun SettingsView(
     )
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
     var useGeneralListStylePreference by rememberPreference(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY, App.useGeneralListStyle)
-    var listModePreference by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
+    var generalListStylePreference by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
+    var itemsPerRowPreference by rememberPreference(GRID_ITEMS_PER_ROW_PREFERENCE_KEY, App.gridItemsPerRow)
     var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
@@ -130,12 +134,12 @@ fun SettingsView(
                 ListPreference(
                     title = stringResource(R.string.list_style),
                     entriesValues = listStyleEntries,
-                    preferenceValue = listModePreference,
+                    preferenceValue = generalListStylePreference,
                     icon = R.drawable.format_list_bulleted_24,
                     onValueChange = { value ->
                         value?.let {
                             val listStyle = ListStyle.valueOf(it)
-                            listModePreference = listStyle.name
+                            generalListStylePreference = listStyle.name
                             App.generalListStyle = listStyle
                         }
                     }
@@ -145,6 +149,23 @@ fun SettingsView(
                     title = stringResource(R.string.list_style),
                     icon = R.drawable.format_list_bulleted_24,
                     onClick = navigateToListStyleSettings
+                )
+            }
+
+            if (generalListStylePreference == ListStyle.GRID.name
+                || useGeneralListStylePreference == false
+                ) {
+                ListPreference(
+                    title = stringResource(R.string.items_per_row),
+                    entriesValues = itemsPerRowEntries,
+                    preferenceValue = itemsPerRowPreference.toString(),
+                    icon = R.drawable.grid_view_24,
+                    onValueChange = { value ->
+                        value?.toIntOrNull()?.let {
+                            itemsPerRowPreference = it
+                            App.gridItemsPerRow = it
+                        }
+                    }
                 )
             }
 

@@ -27,6 +27,7 @@ class App : Application() {
         var airingOnMyList = false
         var generalListStyle = ListStyle.STANDARD
         var useGeneralListStyle = true
+        var gridItemsPerRow = 0
         var animeCurrentListStyle = ListStyle.STANDARD
         var animePlanningListStyle = ListStyle.STANDARD
         var animeCompletedListStyle = ListStyle.STANDARD

@@ -32,6 +32,7 @@ object PreferencesDataStore {
     val AIRING_ON_MY_LIST_PREFERENCE_KEY = booleanPreferencesKey("airing_on_my_list")
     val GENERAL_LIST_STYLE_PREFERENCE_KEY = stringPreferencesKey("list_display_mode")
     val USE_GENERAL_LIST_STYLE_PREFERENCE_KEY = booleanPreferencesKey("use_general_list_style")
+    val GRID_ITEMS_PER_ROW_PREFERENCE_KEY = intPreferencesKey("grid_items_per_row")
     val ANIME_CURRENT_LIST_STYLE_PREFERENCE_KEY = stringPreferencesKey("anime_current_list_style")
     val ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY = stringPreferencesKey("anime_planning_list_style")
     val ANIME_COMPLETED_LIST_STYLE_PREFERENCE_KEY = stringPreferencesKey("anime_completed_list_style")

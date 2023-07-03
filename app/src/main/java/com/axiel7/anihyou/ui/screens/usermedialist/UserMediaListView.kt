@@ -67,6 +67,7 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
@@ -281,11 +282,13 @@ fun UserMediaListView(
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
         if (listStyle == ListStyle.GRID.name) {
+            val itemsPerRow by rememberPreference(GRID_ITEMS_PER_ROW_PREFERENCE_KEY, App.gridItemsPerRow)
             val listState = rememberLazyGridState()
             listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
+                columns = if (itemsPerRow != null && itemsPerRow!! > 0) GridCells.Fixed(itemsPerRow!!)
+                else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
                 modifier = listModifier,
                 state = listState,
                 contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),

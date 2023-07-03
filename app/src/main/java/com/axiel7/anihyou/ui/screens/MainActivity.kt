@@ -46,6 +46,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PAUSED_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_COMPLETED_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_CURRENT_LIST_STYLE_PREFERENCE_KEY
@@ -161,6 +162,9 @@ class MainActivity : ComponentActivity() {
         }
         App.dataStore.getValueSync(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY)?.let {
             App.useGeneralListStyle = it
+        }
+        App.dataStore.getValueSync(GRID_ITEMS_PER_ROW_PREFERENCE_KEY)?.let {
+            App.gridItemsPerRow = it
         }
         App.dataStore.getValueSync(ANIME_CURRENT_LIST_STYLE_PREFERENCE_KEY)?.let {
             App.animeCurrentListStyle = ListStyle.valueOf(it)
