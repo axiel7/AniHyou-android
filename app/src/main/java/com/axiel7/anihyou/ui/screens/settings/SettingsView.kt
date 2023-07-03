@@ -25,8 +25,9 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.ui.base.ListStyle
@@ -66,6 +67,7 @@ const val SETTINGS_DESTINATION = "settings"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsView(
+    navigateToListStyleSettings: () -> Unit,
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -76,7 +78,8 @@ fun SettingsView(
         rememberTopAppBarState()
     )
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
-    var listModePreference by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
+    var useGeneralListStylePreference by rememberPreference(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY, App.useGeneralListStyle)
+    var listModePreference by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
     var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
@@ -115,15 +118,35 @@ fun SettingsView(
                 }
             )
 
-            ListPreference(
-                title = stringResource(R.string.list_style),
-                entriesValues = listStyleEntries,
-                preferenceValue = listModePreference,
-                icon = R.drawable.format_list_bulleted_24,
-                onValueChange = { value ->
-                    value?.let { listModePreference = ListStyle.valueOf(it).name }
+            SwitchPreference(
+                title = stringResource(R.string.use_separated_list_styles),
+                preferenceValue = useGeneralListStylePreference?.not(),
+                onValueChange = {
+                    useGeneralListStylePreference = it?.not()
+                    App.useGeneralListStyle = it?.not() ?: true
                 }
             )
+            if (useGeneralListStylePreference == true) {
+                ListPreference(
+                    title = stringResource(R.string.list_style),
+                    entriesValues = listStyleEntries,
+                    preferenceValue = listModePreference,
+                    icon = R.drawable.format_list_bulleted_24,
+                    onValueChange = { value ->
+                        value?.let {
+                            val listStyle = ListStyle.valueOf(it)
+                            listModePreference = listStyle.name
+                            App.generalListStyle = listStyle
+                        }
+                    }
+                )
+            } else {
+                PlainPreference(
+                    title = stringResource(R.string.list_style),
+                    icon = R.drawable.format_list_bulleted_24,
+                    onClick = navigateToListStyleSettings
+                )
+            }
 
             PreferencesTitle(text = stringResource(R.string.content))
             SwitchPreference(
@@ -218,6 +241,7 @@ fun SettingsViewPreview() {
     AniHyouTheme {
         Surface {
             SettingsView(
+                navigateToListStyleSettings = {},
                 navigateBack = {}
             )
         }

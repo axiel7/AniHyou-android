@@ -66,12 +66,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.user.UserMediaListSort
+import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.user.UserMediaListSort
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
@@ -207,6 +209,7 @@ fun UserMediaListHostView(
             UserMediaListView(
                 mediaList = viewModel.mediaList,
                 status = viewModel.status,
+                mediaType = mediaType,
                 isMyList = isMyList,
                 isLoading = viewModel.isLoading,
                 contentPadding = if (!isMyList)
@@ -243,6 +246,7 @@ fun UserMediaListHostView(
 fun UserMediaListView(
     mediaList: List<UserMediaListQuery.MediaList>,
     status: MediaListStatus,
+    mediaType: MediaType,
     isMyList: Boolean,
     isLoading: Boolean,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
@@ -257,7 +261,11 @@ fun UserMediaListView(
         refreshing = isLoading,
         onRefresh = onRefresh
     )
-    val listDisplayMode by rememberPreference(LIST_DISPLAY_MODE_PREFERENCE_KEY, App.listDisplayMode.name)
+    val useGeneralListStyle by rememberPreference(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY, App.useGeneralListStyle)
+    val generalListStyle by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
+    val listStyle = if (useGeneralListStyle == true) generalListStyle
+    else ListType(status, mediaType).styleGlobalAppVariable.name
+
     val scoreFormatPreference by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
     val scoreFormat by remember {
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
@@ -272,7 +280,7 @@ fun UserMediaListView(
         val listModifier = Modifier
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
-        if (listDisplayMode == ListStyle.GRID.name) {
+        if (listStyle == ListStyle.GRID.name) {
             val listState = rememberLazyGridState()
             listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
@@ -307,7 +315,7 @@ fun UserMediaListView(
                 contentPadding = contentPadding,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when (listDisplayMode) {
+                when (listStyle) {
                     ListStyle.STANDARD.name -> {
                         items(
                             items = mediaList,

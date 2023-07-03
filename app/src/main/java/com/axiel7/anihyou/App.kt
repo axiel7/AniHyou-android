@@ -24,7 +24,20 @@ class App : Application() {
         var animeListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
-        var listDisplayMode = ListStyle.STANDARD
         var airingOnMyList = false
+        var generalListStyle = ListStyle.STANDARD
+        var useGeneralListStyle = true
+        var animeCurrentListStyle = ListStyle.STANDARD
+        var animePlanningListStyle = ListStyle.STANDARD
+        var animeCompletedListStyle = ListStyle.STANDARD
+        var animePausedListStyle = ListStyle.STANDARD
+        var animeDroppedListStyle = ListStyle.STANDARD
+        var animeRepeatingListStyle = ListStyle.STANDARD
+        var mangaCurrentListStyle = ListStyle.STANDARD
+        var mangaPlanningListStyle = ListStyle.STANDARD
+        var mangaCompletedListStyle = ListStyle.STANDARD
+        var mangaPausedListStyle = ListStyle.STANDARD
+        var mangaDroppedListStyle = ListStyle.STANDARD
+        var mangaRepeatingListStyle = ListStyle.STANDARD
     }
 }

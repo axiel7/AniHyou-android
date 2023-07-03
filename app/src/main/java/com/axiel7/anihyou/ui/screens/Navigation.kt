@@ -51,6 +51,8 @@ import com.axiel7.anihyou.ui.screens.profile.ProfileView
 import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
+import com.axiel7.anihyou.ui.screens.settings.LIST_STYLE_SETTINGS_DESTINATION
+import com.axiel7.anihyou.ui.screens.settings.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
 import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
@@ -739,6 +741,16 @@ fun MainNavigation(
 
         composable(SETTINGS_DESTINATION) {
             SettingsView(
+                navigateToListStyleSettings = {
+                    navController.navigate(LIST_STYLE_SETTINGS_DESTINATION)
+                },
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(LIST_STYLE_SETTINGS_DESTINATION) {
+            ListStyleSettingsView(
                 navigateBack = {
                     navController.popBackStack()
                 }
