@@ -224,14 +224,6 @@ fun MainView(
     }
 }
 
-private val bottomDestinations = listOf(
-    BottomDestination.Home,
-    BottomDestination.AnimeList,
-    BottomDestination.MangaList,
-    BottomDestination.Profile,
-    BottomDestination.Explore
-)
-
 @Composable
 fun BottomNavBar(
     navController: NavController,
@@ -241,7 +233,7 @@ fun BottomNavBar(
     val isVisible by remember {
         derivedStateOf {
             when {
-                bottomDestinations.map { it.route }
+                BottomDestination.values.map { it.route }
                     .contains(navBackStackEntry?.destination?.route) -> true
                 navBackStackEntry?.destination?.route == null -> true
                 else -> false
@@ -256,7 +248,7 @@ fun BottomNavBar(
         exit = slideOutVertically(targetOffsetY = { it })
     ) {
         NavigationBar {
-            bottomDestinations.forEachIndexed { index, dest ->
+            BottomDestination.values.forEachIndexed { index, dest ->
                 NavigationBarItem(
                     icon = {
                         Icon(

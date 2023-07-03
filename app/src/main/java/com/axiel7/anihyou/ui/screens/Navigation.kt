@@ -103,7 +103,7 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = lastTabOpened.toBottomDestinationRoute(),
+        startDestination = lastTabOpened.toBottomDestinationRoute() ?: BottomDestination.Home.route,
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
