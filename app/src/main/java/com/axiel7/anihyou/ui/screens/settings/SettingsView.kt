@@ -29,7 +29,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.LIST_DISPLAY_MODE_PREFERENCE
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
-import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
@@ -59,7 +59,7 @@ val themeEntries = mapOf(
     THEME_BLACK to R.string.theme_black
 )
 
-val listModeEntries = ListMode.values().associate { it.name to it.stringRes }
+val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
 
 const val SETTINGS_DESTINATION = "settings"
 
@@ -117,11 +117,11 @@ fun SettingsView(
 
             ListPreference(
                 title = stringResource(R.string.list_style),
-                entriesValues = listModeEntries,
+                entriesValues = listStyleEntries,
                 preferenceValue = listModePreference,
                 icon = R.drawable.format_list_bulleted_24,
                 onValueChange = { value ->
-                    value?.let { listModePreference = ListMode.valueOf(it).name }
+                    value?.let { listModePreference = ListStyle.valueOf(it).name }
                 }
             )
 

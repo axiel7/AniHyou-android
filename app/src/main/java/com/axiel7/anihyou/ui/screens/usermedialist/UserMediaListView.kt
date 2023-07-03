@@ -76,7 +76,7 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
@@ -272,7 +272,7 @@ fun UserMediaListView(
         val listModifier = Modifier
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
-        if (listDisplayMode == ListMode.GRID.name) {
+        if (listDisplayMode == ListStyle.GRID.name) {
             val listState = rememberLazyGridState()
             listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
@@ -308,7 +308,7 @@ fun UserMediaListView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (listDisplayMode) {
-                    ListMode.STANDARD.name -> {
+                    ListStyle.STANDARD.name -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -328,7 +328,7 @@ fun UserMediaListView(
                         }
                     }
 
-                    ListMode.COMPACT.name -> {
+                    ListStyle.COMPACT.name -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -348,7 +348,7 @@ fun UserMediaListView(
                         }
                     }
 
-                    ListMode.MINIMAL.name -> {
+                    ListStyle.MINIMAL.name -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },

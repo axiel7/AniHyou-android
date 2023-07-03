@@ -52,7 +52,7 @@ import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
-import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let { App.animeListSort = it }
         App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let { App.mangaListSort = it }
         App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let { App.scoreFormat = ScoreFormat.valueOf(it) }
-        App.dataStore.getValueSync(LIST_DISPLAY_MODE_PREFERENCE_KEY)?.let { App.listDisplayMode = ListMode.valueOf(it) }
+        App.dataStore.getValueSync(LIST_DISPLAY_MODE_PREFERENCE_KEY)?.let { App.listDisplayMode = ListStyle.valueOf(it) }
         App.dataStore.getValueSync(AIRING_ON_MY_LIST_PREFERENCE_KEY)?.let { App.airingOnMyList = it }
 
         setContent {

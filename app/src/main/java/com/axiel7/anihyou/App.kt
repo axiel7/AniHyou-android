@@ -8,7 +8,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.ListMode
+import com.axiel7.anihyou.ui.base.ListStyle
 
 class App : Application() {
 
@@ -24,7 +24,7 @@ class App : Application() {
         var animeListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
         var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
-        var listDisplayMode = ListMode.STANDARD
+        var listDisplayMode = ListStyle.STANDARD
         var airingOnMyList = false
     }
 }

@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 
-enum class ListMode: Localizable {
+enum class ListStyle: Localizable {
     STANDARD, COMPACT, MINIMAL, GRID;
 
     @get:StringRes
