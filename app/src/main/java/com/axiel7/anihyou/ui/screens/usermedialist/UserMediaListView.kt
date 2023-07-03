@@ -291,7 +291,6 @@ fun UserMediaListView(
                 ) { item ->
                     GridUserMediaListItem(
                         item = item,
-                        status = status,
                         scoreFormat = scoreFormat,
                         onClick = { navigateToDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) }

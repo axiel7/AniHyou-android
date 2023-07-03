@@ -309,7 +309,6 @@ fun MinimalUserMediaListItem(
 @Composable
 fun GridUserMediaListItem(
     item: UserMediaListQuery.MediaList,
-    status: MediaListStatus,
     scoreFormat: ScoreFormat,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -325,6 +324,21 @@ fun GridUserMediaListItem(
                 .clip(RoundedCornerShape(8.dp)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (item.media?.nextAiringEpisode != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AiringScheduleText(
+                        item = item,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
             Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
@@ -339,26 +353,6 @@ fun GridUserMediaListItem(
                     score = item.basicMediaListEntry.score,
                     scoreFormat = scoreFormat
                 )
-
-                if (item.media?.nextAiringEpisode != null) {
-                    Row(
-                        modifier = Modifier
-                            .shadow(elevation = 8.dp)
-                            .align(Alignment.TopCenter)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
-                            .background(MaterialTheme.colorScheme.background),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AiringScheduleText(
-                            item = item,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            fontSize = 15.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
             }//:Box
 
             Text(
@@ -427,7 +421,10 @@ fun UserMediaListItemPreview() {
             __typename = "",
             id = 1,
             coverImage = null,
-            nextAiringEpisode = null,
+            nextAiringEpisode = UserMediaListQuery.NextAiringEpisode(
+                episode = 3,
+                timeUntilAiring = 1203239
+            ),
             status = MediaStatus.RELEASING,
             basicMediaDetails = BasicMediaDetails(
                 __typename = "",
@@ -456,7 +453,9 @@ fun UserMediaListItemPreview() {
     )
     AniHyouTheme {
         Surface {
-            Column {
+            Column(
+                verticalArrangement = Arrangement.Bottom
+            ) {
                 StandardUserMediaListItem(
                     item = exampleItem,
                     status = MediaListStatus.CURRENT,
@@ -487,13 +486,14 @@ fun UserMediaListItemPreview() {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
                     items(3) {
                         GridUserMediaListItem(
-                            item = exampleItem,
-                            status = MediaListStatus.CURRENT,
+                            item = if (it == 1) exampleItem.copy(
+                                media = exampleItem.media?.copy(nextAiringEpisode = null)
+                            ) else exampleItem,
                             scoreFormat = ScoreFormat.POINT_100,
                             onClick = { },
                             onLongClick = { }
