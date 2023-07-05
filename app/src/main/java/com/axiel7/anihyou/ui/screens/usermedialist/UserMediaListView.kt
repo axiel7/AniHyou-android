@@ -130,9 +130,10 @@ fun UserMediaListHostView(
             values = UserMediaListSort.values(),
             defaultValue = UserMediaListSort.valueOf(viewModel.sort),
             title = stringResource(R.string.sort),
+            isDeselectable = false,
             onConfirm = {
                 openSortDialog = false
-                viewModel.onSortChanged(it.value)
+                viewModel.onSortChanged(it!!.value)
             },
             onDismiss = { openSortDialog = false }
         )

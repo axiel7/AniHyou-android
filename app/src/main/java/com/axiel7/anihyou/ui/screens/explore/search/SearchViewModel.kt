@@ -13,6 +13,8 @@ import com.axiel7.anihyou.SearchStaffQuery
 import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
+import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.SearchRepository
@@ -39,6 +41,14 @@ class SearchViewModel(
         searchType = value
     }
 
+    val mediaType by derivedStateOf {
+        when (searchType) {
+            SearchType.ANIME -> MediaType.ANIME
+            SearchType.MANGA -> MediaType.MANGA
+            else -> null
+        }
+    }
+
     var mediaSort by mutableStateOf(initialMediaSort ?: MediaSort.SEARCH_MATCH)
         private set
     fun onMediaSortChanged(value: MediaSort) {
@@ -54,7 +64,45 @@ class SearchViewModel(
     val selectedGenres by derivedStateOf { genreCollection.filter { it.value } }
     val selectedTags by derivedStateOf { tagCollection.filter { it.value } }
 
+    val selectedMediaFormats = mutableStateListOf<MediaFormatLocalizable>()
+    fun onMediaFormatChanged(values: List<MediaFormatLocalizable>) {
+        selectedMediaFormats.clear()
+        selectedMediaFormats.addAll(values)
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
+        }
+    }
+
+    val selectedMediaStatuses = mutableStateListOf<MediaStatusLocalizable>()
+    fun onMediaStatusChanged(values: List<MediaStatusLocalizable>) {
+        selectedMediaStatuses.clear()
+        selectedMediaStatuses.addAll(values)
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
+        }
+    }
+
+    var selectedYear by mutableStateOf<Int?>(null)
+        private set
+    fun onYearChanged(value: Int?) {
+        selectedYear = value
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
+        }
+    }
+
+    var onMyList by mutableStateOf(false)
+        private set
+    fun onMyListChanged(value: Boolean) {
+        onMyList = value
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
+        }
+    }
+
+    private var lastQuery = ""
     suspend fun runSearch(query: String) {
+        lastQuery = query
         viewModelScope.launch {
             when (searchType) {
                 SearchType.ANIME -> searchMedia(MediaType.ANIME, query, resetPage = true)
@@ -81,7 +129,10 @@ class SearchViewModel(
         val selectedGenres = genreCollection.filterValues { it }.keys.toList()
         val selectedTags = tagCollection.filterValues { it }.keys.toList()
 
-        if (selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()) {
+        if (selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()
+            || selectedMediaFormats.isNotEmpty() || selectedMediaStatuses.isNotEmpty()
+            || selectedYear != null
+        ) {
             if (mediaSort == MediaSort.SEARCH_MATCH) mediaSort = MediaSort.POPULARITY_DESC
         }
 
@@ -91,6 +142,10 @@ class SearchViewModel(
             sort = listOf(mediaSort),
             genreIn = selectedGenres,
             tagIn = selectedTags,
+            formatIn = selectedMediaFormats.map { it.value },
+            statusIn = selectedMediaStatuses.map { it.value },
+            year = selectedYear,
+            onList = onMyList,
             page = pageMedia,
             perPage = perPage,
         ).collect { result ->

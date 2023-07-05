@@ -244,4 +244,6 @@
     <string name="eight" translatable="false">8</string>
     <string name="nine" translatable="false">9</string>
     <string name="ten" translatable="false">10</string>
+    <string name="media_status">Status</string>
+    <string name="year">Year</string>
 </resources>

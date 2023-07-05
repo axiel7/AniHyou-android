@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.model.media
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.MediaFormat
 
 @Composable
@@ -18,4 +19,20 @@ fun MediaFormat.localized() = when (this) {
     MediaFormat.NOVEL -> stringResource(R.string.novel)
     MediaFormat.ONE_SHOT -> stringResource(R.string.one_shot)
     MediaFormat.UNKNOWN__ -> stringResource(R.string.unknown)
+}
+
+enum class MediaFormatLocalizable(val value: MediaFormat) : Localizable {
+    TV(MediaFormat.TV),
+    TV_SHORT(MediaFormat.TV_SHORT),
+    MOVIE(MediaFormat.MOVIE),
+    SPECIAL(MediaFormat.SPECIAL),
+    OVA(MediaFormat.OVA),
+    ONA(MediaFormat.ONA),
+    MUSIC(MediaFormat.MUSIC),
+    MANGA(MediaFormat.MANGA),
+    NOVEL(MediaFormat.NOVEL),
+    ONE_SHOT(MediaFormat.ONE_SHOT);
+
+    @Composable
+    override fun localized() = value.localized()
 }

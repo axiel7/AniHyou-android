@@ -80,7 +80,8 @@ fun CalendarView(
                   selected = onMyList,
                   onClick = {
                       onMyList = !onMyList
-                  }
+                  },
+                  modifier = Modifier.padding(horizontal = 8.dp),
               )
         },
         scrollBehavior = topAppBarScrollBehavior

@@ -289,7 +289,8 @@ fun StaffMediaView(
                             viewModel.mediaOnMyList = !viewModel.mediaOnMyList
                             viewModel.refreshStaffMedia()
                         }
-                    }
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
         }

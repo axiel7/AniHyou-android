@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,18 +37,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.base.GenericLocalizable
+import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
+import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.DialogWithCheckboxSelection
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.OnBottomReached
+import com.axiel7.anihyou.ui.composables.OnMyListChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
+import com.axiel7.anihyou.utils.DateUtils
 import kotlinx.coroutines.launch
 
 @Composable
@@ -130,6 +138,25 @@ fun SearchView(
                     performSearch = performSearch,
                     searchByGenre = searchByGenre,
                 )
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(0.dp))
+
+                    MediaSearchFormatChip(viewModel = viewModel)
+
+                    MediaSearchStatusChip(viewModel = viewModel)
+
+                    MediaSearchYearChip(viewModel = viewModel)
+
+                    OnMyListChip(
+                        selected = viewModel.onMyList,
+                        onClick = {
+                            viewModel.onMyListChanged(!viewModel.onMyList)
+                        }
+                    )
+                }
             }
         }
         when (viewModel.searchType) {
@@ -264,8 +291,9 @@ fun MediaSearchSortChip(
             values = MediaSortSearch.values(),
             defaultValue = selectedSort,
             title = stringResource(R.string.sort),
+            isDeselectable = false,
             onConfirm = {
-                selectedSort = it
+                selectedSort = it!!
                 viewModel.onMediaSortChanged(if (isDescending) it.desc else it.asc)
                 openDialog = false
                 performSearch.value = true
@@ -383,4 +411,79 @@ fun MediaSearchGenresChips(
             }
         )
     }//: FlowRow
+}
+
+@Composable
+fun MediaSearchFormatChip(
+    viewModel: SearchViewModel
+) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        DialogWithCheckboxSelection(
+            values = MediaFormatLocalizable.values(),
+            defaultValues = viewModel.selectedMediaFormats.toTypedArray(),
+            title = stringResource(R.string.format),
+            onConfirm = {
+                viewModel.onMediaFormatChanged(it)
+            },
+            onDismiss = { openDialog = false }
+        )
+    }
+
+    AssistChip(
+        onClick = { openDialog = true },
+        label = { Text(text = stringResource(R.string.format)) },
+    )
+}
+
+@Composable
+fun MediaSearchStatusChip(
+    viewModel: SearchViewModel
+) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        DialogWithCheckboxSelection(
+            values = MediaStatusLocalizable.values(),
+            defaultValues = viewModel.selectedMediaStatuses.toTypedArray(),
+            title = stringResource(R.string.media_status),
+            onConfirm = {
+                openDialog = false
+                viewModel.onMediaStatusChanged(it)
+            },
+            onDismiss = { openDialog = false }
+        )
+    }
+
+    AssistChip(
+        onClick = { openDialog = true },
+        label = { Text(text = stringResource(R.string.media_status)) },
+    )
+}
+
+@Composable
+fun MediaSearchYearChip(
+    viewModel: SearchViewModel
+) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        DialogWithRadioSelection(
+            values = DateUtils.seasonYears.map { GenericLocalizable(it) }.toTypedArray(),
+            defaultValue = GenericLocalizable(viewModel.selectedYear),
+            title = stringResource(R.string.year),
+            isDeselectable = true,
+            onConfirm = {
+                openDialog = false
+                viewModel.onYearChanged(it?.value)
+            },
+            onDismiss = { openDialog = false }
+        )
+    }
+
+    AssistChip(
+        onClick = { openDialog = true },
+        label = { Text(text = stringResource(R.string.year)) }
+    )
 }

@@ -43,12 +43,13 @@ fun FilterSelectionChip(
 fun OnMyListChip(
     selected: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     FilterChip(
         selected = selected,
         onClick = onClick,
         label = { Text(text = stringResource(R.string.on_my_list)) },
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = modifier,
         leadingIcon = {
             if (selected) {
                 Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")

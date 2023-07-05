@@ -10,7 +10,9 @@ import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.GenresAndTags
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
+import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
+import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import kotlinx.coroutines.flow.flow
 
@@ -22,6 +24,10 @@ object SearchRepository {
         sort: List<MediaSort> = listOf(MediaSort.SEARCH_MATCH),
         genreIn: List<String>? = null,
         tagIn: List<String>? = null,
+        formatIn: List<MediaFormat>? = null,
+        statusIn: List<MediaStatus>? = null,
+        year: Int? = null,
+        onList: Boolean? = null,
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
@@ -37,6 +43,12 @@ object SearchRepository {
             else Optional.present(genreIn),
             tag_in = if (tagIn.isNullOrEmpty()) Optional.absent()
             else Optional.present(tagIn),
+            format_in = if (formatIn.isNullOrEmpty()) Optional.absent()
+            else Optional.present(formatIn),
+            status_in = if (statusIn.isNullOrEmpty()) Optional.absent()
+            else Optional.present(statusIn),
+            seasonYear = Optional.presentIfNotNull(year),
+            onList = if (onList == true) Optional.present(true) else Optional.absent()
         ).tryQuery()
 
         val error = response.getError()
