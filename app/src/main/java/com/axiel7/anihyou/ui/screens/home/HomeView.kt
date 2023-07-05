@@ -98,7 +98,7 @@ fun HomeView(
                     val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsState()
                     if (unreadNotificationCount > 0) {
                         Badge {
-                            Text(text = viewModel.unreadNotificationCount.toString())
+                            Text(text = unreadNotificationCount.toString())
                         }
                     }
                 },
