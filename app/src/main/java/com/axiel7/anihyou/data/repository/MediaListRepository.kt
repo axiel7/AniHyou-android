@@ -48,12 +48,14 @@ object MediaListRepository {
         if (error != null) emit(PagedResult.Error(message = error))
         else {
             val mediaPage = response?.data?.Page
-            if (mediaPage != null) emit(PagedResult.Success(
-                data = mediaPage.mediaList?.filterNotNull().orEmpty(),
-                nextPage = if (mediaPage.pageInfo?.hasNextPage == true)
-                    mediaPage.pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (mediaPage != null) emit(
+                PagedResult.Success(
+                    data = mediaPage.mediaList?.filterNotNull().orEmpty(),
+                    nextPage = if (mediaPage.pageInfo?.hasNextPage == true)
+                        mediaPage.pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }

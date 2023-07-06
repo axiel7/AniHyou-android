@@ -30,39 +30,46 @@ class ExploreViewModel : BaseViewModel() {
                     type = MediaType.ANIME,
                     sort = listOf(MediaSort.SCORE_DESC)
                 )
+
             ChartType.POPULAR_ANIME ->
                 getMediaChart(
                     type = MediaType.ANIME,
                     sort = listOf(MediaSort.POPULARITY_DESC)
                 )
+
             ChartType.UPCOMING_ANIME ->
                 getMediaChart(
                     type = MediaType.ANIME,
                     sort = listOf(MediaSort.POPULARITY_DESC),
                     status = MediaStatus.NOT_YET_RELEASED
                 )
+
             ChartType.AIRING_ANIME ->
                 getMediaChart(
                     type = MediaType.ANIME,
                     sort = listOf(MediaSort.SCORE_DESC),
                     status = MediaStatus.RELEASING
                 )
+
             ChartType.TOP_MANGA ->
                 getMediaChart(
                     type = MediaType.MANGA,
                     sort = listOf(MediaSort.SCORE_DESC)
                 )
+
             ChartType.POPULAR_MANGA ->
                 getMediaChart(
                     type = MediaType.MANGA,
                     sort = listOf(MediaSort.POPULARITY_DESC)
                 )
+
             ChartType.UPCOMING_MANGA ->
                 getMediaChart(
                     type = MediaType.MANGA,
                     sort = listOf(MediaSort.POPULARITY_DESC),
                     status = MediaStatus.NOT_YET_RELEASED
                 )
+
             ChartType.PUBLISHING_MANGA ->
                 getMediaChart(
                     type = MediaType.MANGA,
@@ -91,8 +98,7 @@ class ExploreViewModel : BaseViewModel() {
                 hasNextPage = if (page > 100 / perPage) false //limit 100
                 else result.nextPage != null
                 page = result.nextPage ?: page
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -121,8 +127,7 @@ class ExploreViewModel : BaseViewModel() {
                 animeSeasonal.addAll(result.data)
                 hasNextPage = result.nextPage != null
                 page = result.nextPage ?: page
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

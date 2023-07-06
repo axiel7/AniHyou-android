@@ -37,6 +37,7 @@ class SearchViewModel(
         if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME
     )
         private set
+
     fun onSearchTypeChanged(value: SearchType) {
         searchType = value
     }
@@ -51,6 +52,7 @@ class SearchViewModel(
 
     var mediaSort by mutableStateOf(initialMediaSort ?: MediaSort.SEARCH_MATCH)
         private set
+
     fun onMediaSortChanged(value: MediaSort) {
         mediaSort = value
     }
@@ -84,6 +86,7 @@ class SearchViewModel(
 
     var selectedYear by mutableStateOf<Int?>(null)
         private set
+
     fun onYearChanged(value: Int?) {
         selectedYear = value
         viewModelScope.launch(Dispatchers.IO) {
@@ -93,6 +96,7 @@ class SearchViewModel(
 
     var onMyList by mutableStateOf(false)
         private set
+
     fun onMyListChanged(value: Boolean) {
         onMyList = value
         viewModelScope.launch(Dispatchers.IO) {
@@ -156,8 +160,7 @@ class SearchViewModel(
                 searchedMedia.addAll(result.data)
                 hasNextPageMedia = result.nextPage != null
                 pageMedia = result.nextPage ?: pageMedia
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -172,8 +175,7 @@ class SearchViewModel(
             if (result is PagedResult.Success) {
                 searchedCharacters.clear()
                 searchedCharacters.addAll(result.data)
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -188,8 +190,7 @@ class SearchViewModel(
             if (result is PagedResult.Success) {
                 searchedStaff.clear()
                 searchedStaff.addAll(result.data)
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -204,8 +205,7 @@ class SearchViewModel(
             if (result is PagedResult.Success) {
                 searchedStudios.clear()
                 searchedStudios.addAll(result.data)
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -220,8 +220,7 @@ class SearchViewModel(
             if (result is PagedResult.Success) {
                 searchedUsers.clear()
                 searchedUsers.addAll(result.data)
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -246,11 +245,11 @@ class SearchViewModel(
                 result.data.tags.forEach {
                     tagCollection[it] = false
                 }
-                val externalTag = if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
-                else null
+                val externalTag =
+                    if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
+                    else null
                 externalTag?.let { tagCollection[externalTag] = true }
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }

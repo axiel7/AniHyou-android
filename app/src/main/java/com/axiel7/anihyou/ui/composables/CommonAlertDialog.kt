@@ -27,7 +27,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 
 @Composable
-fun <T: Localizable> DialogWithRadioSelection(
+fun <T : Localizable> DialogWithRadioSelection(
     values: Array<T>,
     defaultValue: T?,
     title: String? = null,
@@ -87,7 +87,7 @@ fun <T: Localizable> DialogWithRadioSelection(
 }
 
 @Composable
-fun <T: Localizable> DialogWithCheckboxSelection(
+fun <T : Localizable> DialogWithCheckboxSelection(
     values: Array<T>,
     defaultValues: Array<T>,
     title: String? = null,

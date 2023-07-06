@@ -26,12 +26,14 @@ object StudioRepository {
         else {
             val studio = response?.data?.Studio
             val pageInfo = studio?.media?.pageInfo
-            if (studio != null) emit(PagedResult.Success(
-                data = studio,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (studio != null) emit(
+                PagedResult.Success(
+                    data = studio,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

@@ -67,7 +67,11 @@ private enum class StaffInfoType {
         val tabRows = arrayOf(
             TabRowItem(INFO, title = R.string.information, icon = R.drawable.info_24),
             TabRowItem(MEDIA, title = R.string.character_media, icon = R.drawable.movie_24),
-            TabRowItem(CHARACTER, title = R.string.characters, icon = R.drawable.record_voice_over_24),
+            TabRowItem(
+                CHARACTER,
+                title = R.string.characters,
+                icon = R.drawable.record_voice_over_24
+            ),
         )
     }
 }
@@ -125,6 +129,7 @@ fun StaffDetailsView(
                         ),
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )
+
                 StaffInfoType.MEDIA ->
                     StaffMediaView(
                         viewModel = viewModel,
@@ -134,6 +139,7 @@ fun StaffDetailsView(
                         ),
                         navigateToMediaDetails = navigateToMediaDetails
                     )
+
                 StaffInfoType.CHARACTER ->
                     StaffCharacterView(
                         viewModel = viewModel,

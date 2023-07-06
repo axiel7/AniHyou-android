@@ -61,7 +61,10 @@ class AiringWidget : GlanceAppWidget() {
                                         .padding(bottom = 8.dp)
                                         .fillMaxWidth()
                                         .clickable(actionStartActivity(
-                                            Intent(LocalContext.current, MainActivity::class.java).apply {
+                                            Intent(
+                                                LocalContext.current,
+                                                MainActivity::class.java
+                                            ).apply {
                                                 action = "media_details"
                                                 putExtra("media_id", item.mediaId)
                                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -82,7 +85,8 @@ class AiringWidget : GlanceAppWidget() {
                                         val airingAt = nextAiringEpisode.airingAt.toLong()
                                             .secondsToLocalDateTime()?.toLocalized() ?: "-"
                                         Text(
-                                            text = LocalContext.current.getString(R.string.episode_airing_on,
+                                            text = LocalContext.current.getString(
+                                                R.string.episode_airing_on,
                                                 nextAiringEpisode.episode,
                                                 airingAt
                                             ),

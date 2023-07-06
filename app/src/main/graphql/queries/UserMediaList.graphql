@@ -1,41 +1,41 @@
 query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
-  Page(page: $page, perPage: $perPage) {
-    mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
-      ...BasicMediaListEntry
-      mediaId
-      media {
-        ...BasicMediaDetails
-        coverImage {
-          large
-          color
+    Page(page: $page, perPage: $perPage) {
+        mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
+            ...BasicMediaListEntry
+            mediaId
+            media {
+                ...BasicMediaDetails
+                coverImage {
+                    large
+                    color
+                }
+                nextAiringEpisode {
+                    episode
+                    timeUntilAiring
+                }
+                status
+            }
         }
-        nextAiringEpisode {
-          episode
-          timeUntilAiring
+        pageInfo {
+            currentPage
+            hasNextPage
         }
-        status
-      }
     }
-    pageInfo {
-      currentPage
-      hasNextPage
-    }
-  }
 }
 
 fragment BasicMediaListEntry on MediaList {
-  id
-  status
-  score
-  progress
-  progressVolumes
-  repeat
-  private
-  startedAt {
-    ...FuzzyDate
-  }
-  completedAt {
-    ...FuzzyDate
-  }
-  notes
+    id
+    status
+    score
+    progress
+    progressVolumes
+    repeat
+    private
+    startedAt {
+        ...FuzzyDate
+    }
+    completedAt {
+        ...FuzzyDate
+    }
+    notes
 }

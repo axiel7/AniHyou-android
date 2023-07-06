@@ -28,12 +28,15 @@ object NotificationRepository {
         if (error != null) emit(PagedResult.Error(message = error))
         else {
             val notificationsPage = response?.data?.Page
-            if (notificationsPage != null) emit(PagedResult.Success(
-                data = notificationsPage.notifications?.filterNotNull().orEmpty().toGenericNotifications(),
-                nextPage = if (notificationsPage.pageInfo?.hasNextPage == true)
-                    notificationsPage.pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (notificationsPage != null) emit(
+                PagedResult.Success(
+                    data = notificationsPage.notifications?.filterNotNull().orEmpty()
+                        .toGenericNotifications(),
+                    nextPage = if (notificationsPage.pageInfo?.hasNextPage == true)
+                        notificationsPage.pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }
@@ -45,7 +48,8 @@ object NotificationRepository {
                 val episodeString = noti.contexts?.get(0) ?: ""
                 val ofString = noti.contexts?.get(1) ?: ""
                 val airedString = noti.contexts?.get(2) ?: ""
-                val text = "$episodeString${noti.episode}$ofString${noti.media?.title?.userPreferred}$airedString"
+                val text =
+                    "$episodeString${noti.episode}$ofString${noti.media?.title?.userPreferred}$airedString"
                 tempList.add(
                     GenericNotification(
                         id = noti.id,

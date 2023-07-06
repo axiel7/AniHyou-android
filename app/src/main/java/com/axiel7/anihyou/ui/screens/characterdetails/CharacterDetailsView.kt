@@ -121,6 +121,7 @@ fun CharacterDetailsView(
                         ),
                         navigateToFullscreenImage = navigateToFullscreenImage,
                     )
+
                 CharacterInfoType.MEDIA ->
                     CharacterMediaView(
                         viewModel = viewModel,
@@ -284,7 +285,8 @@ fun CharacterMediaView(
                 subtitle2 = {
                     Text(
                         text = item.voiceActors
-                            ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" } ?: "",
+                            ?.joinToString { "${it?.name?.userPreferred} (${it?.languageV2})" }
+                            ?: "",
                         color = MaterialTheme.colorScheme.outline,
                         fontSize = 15.sp
                     )

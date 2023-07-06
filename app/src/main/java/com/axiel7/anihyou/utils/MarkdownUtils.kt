@@ -28,6 +28,7 @@ object MarkdownUtils {
                 onSpoilerClicked(
                     URLDecoder.decode(removePrefix(ANIHYOU_SPOILER_SCHEME), "UTF-8")
                 )
+
             else -> onLinkClicked(this)
         }
     }

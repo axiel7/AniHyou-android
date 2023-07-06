@@ -76,13 +76,13 @@ fun CalendarView(
         title = stringResource(R.string.calendar),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-              OnMyListChip(
-                  selected = onMyList,
-                  onClick = {
-                      onMyList = !onMyList
-                  },
-                  modifier = Modifier.padding(horizontal = 8.dp),
-              )
+            OnMyListChip(
+                selected = onMyList,
+                onClick = {
+                    onMyList = !onMyList
+                },
+                modifier = Modifier.padding(horizontal = 8.dp),
+            )
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -125,7 +125,7 @@ fun CalendarDayView(
     val viewModel: CalendarViewModel = viewModel(key = "$weekday")
 
     val listState = rememberLazyGridState()
-    
+
     LaunchedEffect(onMyList) {
         viewModel.onMyList = onMyList
         viewModel.resetPage()
@@ -156,7 +156,8 @@ fun CalendarDayView(
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
                     Text(
-                        text = stringResource(R.string.episode_airing_at,
+                        text = stringResource(
+                            R.string.episode_airing_at,
                             item.episode,
                             item.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
                         ),

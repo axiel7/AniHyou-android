@@ -87,6 +87,7 @@ fun MainNavigation(
                             .replace("{media_id}", deepLink.id)
                     )
                 }
+
                 DeepLink.Type.USER -> {
                     val userId = deepLink.id.toIntOrNull()
                     var dest = USER_DETAILS_DESTINATION
@@ -94,6 +95,7 @@ fun MainNavigation(
                     else dest.replace("{name}", deepLink.id)
                     navController.navigate(dest)
                 }
+
                 else -> {
                     navController.navigate("${deepLink.type.name.lowercase()}/${deepLink.id}")
                 }
@@ -320,8 +322,10 @@ fun MainNavigation(
         ) { navEntry ->
             ExploreView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                initialMediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) },
-                initialMediaSort = navEntry.arguments?.getString("mediaSort")?.let { MediaSort.valueOf(it) },
+                initialMediaType = navEntry.arguments?.getString("mediaType")
+                    ?.let { MediaType.safeValueOf(it) },
+                initialMediaSort = navEntry.arguments?.getString("mediaSort")
+                    ?.let { MediaSort.valueOf(it) },
                 initialGenre = navEntry.arguments?.getString("genre"),
                 initialTag = navEntry.arguments?.getString("tag"),
                 navigateBack = {
@@ -384,7 +388,8 @@ fun MainNavigation(
             )
         ) { navEntry ->
             UserMediaListHostView(
-                mediaType = navEntry.arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) }!!,
+                mediaType = navEntry.arguments?.getString("mediaType")
+                    ?.let { MediaType.safeValueOf(it) }!!,
                 modifier = Modifier.padding(bottom = bottomPadding),
                 userId = navEntry.arguments?.getInt("userId"),
                 navigateToMediaDetails = { id ->
@@ -506,7 +511,7 @@ fun MainNavigation(
                 navArgument("year") { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getString("season")?.let {  season ->
+            navEntry.arguments?.getString("season")?.let { season ->
                 navEntry.arguments?.getInt("year")?.let { year ->
                     SeasonAnimeView(
                         initialSeason = AnimeSeason(

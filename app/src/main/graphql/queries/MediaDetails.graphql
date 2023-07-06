@@ -1,99 +1,99 @@
 query MediaDetails($mediaId: Int) {
-  Media(id: $mediaId) {
-    ...BasicMediaDetails
-    title {
-      userPreferred
-      romaji
-      english
-      native
+    Media(id: $mediaId) {
+        ...BasicMediaDetails
+        title {
+            userPreferred
+            romaji
+            english
+            native
+        }
+        synonyms
+        format
+        status
+        description(asHtml: true)
+        startDate {
+            ...FuzzyDate
+        }
+        endDate {
+            ...FuzzyDate
+        }
+        season
+        seasonYear
+        duration
+        coverImage {
+            large
+            extraLarge
+            color
+        }
+        bannerImage
+        averageScore
+        meanScore
+        popularity
+        genres
+        studios {
+            nodes {
+                name
+                isAnimationStudio
+            }
+        }
+        favourites
+        isFavourite
+        nextAiringEpisode {
+            timeUntilAiring
+            episode
+        }
+        mediaListEntry {
+            ...BasicMediaListEntry
+            startedAt {
+                ...FuzzyDate
+            }
+            completedAt {
+                ...FuzzyDate
+            }
+        }
+        source
+        externalLinks {
+            id
+            url
+            site
+            type
+            language
+        }
+        trailer {
+            id
+            site
+            thumbnail
+        }
+        streamingEpisodes {
+            url
+            title
+            site
+            thumbnail
+        }
+        tags {
+            id
+            name
+            description
+            rank
+            isMediaSpoiler
+        }
+        siteUrl
     }
-    synonyms
-    format
-    status
-    description(asHtml: true)
-    startDate {
-      ...FuzzyDate
-    }
-    endDate {
-      ...FuzzyDate
-    }
-    season
-    seasonYear
-    duration
-    coverImage {
-      large
-      extraLarge
-      color
-    }
-    bannerImage
-    averageScore
-    meanScore
-    popularity
-    genres
-    studios {
-      nodes {
-        name
-        isAnimationStudio
-      }
-    }
-    favourites
-    isFavourite
-    nextAiringEpisode {
-      timeUntilAiring
-      episode
-    }
-    mediaListEntry {
-      ...BasicMediaListEntry
-      startedAt {
-        ...FuzzyDate
-      }
-      completedAt {
-        ...FuzzyDate
-      }
-    }
-    source
-    externalLinks {
-      id
-      url
-      site
-      type
-      language
-    }
-    trailer {
-      id
-      site
-      thumbnail
-    }
-    streamingEpisodes {
-      url
-      title
-      site
-      thumbnail
-    }
-    tags {
-      id
-      name
-      description
-      rank
-      isMediaSpoiler
-    }
-    siteUrl
-  }
 }
 
 fragment FuzzyDate on FuzzyDate {
-  day
-  month
-  year
+    day
+    month
+    year
 }
 
 fragment BasicMediaDetails on Media {
-  id
-  title {
-    userPreferred
-  }
-  episodes
-  chapters
-  volumes
-  type
+    id
+    title {
+        userPreferred
+    }
+    episodes
+    chapters
+    volumes
+    type
 }

@@ -34,8 +34,7 @@ class EditMediaViewModel(
         status = value
         if (isNewEntry && value == MediaListStatus.CURRENT) {
             startDate = LocalDate.now()
-        }
-        else if (value == MediaListStatus.COMPLETED) {
+        } else if (value == MediaListStatus.COMPLETED) {
             endDate = LocalDate.now()
             mediaDetails.duration()?.let { if (it > 0) progress = it }
             if (mediaDetails.isManga()) {
@@ -148,8 +147,7 @@ class EditMediaViewModel(
             if (result is DataResult.Success) {
                 listEntry = result.data
                 updateSuccess = true
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -167,8 +165,7 @@ class EditMediaViewModel(
                     listEntry = null
                     updateSuccess = true
                 }
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }

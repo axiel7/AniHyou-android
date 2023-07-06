@@ -1,5 +1,5 @@
 mutation DeleteMediaList($mediaListEntryId: Int) {
-  DeleteMediaListEntry(id: $mediaListEntryId) {
-    deleted
-  }
+    DeleteMediaListEntry(id: $mediaListEntryId) {
+        deleted
+    }
 }

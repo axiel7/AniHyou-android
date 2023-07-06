@@ -122,6 +122,7 @@ fun UserFavoritesView(
                         }
                     }
                 }
+
                 FavoritesType.MANGA -> {
                     items(
                         items = viewModel.manga,
@@ -143,6 +144,7 @@ fun UserFavoritesView(
                         }
                     }
                 }
+
                 FavoritesType.CHARACTERS -> {
                     items(
                         items = viewModel.characters,
@@ -163,6 +165,7 @@ fun UserFavoritesView(
                         }
                     }
                 }
+
                 FavoritesType.STAFF -> {
                     items(
                         items = viewModel.staff,
@@ -183,6 +186,7 @@ fun UserFavoritesView(
                         }
                     }
                 }
+
                 FavoritesType.STUDIOS -> {
                     items(
                         items = viewModel.studios,
@@ -210,7 +214,10 @@ fun UserFavoritesView(
                             ) {
                                 Text(
                                     text = "Loading",
-                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    ),
                                     fontSize = 16.sp,
                                     lineHeight = 18.sp
                                 )

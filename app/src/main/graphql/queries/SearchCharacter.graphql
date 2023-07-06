@@ -1,17 +1,17 @@
 query SearchCharacter($page: Int, $perPage: Int, $search: String) {
-  Page(page: $page, perPage: $perPage) {
-    characters(search: $search, sort: SEARCH_MATCH) {
-      id
-      name {
-        userPreferred
-      }
-      image {
-        medium
-      }
+    Page(page: $page, perPage: $perPage) {
+        characters(search: $search, sort: SEARCH_MATCH) {
+            id
+            name {
+                userPreferred
+            }
+            image {
+                medium
+            }
+        }
+        pageInfo {
+            hasNextPage
+            currentPage
+        }
     }
-    pageInfo {
-      hasNextPage
-      currentPage
-    }
-  }
 }

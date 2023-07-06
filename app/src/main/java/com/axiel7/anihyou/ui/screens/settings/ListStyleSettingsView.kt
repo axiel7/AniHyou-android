@@ -60,7 +60,10 @@ fun ListStyleSettingsView(
             PreferencesTitle(text = stringResource(R.string.anime_list))
             MediaListStatus.knownValues().forEach { status ->
                 val listType = ListType(status, MediaType.ANIME)
-                var preference by rememberPreference(listType.stylePreferenceKey, listType.styleGlobalAppVariable.name)
+                var preference by rememberPreference(
+                    listType.stylePreferenceKey,
+                    listType.styleGlobalAppVariable.name
+                )
 
                 ListPreference(
                     title = status.localized(),
@@ -76,7 +79,10 @@ fun ListStyleSettingsView(
             PreferencesTitle(text = stringResource(R.string.manga_list))
             MediaListStatus.knownValues().forEach { status ->
                 val listType = ListType(status, MediaType.MANGA)
-                var preference by rememberPreference(listType.stylePreferenceKey, listType.styleGlobalAppVariable.name)
+                var preference by rememberPreference(
+                    listType.stylePreferenceKey,
+                    listType.styleGlobalAppVariable.name
+                )
 
                 ListPreference(
                     title = status.localized(),

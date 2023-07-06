@@ -135,7 +135,7 @@ fun OverviewUserStatsView(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
         ) {
-           ScoreStatCountType.values().forEach {
+            ScoreStatCountType.values().forEach {
                 FilterSelectionChip(
                     selected = viewModel.scoreCountType == it,
                     text = it.localized(),
@@ -145,10 +145,10 @@ fun OverviewUserStatsView(
         }
         VerticalStatsBar(
             stats = if (viewModel.isAnime) {
-               when (viewModel.scoreCountType) {
-                   ScoreStatCountType.TITLES -> viewModel.animeScoreStatsCount
-                   ScoreStatCountType.TIME -> viewModel.animeScoreStatsTime
-               }
+                when (viewModel.scoreCountType) {
+                    ScoreStatCountType.TITLES -> viewModel.animeScoreStatsCount
+                    ScoreStatCountType.TIME -> viewModel.animeScoreStatsTime
+                }
             } else {
                 when (viewModel.scoreCountType) {
                     ScoreStatCountType.TITLES -> viewModel.mangaScoreStatsCount

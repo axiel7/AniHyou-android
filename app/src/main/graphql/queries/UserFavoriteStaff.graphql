@@ -1,21 +1,21 @@
 query UserFavoritesStaff($userId: Int, $page: Int, $perPage: Int) {
-  User(id: $userId) {
-    favourites {
-      staff(page: $page, perPage: $perPage) {
-        nodes {
-          id
-          name {
-            userPreferred
-          }
-          image {
-            large
-          }
+    User(id: $userId) {
+        favourites {
+            staff(page: $page, perPage: $perPage) {
+                nodes {
+                    id
+                    name {
+                        userPreferred
+                    }
+                    image {
+                        large
+                    }
+                }
+                pageInfo {
+                    currentPage
+                    hasNextPage
+                }
+            }
         }
-        pageInfo {
-          currentPage
-          hasNextPage
-        }
-      }
     }
-  }
 }

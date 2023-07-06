@@ -26,7 +26,7 @@ class UserMediaListViewModel(
 ) : BaseViewModel() {
 
     var status by mutableStateOf(MediaListStatus.CURRENT)
-    private set
+        private set
 
     fun onStatusChanged(status: MediaListStatus) {
         this.status = status
@@ -40,7 +40,7 @@ class UserMediaListViewModel(
     var sort = MediaListSort.safeValueOf(
         if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
     )
-    private set
+        private set
 
     fun onSortChanged(sort: MediaListSort) {
         this.sort = sort
@@ -73,8 +73,7 @@ class UserMediaListViewModel(
                 mediaList.addAll(result.data)
                 hasNextPage = result.nextPage != null
                 page = result.nextPage ?: page
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

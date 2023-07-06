@@ -39,7 +39,10 @@ fun AiringAnimeHorizontalItem(
     ) {
         MediaPoster(
             url = imageUrl,
-            modifier = Modifier.size(width = MEDIA_POSTER_SMALL_WIDTH.dp, height = MEDIA_POSTER_SMALL_HEIGHT.dp)
+            modifier = Modifier.size(
+                width = MEDIA_POSTER_SMALL_WIDTH.dp,
+                height = MEDIA_POSTER_SMALL_HEIGHT.dp
+            )
         )
 
         Column(

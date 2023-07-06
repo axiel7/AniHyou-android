@@ -74,12 +74,12 @@ fun generateCSS(): String {
     return """
     <style type='text/css'>
         ${
-            baseCss(
-                backgroundColor = MaterialTheme.colorScheme.background.toArgb().hexToString(),
-                fontColor = MaterialTheme.colorScheme.onBackground.toArgb().hexToString(),
-                linkColor = MaterialTheme.colorScheme.primary.toArgb().hexToString()
-            )
-        }
+        baseCss(
+            backgroundColor = MaterialTheme.colorScheme.background.toArgb().hexToString(),
+            fontColor = MaterialTheme.colorScheme.onBackground.toArgb().hexToString(),
+            linkColor = MaterialTheme.colorScheme.primary.toArgb().hexToString()
+        )
+    }
         body {
             margin: 16;
             padding: 0;

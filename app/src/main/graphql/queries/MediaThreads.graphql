@@ -1,11 +1,11 @@
 query MediaThreads($page: Int, $perPage: Int, $mediaCategoryId: Int, $sort: [ThreadSort]) {
-  Page(page: $page, perPage: $perPage) {
-    threads(mediaCategoryId: $mediaCategoryId, sort: $sort) {
-      ...BasicThreadDetails
+    Page(page: $page, perPage: $perPage) {
+        threads(mediaCategoryId: $mediaCategoryId, sort: $sort) {
+            ...BasicThreadDetails
+        }
+        pageInfo {
+            hasNextPage
+            currentPage
+        }
     }
-    pageInfo {
-      hasNextPage
-      currentPage
-    }
-  }
 }

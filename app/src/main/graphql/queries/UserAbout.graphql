@@ -1,5 +1,5 @@
 query UserAbout($userId: Int) {
-  User(id: $userId) {
-    about(asHtml: true)
-  }
+    User(id: $userId) {
+        about(asHtml: true)
+    }
 }

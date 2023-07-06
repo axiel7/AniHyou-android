@@ -1,48 +1,48 @@
 query UserStatsMangaOverview($userId: Int) {
-  User(id: $userId) {
-    statistics {
-      manga {
-        count
-        chaptersRead
-        volumesRead
-        meanScore
-        standardDeviation
-        scores(sort: MEAN_SCORE) {
-          count
-          chaptersRead
-          meanScore
+    User(id: $userId) {
+        statistics {
+            manga {
+                count
+                chaptersRead
+                volumesRead
+                meanScore
+                standardDeviation
+                scores(sort: MEAN_SCORE) {
+                    count
+                    chaptersRead
+                    meanScore
+                }
+                formats {
+                    count
+                    chaptersRead
+                    meanScore
+                    format
+                }
+                statuses {
+                    count
+                    chaptersRead
+                    meanScore
+                    status
+                }
+                countries {
+                    count
+                    chaptersRead
+                    meanScore
+                    country
+                }
+                releaseYears {
+                    count
+                    chaptersRead
+                    meanScore
+                    releaseYear
+                }
+                startYears {
+                    count
+                    chaptersRead
+                    meanScore
+                    startYear
+                }
+            }
         }
-        formats {
-          count
-          chaptersRead
-          meanScore
-          format
-        }
-        statuses {
-          count
-          chaptersRead
-          meanScore
-          status
-        }
-        countries {
-          count
-          chaptersRead
-          meanScore
-          country
-        }
-        releaseYears {
-          count
-          chaptersRead
-          meanScore
-          releaseYear
-        }
-        startYears {
-          count
-          chaptersRead
-          meanScore
-          startYear
-        }
-      }
     }
-  }
 }

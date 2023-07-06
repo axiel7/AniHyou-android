@@ -35,8 +35,7 @@ class ProfileViewModel : BaseViewModel() {
                     it[PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY] =
                         result.data.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
                 }
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -55,8 +54,7 @@ class ProfileViewModel : BaseViewModel() {
             if (result is DataResult.Success) {
                 this@ProfileViewModel.userId = result.data.id
                 userInfo = result.data
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -66,8 +64,7 @@ class ProfileViewModel : BaseViewModel() {
         UserRepository.toggleFollow(userId).collect { result ->
             if (result is DataResult.Success) {
                 userInfo = userInfo?.copy(isFollowing = result.data.isFollowing)
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }

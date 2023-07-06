@@ -1,27 +1,27 @@
 query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGreater: Int, $airingAtLesser: Int) {
-  Page(page: $page, perPage: $perPage) {
-    airingSchedules(sort: $sort, airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser) {
-      id
-      mediaId
-      media {
-        title {
-          userPreferred
+    Page(page: $page, perPage: $perPage) {
+        airingSchedules(sort: $sort, airingAt_greater: $airingAtGreater, airingAt_lesser: $airingAtLesser) {
+            id
+            mediaId
+            media {
+                title {
+                    userPreferred
+                }
+                coverImage {
+                    large
+                }
+                meanScore
+                mediaListEntry {
+                    status
+                }
+            }
+            episode
+            timeUntilAiring
+            airingAt
         }
-        coverImage {
-          large
+        pageInfo {
+            currentPage
+            hasNextPage
         }
-        meanScore
-        mediaListEntry {
-          status
-        }
-      }
-      episode
-      timeUntilAiring
-      airingAt
     }
-    pageInfo {
-      currentPage
-      hasNextPage
-    }
-  }
 }

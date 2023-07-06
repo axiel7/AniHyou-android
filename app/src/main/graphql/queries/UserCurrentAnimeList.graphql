@@ -1,19 +1,19 @@
 query UserCurrentAnimeList($userId: Int) {
-  Page(page: 1, perPage: 50) {
-    mediaList(userId: $userId, type: ANIME, status: CURRENT, sort: [UPDATED_TIME_DESC]) {
-      mediaId
-      media {
-        title {
-          userPreferred
+    Page(page: 1, perPage: 50) {
+        mediaList(userId: $userId, type: ANIME, status: CURRENT, sort: [UPDATED_TIME_DESC]) {
+            mediaId
+            media {
+                title {
+                    userPreferred
+                }
+                nextAiringEpisode {
+                    episode
+                    timeUntilAiring
+                    airingAt
+                }
+                status
+            }
         }
-        nextAiringEpisode {
-          episode
-          timeUntilAiring
-          airingAt
-        }
-        status
-      }
     }
-  }
 }
 

@@ -101,8 +101,13 @@ fun EditMediaSheet(
             datePickerState = datePickerState,
             onDateSelected = {
                 when (viewModel.selectedDateType) {
-                    1 -> { viewModel.onChangeStartDate(it) }
-                    2 -> { viewModel.onChangeEndDate(it) }
+                    1 -> {
+                        viewModel.onChangeStartDate(it)
+                    }
+
+                    2 -> {
+                        viewModel.onChangeEndDate(it)
+                    }
                 }
             }
         )
@@ -201,8 +206,20 @@ fun EditMediaSheet(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
                     totalProgress = mediaDetails.volumes,
                     onValueChange = { viewModel.onChangeVolumeProgress(it.toIntOrNull()) },
-                    onMinusClick = { viewModel.onChangeVolumeProgress(viewModel.volumeProgress?.minus(1)) },
-                    onPlusClick = { viewModel.onChangeVolumeProgress(viewModel.volumeProgress?.plus(1)) }
+                    onMinusClick = {
+                        viewModel.onChangeVolumeProgress(
+                            viewModel.volumeProgress?.minus(
+                                1
+                            )
+                        )
+                    },
+                    onPlusClick = {
+                        viewModel.onChangeVolumeProgress(
+                            viewModel.volumeProgress?.plus(
+                                1
+                            )
+                        )
+                    }
                 )
             }
 
@@ -250,7 +267,7 @@ fun EditMediaSheet(
             // Dates
             ClickableOutlinedTextField(
                 value = viewModel.startDate.toLocalized(),
-                onValueChange = {  },
+                onValueChange = { },
                 label = { Text(text = stringResource(R.string.start_date)) },
                 trailingIcon = {
                     if (viewModel.startDate != null) {
@@ -270,7 +287,7 @@ fun EditMediaSheet(
             )
             ClickableOutlinedTextField(
                 value = viewModel.endDate.toLocalized(),
-                onValueChange = {  },
+                onValueChange = { },
                 modifier = Modifier.padding(vertical = 8.dp),
                 label = { Text(text = stringResource(R.string.end_date)) },
                 trailingIcon = {

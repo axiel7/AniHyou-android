@@ -1,21 +1,21 @@
 query ThreadComments($page: Int, $perPage: Int, $threadId: Int) {
-  Page(page: $page, perPage: $perPage) {
-    threadComments(threadId: $threadId) {
-      id
-      comment
-      likeCount
-      createdAt
-      user {
-        id
-        name
-        avatar {
-          medium
+    Page(page: $page, perPage: $perPage) {
+        threadComments(threadId: $threadId) {
+            id
+            comment
+            likeCount
+            createdAt
+            user {
+                id
+                name
+                avatar {
+                    medium
+                }
+            }
         }
-      }
+        pageInfo {
+            currentPage
+            hasNextPage
+        }
     }
-    pageInfo {
-      currentPage
-      hasNextPage
-    }
-  }
 }

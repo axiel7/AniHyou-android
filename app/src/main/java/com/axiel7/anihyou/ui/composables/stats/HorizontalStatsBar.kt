@@ -31,7 +31,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
-fun <T: LocalizableAndColorable> HorizontalStatsBar(
+fun <T : LocalizableAndColorable> HorizontalStatsBar(
     stats: List<Stat<T>>,
     horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 0.dp,
@@ -58,8 +58,7 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
                             .defaultPlaceholder(visible = true)
                     )
                 }
-            }
-            else stats.forEach {
+            } else stats.forEach {
                 AssistChip(
                     onClick = { },
                     label = { Text(text = it.type.localized()) },
@@ -97,13 +96,15 @@ fun <T: LocalizableAndColorable> HorizontalStatsBar(
 @Composable
 fun HorizontalStatsBarPreview() {
     val stats by remember {
-        mutableStateOf(listOf(
-            StatLocalizableAndColorable(type = StatusDistribution.CURRENT, value = 12f),
-            StatLocalizableAndColorable(type = StatusDistribution.COMPLETED, value = 420f),
-            StatLocalizableAndColorable(type = StatusDistribution.PAUSED, value = 5f),
-            StatLocalizableAndColorable(type = StatusDistribution.DROPPED, value = 3f),
-            StatLocalizableAndColorable(type = StatusDistribution.PLANNING, value = 30f),
-        ))
+        mutableStateOf(
+            listOf(
+                StatLocalizableAndColorable(type = StatusDistribution.CURRENT, value = 12f),
+                StatLocalizableAndColorable(type = StatusDistribution.COMPLETED, value = 420f),
+                StatLocalizableAndColorable(type = StatusDistribution.PAUSED, value = 5f),
+                StatLocalizableAndColorable(type = StatusDistribution.DROPPED, value = 3f),
+                StatLocalizableAndColorable(type = StatusDistribution.PLANNING, value = 30f),
+            )
+        )
     }
     AniHyouTheme {
         Surface {

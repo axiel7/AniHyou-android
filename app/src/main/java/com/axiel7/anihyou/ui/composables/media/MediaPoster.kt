@@ -64,7 +64,10 @@ fun MediaPosterPreview() {
             MediaPoster(
                 url = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-2WWJVXIAOG11.png",
                 modifier = Modifier
-                    .size(width = MEDIA_POSTER_SMALL_WIDTH.dp, height = MEDIA_POSTER_SMALL_HEIGHT.dp)
+                    .size(
+                        width = MEDIA_POSTER_SMALL_WIDTH.dp,
+                        height = MEDIA_POSTER_SMALL_HEIGHT.dp
+                    )
             )
         }
     }

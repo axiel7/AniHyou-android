@@ -1,24 +1,24 @@
 query CharacterDetails($characterId: Int) {
-  Character(id: $characterId) {
-    id
-    name {
-      userPreferred
-      native
-      alternative
-      alternativeSpoiler
+    Character(id: $characterId) {
+        id
+        name {
+            userPreferred
+            native
+            alternative
+            alternativeSpoiler
+        }
+        image {
+            large
+        }
+        description(asHtml: true)
+        gender
+        dateOfBirth {
+            ...FuzzyDate
+        }
+        age
+        bloodType
+        favourites
+        isFavourite
+        siteUrl
     }
-    image {
-      large
-    }
-    description(asHtml: true)
-    gender
-    dateOfBirth {
-      ...FuzzyDate
-    }
-    age
-    bloodType
-    favourites
-    isFavourite
-    siteUrl
-  }
 }

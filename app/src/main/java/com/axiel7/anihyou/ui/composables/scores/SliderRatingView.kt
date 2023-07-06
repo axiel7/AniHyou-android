@@ -42,8 +42,7 @@ fun SliderRatingView(
                 if (value.isEmpty()) {
                     ratingString = value
                     onRatingChanged(0.0)
-                }
-                else {
+                } else {
                     value.toDoubleOrNull()?.let {
                         if (it == 0.0) {
                             ratingString = ""

@@ -1,26 +1,26 @@
 query StudioDetails($studioId: Int, $page: Int, $perPage: Int) {
-  Studio(id: $studioId) {
-    id
-    name
-    favourites
-    isFavourite
-    media(isMain: true, page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
-      nodes {
+    Studio(id: $studioId) {
         id
-        coverImage {
-          large
+        name
+        favourites
+        isFavourite
+        media(isMain: true, page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+            nodes {
+                id
+                coverImage {
+                    large
+                }
+                title {
+                    userPreferred
+                }
+                startDate {
+                    year
+                }
+            }
+            pageInfo {
+                currentPage
+                hasNextPage
+            }
         }
-        title {
-          userPreferred
-        }
-        startDate {
-          year
-        }
-      }
-      pageInfo {
-        currentPage
-        hasNextPage
-      }
     }
-  }
 }

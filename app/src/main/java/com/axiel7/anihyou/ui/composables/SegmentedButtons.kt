@@ -42,10 +42,12 @@ fun <T> SegmentedButtons(
         items.forEachIndexed { index, item ->
             val isSelected = selectedIndex == index
             OutlinedButton(
-                modifier = Modifier.weight(1f).then(
-                    if (index != 0) Modifier.offset((-1 * index).dp, 0.dp)
-                    else Modifier
-                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .then(
+                        if (index != 0) Modifier.offset((-1 * index).dp, 0.dp)
+                        else Modifier
+                    ),
                 onClick = {
                     selectedIndex = index
                     onItemSelection(selectedIndex)

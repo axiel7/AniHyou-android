@@ -56,12 +56,14 @@ object SearchRepository {
         else {
             val media = response?.data?.Page?.media?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (media != null) emit(PagedResult.Success(
-                data = media,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (media != null) emit(
+                PagedResult.Success(
+                    data = media,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -84,12 +86,14 @@ object SearchRepository {
         else {
             val characters = response?.data?.Page?.characters?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (characters != null) emit(PagedResult.Success(
-                data = characters,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (characters != null) emit(
+                PagedResult.Success(
+                    data = characters,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -112,12 +116,14 @@ object SearchRepository {
         else {
             val staff = response?.data?.Page?.staff?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (staff != null) emit(PagedResult.Success(
-                data = staff,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (staff != null) emit(
+                PagedResult.Success(
+                    data = staff,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -140,12 +146,14 @@ object SearchRepository {
         else {
             val studios = response?.data?.Page?.studios?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (studios != null) emit(PagedResult.Success(
-                data = studios,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (studios != null) emit(
+                PagedResult.Success(
+                    data = studios,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -168,12 +176,14 @@ object SearchRepository {
         else {
             val users = response?.data?.Page?.users?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (users != null) emit(PagedResult.Success(
-                data = users,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (users != null) emit(
+                PagedResult.Success(
+                    data = users,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -185,12 +195,15 @@ object SearchRepository {
         val error = response.getError()
         if (error != null) emit(DataResult.Error(message = error))
         else {
-            if (response?.data != null) emit(DataResult.Success(
-                data = GenresAndTags(
-                    genres = response.data?.GenreCollection?.filterNotNull().orEmpty(),
-                    tags = response.data?.MediaTagCollection?.filterNotNull()?.map { it.name }.orEmpty()
+            if (response?.data != null) emit(
+                DataResult.Success(
+                    data = GenresAndTags(
+                        genres = response.data?.GenreCollection?.filterNotNull().orEmpty(),
+                        tags = response.data?.MediaTagCollection?.filterNotNull()?.map { it.name }
+                            .orEmpty()
+                    )
                 )
-            ))
+            )
             else emit(DataResult.Error(message = "Error"))
         }
     }

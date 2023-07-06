@@ -24,12 +24,12 @@ import kotlinx.coroutines.flow.flow
 object UserRepository {
 
     fun getUnreadNotificationCount() = flow {
-        val accessToken = App.dataStore.data.first()[PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY]
+        val accessToken =
+            App.dataStore.data.first()[PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY]
         if (accessToken != null) {
             val response = UnreadNotificationCountQuery().tryQuery()
             emit(response?.data?.Viewer?.unreadNotificationCount ?: 0)
-        }
-        else emit(0)
+        } else emit(0)
     }
 
     fun getUserOptions() = flow {
@@ -132,12 +132,14 @@ object UserRepository {
         else {
             val activities = response?.data?.Page?.activities?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (activities != null) emit(PagedResult.Success(
-                data = activities,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (activities != null) emit(
+                PagedResult.Success(
+                    data = activities,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -192,12 +194,14 @@ object UserRepository {
         else {
             val followers = response?.data?.Page?.followers?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (followers != null) emit(PagedResult.Success(
-                data = followers,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (followers != null) emit(
+                PagedResult.Success(
+                    data = followers,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -220,12 +224,14 @@ object UserRepository {
         else {
             val following = response?.data?.Page?.following?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (following != null) emit(PagedResult.Success(
-                data = following,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (following != null) emit(
+                PagedResult.Success(
+                    data = following,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

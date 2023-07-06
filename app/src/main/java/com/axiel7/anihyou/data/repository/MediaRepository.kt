@@ -48,12 +48,14 @@ object MediaRepository {
         if (error != null) emit(PagedResult.Error(message = error))
         else {
             val airingPage = response?.data?.Page
-            if (airingPage != null) emit(PagedResult.Success(
-                data = airingPage.airingSchedules?.filterNotNull().orEmpty(),
-                nextPage = if (airingPage.pageInfo?.hasNextPage == true)
-                    airingPage.pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (airingPage != null) emit(
+                PagedResult.Success(
+                    data = airingPage.airingSchedules?.filterNotNull().orEmpty(),
+                    nextPage = if (airingPage.pageInfo?.hasNextPage == true)
+                        airingPage.pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }
@@ -75,12 +77,14 @@ object MediaRepository {
                 ?.filter { it.nextAiringEpisode != null }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
             val pageInfo = response?.data?.Page?.pageInfo
-            if (airingAnime != null) emit(PagedResult.Success(
-                data = airingAnime,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (airingAnime != null) emit(
+                PagedResult.Success(
+                    data = airingAnime,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }
@@ -104,12 +108,14 @@ object MediaRepository {
         else {
             val seasonalAnime = response?.data?.Page?.media?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (seasonalAnime != null) emit(PagedResult.Success(
-                data = seasonalAnime,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (seasonalAnime != null) emit(
+                PagedResult.Success(
+                    data = seasonalAnime,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }
@@ -133,12 +139,14 @@ object MediaRepository {
         else {
             val media = response?.data?.Page?.media?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (media != null) emit(PagedResult.Success(
-                data = media,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (media != null) emit(
+                PagedResult.Success(
+                    data = media,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Empty"))
         }
     }
@@ -174,8 +182,7 @@ object MediaRepository {
                     staff = media.staff?.edges?.filterNotNull().orEmpty()
                 )
                 emit(DataResult.Success(data = charactersAndStaff))
-            }
-            else emit(DataResult.Error(message = "Empty"))
+            } else emit(DataResult.Error(message = "Empty"))
         }
     }
 
@@ -195,8 +202,7 @@ object MediaRepository {
                     recommendations = media.recommendations?.nodes?.filterNotNull().orEmpty()
                 )
                 emit(DataResult.Success(data = relationsAndRecommendations))
-            }
-            else emit(DataResult.Error(message = "Empty"))
+            } else emit(DataResult.Error(message = "Empty"))
         }
     }
 
@@ -212,8 +218,7 @@ object MediaRepository {
             val media = response?.data?.Media
             if (media != null) {
                 emit(DataResult.Success(data = media))
-            }
-            else emit(DataResult.Error(message = "Error"))
+            } else emit(DataResult.Error(message = "Error"))
         }
     }
 
@@ -235,14 +240,15 @@ object MediaRepository {
             val reviews = response?.data?.Media?.reviews?.nodes?.filterNotNull()
             val pageInfo = response?.data?.Media?.reviews?.pageInfo
             if (reviews != null) {
-                emit(PagedResult.Success(
-                    data = reviews,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                ))
-            }
-            else emit(PagedResult.Error(message = "Error"))
+                emit(
+                    PagedResult.Success(
+                        data = reviews,
+                        nextPage = if (pageInfo?.hasNextPage == true)
+                            pageInfo.currentPage?.plus(1)
+                        else null
+                    )
+                )
+            } else emit(PagedResult.Error(message = "Error"))
         }
     }
 
@@ -264,14 +270,15 @@ object MediaRepository {
         else {
             val threadsPage = response?.data?.Page
             if (threadsPage != null) {
-                emit(PagedResult.Success(
-                    data = threadsPage.threads?.filterNotNull().orEmpty(),
-                    nextPage = if (threadsPage.pageInfo?.hasNextPage == true)
+                emit(
+                    PagedResult.Success(
+                        data = threadsPage.threads?.filterNotNull().orEmpty(),
+                        nextPage = if (threadsPage.pageInfo?.hasNextPage == true)
                             threadsPage.pageInfo.currentPage?.plus(1)
-                    else null
-                ))
-            }
-            else emit(PagedResult.Error(message = "Error"))
+                        else null
+                    )
+                )
+            } else emit(PagedResult.Error(message = "Error"))
         }
     }
 
@@ -297,20 +304,24 @@ object MediaRepository {
         else {
             val media = response?.data?.Page?.media?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (media != null) emit(PagedResult.Success(
-                data = media,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (media != null) emit(
+                PagedResult.Success(
+                    data = media,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
 
     suspend fun getUserCurrentAiringAnime(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
-        val response = apolloClient.query(UserCurrentAnimeListQuery(
-            userId = Optional.present(userId)
-        )).execute()
+        val response = apolloClient.query(
+            UserCurrentAnimeListQuery(
+                userId = Optional.present(userId)
+            )
+        ).execute()
         if (response.hasErrors()) return null
         else {
             response.data?.Page?.mediaList?.filterNotNull()?.let { mediaList ->

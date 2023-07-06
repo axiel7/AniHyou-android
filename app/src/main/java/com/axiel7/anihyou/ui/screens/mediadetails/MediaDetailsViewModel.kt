@@ -41,8 +41,7 @@ class MediaDetailsViewModel(
 
             if (result is DataResult.Success) {
                 mediaDetails = result.data
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -71,8 +70,7 @@ class MediaDetailsViewModel(
                     if (result.data) {
                         mediaDetails = details.copy(isFavourite = !details.isFavourite)
                     }
-                }
-                else if (result is DataResult.Error) {
+                } else if (result is DataResult.Error) {
                     message = result.message
                 }
             }
@@ -120,8 +118,7 @@ class MediaDetailsViewModel(
                 }
                 mediaRankings.clear()
                 result.data.rankings?.filterNotNull()?.let { mediaRankings.addAll(it) }
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 isSuccessStats = false
                 message = result.message
             }

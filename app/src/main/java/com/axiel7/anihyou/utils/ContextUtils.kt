@@ -95,7 +95,10 @@ object ContextUtils {
         val emptyBrowserIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("http", "", null))
             .setAction(Intent.ACTION_VIEW)
 
-        return packageManager.queryIntentActivitiesCompat(emptyBrowserIntent, PackageManager.MATCH_ALL)
+        return packageManager.queryIntentActivitiesCompat(
+            emptyBrowserIntent,
+            PackageManager.MATCH_ALL
+        )
     }
 
     /** Custom compat method until Google decides to make one */

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.AniHyou" parent="android:Theme.Material.NoActionBar" />
 
     <style name="Theme.MySplash" parent="Theme.SplashScreen">
@@ -8,7 +9,7 @@
         <item name="postSplashScreenTheme">@style/Theme.AniHyou</item>
     </style>
 
-    <style name="Theme.AppWidget.AppWidgetContainer" parent="android:Theme.Material.NoActionBar"/>
+    <style name="Theme.AppWidget.AppWidgetContainer" parent="android:Theme.Material.NoActionBar" />
 
     <style name="Widget.AppWidget.AppWidget.Container" parent="android:Widget">
         <item name="android:id">@android:id/background</item>

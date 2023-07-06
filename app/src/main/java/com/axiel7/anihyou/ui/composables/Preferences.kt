@@ -73,9 +73,10 @@ fun PlainPreference(
                     tint = MaterialTheme.colorScheme.primary
                 )
             } else {
-                Spacer(modifier = Modifier
-                    .padding(16.dp)
-                    .size(24.dp)
+                Spacer(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(24.dp)
                 )
             }
 
@@ -132,9 +133,10 @@ fun SwitchPreference(
                     tint = MaterialTheme.colorScheme.primary
                 )
             } else {
-                Spacer(modifier = Modifier
-                    .padding(16.dp)
-                    .size(24.dp)
+                Spacer(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(24.dp)
                 )
             }
 
@@ -195,9 +197,10 @@ fun ListPreference(
                 tint = MaterialTheme.colorScheme.primary
             )
         } else {
-            Spacer(modifier = Modifier
-                .padding(16.dp)
-                .size(24.dp)
+            Spacer(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(24.dp)
             )
         }
 

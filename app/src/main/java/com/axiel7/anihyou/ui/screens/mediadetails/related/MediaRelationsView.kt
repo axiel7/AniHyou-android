@@ -55,8 +55,7 @@ fun MediaRelationsView(
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
-                }
-                else items(mediaRelated) { item ->
+                } else items(mediaRelated) { item ->
                     MediaItemVertical(
                         title = item.mediaRelated.node?.title?.userPreferred ?: "",
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
@@ -89,10 +88,10 @@ fun MediaRelationsView(
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
-                }
-                else items(mediaRecommendations) { item ->
+                } else items(mediaRecommendations) { item ->
                     MediaItemVertical(
-                        title = item.mediaRecommended.mediaRecommendation?.title?.userPreferred ?: "",
+                        title = item.mediaRecommended.mediaRecommendation?.title?.userPreferred
+                            ?: "",
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {

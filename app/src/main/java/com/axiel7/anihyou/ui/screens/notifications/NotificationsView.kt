@@ -112,7 +112,8 @@ fun NotificationsView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()?.secondsToLegibleText(),
+                    subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
+                        ?.secondsToLegibleText(),
                     onClick = {
                         when (item.type) {
                             NotificationType.AIRING,
@@ -120,6 +121,7 @@ fun NotificationsView(
                             NotificationType.MEDIA_DATA_CHANGE,
                             NotificationType.MEDIA_MERGE,
                             NotificationType.MEDIA_DELETION -> navigateToMediaDetails(item.contentId)
+
                             else -> {
                                 context.showToast("Coming Soon")
                             }
@@ -135,6 +137,7 @@ fun NotificationsView(
                             NotificationType.THREAD_COMMENT_MENTION,
                             NotificationType.THREAD_COMMENT_LIKE,
                             NotificationType.THREAD_LIKE -> navigateToUserDetails(item.secondaryContentId!!)
+
                             else -> {}
                         }
                     }

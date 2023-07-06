@@ -29,11 +29,13 @@ object DateUtils {
 
     private val defaultZoneOffset get() = ZonedDateTime.now(ZoneId.systemDefault()).offset
 
-    fun String.toIsoFormat(inputFormat: DateTimeFormatter) = LocalDate.parse(this, inputFormat).toString()
+    fun String.toIsoFormat(inputFormat: DateTimeFormatter) =
+        LocalDate.parse(this, inputFormat).toString()
 
     fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(defaultZoneOffset).toEpochMilli()
 
-    fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate = with(TemporalAdjusters.nextOrSame(dayOfWeek))
+    fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate =
+        with(TemporalAdjusters.nextOrSame(dayOfWeek))
 
     fun LocalDate?.toLocalized(
         style: FormatStyle = FormatStyle.MEDIUM
@@ -51,9 +53,10 @@ object DateUtils {
         ""
     }
 
-    fun LocalDateTime.toCalendar(): GregorianCalendar = GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
+    fun LocalDateTime.toCalendar(): GregorianCalendar =
+        GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
-    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    val currentYear = Calendar.getInstance()[Calendar.YEAR]
     private const val BASE_YEAR = 1917
     val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toList()
 
@@ -120,23 +123,26 @@ object DateUtils {
     @Composable
     fun Long.secondsToLegibleText(): String {
         val days = this / 86400
-        if (days > 6) {
-            val weeks = this / 604800
-            return if (weeks > 4) {
-                val months = this / 2629746
-                if (months > 12) {
-                    val years = this / 31556952
-                    stringResource(R.string.num_years).format(years)
-                } else stringResource(R.string.num_months).format(months)
-            } else stringResource(R.string.num_weeks).format(weeks)
-        }
-        else if (days >= 1) return stringResource(R.string.num_days).format(days)
-        else {
-            val hours = this / 3600
-            return if (hours >= 1) "$hours ${stringResource(R.string.hour_abbreviation)}"
-            else {
-                val minutes = (this % 3600) / 60
-                "$minutes ${stringResource(R.string.minutes_abbreviation)}"
+        return when {
+            days > 6 -> {
+                val weeks = this / 604800
+                return if (weeks > 4) {
+                    val months = this / 2629746
+                    if (months > 12) {
+                        val years = this / 31556952
+                        stringResource(R.string.num_years).format(years)
+                    } else stringResource(R.string.num_months).format(months)
+                } else stringResource(R.string.num_weeks).format(weeks)
+            }
+
+            days >= 1 -> stringResource(R.string.num_days).format(days)
+            else -> {
+                val hours = this / 3600
+                return if (hours >= 1) "$hours ${stringResource(R.string.hour_abbreviation)}"
+                else {
+                    val minutes = (this % 3600) / 60
+                    "$minutes ${stringResource(R.string.minutes_abbreviation)}"
+                }
             }
         }
     }
@@ -169,7 +175,8 @@ object DateUtils {
     /**
      * Difference in seconds since now
      */
-    fun Long.timestampIntervalSinceNow() = (System.currentTimeMillis() - this * 1000).absoluteValue / 1000
+    fun Long.timestampIntervalSinceNow() =
+        (System.currentTimeMillis() - this * 1000).absoluteValue / 1000
 
     /**
      * @return the date in LocalDate, null if fails
@@ -226,6 +233,7 @@ object DateUtils {
                 )
             )
         }
+
         month != null && year != null -> {
             LocalDate.of(year, month, 1).format(
                 DateTimeFormatter.ofPattern(
@@ -233,6 +241,7 @@ object DateUtils {
                 )
             )
         }
+
         day == null && month == null && year != null -> "$year"
         else -> stringResource(R.string.unknown)
     }

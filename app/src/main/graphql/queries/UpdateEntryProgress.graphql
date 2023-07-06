@@ -1,7 +1,7 @@
 mutation UpdateEntryProgress($saveMediaListEntryId: Int, $progress: Int) {
-  SaveMediaListEntry(id: $saveMediaListEntryId, progress: $progress) {
-    id
-    mediaId
-    progress
-  }
+    SaveMediaListEntry(id: $saveMediaListEntryId, progress: $progress) {
+        id
+        mediaId
+        progress
+    }
 }

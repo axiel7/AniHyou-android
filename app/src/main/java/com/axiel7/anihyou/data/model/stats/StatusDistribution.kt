@@ -33,7 +33,8 @@ enum class StatusDistribution(
     DROPPED(MediaListStatus.DROPPED),
     PLANNING(MediaListStatus.PLANNING);
 
-    @Composable override fun primaryColor(): Color {
+    @Composable
+    override fun primaryColor(): Color {
         val isDark = isSystemInDarkTheme()
         return when (value) {
             MediaListStatus.CURRENT -> if (isDark) stat_dark_green else stat_light_green
@@ -45,7 +46,9 @@ enum class StatusDistribution(
             MediaListStatus.UNKNOWN__ -> MaterialTheme.colorScheme.outline
         }
     }
-    @Composable override fun onPrimaryColor(): Color {
+
+    @Composable
+    override fun onPrimaryColor(): Color {
         val isDark = isSystemInDarkTheme()
         return when (value) {
             MediaListStatus.CURRENT -> if (isDark) stat_dark_onGreen else stat_light_onGreen
@@ -58,9 +61,11 @@ enum class StatusDistribution(
         }
     }
 
-    @Composable override fun localized() = value.localized()
+    @Composable
+    override fun localized() = value.localized()
 
     companion object {
-        fun valueOf(rawValue: String?) = StatusDistribution.values().find { it.value.rawValue == rawValue }
+        fun valueOf(rawValue: String?) =
+            StatusDistribution.values().find { it.value.rawValue == rawValue }
     }
 }

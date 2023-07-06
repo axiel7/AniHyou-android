@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -34,79 +35,86 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="anihyou"
-                    android:host="auth-response" />
+                    android:host="auth-response"
+                    android:scheme="anihyou" />
 
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/anime/"/>
+                    android:pathPrefix="/anime/"
+                    android:scheme="https" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/manga/"/>
+                    android:pathPrefix="/manga/"
+                    android:scheme="https" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/character/"/>
+                    android:pathPrefix="/character/"
+                    android:scheme="https" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/staff/"/>
+                    android:pathPrefix="/staff/"
+                    android:scheme="https" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/studio/"/>
+                    android:pathPrefix="/studio/"
+                    android:scheme="https" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="anilist.co"
-                    android:pathPrefix="/user/"/>
+                    android:pathPrefix="/user/"
+                    android:scheme="https" />
 
             </intent-filter>
         </activity>

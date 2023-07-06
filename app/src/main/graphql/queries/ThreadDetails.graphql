@@ -1,22 +1,22 @@
 query ThreadDetails($threadId: Int) {
-  Thread(id: $threadId) {
-    ...BasicThreadDetails
-  }
+    Thread(id: $threadId) {
+        ...BasicThreadDetails
+    }
 }
 
 fragment BasicThreadDetails on Thread {
-  id
-  title
-  body
-  viewCount
-  likeCount
-  replyCount
-  user {
     id
-    name
-    avatar {
-      medium
+    title
+    body
+    viewCount
+    likeCount
+    replyCount
+    user {
+        id
+        name
+        avatar {
+            medium
+        }
     }
-  }
-  createdAt
+    createdAt
 }

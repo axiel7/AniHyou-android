@@ -124,7 +124,10 @@ fun SeasonAnimeView(
                 onClick = { scope.launch { sheetState.show() } },
                 modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())
             ) {
-                Icon(painter = painterResource(R.drawable.filter_list_24), contentDescription = "filter")
+                Icon(
+                    painter = painterResource(R.drawable.filter_list_24),
+                    contentDescription = "filter"
+                )
             }
         },
         navigationIcon = {

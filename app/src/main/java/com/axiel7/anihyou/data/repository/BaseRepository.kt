@@ -10,7 +10,7 @@ import com.axiel7.anihyou.network.apolloClient
 
 object BaseRepository {
 
-    suspend fun <D: Query.Data> Query<D>.tryQuery(
+    suspend fun <D : Query.Data> Query<D>.tryQuery(
         fetchPolicy: FetchPolicy = FetchPolicy.CacheFirst
     ): ApolloResponse<D>? {
         return try {
@@ -23,7 +23,7 @@ object BaseRepository {
         }
     }
 
-    suspend fun <D: Mutation.Data> Mutation<D>.tryMutation(): ApolloResponse<D>? {
+    suspend fun <D : Mutation.Data> Mutation<D>.tryMutation(): ApolloResponse<D>? {
         return try {
             apolloClient.mutation(this).execute()
         } catch (e: Exception) {
@@ -31,11 +31,10 @@ object BaseRepository {
         }
     }
 
-    fun <D: Operation.Data> ApolloResponse<D>?.getError() =
+    fun <D : Operation.Data> ApolloResponse<D>?.getError() =
         if (this == null || hasErrors() || data == null) {
             this?.errors?.first()?.message ?: "Unknown error"
-        }
-        else null
+        } else null
 }
 
 sealed interface DataResult<out T> {

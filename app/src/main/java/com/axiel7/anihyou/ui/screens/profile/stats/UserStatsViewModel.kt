@@ -90,13 +90,11 @@ class UserStatsViewModel(
                             )
                         }
                     }
-                }
-                else if (result is DataResult.Error) {
+                } else if (result is DataResult.Error) {
                     message = result.message
                 }
             }
-        }
-        else if (mediaType == MediaType.MANGA) {
+        } else if (mediaType == MediaType.MANGA) {
             UserRepository.getOverviewMangaStats(userId).collect { result ->
                 if (result is DataResult.Success) {
                     mangaScoreStatsCount.clear()
@@ -140,8 +138,7 @@ class UserStatsViewModel(
                             )
                         }
                     }
-                }
-                else if (result is DataResult.Error) {
+                } else if (result is DataResult.Error) {
                     message = result.message
                 }
             }

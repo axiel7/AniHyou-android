@@ -130,7 +130,7 @@ fun StandardUserMediaListItem(
 
                         if (isMyList && (status == MediaListStatus.CURRENT
                                     || status == MediaListStatus.REPEATING)
-                            ) {
+                        ) {
                             FilledTonalButton(onClick = onClickPlus) {
                                 Text(text = "+1")
                             }
@@ -392,18 +392,21 @@ fun AiringScheduleText(
     textAlign: TextAlign? = null,
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-        val isBehind = item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
+        val isBehind =
+            item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
         Text(
             text =
-                if (isBehind)
-                    stringResource(R.string.num_episodes_behind,
-                        (nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0)
-                    )
-                else
-                    stringResource(R.string.episode_in_time,
-                        nextAiringEpisode.episode,
-                        nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
-                    ),
+            if (isBehind)
+                stringResource(
+                    R.string.num_episodes_behind,
+                    (nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0)
+                )
+            else
+                stringResource(
+                    R.string.episode_in_time,
+                    nextAiringEpisode.episode,
+                    nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                ),
             modifier = modifier,
             color = if (isBehind) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant,

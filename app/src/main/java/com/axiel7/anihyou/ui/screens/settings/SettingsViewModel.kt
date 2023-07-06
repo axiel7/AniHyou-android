@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel : BaseViewModel() {
 
     var displayAdultContent by mutableStateOf(false)
-    private set
+        private set
 
     fun onDisplayAdultContentChanged(value: Boolean) {
         displayAdultContent = value
@@ -24,8 +24,7 @@ class SettingsViewModel : BaseViewModel() {
 
             if (result is DataResult.Success) {
                 displayAdultContent = result.data.displayAdultContent ?: false
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -39,8 +38,7 @@ class SettingsViewModel : BaseViewModel() {
 
             if (result is DataResult.Success) {
                 displayAdultContent = result.data.options?.displayAdultContent ?: false
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }

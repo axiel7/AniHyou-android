@@ -183,6 +183,7 @@ fun SearchView(
                     }
                 }
             }
+
             SearchType.CHARACTER -> {
                 items(
                     items = viewModel.searchedCharacters,
@@ -204,6 +205,7 @@ fun SearchView(
                     }
                 }
             }
+
             SearchType.STAFF -> {
                 items(
                     items = viewModel.searchedStaff,
@@ -225,6 +227,7 @@ fun SearchView(
                     }
                 }
             }
+
             SearchType.STUDIO -> {
                 items(
                     items = viewModel.searchedStudios,
@@ -250,6 +253,7 @@ fun SearchView(
                     }
                 }
             }
+
             SearchType.USER -> {
                 items(
                     items = viewModel.searchedUsers,

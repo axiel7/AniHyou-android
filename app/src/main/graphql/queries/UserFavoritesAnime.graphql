@@ -1,21 +1,21 @@
 query UserFavoritesAnime($userId: Int, $page: Int, $perPage: Int) {
-  User(id: $userId) {
-    favourites {
-      anime(page: $page, perPage: $perPage) {
-        nodes {
-          id
-          title {
-            userPreferred
-          }
-          coverImage {
-            large
-          }
+    User(id: $userId) {
+        favourites {
+            anime(page: $page, perPage: $perPage) {
+                nodes {
+                    id
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                }
+                pageInfo {
+                    currentPage
+                    hasNextPage
+                }
+            }
         }
-        pageInfo {
-          currentPage
-          hasNextPage
-        }
-      }
     }
-  }
 }

@@ -18,19 +18,20 @@ enum class ItemsPerRow(val value: Int) : Localizable {
     NINE(9),
     TEN(10);
 
-    val stringRes get() = when (this) {
-        DEFAULT -> R.string.default_setting
-        ONE -> R.string.one
-        TWO -> R.string.two
-        THREE -> R.string.three
-        FOUR -> R.string.four
-        FIVE -> R.string.five
-        SIX -> R.string.six
-        SEVEN -> R.string.seven
-        EIGHT -> R.string.eight
-        NINE -> R.string.nine
-        TEN -> R.string.ten
-    }
+    val stringRes
+        get() = when (this) {
+            DEFAULT -> R.string.default_setting
+            ONE -> R.string.one
+            TWO -> R.string.two
+            THREE -> R.string.three
+            FOUR -> R.string.four
+            FIVE -> R.string.five
+            SIX -> R.string.six
+            SEVEN -> R.string.seven
+            EIGHT -> R.string.eight
+            NINE -> R.string.nine
+            TEN -> R.string.ten
+        }
 
     @Composable
     override fun localized() = stringResource(stringRes)

@@ -27,28 +27,25 @@ class CharacterDetailsViewModel(
         characterDetails?.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
     }
 
-    suspend fun getCharacterDetails() = viewModelScope.launch {
+    fun getCharacterDetails() = viewModelScope.launch(dispatcher) {
         CharacterRepository.getCharacterDetails(characterId).collect { result ->
             isLoading = result is DataResult.Loading
 
             if (result is DataResult.Success) {
                 characterDetails = result.data
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
     }
 
-    suspend fun toggleFavorite() = viewModelScope.launch {
+    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
         characterDetails?.let { details ->
             FavoriteRepository.toggleFavorite(
                 characterId = characterId
             ).collect { result ->
-                if (result is DataResult.Success) {
-                    if (result.data) {
-                        characterDetails = details.copy(isFavourite = !details.isFavourite)
-                    }
+                if (result is DataResult.Success && result.data) {
+                    characterDetails = details.copy(isFavourite = !details.isFavourite)
                 }
             }
         }
@@ -56,9 +53,9 @@ class CharacterDetailsViewModel(
 
     private var page = 1
     var hasNextPage = true
-    var characterMedia =  mutableStateListOf<CharacterMediaQuery.Edge>()
+    var characterMedia = mutableStateListOf<CharacterMediaQuery.Edge>()
 
-    suspend fun getCharacterMedia() = viewModelScope.launch {
+    fun getCharacterMedia() = viewModelScope.launch(dispatcher) {
         CharacterRepository.getCharacterMediaPage(
             characterId = characterId,
             page = page,
@@ -69,8 +66,7 @@ class CharacterDetailsViewModel(
                 characterMedia.addAll(result.data)
                 page = result.nextPage ?: page
                 hasNextPage = result.nextPage != null
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

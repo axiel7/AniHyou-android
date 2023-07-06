@@ -39,7 +39,8 @@ import com.axiel7.anihyou.ui.screens.explore.search.SearchView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
-const val EXPLORE_GENRE_DESTINATION = "explore/{mediaType}?mediaSort={mediaSort}?genre={genre}?tag={tag}"
+const val EXPLORE_GENRE_DESTINATION =
+    "explore/{mediaType}?mediaSort={mediaSort}?genre={genre}?tag={tag}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -160,7 +161,7 @@ fun ExploreView(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             ) {

@@ -31,23 +31,29 @@ fun <T> DefaultTabRowWithPager(
     val state = rememberPagerState(initialPage = initialPage) { tabs.size }
     val scope = rememberCoroutineScope()
 
-    Column(modifier =  modifier) {
-        val tabsLayout = @Composable { tabs.forEachIndexed { index, item ->
-            Tab(
-                selected = state.currentPage == index,
-                onClick = { scope.launch { state.animateScrollToPage(index) } },
-                text = if (item.title != null) {{
-                    Text(text = stringResource(item.title))
-                }} else null,
-                icon = if (item.icon != null) {{
-                    Icon(
-                        painter = painterResource(item.icon),
-                        contentDescription = item.value.toString()
-                    )
-                }} else null,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }}
+    Column(modifier = modifier) {
+        val tabsLayout = @Composable {
+            tabs.forEachIndexed { index, item ->
+                Tab(
+                    selected = state.currentPage == index,
+                    onClick = { scope.launch { state.animateScrollToPage(index) } },
+                    text = if (item.title != null) {
+                        {
+                            Text(text = stringResource(item.title))
+                        }
+                    } else null,
+                    icon = if (item.icon != null) {
+                        {
+                            Icon(
+                                painter = painterResource(item.icon),
+                                contentDescription = item.value.toString()
+                            )
+                        }
+                    } else null,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
 
         if (isTabScrollable) {
             ScrollableTabRow(

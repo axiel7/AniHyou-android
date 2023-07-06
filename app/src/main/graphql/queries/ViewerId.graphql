@@ -1,13 +1,13 @@
 query ViewerId {
-  Viewer {
-    id
-    options {
-      profileColor
-      staffNameLanguage
-      titleLanguage
+    Viewer {
+        id
+        options {
+            profileColor
+            staffNameLanguage
+            titleLanguage
+        }
+        mediaListOptions {
+            scoreFormat
+        }
     }
-    mediaListOptions {
-      scoreFormat
-    }
-  }
 }

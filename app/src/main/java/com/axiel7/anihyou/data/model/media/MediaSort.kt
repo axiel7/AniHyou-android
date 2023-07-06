@@ -51,42 +51,48 @@ fun MediaSort.localized() = when (this) {
 enum class MediaSortSearch(
     val asc: MediaSort,
     val desc: MediaSort
-): Localizable {
+) : Localizable {
     SEARCH_MATCH(
         asc = MediaSort.SEARCH_MATCH,
         desc = MediaSort.SEARCH_MATCH,
     ) {
-        @Composable override fun localized() = stringResource(R.string.sort_default)
+        @Composable
+        override fun localized() = stringResource(R.string.sort_default)
     },
     POPULARITY(
         asc = MediaSort.POPULARITY,
         desc = MediaSort.POPULARITY_DESC,
     ) {
-        @Composable override fun localized() = asc.localized()
+        @Composable
+        override fun localized() = asc.localized()
     },
     SCORE(
         asc = MediaSort.SCORE,
         desc = MediaSort.SCORE_DESC,
     ) {
-        @Composable override fun localized() = asc.localized()
+        @Composable
+        override fun localized() = asc.localized()
     },
     TRENDING(
         asc = MediaSort.TRENDING,
         desc = MediaSort.TRENDING_DESC,
     ) {
-        @Composable override fun localized() = asc.localized()
+        @Composable
+        override fun localized() = asc.localized()
     },
     FAVOURITES(
         asc = MediaSort.FAVOURITES,
         desc = MediaSort.FAVOURITES_DESC,
     ) {
-        @Composable override fun localized() = asc.localized()
+        @Composable
+        override fun localized() = asc.localized()
     },
     START_DATE(
         asc = MediaSort.START_DATE,
         desc = MediaSort.START_DATE_DESC,
     ) {
-        @Composable override fun localized() = asc.localized()
+        @Composable
+        override fun localized() = asc.localized()
     };
 
     companion object {

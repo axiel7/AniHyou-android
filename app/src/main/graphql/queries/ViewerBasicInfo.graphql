@@ -1,26 +1,26 @@
 query Viewer {
-  Viewer {
-    ...UserInfo
-  }
+    Viewer {
+        ...UserInfo
+    }
 }
 
 fragment UserInfo on User {
-  id
-  name
-  avatar {
-    large
-  }
-  bannerImage
-  about(asHtml: true)
-  options {
-    profileColor
-    staffNameLanguage
-    titleLanguage
-  }
-  mediaListOptions {
-    scoreFormat
-  }
-  isFollowing
-  isFollower
-  siteUrl
+    id
+    name
+    avatar {
+        large
+    }
+    bannerImage
+    about(asHtml: true)
+    options {
+        profileColor
+        staffNameLanguage
+        titleLanguage
+    }
+    mediaListOptions {
+        scoreFormat
+    }
+    isFollowing
+    isFollower
+    siteUrl
 }

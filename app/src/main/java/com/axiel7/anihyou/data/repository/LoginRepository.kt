@@ -33,7 +33,8 @@ object LoginRepository {
                 App.dataStore.edit {
                     it[USER_ID_PREFERENCE_KEY] = viewer.id
                     it[PROFILE_COLOR_PREFERENCE_KEY] = viewer.options?.profileColor ?: "#526CFD"
-                    it[SCORE_FORMAT_PREFERENCE_KEY] = viewer.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
+                    it[SCORE_FORMAT_PREFERENCE_KEY] =
+                        viewer.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
                 }
             }
         }

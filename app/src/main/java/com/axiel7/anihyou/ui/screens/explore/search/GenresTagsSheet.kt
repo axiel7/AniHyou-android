@@ -86,11 +86,12 @@ fun GenresTagsSheet(
                 GenresTagsSheetTab.GENRES ->
                     if (filter.isNotBlank())
                         genresList.filter { it.first.contains(filter, ignoreCase = true) }
-                else genresList
+                    else genresList
+
                 GenresTagsSheetTab.TAGS ->
                     if (filter.isNotBlank())
                         tagsList.filter { it.first.contains(filter, ignoreCase = true) }
-                else tagsList
+                    else tagsList
             }
         }
     }

@@ -97,6 +97,7 @@ fun UserSocialView(
                         }
                     }
                 }
+
                 UserSocialType.FOLLOWING -> {
                     items(
                         items = viewModel.following,

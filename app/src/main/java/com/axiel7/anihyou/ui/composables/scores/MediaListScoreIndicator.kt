@@ -49,24 +49,31 @@ fun BadgeScoreIndicator(
                     tint = score.scoreOnPrimaryColor(format = scoreFormat)
                 )
                 Text(
-                    text = if (score != null && score != 0.0) String.format("%.0f", score) else UNKNOWN_CHAR,
+                    text = if (score != null && score != 0.0) String.format(
+                        "%.0f",
+                        score
+                    ) else UNKNOWN_CHAR,
                     color = score.scoreOnPrimaryColor(format = scoreFormat),
                     fontSize = 14.sp
                 )
             }
+
             ScoreFormat.POINT_10_DECIMAL -> {
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
                     contentDescription = "star",
                     modifier = Modifier.size(18.dp),
-                    tint = score?.point10DecimalOnPrimaryColor() ?: MaterialTheme.colorScheme.onSurface
+                    tint = score?.point10DecimalOnPrimaryColor()
+                        ?: MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = if (score != null && score != 0.0) score.format() else UNKNOWN_CHAR,
-                    color = score?.point10DecimalOnPrimaryColor() ?: MaterialTheme.colorScheme.onSurface,
+                    color = score?.point10DecimalOnPrimaryColor()
+                        ?: MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 )
             }
+
             ScoreFormat.POINT_3 -> {
                 if (score != null && score != 0.0) {
                     Icon(
@@ -83,6 +90,7 @@ fun BadgeScoreIndicator(
                     )
                 }
             }
+
             ScoreFormat.UNKNOWN__ -> {}
         }
     }
@@ -106,11 +114,15 @@ fun MinimalScoreIndicator(
                     tint = score.scorePrimaryColor(format = scoreFormat)
                 )
                 Text(
-                    text = if (score != null && score != 0.0) String.format("%.0f", score) else UNKNOWN_CHAR,
+                    text = if (score != null && score != 0.0) String.format(
+                        "%.0f",
+                        score
+                    ) else UNKNOWN_CHAR,
                     color = score.scorePrimaryColor(format = scoreFormat),
                     fontSize = 14.sp
                 )
             }
+
             ScoreFormat.POINT_10_DECIMAL -> {
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
@@ -120,10 +132,12 @@ fun MinimalScoreIndicator(
                 )
                 Text(
                     text = if (score != null && score != 0.0) score.format() else UNKNOWN_CHAR,
-                    color = score?.point10DecimalPrimaryColor() ?: MaterialTheme.colorScheme.outline,
+                    color = score?.point10DecimalPrimaryColor()
+                        ?: MaterialTheme.colorScheme.outline,
                     fontSize = 14.sp
                 )
             }
+
             ScoreFormat.POINT_3 -> {
                 if (score != null && score != 0.0) {
                     Icon(
@@ -140,6 +154,7 @@ fun MinimalScoreIndicator(
                     )
                 }
             }
+
             ScoreFormat.UNKNOWN__ -> {}
         }
     }

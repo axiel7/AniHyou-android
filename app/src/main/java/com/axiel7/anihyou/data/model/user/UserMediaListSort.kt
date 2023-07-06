@@ -8,20 +8,24 @@ import com.axiel7.anihyou.type.MediaListSort
 
 enum class UserMediaListSort(
     val value: MediaListSort
-): Localizable {
+) : Localizable {
     SCORE_DESC(MediaListSort.SCORE_DESC) {
-        @Composable override fun localized() = stringResource(R.string.sort_score)
+        @Composable
+        override fun localized() = stringResource(R.string.sort_score)
     },
     UPDATED_DESC(MediaListSort.UPDATED_TIME_DESC) {
-        @Composable override fun localized() = stringResource(R.string.sort_updated)
+        @Composable
+        override fun localized() = stringResource(R.string.sort_updated)
     },
     ADDED_DESC(MediaListSort.ADDED_TIME_DESC) {
-        @Composable override fun localized() = stringResource(R.string.sort_added)
+        @Composable
+        override fun localized() = stringResource(R.string.sort_added)
     };
 
     companion object {
         fun valueOf(rawValue: String?): UserMediaListSort? =
             UserMediaListSort.values().find { it.value.rawValue == rawValue }
+
         fun valueOf(value: MediaListSort?): UserMediaListSort? =
             UserMediaListSort.values().find { it.value == value }
     }

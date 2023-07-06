@@ -121,8 +121,10 @@ fun MediaInformationView(
             text = stringResource(R.string.tags),
             trailingIcon = {
                 TextButton(onClick = { showSpoiler = !showSpoiler }) {
-                    Text(text = stringResource(
-                        if (showSpoiler) R.string.hide_spoiler else R.string.show_spoiler)
+                    Text(
+                        text = stringResource(
+                            if (showSpoiler) R.string.hide_spoiler else R.string.show_spoiler
+                        )
                     )
                 }
             }
@@ -140,18 +142,25 @@ fun MediaInformationView(
                             description = tag.description,
                             rank = tag.rank,
                             onClick = {
-                                navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
+                                navigateToExplore(
+                                    viewModel.mediaDetails?.basicMediaDetails?.type,
+                                    null,
+                                    tag.name
+                                )
                             }
                         )
-                    }
-                    else {
+                    } else {
                         SpoilerTagChip(
                             name = tag.name,
                             description = tag.description,
                             rank = tag.rank,
                             visible = showSpoiler,
                             onClick = {
-                                navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, null, tag.name)
+                                navigateToExplore(
+                                    viewModel.mediaDetails?.basicMediaDetails?.type,
+                                    null,
+                                    tag.name
+                                )
                             }
                         )
                     }

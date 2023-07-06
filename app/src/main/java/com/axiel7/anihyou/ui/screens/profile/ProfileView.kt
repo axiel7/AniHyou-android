@@ -229,20 +229,28 @@ fun ProfileView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             isLoading = viewModel.isLoading,
                             navigateToUserMediaList = if (navigateToUserMediaList != null) {
-                                { mediaType -> navigateToUserMediaList(mediaType, viewModel.userId) }
+                                { mediaType ->
+                                    navigateToUserMediaList(
+                                        mediaType,
+                                        viewModel.userId
+                                    )
+                                }
                             } else null,
                         )
+
                     ProfileInfoType.ACTIVITY ->
                         UserActivityView(
                             viewModel = viewModel,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             navigateToMediaDetails = navigateToMediaDetails
                         )
+
                     ProfileInfoType.STATS ->
                         UserStatsView(
                             userId = viewModel.userId,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                         )
+
                     ProfileInfoType.FAVORITES ->
                         UserFavoritesView(
                             userId = viewModel.userId,
@@ -252,6 +260,7 @@ fun ProfileView(
                             navigateToStaffDetails = navigateToStaffDetails,
                             navigateToStudioDetails = navigateToStudioDetails,
                         )
+
                     ProfileInfoType.SOCIAL ->
                         UserSocialView(
                             userId = viewModel.userId,

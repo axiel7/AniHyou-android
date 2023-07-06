@@ -162,26 +162,26 @@ fun MediaDetailsView(
     Scaffold(
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
-             TopAppBar(
-                 title = {},
-                 navigationIcon = {
-                     BackIconButton(onClick = navigateBack)
-                 },
-                 actions = {
-                     FavoriteIconButton(
-                         isFavorite = viewModel.mediaDetails?.isFavourite ?: false,
-                         onClick = {
-                             scope.launch { viewModel.toggleFavorite() }
-                         }
-                     )
-                     ShareIconButton(url = viewModel.mediaDetails?.siteUrl ?: "")
-                 },
-                 colors = TopAppBarDefaults.topAppBarColors(
-                     containerColor = Color.Transparent,
-                     scrolledContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
-                 ),
-                 scrollBehavior = topAppBarScrollBehavior
-             )
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    BackIconButton(onClick = navigateBack)
+                },
+                actions = {
+                    FavoriteIconButton(
+                        isFavorite = viewModel.mediaDetails?.isFavourite ?: false,
+                        onClick = {
+                            scope.launch { viewModel.toggleFavorite() }
+                        }
+                    )
+                    ShareIconButton(url = viewModel.mediaDetails?.siteUrl ?: "")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+                ),
+                scrollBehavior = topAppBarScrollBehavior
+            )
         },
         floatingActionButton = {
             if (accessTokenPreference != null) {
@@ -261,7 +261,8 @@ fun MediaDetailsView(
                             .defaultPlaceholder(visible = viewModel.isLoading)
                     )
                     TextIconHorizontal(
-                        text = viewModel.mediaDetails?.basicMediaDetails?.durationText() ?: UNKNOWN_CHAR,
+                        text = viewModel.mediaDetails?.basicMediaDetails?.durationText()
+                            ?: UNKNOWN_CHAR,
                         icon = R.drawable.timer_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
@@ -286,7 +287,8 @@ fun MediaDetailsView(
                 val dividerHeight = 36
                 viewModel.mediaDetails?.nextAiringEpisode?.let { nextAiringEpisode ->
                     TextSubtitleVertical(
-                        text = stringResource(R.string.episode_in_time,
+                        text = stringResource(
+                            R.string.episode_in_time,
                             nextAiringEpisode.episode,
                             nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
                         ),
@@ -344,7 +346,7 @@ fun MediaDetailsView(
                             append(stringResource(R.string.lorem_ipsun))
                         else
                             append(stringResource(R.string.no_description))
-                },
+                    },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .defaultPlaceholder(visible = viewModel.isLoading),
@@ -372,8 +374,7 @@ fun MediaDetailsView(
                             contentDescription = "translate"
                         )
                     }
-                }
-                else Spacer(modifier = Modifier.size(48.dp))
+                } else Spacer(modifier = Modifier.size(48.dp))
 
                 IconButton(
                     onClick = {
@@ -390,7 +391,10 @@ fun MediaDetailsView(
                         }
                     }
                 ) {
-                    Icon(painter = painterResource(R.drawable.content_copy_24), contentDescription = "copy")
+                    Icon(
+                        painter = painterResource(R.drawable.content_copy_24),
+                        contentDescription = "copy"
+                    )
                 }
             }//: Row
 
@@ -403,7 +407,11 @@ fun MediaDetailsView(
                 viewModel.mediaDetails?.genres?.forEach {
                     AssistChip(
                         onClick = {
-                            navigateToExplore(viewModel.mediaDetails?.basicMediaDetails?.type, it, null)
+                            navigateToExplore(
+                                viewModel.mediaDetails?.basicMediaDetails?.type,
+                                it,
+                                null
+                            )
                         },
                         label = { Text(text = it ?: "") },
                         modifier = Modifier.padding(start = 8.dp)
@@ -449,6 +457,7 @@ fun MediaDetailsView(
                     DetailsType.STATS -> MediaStatsView(
                         viewModel = viewModel
                     )
+
                     DetailsType.REVIEWS -> ReviewThreadListView(
                         viewModel = viewModel,
                         navigateToReviewDetails = navigateToReviewDetails,

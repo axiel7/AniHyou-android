@@ -81,9 +81,18 @@ fun SettingsView(
         rememberTopAppBarState()
     )
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
-    var useGeneralListStylePreference by rememberPreference(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY, App.useGeneralListStyle)
-    var generalListStylePreference by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
-    var itemsPerRowPreference by rememberPreference(GRID_ITEMS_PER_ROW_PREFERENCE_KEY, App.gridItemsPerRow)
+    var useGeneralListStylePreference by rememberPreference(
+        USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
+        App.useGeneralListStyle
+    )
+    var generalListStylePreference by rememberPreference(
+        GENERAL_LIST_STYLE_PREFERENCE_KEY,
+        App.generalListStyle.name
+    )
+    var itemsPerRowPreference by rememberPreference(
+        GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
+        App.gridItemsPerRow
+    )
     var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
 
     LaunchedEffect(viewModel) {
@@ -154,7 +163,7 @@ fun SettingsView(
 
             if (generalListStylePreference == ListStyle.GRID.name
                 || useGeneralListStylePreference == false
-                ) {
+            ) {
                 ListPreference(
                     title = stringResource(R.string.items_per_row),
                     entriesValues = itemsPerRowEntries,

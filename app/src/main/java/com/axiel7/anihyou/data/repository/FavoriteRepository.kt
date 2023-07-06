@@ -57,12 +57,14 @@ object FavoriteRepository {
         else {
             val anime = response?.data?.User?.favourites?.anime?.nodes?.filterNotNull()
             val pageInfo = response?.data?.User?.favourites?.anime?.pageInfo
-            if (anime != null) emit(PagedResult.Success(
-                data = anime,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (anime != null) emit(
+                PagedResult.Success(
+                    data = anime,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -85,12 +87,14 @@ object FavoriteRepository {
         else {
             val manga = response?.data?.User?.favourites?.manga?.nodes?.filterNotNull()
             val pageInfo = response?.data?.User?.favourites?.manga?.pageInfo
-            if (manga != null) emit(PagedResult.Success(
-                data = manga,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (manga != null) emit(
+                PagedResult.Success(
+                    data = manga,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -113,12 +117,14 @@ object FavoriteRepository {
         else {
             val characters = response?.data?.User?.favourites?.characters?.nodes?.filterNotNull()
             val pageInfo = response?.data?.User?.favourites?.characters?.pageInfo
-            if (characters != null) emit(PagedResult.Success(
-                data = characters,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (characters != null) emit(
+                PagedResult.Success(
+                    data = characters,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -141,12 +147,14 @@ object FavoriteRepository {
         else {
             val staff = response?.data?.User?.favourites?.staff?.nodes?.filterNotNull()
             val pageInfo = response?.data?.User?.favourites?.staff?.pageInfo
-            if (staff != null) emit(PagedResult.Success(
-                data = staff,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (staff != null) emit(
+                PagedResult.Success(
+                    data = staff,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }
@@ -169,12 +177,14 @@ object FavoriteRepository {
         else {
             val studios = response?.data?.User?.favourites?.studios?.nodes?.filterNotNull()
             val pageInfo = response?.data?.User?.favourites?.studios?.pageInfo
-            if (studios != null) emit(PagedResult.Success(
-                data = studios,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (studios != null) emit(
+                PagedResult.Success(
+                    data = studios,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

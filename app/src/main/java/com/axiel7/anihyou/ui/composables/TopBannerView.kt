@@ -54,13 +54,14 @@ fun TopBannerView(
             )
         }
         //top shadow
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(banner_shadow_color, MaterialTheme.colorScheme.surface)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(banner_shadow_color, MaterialTheme.colorScheme.surface)
+                    )
                 )
-            )
         )
     }
 }

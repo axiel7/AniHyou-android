@@ -14,9 +14,10 @@ val cacheFactory = MemoryCacheFactory(maxSizeBytes = 10 * 1024 * 1024)
 
 val apolloClient = ApolloClient.Builder()
     .serverUrl(ANILIST_GRAPHQL_URL)
-    .okHttpClient(OkHttpClient.Builder()
-        .addInterceptor(AuthorizationInterceptor())
-        .build()
+    .okHttpClient(
+        OkHttpClient.Builder()
+            .addInterceptor(AuthorizationInterceptor())
+            .build()
     )
     .normalizedCache(cacheFactory)
     .build()

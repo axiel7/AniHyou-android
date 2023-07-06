@@ -64,8 +64,7 @@ object StaffRepository {
                         else null
                     )
                 )
-            }
-            else emit(PagedResult.Error(message = "Error"))
+            } else emit(PagedResult.Error(message = "Error"))
         }
     }
 
@@ -87,12 +86,14 @@ object StaffRepository {
         else {
             val characters = response?.data?.Staff?.characterMedia?.edges?.filterNotNull()
             val pageInfo = response?.data?.Staff?.characterMedia?.pageInfo
-            if (characters != null) emit(PagedResult.Success(
-                data = characters,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (characters != null) emit(
+                PagedResult.Success(
+                    data = characters,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

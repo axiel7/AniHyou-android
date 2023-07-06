@@ -8,12 +8,12 @@ abstract class Stat<T> {
     abstract val value: Float
 }
 
-data class StatLocalizableAndColorable<T: LocalizableAndColorable>(
+data class StatLocalizableAndColorable<T : LocalizableAndColorable>(
     override val type: T,
     override val value: Float,
 ) : Stat<T>()
 
-data class StatColorable<T: Colorable>(
+data class StatColorable<T : Colorable>(
     override val type: T,
     override val value: Float,
 ) : Stat<T>()

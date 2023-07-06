@@ -18,7 +18,7 @@ class UserSocialViewModel(
 ) : BaseViewModel() {
 
     var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
-    private set
+        private set
 
     fun onUserSocialTypeChanged(value: UserSocialType) {
         userSocialType = value
@@ -45,8 +45,7 @@ class UserSocialViewModel(
                 followers.addAll(result.data)
                 hasNextPageFollowers = result.nextPage != null
                 pageFollowers = result.nextPage ?: pageFollowers
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -67,8 +66,7 @@ class UserSocialViewModel(
                 following.addAll(result.data)
                 hasNextPageFollowing = result.nextPage != null
                 pageFollowing = result.nextPage ?: pageFollowing
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

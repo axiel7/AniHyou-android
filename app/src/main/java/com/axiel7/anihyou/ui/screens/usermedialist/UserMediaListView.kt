@@ -263,12 +263,21 @@ fun UserMediaListView(
         refreshing = isLoading,
         onRefresh = onRefresh
     )
-    val useGeneralListStyle by rememberPreference(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY, App.useGeneralListStyle)
-    val generalListStyle by rememberPreference(GENERAL_LIST_STYLE_PREFERENCE_KEY, App.generalListStyle.name)
+    val useGeneralListStyle by rememberPreference(
+        USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
+        App.useGeneralListStyle
+    )
+    val generalListStyle by rememberPreference(
+        GENERAL_LIST_STYLE_PREFERENCE_KEY,
+        App.generalListStyle.name
+    )
     val listStyle = if (useGeneralListStyle == true) generalListStyle
     else ListType(status, mediaType).styleGlobalAppVariable.name
 
-    val scoreFormatPreference by rememberPreference(SCORE_FORMAT_PREFERENCE_KEY, App.scoreFormat.name)
+    val scoreFormatPreference by rememberPreference(
+        SCORE_FORMAT_PREFERENCE_KEY,
+        App.scoreFormat.name
+    )
     val scoreFormat by remember {
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
     }
@@ -283,7 +292,10 @@ fun UserMediaListView(
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
         if (listStyle == ListStyle.GRID.name) {
-            val itemsPerRow by rememberPreference(GRID_ITEMS_PER_ROW_PREFERENCE_KEY, App.gridItemsPerRow)
+            val itemsPerRow by rememberPreference(
+                GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
+                App.gridItemsPerRow
+            )
             val listState = rememberLazyGridState()
             listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 

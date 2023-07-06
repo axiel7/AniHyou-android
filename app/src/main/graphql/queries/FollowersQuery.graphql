@@ -1,19 +1,19 @@
 query Followers($userId: Int!, $page: Int, $perPage: Int) {
-  Page(page: $page, perPage: $perPage) {
-    followers(userId: $userId) {
-      ...UserFollow
+    Page(page: $page, perPage: $perPage) {
+        followers(userId: $userId) {
+            ...UserFollow
+        }
+        pageInfo {
+            currentPage
+            hasNextPage
+        }
     }
-    pageInfo {
-      currentPage
-      hasNextPage
-    }
-  }
 }
 
 fragment UserFollow on User {
-  id
-  name
-  avatar {
-    large
-  }
+    id
+    name
+    avatar {
+        large
+    }
 }

@@ -47,7 +47,8 @@ fun UserActivityView(
                 ActivityItem(
                     title = activity.text(),
                     imageUrl = activity.media?.coverImage?.medium,
-                    subtitle = activity.createdAt.toLong().timestampIntervalSinceNow().secondsToLegibleText(),
+                    subtitle = activity.createdAt.toLong().timestampIntervalSinceNow()
+                        .secondsToLegibleText(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),

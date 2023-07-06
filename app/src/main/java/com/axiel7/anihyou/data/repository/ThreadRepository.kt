@@ -43,12 +43,14 @@ object ThreadRepository {
         else {
             val comments = response?.data?.Page?.threadComments?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (comments != null) emit(PagedResult.Success(
-                data = comments,
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (comments != null) emit(
+                PagedResult.Success(
+                    data = comments,
+                    nextPage = if (pageInfo?.hasNextPage == true)
+                        pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

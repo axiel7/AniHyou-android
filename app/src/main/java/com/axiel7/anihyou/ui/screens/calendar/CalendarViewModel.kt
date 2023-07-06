@@ -20,7 +20,7 @@ class CalendarViewModel : BaseViewModel() {
     val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
     var onMyList = false
 
-    suspend fun getAiringAnime(weekday: Int) = viewModelScope.launch {
+    fun getAiringAnime(weekday: Int) = viewModelScope.launch(dispatcher) {
         val weekdayStartTimestamp = now.thisWeekdayTimestamp(
             dayOfWeek = DayOfWeek.of(weekday),
             isEndOfDay = false

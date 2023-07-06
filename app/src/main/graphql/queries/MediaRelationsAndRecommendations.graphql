@@ -1,42 +1,42 @@
 query MediaRelationsAndRecommendations($mediaId: Int) {
-  Media(id: $mediaId) {
-    relations {
-      edges {
-        ...MediaRelated
-      }
+    Media(id: $mediaId) {
+        relations {
+            edges {
+                ...MediaRelated
+            }
+        }
+        recommendations(page: 1, sort: RATING_DESC) {
+            nodes {
+                ...MediaRecommended
+            }
+        }
     }
-    recommendations(page: 1, sort: RATING_DESC) {
-      nodes {
-        ...MediaRecommended
-      }
-    }
-  }
 }
 
 fragment MediaRelated on MediaEdge {
-  relationType
-  node {
-    id
-    title {
-      userPreferred
+    relationType
+    node {
+        id
+        title {
+            userPreferred
+        }
+        format
+        coverImage {
+            large
+        }
     }
-    format
-    coverImage {
-      large
-    }
-  }
 }
 
 fragment MediaRecommended on Recommendation {
-  rating
-  mediaRecommendation {
-    id
-    title {
-      userPreferred
+    rating
+    mediaRecommendation {
+        id
+        title {
+            userPreferred
+        }
+        format
+        coverImage {
+            large
+        }
     }
-    format
-    coverImage {
-      large
-    }
-  }
 }

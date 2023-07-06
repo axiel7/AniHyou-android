@@ -7,21 +7,27 @@ import com.axiel7.anihyou.data.model.base.Localizable
 
 enum class SearchType : Localizable {
     ANIME {
-        @Composable override fun localized() = stringResource(R.string.anime)
+        @Composable
+        override fun localized() = stringResource(R.string.anime)
     },
     MANGA {
-        @Composable override fun localized() = stringResource(R.string.manga)
+        @Composable
+        override fun localized() = stringResource(R.string.manga)
     },
     CHARACTER {
-        @Composable override fun localized() = stringResource(R.string.characters)
+        @Composable
+        override fun localized() = stringResource(R.string.characters)
     },
     STAFF {
-        @Composable override fun localized() = stringResource(R.string.staff)
+        @Composable
+        override fun localized() = stringResource(R.string.staff)
     },
     STUDIO {
-        @Composable override fun localized() = stringResource(R.string.studios)
+        @Composable
+        override fun localized() = stringResource(R.string.studios)
     },
     USER {
-        @Composable override fun localized() = stringResource(R.string.users)
+        @Composable
+        override fun localized() = stringResource(R.string.users)
     },
 }

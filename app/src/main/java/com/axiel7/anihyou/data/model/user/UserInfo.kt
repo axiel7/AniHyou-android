@@ -15,4 +15,4 @@ fun UserInfo.hexColor() =
         "green" -> "#4DCA51"
         "gray" -> "#677B94"
         else -> "#3DB4F2"
-}
+    }

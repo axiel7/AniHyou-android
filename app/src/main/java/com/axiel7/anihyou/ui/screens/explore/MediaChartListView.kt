@@ -77,7 +77,7 @@ fun MediaChartListView(
                     imageUrl = item.coverImage?.large,
                     badgeContent = {
                         Text(
-                            text = "#${index+1}",
+                            text = "#${index + 1}",
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     },

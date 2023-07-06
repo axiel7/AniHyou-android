@@ -21,7 +21,7 @@ class UserFavoritesViewModel(
 ) : BaseViewModel() {
 
     var favoritesType by mutableStateOf(FavoritesType.ANIME)
-    private set
+        private set
 
     fun onFavoriteTypeChanged(value: FavoritesType) {
         favoritesType = value
@@ -51,8 +51,7 @@ class UserFavoritesViewModel(
                 anime.addAll(result.data)
                 hasNextPageAnime = result.nextPage != null
                 pageAnime = result.nextPage ?: pageAnime
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -73,8 +72,7 @@ class UserFavoritesViewModel(
                 manga.addAll(result.data)
                 hasNextPageManga = result.nextPage != null
                 pageManga = result.nextPage ?: pageManga
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -95,8 +93,7 @@ class UserFavoritesViewModel(
                 characters.addAll(result.data)
                 hasNextPageCharacter = result.nextPage != null
                 pageCharacter = result.nextPage ?: pageCharacter
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -117,8 +114,7 @@ class UserFavoritesViewModel(
                 staff.addAll(result.data)
                 hasNextPageStaff = result.nextPage != null
                 pageStaff = result.nextPage ?: pageStaff
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -139,8 +135,7 @@ class UserFavoritesViewModel(
                 studios.addAll(result.data)
                 hasNextPageStudio = result.nextPage != null
                 pageStudio = result.nextPage ?: pageStudio
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

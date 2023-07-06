@@ -86,8 +86,7 @@ class MainActivity : ComponentActivity() {
                 type = DeepLink.Type.ANIME,
                 id = intent.getIntExtra("media_id", 0).toString()
             )
-        }
-        else if (intent.data != null) {
+        } else if (intent.data != null) {
             parseLoginIntentData(intent.data)
             // Manually handle deep links because the uri pattern in the compose navigation
             // matches this -> https://anilist.co/manga/41514/
@@ -239,6 +238,7 @@ fun BottomNavBar(
             when {
                 BottomDestination.values.map { it.route }
                     .contains(navBackStackEntry?.destination?.route) -> true
+
                 navBackStackEntry?.destination?.route == null -> true
                 else -> false
             }

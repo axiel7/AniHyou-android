@@ -1,22 +1,22 @@
 query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType, $status: MediaStatus) {
-  Page(page: $page, perPage: $perPage) {
-    media(sort: $sort, type: $type, status: $status) {
-      id
-      title {
-        userPreferred
-      }
-      format
-      startDate {
-        year
-      }
-      coverImage {
-        large
-      }
-      meanScore
+    Page(page: $page, perPage: $perPage) {
+        media(sort: $sort, type: $type, status: $status) {
+            id
+            title {
+                userPreferred
+            }
+            format
+            startDate {
+                year
+            }
+            coverImage {
+                large
+            }
+            meanScore
+        }
+        pageInfo {
+            hasNextPage
+            currentPage
+        }
     }
-    pageInfo {
-      hasNextPage
-      currentPage
-    }
-  }
 }

@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.PagedResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 abstract class BaseViewModel : ViewModel() {
+    protected val dispatcher = Dispatchers.IO
+
     var isLoading by mutableStateOf(false)
     var message by mutableStateOf<String?>(null)
 

@@ -13,8 +13,12 @@ object NumberUtils {
 
     private val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
 
-    private val defaultDecimalFormat @RequiresApi(Build.VERSION_CODES.N)
-    get() = CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT)
+    private val defaultDecimalFormat
+        @RequiresApi(Build.VERSION_CODES.N)
+        get() = CompactDecimalFormat.getInstance(
+            Locale.getDefault(),
+            CompactDecimalFormat.CompactStyle.SHORT
+        )
 
     private val decimalFormatSymbols = DecimalFormatSymbols.getInstance()
     private val thousandsSeparator = decimalFormatSymbols.groupingSeparator
@@ -50,7 +54,8 @@ object NumberUtils {
      * Returns a string representation of the Integer.
      * If the Integer is `<= 0` or `null` returns `"─"`.
      */
-    fun Int?.toStringPositiveValueOrUnknown() = if (this == 0) UNKNOWN_CHAR else this.toStringOrUnknown()
+    fun Int?.toStringPositiveValueOrUnknown() =
+        if (this == 0) UNKNOWN_CHAR else this.toStringOrUnknown()
 
     fun Float?.toStringOrZero() = this?.toString() ?: "0.0"
 
@@ -60,7 +65,8 @@ object NumberUtils {
      * Returns a string representation of the Float.
      * If the Float is `<= 0` or `null` returns `"─"`.
      */
-    fun Float?.toStringPositiveValueOrUnknown() = if (this == 0f) UNKNOWN_CHAR else this.toStringOrUnknown()
+    fun Float?.toStringPositiveValueOrUnknown() =
+        if (this == 0f) UNKNOWN_CHAR else this.toStringOrUnknown()
 
     fun String.formatToDecimal(): String {
         if (matches("\\D".toRegex())) return ""

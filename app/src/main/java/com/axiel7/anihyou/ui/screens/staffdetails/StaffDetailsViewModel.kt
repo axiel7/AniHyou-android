@@ -27,8 +27,7 @@ class StaffDetailsViewModel(
 
             if (result is DataResult.Success) {
                 staffDetails = result.data
-            }
-            else if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 message = result.message
             }
         }
@@ -63,8 +62,7 @@ class StaffDetailsViewModel(
                 staffMedia.addAll(result.data)
                 hasNextPageMedia = result.nextPage != null
                 pageMedia = result.nextPage ?: pageMedia
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }
@@ -92,8 +90,7 @@ class StaffDetailsViewModel(
                 staffCharacters.addAll(result.data)
                 hasNextPageCharacter = result.nextPage != null
                 pageCharacter = result.nextPage ?: pageCharacter
-            }
-            else if (result is PagedResult.Error) {
+            } else if (result is PagedResult.Error) {
                 message = result.message
             }
         }

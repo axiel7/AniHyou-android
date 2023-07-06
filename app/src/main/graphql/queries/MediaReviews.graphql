@@ -1,19 +1,19 @@
 query MediaReviews($mediaId: Int, $page: Int, $perPage: Int) {
-  Media(id: $mediaId) {
-    reviews(page: $page, perPage: $perPage, sort: RATING_DESC) {
-      nodes {
-        id
-        summary
-        score
-        rating
-        user {
-          name
+    Media(id: $mediaId) {
+        reviews(page: $page, perPage: $perPage, sort: RATING_DESC) {
+            nodes {
+                id
+                summary
+                score
+                rating
+                user {
+                    name
+                }
+            }
+            pageInfo {
+                currentPage
+                hasNextPage
+            }
         }
-      }
-      pageInfo {
-        currentPage
-        hasNextPage
-      }
     }
-  }
 }

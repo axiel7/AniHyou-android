@@ -1,32 +1,32 @@
 query UserActivity($page: Int, $perPage: Int, $userId: Int, $sort: [ActivitySort]) {
-  Page(page: $page, perPage: $perPage) {
-    activities(userId: $userId, sort: $sort) {
-      ... on TextActivity {
-        id
-        type
-        text
-        createdAt
-      }
-      ... on ListActivity {
-        id
-        type
-        status
-        progress
-        createdAt
-        media {
-          id
-          title {
-            userPreferred
-          }
-          coverImage {
-            medium
-          }
+    Page(page: $page, perPage: $perPage) {
+        activities(userId: $userId, sort: $sort) {
+            ... on TextActivity {
+                id
+                type
+                text
+                createdAt
+            }
+            ... on ListActivity {
+                id
+                type
+                status
+                progress
+                createdAt
+                media {
+                    id
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        medium
+                    }
+                }
+            }
         }
-      }
+        pageInfo {
+            currentPage
+            hasNextPage
+        }
     }
-    pageInfo {
-      currentPage
-      hasNextPage
-    }
-  }
 }

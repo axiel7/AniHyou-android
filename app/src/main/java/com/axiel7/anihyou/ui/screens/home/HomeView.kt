@@ -132,21 +132,25 @@ fun HomeView(
                         navigateToCalendar = navigateToCalendar,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
+
                     HomeInfo.THIS_SEASON -> HomeThisSeasonContent(
                         viewModel = viewModel,
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
+
                     HomeInfo.TRENDING_ANIME -> HomeTrendingAnimeContent(
                         viewModel = viewModel,
                         navigateToExplore = navigateToExplore,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
+
                     HomeInfo.NEXT_SEASON -> HomeNextSeasonContent(
                         viewModel = viewModel,
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
+
                     HomeInfo.TRENDING_MANGA -> HomeTrendingMangaContent(
                         viewModel = viewModel,
                         navigateToExplore = navigateToExplore,
@@ -181,6 +185,7 @@ fun HomeAiringContent(
                         AiringAnimeHorizontalItemPlaceholder()
                     }
                 }
+
                 is PagedResult.Success -> {
                     items(
                         items = (airingAnime as PagedResult.Success).data,
@@ -201,6 +206,7 @@ fun HomeAiringContent(
                         )
                     }
                 }
+
                 is PagedResult.Error -> {
                     item {
                         Text(text = (airingAnime as PagedResult.Error).message)
@@ -208,8 +214,7 @@ fun HomeAiringContent(
                 }
             }
         }//:LazyRow
-    }
-    else if (airingOnMyList == false) {
+    } else if (airingOnMyList == false) {
         val airingAnimeState by viewModel.airingAnime.collectAsState()
         HomeLazyRow(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
@@ -220,6 +225,7 @@ fun HomeAiringContent(
                         AiringAnimeHorizontalItemPlaceholder()
                     }
                 }
+
                 is PagedResult.Success -> {
                     items(
                         items = (airingAnimeState as PagedResult.Success).data,
@@ -227,8 +233,10 @@ fun HomeAiringContent(
                     ) { item ->
                         AiringAnimeHorizontalItem(
                             title = item.media?.title?.userPreferred ?: "",
-                            subtitle = stringResource(R.string.airing_in,
-                                item.timeUntilAiring.toLong().secondsToLegibleText()),
+                            subtitle = stringResource(
+                                R.string.airing_in,
+                                item.timeUntilAiring.toLong().secondsToLegibleText()
+                            ),
                             imageUrl = item.media?.coverImage?.large,
                             score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
                             onClick = {
@@ -237,6 +245,7 @@ fun HomeAiringContent(
                         )
                     }
                 }
+
                 is PagedResult.Error -> {
                     item {
                         Text(text = (airingAnimeState as PagedResult.Error).message)
@@ -271,6 +280,7 @@ fun HomeThisSeasonContent(
                     )
                 }
             }
+
             is PagedResult.Success -> {
                 items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
@@ -287,6 +297,7 @@ fun HomeThisSeasonContent(
                     )
                 }
             }
+
             is PagedResult.Error -> {
                 item {
                     Text(text = (seasonAnime as PagedResult.Error).message)
@@ -320,6 +331,7 @@ fun HomeTrendingAnimeContent(
                     )
                 }
             }
+
             is PagedResult.Success -> {
                 items((trendingAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
@@ -336,6 +348,7 @@ fun HomeTrendingAnimeContent(
                     )
                 }
             }
+
             is PagedResult.Error -> {
                 item {
                     Text(text = (trendingAnime as PagedResult.Error).message)
@@ -369,6 +382,7 @@ fun HomeNextSeasonContent(
                     )
                 }
             }
+
             is PagedResult.Success -> {
                 items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
@@ -385,6 +399,7 @@ fun HomeNextSeasonContent(
                     )
                 }
             }
+
             is PagedResult.Error -> {
                 item {
                     Text(text = (seasonAnime as PagedResult.Error).message)
@@ -418,6 +433,7 @@ fun HomeTrendingMangaContent(
                     )
                 }
             }
+
             is PagedResult.Success -> {
                 items((trendingManga as PagedResult.Success).data) { item ->
                     MediaItemVertical(
@@ -434,6 +450,7 @@ fun HomeTrendingMangaContent(
                     )
                 }
             }
+
             is PagedResult.Error -> {
                 item {
                     Text(text = (trendingManga as PagedResult.Error).message)

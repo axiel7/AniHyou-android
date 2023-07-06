@@ -41,12 +41,14 @@ object CharacterRepository {
         if (error != null) emit(PagedResult.Error(message = error))
         else {
             val mediaPage = response?.data?.Character?.media
-            if (mediaPage != null) emit(PagedResult.Success(
-                data = mediaPage.edges?.filterNotNull().orEmpty(),
-                nextPage = if (mediaPage.pageInfo?.hasNextPage == true)
-                    mediaPage.pageInfo.currentPage?.plus(1)
-                else null
-            ))
+            if (mediaPage != null) emit(
+                PagedResult.Success(
+                    data = mediaPage.edges?.filterNotNull().orEmpty(),
+                    nextPage = if (mediaPage.pageInfo?.hasNextPage == true)
+                        mediaPage.pageInfo.currentPage?.plus(1)
+                    else null
+                )
+            )
             else emit(PagedResult.Error(message = "Error"))
         }
     }

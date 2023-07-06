@@ -30,16 +30,19 @@ class HomeViewModel : BaseViewModel() {
         airingAtGreater = System.currentTimeMillis() / 1000
     ).pagedResultStateInViewModel()
 
-    val airingAnimeOnMyList = MediaRepository.getAiringAnimeOnMyListPage().pagedResultStateInViewModel()
+    val airingAnimeOnMyList =
+        MediaRepository.getAiringAnimeOnMyListPage().pagedResultStateInViewModel()
 
-    val thisSeasonAnime = MediaRepository.getSeasonalAnimePage(nowAnimeSeason).pagedResultStateInViewModel()
+    val thisSeasonAnime =
+        MediaRepository.getSeasonalAnimePage(nowAnimeSeason).pagedResultStateInViewModel()
 
     val trendingAnime = MediaRepository.getMediaSortedPage(
         mediaType = MediaType.ANIME,
         sort = listOf(MediaSort.TRENDING_DESC)
     ).pagedResultStateInViewModel()
 
-    val nextSeasonAnime = MediaRepository.getSeasonalAnimePage(nextAnimeSeason).pagedResultStateInViewModel()
+    val nextSeasonAnime =
+        MediaRepository.getSeasonalAnimePage(nextAnimeSeason).pagedResultStateInViewModel()
 
     val trendingManga = MediaRepository.getMediaSortedPage(
         mediaType = MediaType.MANGA,
