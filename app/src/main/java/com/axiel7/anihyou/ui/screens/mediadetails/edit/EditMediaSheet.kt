@@ -71,7 +71,6 @@ import com.axiel7.anihyou.ui.composables.scores.SliderRatingView
 import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
-import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.utils.StringUtils.toStringOrEmpty

@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
-import kotlin.math.roundToLong
 
 @Composable
 fun SliderRatingView(

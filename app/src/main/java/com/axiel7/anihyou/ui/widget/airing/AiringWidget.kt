@@ -20,13 +20,13 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.axiel7.anihyou.ui.screens.MainActivity
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.ui.screens.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.stringResource
 import com.axiel7.anihyou.utils.DateUtils.secondsToLocalDateTime
