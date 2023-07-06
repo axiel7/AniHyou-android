@@ -18,7 +18,7 @@ class SettingsViewModel : BaseViewModel() {
         displayAdultContent = value
     }
 
-    suspend fun getUserOptions() = viewModelScope.launch {
+    fun getUserOptions() = viewModelScope.launch(dispatcher) {
         UserRepository.getUserOptions().collect { result ->
             isLoading = result is DataResult.Loading
 
@@ -30,7 +30,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    suspend fun updateUser() = viewModelScope.launch {
+    fun updateUser() = viewModelScope.launch(dispatcher) {
         UserRepository.updateUser(
             displayAdultContent = displayAdultContent
         ).collect { result ->

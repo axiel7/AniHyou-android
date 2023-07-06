@@ -66,7 +66,9 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 import kotlinx.coroutines.launch
 
-const val SEASON_ANIME_DESTINATION = "season/{year}/{season}"
+const val YEAR_ARGUMENT = "{year}"
+const val SEASON_ARGUMENT = "{season}"
+const val SEASON_ANIME_DESTINATION = "season/$YEAR_ARGUMENT/$SEASON_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

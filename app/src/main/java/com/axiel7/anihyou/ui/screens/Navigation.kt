@@ -31,38 +31,56 @@ import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
+import com.axiel7.anihyou.ui.composables.URL_ARGUMENT
 import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
+import com.axiel7.anihyou.ui.screens.explore.CHART_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.EXPLORE_GENRE_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
+import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_CHART_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MediaChartListView
 import com.axiel7.anihyou.ui.screens.explore.SEASON_ANIME_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.SeasonAnimeView
+import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
 import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
+import com.axiel7.anihyou.ui.screens.profile.USER_NAME_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.ui.screens.settings.LIST_STYLE_SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
 import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.ui.screens.studiodetails.STUDIO_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.studiodetails.STUDIO_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.screens.thread.THREAD_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.thread.THREAD_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import com.axiel7.anihyou.utils.UTF_8
 import java.net.URLEncoder
 
 @Composable
@@ -84,15 +102,15 @@ fun MainNavigation(
                 DeepLink.Type.ANIME, DeepLink.Type.MANGA -> {
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", deepLink.id)
+                            .replace(MEDIA_ID_ARGUMENT, deepLink.id)
                     )
                 }
 
                 DeepLink.Type.USER -> {
                     val userId = deepLink.id.toIntOrNull()
                     var dest = USER_DETAILS_DESTINATION
-                    dest = if (userId != null) dest.replace("{id}", userId.toString())
-                    else dest.replace("{name}", deepLink.id)
+                    dest = if (userId != null) dest.replace(USER_ID_ARGUMENT, userId.toString())
+                    else dest.replace(USER_NAME_ARGUMENT, deepLink.id)
                     navController.navigate(dest)
                 }
 
@@ -130,14 +148,14 @@ fun MainNavigation(
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToAnimeSeason = { animeSeason ->
                     navController.navigate(
                         SEASON_ANIME_DESTINATION
-                            .replace("{year}", animeSeason.year.toString())
-                            .replace("{season}", animeSeason.season.name)
+                            .replace(YEAR_ARGUMENT, animeSeason.year.toString())
+                            .replace(SEASON_ARGUMENT, animeSeason.season.name)
                     )
                 },
                 navigateToCalendar = {
@@ -146,8 +164,8 @@ fun MainNavigation(
                 navigateToExplore = { mediaType, mediaSort ->
                     navController.navigate(
                         EXPLORE_GENRE_DESTINATION
-                            .replace("{mediaType}", mediaType.rawValue)
-                            .replace("{mediaSort}", mediaSort.rawValue)
+                            .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                            .replace(MEDIA_SORT_ARGUMENT, mediaSort.rawValue)
                     )
                 },
                 navigateToNotifications = {
@@ -168,7 +186,7 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     }
                 )
@@ -187,7 +205,7 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     }
                 )
@@ -206,40 +224,40 @@ fun MainNavigation(
                         navController.navigate(SETTINGS_DESTINATION)
                     },
                     navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        val encodedUrl = URLEncoder.encode(url, UTF_8)
                         navController.navigate(
                             FULLSCREEN_IMAGE_DESTINATION
-                                .replace("{url}", encodedUrl)
+                                .replace(URL_ARGUMENT, encodedUrl)
                         )
                     },
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate(
                             CHARACTER_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(CHARACTER_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToStaffDetails = { id ->
                         navController.navigate(
                             STAFF_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(STAFF_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToStudioDetails = { id ->
                         navController.navigate(
                             STUDIO_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(STUDIO_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToUserDetails = { id ->
                         navController.navigate(
                             USER_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(USER_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToUserMediaList = null
@@ -256,44 +274,44 @@ fun MainNavigation(
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToUserDetails = { id ->
                     navController.navigate(
                         USER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(USER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToCharacterDetails = { id ->
                     navController.navigate(
                         CHARACTER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStaffDetails = { id ->
                     navController.navigate(
                         STAFF_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STAFF_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStudioDetails = { id ->
                     navController.navigate(
                         STUDIO_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STUDIO_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToMediaChart = { type ->
                     navController.navigate(
                         MEDIA_CHART_DESTINATION
-                            .replace("{type}", type.name)
+                            .replace(CHART_TYPE_ARGUMENT, type.name)
                     )
                 },
                 navigateToAnimeSeason = { year, season ->
                     navController.navigate(
                         SEASON_ANIME_DESTINATION
-                            .replace("{year}", year.toString())
-                            .replace("{season}", season)
+                            .replace(YEAR_ARGUMENT, year.toString())
+                            .replace(SEASON_ARGUMENT, season)
                     )
                 },
                 navigateToCalendar = {
@@ -305,16 +323,18 @@ fun MainNavigation(
         composable(
             EXPLORE_GENRE_DESTINATION,
             arguments = listOf(
-                navArgument("mediaType") { type = NavType.StringType },
-                navArgument("mediaSort") {
+                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                },
+                navArgument(MEDIA_SORT_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument("genre") {
+                navArgument(GENRE_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument("tag") {
+                navArgument(TAG_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 }
@@ -322,56 +342,56 @@ fun MainNavigation(
         ) { navEntry ->
             ExploreView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                initialMediaType = navEntry.arguments?.getString("mediaType")
+                initialMediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
                     ?.let { MediaType.safeValueOf(it) },
-                initialMediaSort = navEntry.arguments?.getString("mediaSort")
+                initialMediaSort = navEntry.arguments?.getString(MEDIA_SORT_ARGUMENT.removeFirstAndLast())
                     ?.let { MediaSort.valueOf(it) },
-                initialGenre = navEntry.arguments?.getString("genre"),
-                initialTag = navEntry.arguments?.getString("tag"),
+                initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
+                initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
                 navigateBack = {
                     navController.popBackStack()
                 },
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToUserDetails = { id ->
                     navController.navigate(
                         USER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(USER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToCharacterDetails = { id ->
                     navController.navigate(
                         CHARACTER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStaffDetails = { id ->
                     navController.navigate(
                         STAFF_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STAFF_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStudioDetails = { id ->
                     navController.navigate(
                         STUDIO_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STUDIO_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToMediaChart = { type ->
                     navController.navigate(
                         MEDIA_CHART_DESTINATION
-                            .replace("{type}", type.name)
+                            .replace(MEDIA_TYPE_ARGUMENT, type.name)
                     )
                 },
                 navigateToAnimeSeason = { year, season ->
                     navController.navigate(
                         SEASON_ANIME_DESTINATION
-                            .replace("{year}", year.toString())
-                            .replace("{season}", season)
+                            .replace(YEAR_ARGUMENT, year.toString())
+                            .replace(SEASON_ARGUMENT, season)
                     )
                 },
                 navigateToCalendar = {
@@ -383,19 +403,19 @@ fun MainNavigation(
         composable(
             USER_MEDIA_LIST_DESTINATION,
             arguments = listOf(
-                navArgument("mediaType") { type = NavType.StringType },
-                navArgument("userId") { type = NavType.IntType }
+                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
+                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
             UserMediaListHostView(
-                mediaType = navEntry.arguments?.getString("mediaType")
+                mediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
                     ?.let { MediaType.safeValueOf(it) }!!,
                 modifier = Modifier.padding(bottom = bottomPadding),
-                userId = navEntry.arguments?.getInt("userId"),
+                userId = navEntry.arguments?.getInt(USER_ID_ARGUMENT.removeFirstAndLast()),
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateBack = {
@@ -409,13 +429,13 @@ fun MainNavigation(
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToUserDetails = { id ->
                     navController.navigate(
                         USER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(USER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateBack = {
@@ -427,56 +447,56 @@ fun MainNavigation(
         composable(
             MEDIA_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("media_id") { type = NavType.IntType }
+                navArgument(MEDIA_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             ),
         ) { navEntry ->
             MediaDetailsView(
-                mediaId = navEntry.arguments?.getInt("media_id") ?: 0,
+                mediaId = navEntry.arguments?.getInt(MEDIA_ID_ARGUMENT.removeFirstAndLast()) ?: 0,
                 navigateBack = {
                     navController.popBackStack()
                 },
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToFullscreenImage = { url ->
-                    val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                    val encodedUrl = URLEncoder.encode(url, UTF_8)
                     navController.navigate(
                         FULLSCREEN_IMAGE_DESTINATION
-                            .replace("{url}", encodedUrl)
+                            .replace(URL_ARGUMENT, encodedUrl)
                     )
                 },
                 navigateToCharacterDetails = { id ->
                     navController.navigate(
                         CHARACTER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStaffDetails = { id ->
                     navController.navigate(
                         STAFF_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STAFF_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToReviewDetails = { id ->
                     navController.navigate(
                         REVIEW_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(REVIEW_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToThreadDetails = { id ->
                     navController.navigate(
                         THREAD_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(THREAD_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToExplore = { mediaType, genre, tag ->
                     var dest = EXPLORE_GENRE_DESTINATION
-                    if (mediaType != null) dest = dest.replace("{mediaType}", mediaType.rawValue)
-                    if (genre != null) dest = dest.replace("{genre}", genre)
-                    if (tag != null) dest = dest.replace("{tag}", tag)
+                    if (mediaType != null) dest = dest.replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                    if (genre != null) dest = dest.replace(GENRE_ARGUMENT, genre)
+                    if (tag != null) dest = dest.replace(TAG_ARGUMENT, tag)
                     navController.navigate(dest)
                 }
             )
@@ -485,10 +505,10 @@ fun MainNavigation(
         composable(
             MEDIA_CHART_DESTINATION,
             arguments = listOf(
-                navArgument("type") { type = NavType.StringType }
+                navArgument(CHART_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getString("type")?.let {
+            navEntry.arguments?.getString(CHART_TYPE_ARGUMENT.removeFirstAndLast())?.let {
                 MediaChartListView(
                     type = ChartType.valueOf(it),
                     navigateBack = {
@@ -497,7 +517,7 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     }
                 )
@@ -507,12 +527,12 @@ fun MainNavigation(
         composable(
             SEASON_ANIME_DESTINATION,
             arguments = listOf(
-                navArgument("season") { type = NavType.StringType },
-                navArgument("year") { type = NavType.IntType }
+                navArgument(SEASON_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
+                navArgument(YEAR_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getString("season")?.let { season ->
-                navEntry.arguments?.getInt("year")?.let { year ->
+            navEntry.arguments?.getString(SEASON_ARGUMENT.removeFirstAndLast())?.let { season ->
+                navEntry.arguments?.getInt(YEAR_ARGUMENT.removeFirstAndLast())?.let { year ->
                     SeasonAnimeView(
                         initialSeason = AnimeSeason(
                             year = year,
@@ -524,7 +544,7 @@ fun MainNavigation(
                         navigateToMediaDetails = { id ->
                             navController.navigate(
                                 MEDIA_DETAILS_DESTINATION
-                                    .replace("{media_id}", id.toString())
+                                    .replace(MEDIA_ID_ARGUMENT, id.toString())
                             )
                         }
                     )
@@ -537,7 +557,7 @@ fun MainNavigation(
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateBack = {
@@ -549,11 +569,11 @@ fun MainNavigation(
         composable(
             USER_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") {
+                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument("name") {
+                navArgument(USER_NAME_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 }
@@ -561,50 +581,50 @@ fun MainNavigation(
         ) { navEntry ->
             ProfileView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                userId = navEntry.arguments?.getString("id")?.toIntOrNull(),
-                username = navEntry.arguments?.getString("name"),
+                userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())?.toIntOrNull(),
+                username = navEntry.arguments?.getString(USER_NAME_ARGUMENT.removeFirstAndLast()),
                 navigateToFullscreenImage = { url ->
-                    val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                    val encodedUrl = URLEncoder.encode(url, UTF_8)
                     navController.navigate(
                         FULLSCREEN_IMAGE_DESTINATION
-                            .replace("{url}", encodedUrl)
+                            .replace(URL_ARGUMENT, encodedUrl)
                     )
                 },
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
-                            .replace("{media_id}", id.toString())
+                            .replace(MEDIA_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToCharacterDetails = { id ->
                     navController.navigate(
                         CHARACTER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStaffDetails = { id ->
                     navController.navigate(
                         STAFF_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STAFF_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToStudioDetails = { id ->
                     navController.navigate(
                         STUDIO_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(STUDIO_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToUserDetails = { id ->
                     navController.navigate(
                         USER_DETAILS_DESTINATION
-                            .replace("{id}", id.toString())
+                            .replace(USER_ID_ARGUMENT, id.toString())
                     )
                 },
                 navigateToUserMediaList = { mediaType, userId ->
                     navController.navigate(
                         USER_MEDIA_LIST_DESTINATION
-                            .replace("{userId}", userId.toString())
-                            .replace("{mediaType}", mediaType.rawValue)
+                            .replace(USER_ID_ARGUMENT, userId.toString())
+                            .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
                     )
                 },
                 navigateBack = {
@@ -616,10 +636,10 @@ fun MainNavigation(
         composable(
             CHARACTER_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument(CHARACTER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt("id")?.let { characterId ->
+            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())?.let { characterId ->
                 CharacterDetailsView(
                     characterId = characterId,
                     navigateBack = {
@@ -628,14 +648,14 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        val encodedUrl = URLEncoder.encode(url, UTF_8)
                         navController.navigate(
                             FULLSCREEN_IMAGE_DESTINATION
-                                .replace("{url}", encodedUrl)
+                                .replace(URL_ARGUMENT, encodedUrl)
                         )
                     },
                 )
@@ -645,10 +665,10 @@ fun MainNavigation(
         composable(
             STAFF_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument(STAFF_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt("id")?.let { staffId ->
+            navEntry.arguments?.getInt(STAFF_ID_ARGUMENT.removeFirstAndLast())?.let { staffId ->
                 StaffDetailsView(
                     staffId = staffId,
                     navigateBack = {
@@ -657,20 +677,20 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToCharacterDetails = { id ->
                         navController.navigate(
                             CHARACTER_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(CHARACTER_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        val encodedUrl = URLEncoder.encode(url, UTF_8)
                         navController.navigate(
                             FULLSCREEN_IMAGE_DESTINATION
-                                .replace("{url}", encodedUrl)
+                                .replace(URL_ARGUMENT, encodedUrl)
                         )
                     }
                 )
@@ -680,10 +700,10 @@ fun MainNavigation(
         composable(
             REVIEW_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument(REVIEW_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt("id")?.let {
+            navEntry.arguments?.getInt(REVIEW_ID_ARGUMENT.removeFirstAndLast())?.let {
                 ReviewDetailsView(
                     reviewId = it,
                     navigateBack = {
@@ -696,23 +716,23 @@ fun MainNavigation(
         composable(
             THREAD_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument(THREAD_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt("id")?.let {
+            navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let {
                 ThreadDetailsView(
                     threadId = it,
                     navigateToUserDetails = { id ->
                         navController.navigate(
                             USER_DETAILS_DESTINATION
-                                .replace("{id}", id.toString())
+                                .replace(USER_ID_ARGUMENT, id.toString())
                         )
                     },
                     navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, "UTF-8")
+                        val encodedUrl = URLEncoder.encode(url, UTF_8)
                         navController.navigate(
                             FULLSCREEN_IMAGE_DESTINATION
-                                .replace("{url}", encodedUrl)
+                                .replace(URL_ARGUMENT, encodedUrl)
                         )
                     },
                     navigateBack = {
@@ -725,10 +745,10 @@ fun MainNavigation(
         composable(
             STUDIO_DETAILS_DESTINATION,
             arguments = listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument(STUDIO_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt("id")?.let {
+            navEntry.arguments?.getInt(STUDIO_ID_ARGUMENT.removeFirstAndLast())?.let {
                 StudioDetailsView(
                     studioId = it,
                     navigateBack = {
@@ -737,7 +757,7 @@ fun MainNavigation(
                     navigateToMediaDetails = { id ->
                         navController.navigate(
                             MEDIA_DETAILS_DESTINATION
-                                .replace("{media_id}", id.toString())
+                                .replace(MEDIA_ID_ARGUMENT, id.toString())
                         )
                     }
                 )
@@ -765,11 +785,11 @@ fun MainNavigation(
         composable(
             FULLSCREEN_IMAGE_DESTINATION,
             arguments = listOf(
-                navArgument("url") { type = NavType.StringType }
+                navArgument(URL_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
             )
         ) { navEntry ->
             FullScreenImageView(
-                imageUrl = navEntry.arguments?.getString("url"),
+                imageUrl = navEntry.arguments?.getString(URL_ARGUMENT.removeFirstAndLast()),
                 onDismiss = {
                     navController.popBackStack()
                 }

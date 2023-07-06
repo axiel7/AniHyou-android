@@ -322,7 +322,7 @@ object MediaRepository {
                 userId = Optional.present(userId)
             )
         ).execute()
-        if (response.hasErrors()) return null
+        return if (response.hasErrors()) null
         else {
             response.data?.Page?.mediaList?.filterNotNull()?.let { mediaList ->
                 return mediaList

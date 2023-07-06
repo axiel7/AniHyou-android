@@ -18,7 +18,7 @@ class ThreadDetailsViewModel(
     var page = 1
     var hasNextPage = true
 
-    suspend fun getThreadComments(threadId: Int) = viewModelScope.launch {
+    fun getThreadComments(threadId: Int) = viewModelScope.launch(dispatcher) {
         ThreadRepository.getThreadCommentsPage(
             threadId = threadId,
             page = page

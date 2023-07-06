@@ -68,4 +68,6 @@ object StringUtils {
             }
         }
     }
+
+    fun String.removeFirstAndLast() = substring(1, length - 1)
 }

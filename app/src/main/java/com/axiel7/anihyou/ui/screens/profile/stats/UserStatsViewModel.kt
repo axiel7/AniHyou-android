@@ -44,7 +44,7 @@ class UserStatsViewModel(
     val mangaStatusDistribution = mutableStateListOf<Stat<StatusDistribution>>()
     val mangaFormatDistribution = mutableStateListOf<Stat<FormatDistribution>>()
 
-    suspend fun getOverview() = viewModelScope.launch {
+    fun getOverview() = viewModelScope.launch(dispatcher) {
         isLoading = true
         if (mediaType == MediaType.ANIME) {
             UserRepository.getOverviewAnimeStats(userId).collect { result ->

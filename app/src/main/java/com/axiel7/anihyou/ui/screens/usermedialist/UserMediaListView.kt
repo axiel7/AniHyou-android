@@ -89,11 +89,13 @@ import com.axiel7.anihyou.ui.composables.media.GridUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
+import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-const val USER_MEDIA_LIST_DESTINATION = "media_list/{userId}/{mediaType}"
+const val USER_MEDIA_LIST_DESTINATION = "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

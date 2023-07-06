@@ -13,7 +13,6 @@ import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserFavoritesViewModel(
@@ -25,14 +24,12 @@ class UserFavoritesViewModel(
 
     fun onFavoriteTypeChanged(value: FavoritesType) {
         favoritesType = value
-        viewModelScope.launch(Dispatchers.IO) {
-            when (favoritesType) {
-                FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
-                FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
-                FavoritesType.CHARACTERS -> if (hasNextPageCharacter) getCharacters(userId)
-                FavoritesType.STAFF -> if (hasNextPageStaff) getStaff(userId)
-                FavoritesType.STUDIOS -> if (hasNextPageStudio) getStudios(userId)
-            }
+        when (favoritesType) {
+            FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
+            FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
+            FavoritesType.CHARACTERS -> if (hasNextPageCharacter) getCharacters(userId)
+            FavoritesType.STAFF -> if (hasNextPageStaff) getStaff(userId)
+            FavoritesType.STUDIOS -> if (hasNextPageStudio) getStudios(userId)
         }
     }
 
@@ -40,7 +37,7 @@ class UserFavoritesViewModel(
     private var hasNextPageAnime = true
     var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
 
-    private suspend fun getAnime(userId: Int) {
+    private fun getAnime(userId: Int) = viewModelScope.launch(dispatcher) {
         FavoriteRepository.getFavoriteAnime(
             userId = userId,
             page = pageAnime
@@ -61,7 +58,7 @@ class UserFavoritesViewModel(
     private var hasNextPageManga = true
     var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
 
-    private suspend fun getManga(userId: Int) {
+    private fun getManga(userId: Int) = viewModelScope.launch(dispatcher) {
         FavoriteRepository.getFavoriteManga(
             userId = userId,
             page = pageManga
@@ -82,7 +79,7 @@ class UserFavoritesViewModel(
     private var hasNextPageCharacter = true
     var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
 
-    private suspend fun getCharacters(userId: Int) {
+    private fun getCharacters(userId: Int) = viewModelScope.launch(dispatcher) {
         FavoriteRepository.getFavoriteCharacters(
             userId = userId,
             page = pageCharacter
@@ -103,7 +100,7 @@ class UserFavoritesViewModel(
     private var hasNextPageStaff = true
     var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
 
-    private suspend fun getStaff(userId: Int) {
+    private fun getStaff(userId: Int) = viewModelScope.launch(dispatcher) {
         FavoriteRepository.getFavoriteStaff(
             userId = userId,
             page = pageStaff
@@ -124,7 +121,7 @@ class UserFavoritesViewModel(
     private var hasNextPageStudio = true
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 
-    private suspend fun getStudios(userId: Int) {
+    private fun getStudios(userId: Int) = viewModelScope.launch(dispatcher) {
         FavoriteRepository.getFavoriteStudio(
             userId = userId,
             page = pageStudio

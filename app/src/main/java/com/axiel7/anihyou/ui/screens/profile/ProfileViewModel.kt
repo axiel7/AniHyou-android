@@ -21,7 +21,7 @@ class ProfileViewModel : BaseViewModel() {
     var userId = 0
     var userInfo by mutableStateOf<UserInfo?>(null)
 
-    suspend fun getMyUserInfo() = viewModelScope.launch {
+    fun getMyUserInfo() = viewModelScope.launch(dispatcher) {
         UserRepository.getMyUserInfo().collect { result ->
             isLoading = result is DataResult.Loading
 
@@ -41,10 +41,10 @@ class ProfileViewModel : BaseViewModel() {
         }
     }
 
-    suspend fun getUserInfo(
+    fun getUserInfo(
         userId: Int? = null,
         username: String? = null,
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(dispatcher) {
         UserRepository.getUserInfo(
             userId = userId,
             username = username,
@@ -60,7 +60,7 @@ class ProfileViewModel : BaseViewModel() {
         }
     }
 
-    suspend fun toggleFollow() = viewModelScope.launch {
+    fun toggleFollow() = viewModelScope.launch(dispatcher) {
         UserRepository.toggleFollow(userId).collect { result ->
             if (result is DataResult.Success) {
                 userInfo = userInfo?.copy(isFollowing = result.data.isFollowing)
@@ -75,7 +75,7 @@ class ProfileViewModel : BaseViewModel() {
     var hasNextPageActivity = true
     var userActivities = mutableStateListOf<UserActivityQuery.Activity>()
 
-    suspend fun getUserActivity(userId: Int) = viewModelScope.launch {
+    fun getUserActivity(userId: Int) = viewModelScope.launch(dispatcher) {
         UserRepository.getUserActivity(
             userId = userId,
             page = pageActivity

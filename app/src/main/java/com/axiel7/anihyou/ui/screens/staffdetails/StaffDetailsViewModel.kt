@@ -21,7 +21,7 @@ class StaffDetailsViewModel(
 
     var staffDetails by mutableStateOf<StaffDetailsQuery.Staff?>(null)
 
-    suspend fun getStaffDetails() = viewModelScope.launch {
+    fun getStaffDetails() = viewModelScope.launch(dispatcher) {
         StaffRepository.getStaffDetails(staffId).collect { result ->
             isLoading = result is DataResult.Loading
 
@@ -33,13 +33,11 @@ class StaffDetailsViewModel(
         }
     }
 
-    suspend fun toggleFavorite() = viewModelScope.launch {
+    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
         staffDetails?.let { details ->
             FavoriteRepository.toggleFavorite(staffId = staffId).collect { result ->
-                if (result is DataResult.Success) {
-                    if (result.data) {
-                        staffDetails = details.copy(isFavourite = !details.isFavourite)
-                    }
+                if (result is DataResult.Success && result.data) {
+                    staffDetails = details.copy(isFavourite = !details.isFavourite)
                 }
             }
         }
@@ -50,7 +48,7 @@ class StaffDetailsViewModel(
     var hasNextPageMedia = true
     var staffMedia = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
 
-    suspend fun getStaffMedia() = viewModelScope.launch {
+    fun getStaffMedia() = viewModelScope.launch(dispatcher) {
         StaffRepository.getStaffMediaPage(
             staffId = staffId,
             onList = mediaOnMyList,
@@ -68,7 +66,7 @@ class StaffDetailsViewModel(
         }
     }
 
-    suspend fun refreshStaffMedia() {
+    fun refreshStaffMedia() {
         hasNextPageMedia = false
         pageMedia = 1
         staffMedia.clear()
@@ -79,7 +77,7 @@ class StaffDetailsViewModel(
     var hasNextPageCharacter = true
     var staffCharacters = mutableStateListOf<StaffCharacterQuery.Edge>()
 
-    suspend fun getStaffCharacters() = viewModelScope.launch {
+    fun getStaffCharacters() = viewModelScope.launch(dispatcher) {
         StaffRepository.getStaffCharactersPage(
             staffId = staffId,
             page = pageCharacter

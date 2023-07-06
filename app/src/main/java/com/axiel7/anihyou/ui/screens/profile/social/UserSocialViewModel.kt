@@ -10,7 +10,6 @@ import com.axiel7.anihyou.FollowingsQuery
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserSocialViewModel(
@@ -22,11 +21,9 @@ class UserSocialViewModel(
 
     fun onUserSocialTypeChanged(value: UserSocialType) {
         userSocialType = value
-        viewModelScope.launch(Dispatchers.IO) {
-            when (userSocialType) {
-                UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers()
-                UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing()
-            }
+        when (userSocialType) {
+            UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers()
+            UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing()
         }
     }
 
@@ -34,7 +31,7 @@ class UserSocialViewModel(
     private var hasNextPageFollowers = true
     var followers = mutableStateListOf<FollowersQuery.Follower>()
 
-    private suspend fun getFollowers() {
+    private fun getFollowers() = viewModelScope.launch(dispatcher) {
         UserRepository.getFollowers(
             userId = userId,
             page = pageFollowers
@@ -55,7 +52,7 @@ class UserSocialViewModel(
     private var hasNextPageFollowing = true
     var following = mutableStateListOf<FollowingsQuery.Following>()
 
-    private suspend fun getFollowing() {
+    private fun getFollowing() = viewModelScope.launch(dispatcher) {
         UserRepository.getFollowing(
             userId = userId,
             page = pageFollowing

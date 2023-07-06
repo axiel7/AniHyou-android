@@ -76,7 +76,9 @@ private enum class ProfileInfoType {
     }
 }
 
-const val USER_DETAILS_DESTINATION = "user?id={id}?name={name}"
+const val USER_ID_ARGUMENT = "{userId}"
+const val USER_NAME_ARGUMENT = "{name}"
+const val USER_DETAILS_DESTINATION = "user?id=$USER_ID_ARGUMENT?name=$USER_NAME_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

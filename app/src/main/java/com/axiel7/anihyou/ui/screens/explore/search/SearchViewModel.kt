@@ -105,17 +105,15 @@ class SearchViewModel(
     }
 
     private var lastQuery = ""
-    suspend fun runSearch(query: String) {
+    fun runSearch(query: String) {
         lastQuery = query
-        viewModelScope.launch {
-            when (searchType) {
-                SearchType.ANIME -> searchMedia(MediaType.ANIME, query, resetPage = true)
-                SearchType.MANGA -> searchMedia(MediaType.MANGA, query, resetPage = true)
-                SearchType.CHARACTER -> searchCharacter(query)
-                SearchType.STAFF -> searchStaff(query)
-                SearchType.STUDIO -> searchStudio(query)
-                SearchType.USER -> searchUser(query)
-            }
+        when (searchType) {
+            SearchType.ANIME -> searchMedia(MediaType.ANIME, query, resetPage = true)
+            SearchType.MANGA -> searchMedia(MediaType.MANGA, query, resetPage = true)
+            SearchType.CHARACTER -> searchCharacter(query)
+            SearchType.STAFF -> searchStaff(query)
+            SearchType.STUDIO -> searchStudio(query)
+            SearchType.USER -> searchUser(query)
         }
     }
 
@@ -123,21 +121,22 @@ class SearchViewModel(
     private var hasNextPageMedia = true
     val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
 
-    suspend fun searchMedia(
+    fun searchMedia(
         mediaType: MediaType,
         query: String,
         resetPage: Boolean
-    ) {
+    ) = viewModelScope.launch(dispatcher) {
         if (resetPage) pageMedia = 1
 
         val selectedGenres = genreCollection.filterValues { it }.keys.toList()
         val selectedTags = tagCollection.filterValues { it }.keys.toList()
 
-        if (selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()
+        if ((selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()
             || selectedMediaFormats.isNotEmpty() || selectedMediaStatuses.isNotEmpty()
-            || selectedYear != null
+            || selectedYear != null)
+            && mediaSort == MediaSort.SEARCH_MATCH
         ) {
-            if (mediaSort == MediaSort.SEARCH_MATCH) mediaSort = MediaSort.POPULARITY_DESC
+            mediaSort = MediaSort.POPULARITY_DESC
         }
 
         SearchRepository.searchMedia(
@@ -168,7 +167,7 @@ class SearchViewModel(
 
     val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
 
-    private suspend fun searchCharacter(query: String) {
+    private fun searchCharacter(query: String) = viewModelScope.launch(dispatcher) {
         SearchRepository.searchCharacter(query = query).collect { result ->
             isLoading = result is PagedResult.Loading
 
@@ -183,7 +182,7 @@ class SearchViewModel(
 
     val searchedStaff = mutableStateListOf<SearchStaffQuery.Staff>()
 
-    private suspend fun searchStaff(query: String) {
+    private fun searchStaff(query: String) = viewModelScope.launch(dispatcher) {
         SearchRepository.searchStaff(query = query).collect { result ->
             isLoading = result is PagedResult.Loading
 
@@ -198,7 +197,7 @@ class SearchViewModel(
 
     val searchedStudios = mutableStateListOf<SearchStudioQuery.Studio>()
 
-    private suspend fun searchStudio(query: String) {
+    private fun searchStudio(query: String) = viewModelScope.launch(dispatcher) {
         SearchRepository.searchStudio(query = query).collect { result ->
             isLoading = result is PagedResult.Loading
 
@@ -213,7 +212,7 @@ class SearchViewModel(
 
     val searchedUsers = mutableStateListOf<SearchUserQuery.User>()
 
-    private suspend fun searchUser(query: String) {
+    private fun searchUser(query: String) = viewModelScope.launch(dispatcher) {
         SearchRepository.searchUser(query = query).collect { result ->
             isLoading = result is PagedResult.Loading
 
@@ -229,7 +228,7 @@ class SearchViewModel(
     var isLoadingGenres by mutableStateOf(false)
         private set
 
-    suspend fun getGenreTagCollection() = viewModelScope.launch {
+    fun getGenreTagCollection() = viewModelScope.launch(dispatcher) {
         SearchRepository.getGenreTagCollection().collect { result ->
             isLoadingGenres = result is DataResult.Loading
 

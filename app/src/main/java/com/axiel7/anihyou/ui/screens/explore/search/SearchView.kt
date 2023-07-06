@@ -97,14 +97,15 @@ fun SearchView(
     }
 
     listState.OnBottomReached(buffer = 2) {
-        if (viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA) {
-            if (viewModel.searchedMedia.isNotEmpty())
-                viewModel.searchMedia(
-                    mediaType = if (viewModel.searchType == SearchType.ANIME) MediaType.ANIME
-                    else MediaType.MANGA,
-                    query = query,
-                    resetPage = false
-                )
+        if ((viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA)
+            && viewModel.searchedMedia.isNotEmpty()
+        ) {
+            viewModel.searchMedia(
+                mediaType = if (viewModel.searchType == SearchType.ANIME) MediaType.ANIME
+                else MediaType.MANGA,
+                query = query,
+                resetPage = false
+            )
         }
     }
 

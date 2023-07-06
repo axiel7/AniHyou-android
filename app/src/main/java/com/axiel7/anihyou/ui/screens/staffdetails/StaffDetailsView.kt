@@ -76,7 +76,8 @@ private enum class StaffInfoType {
     }
 }
 
-const val STAFF_DETAILS_DESTINATION = "staff/{id}"
+const val STAFF_ID_ARGUMENT = "{id}"
+const val STAFF_DETAILS_DESTINATION = "staff/$STAFF_ID_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

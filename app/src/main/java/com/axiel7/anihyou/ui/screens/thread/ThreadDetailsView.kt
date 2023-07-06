@@ -32,7 +32,8 @@ import com.axiel7.anihyou.ui.composables.thread.ThreadCommentView
 import com.axiel7.anihyou.ui.composables.thread.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val THREAD_DETAILS_DESTINATION = "thread/{id}"
+const val THREAD_ID_ARGUMENT = "{id}"
+const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

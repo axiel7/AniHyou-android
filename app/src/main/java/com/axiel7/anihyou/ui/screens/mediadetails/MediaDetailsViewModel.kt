@@ -35,7 +35,7 @@ class MediaDetailsViewModel(
         mediaDetails?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
     }
 
-    suspend fun getDetails() = viewModelScope.launch {
+    fun getDetails() = viewModelScope.launch(dispatcher) {
         MediaRepository.getMediaDetails(mediaId).collect { result ->
             isLoading = result is DataResult.Loading
 
@@ -58,7 +58,7 @@ class MediaDetailsViewModel(
         }
     }
 
-    suspend fun toggleFavorite() = viewModelScope.launch {
+    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
         mediaDetails?.let { details ->
             FavoriteRepository.toggleFavorite(
                 animeId = if (details.basicMediaDetails.type == MediaType.ANIME)
@@ -89,7 +89,7 @@ class MediaDetailsViewModel(
     var mediaScoreDistribution = mutableStateListOf<Stat<ScoreDistribution>>()
     var mediaRankings = mutableStateListOf<MediaStatsQuery.Ranking>()
 
-    suspend fun getMediaStats() = viewModelScope.launch {
+    fun getMediaStats() = viewModelScope.launch(dispatcher) {
         MediaRepository.getMediaStats(mediaId).collect { result ->
             isLoadingStats = result is DataResult.Loading
 
@@ -130,7 +130,7 @@ class MediaDetailsViewModel(
     private var pageReviews = 1
     var hasNextPageReviews = true
 
-    suspend fun getMediaReviews() = viewModelScope.launch {
+    fun getMediaReviews() = viewModelScope.launch(dispatcher) {
         MediaRepository.getMediaReviewsPage(
             mediaId = mediaId,
             page = pageReviews
@@ -150,7 +150,7 @@ class MediaDetailsViewModel(
     private var pageThreads = 1
     var hasNextPageThreads = true
 
-    suspend fun getMediaThreads() = viewModelScope.launch {
+    fun getMediaThreads() = viewModelScope.launch(dispatcher) {
         MediaRepository.getMediaThreadsPage(
             mediaId = mediaId,
             page = pageReviews

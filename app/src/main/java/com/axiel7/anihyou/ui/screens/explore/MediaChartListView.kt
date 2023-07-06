@@ -28,7 +28,8 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val MEDIA_CHART_DESTINATION = "media_chart/{type}"
+const val CHART_TYPE_ARGUMENT = "{type}"
+const val MEDIA_CHART_DESTINATION = "media_chart/$CHART_TYPE_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

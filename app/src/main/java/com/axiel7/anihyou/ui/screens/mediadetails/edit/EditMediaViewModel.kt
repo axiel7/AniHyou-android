@@ -128,7 +128,7 @@ class EditMediaViewModel(
 
     var updateSuccess by mutableStateOf(false)
 
-    suspend fun updateListEntry() = viewModelScope.launch {
+    fun updateListEntry() = viewModelScope.launch(dispatcher) {
         MediaListRepository.updateEntry(
             oldEntry = listEntry,
             mediaId = mediaDetails.id,
@@ -155,7 +155,7 @@ class EditMediaViewModel(
 
     var openDeleteDialog by mutableStateOf(false)
 
-    suspend fun deleteListEntry() = viewModelScope.launch {
+    fun deleteListEntry() = viewModelScope.launch(dispatcher) {
         if (listEntry == null) return@launch
         MediaListRepository.deleteEntry(listEntry!!.id).collect { result ->
             isLoading = result is DataResult.Loading

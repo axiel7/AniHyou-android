@@ -56,9 +56,9 @@ class UserMediaListViewModel(
         }
     }
 
-    suspend fun getUserMediaList(
+    fun getUserMediaList(
         refreshCache: Boolean = false
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(dispatcher) {
         MediaListRepository.getUserMediaListPage(
             userId = userId,
             mediaType = mediaType,
@@ -80,7 +80,7 @@ class UserMediaListViewModel(
     }
 
 
-    suspend fun refreshList(
+    fun refreshList(
         refreshCache: Boolean
     ) {
         hasNextPage = false
@@ -89,10 +89,10 @@ class UserMediaListViewModel(
         getUserMediaList(refreshCache)
     }
 
-    suspend fun updateEntryProgress(
+    fun updateEntryProgress(
         entryId: Int,
         progress: Int
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(dispatcher) {
         MediaListRepository.updateEntryProgress(
             entryId = entryId,
             progress = progress,

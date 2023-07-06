@@ -71,7 +71,8 @@ private enum class CharacterInfoType {
     }
 }
 
-const val CHARACTER_DETAILS_DESTINATION = "character/{id}"
+const val CHARACTER_ID_ARGUMENT = "{id}"
+const val CHARACTER_DETAILS_DESTINATION = "character/$CHARACTER_ID_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

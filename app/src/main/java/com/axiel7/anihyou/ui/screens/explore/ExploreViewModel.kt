@@ -23,7 +23,7 @@ class ExploreViewModel : BaseViewModel() {
 
     var mediaChart = mutableStateListOf<MediaChartQuery.Medium>()
 
-    suspend fun loadMoreChart(type: ChartType) {
+    fun loadMoreChart(type: ChartType) {
         when (type) {
             ChartType.TOP_ANIME ->
                 getMediaChart(
@@ -79,11 +79,11 @@ class ExploreViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun getMediaChart(
+    private fun getMediaChart(
         type: MediaType,
         sort: List<MediaSort>,
         status: MediaStatus? = null,
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(dispatcher) {
         MediaRepository.getMediaChartPage(
             type = type,
             sort = sort,
@@ -95,8 +95,7 @@ class ExploreViewModel : BaseViewModel() {
 
             if (result is PagedResult.Success) {
                 mediaChart.addAll(result.data)
-                hasNextPage = if (page > 100 / perPage) false //limit 100
-                else result.nextPage != null
+                hasNextPage = page < (100 / perPage) && result.nextPage != null
                 page = result.nextPage ?: page
             } else if (result is PagedResult.Error) {
                 message = result.message
@@ -106,11 +105,11 @@ class ExploreViewModel : BaseViewModel() {
 
     var animeSeasonal = mutableStateListOf<SeasonalAnimeQuery.Medium>()
 
-    suspend fun getAnimeSeasonal(
+    fun getAnimeSeasonal(
         season: MediaSeason,
         year: Int,
         resetPage: Boolean = false
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(dispatcher) {
         if (resetPage) {
             page = 1
             hasNextPage = true

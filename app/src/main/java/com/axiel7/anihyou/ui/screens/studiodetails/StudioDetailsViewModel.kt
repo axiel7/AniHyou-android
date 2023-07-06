@@ -22,7 +22,7 @@ class StudioDetailsViewModel(
     var studioDetails by mutableStateOf<StudioDetailsQuery.Studio?>(null)
     val studioMedia = mutableStateListOf<StudioDetailsQuery.Node>()
 
-    suspend fun getStudioDetails() = viewModelScope.launch {
+    fun getStudioDetails() = viewModelScope.launch(dispatcher) {
         StudioRepository.getStudioDetails(
             studioId = studioId,
             page = page
@@ -38,14 +38,12 @@ class StudioDetailsViewModel(
         }
     }
 
-    suspend fun toggleFavorite() = viewModelScope.launch {
+    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
         FavoriteRepository.toggleFavorite(studioId = studioId).collect { result ->
-            if (result is DataResult.Success) {
-                if (result.data) {
-                    studioDetails = studioDetails?.copy(
-                        isFavourite = studioDetails?.isFavourite?.not() ?: false
-                    )
-                }
+            if (result is DataResult.Success && result.data) {
+                studioDetails = studioDetails?.copy(
+                    isFavourite = studioDetails?.isFavourite?.not() ?: false
+                )
             }
         }
     }

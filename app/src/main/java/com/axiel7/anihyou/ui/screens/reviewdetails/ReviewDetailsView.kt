@@ -38,7 +38,8 @@ import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val REVIEW_DETAILS_DESTINATION = "review/{id}"
+const val REVIEW_ID_ARGUMENT = "{id}"
+const val REVIEW_DETAILS_DESTINATION = "review/$REVIEW_ID_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

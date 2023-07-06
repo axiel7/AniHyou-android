@@ -89,7 +89,8 @@ import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import kotlinx.coroutines.launch
 
-const val MEDIA_DETAILS_DESTINATION = "media_details/{media_id}"
+const val MEDIA_ID_ARGUMENT = "{mediaId}"
+const val MEDIA_DETAILS_DESTINATION = "media_details/$MEDIA_ID_ARGUMENT"
 
 private enum class DetailsType {
     INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;

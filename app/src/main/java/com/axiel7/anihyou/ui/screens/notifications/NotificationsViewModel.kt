@@ -20,7 +20,7 @@ class NotificationsViewModel : BaseViewModel() {
     var page = 1
     var hasNextPage = false
 
-    suspend fun getNotifications() = viewModelScope.launch {
+    fun getNotifications() = viewModelScope.launch(dispatcher) {
         NotificationRepository.getNotificationsPage(
             type = type,
             page = page,

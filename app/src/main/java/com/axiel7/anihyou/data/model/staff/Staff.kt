@@ -9,10 +9,10 @@ import com.axiel7.anihyou.StaffDetailsQuery
 fun StaffDetailsQuery.Staff.yearsActiveFormatted(): String? {
     yearsActive?.getOrNull(0)?.let { startYear ->
         val possibleEndYear = yearsActive.getOrNull(1)
-        if (yearsActive.size > 1 && possibleEndYear != null) {
-            return "$startYear-$possibleEndYear"
+        return if (yearsActive.size > 1 && possibleEndYear != null) {
+            "$startYear-$possibleEndYear"
         } else {
-            return "$startYear-${stringResource(R.string.present)}"
+            "$startYear-${stringResource(R.string.present)}"
         }
     }
     return null

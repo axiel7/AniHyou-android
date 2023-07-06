@@ -39,8 +39,12 @@ import com.axiel7.anihyou.ui.screens.explore.search.SearchView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
+const val MEDIA_TYPE_ARGUMENT = "{mediaType}"
+const val MEDIA_SORT_ARGUMENT = "{mediaSort}"
+const val GENRE_ARGUMENT = "{genre}"
+const val TAG_ARGUMENT = "{tag}"
 const val EXPLORE_GENRE_DESTINATION =
-    "explore/{mediaType}?mediaSort={mediaSort}?genre={genre}?tag={tag}"
+    "explore/$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT?tag=$TAG_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
