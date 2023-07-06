@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.axiel7.anihyou.utils
 
 import com.axiel7.anihyou.BuildConfig
