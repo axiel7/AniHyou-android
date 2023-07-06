@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -141,6 +144,7 @@ fun MediaDetailsView(
     }
     val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
     val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
+    val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     LaunchedEffect(mediaId) {
         viewModel.getDetails()
@@ -151,6 +155,7 @@ fun MediaDetailsView(
             sheetState = sheetState,
             mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
             listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
+            bottomPadding = bottomBarPadding,
             onDismiss = { updatedListEntry ->
                 scope.launch {
                     viewModel.onUpdateListEntry(updatedListEntry)

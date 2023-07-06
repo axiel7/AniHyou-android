@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -61,6 +62,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
@@ -126,6 +128,7 @@ fun UserMediaListHostView(
         }
     }
     val isMyList = remember { userId == null }
+    val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     if (openSortDialog) {
         DialogWithRadioSelection(
@@ -145,6 +148,7 @@ fun UserMediaListHostView(
         ListStatusSheet(
             selectedStatus = viewModel.status,
             sheetState = statusSheetState,
+            bottomPadding = bottomBarPadding,
             onStatusChanged = viewModel::onStatusChanged
         )
     }
@@ -154,6 +158,7 @@ fun UserMediaListHostView(
             sheetState = editSheetState,
             mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
             listEntry = viewModel.selectedItem!!.basicMediaListEntry,
+            bottomPadding = bottomBarPadding,
             onDismiss = { updatedListEntry ->
                 scope.launch {
                     viewModel.onUpdateListEntry(updatedListEntry)
@@ -411,16 +416,17 @@ fun UserMediaListView(
 fun ListStatusSheet(
     selectedStatus: MediaListStatus,
     sheetState: SheetState,
+    bottomPadding: Dp,
     onStatusChanged: (MediaListStatus) -> Unit,
     onDismiss: () -> Unit = {},
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         Column(
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp + bottomPadding)
         ) {
             MediaListStatus.knownValues().forEach {
                 val isSelected = selectedStatus == it

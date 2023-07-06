@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.App
@@ -82,6 +83,7 @@ fun EditMediaSheet(
     sheetState: SheetState,
     mediaDetails: BasicMediaDetails,
     listEntry: BasicMediaListEntry?,
+    bottomPadding: Dp = 0.dp,
     onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
 ) {
     val context = LocalContext.current
@@ -134,14 +136,14 @@ fun EditMediaSheet(
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = { onDismiss(viewModel.listEntry) },
-        windowInsets = WindowInsets.navigationBars
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .imePadding()
-                .padding(bottom = 32.dp),
+                .padding(bottom = 32.dp + bottomPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Cancel / Save buttons

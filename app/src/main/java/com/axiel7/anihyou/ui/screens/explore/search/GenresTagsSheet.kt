@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
@@ -70,6 +71,7 @@ private enum class GenresTagsSheetTab {
 fun GenresTagsSheet(
     viewModel: SearchViewModel,
     sheetState: SheetState,
+    bottomPadding: Dp,
     onDismiss: () -> Unit,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -111,12 +113,13 @@ fun GenresTagsSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
                 .imePadding()
+                .padding(bottom = bottomPadding)
                 .bringIntoViewRequester(bringIntoViewRequester)
         ) {
             Row(
@@ -221,6 +224,7 @@ fun GenresTagsSheetPreview() {
             GenresTagsSheet(
                 viewModel = viewModel(),
                 sheetState = rememberModalBottomSheetState(),
+                bottomPadding = 0.dp,
                 onDismiss = {}
             )
         }
