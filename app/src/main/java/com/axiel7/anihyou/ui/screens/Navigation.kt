@@ -45,6 +45,7 @@ import com.axiel7.anihyou.ui.screens.explore.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MediaChartListView
+import com.axiel7.anihyou.ui.screens.explore.OPEN_SEARCH_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.SEASON_ANIME_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.SeasonAnimeView
@@ -112,6 +113,13 @@ fun MainNavigation(
                     dest = if (userId != null) dest.replace(USER_ID_ARGUMENT, userId.toString())
                     else dest.replace(USER_NAME_ARGUMENT, deepLink.id)
                     navController.navigate(dest)
+                }
+
+                DeepLink.Type.SEARCH -> {
+                    navController.navigate(
+                        EXPLORE_GENRE_DESTINATION
+                            .replace(OPEN_SEARCH_ARGUMENT, deepLink.id)
+                    )
                 }
 
                 else -> {
@@ -320,11 +328,11 @@ fun MainNavigation(
             )
         }
 
-        composable(
-            EXPLORE_GENRE_DESTINATION,
+        composable(EXPLORE_GENRE_DESTINATION,
             arguments = listOf(
                 navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
+                    nullable = true
                 },
                 navArgument(MEDIA_SORT_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
@@ -335,6 +343,10 @@ fun MainNavigation(
                     nullable = true
                 },
                 navArgument(TAG_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 }
@@ -348,6 +360,7 @@ fun MainNavigation(
                     ?.let { MediaSort.valueOf(it) },
                 initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
                 initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
+                openSearch = navEntry.arguments?.getString(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) == "true",
                 navigateBack = {
                     navController.popBackStack()
                 },

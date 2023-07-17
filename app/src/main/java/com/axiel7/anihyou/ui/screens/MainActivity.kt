@@ -80,25 +80,36 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         var deepLink: DeepLink? = null
-        // Widget intent
-        if (intent.action == "media_details") {
-            deepLink = DeepLink(
-                type = DeepLink.Type.ANIME,
-                id = intent.getIntExtra("media_id", 0).toString()
-            )
-        } else if (intent.data != null) {
-            parseLoginIntentData(intent.data)
-            // Manually handle deep links because the uri pattern in the compose navigation
-            // matches this -> https://anilist.co/manga/41514/
-            // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
-            //TODO: find a better solution :)
-            val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
-            if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
-                val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
+        when {
+            // Widget intent
+            intent.action == "media_details" -> {
                 deepLink = DeepLink(
-                    type = DeepLink.Type.valueOf(linkSplit[1].uppercase()),
-                    id = linkSplit[2]
+                    type = DeepLink.Type.ANIME,
+                    id = intent.getIntExtra("media_id", 0).toString()
                 )
+            }
+            // Search shortcut
+            intent.action == "search" -> {
+                deepLink = DeepLink(
+                    type = DeepLink.Type.SEARCH,
+                    id = true.toString()
+                )
+            }
+            // Login intent or anilist link
+            intent.data != null -> {
+                parseLoginIntentData(intent.data)
+                // Manually handle deep links because the uri pattern in the compose navigation
+                // matches this -> https://anilist.co/manga/41514/
+                // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
+                //TODO: find a better solution :)
+                val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
+                if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
+                    val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
+                    deepLink = DeepLink(
+                        type = DeepLink.Type.valueOf(linkSplit[1].uppercase()),
+                        id = linkSplit[2]
+                    )
+                }
             }
         }
 

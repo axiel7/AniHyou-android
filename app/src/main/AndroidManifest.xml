@@ -117,6 +117,10 @@
                     android:scheme="https" />
 
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <receiver
@@ -131,7 +135,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/airing_widget_info" />
         </receiver>
-
 
     </application>
 

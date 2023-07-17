@@ -16,6 +16,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,8 +46,10 @@ const val MEDIA_TYPE_ARGUMENT = "{mediaType}"
 const val MEDIA_SORT_ARGUMENT = "{mediaSort}"
 const val GENRE_ARGUMENT = "{genre}"
 const val TAG_ARGUMENT = "{tag}"
+const val OPEN_SEARCH_ARGUMENT = "{openSearch}"
 const val EXPLORE_GENRE_DESTINATION =
-    "explore/$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT?tag=$TAG_ARGUMENT"
+    "explore?mediaType=$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT" +
+            "?tag=$TAG_ARGUMENT?openSearch=$OPEN_SEARCH_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +59,7 @@ fun ExploreView(
     initialMediaSort: MediaSort? = null,
     initialGenre: String? = null,
     initialTag: String? = null,
+    openSearch: Boolean = false,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
@@ -66,7 +72,7 @@ fun ExploreView(
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(initialMediaType != null) }
-    var isSearchActive by rememberSaveable { mutableStateOf(initialMediaType != null) }
+    var isSearchActive by rememberSaveable { mutableStateOf(openSearch || initialMediaType != null) }
     val searchHorizontalPadding by animateDpAsState(
         targetValue = if (!isSearchActive) 16.dp else 0.dp,
         label = "searchHorizontalPadding"
@@ -75,6 +81,11 @@ fun ExploreView(
         targetValue = if (!isSearchActive) 4.dp else 0.dp,
         label = "searchBottomPadding"
     )
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(openSearch) {
+        if (openSearch) focusRequester.requestFocus()
+    }
 
     Scaffold(
         modifier = modifier,
@@ -100,7 +111,8 @@ fun ExploreView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = searchHorizontalPadding)
-                        .padding(bottom = searchBottomPadding),
+                        .padding(bottom = searchBottomPadding)
+                        .focusRequester(focusRequester),
                     placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                     leadingIcon = {
                         if (isSearchActive) {

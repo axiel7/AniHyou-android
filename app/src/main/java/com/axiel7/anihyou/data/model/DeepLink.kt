@@ -5,6 +5,6 @@ data class DeepLink(
     val id: String,
 ) {
     enum class Type {
-        ANIME, MANGA, CHARACTER, STAFF, STUDIO, USER
+        ANIME, MANGA, CHARACTER, STAFF, STUDIO, USER, SEARCH
     }
 }
