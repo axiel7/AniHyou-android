@@ -36,6 +36,27 @@ object NumberUtils {
     }
 
     /**
+     * Parses the string as a [Double] number and returns the result.
+     * Can be called with comma as decimal separator.
+     * @throws NumberFormatException if the string is not a valid representation of a number.
+     */
+    fun String.toDoubleLocaleInvariant() = replace(',', '.').toDouble()
+
+    /**
+     * Parses the string as a [Double] number and returns the result
+     * or `null` if the string is not a valid representation of a number.
+     * Can be called with comma as decimal separator.
+     */
+    fun String.toDoubleOrNullLocaleInvariant() = replace(',', '.').toDoubleOrNull()
+
+    /**
+     * Parses the string as a [Float] number and returns the result
+     * or `null` if the string is not a valid representation of a number.
+     * Can be called with comma as decimal separator.
+     */
+    fun String.toFloatOrNullLocaleInvariant() = replace(',', '.').toFloatOrNull()
+
+    /**
      * @return if true 1 else 0
      */
     fun Boolean?.toInt(): Int = if (this == true) 1 else 0

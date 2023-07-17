@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
+import com.axiel7.anihyou.utils.NumberUtils.toDoubleLocaleInvariant
+import com.axiel7.anihyou.utils.NumberUtils.toDoubleOrNullLocaleInvariant
+import com.axiel7.anihyou.utils.NumberUtils.toFloatOrNullLocaleInvariant
 
 @Composable
 fun SliderRatingView(
@@ -43,13 +46,13 @@ fun SliderRatingView(
                     ratingString = value
                     onRatingChanged(0.0)
                 } else {
-                    value.toDoubleOrNull()?.let {
+                    value.toDoubleOrNullLocaleInvariant()?.let {
                         if (it == 0.0) {
                             ratingString = ""
                             onRatingChanged(0.0)
                         } else {
                             val valueRoundedString = it.format(decimalLength = 1)
-                            val valueRounded = valueRoundedString.toDouble()
+                            val valueRounded = valueRoundedString.toDoubleLocaleInvariant()
                             if (valueRounded <= maxValue)
                                 ratingString = valueRoundedString
                             onRatingChanged(valueRounded)
@@ -65,14 +68,14 @@ fun SliderRatingView(
         )
 
         Slider(
-            value = ratingString.toFloatOrNull() ?: 0f,
+            value = ratingString.toFloatOrNullLocaleInvariant() ?: 0f,
             onValueChange = {
                 ratingString = if (it == 0f) "" else it.toDouble().format(decimalLength = 1)
             },
             valueRange = 0f..maxValue.toFloat(),
             steps = if (maxValue <= 10.0 && !showAsDecimal) maxValue.toInt() else 0,
             onValueChangeFinished = {
-                onRatingChanged(ratingString.toDoubleOrNull() ?: 0.0)
+                onRatingChanged(ratingString.toDoubleOrNullLocaleInvariant() ?: 0.0)
             }
         )
     }
