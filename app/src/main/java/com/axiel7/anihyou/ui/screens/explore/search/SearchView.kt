@@ -435,6 +435,7 @@ fun MediaSearchFormatChip(
             defaultValues = viewModel.selectedMediaFormats.toTypedArray(),
             title = stringResource(R.string.format),
             onConfirm = {
+                openDialog = false
                 viewModel.onMediaFormatChanged(it)
             },
             onDismiss = { openDialog = false }
