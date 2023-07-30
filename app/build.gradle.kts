@@ -106,7 +106,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$materialVersion")
     implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
 
-    implementation("androidx.navigation:navigation-compose:2.7.0-beta02")
+    implementation("androidx.navigation:navigation-compose:2.7.0-rc01")
     implementation("androidx.glance:glance-appwidget:1.0.0-rc01")
 
     val accompanistVersion = "0.30.1"
