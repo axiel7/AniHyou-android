@@ -16,7 +16,7 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
-import com.axiel7.anihyou.ui.screens.home.HomeLazyRow
+import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
 import com.axiel7.anihyou.ui.screens.home.HomeViewModel
 import com.axiel7.anihyou.ui.screens.home.HorizontalListHeader
 

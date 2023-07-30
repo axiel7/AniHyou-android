@@ -14,7 +14,7 @@ import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
-import com.axiel7.anihyou.ui.screens.home.HomeLazyRow
+import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
 import com.axiel7.anihyou.ui.screens.home.HomeViewModel
 import com.axiel7.anihyou.ui.screens.home.HorizontalListHeader
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
