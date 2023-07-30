@@ -2,6 +2,9 @@ package com.axiel7.anihyou.ui.base
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 
 sealed class BottomDestination(
@@ -53,6 +56,16 @@ sealed class BottomDestination(
 
     companion object {
         val values = listOf(Home, AnimeList, MangaList, Profile, Explore)
+
+        val railValues = listOf(Home, AnimeList, MangaList, Profile)
+
+        @Composable
+        fun BottomDestination.Icon(selected: Boolean) {
+            androidx.compose.material3.Icon(
+                painter = painterResource(if (selected) iconSelected else icon),
+                contentDescription = stringResource(title)
+            )
+        }
 
         fun String.toBottomDestinationIndex() = values.find { it.route == this }?.index
 

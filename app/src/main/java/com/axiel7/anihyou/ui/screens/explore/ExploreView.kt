@@ -167,8 +167,8 @@ fun ExploreView(
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
                 .verticalScroll(rememberScrollState())
+                .padding(padding)
         ) {
             // Anime
             Text(

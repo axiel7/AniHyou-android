@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -37,19 +38,19 @@ import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
-import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.EXPLORE_GENRE_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
 import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
 import com.axiel7.anihyou.ui.screens.explore.OPEN_SEARCH_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
 import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ANIME_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.SeasonAnimeView
-import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
@@ -87,6 +88,7 @@ import java.net.URLEncoder
 @Composable
 fun MainNavigation(
     navController: NavHostController,
+    isCompactScreen: Boolean,
     lastTabOpened: Int,
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
@@ -152,7 +154,9 @@ fun MainNavigation(
     ) {
         composable(BottomDestination.Home.route) {
             HomeView(
-                modifier = Modifier.padding(bottom = bottomPadding),
+                modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
+                contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
+                else PaddingValues(bottom = 16.dp + bottomPadding),
                 navigateToMediaDetails = { id ->
                     navController.navigate(
                         MEDIA_DETAILS_DESTINATION
@@ -227,7 +231,7 @@ fun MainNavigation(
                 )
             } else {
                 ProfileView(
-                    modifier = Modifier.padding(bottom = bottomPadding),
+                    modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                     navigateToSettings = {
                         navController.navigate(SETTINGS_DESTINATION)
                     },
@@ -275,7 +279,7 @@ fun MainNavigation(
 
         composable(BottomDestination.Explore.route) {
             ExploreView(
-                modifier = Modifier.padding(bottom = bottomPadding),
+                modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 navigateBack = {
                     navController.popBackStack()
                 },
@@ -507,7 +511,8 @@ fun MainNavigation(
                 },
                 navigateToExplore = { mediaType, genre, tag ->
                     var dest = EXPLORE_GENRE_DESTINATION
-                    if (mediaType != null) dest = dest.replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                    if (mediaType != null) dest =
+                        dest.replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
                     if (genre != null) dest = dest.replace(GENRE_ARGUMENT, genre)
                     if (tag != null) dest = dest.replace(TAG_ARGUMENT, tag)
                     navController.navigate(dest)
@@ -594,7 +599,8 @@ fun MainNavigation(
         ) { navEntry ->
             ProfileView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())?.toIntOrNull(),
+                userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())
+                    ?.toIntOrNull(),
                 username = navEntry.arguments?.getString(USER_NAME_ARGUMENT.removeFirstAndLast()),
                 navigateToFullscreenImage = { url ->
                     val encodedUrl = URLEncoder.encode(url, UTF_8)
@@ -652,27 +658,28 @@ fun MainNavigation(
                 navArgument(CHARACTER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())?.let { characterId ->
-                CharacterDetailsView(
-                    characterId = characterId,
-                    navigateBack = {
-                        navController.popBackStack()
-                    },
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, UTF_8)
-                        navController.navigate(
-                            FULLSCREEN_IMAGE_DESTINATION
-                                .replace(URL_ARGUMENT, encodedUrl)
-                        )
-                    },
-                )
-            }
+            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())
+                ?.let { characterId ->
+                    CharacterDetailsView(
+                        characterId = characterId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToMediaDetails = { id ->
+                            navController.navigate(
+                                MEDIA_DETAILS_DESTINATION
+                                    .replace(MEDIA_ID_ARGUMENT, id.toString())
+                            )
+                        },
+                        navigateToFullscreenImage = { url ->
+                            val encodedUrl = URLEncoder.encode(url, UTF_8)
+                            navController.navigate(
+                                FULLSCREEN_IMAGE_DESTINATION
+                                    .replace(URL_ARGUMENT, encodedUrl)
+                            )
+                        },
+                    )
+                }
         }
 
         composable(

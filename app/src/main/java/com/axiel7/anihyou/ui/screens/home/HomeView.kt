@@ -59,6 +59,7 @@ enum class HomeInfo {
 @Composable
 fun HomeView(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToCalendar: () -> Unit,
@@ -109,7 +110,7 @@ fun HomeView(
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .padding(padding),
             state = listState,
-            contentPadding = PaddingValues(bottom = 16.dp)
+            contentPadding = contentPadding
         ) {
             items(viewModel.infos) { item ->
                 when (item) {

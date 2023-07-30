@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.main.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -12,13 +11,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.axiel7.anihyou.data.PreferencesDataStore
 import com.axiel7.anihyou.ui.base.BottomDestination
+import com.axiel7.anihyou.ui.base.BottomDestination.Companion.Icon
 
 @Composable
 fun MainBottomNavBar(
@@ -49,18 +48,13 @@ fun MainBottomNavBar(
     ) {
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
+                val isSelected = navBackStackEntry?.destination?.route == dest.route
                 NavigationBarItem(
                     icon = {
-                        Icon(
-                            painter = painterResource(
-                                if (navBackStackEntry?.destination?.route == dest.route) dest.iconSelected
-                                else dest.icon
-                            ),
-                            contentDescription = stringResource(dest.title)
-                        )
+                        dest.Icon(selected = isSelected)
                     },
                     label = { Text(text = stringResource(dest.title)) },
-                    selected = navBackStackEntry?.destination?.route == dest.route,
+                    selected = isSelected,
                     onClick = {
                         selectedItem = index
                         navController.navigate(dest.route) {

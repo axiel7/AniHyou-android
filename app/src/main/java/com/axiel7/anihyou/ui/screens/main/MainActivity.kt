@@ -6,18 +6,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -50,6 +63,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
+import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
@@ -58,6 +72,7 @@ import com.axiel7.anihyou.utils.THEME_FOLLOW_SYSTEM
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -107,6 +122,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
+            val windowSizeClass = calculateWindowSizeClass(this)
 
             AniHyouTheme(
                 darkTheme = if (themePreference == THEME_FOLLOW_SYSTEM) isSystemInDarkTheme()
@@ -118,6 +134,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainView(
+                        windowSizeClass = windowSizeClass,
                         lastTabOpened = lastTabOpened ?: 0,
                         deepLink = deepLink,
                     )
@@ -199,35 +216,66 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainView(
+    windowSizeClass: WindowSizeClass,
     lastTabOpened: Int,
     deepLink: DeepLink?,
 ) {
     val navController = rememberNavController()
+    val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     Scaffold(
         bottomBar = {
-            MainBottomNavBar(
-                navController = navController,
-                lastTabOpened = lastTabOpened
-            )
+            if (isCompactScreen) {
+                MainBottomNavBar(
+                    navController = navController,
+                    lastTabOpened = lastTabOpened
+                )
+            }
         },
         contentWindowInsets = WindowInsets.systemBars
             .only(WindowInsetsSides.Horizontal)
     ) { padding ->
-        MainNavigation(
-            navController = navController,
-            lastTabOpened = lastTabOpened,
-            deepLink = deepLink,
-            padding = padding,
-        )
+        if (isCompactScreen) {
+            MainNavigation(
+                navController = navController,
+                isCompactScreen = true,
+                lastTabOpened = lastTabOpened,
+                deepLink = deepLink,
+                padding = padding,
+            )
+        } else {
+            val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+            Row {
+                MainNavigationRail(
+                    navController = navController,
+                    lastTabOpened = lastTabOpened
+                )
+                MainNavigation(
+                    navController = navController,
+                    isCompactScreen = false,
+                    lastTabOpened = lastTabOpened,
+                    deepLink = deepLink,
+                    padding = PaddingValues(
+                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                        top = padding.calculateTopPadding(),
+                        end = padding.calculateEndPadding(LocalLayoutDirection.current),
+                        bottom = bottomPadding.calculateBottomPadding()
+                    ),
+                )
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
     AniHyouTheme {
         MainView(
+            windowSizeClass = WindowSizeClass.calculateFromSize(
+                DpSize(width = 1280.dp, height = 1920.dp)
+            ),
             lastTabOpened = 0,
             deepLink = null
         )
