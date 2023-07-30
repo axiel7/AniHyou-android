@@ -194,6 +194,7 @@ fun MainNavigation(
             } else {
                 UserMediaListHostView(
                     mediaType = MediaType.ANIME,
+                    isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navigateToMediaDetails = { id ->
                         navController.navigate(
@@ -213,6 +214,7 @@ fun MainNavigation(
             } else {
                 UserMediaListHostView(
                     mediaType = MediaType.MANGA,
+                    isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navigateToMediaDetails = { id ->
                         navController.navigate(
@@ -427,6 +429,7 @@ fun MainNavigation(
             UserMediaListHostView(
                 mediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
                     ?.let { MediaType.safeValueOf(it) }!!,
+                isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
                 userId = navEntry.arguments?.getInt(USER_ID_ARGUMENT.removeFirstAndLast()),
                 navigateToMediaDetails = { id ->

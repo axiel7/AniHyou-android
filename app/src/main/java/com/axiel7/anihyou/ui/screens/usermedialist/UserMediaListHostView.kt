@@ -61,6 +61,7 @@ const val USER_MEDIA_LIST_DESTINATION = "media_list/$USER_ID_ARGUMENT/$MEDIA_TYP
 @Composable
 fun UserMediaListHostView(
     mediaType: MediaType,
+    isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     userId: Int? = null,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
@@ -179,6 +180,7 @@ fun UserMediaListHostView(
                 mediaType = mediaType,
                 isMyList = isMyList,
                 isLoading = viewModel.isLoading,
+                showAsGrid = !isCompactScreen,
                 contentPadding = if (!isMyList)
                     PaddingValues(top = 8.dp, bottom = padding.calculateBottomPadding())
                 else PaddingValues(vertical = 8.dp),
@@ -215,6 +217,7 @@ fun UserMediaListViewPreview() {
         Surface {
             UserMediaListHostView(
                 mediaType = MediaType.ANIME,
+                isCompactScreen = true,
                 navigateToMediaDetails = {}
             )
         }

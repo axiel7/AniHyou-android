@@ -55,6 +55,7 @@ fun UserMediaListView(
     mediaType: MediaType,
     isMyList: Boolean,
     isLoading: Boolean,
+    showAsGrid: Boolean,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     nestedScrollConnection: NestedScrollConnection,
     navigateToDetails: (mediaId: Int) -> Unit,
@@ -86,6 +87,9 @@ fun UserMediaListView(
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
     }
 
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
     Box(
         modifier = Modifier
             .clipToBounds()
@@ -100,8 +104,6 @@ fun UserMediaListView(
                 GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
                 App.gridItemsPerRow
             )
-            val listState = rememberLazyGridState()
-            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
             LazyVerticalGrid(
                 columns = if (itemsPerRow != null && itemsPerRow!! > 0) GridCells.Fixed(itemsPerRow!!)
@@ -126,14 +128,12 @@ fun UserMediaListView(
                 }
             }
         } else {
-            val listState = rememberLazyListState()
-            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
-
-            LazyColumn(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(if (showAsGrid) 2 else 1),
                 modifier = listModifier,
                 state = listState,
                 contentPadding = contentPadding,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.Center
             ) {
                 when (listStyle) {
                     ListStyle.STANDARD.name -> {
