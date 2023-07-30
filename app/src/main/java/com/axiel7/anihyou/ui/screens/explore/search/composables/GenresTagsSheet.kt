@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.explore.search
+package com.axiel7.anihyou.ui.screens.explore.search.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +51,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextCheckbox
+import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 

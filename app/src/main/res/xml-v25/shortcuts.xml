@@ -7,7 +7,7 @@
         android:shortcutShortLabel="@string/explore">
         <intent
             android:action="search"
-            android:targetClass="com.axiel7.anihyou.ui.screens.MainActivity"
+            android:targetClass="com.axiel7.anihyou.ui.screens.main.MainActivity"
             android:targetPackage="com.axiel7.anihyou" />
     </shortcut>
 </shortcuts>

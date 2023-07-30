@@ -24,7 +24,7 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.ui.screens.home.HomeLazyRow
+import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero

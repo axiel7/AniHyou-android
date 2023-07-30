@@ -26,9 +26,9 @@ import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.repository.MediaRepository
-import com.axiel7.anihyou.ui.screens.MainActivity
+import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
-import com.axiel7.anihyou.ui.theme.stringResource
+import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.secondsToLocalDateTime
 import com.axiel7.anihyou.utils.DateUtils.toLocalized
 
@@ -45,7 +45,7 @@ class AiringWidget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = stringResource(R.string.no_information),
+                            text = glanceStringResource(R.string.no_information),
                             modifier = GlanceModifier.padding(bottom = 8.dp),
                             style = TextStyle(
                                 color = GlanceTheme.colors.onSurface

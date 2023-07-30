@@ -25,7 +25,7 @@
         android:theme="@style/Theme.MySplash"
         tools:targetApi="31">
         <activity
-            android:name=".ui.screens.MainActivity"
+            android:name=".ui.screens.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AniHyou">
             <intent-filter>

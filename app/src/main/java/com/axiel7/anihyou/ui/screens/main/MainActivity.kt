@@ -1,41 +1,26 @@
-package com.axiel7.anihyou.ui.screens
+package com.axiel7.anihyou.ui.screens.main
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
@@ -62,9 +47,9 @@ import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.BottomDestination
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.ListStyle
+import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import com.axiel7.anihyou.utils.THEME_BLACK
@@ -221,7 +206,7 @@ fun MainView(
 
     Scaffold(
         bottomBar = {
-            BottomNavBar(
+            MainBottomNavBar(
                 navController = navController,
                 lastTabOpened = lastTabOpened
             )
@@ -235,60 +220,6 @@ fun MainView(
             deepLink = deepLink,
             padding = padding,
         )
-    }
-}
-
-@Composable
-fun BottomNavBar(
-    navController: NavController,
-    lastTabOpened: Int
-) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val isVisible by remember {
-        derivedStateOf {
-            when {
-                BottomDestination.values.map { it.route }
-                    .contains(navBackStackEntry?.destination?.route) -> true
-
-                navBackStackEntry?.destination?.route == null -> true
-                else -> false
-            }
-        }
-    }
-    var selectedItem by rememberPreference(LAST_TAB_PREFERENCE_KEY, lastTabOpened)
-
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it })
-    ) {
-        NavigationBar {
-            BottomDestination.values.forEachIndexed { index, dest ->
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(
-                                if (navBackStackEntry?.destination?.route == dest.route) dest.iconSelected
-                                else dest.icon
-                            ),
-                            contentDescription = stringResource(dest.title)
-                        )
-                    },
-                    label = { Text(text = stringResource(dest.title)) },
-                    selected = navBackStackEntry?.destination?.route == dest.route,
-                    onClick = {
-                        selectedItem = index
-                        navController.navigate(dest.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-            }
-        }
     }
 }
 

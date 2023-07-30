@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.explore
+package com.axiel7.anihyou.ui.screens.explore.charts
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -26,6 +26,7 @@ import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.screens.explore.ExploreViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val CHART_TYPE_ARGUMENT = "{type}"

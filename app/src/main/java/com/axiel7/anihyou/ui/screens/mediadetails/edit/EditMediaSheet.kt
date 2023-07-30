@@ -9,21 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
@@ -33,16 +27,13 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -69,11 +60,13 @@ import com.axiel7.anihyou.ui.composables.TextCheckbox
 import com.axiel7.anihyou.ui.composables.scores.FiveStarRatingView
 import com.axiel7.anihyou.ui.composables.scores.SliderRatingView
 import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.DeleteMediaEntryDialog
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDatePicker
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaProgressRow
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.utils.DateUtils.toLocalized
-import com.axiel7.anihyou.utils.StringUtils.toStringOrEmpty
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -359,108 +352,6 @@ fun EditMediaSheet(
             }
         }//:Column
     }//:Sheet
-}
-
-@Composable
-fun DeleteMediaEntryDialog(viewModel: EditMediaViewModel) {
-    val scope = rememberCoroutineScope()
-    AlertDialog(
-        onDismissRequest = { viewModel.openDeleteDialog = false },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    scope.launch { viewModel.deleteListEntry() }
-                    viewModel.openDeleteDialog = false
-                }
-            ) {
-                Text(text = stringResource(R.string.ok))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { viewModel.openDeleteDialog = false }) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        },
-        title = { Text(text = stringResource(R.string.delete)) },
-        text = { Text(text = stringResource(R.string.delete_confirmation)) }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditMediaDatePicker(
-    viewModel: EditMediaViewModel,
-    datePickerState: DatePickerState,
-    onDateSelected: (Long) -> Unit
-) {
-    val dateConfirmEnabled by remember {
-        derivedStateOf { datePickerState.selectedDateMillis != null }
-    }
-
-    DatePickerDialog(
-        onDismissRequest = { viewModel.openDatePicker = false },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    viewModel.openDatePicker = false
-                    onDateSelected(datePickerState.selectedDateMillis!!)
-                },
-                enabled = dateConfirmEnabled
-            ) {
-                Text(text = stringResource(R.string.ok))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { viewModel.openDatePicker = false }) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        }
-    ) {
-        DatePicker(state = datePickerState)
-    }
-}
-
-@Composable
-fun EditMediaProgressRow(
-    label: String,
-    progress: Int?,
-    modifier: Modifier,
-    totalProgress: Int?,
-    onValueChange: (String) -> Unit,
-    onMinusClick: () -> Unit,
-    onPlusClick: () -> Unit,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedButton(
-            onClick = onMinusClick,
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "-1")
-        }
-        OutlinedTextField(
-            value = progress.toStringOrEmpty(),
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .weight(2f)
-                .padding(horizontal = 16.dp),
-            label = { Text(text = label) },
-            suffix = {
-                totalProgress?.let { Text(text = "/$it") }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-
-        OutlinedButton(
-            onClick = onPlusClick,
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "+1")
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

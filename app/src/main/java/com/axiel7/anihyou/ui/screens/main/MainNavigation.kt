@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens
+package com.axiel7.anihyou.ui.screens.main
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -37,20 +37,20 @@ import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
-import com.axiel7.anihyou.ui.screens.explore.CHART_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.EXPLORE_GENRE_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
 import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_CHART_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MediaChartListView
+import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
 import com.axiel7.anihyou.ui.screens.explore.OPEN_SEARCH_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.SEASON_ANIME_DESTINATION
-import com.axiel7.anihyou.ui.screens.explore.SEASON_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.SeasonAnimeView
+import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ANIME_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.charts.SeasonAnimeView
 import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.YEAR_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.charts.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
