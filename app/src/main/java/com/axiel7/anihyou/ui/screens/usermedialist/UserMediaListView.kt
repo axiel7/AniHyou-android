@@ -38,11 +38,11 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.composables.OnBottomReached
-import com.axiel7.anihyou.ui.composables.media.CompactUserMediaListItem
-import com.axiel7.anihyou.ui.composables.media.GridUserMediaListItem
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
-import com.axiel7.anihyou.ui.composables.media.MinimalUserMediaListItem
-import com.axiel7.anihyou.ui.composables.media.StandardUserMediaListItem
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaListItem
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
