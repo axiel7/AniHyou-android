@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -22,10 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.media.duration
@@ -37,6 +41,7 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -113,14 +118,31 @@ fun StandardUserMediaListItem(
                             fontSize = 16.sp
                         )
 
-                        if (isMyList && (status == MediaListStatus.CURRENT
-                                    || status == MediaListStatus.REPEATING)
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.Bottom
                         ) {
-                            FilledTonalButton(onClick = onClickPlus) {
-                                Text(text = "+1")
+                            if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
+                                Icon(
+                                    painter = painterResource(R.drawable.replay_20),
+                                    contentDescription = stringResource(R.string.repeat_count)
+                                )
+                            }
+                            if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
+                                Icon(
+                                    painter = painterResource(R.drawable.notes_20),
+                                    contentDescription = stringResource(R.string.notes)
+                                )
+                            }
+                            if (isMyList && (status == MediaListStatus.CURRENT
+                                        || status == MediaListStatus.REPEATING)
+                            ) {
+                                FilledTonalButton(onClick = onClickPlus) {
+                                    Text(text = "+1")
+                                }
                             }
                         }
-                    }
+                    }//:Row
 
                     LinearProgressIndicator(
                         progress = item.calculateProgressBarValue(),

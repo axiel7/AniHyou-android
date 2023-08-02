@@ -33,7 +33,7 @@ val exampleMediaList = UserMediaListQuery.MediaList(
             __typename = "",
             id = 1,
             title = BasicMediaDetails.Title(userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"),
-            episodes = 12,
+            episodes = 1095,
             chapters = null,
             volumes = null,
             type = MediaType.ANIME
@@ -45,12 +45,12 @@ val exampleMediaList = UserMediaListQuery.MediaList(
         mediaId = 1,
         status = MediaListStatus.CURRENT,
         score = 77.0,
-        progress = 3,
+        progress = 999,
         progressVolumes = null,
-        repeat = null,
+        repeat = 2,
         startedAt = null,
         completedAt = null,
         private = false,
-        notes = null,
+        notes = "This is a note",
     )
 )

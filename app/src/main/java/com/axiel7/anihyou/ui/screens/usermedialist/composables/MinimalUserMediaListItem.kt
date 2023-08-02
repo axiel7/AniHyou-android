@@ -5,11 +5,13 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
@@ -17,10 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
@@ -28,6 +33,7 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.scores.MinimalScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -73,6 +79,7 @@ fun MinimalUserMediaListItem(
                 )
 
                 Row(
+                    modifier = Modifier.padding(end = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
@@ -84,6 +91,19 @@ fun MinimalUserMediaListItem(
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
+                        Icon(
+                            painter = painterResource(R.drawable.replay_20),
+                            contentDescription = stringResource(R.string.repeat_count)
+                        )
+                    }
+                    if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
+                        Icon(
+                            painter = painterResource(R.drawable.notes_20),
+                            contentDescription = stringResource(R.string.notes)
+                        )
+                    }
                 }
             }//:Column
 
