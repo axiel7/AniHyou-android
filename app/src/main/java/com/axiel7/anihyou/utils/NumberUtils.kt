@@ -5,6 +5,7 @@ import android.icu.text.CompactDecimalFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
+import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
@@ -13,12 +14,14 @@ object NumberUtils {
 
     private val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
 
-    private val defaultDecimalFormat
+    private val defaultCompactDecimalFormat
         @RequiresApi(Build.VERSION_CODES.N)
         get() = CompactDecimalFormat.getInstance(
             Locale.getDefault(),
             CompactDecimalFormat.CompactStyle.SHORT
         )
+
+    private val defaultDecimalFormat = DecimalFormat()
 
     private val decimalFormatSymbols = DecimalFormatSymbols.getInstance()
     private val thousandsSeparator = decimalFormatSymbols.groupingSeparator
@@ -27,10 +30,18 @@ object NumberUtils {
     fun Int.format(): String = defaultNumberFormat.format(this)
     fun Long.format(): String = defaultNumberFormat.format(this)
     fun Double.format(): String = defaultNumberFormat.format(this)
-    fun Double.format(decimalLength: Int) = String.format("%.${decimalLength}f", this)
+    fun Double.format(decimalLength: Int): String {
+        var pattern = "0"
+        if (decimalLength > 0) {
+            pattern = "0."
+            pattern += "0".repeat(decimalLength)
+        }
+        defaultDecimalFormat.applyPattern(pattern)
+        return defaultDecimalFormat.format(this)
+    }
 
     fun Int.abbreviated(): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        defaultDecimalFormat.format(this)
+        defaultCompactDecimalFormat.format(this)
     } else {
         this.format()
     }
