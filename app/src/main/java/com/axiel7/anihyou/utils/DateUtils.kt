@@ -60,6 +60,8 @@ object DateUtils {
     private const val BASE_YEAR = 1917
     val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toList()
 
+    fun currentTimeSeconds() = System.currentTimeMillis() / 1000
+
     fun LocalDateTime.tomorrow(): LocalDateTime = toCalendar()
         .apply {
             add(Calendar.DAY_OF_MONTH, 1)
@@ -119,9 +121,12 @@ object DateUtils {
      * Converts seconds to years, months, weeks, days, hours or minutes.
      * Depending if there is enough time.
      * Eg. If days greater than 1 and less than 6, returns "x days"
+     * @param buildString optional parameter to use in Glance. By default it uses compose [stringResource]
      */
     @Composable
-    fun Long.secondsToLegibleText(): String {
+    fun Long.secondsToLegibleText(
+        buildString: @Composable (id: Int, time: Long) -> String = { id, time -> stringResource(id, time) }
+    ): String {
         val days = this / 86400
         return when {
             days > 6 -> {
@@ -130,18 +135,18 @@ object DateUtils {
                     val months = this / 2629746
                     if (months > 12) {
                         val years = this / 31556952
-                        stringResource(R.string.num_years).format(years)
-                    } else stringResource(R.string.num_months).format(months)
-                } else stringResource(R.string.num_weeks).format(weeks)
+                        buildString(R.string.num_years, years)
+                    } else buildString(R.string.num_months, months)
+                } else buildString(R.string.num_weeks, weeks)
             }
 
-            days >= 1 -> stringResource(R.string.num_days).format(days)
+            days >= 1 -> buildString(R.string.num_days, days)
             else -> {
                 val hours = this / 3600
-                return if (hours >= 1) "$hours ${stringResource(R.string.hour_abbreviation)}"
+                return if (hours >= 1) buildString(R.string.hour_abbreviation, hours)
                 else {
                     val minutes = (this % 3600) / 60
-                    "$minutes ${stringResource(R.string.minutes_abbreviation)}"
+                    buildString(R.string.minutes_abbreviation, minutes)
                 }
             }
         }

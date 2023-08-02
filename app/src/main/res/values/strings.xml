@@ -8,8 +8,8 @@
     <string name="num_months">%s months</string>
     <string name="num_weeks">%s weeks</string>
     <string name="num_days">%s days</string>
-    <string name="hour_abbreviation">h</string>
-    <string name="minutes_abbreviation">min</string>
+    <string name="hour_abbreviation">%s h</string>
+    <string name="minutes_abbreviation">%s min</string>
     <string name="unknown">Unknown</string>
     <string name="airing_soon">Airing soon</string>
     <string name="mean_score">Mean score</string>
@@ -61,7 +61,7 @@
     <string name="average_score">Average score</string>
     <string name="popularity">Popularity</string>
     <string name="favorites">Favorites</string>
-    <string name="episode_in_time">Ep %s in %s</string>
+    <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">Airing</string>
     <string name="lorem_ipsun" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="num_episodes_behind">%s episodes behind</string>
@@ -246,4 +246,5 @@
     <string name="ten" translatable="false">10</string>
     <string name="media_status">Status</string>
     <string name="year">Year</string>
+    <string name="episode_aired_ago">Ep %d aired %s ago</string>
 </resources>

@@ -29,8 +29,9 @@ import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
-import com.axiel7.anihyou.utils.DateUtils.secondsToLocalDateTime
-import com.axiel7.anihyou.utils.DateUtils.toLocalized
+import com.axiel7.anihyou.utils.DateUtils.currentTimeSeconds
+import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import kotlin.math.absoluteValue
 
 class AiringWidget : GlanceAppWidget() {
 
@@ -82,14 +83,32 @@ class AiringWidget : GlanceAppWidget() {
                                     )
 
                                     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-                                        val airingAt = nextAiringEpisode.airingAt.toLong()
-                                            .secondsToLocalDateTime()?.toLocalized() ?: "-"
-                                        Text(
-                                            text = LocalContext.current.getString(
-                                                R.string.episode_airing_on,
+                                        val airingIn = nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
+                                        val airingText = if (airingIn > 0) {
+                                            val timeText = airingIn.secondsToLegibleText(
+                                                buildString = { id, time ->
+                                                    LocalContext.current.getString(id, time)
+                                                }
+                                            )
+                                            LocalContext.current.getString(
+                                                R.string.episode_in_time,
                                                 nextAiringEpisode.episode,
-                                                airingAt
-                                            ),
+                                                timeText
+                                            )
+                                        } else {
+                                            val timeText = airingIn.absoluteValue.secondsToLegibleText(
+                                                buildString = { id, time ->
+                                                    LocalContext.current.getString(id, time)
+                                                }
+                                            )
+                                            LocalContext.current.getString(
+                                                R.string.episode_aired_ago,
+                                                nextAiringEpisode.episode,
+                                                timeText
+                                            )
+                                        }
+                                        Text(
+                                            text = airingText,
                                             style = TextStyle(
                                                 color = GlanceTheme.colors.onPrimaryContainer
                                             ),
