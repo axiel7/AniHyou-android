@@ -16,6 +16,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -32,7 +33,7 @@ object DateUtils {
     fun String.toIsoFormat(inputFormat: DateTimeFormatter) =
         LocalDate.parse(this, inputFormat).toString()
 
-    fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(defaultZoneOffset).toEpochMilli()
+    fun LocalDate.toEpochMillis() = this.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
     fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate =
         with(TemporalAdjusters.nextOrSame(dayOfWeek))
@@ -188,7 +189,7 @@ object DateUtils {
      */
     fun Long.millisToLocalDate(): LocalDate? {
         return try {
-            Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+            Instant.ofEpochMilli(this).atZone(ZoneId.of("UTC")).toLocalDate()
         } catch (e: Exception) {
             null
         }
