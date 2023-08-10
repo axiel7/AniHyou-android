@@ -158,8 +158,8 @@ object DateUtils {
         val hours = this / 60
         return if (hours >= 1) {
             val minutes = this % 60
-            "$hours ${stringResource(R.string.hour_abbreviation)} $minutes ${stringResource(R.string.minutes_abbreviation)}"
-        } else "$this ${stringResource(R.string.minutes_abbreviation)}"
+            "${stringResource(R.string.hour_abbreviation, hours)} ${stringResource(R.string.minutes_abbreviation, minutes)}"
+        } else stringResource(R.string.minutes_abbreviation, this)
     }
 
     fun Long.minutesToDays() = this / 1440
