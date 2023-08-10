@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,10 +64,10 @@ fun FullScreenImageView(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedIconButton(onClick = { context.openShareSheet(imageUrl ?: "") }) {
+            FilledTonalIconButton(onClick = { context.openShareSheet(imageUrl ?: "") }) {
                 Icon(painter = painterResource(R.drawable.share_24), contentDescription = "close")
             }
-            OutlinedIconButton(onClick = onDismiss) {
+            FilledTonalIconButton(onClick = onDismiss) {
                 Icon(painter = painterResource(R.drawable.close_24), contentDescription = "close")
             }
         }
