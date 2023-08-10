@@ -5,12 +5,14 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +35,6 @@ import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
@@ -58,7 +59,7 @@ fun CompactUserMediaListItem(
             .combinedClickable(onLongClick = onLongClick, onClick = onClick),
     ) {
         Row(
-            modifier = Modifier.height(MEDIA_POSTER_COMPACT_HEIGHT.dp)
+            modifier = Modifier.height(IntrinsicSize.Max)
         ) {
             Box(
                 contentAlignment = Alignment.BottomStart
@@ -68,7 +69,9 @@ fun CompactUserMediaListItem(
                     showShadow = false,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .size(MEDIA_POSTER_SMALL_WIDTH.dp)
+                        .heightIn(min = MEDIA_POSTER_SMALL_WIDTH.dp)
+                        .fillMaxHeight()
+                        .width(MEDIA_POSTER_SMALL_WIDTH.dp)
                 )
 
                 BadgeScoreIndicator(
@@ -79,14 +82,12 @@ fun CompactUserMediaListItem(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
-                    modifier = Modifier
-                        .padding(top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     lineHeight = 19.sp,
@@ -100,9 +101,7 @@ fun CompactUserMediaListItem(
                 )
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 4.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
