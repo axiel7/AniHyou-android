@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -54,7 +55,7 @@ fun MinimalUserMediaListItem(
     ) {
         Row(
             modifier = Modifier
-                .height(84.dp)
+                .height(IntrinsicSize.Max)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -79,7 +80,7 @@ fun MinimalUserMediaListItem(
                 )
 
                 Row(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier.padding(top = 8.dp, end = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
