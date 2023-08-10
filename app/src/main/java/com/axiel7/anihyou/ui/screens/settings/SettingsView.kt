@@ -33,6 +33,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.ui.base.ItemsPerRow
 import com.axiel7.anihyou.ui.base.ListStyle
+import com.axiel7.anihyou.ui.base.Theme
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
@@ -49,19 +50,9 @@ import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
-import com.axiel7.anihyou.utils.THEME_BLACK
-import com.axiel7.anihyou.utils.THEME_DARK
-import com.axiel7.anihyou.utils.THEME_FOLLOW_SYSTEM
-import com.axiel7.anihyou.utils.THEME_LIGHT
 import kotlinx.coroutines.launch
 
-val themeEntries = mapOf(
-    THEME_FOLLOW_SYSTEM to R.string.theme_system,
-    THEME_LIGHT to R.string.theme_light,
-    THEME_DARK to R.string.theme_dark,
-    THEME_BLACK to R.string.theme_black
-)
-
+val themeEntries = Theme.values().associate { it.name to it.stringRes }
 val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
 val itemsPerRowEntries = ItemsPerRow.values().associate { it.value.toString() to it.stringRes }
 
@@ -80,7 +71,7 @@ fun SettingsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, THEME_FOLLOW_SYSTEM)
+    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.name)
     var useGeneralListStylePreference by rememberPreference(
         USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
         App.useGeneralListStyle

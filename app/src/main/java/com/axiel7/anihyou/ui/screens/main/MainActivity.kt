@@ -62,13 +62,11 @@ import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.ListStyle
+import com.axiel7.anihyou.ui.base.Theme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
-import com.axiel7.anihyou.utils.THEME_BLACK
-import com.axiel7.anihyou.utils.THEME_DARK
-import com.axiel7.anihyou.utils.THEME_FOLLOW_SYSTEM
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -125,9 +123,9 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             AniHyouTheme(
-                darkTheme = if (themePreference == THEME_FOLLOW_SYSTEM) isSystemInDarkTheme()
-                else themePreference == THEME_DARK || themePreference == THEME_BLACK,
-                blackColors = themePreference == THEME_BLACK
+                darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.name) isSystemInDarkTheme()
+                else themePreference == Theme.DARK.name || themePreference == Theme.BLACK.name,
+                blackColors = themePreference == Theme.BLACK.name
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

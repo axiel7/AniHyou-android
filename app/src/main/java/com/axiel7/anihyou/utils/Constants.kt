@@ -28,8 +28,3 @@ const val DISCORD_SERVER_URL = "https://discord.gg/CTv3WdfxHh"
 const val UNKNOWN_CHAR = "─"
 
 const val UTF_8 = "UTF-8"
-
-const val THEME_FOLLOW_SYSTEM = "follow_system"
-const val THEME_LIGHT = "light"
-const val THEME_DARK = "dark"
-const val THEME_BLACK = "black"
