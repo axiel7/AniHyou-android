@@ -138,5 +138,9 @@ apollo {
     generateSourcesDuringGradleSync.set(false)
     service("service") {
         packageName.set("com.axiel7.anihyou")
+        introspection {
+            endpointUrl.set("https://graphql.anilist.co")
+            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        }
     }
 }
