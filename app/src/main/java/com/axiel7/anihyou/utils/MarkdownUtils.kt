@@ -5,8 +5,8 @@ import java.net.URLEncoder
 
 object MarkdownUtils {
 
-    const val ANIHYOU_IMAGE_SCHEME = "anihyouimage"
-    const val ANIHYOU_SPOILER_SCHEME = "anihyouspoiler://"
+    private const val ANIHYOU_IMAGE_SCHEME = "anihyouimage"
+    private const val ANIHYOU_SPOILER_SCHEME = "anihyouspoiler://"
 
     fun String.formatImageTags() =
         replace(Regex("(img\\d*%*)\\((.*)\\)"), "\n[View image]($ANIHYOU_IMAGE_SCHEME\$2)\n")

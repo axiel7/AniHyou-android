@@ -93,11 +93,10 @@ object ContextUtils {
     /** Finds all the browsers installed on the device */
     private fun Context.findBrowserIntentActivities(): List<ResolveInfo> {
         val emptyBrowserIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("http", "", null))
-            .setAction(Intent.ACTION_VIEW)
 
         return packageManager.queryIntentActivitiesCompat(
-            emptyBrowserIntent,
-            PackageManager.MATCH_ALL
+            intent = emptyBrowserIntent,
+            flags = PackageManager.MATCH_ALL
         )
     }
 
@@ -106,7 +105,7 @@ object ContextUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
         } else {
-            @Suppress("DEPRECATION") queryIntentActivities(intent, flags)
+            queryIntentActivities(intent, flags)
         }
 
     fun Context.getActivity(): Activity? = when (this) {
