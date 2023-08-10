@@ -52,7 +52,7 @@ import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
 import kotlinx.coroutines.launch
 
-val themeEntries = Theme.values().associate { it.name to it.stringRes }
+val themeEntries = Theme.values().associate { it.value to it.stringRes }
 val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
 val itemsPerRowEntries = ItemsPerRow.values().associate { it.value.toString() to it.stringRes }
 
@@ -71,7 +71,7 @@ fun SettingsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.name)
+    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.value)
     var useGeneralListStylePreference by rememberPreference(
         USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
         App.useGeneralListStyle

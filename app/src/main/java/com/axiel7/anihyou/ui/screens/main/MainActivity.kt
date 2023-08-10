@@ -123,9 +123,9 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             AniHyouTheme(
-                darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.name) isSystemInDarkTheme()
-                else themePreference == Theme.DARK.name || themePreference == Theme.BLACK.name,
-                blackColors = themePreference == Theme.BLACK.name
+                darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.value) isSystemInDarkTheme()
+                else themePreference == Theme.DARK.value || themePreference == Theme.BLACK.value,
+                blackColors = themePreference == Theme.BLACK.value
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
