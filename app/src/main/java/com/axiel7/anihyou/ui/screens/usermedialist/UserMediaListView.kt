@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -84,9 +87,6 @@ fun UserMediaListView(
         derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
     }
 
-    val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
-
     Box(
         modifier = Modifier
             .clipToBounds()
@@ -101,6 +101,8 @@ fun UserMediaListView(
                 GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
                 App.gridItemsPerRow
             )
+            val listState = rememberLazyGridState()
+            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
 
             LazyVerticalGrid(
                 columns = if (itemsPerRow != null && itemsPerRow!! > 0) GridCells.Fixed(itemsPerRow!!)
@@ -124,13 +126,87 @@ fun UserMediaListView(
                     )
                 }
             }
-        } else {
+        } else if (showAsGrid) {
+            val listState = rememberLazyGridState()
+            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
             LazyVerticalGrid(
-                columns = GridCells.Fixed(if (showAsGrid) 2 else 1),
+                columns = GridCells.Fixed(2),
                 modifier = listModifier,
                 state = listState,
                 contentPadding = contentPadding,
                 horizontalArrangement = Arrangement.Center
+            ) {
+                when (listStyle) {
+                    ListStyle.STANDARD.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            StandardUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+
+                    ListStyle.COMPACT.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            CompactUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+
+                    ListStyle.MINIMAL.name -> {
+                        items(
+                            items = mediaList,
+                            key = { it.basicMediaListEntry.id },
+                            contentType = { it.basicMediaListEntry }
+                        ) { item ->
+                            MinimalUserMediaListItem(
+                                item = item,
+                                status = status,
+                                scoreFormat = scoreFormat,
+                                isMyList = isMyList,
+                                onClick = { navigateToDetails(item.mediaId) },
+                                onLongClick = { onShowEditSheet(item) },
+                                onClickPlus = {
+                                    onUpdateProgress(item.basicMediaListEntry)
+                                }
+                            )
+                        }
+                    }
+                }
+            }//: LazyVerticalGrid
+        } else {
+            val listState = rememberLazyListState()
+            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
+            LazyColumn(
+                modifier = listModifier,
+                state = listState,
+                contentPadding = contentPadding,
             ) {
                 when (listStyle) {
                     ListStyle.STANDARD.name -> {
