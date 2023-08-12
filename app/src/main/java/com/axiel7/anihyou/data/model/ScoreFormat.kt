@@ -57,6 +57,15 @@ fun ScoreFormat.maxValue() = when (this) {
     ScoreFormat.UNKNOWN__ -> 0.0
 }
 
+fun ScoreFormat.stringRes() = when (this) {
+    ScoreFormat.POINT_100 -> R.string.score_point_100
+    ScoreFormat.POINT_10_DECIMAL -> R.string.score_point_10_decimal
+    ScoreFormat.POINT_10 -> R.string.score_point_10
+    ScoreFormat.POINT_5 -> R.string.score_point_5
+    ScoreFormat.POINT_3 -> R.string.score_point_3
+    ScoreFormat.UNKNOWN__ -> R.string.unknown
+}
+
 @Composable
 fun Double?.scorePrimaryColor(format: ScoreFormat): Color {
     if (this == null) return MaterialTheme.colorScheme.outline

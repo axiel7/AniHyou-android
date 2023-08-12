@@ -18,6 +18,10 @@ import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
 import com.axiel7.anihyou.type.ActivitySort
+import com.axiel7.anihyou.type.MediaListOptionsInput
+import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.type.UserStaffNameLanguage
+import com.axiel7.anihyou.type.UserTitleLanguage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
@@ -40,24 +44,34 @@ object UserRepository {
         val error = response.getError()
         if (error != null) emit(DataResult.Error(message = error))
         else {
-            val options = response?.data?.Viewer?.options
+            val options = response?.data?.Viewer?.userOptionsFragment
             if (options != null) emit(DataResult.Success(data = options))
             else emit(DataResult.Error(message = "Error"))
         }
     }
 
     fun updateUser(
-        displayAdultContent: Boolean? = null
+        displayAdultContent: Boolean? = null,
+        titleLanguage: UserTitleLanguage? = null,
+        staffNameLanguage: UserStaffNameLanguage? = null,
+        scoreFormat: ScoreFormat? = null,
+        animeListOptions: MediaListOptionsInput? = null,
+        mangaListOptions: MediaListOptionsInput? = null,
     ) = flow {
         emit(DataResult.Loading)
         val response = UpdateUserMutation(
-            displayAdultContent = Optional.presentIfNotNull(displayAdultContent)
+            displayAdultContent = Optional.presentIfNotNull(displayAdultContent),
+            titleLanguage = Optional.presentIfNotNull(titleLanguage),
+            staffNameLanguage = Optional.presentIfNotNull(staffNameLanguage),
+            scoreFormat = Optional.presentIfNotNull(scoreFormat),
+            animeListOptions = Optional.presentIfNotNull(animeListOptions),
+            mangaListOptions = Optional.presentIfNotNull(mangaListOptions),
         ).tryMutation()
 
         val error = response.getError()
         if (error != null) emit(DataResult.Error(message = error))
         else {
-            val user = response?.data?.UpdateUser
+            val user = response?.data?.UpdateUser?.userOptionsFragment
             if (user != null) emit(DataResult.Success(data = user))
             else emit(DataResult.Error(message = "Error"))
         }

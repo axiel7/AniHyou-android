@@ -213,7 +213,7 @@ fun ListPreference(
             )
 
             Text(
-                text = stringResource(entriesValues[preferenceValue]!!),
+                text = entriesValues[preferenceValue]?.let { stringResource(it) } ?: "",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp
             )
@@ -247,11 +247,8 @@ fun ListPreference(
                 }
             },
             confirmButton = {
-                TextButton(onClick = {
-                    openDialog = false
-                    onValueChange(preferenceValue)
-                }) {
-                    Text(text = stringResource(R.string.ok))
+                TextButton(onClick = { openDialog = false }) {
+                    Text(text = stringResource(R.string.close))
                 }
             }
         )

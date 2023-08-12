@@ -1,8 +1,19 @@
-mutation UpdateUser($displayAdultContent: Boolean) {
-    UpdateUser(displayAdultContent: $displayAdultContent) {
-        id
-        options {
-            displayAdultContent
-        }
+mutation UpdateUser(
+    $displayAdultContent: Boolean,
+    $titleLanguage: UserTitleLanguage,
+    $staffNameLanguage: UserStaffNameLanguage,
+    $scoreFormat: ScoreFormat,
+    $animeListOptions: MediaListOptionsInput,
+    $mangaListOptions: MediaListOptionsInput
+) {
+    UpdateUser(
+        displayAdultContent: $displayAdultContent,
+        titleLanguage: $titleLanguage,
+        staffNameLanguage: $staffNameLanguage,
+        scoreFormat: $scoreFormat,
+        animeListOptions: $animeListOptions,
+        mangaListOptions: $mangaListOptions
+    ) {
+        ...UserOptionsFragment
     }
 }

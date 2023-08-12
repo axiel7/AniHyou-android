@@ -16,6 +16,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
 import androidx.core.os.LocaleListCompat
 import com.axiel7.anihyou.R
 
@@ -23,6 +24,8 @@ object ContextUtils {
 
     fun Context.showToast(message: String?) =
         message?.let { Toast.makeText(this, message, Toast.LENGTH_SHORT).show() }
+
+    fun Context.showToast(@StringRes stringRes: Int) = showToast(getString(stringRes))
 
     fun Context.openActionView(url: String) {
         openActionView(Uri.parse(url))

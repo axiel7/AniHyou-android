@@ -247,4 +247,13 @@
     <string name="media_status">Status</string>
     <string name="year">Year</string>
     <string name="episode_aired_ago">Ep %d aired %s ago</string>
+    <string name="title_language">Title language</string>
+    <string name="romaji_western_order">Romaji (Western Order)</string>
+    <string name="staff_character_name_language"><![CDATA[Staff & Character name language]]></string>
+    <string name="score_format">Score format</string>
+    <string name="score_point_100">100 Point (55/100)</string>
+    <string name="score_point_10_decimal">10 Point Decimal (5.5/10)</string>
+    <string name="score_point_10">10 Point (5/10)</string>
+    <string name="score_point_5">5 Star (3/5)</string>
+    <string name="score_point_3">3 Point Smiley :)</string>
 </resources>

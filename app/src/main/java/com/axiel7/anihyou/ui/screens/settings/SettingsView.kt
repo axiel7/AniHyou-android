@@ -27,10 +27,17 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.stringRes
+import com.axiel7.anihyou.data.model.user.preferenceValues
+import com.axiel7.anihyou.data.model.user.stringRes
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.type.UserStaffNameLanguage
+import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.base.ItemsPerRow
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.base.Theme
@@ -47,6 +54,7 @@ import com.axiel7.anihyou.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.ContextUtils.openByDefaultSettings
 import com.axiel7.anihyou.utils.ContextUtils.openLink
+import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
@@ -55,6 +63,11 @@ import kotlinx.coroutines.launch
 val themeEntries = Theme.values().associate { it.value to it.stringRes }
 val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
 val itemsPerRowEntries = ItemsPerRow.values().associate { it.value.toString() to it.stringRes }
+val titleLanguageEntries =
+    UserTitleLanguage.preferenceValues().associate { it.rawValue to it.stringRes() }
+val staffNameLanguageEntries =
+    UserStaffNameLanguage.knownValues().associate { it.rawValue to it.stringRes() }
+val scoreFormatEntries = ScoreFormat.knownValues().associate { it.rawValue to it.stringRes() }
 
 const val SETTINGS_DESTINATION = "settings"
 
@@ -85,6 +98,10 @@ fun SettingsView(
         App.gridItemsPerRow
     )
     var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
+    var scoreFormatPreference by rememberPreference(
+        SCORE_FORMAT_PREFERENCE_KEY,
+        App.scoreFormat.name
+    )
 
     LaunchedEffect(viewModel) {
         if (!viewModel.isLoading) viewModel.getUserOptions()
@@ -169,15 +186,56 @@ fun SettingsView(
                 )
             }
 
+            ListPreference(
+                title = stringResource(R.string.title_language),
+                entriesValues = titleLanguageEntries,
+                preferenceValue = viewModel.userOptions?.options?.titleLanguage?.rawValue,
+                icon = R.drawable.title_24,
+                onValueChange = { value ->
+                    value?.let {
+                        val titleLanguage = UserTitleLanguage.valueOf(it)
+                        viewModel.onTitleLanguageChanged(titleLanguage)
+                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                    }
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.staff_character_name_language),
+                entriesValues = staffNameLanguageEntries,
+                preferenceValue = viewModel.userOptions?.options?.staffNameLanguage?.rawValue,
+                icon = R.drawable.group_24,
+                onValueChange = { value ->
+                    value?.let {
+                        val staffNameLanguage = UserStaffNameLanguage.valueOf(it)
+                        viewModel.onStaffNameLanguageChanged(staffNameLanguage)
+                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                    }
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.score_format),
+                entriesValues = scoreFormatEntries,
+                preferenceValue = scoreFormatPreference,
+                icon = R.drawable.star_24,
+                onValueChange = { value ->
+                    value?.let {
+                        scoreFormatPreference = it
+                        val scoreFormat = ScoreFormat.valueOf(it)
+                        viewModel.onScoreFormatChanged(scoreFormat)
+                    }
+                }
+            )
+
             PreferencesTitle(text = stringResource(R.string.content))
             SwitchPreference(
                 title = stringResource(R.string.display_adult_content),
-                preferenceValue = viewModel.displayAdultContent,
+                preferenceValue = viewModel.userOptions?.options?.displayAdultContent,
                 icon = R.drawable.no_adult_content_24,
                 onValueChange = { value ->
                     if (value != null) {
                         viewModel.onDisplayAdultContentChanged(value)
-                        scope.launch { viewModel.updateUser() }
                     }
                 }
             )

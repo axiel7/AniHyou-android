@@ -1,13 +1,26 @@
 query UserOptions {
     Viewer {
-        id
-        options {
-            activityMergeTime
-            airingNotifications
-            displayAdultContent
-            profileColor
-            staffNameLanguage
-            titleLanguage
+        ...UserOptionsFragment
+    }
+}
+
+fragment UserOptionsFragment on User {
+    id
+    options {
+        displayAdultContent
+        profileColor
+        staffNameLanguage
+        titleLanguage
+    }
+    mediaListOptions {
+        scoreFormat
+        animeList {
+            advancedScoringEnabled
+            advancedScoring
+        }
+        mangaList {
+            advancedScoringEnabled
+            advancedScoring
         }
     }
 }
