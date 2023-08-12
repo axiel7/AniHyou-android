@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
@@ -85,8 +87,10 @@ fun BadgeScoreIndicator(
                 } else {
                     Text(
                         text = UNKNOWN_CHAR,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 14.sp
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
