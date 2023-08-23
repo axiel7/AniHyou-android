@@ -109,7 +109,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("androidx.glance:glance-appwidget:1.0.0-rc01")
 
-    val accompanistVersion = "0.31.6-rc"
+    val accompanistVersion = "0.32.0"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
