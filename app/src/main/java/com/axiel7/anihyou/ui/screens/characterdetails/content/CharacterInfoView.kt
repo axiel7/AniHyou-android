@@ -31,7 +31,7 @@ import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsViewModel
 import com.axiel7.anihyou.utils.DateUtils.formatted
-import com.google.accompanist.placeholder.material.placeholder
+import io.github.fornewid.placeholder.material3.placeholder
 
 @Composable
 fun CharacterInfoView(

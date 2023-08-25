@@ -111,9 +111,10 @@ dependencies {
 
     val accompanistVersion = "0.32.0"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
+
+    implementation("io.github.fornewid:placeholder-material3:1.0.1")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
