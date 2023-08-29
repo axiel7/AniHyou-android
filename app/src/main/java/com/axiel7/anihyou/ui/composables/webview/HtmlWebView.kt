@@ -1,9 +1,10 @@
-package com.axiel7.anihyou.ui.composables
+package com.axiel7.anihyou.ui.composables.webview
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -13,9 +14,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.utils.ColorUtils.hexToString
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebView
-import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 
 @Composable
 fun HtmlWebView(
@@ -24,9 +22,8 @@ fun HtmlWebView(
 ) {
     val context = LocalContext.current
     val htmlConverted = generateHtml(html = html)
-    val webViewState = rememberWebViewStateWithHTMLData(data = htmlConverted)
     val webClient = remember {
-        object : AccompanistWebViewClient() {
+        object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
@@ -38,9 +35,8 @@ fun HtmlWebView(
     }
 
     WebView(
-        state = webViewState,
+        data = htmlConverted,
         modifier = modifier.fillMaxWidth(),
-        captureBackPresses = false,
         onCreated = { webView ->
             webView.background = ColorDrawable(Color.TRANSPARENT)
             webView.isScrollContainer = false
