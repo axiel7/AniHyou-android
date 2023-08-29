@@ -82,6 +82,8 @@ fun WebView(
         modifier = modifier,
         onRelease = {
             onDispose(it)
+            it.stopLoading()
+            it.destroy()
         }
     )
 }
