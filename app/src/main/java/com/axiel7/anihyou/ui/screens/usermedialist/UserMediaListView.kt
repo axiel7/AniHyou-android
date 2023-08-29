@@ -13,10 +13,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,12 +38,14 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
+import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
+import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
+import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserMediaListView(
     mediaList: List<UserMediaListQuery.MediaList>,
