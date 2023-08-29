@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,14 +27,15 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.App
@@ -66,6 +69,8 @@ import com.axiel7.anihyou.ui.base.Theme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.ui.theme.dark_scrim
+import com.axiel7.anihyou.ui.theme.light_scrim
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,9 +78,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         var deepLink: DeepLink? = null
         when {
@@ -121,10 +126,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
             val windowSizeClass = calculateWindowSizeClass(this)
+            val darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.value) isSystemInDarkTheme()
+            else themePreference == Theme.DARK.value || themePreference == Theme.BLACK.value
+
+            DisposableEffect(darkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
+                    ) { darkTheme },
+                    navigationBarStyle = SystemBarStyle.auto(
+                        light_scrim.toArgb(),
+                        dark_scrim.toArgb(),
+                    ) { darkTheme },
+                )
+                onDispose {}
+            }
 
             AniHyouTheme(
-                darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.value) isSystemInDarkTheme()
-                else themePreference == Theme.DARK.value || themePreference == Theme.BLACK.value,
+                darkTheme = darkTheme,
                 blackColors = themePreference == Theme.BLACK.value
             ) {
                 Surface(

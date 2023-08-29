@@ -3,6 +3,8 @@ package com.axiel7.anihyou.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val banner_shadow_color = Color(0x55000000)
+val light_scrim = Color(0xE6FFFFFF)
+val dark_scrim = Color(0x801b1b1b)
 
 val md_theme_light_primary = Color(0xFF314DDF)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
