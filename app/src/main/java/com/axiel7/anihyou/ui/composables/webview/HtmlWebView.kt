@@ -63,6 +63,11 @@ fun formatCompatibleHtml(html: String): String {
     return html
         // replace AniList markdown [text](link) with html <a>
         .replace(Regex("\\[([^]]+)]\\(([^)]+)\\)"), "<a href=\"\$2\">\$1</a>")
+        // replace AniList markdown __bold__ with html <b>
+        .replace(Regex("__(.+)__"), "<b>\$1</b>")
+        // escaped chars
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
 }
 
 @Composable
