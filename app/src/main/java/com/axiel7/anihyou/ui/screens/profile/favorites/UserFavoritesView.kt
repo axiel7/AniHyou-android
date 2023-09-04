@@ -84,7 +84,7 @@ fun UserFavoritesView(
                 .horizontalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
-            FavoritesType.values().forEach {
+            FavoritesType.entries.forEach {
                 FilterSelectionChip(
                     selected = viewModel.favoritesType == it,
                     text = it.localized(),

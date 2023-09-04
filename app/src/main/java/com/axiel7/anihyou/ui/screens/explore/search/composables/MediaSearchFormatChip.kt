@@ -21,7 +21,7 @@ fun MediaSearchFormatChip(
 
     if (openDialog) {
         DialogWithCheckboxSelection(
-            values = MediaFormatLocalizable.values(),
+            values = MediaFormatLocalizable.entries.toTypedArray(),
             defaultValues = viewModel.selectedMediaFormats.toTypedArray(),
             title = stringResource(R.string.format),
             onConfirm = {

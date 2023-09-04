@@ -100,7 +100,7 @@ fun SearchView(
                     .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 4.dp)
             ) {
-                SearchType.values().forEach {
+                SearchType.entries.forEach {
                     FilterSelectionChip(
                         selected = viewModel.searchType == it,
                         text = it.localized(),

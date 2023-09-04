@@ -96,7 +96,7 @@ enum class MediaSortSearch(
     };
 
     companion object {
-        fun valueOf(value: MediaSort) = MediaSortSearch.values().find {
+        fun valueOf(value: MediaSort) = entries.find {
             it.desc == value || it.asc == value
         }
     }

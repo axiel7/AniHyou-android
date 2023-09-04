@@ -14,7 +14,7 @@ sealed class BottomDestination(
     @DrawableRes val icon: Int,
     @DrawableRes val iconSelected: Int,
 ) {
-    object Home : BottomDestination(
+    data object Home : BottomDestination(
         index = 0,
         route = "home",
         title = R.string.home,
@@ -22,7 +22,7 @@ sealed class BottomDestination(
         iconSelected = R.drawable.home_filled_24
     )
 
-    object AnimeList : BottomDestination(
+    data object AnimeList : BottomDestination(
         index = 1,
         route = "anime_list",
         title = R.string.anime,
@@ -30,7 +30,7 @@ sealed class BottomDestination(
         iconSelected = R.drawable.live_tv_filled_24
     )
 
-    object MangaList : BottomDestination(
+    data object MangaList : BottomDestination(
         index = 2,
         route = "manga_list",
         title = R.string.manga,
@@ -38,7 +38,7 @@ sealed class BottomDestination(
         iconSelected = R.drawable.book_filled_24
     )
 
-    object Profile : BottomDestination(
+    data object Profile : BottomDestination(
         index = 3,
         route = "profile",
         title = R.string.profile,
@@ -46,7 +46,7 @@ sealed class BottomDestination(
         iconSelected = R.drawable.person_filled_24
     )
 
-    object Explore : BottomDestination(
+    data object Explore : BottomDestination(
         index = 4,
         route = "explore",
         title = R.string.explore,

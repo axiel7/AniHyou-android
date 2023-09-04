@@ -91,7 +91,7 @@ fun UserMediaListHostView(
 
     if (openSortDialog) {
         DialogWithRadioSelection(
-            values = UserMediaListSort.values(),
+            values = UserMediaListSort.entries.toTypedArray(),
             defaultValue = UserMediaListSort.valueOf(viewModel.sort),
             title = stringResource(R.string.sort),
             isDeselectable = false,

@@ -36,7 +36,7 @@ fun MediaSearchSortChip(
 
     if (openDialog) {
         DialogWithRadioSelection(
-            values = MediaSortSearch.values(),
+            values = MediaSortSearch.entries.toTypedArray(),
             defaultValue = selectedSort,
             title = stringResource(R.string.sort),
             isDeselectable = false,

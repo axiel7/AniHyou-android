@@ -60,7 +60,7 @@ fun UserSocialView(
                 .horizontalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
-            UserSocialType.values().forEach {
+            UserSocialType.entries.forEach {
                 FilterSelectionChip(
                     selected = viewModel.userSocialType == it,
                     text = it.localized(),

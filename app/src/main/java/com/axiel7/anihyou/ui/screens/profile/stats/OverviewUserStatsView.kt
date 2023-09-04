@@ -135,7 +135,7 @@ fun OverviewUserStatsView(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
         ) {
-            ScoreStatCountType.values().forEach {
+            ScoreStatCountType.entries.forEach {
                 FilterSelectionChip(
                     selected = viewModel.scoreCountType == it,
                     text = it.localized(),

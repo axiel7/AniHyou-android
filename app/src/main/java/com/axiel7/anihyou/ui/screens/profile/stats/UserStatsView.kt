@@ -67,7 +67,7 @@ fun UserStatsView(
                 .horizontalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
-            UserStatType.values().forEach {
+            UserStatType.entries.forEach {
                 FilterSelectionChip(
                     selected = viewModel.statType == it,
                     text = it.localized(),

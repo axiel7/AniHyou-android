@@ -60,9 +60,9 @@ import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
 import kotlinx.coroutines.launch
 
-val themeEntries = Theme.values().associate { it.value to it.stringRes }
-val listStyleEntries = ListStyle.values().associate { it.name to it.stringRes }
-val itemsPerRowEntries = ItemsPerRow.values().associate { it.value.toString() to it.stringRes }
+val themeEntries = Theme.entries.associate { it.value to it.stringRes }
+val listStyleEntries = ListStyle.entries.associate { it.name to it.stringRes }
+val itemsPerRowEntries = ItemsPerRow.entries.associate { it.value.toString() to it.stringRes }
 val titleLanguageEntries =
     UserTitleLanguage.preferenceValues().associate { it.rawValue to it.stringRes() }
 val staffNameLanguageEntries =

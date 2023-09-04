@@ -99,6 +99,6 @@ enum class FormatDistribution(
 
     companion object {
         fun valueOf(rawValue: String?) =
-            FormatDistribution.values().find { it.value.rawValue == rawValue }
+            entries.find { it.value.rawValue == rawValue }
     }
 }

@@ -91,7 +91,7 @@ fun NotificationsView(
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState())
                 ) {
-                    NotificationTypeGroup.values().forEach {
+                    NotificationTypeGroup.entries.forEach {
                         FilterSelectionChip(
                             selected = viewModel.type == it,
                             text = it.localized(),

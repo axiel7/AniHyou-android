@@ -38,7 +38,7 @@ object BaseRepository {
 }
 
 sealed interface DataResult<out T> {
-    object Loading : DataResult<Nothing>
+    data object Loading : DataResult<Nothing>
 
     data class Error(
         val message: String
@@ -50,7 +50,7 @@ sealed interface DataResult<out T> {
 }
 
 sealed interface PagedResult<out T> {
-    object Loading : PagedResult<Nothing>
+    data object Loading : PagedResult<Nothing>
 
     data class Error(
         val message: String

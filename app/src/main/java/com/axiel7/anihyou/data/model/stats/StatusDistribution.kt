@@ -66,6 +66,6 @@ enum class StatusDistribution(
 
     companion object {
         fun valueOf(rawValue: String?) =
-            StatusDistribution.values().find { it.value.rawValue == rawValue }
+            entries.find { it.value.rawValue == rawValue }
     }
 }

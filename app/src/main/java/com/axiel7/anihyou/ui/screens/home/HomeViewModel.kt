@@ -18,8 +18,8 @@ class HomeViewModel : BaseViewModel() {
     val infos = mutableStateListOf(HomeInfo.AIRING, HomeInfo.THIS_SEASON, HomeInfo.TRENDING_ANIME)
 
     fun addNextInfo() {
-        if (infos.size < HomeInfo.values().size)
-            infos.add(HomeInfo.values()[infos.size])
+        if (infos.size < HomeInfo.entries.size)
+            infos.add(HomeInfo.entries[infos.size])
     }
 
     private val now = LocalDateTime.now()
