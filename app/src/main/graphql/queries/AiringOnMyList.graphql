@@ -10,9 +10,7 @@ query AiringOnMyList($page: Int, $perPage: Int) {
             }
             meanScore
             nextAiringEpisode {
-                episode
                 timeUntilAiring
-                airingAt
             }
         }
         pageInfo {

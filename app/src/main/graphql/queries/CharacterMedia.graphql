@@ -12,7 +12,6 @@ query CharacterMedia($characterId: Int, $page: Int, $perPage: Int) {
                         large
                     }
                 }
-                characterName
                 characterRole
                 voiceActors(sort: [RELEVANCE, LANGUAGE]) {
                     id

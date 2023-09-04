@@ -41,7 +41,7 @@ object NotificationRepository {
         }
     }
 
-    fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
+    private fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
         val tempList = mutableListOf<GenericNotification>()
         this.forEach { aniListNotification ->
             aniListNotification.onAiringNotification?.let { noti ->
