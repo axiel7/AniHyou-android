@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.staffdetails
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -9,18 +10,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.base.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffCharacterView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffInfoView
@@ -33,13 +39,9 @@ private enum class StaffInfoType {
 
     companion object {
         val tabRows = arrayOf(
-            TabRowItem(INFO, title = R.string.information, icon = R.drawable.info_24),
-            TabRowItem(MEDIA, title = R.string.character_media, icon = R.drawable.movie_24),
-            TabRowItem(
-                CHARACTER,
-                title = R.string.characters,
-                icon = R.drawable.record_voice_over_24
-            ),
+            TabRowItem(INFO, icon = R.drawable.info_24),
+            TabRowItem(MEDIA, icon = R.drawable.movie_24),
+            TabRowItem(CHARACTER, icon = R.drawable.record_voice_over_24),
         )
     }
 }
@@ -62,6 +64,7 @@ fun StaffDetailsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
@@ -78,8 +81,7 @@ fun StaffDetailsView(
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        DefaultTabRowWithPager(
-            tabs = StaffInfoType.tabRows,
+        Column(
             modifier = Modifier
                 .padding(
                     start = padding.calculateStartPadding(LocalLayoutDirection.current),
@@ -87,7 +89,15 @@ fun StaffDetailsView(
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 )
         ) {
-            when (StaffInfoType.tabRows[it].value) {
+            SegmentedButtons(
+                items = StaffInfoType.tabRows,
+                modifier = Modifier.padding(horizontal = 16.dp),
+                defaultSelectedIndex = selectedTabIndex,
+                onItemSelection = {
+                    selectedTabIndex = it
+                }
+            )
+            when (StaffInfoType.tabRows[selectedTabIndex].value) {
                 StaffInfoType.INFO ->
                     StaffInfoView(
                         staffId = staffId,
@@ -119,7 +129,7 @@ fun StaffDetailsView(
                         navigateToCharacterDetails = navigateToCharacterDetails
                     )
             }
-        }
+        }//: Column
     }
 }
 
