@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.composables.webview
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -70,6 +71,7 @@ fun WebView(
         factory = { context ->
             (factory?.invoke(context) ?: WebView(context)).apply {
                 onCreated(this)
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
                 this.layoutParams = layoutParams
 
