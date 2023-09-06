@@ -212,11 +212,13 @@ fun ListPreference(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            Text(
-                text = entriesValues[preferenceValue]?.let { stringResource(it) } ?: "",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp
-            )
+            if (preferenceValue != null) {
+                Text(
+                    text = entriesValues[preferenceValue]?.let { stringResource(it) } ?: "",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp
+                )
+            }
         }
     }
 
