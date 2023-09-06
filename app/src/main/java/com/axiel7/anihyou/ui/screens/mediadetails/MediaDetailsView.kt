@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -241,46 +242,50 @@ fun MediaDetailsView(
                             }
                         }
                 )
-                Column {
-                    Text(
-                        text = viewModel.mediaDetails?.title?.userPreferred ?: "Loading",
-                        modifier = Modifier
-                            .padding(bottom = 8.dp, end = 8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading)
-                            .combinedClickable(
-                                onLongClick = {
-                                    viewModel.mediaDetails?.title?.userPreferred
-                                        ?.let { context.copyToClipBoard(it) }
-                                },
-                                onClick = { }
-                            ),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    TextIconHorizontal(
-                        text = viewModel.mediaDetails?.format?.localized() ?: "Loading",
-                        icon = if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true)
-                            R.drawable.live_tv_24
-                        else R.drawable.book_24,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading)
-                    )
-                    TextIconHorizontal(
-                        text = viewModel.mediaDetails?.basicMediaDetails?.durationText()
-                            ?: UNKNOWN_CHAR,
-                        icon = R.drawable.timer_24,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading)
-                    )
-                    TextIconHorizontal(
-                        text = viewModel.mediaDetails?.status.localized(),
-                        icon = R.drawable.rss_feed_24,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading)
-                    )
+                // For some reason current material3 version applies an alpha to the icon tint
+                // putting a surface seems to fix it
+                Surface {
+                    Column {
+                        Text(
+                            text = viewModel.mediaDetails?.title?.userPreferred ?: "Loading",
+                            modifier = Modifier
+                                .padding(bottom = 8.dp, end = 8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading)
+                                .combinedClickable(
+                                    onLongClick = {
+                                        viewModel.mediaDetails?.title?.userPreferred
+                                            ?.let { context.copyToClipBoard(it) }
+                                    },
+                                    onClick = { }
+                                ),
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        TextIconHorizontal(
+                            text = viewModel.mediaDetails?.format?.localized() ?: "Loading",
+                            icon = if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true)
+                                R.drawable.live_tv_24
+                            else R.drawable.book_24,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading)
+                        )
+                        TextIconHorizontal(
+                            text = viewModel.mediaDetails?.basicMediaDetails?.durationText()
+                                ?: UNKNOWN_CHAR,
+                            icon = R.drawable.timer_24,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading)
+                        )
+                        TextIconHorizontal(
+                            text = viewModel.mediaDetails?.status.localized(),
+                            icon = R.drawable.rss_feed_24,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .defaultPlaceholder(visible = viewModel.isLoading)
+                        )
+                    }//:Column
                 }
             }//:Row
 
