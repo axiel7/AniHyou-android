@@ -100,7 +100,7 @@ fun UserMediaListView(
                 App.gridItemsPerRow
             )
             val listState = rememberLazyGridState()
-            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+            listState.OnBottomReached(buffer = 6, onLoadMore = onLoadMore)
 
             LazyVerticalGrid(
                 columns = if (itemsPerRow != null && itemsPerRow!! > 0) GridCells.Fixed(itemsPerRow!!)
