@@ -7,9 +7,11 @@ import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.RichTooltipBox
+import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberRichTooltipState
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -66,19 +68,21 @@ fun TagChip(
     rank: Int?,
     onClick: () -> Unit
 ) {
-    val tooltipState = rememberRichTooltipState(isPersistent = true)
-    RichTooltipBox(
-        text = {
-            Text(text = description ?: stringResource(R.string.no_description))
+    val tooltipState = rememberTooltipState(isPersistent = true)
+    TooltipBox(
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip = {
+            RichTooltip {
+                Text(text = description ?: stringResource(R.string.no_description))
+            }
         },
-        tooltipState = tooltipState
+        state = tooltipState
     ) {
         ElevatedAssistChip(
             onClick = onClick,
             label = { Text(text = name) },
             modifier = Modifier
-                .padding(horizontal = 4.dp)
-                .tooltipTrigger(),
+                .padding(horizontal = 4.dp),
             leadingIcon = { Text(text = "${rank ?: 0}%") }
         )
     }
@@ -93,20 +97,22 @@ fun SpoilerTagChip(
     visible: Boolean,
     onClick: () -> Unit
 ) {
-    val tooltipState = rememberRichTooltipState(isPersistent = true)
+    val tooltipState = rememberTooltipState(isPersistent = true)
     AnimatedVisibility(visible = visible) {
-        RichTooltipBox(
-            text = {
-                Text(text = description ?: stringResource(R.string.no_description))
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                RichTooltip {
+                    Text(text = description ?: stringResource(R.string.no_description))
+                }
             },
-            tooltipState = tooltipState
+            state = tooltipState
         ) {
             AssistChip(
                 onClick = onClick,
                 label = { Text(text = name) },
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .tooltipTrigger(),
+                    .padding(horizontal = 4.dp),
                 leadingIcon = { Text(text = "${rank ?: 0}%") }
             )
         }

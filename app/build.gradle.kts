@@ -102,7 +102,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    val materialVersion = "1.2.0-alpha06"
+    val materialVersion = "1.2.0-alpha07"
     implementation("androidx.compose.material3:material3:$materialVersion")
     implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
 
