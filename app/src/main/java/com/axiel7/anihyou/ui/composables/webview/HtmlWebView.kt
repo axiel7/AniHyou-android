@@ -19,6 +19,7 @@ import com.axiel7.anihyou.utils.ContextUtils.openActionView
 fun HtmlWebView(
     html: String,
     modifier: Modifier = Modifier,
+    hardwareEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
     val htmlConverted = generateHtml(html = html)
@@ -37,6 +38,7 @@ fun HtmlWebView(
     WebView(
         data = htmlConverted,
         modifier = modifier.fillMaxWidth(),
+        hardwareEnabled = hardwareEnabled,
         onCreated = { webView ->
             webView.background = ColorDrawable(Color.TRANSPARENT)
             webView.isScrollContainer = false

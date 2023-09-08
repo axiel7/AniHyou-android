@@ -75,7 +75,7 @@ fun ReviewDetailsView(
             Text(
                 text = reviewDetails?.summary ?: "Loading review",
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth()
                     .defaultPlaceholder(visible = isLoading),
                 fontSize = 20.sp,

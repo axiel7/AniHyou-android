@@ -137,7 +137,10 @@ fun StaffInfoView(
                 lineHeight = 18.sp
             )
         } else if (viewModel.staffDetails?.description != null) {
-            HtmlWebView(html = viewModel.staffDetails!!.description!!)
+            HtmlWebView(
+                html = viewModel.staffDetails!!.description!!,
+                hardwareEnabled = false
+            )
         }
     }//: Column
 }

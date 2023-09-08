@@ -140,7 +140,10 @@ fun CharacterInfoView(
                 lineHeight = 18.sp
             )
         } else if (viewModel.characterDetails?.description != null) {
-            HtmlWebView(html = viewModel.characterDetails!!.description!!)
+            HtmlWebView(
+                html = viewModel.characterDetails!!.description!!,
+                hardwareEnabled = false
+            )
         }
     }//: Column
 }

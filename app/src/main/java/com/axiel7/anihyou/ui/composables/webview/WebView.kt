@@ -17,6 +17,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 fun WebView(
     data: String,
     modifier: Modifier = Modifier,
+    hardwareEnabled: Boolean = true,
     onCreated: (WebView) -> Unit = {},
     onDispose: (WebView) -> Unit = {},
     client: WebViewClient = remember { WebViewClient() },
@@ -47,6 +48,7 @@ fun WebView(
             data,
             layoutParams,
             Modifier,
+            hardwareEnabled,
             onCreated,
             onDispose,
             client,
@@ -61,6 +63,7 @@ fun WebView(
     data: String,
     layoutParams: FrameLayout.LayoutParams,
     modifier: Modifier = Modifier,
+    hardwareEnabled: Boolean = true,
     onCreated: (WebView) -> Unit = {},
     onDispose: (WebView) -> Unit = {},
     client: WebViewClient = remember { WebViewClient() },
@@ -71,7 +74,7 @@ fun WebView(
         factory = { context ->
             (factory?.invoke(context) ?: WebView(context)).apply {
                 onCreated(this)
-                setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+                if (!hardwareEnabled) setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
                 this.layoutParams = layoutParams
 
