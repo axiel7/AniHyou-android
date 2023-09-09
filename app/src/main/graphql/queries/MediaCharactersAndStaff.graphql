@@ -1,11 +1,11 @@
 query MediaCharactersAndStaff($mediaId: Int) {
     Media(id: $mediaId) {
-        characters(page: 1, perPage: 25) {
+        characters(page: 1, perPage: 25, sort: [RELEVANCE, ROLE, FAVOURITES_DESC]) {
             edges {
                 ...MediaCharacter
             }
         }
-        staff(page: 1, perPage: 25) {
+        staff(page: 1, perPage: 25, sort: [RELEVANCE, ROLE]) {
             edges {
                 ...MediaStaff
             }
