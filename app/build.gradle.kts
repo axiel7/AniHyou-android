@@ -20,8 +20,8 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 27
-        versionName = "1.1.7"
+        versionCode = 28
+        versionName = "1.1.8"
         archivesName.set("anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -75,7 +75,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
