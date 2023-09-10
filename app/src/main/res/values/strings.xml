@@ -256,4 +256,5 @@
     <string name="score_point_10">10 Point (5/10)</string>
     <string name="score_point_5">5 Star (3/5)</string>
     <string name="score_point_3">3 Point Smiley :)</string>
+    <string name="no_media">No media</string>
 </resources>

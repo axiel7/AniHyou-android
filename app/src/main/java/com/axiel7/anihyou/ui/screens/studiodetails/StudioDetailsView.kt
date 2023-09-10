@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -114,6 +116,15 @@ fun StudioDetailsView(
             if (viewModel.isLoading) {
                 items(13) {
                     MediaItemVerticalPlaceholder()
+                }
+            } else if (viewModel.studioMedia.isEmpty()) {
+                item(
+                    span = { GridItemSpan(maxLineSpan) }
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_media),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
