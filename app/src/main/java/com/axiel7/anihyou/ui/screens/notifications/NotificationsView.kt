@@ -80,8 +80,6 @@ fun NotificationsView(
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
             state = listState,
             contentPadding = PaddingValues(
-                start = 8.dp,
-                end = 8.dp,
                 bottom = padding.calculateBottomPadding()
             )
         ) {
@@ -89,7 +87,9 @@ fun NotificationsView(
                 contentType = viewModel.type
             ) {
                 Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp)
                 ) {
                     NotificationTypeGroup.entries.forEach {
                         FilterSelectionChip(
@@ -111,7 +111,7 @@ fun NotificationsView(
                     imageUrl = item.imageUrl,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(8.dp),
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
                         ?.secondsToLegibleText(),
                     onClick = {
@@ -148,7 +148,7 @@ fun NotificationsView(
                     ActivityItemPlaceholder(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(8.dp),
                     )
                 }
             }
