@@ -51,5 +51,11 @@ fun MediaDetailsQuery.Media.externalLinks() =
 
 fun MediaDetailsQuery.ExternalLink.displayName() = buildString {
     append(site)
-    language?.let { lang -> append(" ($lang)") }
+    languageShort()?.let { lang -> append(" ($lang)") }
+}
+
+fun MediaDetailsQuery.ExternalLink.languageShort() = when (language) {
+    "Japanese" -> "JP"
+    "English" -> "EN"
+    else -> language
 }
