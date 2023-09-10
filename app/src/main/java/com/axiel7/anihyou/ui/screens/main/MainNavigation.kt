@@ -485,6 +485,12 @@ fun MainNavigation(
                             .replace(URL_ARGUMENT, encodedUrl)
                     )
                 },
+                navigateToStudioDetails = { id ->
+                    navController.navigate(
+                        STUDIO_DETAILS_DESTINATION
+                            .replace(STUDIO_ID_ARGUMENT, id.toString())
+                    )
+                },
                 navigateToCharacterDetails = { id ->
                     navController.navigate(
                         CHARACTER_DETAILS_DESTINATION

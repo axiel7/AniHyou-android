@@ -117,6 +117,7 @@ fun MediaDetailsView(
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
@@ -449,7 +450,8 @@ fun MediaDetailsView(
                     DetailsType.INFO ->
                         MediaInformationView(
                             viewModel = viewModel,
-                            navigateToExplore = navigateToExplore
+                            navigateToExplore = navigateToExplore,
+                            navigateToStudioDetails = navigateToStudioDetails
                         )
 
                     DetailsType.STAFF_CHARACTERS ->
@@ -489,6 +491,7 @@ fun MediaDetailsViewPreview() {
             navigateBack = {},
             navigateToMediaDetails = {},
             navigateToFullscreenImage = {},
+            navigateToStudioDetails = {},
             navigateToCharacterDetails = {},
             navigateToStaffDetails = {},
             navigateToReviewDetails = {},

@@ -34,6 +34,7 @@ import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.media.seasonAndYear
 import com.axiel7.anihyou.data.model.media.streamingLinks
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.InfoClickableItemView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.SpoilerTagChip
@@ -52,9 +53,11 @@ import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 fun MediaInformationView(
     viewModel: MediaDetailsViewModel,
     navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
+    val isAnime = viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -76,18 +79,10 @@ fun MediaInformationView(
             info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted(),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
-        if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true) {
+        if (isAnime) {
             InfoItemView(
                 title = stringResource(R.string.season),
                 info = viewModel.mediaDetails?.seasonAndYear()
-            )
-            InfoItemView(
-                title = stringResource(R.string.studios),
-                info = viewModel.studios?.joinToString { it.name }
-            )
-            InfoItemView(
-                title = stringResource(R.string.producers),
-                info = viewModel.producers?.joinToString { it.name }
             )
         }
         InfoItemView(
@@ -115,6 +110,24 @@ fun MediaInformationView(
             info = viewModel.mediaDetails?.synonyms?.joinToString("\n"),
             modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
         )
+        if (isAnime) {
+            InfoClickableItemView(
+                title = stringResource(R.string.studios),
+                items = viewModel.studios.orEmpty(),
+                itemName = { it.name },
+                onItemClicked = {
+                    navigateToStudioDetails(it.id)
+                }
+            )
+            InfoClickableItemView(
+                title = stringResource(R.string.producers),
+                items = viewModel.producers.orEmpty(),
+                itemName = { it.name },
+                onItemClicked = {
+                    navigateToStudioDetails(it.id)
+                }
+            )
+        }
 
         // Tags
         InfoTitle(
@@ -130,7 +143,7 @@ fun MediaInformationView(
             }
         )
         FlowRow(
-            Modifier
+            modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .animateContentSize()
         ) {
@@ -252,7 +265,8 @@ fun MediaInformationViewPreview() {
         Surface {
             MediaInformationView(
                 viewModel = MediaDetailsViewModel(mediaId = 1),
-                navigateToExplore = { _, _, _ -> }
+                navigateToExplore = { _, _, _ -> },
+                navigateToStudioDetails = {}
             )
         }
     }
