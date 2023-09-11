@@ -20,7 +20,7 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 28
+        versionCode = 29
         versionName = "1.1.8"
         archivesName.set("anihyou-$versionName")
 
