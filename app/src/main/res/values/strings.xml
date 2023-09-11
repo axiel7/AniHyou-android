@@ -265,4 +265,5 @@
     <string name="weekly">Weekly</string>
     <string name="push_notifications">Push notifications</string>
     <string name="update_interval">Update interval</string>
+    <string name="airing_anime_notifications">Airing anime notifications</string>
 </resources>

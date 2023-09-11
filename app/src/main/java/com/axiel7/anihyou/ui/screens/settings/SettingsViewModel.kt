@@ -54,6 +54,15 @@ class SettingsViewModel : BaseViewModel() {
         updateUser(scoreFormat = value)
     }
 
+    fun onAiringNotificationChanged(value: Boolean) {
+        userOptions = userOptions?.copy(
+            options = userOptions?.options?.copy(
+                airingNotifications = value
+            )
+        )
+        updateUser()
+    }
+
     fun getUserOptions() = viewModelScope.launch(dispatcher) {
         UserRepository.getUserOptions().collect { result ->
             isLoading = result is DataResult.Loading
@@ -71,12 +80,14 @@ class SettingsViewModel : BaseViewModel() {
         titleLanguage: UserTitleLanguage? = null,
         staffNameLanguage: UserStaffNameLanguage? = null,
         scoreFormat: ScoreFormat? = null,
+        airingNotifications: Boolean? = null,
     ) = viewModelScope.launch(dispatcher) {
         UserRepository.updateUser(
             displayAdultContent = displayAdultContent,
             titleLanguage = titleLanguage,
             staffNameLanguage = staffNameLanguage,
             scoreFormat = scoreFormat,
+            airingNotifications = airingNotifications,
         ).collect { result ->
             isLoading = result is DataResult.Loading
 

@@ -55,6 +55,7 @@ object UserRepository {
         titleLanguage: UserTitleLanguage? = null,
         staffNameLanguage: UserStaffNameLanguage? = null,
         scoreFormat: ScoreFormat? = null,
+        airingNotifications: Boolean? = null,
         animeListOptions: MediaListOptionsInput? = null,
         mangaListOptions: MediaListOptionsInput? = null,
     ) = flow {
@@ -64,6 +65,7 @@ object UserRepository {
             titleLanguage = Optional.presentIfNotNull(titleLanguage),
             staffNameLanguage = Optional.presentIfNotNull(staffNameLanguage),
             scoreFormat = Optional.presentIfNotNull(scoreFormat),
+            airingNotifications = Optional.presentIfNotNull(airingNotifications),
             animeListOptions = Optional.presentIfNotNull(animeListOptions),
             mangaListOptions = Optional.presentIfNotNull(mangaListOptions),
         ).tryMutation()

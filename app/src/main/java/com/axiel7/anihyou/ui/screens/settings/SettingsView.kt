@@ -290,6 +290,16 @@ fun SettingsView(
                         }
                     }
                 )
+                SwitchPreference(
+                    title = stringResource(R.string.airing_anime_notifications),
+                    preferenceValue = viewModel.userOptions?.options?.airingNotifications,
+                    icon = R.drawable.podcasts_24,
+                    onValueChange = { value ->
+                        if (value != null) {
+                            viewModel.onAiringNotificationChanged(value)
+                        }
+                    }
+                )
             }
 
             PreferencesTitle(text = stringResource(R.string.account))

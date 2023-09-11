@@ -3,6 +3,7 @@ mutation UpdateUser(
     $titleLanguage: UserTitleLanguage,
     $staffNameLanguage: UserStaffNameLanguage,
     $scoreFormat: ScoreFormat,
+    $airingNotifications: Boolean,
     $animeListOptions: MediaListOptionsInput,
     $mangaListOptions: MediaListOptionsInput
 ) {
@@ -11,6 +12,7 @@ mutation UpdateUser(
         titleLanguage: $titleLanguage,
         staffNameLanguage: $staffNameLanguage,
         scoreFormat: $scoreFormat,
+        airingNotifications: $airingNotifications,
         animeListOptions: $animeListOptions,
         mangaListOptions: $mangaListOptions
     ) {

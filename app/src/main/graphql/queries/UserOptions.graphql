@@ -11,6 +11,7 @@ fragment UserOptionsFragment on User {
         profileColor
         staffNameLanguage
         titleLanguage
+        airingNotifications
     }
     mediaListOptions {
         scoreFormat
