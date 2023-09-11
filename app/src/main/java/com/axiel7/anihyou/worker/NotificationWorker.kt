@@ -99,7 +99,8 @@ class NotificationWorker(
                         channelId = DEFAULT_CHANNEL_ID,
                         title = it.text,
                         text = "",
-                        pendingIntent = pendingIntent
+                        pendingIntent = pendingIntent,
+                        group = it.type?.name
                     )
                 }
             }

@@ -34,6 +34,7 @@ object NotificationUtils {
         title: String,
         text: String,
         pendingIntent: PendingIntent? = null,
+        group: String? = null,
     ): Boolean {
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setContentTitle(title)
@@ -41,6 +42,7 @@ object NotificationUtils {
             .setSmallIcon(R.drawable.anihyou_24)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
+            .setGroup(group)
 
         with(NotificationManagerCompat.from(applicationContext)) {
             if (ActivityCompat.checkSelfPermission(
