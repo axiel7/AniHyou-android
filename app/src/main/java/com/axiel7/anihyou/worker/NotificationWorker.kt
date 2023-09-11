@@ -20,6 +20,7 @@ import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
 import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.utils.NotificationUtils.createNotificationChannel
@@ -35,6 +36,17 @@ class NotificationWorker(
     // chosen by the user and check for new notifications
     override suspend fun doWork(): Result {
         if (isStopped) return Result.success()
+
+        // check first the unread count so we can skip early if there aren't unread notifications
+        // e.g.: the user read the notifications on web
+        var unreadCount = 0
+        runBlocking {
+            UserRepository.getUnreadNotificationCount().collect {
+                unreadCount = it
+            }
+        }
+        if (unreadCount == 0) return Result.success()
+
         var notifications: List<GenericNotification>? = null
         runBlocking {
             NotificationRepository.getNotificationsPage(
