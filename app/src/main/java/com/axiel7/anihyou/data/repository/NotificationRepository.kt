@@ -12,6 +12,7 @@ object NotificationRepository {
 
     fun getNotificationsPage(
         type: NotificationTypeGroup,
+        resetCount: Boolean,
         page: Int = 1,
         perPage: Int = 25,
     ) = flow {
@@ -21,7 +22,8 @@ object NotificationRepository {
             page = Optional.present(page),
             perPage = Optional.present(perPage),
             typeIn = if (type == NotificationTypeGroup.ALL) Optional.absent()
-            else Optional.present(type.values.toList())
+            else Optional.present(type.values.toList()),
+            resetCount = Optional.present(resetCount)
         ).tryQuery()
 
         val error = response.getError()

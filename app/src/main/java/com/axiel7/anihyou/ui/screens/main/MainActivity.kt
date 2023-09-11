@@ -55,12 +55,15 @@ import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_DROPPED_LIST_STYLE_PRE
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_PAUSED_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_PLANNING_LIST_STYLE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATION_INTERVAL_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.DeepLink
+import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
@@ -87,7 +90,7 @@ class MainActivity : ComponentActivity() {
             // Widget intent
             intent.action == "media_details" -> {
                 deepLink = DeepLink(
-                    type = DeepLink.Type.ANIME,
+                    type = DeepLink.Type.ANIME,// does not mather ANIME or MANGA
                     id = intent.getIntExtra("media_id", 0).toString()
                 )
             }
@@ -227,6 +230,12 @@ class MainActivity : ComponentActivity() {
             }
             App.dataStore.getValueSync(MANGA_DROPPED_LIST_STYLE_PREFERENCE_KEY)?.let {
                 App.mangaDroppedListStyle = ListStyle.valueOf(it)
+            }
+            App.dataStore.getValueSync(NOTIFICATIONS_ENABLED_PREFERENCE_KEY)?.let {
+                App.enabledNotifications = it
+            }
+            App.dataStore.getValueSync(NOTIFICATION_INTERVAL_PREFERENCE_KEY)?.let {
+                App.notificationInterval = NotificationInterval.valueOf(it)
             }
         }
     }

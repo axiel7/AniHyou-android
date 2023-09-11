@@ -257,4 +257,12 @@
     <string name="score_point_5">5 Star (3/5)</string>
     <string name="score_point_3">3 Point Smiley :)</string>
     <string name="no_media">No media</string>
+    <string name="every_six_hours">Every 6 hours</string>
+    <string name="every_twelve_hours">Every 12 hours</string>
+    <string name="daily">Daily</string>
+    <string name="every_two_days">Every 2 days</string>
+    <string name="every_three_days">Every 3 days</string>
+    <string name="weekly">Weekly</string>
+    <string name="push_notifications">Push notifications</string>
+    <string name="update_interval">Update interval</string>
 </resources>

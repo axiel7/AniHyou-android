@@ -5,11 +5,14 @@ import androidx.datastore.preferences.core.edit
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.ViewerIdQuery
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
+import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.network.apolloClient
+import com.axiel7.anihyou.worker.NotificationWorker
 
 object LoginRepository {
 
@@ -21,7 +24,10 @@ object LoginRepository {
             App.accessToken = token
             App.dataStore.edit {
                 it[ACCESS_TOKEN_PREFERENCE_KEY] = token
+                // enable notifications by default when logging in
+                it[NOTIFICATIONS_ENABLED_PREFERENCE_KEY] = true
             }
+            NotificationWorker.scheduleNotificationWork(interval = NotificationInterval.DAILY)
             refreshUserIdAndOptions()
         }
     }
@@ -46,7 +52,9 @@ object LoginRepository {
             it.remove(USER_ID_PREFERENCE_KEY)
             it.remove(PROFILE_COLOR_PREFERENCE_KEY)
             it.remove(SCORE_FORMAT_PREFERENCE_KEY)
+            it.remove(NOTIFICATIONS_ENABLED_PREFERENCE_KEY)
         }
         App.accessToken = null
+        NotificationWorker.cancelNotificationWork()
     }
 }

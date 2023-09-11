@@ -27,10 +27,13 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATION_INTERVAL_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.stringRes
 import com.axiel7.anihyou.data.model.user.preferenceValues
 import com.axiel7.anihyou.data.model.user.stringRes
@@ -58,6 +61,7 @@ import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
+import com.axiel7.anihyou.worker.NotificationWorker
 import kotlinx.coroutines.launch
 
 val themeEntries = Theme.entries.associate { it.value to it.stringRes }
@@ -68,6 +72,7 @@ val titleLanguageEntries =
 val staffNameLanguageEntries =
     UserStaffNameLanguage.knownValues().associate { it.rawValue to it.stringRes() }
 val scoreFormatEntries = ScoreFormat.knownValues().associate { it.rawValue to it.stringRes() }
+val notificationIntervalEntries = NotificationInterval.entries.associate { it.name to it.stringRes }
 
 const val SETTINGS_DESTINATION = "settings"
 
@@ -101,6 +106,14 @@ fun SettingsView(
     var scoreFormatPreference by rememberPreference(
         SCORE_FORMAT_PREFERENCE_KEY,
         App.scoreFormat.name
+    )
+    var notificationsEnabledPreference by rememberPreference(
+        NOTIFICATIONS_ENABLED_PREFERENCE_KEY,
+        App.enabledNotifications
+    )
+    var notificationInterval by rememberPreference(
+        NOTIFICATION_INTERVAL_PREFERENCE_KEY,
+        App.notificationInterval.name
     )
 
     LaunchedEffect(viewModel) {
@@ -247,6 +260,37 @@ fun SettingsView(
                     airingOnMyList = it
                 }
             )
+
+            PreferencesTitle(text = stringResource(R.string.notifications))
+            SwitchPreference(
+                title = stringResource(R.string.push_notifications),
+                preferenceValue = notificationsEnabledPreference,
+                icon = R.drawable.notifications_24,
+                onValueChange = {
+                    notificationsEnabledPreference = it
+                    if (it == false) NotificationWorker.cancelNotificationWork()
+                    else if (it == true) NotificationWorker.scheduleNotificationWork(
+                        interval = NotificationInterval.valueOf(
+                            notificationInterval ?: App.notificationInterval.name
+                        )
+                    )
+                }
+            )
+            if (notificationsEnabledPreference == true) {
+                ListPreference(
+                    title = stringResource(R.string.update_interval),
+                    entriesValues = notificationIntervalEntries,
+                    preferenceValue = notificationInterval,
+                    onValueChange = { value ->
+                        value?.let {
+                            notificationInterval = it
+                            NotificationWorker.scheduleNotificationWork(
+                                interval = NotificationInterval.valueOf(it)
+                            )
+                        }
+                    }
+                )
+            }
 
             PreferencesTitle(text = stringResource(R.string.account))
             PlainPreference(
