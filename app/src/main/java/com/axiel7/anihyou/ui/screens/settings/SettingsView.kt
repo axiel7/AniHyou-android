@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.settings
 
+import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -62,6 +63,9 @@ import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
 import com.axiel7.anihyou.worker.NotificationWorker
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
 val themeEntries = Theme.entries.associate { it.value to it.stringRes }
@@ -76,7 +80,7 @@ val notificationIntervalEntries = NotificationInterval.entries.associate { it.na
 
 const val SETTINGS_DESTINATION = "settings"
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsView(
     navigateToListStyleSettings: () -> Unit,
@@ -89,6 +93,10 @@ fun SettingsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else null
+
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.value)
     var useGeneralListStylePreference by rememberPreference(
         USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
@@ -269,11 +277,17 @@ fun SettingsView(
                 onValueChange = {
                     notificationsEnabledPreference = it
                     if (it == false) NotificationWorker.cancelNotificationWork()
-                    else if (it == true) NotificationWorker.scheduleNotificationWork(
-                        interval = NotificationInterval.valueOf(
-                            notificationInterval ?: App.notificationInterval.name
-                        )
-                    )
+                    else if (it == true) {
+                        if (notificationPermission == null || notificationPermission.status.isGranted) {
+                            NotificationWorker.scheduleNotificationWork(
+                                interval = NotificationInterval.valueOf(
+                                    notificationInterval ?: App.notificationInterval.name
+                                )
+                            )
+                        } else {
+                            notificationPermission.launchPermissionRequest()
+                        }
+                    }
                 }
             )
             if (notificationsEnabledPreference == true) {

@@ -108,6 +108,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.glance:glance-appwidget:1.0.0")
 
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
     implementation("io.github.fornewid:placeholder-material3:1.0.1")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
