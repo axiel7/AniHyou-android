@@ -33,10 +33,12 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.ReviewRepository.userAcceptance
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.ANILIST_REVIEW_URL
 
 const val REVIEW_ID_ARGUMENT = "{id}"
 const val REVIEW_DETAILS_DESTINATION = "review/$REVIEW_ID_ARGUMENT"
@@ -63,6 +65,9 @@ fun ReviewDetailsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = reviewDetails?.user?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
+        actions = {
+            OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + reviewId)
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         Column(

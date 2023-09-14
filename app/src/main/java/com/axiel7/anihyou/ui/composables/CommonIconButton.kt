@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
 
@@ -32,6 +33,18 @@ fun ShareIconButton(url: String) {
     IconButton(onClick = { context.openShareSheet(url) }) {
         Icon(
             painter = painterResource(R.drawable.share_24),
+            contentDescription = "share",
+            tint = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+fun OpenInBrowserIconButton(url: String) {
+    val context = LocalContext.current
+    IconButton(onClick = { context.openLink(url) }) {
+        Icon(
+            painter = painterResource(R.drawable.open_in_browser_24),
             contentDescription = "share",
             tint = MaterialTheme.colorScheme.onSurface
         )

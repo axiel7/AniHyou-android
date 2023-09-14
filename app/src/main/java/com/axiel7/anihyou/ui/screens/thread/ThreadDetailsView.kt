@@ -26,11 +26,13 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.OnBottomReached
+import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.thread.ParentThreadView
 import com.axiel7.anihyou.ui.composables.thread.ParentThreadViewPlaceholder
 import com.axiel7.anihyou.ui.composables.thread.ThreadCommentView
 import com.axiel7.anihyou.ui.composables.thread.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.ANILIST_THREAD_URL
 
 const val THREAD_ID_ARGUMENT = "{id}"
 const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
@@ -62,6 +64,9 @@ fun ThreadDetailsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
+        actions = {
+            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + threadId)
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         LazyColumn(
