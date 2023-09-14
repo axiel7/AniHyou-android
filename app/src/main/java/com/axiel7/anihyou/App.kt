@@ -1,6 +1,7 @@
 package com.axiel7.anihyou
 
 import android.app.Application
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
@@ -26,7 +27,7 @@ class App : Application() {
     companion object {
         lateinit var INSTANCE: App
             private set
-        val applicationContext get() = INSTANCE.applicationContext
+        val applicationContext: Context get() = INSTANCE.applicationContext
 
         lateinit var dataStore: DataStore<Preferences>
 
