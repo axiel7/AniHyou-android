@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.os.LocaleListCompat
+import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
 
 object ContextUtils {
@@ -73,19 +74,24 @@ object ContextUtils {
     fun Context.openLink(url: String) {
         val uri = Uri.parse(url)
         Intent(Intent.ACTION_VIEW, uri).apply {
-            val browsers = findBrowserIntentActivities()
-            val default = browsers.find { it.isDefault }
-            if (default != null) {
-                setPackage(default.activityInfo.packageName)
-                startActivity(this)
+            val defaultBrowser =
+                findBrowserIntentActivities(PackageManager.MATCH_DEFAULT_ONLY).firstOrNull()
+            if (defaultBrowser != null) {
+                try {
+                    setPackage(defaultBrowser.activityInfo.packageName)
+                    startActivity(this)
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(Intent.createChooser(this, null))
+                }
             } else {
+                val browsers = findBrowserIntentActivities(PackageManager.MATCH_ALL)
                 val intents = browsers.map {
                     Intent(Intent.ACTION_VIEW, uri).apply {
                         setPackage(it.activityInfo.packageName)
                     }
                 }
                 startActivity(
-                    Intent.createChooser(this, "").apply {
+                    Intent.createChooser(this, null).apply {
                         putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toTypedArray())
                     }
                 )
@@ -94,13 +100,15 @@ object ContextUtils {
     }
 
     /** Finds all the browsers installed on the device */
-    private fun Context.findBrowserIntentActivities(): List<ResolveInfo> {
+    private fun Context.findBrowserIntentActivities(
+        flags: Int = 0
+    ): List<ResolveInfo> {
         val emptyBrowserIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("http", "", null))
 
-        return packageManager.queryIntentActivitiesCompat(
-            intent = emptyBrowserIntent,
-            flags = PackageManager.MATCH_ALL
-        )
+        return packageManager
+            .queryIntentActivitiesCompat(emptyBrowserIntent, flags)
+            .filter { it.activityInfo.packageName != BuildConfig.APPLICATION_ID }
+            .sortedBy { it.priority }
     }
 
     /** Custom compat method until Google decides to make one */
