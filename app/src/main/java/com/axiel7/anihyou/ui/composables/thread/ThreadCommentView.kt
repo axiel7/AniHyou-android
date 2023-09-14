@@ -42,7 +42,6 @@ fun ThreadCommentView(
     likeCount: Int,
     createdAt: Int,
     navigateToUserDetails: () -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val context = LocalContext.current
     var spoilerText by remember { mutableStateOf<String?>(null) }
@@ -98,7 +97,6 @@ fun ThreadCommentView(
             markdown = body,
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 16.sp,
-            onImageClicked = navigateToFullscreenImage,
             onSpoilerClicked = { spoilerText = it },
             onLinkClicked = { context.openActionView(it) }
         )
@@ -167,7 +165,6 @@ fun ThreadCommentViewPreview() {
                     likeCount = 23,
                     createdAt = 1212370032,
                     navigateToUserDetails = {},
-                    navigateToFullscreenImage = {}
                 )
                 ThreadCommentViewPlaceholder()
             }

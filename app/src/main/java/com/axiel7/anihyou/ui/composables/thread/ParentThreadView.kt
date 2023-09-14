@@ -39,7 +39,6 @@ import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
 fun ParentThreadView(
     thread: BasicThreadDetails,
     navigateToUserDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val context = LocalContext.current
     var spoilerText by remember { mutableStateOf<String?>(null) }
@@ -74,7 +73,6 @@ fun ParentThreadView(
             markdown = thread.body,
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 17.sp,
-            onImageClicked = navigateToFullscreenImage,
             onSpoilerClicked = { spoilerText = it },
             onLinkClicked = { context.openActionView(it) }
         )
@@ -185,7 +183,6 @@ fun ParentThreadViewPreview() {
                 ParentThreadView(
                     thread = thread,
                     navigateToUserDetails = {},
-                    navigateToFullscreenImage = {}
                 )
                 ParentThreadViewPlaceholder()
             }

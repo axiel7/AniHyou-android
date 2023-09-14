@@ -42,7 +42,6 @@ const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
 fun ThreadDetailsView(
     threadId: Int,
     navigateToUserDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val viewModel = viewModel { ThreadDetailsViewModel(threadId) }
@@ -89,7 +88,6 @@ fun ThreadDetailsView(
                     ParentThreadView(
                         thread = threadDetails!!.basicThreadDetails,
                         navigateToUserDetails = navigateToUserDetails,
-                        navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 } else {
                     ParentThreadViewPlaceholder()
@@ -109,7 +107,6 @@ fun ThreadDetailsView(
                     navigateToUserDetails = {
                         navigateToUserDetails(item.user!!.id)
                     },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
                 )
                 HorizontalDivider()
             }
@@ -131,7 +128,6 @@ fun ThreadDetailsViewPreview() {
             ThreadDetailsView(
                 threadId = 1,
                 navigateToUserDetails = {},
-                navigateToFullscreenImage = {},
                 navigateBack = {}
             )
         }

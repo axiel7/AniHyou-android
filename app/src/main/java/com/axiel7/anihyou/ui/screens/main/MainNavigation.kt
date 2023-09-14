@@ -754,13 +754,6 @@ fun MainNavigation(
                                 .replace(USER_ID_ARGUMENT, id.toString())
                         )
                     },
-                    navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, UTF_8)
-                        navController.navigate(
-                            FULLSCREEN_IMAGE_DESTINATION
-                                .replace(URL_ARGUMENT, encodedUrl)
-                        )
-                    },
                     navigateBack = {
                         navController.popBackStack()
                     }
