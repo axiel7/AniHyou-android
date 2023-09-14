@@ -33,6 +33,7 @@ fun DefaultMarkdownText(
         modifier = modifier,
         fontSize = fontSize,
         color = color,
+        linkColor = MaterialTheme.colorScheme.primary,
         onLinkClicked = { link ->
             link.onMarkdownLinkClicked(
                 onSpoilerClicked = onSpoilerClicked,
