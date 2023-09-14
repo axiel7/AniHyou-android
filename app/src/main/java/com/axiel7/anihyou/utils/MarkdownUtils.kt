@@ -9,8 +9,10 @@ object MarkdownUtils {
 
     private val imageRegex = Regex("(img\\d*%*)\\((.*)\\)")
     private val spoilerRegex = Regex("~!(.*)!~")
+    private val centerRegex = Regex("~~~(.*)~~~", RegexOption.DOT_MATCHES_ALL)
 
     fun String.formatCompatibleMarkdown() = this
+        .removeCenterMarkdown()
         .formatImageTags()
         .formatSpoilerTags()
 
@@ -22,6 +24,9 @@ object MarkdownUtils {
             val spoilerEncoded = URLEncoder.encode(it.groupValues[1], "UTF-8")
             "\n[View spoiler]($ANIHYOU_SPOILER_SCHEME$spoilerEncoded)\n"
         }
+
+    private fun String.removeCenterMarkdown() =
+        replace(centerRegex, "\$1")
 
     fun String.onMarkdownLinkClicked(
         onSpoilerClicked: (String) -> Unit,
