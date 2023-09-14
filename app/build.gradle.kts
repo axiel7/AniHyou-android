@@ -118,7 +118,7 @@ dependencies {
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
-    implementation("com.github.jeziellago:compose-markdown:0.3.6")
+    implementation("com.github.axiel7:compose-markdown:5c1c0662a0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
