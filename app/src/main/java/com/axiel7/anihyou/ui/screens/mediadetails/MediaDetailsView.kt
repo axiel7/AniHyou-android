@@ -37,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -134,7 +135,10 @@ fun MediaDetailsView(
     val sheetState = rememberModalBottomSheetState()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    var maxLinesSynopsis by remember { mutableIntStateOf(5) }
+    var isSynopsisExpanded by remember { mutableStateOf(false) }
+    val maxLinesSynopsis by remember {
+        derivedStateOf { if (isSynopsisExpanded) Int.MAX_VALUE else 5 }
+    }
     val iconExpand by remember {
         derivedStateOf {
             if (maxLinesSynopsis == 5) R.drawable.expand_more_24
@@ -361,6 +365,7 @@ fun MediaDetailsView(
                     },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                    .clickable { isSynopsisExpanded = !isSynopsisExpanded }
                     .defaultPlaceholder(visible = viewModel.isLoading),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
@@ -389,9 +394,7 @@ fun MediaDetailsView(
                 } else Spacer(modifier = Modifier.size(48.dp))
 
                 IconButton(
-                    onClick = {
-                        maxLinesSynopsis = if (maxLinesSynopsis == 5) Int.MAX_VALUE else 5
-                    }
+                    onClick = { isSynopsisExpanded = !isSynopsisExpanded }
                 ) {
                     Icon(painter = painterResource(iconExpand), contentDescription = "expand")
                 }
