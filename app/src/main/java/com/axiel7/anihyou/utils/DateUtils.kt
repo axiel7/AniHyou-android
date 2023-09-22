@@ -93,7 +93,10 @@ object DateUtils {
             MediaSeason.WINTER -> current.season = MediaSeason.SPRING
             MediaSeason.SPRING -> current.season = MediaSeason.SUMMER
             MediaSeason.SUMMER -> current.season = MediaSeason.FALL
-            MediaSeason.FALL -> current.season = MediaSeason.WINTER
+            MediaSeason.FALL -> {
+                current.season = MediaSeason.WINTER
+                current.year += 1
+            }
             else -> {}
         }
         return current
