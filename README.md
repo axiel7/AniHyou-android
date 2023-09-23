@@ -23,17 +23,17 @@ Support the development of AniHyou by making a donation via:
 
 [Ko-Fi](https://ko-fi.com/axiel7)
 
-Bitcoin
+BTC
 ```
 3KKjJuorh9se2jUo1Hr6MFgXhnBWbj5fTP
 ```
 
-Ethereum
+ETH
 ```
 0xBd20dD0e036B246F879EeFde52601f0fBbeC69c0
 ```
 
-Litecoin
+LTC
 ```
 MRw5XPLsM9SVf48tv4nwQoY12nMXaiVzmD
 ```
@@ -45,6 +45,7 @@ MRw5XPLsM9SVf48tv4nwQoY12nMXaiVzmD
 * [Jetpack Compose](https://developer.android.com/jetpack/compose)
 * [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 * [Coil](https://github.com/coil-kt/coil)
+* Forked [compose-markdown](https://github.com/axiel7/compose-markdown)
 
 # Building
 Put the following content on your local.properties file:
