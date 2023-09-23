@@ -51,7 +51,9 @@ fun SliderRatingView(
                             ratingString = ""
                             onRatingChanged(0.0)
                         } else {
-                            val valueRoundedString = it.format(decimalLength = 1)
+                            val valueRoundedString = it.format(
+                                decimalLength = if (showAsDecimal) 1 else 0
+                            )
                             val valueRounded = valueRoundedString.toDoubleLocaleInvariant()
                             if (valueRounded <= maxValue)
                                 ratingString = valueRoundedString
@@ -70,10 +72,12 @@ fun SliderRatingView(
         Slider(
             value = ratingString.toFloatOrNullLocaleInvariant() ?: 0f,
             onValueChange = {
-                ratingString = if (it == 0f) "" else it.toDouble().format(decimalLength = 1)
+                ratingString = if (it == 0f) "" else it.toDouble().format(
+                    decimalLength = if (showAsDecimal) 1 else 0
+                )
             },
             valueRange = 0f..maxValue.toFloat(),
-            steps = if (maxValue <= 10.0 && !showAsDecimal) maxValue.toInt() else 0,
+            steps = if (maxValue <= 10.0 && !showAsDecimal) (maxValue.toInt() - 1) else 0,
             onValueChangeFinished = {
                 onRatingChanged(ratingString.toDoubleOrNullLocaleInvariant() ?: 0.0)
             }
