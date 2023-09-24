@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -26,10 +27,13 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATION_INTERVAL_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
@@ -42,6 +46,7 @@ import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
+import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.ui.base.ItemsPerRow
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.base.Theme
@@ -54,6 +59,7 @@ import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
+import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.ContextUtils.openByDefaultSettings
@@ -67,8 +73,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
+import okhttp3.internal.toHexString
 
 val themeEntries = Theme.entries.associate { it.value to it.stringRes }
+val colorModeEntries = AppColorMode.entries.associate { it.name to it.stringRes }
 val listStyleEntries = ListStyle.entries.associate { it.name to it.stringRes }
 val itemsPerRowEntries = ItemsPerRow.entries.associate { it.value.toString() to it.stringRes }
 val titleLanguageEntries =
@@ -98,6 +106,15 @@ fun SettingsView(
     } else null
 
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.value)
+    var appColorModePreference by rememberPreference(
+        APP_COLOR_MODE_PREFERENCE_KEY,
+        AppColorMode.DEFAULT.name
+    )
+    var appColorPreference by rememberPreference(
+        APP_COLOR_PREFERENCE_KEY,
+        App.appColor?.toArgb()?.toHexString()
+    )
+    val profileColor by rememberPreference(PROFILE_COLOR_PREFERENCE_KEY, null)
     var useGeneralListStylePreference by rememberPreference(
         USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
         App.useGeneralListStyle
@@ -157,6 +174,28 @@ fun SettingsView(
                 icon = R.drawable.palette_24,
                 onValueChange = { value ->
                     themePreference = value
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.color),
+                entriesValues = colorModeEntries,
+                preferenceValue = appColorModePreference,
+                icon = R.drawable.colors_24,
+                onValueChange = { value ->
+                    appColorModePreference = value
+                    when (value) {
+                        AppColorMode.DEFAULT.name -> {
+                            appColorPreference = null
+                        }
+
+                        AppColorMode.PROFILE.name -> {
+                            if (profileColor != null) {
+                                appColorPreference = profileColor
+                                App.appColor = colorFromHex(profileColor)
+                            }
+                        }
+                    }
                 }
             )
 

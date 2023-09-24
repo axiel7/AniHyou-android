@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.axiel7.anihyou"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 34
         versionCode = 30
         versionName = "1.1.8"
@@ -111,6 +111,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     implementation("io.github.fornewid:placeholder-material3:1.0.1")
+    implementation("com.materialkolor:material-kolor:1.2.5")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
