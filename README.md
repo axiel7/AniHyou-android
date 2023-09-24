@@ -50,8 +50,8 @@ MRw5XPLsM9SVf48tv4nwQoY12nMXaiVzmD
 # Building
 Put the following content on your local.properties file:
 
-```
-CLIENT_ID=1234 //your AniList API client ID here
+```properties
+CLIENT_ID=1234 # your AniList API client ID here
 ```
 
 To get a Client ID, go to the [Developer section](https://anilist.co/settings/developer) and create a new client with the *Redirect URL* set to `anihyou://auth-response`
