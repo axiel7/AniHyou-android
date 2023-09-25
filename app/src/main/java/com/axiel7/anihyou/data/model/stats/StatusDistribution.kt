@@ -4,7 +4,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
+import com.axiel7.anihyou.data.model.base.Colorable
+import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.theme.stat_dark_blue
@@ -26,7 +27,7 @@ import com.axiel7.anihyou.ui.theme.stat_light_yellow
 
 enum class StatusDistribution(
     val value: MediaListStatus
-) : LocalizableAndColorable {
+) : Localizable, Colorable {
     CURRENT(MediaListStatus.CURRENT),
     COMPLETED(MediaListStatus.COMPLETED),
     PAUSED(MediaListStatus.PAUSED),

@@ -4,7 +4,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
+import com.axiel7.anihyou.data.model.base.Colorable
+import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.theme.stat_dark_10
@@ -46,7 +47,7 @@ import com.axiel7.anihyou.ui.theme.stat_light_onBlue
 
 enum class FormatDistribution(
     val value: MediaFormat
-) : LocalizableAndColorable {
+) : Localizable, Colorable {
     TV(MediaFormat.TV),
     TV_SHORT(MediaFormat.TV_SHORT),
     MOVIE(MediaFormat.MOVIE),

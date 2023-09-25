@@ -19,7 +19,8 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
+import com.axiel7.anihyou.data.model.base.Colorable
+import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatColorable
@@ -32,11 +33,11 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 const val MAX_VERTICAL_STAT_HEIGHT = 124
 
 @Composable
-fun <T : LocalizableAndColorable> VerticalStatsBar(
+fun <T> VerticalStatsBar(
     stats: List<Stat<T>>,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
-) {
+) where T : Localizable, T : Colorable {
     val maxValue = stats.maxOfOrNull { it.value } ?: 0f
 
     Row(

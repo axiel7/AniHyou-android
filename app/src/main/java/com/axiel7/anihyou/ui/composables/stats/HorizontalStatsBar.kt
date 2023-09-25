@@ -21,7 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.LocalizableAndColorable
+import com.axiel7.anihyou.data.model.base.Colorable
+import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.data.model.stats.StatusDistribution
@@ -31,13 +32,13 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
-fun <T : LocalizableAndColorable> HorizontalStatsBar(
+fun <T> HorizontalStatsBar(
     stats: List<Stat<T>>,
     horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 0.dp,
     showTotal: Boolean = true,
     isLoading: Boolean = false,
-) {
+) where T : Localizable, T : Colorable {
     val totalValue = stats.map { it.value }.sum()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
