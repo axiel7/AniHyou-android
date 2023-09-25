@@ -36,7 +36,7 @@ fun StaffInfoView(
     viewModel: StaffDetailsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     LaunchedEffect(staffId) {
         viewModel.getStaffDetails()
@@ -57,7 +57,9 @@ fun StaffInfoView(
                     .padding(16.dp)
                     .size(PERSON_IMAGE_SIZE_BIG.dp)
                     .clickable {
-                        navigateToFullscreenImage(viewModel.staffDetails?.image?.large)
+                        viewModel.staffDetails?.image?.large?.let {
+                            navigateToFullscreenImage(it)
+                        }
                     },
                 showShadow = true
             )

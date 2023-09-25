@@ -38,7 +38,7 @@ fun CharacterInfoView(
     viewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
 
@@ -62,7 +62,9 @@ fun CharacterInfoView(
                     .padding(16.dp)
                     .size(PERSON_IMAGE_SIZE_BIG.dp)
                     .clickable {
-                        navigateToFullscreenImage(viewModel.characterDetails?.image?.large)
+                        viewModel.characterDetails?.image?.large?.let {
+                            navigateToFullscreenImage(it)
+                        }
                     },
                 showShadow = true
             )

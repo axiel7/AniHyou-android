@@ -96,14 +96,51 @@ fun MainNavigation(
         label = "bottom_bar_padding"
     )
 
+    // common navigation actions
+    val navigateBack: () -> Unit = { navController.popBackStack() }
+    val navigateToMediaDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            MEDIA_DETAILS_DESTINATION
+                .replace(MEDIA_ID_ARGUMENT, id.toString())
+        )
+    }
+    val navigateToCharacterDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            CHARACTER_DETAILS_DESTINATION
+                .replace(CHARACTER_ID_ARGUMENT, id.toString())
+        )
+    }
+    val navigateToStaffDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            STAFF_DETAILS_DESTINATION
+                .replace(STAFF_ID_ARGUMENT, id.toString())
+        )
+    }
+    val navigateToStudioDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            STUDIO_DETAILS_DESTINATION
+                .replace(STUDIO_ID_ARGUMENT, id.toString())
+        )
+    }
+    val navigateToUserDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            USER_DETAILS_DESTINATION
+                .replace(USER_ID_ARGUMENT, id.toString())
+        )
+    }
+    val navigateToFullscreenImage: (String) -> Unit = { url ->
+        val encodedUrl = URLEncoder.encode(url, UTF_8)
+        navController.navigate(
+            FULLSCREEN_IMAGE_DESTINATION
+                .replace(URL_ARGUMENT, encodedUrl)
+        )
+    }
+
     LaunchedEffect(deepLink) {
         if (deepLink != null) {
             when (deepLink.type) {
                 DeepLink.Type.ANIME, DeepLink.Type.MANGA -> {
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, deepLink.id)
-                    )
+                    navigateToMediaDetails(deepLink.id.toInt())
                 }
 
                 DeepLink.Type.USER -> {
@@ -154,12 +191,7 @@ fun MainNavigation(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
                 else PaddingValues(bottom = 16.dp + bottomPadding),
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
+                navigateToMediaDetails = navigateToMediaDetails,
                 navigateToAnimeSeason = { animeSeason ->
                     navController.navigate(
                         SEASON_ANIME_DESTINATION
@@ -193,12 +225,7 @@ fun MainNavigation(
                     mediaType = MediaType.ANIME,
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    }
+                    navigateToMediaDetails = navigateToMediaDetails
                 )
             }
         }
@@ -213,12 +240,7 @@ fun MainNavigation(
                     mediaType = MediaType.MANGA,
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    }
+                    navigateToMediaDetails = navigateToMediaDetails
                 )
             }
         }
@@ -234,43 +256,12 @@ fun MainNavigation(
                     navigateToSettings = {
                         navController.navigate(SETTINGS_DESTINATION)
                     },
-                    navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, UTF_8)
-                        navController.navigate(
-                            FULLSCREEN_IMAGE_DESTINATION
-                                .replace(URL_ARGUMENT, encodedUrl)
-                        )
-                    },
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToCharacterDetails = { id ->
-                        navController.navigate(
-                            CHARACTER_DETAILS_DESTINATION
-                                .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToStaffDetails = { id ->
-                        navController.navigate(
-                            STAFF_DETAILS_DESTINATION
-                                .replace(STAFF_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToStudioDetails = { id ->
-                        navController.navigate(
-                            STUDIO_DETAILS_DESTINATION
-                                .replace(STUDIO_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToUserDetails = { id ->
-                        navController.navigate(
-                            USER_DETAILS_DESTINATION
-                                .replace(USER_ID_ARGUMENT, id.toString())
-                        )
-                    },
+                    navigateToFullscreenImage = navigateToFullscreenImage,
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToCharacterDetails = navigateToCharacterDetails,
+                    navigateToStaffDetails = navigateToStaffDetails,
+                    navigateToStudioDetails = navigateToStudioDetails,
+                    navigateToUserDetails = navigateToUserDetails,
                     navigateToUserMediaList = null
                 )
             }
@@ -279,39 +270,12 @@ fun MainNavigation(
         composable(BottomDestination.Explore.route) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                navigateBack = {
-                    navController.popBackStack()
-                },
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToUserDetails = { id ->
-                    navController.navigate(
-                        USER_DETAILS_DESTINATION
-                            .replace(USER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToCharacterDetails = { id ->
-                    navController.navigate(
-                        CHARACTER_DETAILS_DESTINATION
-                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStaffDetails = { id ->
-                    navController.navigate(
-                        STAFF_DETAILS_DESTINATION
-                            .replace(STAFF_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStudioDetails = { id ->
-                    navController.navigate(
-                        STUDIO_DETAILS_DESTINATION
-                            .replace(STUDIO_ID_ARGUMENT, id.toString())
-                    )
-                },
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
                 navigateToMediaChart = { type ->
                     navController.navigate(
                         MEDIA_CHART_DESTINATION
@@ -364,39 +328,12 @@ fun MainNavigation(
                 initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
                 initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
                 openSearch = navEntry.arguments?.getString(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) == "true",
-                navigateBack = {
-                    navController.popBackStack()
-                },
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToUserDetails = { id ->
-                    navController.navigate(
-                        USER_DETAILS_DESTINATION
-                            .replace(USER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToCharacterDetails = { id ->
-                    navController.navigate(
-                        CHARACTER_DETAILS_DESTINATION
-                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStaffDetails = { id ->
-                    navController.navigate(
-                        STAFF_DETAILS_DESTINATION
-                            .replace(STAFF_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStudioDetails = { id ->
-                    navController.navigate(
-                        STUDIO_DETAILS_DESTINATION
-                            .replace(STUDIO_ID_ARGUMENT, id.toString())
-                    )
-                },
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
                 navigateToMediaChart = { type ->
                     navController.navigate(
                         MEDIA_CHART_DESTINATION
@@ -429,35 +366,16 @@ fun MainNavigation(
                 isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
                 userId = navEntry.arguments?.getInt(USER_ID_ARGUMENT.removeFirstAndLast()),
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateBack = {
-                    navController.popBackStack()
-                }
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateBack = navigateBack
             )
         }
 
         composable(NOTIFICATIONS_DESTINATION) {
             NotificationsView(
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToUserDetails = { id ->
-                    navController.navigate(
-                        USER_DETAILS_DESTINATION
-                            .replace(USER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateBack = {
-                    navController.popBackStack()
-                }
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToUserDetails = navigateToUserDetails,
+                navigateBack = navigateBack
             )
         }
 
@@ -469,40 +387,12 @@ fun MainNavigation(
         ) { navEntry ->
             MediaDetailsView(
                 mediaId = navEntry.arguments?.getInt(MEDIA_ID_ARGUMENT.removeFirstAndLast()) ?: 0,
-                navigateBack = {
-                    navController.popBackStack()
-                },
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToFullscreenImage = { url ->
-                    val encodedUrl = URLEncoder.encode(url, UTF_8)
-                    navController.navigate(
-                        FULLSCREEN_IMAGE_DESTINATION
-                            .replace(URL_ARGUMENT, encodedUrl)
-                    )
-                },
-                navigateToStudioDetails = { id ->
-                    navController.navigate(
-                        STUDIO_DETAILS_DESTINATION
-                            .replace(STUDIO_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToCharacterDetails = { id ->
-                    navController.navigate(
-                        CHARACTER_DETAILS_DESTINATION
-                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStaffDetails = { id ->
-                    navController.navigate(
-                        STAFF_DETAILS_DESTINATION
-                            .replace(STAFF_ID_ARGUMENT, id.toString())
-                    )
-                },
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage,
+                navigateToStudioDetails = navigateToStudioDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
                 navigateToReviewDetails = { id ->
                     navController.navigate(
                         REVIEW_DETAILS_DESTINATION
@@ -535,15 +425,8 @@ fun MainNavigation(
             navEntry.arguments?.getString(CHART_TYPE_ARGUMENT.removeFirstAndLast())?.let {
                 MediaChartListView(
                     type = ChartType.valueOf(it),
-                    navigateBack = {
-                        navController.popBackStack()
-                    },
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    }
+                    navigateBack = navigateBack,
+                    navigateToMediaDetails = navigateToMediaDetails
                 )
             }
         }
@@ -562,15 +445,8 @@ fun MainNavigation(
                             year = year,
                             season = MediaSeason.valueOf(season)
                         ),
-                        navigateBack = {
-                            navController.popBackStack()
-                        },
-                        navigateToMediaDetails = { id ->
-                            navController.navigate(
-                                MEDIA_DETAILS_DESTINATION
-                                    .replace(MEDIA_ID_ARGUMENT, id.toString())
-                            )
-                        }
+                        navigateBack = navigateBack,
+                        navigateToMediaDetails = navigateToMediaDetails
                     )
                 }
             }
@@ -578,15 +454,8 @@ fun MainNavigation(
 
         composable(CALENDAR_DESTINATION) {
             CalendarView(
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateBack = {
-                    navController.popBackStack()
-                }
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateBack = navigateBack
             )
         }
 
@@ -608,43 +477,12 @@ fun MainNavigation(
                 userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())
                     ?.toIntOrNull(),
                 username = navEntry.arguments?.getString(USER_NAME_ARGUMENT.removeFirstAndLast()),
-                navigateToFullscreenImage = { url ->
-                    val encodedUrl = URLEncoder.encode(url, UTF_8)
-                    navController.navigate(
-                        FULLSCREEN_IMAGE_DESTINATION
-                            .replace(URL_ARGUMENT, encodedUrl)
-                    )
-                },
-                navigateToMediaDetails = { id ->
-                    navController.navigate(
-                        MEDIA_DETAILS_DESTINATION
-                            .replace(MEDIA_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToCharacterDetails = { id ->
-                    navController.navigate(
-                        CHARACTER_DETAILS_DESTINATION
-                            .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStaffDetails = { id ->
-                    navController.navigate(
-                        STAFF_DETAILS_DESTINATION
-                            .replace(STAFF_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToStudioDetails = { id ->
-                    navController.navigate(
-                        STUDIO_DETAILS_DESTINATION
-                            .replace(STUDIO_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateToUserDetails = { id ->
-                    navController.navigate(
-                        USER_DETAILS_DESTINATION
-                            .replace(USER_ID_ARGUMENT, id.toString())
-                    )
-                },
+                navigateToFullscreenImage = navigateToFullscreenImage,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
+                navigateToUserDetails = navigateToUserDetails,
                 navigateToUserMediaList = { mediaType, userId ->
                     navController.navigate(
                         USER_MEDIA_LIST_DESTINATION
@@ -652,9 +490,7 @@ fun MainNavigation(
                             .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
                     )
                 },
-                navigateBack = {
-                    navController.popBackStack()
-                },
+                navigateBack = navigateBack,
             )
         }
 
@@ -668,22 +504,9 @@ fun MainNavigation(
                 ?.let { characterId ->
                     CharacterDetailsView(
                         characterId = characterId,
-                        navigateBack = {
-                            navController.popBackStack()
-                        },
-                        navigateToMediaDetails = { id ->
-                            navController.navigate(
-                                MEDIA_DETAILS_DESTINATION
-                                    .replace(MEDIA_ID_ARGUMENT, id.toString())
-                            )
-                        },
-                        navigateToFullscreenImage = { url ->
-                            val encodedUrl = URLEncoder.encode(url, UTF_8)
-                            navController.navigate(
-                                FULLSCREEN_IMAGE_DESTINATION
-                                    .replace(URL_ARGUMENT, encodedUrl)
-                            )
-                        },
+                        navigateBack = navigateBack,
+                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 }
         }
@@ -697,28 +520,10 @@ fun MainNavigation(
             navEntry.arguments?.getInt(STAFF_ID_ARGUMENT.removeFirstAndLast())?.let { staffId ->
                 StaffDetailsView(
                     staffId = staffId,
-                    navigateBack = {
-                        navController.popBackStack()
-                    },
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToCharacterDetails = { id ->
-                        navController.navigate(
-                            CHARACTER_DETAILS_DESTINATION
-                                .replace(CHARACTER_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateToFullscreenImage = { url ->
-                        val encodedUrl = URLEncoder.encode(url, UTF_8)
-                        navController.navigate(
-                            FULLSCREEN_IMAGE_DESTINATION
-                                .replace(URL_ARGUMENT, encodedUrl)
-                        )
-                    }
+                    navigateBack = navigateBack,
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToCharacterDetails = navigateToCharacterDetails,
+                    navigateToFullscreenImage = navigateToFullscreenImage
                 )
             }
         }
@@ -732,9 +537,7 @@ fun MainNavigation(
             navEntry.arguments?.getInt(REVIEW_ID_ARGUMENT.removeFirstAndLast())?.let {
                 ReviewDetailsView(
                     reviewId = it,
-                    navigateBack = {
-                        navController.popBackStack()
-                    }
+                    navigateBack = navigateBack
                 )
             }
         }
@@ -748,15 +551,8 @@ fun MainNavigation(
             navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let {
                 ThreadDetailsView(
                     threadId = it,
-                    navigateToUserDetails = { id ->
-                        navController.navigate(
-                            USER_DETAILS_DESTINATION
-                                .replace(USER_ID_ARGUMENT, id.toString())
-                        )
-                    },
-                    navigateBack = {
-                        navController.popBackStack()
-                    }
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateBack = navigateBack
                 )
             }
         }
@@ -770,15 +566,8 @@ fun MainNavigation(
             navEntry.arguments?.getInt(STUDIO_ID_ARGUMENT.removeFirstAndLast())?.let {
                 StudioDetailsView(
                     studioId = it,
-                    navigateBack = {
-                        navController.popBackStack()
-                    },
-                    navigateToMediaDetails = { id ->
-                        navController.navigate(
-                            MEDIA_DETAILS_DESTINATION
-                                .replace(MEDIA_ID_ARGUMENT, id.toString())
-                        )
-                    }
+                    navigateBack = navigateBack,
+                    navigateToMediaDetails = navigateToMediaDetails
                 )
             }
         }
@@ -788,16 +577,12 @@ fun MainNavigation(
                 navigateToListStyleSettings = {
                     navController.navigate(LIST_STYLE_SETTINGS_DESTINATION)
                 },
-                navigateBack = {
-                    navController.popBackStack()
-                }
+                navigateBack = navigateBack
             )
         }
         composable(LIST_STYLE_SETTINGS_DESTINATION) {
             ListStyleSettingsView(
-                navigateBack = {
-                    navController.popBackStack()
-                }
+                navigateBack = navigateBack
             )
         }
 
@@ -809,9 +594,7 @@ fun MainNavigation(
         ) { navEntry ->
             FullScreenImageView(
                 imageUrl = navEntry.arguments?.getString(URL_ARGUMENT.removeFirstAndLast()),
-                onDismiss = {
-                    navController.popBackStack()
-                }
+                onDismiss = navigateBack
             )
         }
     }

@@ -53,7 +53,7 @@ fun CharacterDetailsView(
     characterId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val viewModel = viewModel { CharacterDetailsViewModel(characterId) }

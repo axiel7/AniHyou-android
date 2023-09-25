@@ -56,7 +56,7 @@ fun StaffDetailsView(
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String?) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val viewModel = viewModel { StaffDetailsViewModel(staffId) }
