@@ -4,9 +4,11 @@ import androidx.compose.ui.graphics.Color
 
 object ColorUtils {
 
-    fun colorFromHex(color: String?) = if (color != null)
+    fun colorFromHex(color: String?) = if (color != null) try {
         Color(android.graphics.Color.parseColor(color))
-    else null
+    } catch (e: IllegalArgumentException) {
+        null
+    } else null
 
     fun Int.hexToString() = String.format("#%06X", 0xFFFFFF and this)
 }

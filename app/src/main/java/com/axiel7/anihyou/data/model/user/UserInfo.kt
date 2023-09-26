@@ -1,9 +1,7 @@
 package com.axiel7.anihyou.data.model.user
 
-import androidx.compose.runtime.Composable
 import com.axiel7.anihyou.fragment.UserInfo
 
-@Composable
 fun UserInfo.hexColor() =
     if (options?.profileColor?.startsWith('#') == true) options.profileColor
     else when (this.options?.profileColor) {

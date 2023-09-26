@@ -8,11 +8,16 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserActivityQuery
-import com.axiel7.anihyou.data.PreferencesDataStore
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.fragment.UserInfo
+import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -30,10 +35,13 @@ class ProfileViewModel : BaseViewModel() {
                 userInfo = result.data
                 // refresh user options
                 App.dataStore.edit {
-                    it[PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY] =
-                        result.data.options?.profileColor ?: "#526CFD"
-                    it[PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY] =
+                    val profileColor = result.data.hexColor()
+                    it[PROFILE_COLOR_PREFERENCE_KEY] = profileColor
+                    it[SCORE_FORMAT_PREFERENCE_KEY] =
                         result.data.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
+                    if (it[APP_COLOR_MODE_PREFERENCE_KEY] == AppColorMode.PROFILE.name) {
+                        it[APP_COLOR_PREFERENCE_KEY] = profileColor
+                    }
                 }
             } else if (result is DataResult.Error) {
                 message = result.message

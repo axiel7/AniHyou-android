@@ -6,8 +6,11 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -22,7 +25,10 @@ fun HtmlWebView(
     hardwareEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
-    val htmlConverted = generateHtml(html = html)
+    val colorScheme = MaterialTheme.colorScheme
+    val htmlConverted by remember {
+        derivedStateOf { generateHtml(html, colorScheme) }
+    }
     val webClient = remember {
         object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
@@ -48,13 +54,15 @@ fun HtmlWebView(
     )
 }
 
-@Composable
-fun generateHtml(html: String) = """
+fun generateHtml(
+    html: String,
+    colorScheme: ColorScheme
+) = """
     <HTML>
     <head>
         <meta name='viewport' content='width=device-width, shrink-to-fit=YES, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'>
     </head>
-    ${generateCSS()}
+    ${generateCSS(colorScheme)}
     <BODY>
     <div id="anihyou">${formatCompatibleHtml(html)}</div>
     </BODY>
@@ -72,15 +80,14 @@ fun formatCompatibleHtml(html: String): String {
         .replace("&gt;", ">")
 }
 
-@Composable
-fun generateCSS(): String {
+fun generateCSS(colorScheme: ColorScheme): String {
     return """
     <style type='text/css'>
         ${
         baseCss(
-            backgroundColor = MaterialTheme.colorScheme.background.toArgb().hexToString(),
-            fontColor = MaterialTheme.colorScheme.onBackground.toArgb().hexToString(),
-            linkColor = MaterialTheme.colorScheme.primary.toArgb().hexToString()
+            backgroundColor = colorScheme.background.toArgb().hexToString(),
+            fontColor = colorScheme.onBackground.toArgb().hexToString(),
+            linkColor = colorScheme.primary.toArgb().hexToString()
         )
     }
         body {
