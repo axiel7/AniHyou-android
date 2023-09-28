@@ -146,26 +146,26 @@ object DateUtils {
                 val weeks = this / 604800
                 if (weeks > 4) {
                     val months = this / 2629746
-                    if (months > 12 && maxUnit <= ChronoUnit.YEARS) {
+                    if (months > 12 && maxUnit >= ChronoUnit.YEARS) {
                         val years = this / 31556952
                         return buildString(R.string.num_years, years)
-                    } else if (maxUnit <= ChronoUnit.MONTHS) {
+                    } else if (maxUnit >= ChronoUnit.MONTHS) {
                         return buildString(R.string.num_months, months)
                     }
-                } else if (maxUnit <= ChronoUnit.WEEKS) {
+                } else if (maxUnit >= ChronoUnit.WEEKS) {
                     return buildString(R.string.num_weeks, weeks)
                 }
             }
 
-            days >= 1 && maxUnit <= ChronoUnit.DAYS -> {
+            days >= 1 && maxUnit >= ChronoUnit.DAYS -> {
                 return buildString(R.string.num_days, days)
             }
 
             else -> {
                 val hours = this / 3600
-                if (hours >= 1 && maxUnit <= ChronoUnit.HOURS) {
+                if (hours >= 1 && maxUnit >= ChronoUnit.HOURS) {
                     return buildString(R.string.hour_abbreviation, hours)
-                } else if (maxUnit <= ChronoUnit.MINUTES) {
+                } else if (maxUnit >= ChronoUnit.MINUTES) {
                     val minutes = (this % 3600) / 60
                     return buildString(R.string.minutes_abbreviation, minutes)
                 }
