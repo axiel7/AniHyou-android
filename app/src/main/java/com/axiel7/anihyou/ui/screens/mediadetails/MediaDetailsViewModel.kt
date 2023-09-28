@@ -26,6 +26,9 @@ import kotlinx.coroutines.launch
 class MediaDetailsViewModel(
     private val mediaId: Int
 ) : BaseViewModel() {
+    init {
+        isLoading = true
+    }
 
     var mediaDetails by mutableStateOf<MediaDetailsQuery.Media?>(null)
     val studios by derivedStateOf {
