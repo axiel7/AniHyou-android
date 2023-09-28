@@ -21,16 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
-import com.axiel7.anihyou.ui.composables.thread.ParentThreadView
-import com.axiel7.anihyou.ui.composables.thread.ParentThreadViewPlaceholder
-import com.axiel7.anihyou.ui.composables.thread.ThreadCommentView
-import com.axiel7.anihyou.ui.composables.thread.ThreadCommentViewPlaceholder
+import com.axiel7.anihyou.ui.screens.thread.composables.ParentThreadView
+import com.axiel7.anihyou.ui.screens.thread.composables.ParentThreadViewPlaceholder
+import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentView
+import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_THREAD_URL
 
@@ -42,6 +43,7 @@ const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
 fun ThreadDetailsView(
     threadId: Int,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val viewModel = viewModel { ThreadDetailsViewModel(threadId) }
@@ -96,6 +98,7 @@ fun ThreadDetailsView(
             }
             items(
                 items = viewModel.threadComments,
+                key = { it.id },
                 contentType = { it }
             ) { item ->
                 ThreadCommentView(
@@ -104,11 +107,13 @@ fun ThreadDetailsView(
                     avatarUrl = item.user?.avatar?.medium,
                     likeCount = item.likeCount,
                     createdAt = item.createdAt,
+                    childComments = item.childComments,
                     navigateToUserDetails = {
                         navigateToUserDetails(item.user!!.id)
                     },
+                    navigateToFullscreenImage = navigateToFullscreenImage
                 )
-                HorizontalDivider()
+                HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
             }
             if (viewModel.isLoading) {
                 items(10) {
@@ -128,6 +133,7 @@ fun ThreadDetailsViewPreview() {
             ThreadDetailsView(
                 threadId = 1,
                 navigateToUserDetails = {},
+                navigateToFullscreenImage = {},
                 navigateBack = {}
             )
         }

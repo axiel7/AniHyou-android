@@ -6,15 +6,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import coil.imageLoader
-import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.MarkdownUtils.formatCompatibleMarkdown
 import com.axiel7.anihyou.utils.MarkdownUtils.onMarkdownLinkClicked
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -25,9 +30,19 @@ fun DefaultMarkdownText(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
     color: Color = MaterialTheme.colorScheme.onSurface,
-    onSpoilerClicked: (String) -> Unit = {},
-    onLinkClicked: (String) -> Unit = {}
+    navigateToFullscreenImage: (String) -> Unit = {},
 ) {
+    val context = LocalContext.current
+    var spoilerText by remember { mutableStateOf<String?>(null) }
+
+    spoilerText?.let {
+        SpoilerDialog(
+            text = it,
+            onDismiss = {
+                spoilerText = null
+            }
+        )
+    }
     MarkdownText(
         markdown = markdown?.formatCompatibleMarkdown() ?: "",
         modifier = modifier,
@@ -36,11 +51,12 @@ fun DefaultMarkdownText(
         linkColor = MaterialTheme.colorScheme.primary,
         onLinkClicked = { link ->
             link.onMarkdownLinkClicked(
-                onSpoilerClicked = onSpoilerClicked,
-                onLinkClicked = onLinkClicked
+                onSpoilerClicked = { spoilerText = it },
+                onLinkClicked = { context.openActionView(it) },
+                onImageClicked = navigateToFullscreenImage
             )
         },
-        imageLoader = App.applicationContext.imageLoader
+        imageLoader = context.imageLoader
     )
 }
 
@@ -68,7 +84,7 @@ fun DefaultMarkdownTextPreview() {
     AniHyouTheme {
         Surface {
             DefaultMarkdownText(
-                markdown = ""
+                markdown = "",
             )
         }
     }

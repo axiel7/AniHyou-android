@@ -78,3 +78,27 @@ fun FavoriteIconButton(
         }
     }
 }
+
+@Composable
+fun CommentIconButton(
+    commentCount: Int = 0,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (commentCount > 0) {
+            Text(
+                text = commentCount.abbreviated(),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(R.drawable.chat_bubble_24),
+                contentDescription = "chat_bubble",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}

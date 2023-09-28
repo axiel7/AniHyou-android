@@ -552,6 +552,7 @@ fun MainNavigation(
                 ThreadDetailsView(
                     threadId = it,
                     navigateToUserDetails = navigateToUserDetails,
+                    navigateToFullscreenImage = navigateToFullscreenImage,
                     navigateBack = navigateBack
                 )
             }

@@ -2,7 +2,7 @@ package com.axiel7.anihyou.ui.screens.thread
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.ThreadCommentsQuery
+import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.ui.base.BaseViewModel
@@ -14,7 +14,7 @@ class ThreadDetailsViewModel(
 
     var threadDetails = ThreadRepository.getThreadDetails(threadId).dataResultStateInViewModel()
 
-    var threadComments = mutableStateListOf<ThreadCommentsQuery.ThreadComment>()
+    var threadComments = mutableStateListOf<ChildComment>()
     var page = 1
     var hasNextPage = true
 

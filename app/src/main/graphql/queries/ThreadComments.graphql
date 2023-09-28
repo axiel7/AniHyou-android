@@ -1,4 +1,5 @@
-query ThreadComments($page: Int, $perPage: Int, $threadId: Int) {
+#bug: if the query name contains "ThreadComments" the `childComments` is always null
+query ChildComments($page: Int, $perPage: Int, $threadId: Int) {
     Page(page: $page, perPage: $perPage) {
         threadComments(threadId: $threadId) {
             id
@@ -12,6 +13,7 @@ query ThreadComments($page: Int, $perPage: Int, $threadId: Int) {
                     medium
                 }
             }
+            childComments
         }
         pageInfo {
             currentPage

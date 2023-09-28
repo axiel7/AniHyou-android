@@ -1,8 +1,9 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.ThreadCommentsQuery
+import com.axiel7.anihyou.ChildCommentsQuery
 import com.axiel7.anihyou.ThreadDetailsQuery
+import com.axiel7.anihyou.data.model.thread.ChildComment.Companion.toChildComment
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
 import kotlinx.coroutines.flow.flow
@@ -32,7 +33,7 @@ object ThreadRepository {
     ) = flow {
         emit(PagedResult.Loading)
 
-        val response = ThreadCommentsQuery(
+        val response = ChildCommentsQuery(
             page = Optional.present(page),
             perPage = Optional.present(perPage),
             threadId = Optional.present(threadId)
@@ -43,15 +44,16 @@ object ThreadRepository {
         else {
             val comments = response?.data?.Page?.threadComments?.filterNotNull()
             val pageInfo = response?.data?.Page?.pageInfo
-            if (comments != null) emit(
-                PagedResult.Success(
-                    data = comments,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
+            if (comments != null) {
+                emit(
+                    PagedResult.Success(
+                        data = comments.map { it.toChildComment() },
+                        nextPage = if (pageInfo?.hasNextPage == true)
+                            pageInfo.currentPage?.plus(1)
+                        else null
+                    )
                 )
-            )
-            else emit(PagedResult.Error(message = "Error"))
+            } else emit(PagedResult.Error(message = "Error"))
         }
     }
 }

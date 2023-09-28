@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables.thread
+package com.axiel7.anihyou.ui.screens.thread.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,28 +11,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
-import com.axiel7.anihyou.ui.composables.SpoilerDialog
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.utils.ContextUtils.openActionView
-import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
+import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun ThreadCommentView(
@@ -41,20 +37,10 @@ fun ThreadCommentView(
     avatarUrl: String?,
     likeCount: Int,
     createdAt: Int,
+    childComments: List<ChildComment?>?,
     navigateToUserDetails: () -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val context = LocalContext.current
-    var spoilerText by remember { mutableStateOf<String?>(null) }
-
-    spoilerText?.let {
-        SpoilerDialog(
-            text = it,
-            onDismiss = {
-                spoilerText = null
-            }
-        )
-    }
-
     Column(
         modifier = Modifier
             .padding(
@@ -88,7 +74,8 @@ fun ThreadCommentView(
                 )
             }
             Text(
-                text = createdAt.toLong().timestampToDateString(format = "MMM d, YYYY") ?: "",
+                text = createdAt.toLong().timestampIntervalSinceNow()
+                    .secondsToLegibleText(maxUnit = ChronoUnit.WEEKS),
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = 15.sp
             )
@@ -97,8 +84,7 @@ fun ThreadCommentView(
             markdown = body,
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 16.sp,
-            onSpoilerClicked = { spoilerText = it },
-            onLinkClicked = { context.openActionView(it) }
+            navigateToFullscreenImage = navigateToFullscreenImage,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -108,6 +94,13 @@ fun ThreadCommentView(
                 isFavorite = false,
                 favoritesCount = likeCount,
                 onClick = { /*TODO*/ }
+            )
+        }
+        childComments?.filterNotNull()?.forEach { comment ->
+            ChildCommentView(
+                comment = comment,
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
     }
@@ -164,7 +157,9 @@ fun ThreadCommentViewPreview() {
                     avatarUrl = "",
                     likeCount = 23,
                     createdAt = 1212370032,
+                    childComments = listOf(ChildComment.preview, ChildComment.preview),
                     navigateToUserDetails = {},
+                    navigateToFullscreenImage = {}
                 )
                 ThreadCommentViewPlaceholder()
             }
