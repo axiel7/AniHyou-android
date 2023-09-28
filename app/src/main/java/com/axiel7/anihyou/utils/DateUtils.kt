@@ -20,6 +20,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -97,6 +98,7 @@ object DateUtils {
                 current.season = MediaSeason.WINTER
                 current.year += 1
             }
+
             else -> {}
         }
         return current
@@ -125,35 +127,51 @@ object DateUtils {
      * Converts seconds to years, months, weeks, days, hours or minutes.
      * Depending if there is enough time.
      * Eg. If days greater than 1 and less than 6, returns "x days"
+     * @param maxUnit maximum time unit to display, if the time exceed the limit then it is showed as a date
      * @param buildString optional parameter to use in Glance. By default it uses compose [stringResource]
      */
     @Composable
     fun Long.secondsToLegibleText(
-        buildString: @Composable (id: Int, time: Long) -> String = { id, time -> stringResource(id, time) }
+        maxUnit: ChronoUnit = ChronoUnit.YEARS,
+        buildString: @Composable (id: Int, time: Long) -> String = { id, time ->
+            stringResource(
+                id,
+                time
+            )
+        }
     ): String {
         val days = this / 86400
-        return when {
+        when {
             days > 6 -> {
                 val weeks = this / 604800
-                return if (weeks > 4) {
+                if (weeks > 4) {
                     val months = this / 2629746
-                    if (months > 12) {
+                    if (months > 12 && maxUnit <= ChronoUnit.YEARS) {
                         val years = this / 31556952
-                        buildString(R.string.num_years, years)
-                    } else buildString(R.string.num_months, months)
-                } else buildString(R.string.num_weeks, weeks)
+                        return buildString(R.string.num_years, years)
+                    } else if (maxUnit <= ChronoUnit.MONTHS) {
+                        return buildString(R.string.num_months, months)
+                    }
+                } else if (maxUnit <= ChronoUnit.WEEKS) {
+                    return buildString(R.string.num_weeks, weeks)
+                }
             }
 
-            days >= 1 -> buildString(R.string.num_days, days)
+            days >= 1 && maxUnit <= ChronoUnit.DAYS -> {
+                return buildString(R.string.num_days, days)
+            }
+
             else -> {
                 val hours = this / 3600
-                return if (hours >= 1) buildString(R.string.hour_abbreviation, hours)
-                else {
+                if (hours >= 1 && maxUnit <= ChronoUnit.HOURS) {
+                    return buildString(R.string.hour_abbreviation, hours)
+                } else if (maxUnit <= ChronoUnit.MINUTES) {
                     val minutes = (this % 3600) / 60
-                    buildString(R.string.minutes_abbreviation, minutes)
+                    return buildString(R.string.minutes_abbreviation, minutes)
                 }
             }
         }
+        return LocalDateTime.now(defaultZoneOffset).plusSeconds(this).toLocalized()
     }
 
     @Composable
@@ -161,7 +179,9 @@ object DateUtils {
         val hours = this / 60
         return if (hours >= 1) {
             val minutes = this % 60
-            "${stringResource(R.string.hour_abbreviation, hours)} ${stringResource(R.string.minutes_abbreviation, minutes)}"
+            "${
+                stringResource(R.string.hour_abbreviation, hours)
+            } ${stringResource(R.string.minutes_abbreviation, minutes)}"
         } else stringResource(R.string.minutes_abbreviation, this)
     }
 
