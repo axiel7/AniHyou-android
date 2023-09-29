@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.axiel7.anihyou"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 34
         versionCode = 30
         versionName = "1.1.8"
