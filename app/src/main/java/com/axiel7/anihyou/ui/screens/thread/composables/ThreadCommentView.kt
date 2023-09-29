@@ -69,7 +69,7 @@ fun ThreadCommentView(
                 Text(
                     text = username,
                     modifier = Modifier.padding(start = 8.dp),
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -77,13 +77,14 @@ fun ThreadCommentView(
                 text = createdAt.toLong().timestampIntervalSinceNow()
                     .secondsToLegibleText(maxUnit = ChronoUnit.WEEKS),
                 color = MaterialTheme.colorScheme.outline,
-                fontSize = 15.sp
+                fontSize = 14.sp
             )
         }
         DefaultMarkdownText(
             markdown = body,
             modifier = Modifier.padding(vertical = 8.dp),
-            fontSize = 16.sp,
+            fontSize = 15.sp,
+            lineHeight = 15.sp,
             navigateToFullscreenImage = navigateToFullscreenImage,
         )
         Row(
@@ -152,7 +153,7 @@ fun ThreadCommentViewPreview() {
         Surface {
             Column {
                 ThreadCommentView(
-                    body = "Yet again, even more peak",
+                    body = "Yet again, even more peak. ".repeat(4),
                     username = "Lap",
                     avatarUrl = "",
                     likeCount = 23,

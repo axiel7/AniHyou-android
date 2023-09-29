@@ -68,7 +68,7 @@ fun ChildCommentView(
                     Text(
                         text = comment.user?.name ?: "",
                         modifier = Modifier.padding(start = 8.dp),
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -76,13 +76,14 @@ fun ChildCommentView(
                     text = comment.createdAt.toLong().timestampIntervalSinceNow()
                         .secondsToLegibleText(maxUnit = ChronoUnit.WEEKS),
                     color = MaterialTheme.colorScheme.outline,
-                    fontSize = 15.sp
+                    fontSize = 14.sp
                 )
             }
             DefaultMarkdownText(
                 markdown = comment.comment ?: "",
                 modifier = Modifier.padding(vertical = 8.dp),
-                fontSize = 16.sp,
+                fontSize = 15.sp,
+                lineHeight = 15.sp,
                 navigateToFullscreenImage = navigateToFullscreenImage
             )
             Row(

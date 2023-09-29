@@ -29,6 +29,7 @@ fun DefaultMarkdownText(
     markdown: String?,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
+    lineHeight: TextUnit = TextUnit.Unspecified,
     color: Color = MaterialTheme.colorScheme.onSurface,
     navigateToFullscreenImage: (String) -> Unit = {},
 ) {
@@ -47,6 +48,7 @@ fun DefaultMarkdownText(
         markdown = markdown?.formatCompatibleMarkdown() ?: "",
         modifier = modifier,
         fontSize = fontSize,
+        lineHeight = lineHeight,
         color = color,
         linkColor = MaterialTheme.colorScheme.primary,
         onLinkClicked = { link ->

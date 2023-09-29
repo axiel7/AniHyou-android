@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val PERSON_IMAGE_SIZE_VERY_SMALL = 32
+const val PERSON_IMAGE_SIZE_VERY_SMALL = 30
 const val PERSON_IMAGE_SIZE_SMALL = 80
 const val PERSON_IMAGE_SIZE_BIG = 124
 
