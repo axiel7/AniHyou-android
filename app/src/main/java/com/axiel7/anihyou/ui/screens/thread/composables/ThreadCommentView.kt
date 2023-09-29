@@ -36,8 +36,11 @@ fun ThreadCommentView(
     username: String,
     avatarUrl: String?,
     likeCount: Int,
+    isLiked: Boolean,
     createdAt: Int,
     childComments: List<ChildComment?>?,
+    toggleLike: () -> Unit,
+    toggleLikeComment: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
@@ -92,14 +95,15 @@ fun ThreadCommentView(
             horizontalArrangement = Arrangement.End
         ) {
             FavoriteIconButton(
-                isFavorite = false,
+                isFavorite = isLiked,
                 favoritesCount = likeCount,
-                onClick = { /*TODO*/ }
+                onClick = toggleLike
             )
         }
         childComments?.filterNotNull()?.forEach { comment ->
             ChildCommentView(
                 comment = comment,
+                toggleLike = toggleLikeComment,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
@@ -157,8 +161,11 @@ fun ThreadCommentViewPreview() {
                     username = "Lap",
                     avatarUrl = "",
                     likeCount = 23,
+                    isLiked = false,
                     createdAt = 1212370032,
                     childComments = listOf(ChildComment.preview, ChildComment.preview),
+                    toggleLike = {},
+                    toggleLikeComment = { true },
                     navigateToUserDetails = {},
                     navigateToFullscreenImage = {}
                 )

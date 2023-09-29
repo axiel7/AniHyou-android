@@ -10,6 +10,7 @@ fragment BasicThreadDetails on Thread {
     body
     viewCount
     likeCount
+    isLiked
     replyCount
     user {
         id

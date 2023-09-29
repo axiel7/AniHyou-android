@@ -5,6 +5,7 @@ query ChildComments($page: Int, $perPage: Int, $threadId: Int) {
             id
             comment
             likeCount
+            isLiked
             createdAt
             user {
                 id

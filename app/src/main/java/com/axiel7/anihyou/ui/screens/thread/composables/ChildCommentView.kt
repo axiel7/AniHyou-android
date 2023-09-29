@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,15 +34,19 @@ import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import kotlinx.coroutines.launch
 import java.time.temporal.ChronoUnit
 
 @Composable
 fun ChildCommentView(
     comment: ChildComment,
     modifier: Modifier = Modifier,
+    toggleLike: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+    var isLiked by remember { mutableStateOf(comment.isLiked ?: false) }
     var showChildComments by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
@@ -103,9 +108,11 @@ fun ChildCommentView(
                     )
                 }
                 FavoriteIconButton(
-                    isFavorite = false,
+                    isFavorite = isLiked,
                     favoritesCount = comment.likeCount,
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        scope.launch { isLiked = toggleLike(comment.id) }
+                    }
                 )
             }
         }//:Column
@@ -115,6 +122,7 @@ fun ChildCommentView(
             ChildCommentView(
                 comment = it,
                 modifier = Modifier.padding(start = 16.dp),
+                toggleLike = toggleLike,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
@@ -129,6 +137,7 @@ fun ChildCommentViewPreview() {
         Surface {
             ChildCommentView(
                 comment = ChildComment.preview,
+                toggleLike = { true },
                 navigateToUserDetails = {},
                 navigateToFullscreenImage = {}
             )

@@ -146,6 +146,7 @@ fun ParentThreadViewPreview() {
         viewCount = 102,
         replyCount = 12,
         likeCount = 17,
+        isLiked = false,
         user = BasicThreadDetails.User(
             id = 1,
             name = "KOMBRAT",

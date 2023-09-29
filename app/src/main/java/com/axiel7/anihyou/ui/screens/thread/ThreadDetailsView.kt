@@ -106,8 +106,13 @@ fun ThreadDetailsView(
                     username = item.user?.name ?: "",
                     avatarUrl = item.user?.avatar?.medium,
                     likeCount = item.likeCount,
+                    isLiked = viewModel.isLiked,
                     createdAt = item.createdAt,
                     childComments = item.childComments,
+                    toggleLike = viewModel::toggleLikeThread,
+                    toggleLikeComment = {
+                        viewModel.toggleLikeComment(it)
+                    },
                     navigateToUserDetails = {
                         navigateToUserDetails(item.user!!.id)
                     },
