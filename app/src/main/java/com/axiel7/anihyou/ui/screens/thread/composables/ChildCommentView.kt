@@ -14,6 +14,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -34,11 +38,13 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun ChildCommentView(
     comment: ChildComment,
+    modifier: Modifier = Modifier,
     navigateToUserDetails: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    var showChildComments by remember { mutableStateOf(false) }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
@@ -93,7 +99,7 @@ fun ChildCommentView(
                 if (!comment.childComments.isNullOrEmpty()) {
                     CommentIconButton(
                         commentCount = comment.childComments.size,
-                        onClick = { /*TODO*/ }
+                        onClick = { showChildComments = !showChildComments }
                     )
                 }
                 FavoriteIconButton(
@@ -104,6 +110,16 @@ fun ChildCommentView(
             }
         }//:Column
     }//:Row
+    if (showChildComments) {
+        comment.childComments?.filterNotNull()?.forEach {
+            ChildCommentView(
+                comment = it,
+                modifier = Modifier.padding(start = 16.dp),
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage,
+            )
+        }
+    }
 }
 
 @Preview
