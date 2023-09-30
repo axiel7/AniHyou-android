@@ -29,6 +29,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
@@ -57,6 +58,7 @@ import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.SwitchPreference
+import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
@@ -79,6 +81,7 @@ val themeEntries = Theme.entries.associate { it.value to it.stringRes }
 val colorModeEntries = AppColorMode.entries.associate { it.name to it.stringRes }
 val listStyleEntries = ListStyle.entries.associate { it.name to it.stringRes }
 val itemsPerRowEntries = ItemsPerRow.entries.associate { it.value.toString() to it.stringRes }
+val homeTabEntries = HomeTab.entries.associate { it.index to it.stringRes }
 val titleLanguageEntries =
     UserTitleLanguage.preferenceValues().associate { it.rawValue to it.stringRes() }
 val staffNameLanguageEntries =
@@ -126,6 +129,10 @@ fun SettingsView(
     var itemsPerRowPreference by rememberPreference(
         GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
         App.gridItemsPerRow
+    )
+    var defaultHomeTabPreference by rememberPreference(
+        DEFAULT_HOME_TAB_PREFERENCE_KEY,
+        App.defaultHomeTab
     )
     var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
     var scoreFormatPreference by rememberPreference(
@@ -196,6 +203,16 @@ fun SettingsView(
                             }
                         }
                     }
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.default_home_tab),
+                entriesValues = homeTabEntries,
+                preferenceValue = defaultHomeTabPreference,
+                icon = R.drawable.home_24,
+                onValueChange = { value ->
+                    defaultHomeTabPreference = value
                 }
             )
 

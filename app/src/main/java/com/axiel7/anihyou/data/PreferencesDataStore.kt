@@ -33,6 +33,7 @@ object PreferencesDataStore {
     val ANIME_LIST_SORT_PREFERENCE_KEY = stringPreferencesKey("anime_list_sort")
     val MANGA_LIST_SORT_PREFERENCE_KEY = stringPreferencesKey("manga_list_sort")
 
+    val DEFAULT_HOME_TAB_PREFERENCE_KEY = intPreferencesKey("default_home_tab")
     val AIRING_ON_MY_LIST_PREFERENCE_KEY = booleanPreferencesKey("airing_on_my_list")
 
     val GENERAL_LIST_STYLE_PREFERENCE_KEY = stringPreferencesKey("list_display_mode")

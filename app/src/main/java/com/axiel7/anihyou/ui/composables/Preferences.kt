@@ -172,13 +172,13 @@ fun SwitchPreference(
 }
 
 @Composable
-fun ListPreference(
+fun <T> ListPreference(
     title: String,
-    entriesValues: Map<String, Int>,
+    entriesValues: Map<T, Int>,
     modifier: Modifier = Modifier,
-    preferenceValue: String?,
+    preferenceValue: T?,
     @DrawableRes icon: Int? = null,
-    onValueChange: (String?) -> Unit
+    onValueChange: (T?) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     var openDialog by remember { mutableStateOf(false) }

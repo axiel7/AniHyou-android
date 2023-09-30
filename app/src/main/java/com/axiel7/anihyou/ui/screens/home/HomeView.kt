@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.AnimeSeason
@@ -42,15 +43,18 @@ import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-enum class HomeTab : Localizable {
-    DISCOVER,
-    ACTIVITY_FEED;
+enum class HomeTab(val index: Int) : Localizable {
+    DISCOVER(0),
+    ACTIVITY_FEED(1);
 
     @Composable
-    override fun localized() = when (this) {
-        DISCOVER -> stringResource(R.string.discover)
-        ACTIVITY_FEED -> stringResource(R.string.activity)
-    }
+    override fun localized() = stringResource(stringRes)
+
+    val stringRes
+        get() = when (this) {
+            DISCOVER -> R.string.discover
+            ACTIVITY_FEED -> R.string.activity
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +73,7 @@ fun HomeView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(App.defaultHomeTab) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
@@ -109,11 +113,11 @@ fun HomeView(
                     RoundedTabRowIndicator(tabPositions[selectedTabIndex])
                 }
             ) {
-                HomeTab.entries.forEachIndexed { index, homeTab ->
+                HomeTab.entries.forEach { tab ->
                     Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(text = homeTab.localized()) }
+                        selected = selectedTabIndex == tab.index,
+                        onClick = { selectedTabIndex = tab.index },
+                        text = { Text(text = tab.localized()) }
                     )
                 }
             }

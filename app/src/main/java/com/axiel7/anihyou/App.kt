@@ -39,6 +39,7 @@ class App : Application() {
 
         var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
 
+        var defaultHomeTab = 0
         var airingOnMyList = false
 
         var generalListStyle = ListStyle.STANDARD
