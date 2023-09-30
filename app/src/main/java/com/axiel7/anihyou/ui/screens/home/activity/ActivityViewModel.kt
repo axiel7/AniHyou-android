@@ -27,4 +27,10 @@ class ActivityViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun refresh() {
+        page = 1
+        hasNextPage = true
+        activities.clear()
+    }
 }
