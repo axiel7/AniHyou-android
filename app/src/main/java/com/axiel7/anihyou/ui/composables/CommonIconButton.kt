@@ -1,14 +1,20 @@
 package com.axiel7.anihyou.ui.composables
 
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
@@ -53,52 +59,66 @@ fun OpenInBrowserIconButton(url: String) {
 
 @Composable
 fun FavoriteIconButton(
+    modifier: Modifier = Modifier,
     isFavorite: Boolean,
     favoritesCount: Int = 0,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    iconSize: Dp = 24.dp,
+    tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
+    TextButton(
+        onClick = onClick,
+        modifier = modifier,
     ) {
         if (favoritesCount > 0) {
             Text(
                 text = favoritesCount.abbreviated(),
-                color = MaterialTheme.colorScheme.onSurface
+                color = tint,
+                fontSize = fontSize
             )
         }
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(
-                    if (isFavorite) R.drawable.favorite_filled_24
-                    else R.drawable.favorite_24
-                ),
-                contentDescription = "heart",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
+        Icon(
+            painter = painterResource(
+                if (isFavorite) R.drawable.favorite_filled_24
+                else R.drawable.favorite_24
+            ),
+            contentDescription = "heart",
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .size(iconSize),
+            tint = tint
+        )
     }
 }
 
 @Composable
 fun CommentIconButton(
+    modifier: Modifier = Modifier,
     commentCount: Int = 0,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    iconSize: Dp = 24.dp,
+    tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
+    TextButton(
+        onClick = onClick,
+        modifier = modifier,
     ) {
         if (commentCount > 0) {
             Text(
                 text = commentCount.abbreviated(),
-                color = MaterialTheme.colorScheme.onSurface
+                color = tint,
+                fontSize = fontSize,
             )
         }
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(R.drawable.chat_bubble_24),
-                contentDescription = "chat_bubble",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.chat_bubble_24),
+            contentDescription = "chat_bubble",
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .size(iconSize),
+            tint = tint
+        )
     }
 }

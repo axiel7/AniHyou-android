@@ -97,7 +97,9 @@ fun ThreadCommentView(
             FavoriteIconButton(
                 isFavorite = isLiked,
                 favoritesCount = likeCount,
-                onClick = toggleLike
+                onClick = toggleLike,
+                fontSize = 14.sp,
+                iconSize = 20.dp,
             )
         }
         childComments?.filterNotNull()?.forEach { comment ->

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -103,17 +104,23 @@ fun ActivityFeedItem(
                 lineHeight = 20.sp
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                modifier = Modifier.align(Alignment.End),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CommentIconButton(
+                    modifier = Modifier.width(78.dp),
                     commentCount = replyCount,
-                    onClick = onClick
+                    onClick = onClick,
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
                 )
                 FavoriteIconButton(
+                    modifier = Modifier.width(78.dp),
                     isFavorite = isLiked ?: false,
                     favoritesCount = likeCount,
-                    onClick = onClickLike
+                    onClick = onClickLike,
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
                 )
             }
         }//:Column
@@ -131,7 +138,7 @@ fun MediaActivityItemPreview() {
                 createdAt = 12312321,
                 text = "I just watched the latest season of Kanojo, Okarishimasu and I want to kms",
                 replyCount = 999,
-                likeCount = 1,
+                likeCount = 999,
                 isLiked = false,
                 mediaCoverUrl = "",
                 onClick = {},

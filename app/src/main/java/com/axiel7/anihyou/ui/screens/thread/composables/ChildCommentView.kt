@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -98,21 +99,27 @@ fun ChildCommentView(
                 navigateToFullscreenImage = navigateToFullscreenImage
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                modifier = Modifier.align(Alignment.End),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 if (!comment.childComments.isNullOrEmpty()) {
                     CommentIconButton(
+                        modifier = Modifier.width(78.dp),
                         commentCount = comment.childComments.size,
-                        onClick = { showChildComments = !showChildComments }
+                        onClick = { showChildComments = !showChildComments },
+                        fontSize = 14.sp,
+                        iconSize = 20.dp,
                     )
                 }
                 FavoriteIconButton(
+                    modifier = Modifier.width(78.dp),
                     isFavorite = isLiked,
                     favoritesCount = comment.likeCount,
                     onClick = {
                         scope.launch { isLiked = toggleLike(comment.id) }
-                    }
+                    },
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
                 )
             }
         }//:Column
