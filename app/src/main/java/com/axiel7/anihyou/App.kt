@@ -2,7 +2,6 @@ package com.axiel7.anihyou
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
@@ -64,6 +63,6 @@ class App : Application() {
         var enabledNotifications = false
         var notificationInterval = NotificationInterval.DAILY
 
-        var appColor: Color? = null
+        var appColor: String? = null
     }
 }

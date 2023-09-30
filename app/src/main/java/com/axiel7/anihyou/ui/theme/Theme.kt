@@ -9,16 +9,12 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
-import com.axiel7.anihyou.utils.ColorUtils.hexToString
 import com.materialkolor.dynamicColorScheme
 
 private val LightColorScheme = lightColorScheme(
@@ -98,17 +94,14 @@ fun AniHyouTheme(
     blackColors: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val appColorHex by rememberPreference(
-        APP_COLOR_PREFERENCE_KEY,
-        App.appColor?.toArgb()?.hexToString()
-    )
-    val appColor by remember {
-        derivedStateOf { colorFromHex(appColorHex) }
-    }
+    val appColorHex by rememberPreference(APP_COLOR_PREFERENCE_KEY, App.appColor)
 
     val colorScheme = when {
-        appColor != null -> {
-            dynamicColorScheme(seedColor = appColor!!, isDark = darkTheme)
+        appColorHex != null -> {
+            dynamicColorScheme(
+                seedColor = colorFromHex(appColorHex) ?: seed,
+                isDark = darkTheme
+            )
         }
 
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

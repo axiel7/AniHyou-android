@@ -78,7 +78,6 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
-import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -192,8 +191,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        defaultAppColor?.let {
-            colorFromHex(it)?.let { color -> App.appColor = color }
+        currentAppColor?.let {
+            App.appColor = it
         }
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let {
             App.animeListSort = it

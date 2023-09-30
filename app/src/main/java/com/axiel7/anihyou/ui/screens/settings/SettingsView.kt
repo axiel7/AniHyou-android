@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -61,7 +60,6 @@ import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
-import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.ContextUtils.openByDefaultSettings
@@ -75,7 +73,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
-import okhttp3.internal.toHexString
 
 val themeEntries = Theme.entries.associate { it.value to it.stringRes }
 val colorModeEntries = AppColorMode.entries.associate { it.name to it.stringRes }
@@ -115,7 +112,7 @@ fun SettingsView(
     )
     var appColorPreference by rememberPreference(
         APP_COLOR_PREFERENCE_KEY,
-        App.appColor?.toArgb()?.toHexString()
+        App.appColor
     )
     val profileColor by rememberPreference(PROFILE_COLOR_PREFERENCE_KEY, null)
     var useGeneralListStylePreference by rememberPreference(
@@ -199,7 +196,7 @@ fun SettingsView(
                         AppColorMode.PROFILE.name -> {
                             if (profileColor != null) {
                                 appColorPreference = profileColor
-                                App.appColor = colorFromHex(profileColor)
+                                App.appColor = profileColor
                             }
                         }
                     }
