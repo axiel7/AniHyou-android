@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.home.composables
+package com.axiel7.anihyou.ui.screens.home.discover.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -16,7 +16,7 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeLazyRow(
+fun DiscoverLazyRow(
     minHeight: Dp = MEDIA_POSTER_SMALL_HEIGHT.dp,
     content: LazyListScope.() -> Unit
 ) {

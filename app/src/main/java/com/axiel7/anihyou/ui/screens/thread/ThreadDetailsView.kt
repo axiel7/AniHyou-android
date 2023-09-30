@@ -26,8 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.OnBottomReached
 import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.thread.composables.ParentThreadView
 import com.axiel7.anihyou.ui.screens.thread.composables.ParentThreadViewPlaceholder
 import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentView

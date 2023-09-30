@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.home
+package com.axiel7.anihyou.ui.screens.home.discover
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDateTime
 
-class HomeViewModel : BaseViewModel() {
+class DiscoverViewModel : BaseViewModel() {
 
-    val infos = mutableStateListOf(HomeInfo.AIRING, HomeInfo.THIS_SEASON, HomeInfo.TRENDING_ANIME)
+    val infos = mutableStateListOf(DiscoverInfo.AIRING, DiscoverInfo.THIS_SEASON, DiscoverInfo.TRENDING_ANIME)
 
     fun addNextInfo() {
-        if (infos.size < HomeInfo.entries.size)
-            infos.add(HomeInfo.entries[infos.size])
+        if (infos.size < DiscoverInfo.entries.size)
+            infos.add(DiscoverInfo.entries[infos.size])
     }
 
     private val now = LocalDateTime.now()

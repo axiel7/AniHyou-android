@@ -24,7 +24,7 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
+import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
@@ -50,7 +50,7 @@ fun MediaRelationsView(
         }
         if (isLoading || mediaRelated.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.related))
-            HomeLazyRow {
+            DiscoverLazyRow {
                 if (isLoading) {
                     items(10) {
                         MediaItemVerticalPlaceholder()
@@ -83,7 +83,7 @@ fun MediaRelationsView(
         }
         if (isLoading || mediaRecommendations.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.recommendations))
-            HomeLazyRow {
+            DiscoverLazyRow {
                 if (isLoading) {
                     items(10) {
                         MediaItemVerticalPlaceholder()

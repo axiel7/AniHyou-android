@@ -49,7 +49,7 @@ import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ANIME_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.SeasonAnimeView
 import com.axiel7.anihyou.ui.screens.explore.charts.YEAR_ARGUMENT
-import com.axiel7.anihyou.ui.screens.home.HomeView
+import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
@@ -187,7 +187,7 @@ fun MainNavigation(
         }*/
     ) {
         composable(BottomDestination.Home.route) {
-            HomeView(
+            DiscoverView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
                 else PaddingValues(bottom = 16.dp + bottomPadding),

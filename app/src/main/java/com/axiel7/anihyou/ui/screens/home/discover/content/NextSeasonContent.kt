@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.home.content
+package com.axiel7.anihyou.ui.screens.home.discover.content
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
@@ -10,34 +10,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
-import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
-import com.axiel7.anihyou.ui.screens.home.HomeViewModel
-import com.axiel7.anihyou.ui.screens.home.HorizontalListHeader
+import com.axiel7.anihyou.ui.screens.home.discover.DiscoverViewModel
+import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 
 @Composable
-fun HomeTrendingAnimeContent(
-    viewModel: HomeViewModel,
-    navigateToExplore: (MediaType, MediaSort) -> Unit,
+fun NextSeasonContent(
+    viewModel: DiscoverViewModel,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
     HorizontalListHeader(
-        text = stringResource(R.string.trending_now),
+        text = stringResource(R.string.next_season),
         onClick = {
-            navigateToExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
+            navigateToAnimeSeason(viewModel.nextAnimeSeason)
         }
     )
-    val trendingAnime by viewModel.trendingAnime.collectAsState()
-    HomeLazyRow(
+    val seasonAnime by viewModel.nextSeasonAnime.collectAsState()
+    DiscoverLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        when (trendingAnime) {
+        when (seasonAnime) {
             is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
@@ -47,7 +46,7 @@ fun HomeTrendingAnimeContent(
             }
 
             is PagedResult.Success -> {
-                items((trendingAnime as PagedResult.Success).data) { item ->
+                items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -65,7 +64,7 @@ fun HomeTrendingAnimeContent(
 
             is PagedResult.Error -> {
                 item {
-                    Text(text = (trendingAnime as PagedResult.Error).message)
+                    Text(text = (seasonAnime as PagedResult.Error).message)
                 }
             }
         }

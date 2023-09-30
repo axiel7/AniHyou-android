@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.home.content
+package com.axiel7.anihyou.ui.screens.home.discover.content
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
@@ -7,37 +7,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
-import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
-import com.axiel7.anihyou.ui.screens.home.HomeViewModel
-import com.axiel7.anihyou.ui.screens.home.HorizontalListHeader
+import com.axiel7.anihyou.ui.screens.home.discover.DiscoverViewModel
+import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 
 @Composable
-fun HomeTrendingMangaContent(
-    viewModel: HomeViewModel,
-    navigateToExplore: (MediaType, MediaSort) -> Unit,
+fun ThisSeasonContent(
+    viewModel: DiscoverViewModel,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
     HorizontalListHeader(
-        text = stringResource(R.string.trending_manga),
+        text = viewModel.nowAnimeSeason.localized(),
         onClick = {
-            navigateToExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
+            navigateToAnimeSeason(viewModel.nowAnimeSeason)
         }
     )
-    val trendingManga by viewModel.trendingManga.collectAsState()
-    HomeLazyRow(
+    val seasonAnime by viewModel.thisSeasonAnime.collectAsState()
+    DiscoverLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
-        when (trendingManga) {
+        when (seasonAnime) {
             is PagedResult.Loading -> {
                 items(10) {
                     MediaItemVerticalPlaceholder(
@@ -47,7 +44,7 @@ fun HomeTrendingMangaContent(
             }
 
             is PagedResult.Success -> {
-                items((trendingManga as PagedResult.Success).data) { item ->
+                items((seasonAnime as PagedResult.Success).data) { item ->
                     MediaItemVertical(
                         title = item.title?.userPreferred ?: "",
                         imageUrl = item.coverImage?.large,
@@ -65,7 +62,7 @@ fun HomeTrendingMangaContent(
 
             is PagedResult.Error -> {
                 item {
-                    Text(text = (trendingManga as PagedResult.Error).message)
+                    Text(text = (seasonAnime as PagedResult.Error).message)
                 }
             }
         }

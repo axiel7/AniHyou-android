@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.home.content
+package com.axiel7.anihyou.ui.screens.home.discover.content
 
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -11,18 +11,18 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.PreferencesDataStore
 import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
-import com.axiel7.anihyou.ui.screens.home.composables.HomeLazyRow
-import com.axiel7.anihyou.ui.screens.home.HomeViewModel
-import com.axiel7.anihyou.ui.screens.home.HorizontalListHeader
+import com.axiel7.anihyou.ui.screens.home.discover.DiscoverViewModel
+import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @Composable
-fun HomeAiringContent(
-    viewModel: HomeViewModel,
+fun AiringContent(
+    viewModel: DiscoverViewModel,
     navigateToCalendar: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit
 ) {
@@ -37,7 +37,7 @@ fun HomeAiringContent(
     )
     if (airingOnMyList == true) {
         val airingAnime by viewModel.airingAnimeOnMyList.collectAsState()
-        HomeLazyRow(
+        DiscoverLazyRow(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
         ) {
             when (airingAnime) {
@@ -77,7 +77,7 @@ fun HomeAiringContent(
         }//:LazyRow
     } else if (airingOnMyList == false) {
         val airingAnimeState by viewModel.airingAnime.collectAsState()
-        HomeLazyRow(
+        DiscoverLazyRow(
             minHeight = MEDIA_POSTER_SMALL_HEIGHT.dp
         ) {
             when (airingAnimeState) {

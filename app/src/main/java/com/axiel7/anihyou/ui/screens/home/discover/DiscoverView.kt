@@ -1,13 +1,9 @@
-package com.axiel7.anihyou.ui.screens.home
+package com.axiel7.anihyou.ui.screens.home.discover
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -24,30 +20,27 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
-import com.axiel7.anihyou.ui.composables.OnBottomReached
-import com.axiel7.anihyou.ui.screens.home.content.HomeAiringContent
-import com.axiel7.anihyou.ui.screens.home.content.HomeNextSeasonContent
-import com.axiel7.anihyou.ui.screens.home.content.HomeThisSeasonContent
-import com.axiel7.anihyou.ui.screens.home.content.HomeTrendingAnimeContent
-import com.axiel7.anihyou.ui.screens.home.content.HomeTrendingMangaContent
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.ui.screens.home.discover.content.AiringContent
+import com.axiel7.anihyou.ui.screens.home.discover.content.NextSeasonContent
+import com.axiel7.anihyou.ui.screens.home.discover.content.ThisSeasonContent
+import com.axiel7.anihyou.ui.screens.home.discover.content.TrendingAnimeContent
+import com.axiel7.anihyou.ui.screens.home.discover.content.TrendingMangaContent
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-enum class HomeInfo {
+enum class DiscoverInfo {
     AIRING,
     THIS_SEASON,
     TRENDING_ANIME,
@@ -57,7 +50,7 @@ enum class HomeInfo {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(
+fun DiscoverView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (mediaId: Int) -> Unit,
@@ -66,7 +59,7 @@ fun HomeView(
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToNotifications: () -> Unit,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val viewModel: DiscoverViewModel = viewModel()
     val listState = rememberLazyListState()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -77,7 +70,7 @@ fun HomeView(
     }
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = stringResource(R.string.home),
+        title = stringResource(R.string.discover),
         modifier = modifier,
         actions = {
             BadgedBox(
@@ -114,31 +107,31 @@ fun HomeView(
         ) {
             items(viewModel.infos) { item ->
                 when (item) {
-                    HomeInfo.AIRING -> HomeAiringContent(
+                    DiscoverInfo.AIRING -> AiringContent(
                         viewModel = viewModel,
                         navigateToCalendar = navigateToCalendar,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
 
-                    HomeInfo.THIS_SEASON -> HomeThisSeasonContent(
+                    DiscoverInfo.THIS_SEASON -> ThisSeasonContent(
                         viewModel = viewModel,
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
 
-                    HomeInfo.TRENDING_ANIME -> HomeTrendingAnimeContent(
+                    DiscoverInfo.TRENDING_ANIME -> TrendingAnimeContent(
                         viewModel = viewModel,
                         navigateToExplore = navigateToExplore,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
 
-                    HomeInfo.NEXT_SEASON -> HomeNextSeasonContent(
+                    DiscoverInfo.NEXT_SEASON -> NextSeasonContent(
                         viewModel = viewModel,
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
 
-                    HomeInfo.TRENDING_MANGA -> HomeTrendingMangaContent(
+                    DiscoverInfo.TRENDING_MANGA -> TrendingMangaContent(
                         viewModel = viewModel,
                         navigateToExplore = navigateToExplore,
                         navigateToMediaDetails = navigateToMediaDetails,
@@ -149,36 +142,11 @@ fun HomeView(
     }//: Scaffold
 }
 
-@Composable
-fun HorizontalListHeader(
-    text: String,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-) {
-    Box(modifier = Modifier.clickable(onClick = onClick ?: {})) {
-        Row(
-            modifier = modifier
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-            if (onClick != null) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_forward_24),
-                    contentDescription = "arrow"
-                )
-            }
-        }
-    }
-}
-
 @Preview
 @Composable
-fun HomeViewPreview() {
+fun DiscoverViewPreview() {
     AniHyouTheme {
-        HomeView(
+        DiscoverView(
             navigateToMediaDetails = { },
             navigateToAnimeSeason = { },
             navigateToCalendar = { },
