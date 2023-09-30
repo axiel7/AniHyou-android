@@ -68,7 +68,9 @@ fun ActivityFeedView(
                         mediaCoverUrl = it.listActivityFragment.media?.coverImage?.medium,
                         onClick = { /*TODO*/ },
                         onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
-                        onClickLike = { /*TODO*/ },
+                        onClickLike = {
+                            viewModel.toggleLikeActivity(it.listActivityFragment.id)
+                        },
                         onClickMedia = {
                             it.listActivityFragment.media?.id?.let { id -> navigateToMediaDetails(id) }
                         }
@@ -86,7 +88,9 @@ fun ActivityFeedView(
                         isLiked = it.isLiked,
                         onClick = { /*TODO*/ },
                         onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
-                        onClickLike = { /*TODO*/ },
+                        onClickLike = {
+                            viewModel.toggleLikeActivity(it.id)
+                        },
                     )
                 }
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))

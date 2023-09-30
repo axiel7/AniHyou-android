@@ -24,7 +24,17 @@ object LikeRepository {
         if (error != null) emit(DataResult.Error(message = error))
         else {
             val data = response?.data
-            if (data != null) emit(DataResult.Success(data = true))
+            if (data?.ToggleLikeV2 != null) {
+                val liked = data.ToggleLikeV2.onListActivity?.isLiked
+                        ?: data.ToggleLikeV2.onTextActivity?.isLiked
+                        ?: data.ToggleLikeV2.onMessageActivity?.isLiked
+                        ?: data.ToggleLikeV2.onActivityReply?.isLiked
+                        ?: data.ToggleLikeV2.onThread?.isLiked
+                        ?: data.ToggleLikeV2.onThreadComment?.isLiked
+
+                if (liked != null) emit(DataResult.Success(data = liked))
+                else emit(DataResult.Error(message = "Unable to like"))
+            }
             else emit(DataResult.Error(message = "Error"))
         }
     }
