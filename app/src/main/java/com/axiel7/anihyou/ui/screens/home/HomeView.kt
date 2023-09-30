@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -38,6 +38,7 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
+import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
@@ -62,12 +63,13 @@ fun HomeView(
     navigateToCalendar: () -> Unit,
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToNotifications: () -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
@@ -124,8 +126,12 @@ fun HomeView(
                     navigateToCalendar = navigateToCalendar,
                     navigateToExplore = navigateToExplore
                 )
-                
-                HomeTab.ACTIVITY_FEED -> Text(text = "Coming Soon")
+
+                HomeTab.ACTIVITY_FEED -> ActivityFeedView(
+                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToUserDetails = navigateToUserDetails
+                )
             }
         }//:Column
     }//:Scaffold
@@ -141,7 +147,8 @@ fun HomeViewPreview() {
                 navigateToAnimeSeason = {},
                 navigateToCalendar = {},
                 navigateToExplore = { _, _ -> },
-                navigateToNotifications = {}
+                navigateToNotifications = {},
+                navigateToUserDetails = {}
             )
         }
     }

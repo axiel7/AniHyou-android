@@ -1,0 +1,56 @@
+query ActivityFeed($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        activities(isFollowing: true, sort: [ID_DESC]) {
+            ... on TextActivity {
+                createdAt
+                id
+                isLiked
+                likeCount
+                replyCount
+                text
+                type
+                user {
+                    id
+                    name
+                    avatar {
+                        medium
+                    }
+                }
+            }
+            ... on ListActivity {
+                ...ListActivityFragment
+                user {
+                    id
+                    name
+                    avatar {
+                        medium
+                    }
+                }
+            }
+        }
+        pageInfo {
+            currentPage
+            hasNextPage
+        }
+    }
+}
+
+fragment ListActivityFragment on ListActivity {
+    id
+    createdAt
+    isLiked
+    likeCount
+    replyCount
+    type
+    progress
+    status
+    media {
+        id
+        title {
+            userPreferred
+        }
+        coverImage {
+            medium
+        }
+    }
+}

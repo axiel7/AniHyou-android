@@ -8,20 +8,7 @@ query UserActivity($page: Int, $perPage: Int, $userId: Int, $sort: [ActivitySort
                 createdAt
             }
             ... on ListActivity {
-                id
-                type
-                status
-                progress
-                createdAt
-                media {
-                    id
-                    title {
-                        userPreferred
-                    }
-                    coverImage {
-                        medium
-                    }
-                }
+                ...ListActivityFragment
             }
         }
         pageInfo {

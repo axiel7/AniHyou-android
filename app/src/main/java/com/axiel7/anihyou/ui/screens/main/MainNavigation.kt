@@ -211,7 +211,8 @@ fun MainNavigation(
                 },
                 navigateToNotifications = {
                     navController.navigate(NOTIFICATIONS_DESTINATION)
-                }
+                },
+                navigateToUserDetails = navigateToUserDetails
             )
         }
 
