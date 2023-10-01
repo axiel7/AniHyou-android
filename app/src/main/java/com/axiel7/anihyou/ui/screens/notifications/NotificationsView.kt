@@ -38,6 +38,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import java.time.temporal.ChronoUnit
 
 const val NOTIFICATIONS_DESTINATION = "notifications"
 
@@ -113,7 +114,10 @@ fun NotificationsView(
                         .fillMaxWidth()
                         .padding(8.dp),
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
-                        ?.secondsToLegibleText(),
+                        ?.secondsToLegibleText(
+                            maxUnit = ChronoUnit.WEEKS,
+                            isFutureDate = false
+                        ),
                     onClick = {
                         when (item.type) {
                             NotificationType.AIRING,

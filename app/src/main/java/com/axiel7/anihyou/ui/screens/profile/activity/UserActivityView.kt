@@ -18,6 +18,7 @@ import com.axiel7.anihyou.ui.screens.profile.ProfileViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun UserActivityView(
@@ -46,7 +47,10 @@ fun UserActivityView(
                     title = activity.text(),
                     imageUrl = activity.media?.coverImage?.medium,
                     subtitle = activity.createdAt.toLong().timestampIntervalSinceNow()
-                        .secondsToLegibleText(),
+                        .secondsToLegibleText(
+                            maxUnit = ChronoUnit.WEEKS,
+                            isFutureDate = false
+                        ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),

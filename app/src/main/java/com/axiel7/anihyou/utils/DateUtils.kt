@@ -133,11 +133,9 @@ object DateUtils {
     @Composable
     fun Long.secondsToLegibleText(
         maxUnit: ChronoUnit = ChronoUnit.YEARS,
+        isFutureDate: Boolean = true,
         buildString: @Composable (id: Int, time: Long) -> String = { id, time ->
-            stringResource(
-                id,
-                time
-            )
+            stringResource(id, time)
         }
     ): String {
         val days = this / 86400
@@ -171,7 +169,9 @@ object DateUtils {
                 }
             }
         }
-        return LocalDateTime.now(defaultZoneOffset).plusSeconds(this).toLocalized()
+        return LocalDateTime.now(defaultZoneOffset)
+            .plusSeconds(if (isFutureDate) this else -this)
+            .toLocalized()
     }
 
     @Composable

@@ -78,7 +78,10 @@ fun ThreadCommentView(
             }
             Text(
                 text = createdAt.toLong().timestampIntervalSinceNow()
-                    .secondsToLegibleText(maxUnit = ChronoUnit.WEEKS),
+                    .secondsToLegibleText(
+                        maxUnit = ChronoUnit.WEEKS,
+                        isFutureDate = false
+                    ),
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = 14.sp
             )
