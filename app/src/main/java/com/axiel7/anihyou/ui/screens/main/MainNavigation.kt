@@ -1,6 +1,9 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -182,7 +185,7 @@ fun MainNavigation(
             top = padding.calculateTopPadding(),
             end = padding.calculateEndPadding(LocalLayoutDirection.current),
         ),
-        /*enterTransition = {
+        enterTransition = {
             fadeIn(tween(400))
         },
         exitTransition = {
@@ -193,7 +196,7 @@ fun MainNavigation(
         },
         popExitTransition = {
             fadeOut(tween(400))
-        }*/
+        }
     ) {
         composable(BottomDestination.Home.route) {
             HomeView(
