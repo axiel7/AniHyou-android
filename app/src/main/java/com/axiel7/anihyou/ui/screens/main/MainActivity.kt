@@ -36,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.App
@@ -48,7 +47,6 @@ import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_K
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PAUSED_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
@@ -182,17 +180,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun preloadPreferences() {
-        val defaultAppColor = App.dataStore.getValueSync(DEFAULT_APP_COLOR_PREFERENCE_KEY)
-        val currentAppColor = App.dataStore.getValueSync(APP_COLOR_PREFERENCE_KEY)
-        if (currentAppColor != defaultAppColor) {
-            lifecycleScope.launch {
-                App.dataStore.edit {
-                    if (defaultAppColor != null) it[APP_COLOR_PREFERENCE_KEY] = defaultAppColor
-                    else it.remove(APP_COLOR_PREFERENCE_KEY)
-                }
-            }
-        }
-        currentAppColor?.let {
+        App.dataStore.getValueSync(APP_COLOR_PREFERENCE_KEY)?.let {
             App.appColor = it
         }
         App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let {

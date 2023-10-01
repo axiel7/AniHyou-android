@@ -65,7 +65,6 @@ object PreferencesDataStore {
         intPreferencesKey("last_notification_created_at")
 
     val APP_COLOR_MODE_PREFERENCE_KEY = stringPreferencesKey("app_color_mode")
-    val DEFAULT_APP_COLOR_PREFERENCE_KEY = stringPreferencesKey("default_app_color")
     val APP_COLOR_PREFERENCE_KEY = stringPreferencesKey("app_color")
 
     val Context.defaultPreferencesDataStore by preferencesDataStore(name = "default")
