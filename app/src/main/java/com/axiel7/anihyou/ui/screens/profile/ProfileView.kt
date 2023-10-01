@@ -101,7 +101,7 @@ fun ProfileView(
     val viewModel: ProfileViewModel = viewModel()
     val isMyProfile by remember { derivedStateOf { userId == null && username == null } }
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 

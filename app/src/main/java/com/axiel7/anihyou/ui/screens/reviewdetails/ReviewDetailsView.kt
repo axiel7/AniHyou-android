@@ -50,7 +50,7 @@ fun ReviewDetailsView(
     navigateBack: () -> Unit,
 ) {
     val viewModel = viewModel { ReviewDetailsViewModel(reviewId) }
-    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
