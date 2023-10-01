@@ -14,9 +14,11 @@ import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.fragment.UserInfo
+import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
@@ -94,6 +96,39 @@ class ProfileViewModel : BaseViewModel() {
                 userActivities.addAll(result.data)
                 hasNextPageActivity = result.nextPage != null
                 pageActivity = result.nextPage ?: pageActivity
+            }
+        }
+    }
+
+    fun toggleLikeActivity(id: Int) = viewModelScope.launch(dispatcher) {
+        LikeRepository.toggleLike(
+            likeableId = id,
+            type = LikeableType.ACTIVITY
+        ).collect { result ->
+            if (result is DataResult.Success) {
+                val isLiked = result.data
+                val foundIndex = userActivities.indexOfFirst {
+                    it.onListActivity?.listActivityFragment?.id == id
+                            || it.onTextActivity?.id == id
+                }
+                if (foundIndex != -1) {
+                    val oldItem = userActivities[foundIndex]
+                    userActivities[foundIndex] = oldItem.copy(
+                        onTextActivity = oldItem.onTextActivity?.copy(
+                            isLiked = isLiked,
+                            likeCount = if (isLiked) oldItem.onTextActivity.likeCount + 1
+                            else oldItem.onTextActivity.likeCount - 1
+                        ),
+                        onListActivity = oldItem.onListActivity?.copy(
+                            listActivityFragment = oldItem.onListActivity.listActivityFragment.copy(
+                                isLiked = isLiked,
+                                likeCount = if (isLiked)
+                                    oldItem.onListActivity.listActivityFragment.likeCount + 1
+                                else oldItem.onListActivity.listActivityFragment.likeCount - 1
+                            )
+                        )
+                    )
+                }
             }
         }
     }

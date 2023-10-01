@@ -61,7 +61,7 @@ fun UserActivityView(
                         navigateToMediaDetails(activity.media?.id!!)
                     },
                     onClickLike = {
-
+                        viewModel.toggleLikeActivity(activity.id)
                     }
                 )
             }
@@ -78,7 +78,7 @@ fun UserActivityView(
                         .padding(8.dp),
                     onClick = {},
                     onClickLike = {
-
+                        viewModel.toggleLikeActivity(activity.id)
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
