@@ -49,6 +49,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PAUSED_LIST_STYLE_PREF
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_APP_COLOR_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
@@ -202,6 +203,9 @@ class MainActivity : ComponentActivity() {
         }
         App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let {
             App.scoreFormat = ScoreFormat.valueOf(it)
+        }
+        App.dataStore.getValueSync(DEFAULT_HOME_TAB_PREFERENCE_KEY)?.let {
+            App.defaultHomeTab = it
         }
         App.dataStore.getValueSync(AIRING_ON_MY_LIST_PREFERENCE_KEY)?.let {
             App.airingOnMyList = it
