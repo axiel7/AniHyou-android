@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithCheckboxSelection
 import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 
@@ -21,7 +22,8 @@ fun MediaSearchFormatChip(
 
     if (openDialog) {
         DialogWithCheckboxSelection(
-            values = MediaFormatLocalizable.entries.toTypedArray(),
+            values = if (viewModel.mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
+            else MediaFormatLocalizable.mangaEntries,
             defaultValues = viewModel.selectedMediaFormats.toTypedArray(),
             title = stringResource(R.string.format),
             onConfirm = {

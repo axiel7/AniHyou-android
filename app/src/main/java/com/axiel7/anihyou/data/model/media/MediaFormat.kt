@@ -35,4 +35,9 @@ enum class MediaFormatLocalizable(val value: MediaFormat) : Localizable {
 
     @Composable
     override fun localized() = value.localized()
+
+    companion object {
+        val animeEntries = arrayOf(TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC)
+        val mangaEntries = arrayOf(MANGA, NOVEL, ONE_SHOT)
+    }
 }
