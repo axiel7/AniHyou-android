@@ -117,6 +117,7 @@ fun NotificationsView(
                             maxUnit = ChronoUnit.WEEKS,
                             isFutureDate = false
                         ),
+                    isUnread = item.isUnread,
                     onClick = {
                         when (item.type) {
                             NotificationType.AIRING,

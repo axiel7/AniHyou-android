@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.notifications.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +30,15 @@ const val NOTIFICATION_IMAGE_SIZE = 48
 fun NotificationItem(
     title: String,
     modifier: Modifier = Modifier,
-    imageUrl: String? = null,
-    subtitle: String? = null,
+    imageUrl: String?,
+    subtitle: String?,
+    isUnread: Boolean,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
+        modifier = (if (isUnread) Modifier.background(MaterialTheme.colorScheme.surfaceVariant) else Modifier)
+            .then(modifier)
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
     ) {
@@ -118,6 +121,7 @@ fun ActivityItemPreview() {
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
                     subtitle = "14 h ago",
+                    isUnread = true,
                     onClick = {}
                 )
                 NotificationItemPlaceholder(
