@@ -65,8 +65,9 @@ fun FavoriteIconButton(
     onClick: () -> Unit,
     fontSize: TextUnit = TextUnit.Unspecified,
     iconSize: Dp = 24.dp,
-    tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
+    val tint = if (isFavorite) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.onSurface
     TextButton(
         onClick = onClick,
         modifier = modifier,
