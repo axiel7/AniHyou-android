@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class NotificationsViewModel : BaseViewModel() {
 
     var type by mutableStateOf(NotificationTypeGroup.ALL)
+    private var resetCount = true
 
     val notifications = mutableStateListOf<GenericNotification>()
     var page = 1
@@ -26,10 +27,11 @@ class NotificationsViewModel : BaseViewModel() {
     fun getNotifications() = viewModelScope.launch(dispatcher) {
         NotificationRepository.getNotificationsPage(
             type = type,
-            resetCount = true,
+            resetCount = resetCount,
             page = page,
         ).collect { result ->
             isLoading = result is PagedResult.Loading
+            resetCount = false
 
             if (result is PagedResult.Success) {
                 App.dataStore.edit {
@@ -38,8 +40,8 @@ class NotificationsViewModel : BaseViewModel() {
                     }
                 }
                 notifications.addAll(result.data)
-                hasNextPage = result.nextPage != null
                 page = result.nextPage ?: page
+                hasNextPage = result.nextPage != null
             }
         }
     }

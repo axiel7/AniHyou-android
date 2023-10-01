@@ -59,7 +59,6 @@ fun NotificationsView(
 
     LaunchedEffect(viewModel.type) {
         viewModel.resetPage()
-        viewModel.getNotifications()
     }
 
     listState.OnBottomReached(buffer = 3) {
