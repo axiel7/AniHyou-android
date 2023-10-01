@@ -6,6 +6,9 @@ query UserActivity($page: Int, $perPage: Int, $userId: Int, $sort: [ActivitySort
                 type
                 text
                 createdAt
+                likeCount
+                replyCount
+                isLiked
             }
             ... on ListActivity {
                 ...ListActivityFragment

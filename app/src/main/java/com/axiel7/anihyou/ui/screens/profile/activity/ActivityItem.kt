@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,22 +21,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.type.ActivityType
+import com.axiel7.anihyou.ui.composables.CommentIconButton
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
+import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import java.time.temporal.ChronoUnit
 
 const val ACTIVITY_IMAGE_SIZE = 48
 
 @Composable
 fun ActivityItem(
     type: ActivityType,
-    title: String,
+    text: String,
+    createdAt: Int,
+    replyCount: Int,
+    likeCount: Int,
+    isLiked: Boolean?,
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
-    subtitle: String? = null,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
+    onClickLike: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit = {},
 ) {
     Row(
@@ -54,19 +65,17 @@ fun ActivityItem(
         }
 
         Column(
-            modifier = Modifier
-                .padding(end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             if (type == ActivityType.TEXT) {
                 DefaultMarkdownText(
-                    markdown = title,
+                    markdown = text,
                     lineHeight = 20.sp,
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
             } else {
                 Text(
-                    text = title,
+                    text = text,
                     modifier = Modifier.padding(bottom = 4.dp),
                     lineHeight = 20.sp,
                     overflow = TextOverflow.Ellipsis,
@@ -74,11 +83,35 @@ fun ActivityItem(
                 )
             }
 
-            subtitle?.let {
+            Row(
+                modifier = Modifier.align(Alignment.End),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = it,
+                    text = createdAt.toLong().timestampIntervalSinceNow()
+                        .secondsToLegibleText(
+                            maxUnit = ChronoUnit.WEEKS,
+                            isFutureDate = false
+                        ),
+                    modifier = Modifier.weight(1f),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                CommentIconButton(
+                    modifier = Modifier.width(78.dp),
+                    commentCount = replyCount,
+                    onClick = onClick,
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
+                )
+                FavoriteIconButton(
+                    modifier = Modifier.width(78.dp),
+                    isFavorite = isLiked ?: false,
+                    favoritesCount = likeCount,
+                    onClick = onClickLike,
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
                 )
             }
         }
@@ -128,11 +161,15 @@ fun ActivityItemPreview() {
             Column {
                 ActivityItem(
                     type = ActivityType.MEDIA_LIST,
-                    title = "Plans to watch Alice to Therese no Maboroshi Koujou",
+                    text = "Plans to watch Alice to Therese no Maboroshi Koujou",
+                    createdAt = 1927389,
+                    replyCount = 999,
+                    likeCount = 999,
+                    isLiked = false,
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
-                    subtitle = "14 h ago",
-                    onClick = {}
+                    onClick = {},
+                    onClickLike = {}
                 )
                 ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)
