@@ -2,13 +2,7 @@ query ActivityFeed($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
         activities(isFollowing: true, sort: [ID_DESC]) {
             ... on TextActivity {
-                createdAt
-                id
-                isLiked
-                likeCount
-                replyCount
-                text
-                type
+                ...TextActivityFragment
                 user {
                     id
                     name
@@ -50,6 +44,31 @@ fragment ListActivityFragment on ListActivity {
             userPreferred
         }
         coverImage {
+            medium
+        }
+    }
+}
+
+fragment TextActivityFragment on TextActivity {
+    id
+    createdAt
+    isLiked
+    likeCount
+    replyCount
+    text
+}
+
+fragment MessageActivityFragment on MessageActivity {
+    id
+    createdAt
+    isLiked
+    likeCount
+    replyCount
+    message
+    messenger {
+        id
+        name
+        avatar {
             medium
         }
     }

@@ -12,6 +12,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KE
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
@@ -109,23 +110,18 @@ class ProfileViewModel : BaseViewModel() {
                 val isLiked = result.data
                 val foundIndex = userActivities.indexOfFirst {
                     it.onListActivity?.listActivityFragment?.id == id
-                            || it.onTextActivity?.id == id
+                            || it.onTextActivity?.textActivityFragment?.id == id
                 }
                 if (foundIndex != -1) {
                     val oldItem = userActivities[foundIndex]
                     userActivities[foundIndex] = oldItem.copy(
                         onTextActivity = oldItem.onTextActivity?.copy(
-                            isLiked = isLiked,
-                            likeCount = if (isLiked) oldItem.onTextActivity.likeCount + 1
-                            else oldItem.onTextActivity.likeCount - 1
+                            textActivityFragment = oldItem.onTextActivity.textActivityFragment
+                                .updateLikeStatus(isLiked)
                         ),
                         onListActivity = oldItem.onListActivity?.copy(
-                            listActivityFragment = oldItem.onListActivity.listActivityFragment.copy(
-                                isLiked = isLiked,
-                                likeCount = if (isLiked)
-                                    oldItem.onListActivity.listActivityFragment.likeCount + 1
-                                else oldItem.onListActivity.listActivityFragment.likeCount - 1
-                            )
+                            listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                .updateLikeStatus(isLiked)
                         )
                     )
                 }

@@ -2,16 +2,13 @@ query UserActivity($page: Int, $perPage: Int, $userId: Int, $sort: [ActivitySort
     Page(page: $page, perPage: $perPage) {
         activities(userId: $userId, sort: $sort) {
             ... on TextActivity {
-                id
-                type
-                text
-                createdAt
-                likeCount
-                replyCount
-                isLiked
+                ...TextActivityFragment
             }
             ... on ListActivity {
                 ...ListActivityFragment
+            }
+            ... on MessageActivity {
+                ...MessageActivityFragment
             }
         }
         pageInfo {

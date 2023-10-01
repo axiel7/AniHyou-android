@@ -65,7 +65,7 @@ fun UserActivityView(
                     }
                 )
             }
-            item.onTextActivity?.let { activity ->
+            item.onTextActivity?.textActivityFragment?.let { activity ->
                 ActivityItem(
                     type = ActivityType.TEXT,
                     text = activity.text ?: "",

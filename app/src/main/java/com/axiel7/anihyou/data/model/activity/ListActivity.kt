@@ -10,3 +10,8 @@ fun ListActivityFragment.text(): String {
     return if (progress != null) "${status?.capitalize(Locale.current)} $progress of ${media?.title?.userPreferred}"
     else "${status?.capitalize(Locale.current)} ${media?.title?.userPreferred}"
 }
+
+fun ListActivityFragment.updateLikeStatus(isLiked: Boolean) = copy(
+    isLiked = isLiked,
+    likeCount = if (isLiked) likeCount + 1 else likeCount - 1
+)

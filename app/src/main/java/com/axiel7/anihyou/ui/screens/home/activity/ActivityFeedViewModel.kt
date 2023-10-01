@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.home.activity
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.ActivityFeedQuery
+import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
@@ -11,7 +12,7 @@ import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class ActivityViewModel : BaseViewModel() {
+class ActivityFeedViewModel : BaseViewModel() {
 
     private var page = 1
     var hasNextPage = true
@@ -46,23 +47,18 @@ class ActivityViewModel : BaseViewModel() {
                 val isLiked = result.data
                 val foundIndex = activities.indexOfFirst {
                     it.onListActivity?.listActivityFragment?.id == id
-                            || it.onTextActivity?.id == id
+                            || it.onTextActivity?.textActivityFragment?.id == id
                 }
                 if (foundIndex != -1) {
                     val oldItem = activities[foundIndex]
                     activities[foundIndex] = oldItem.copy(
                         onTextActivity = oldItem.onTextActivity?.copy(
-                            isLiked = isLiked,
-                            likeCount = if (isLiked) oldItem.onTextActivity.likeCount + 1
-                            else oldItem.onTextActivity.likeCount - 1
+                            textActivityFragment = oldItem.onTextActivity.textActivityFragment
+                                .updateLikeStatus(isLiked)
                         ),
                         onListActivity = oldItem.onListActivity?.copy(
-                            listActivityFragment = oldItem.onListActivity.listActivityFragment.copy(
-                                isLiked = isLiked,
-                                likeCount = if (isLiked)
-                                    oldItem.onListActivity.listActivityFragment.likeCount + 1
-                                else oldItem.onListActivity.listActivityFragment.likeCount - 1
-                            )
+                            listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                .updateLikeStatus(isLiked)
                         )
                     )
                 }

@@ -32,7 +32,7 @@ fun ActivityFeedView(
     navigateToUserDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val viewModel: ActivityViewModel = viewModel()
+    val viewModel: ActivityFeedViewModel = viewModel()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = viewModel.isLoading,
         onRefresh = viewModel::refresh
@@ -85,15 +85,15 @@ fun ActivityFeedView(
                         type = ActivityType.TEXT,
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
-                        createdAt = it.createdAt,
-                        text = it.text ?: "",
-                        replyCount = it.replyCount,
-                        likeCount = it.likeCount,
-                        isLiked = it.isLiked,
+                        createdAt = it.textActivityFragment.createdAt,
+                        text = it.textActivityFragment.text ?: "",
+                        replyCount = it.textActivityFragment.replyCount,
+                        likeCount = it.textActivityFragment.likeCount,
+                        isLiked = it.textActivityFragment.isLiked,
                         onClick = { /*TODO*/ },
                         onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
                         onClickLike = {
-                            viewModel.toggleLikeActivity(it.id)
+                            viewModel.toggleLikeActivity(it.textActivityFragment.id)
                         },
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )
