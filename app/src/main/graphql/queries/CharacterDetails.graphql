@@ -10,7 +10,7 @@ query CharacterDetails($characterId: Int) {
         image {
             large
         }
-        description(asHtml: true)
+        description
         gender
         dateOfBirth {
             ...FuzzyDate

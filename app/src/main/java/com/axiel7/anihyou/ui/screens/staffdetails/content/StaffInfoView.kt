@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.staff.yearsActiveFormatted
+import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
-import com.axiel7.anihyou.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsViewModel
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
@@ -139,9 +139,9 @@ fun StaffInfoView(
                 lineHeight = 18.sp
             )
         } else if (viewModel.staffDetails?.description != null) {
-            HtmlWebView(
-                html = viewModel.staffDetails!!.description!!,
-                hardwareEnabled = false
+            DefaultMarkdownText(
+                markdown = viewModel.staffDetails?.description ?: "",
+                modifier = Modifier.padding(16.dp)
             )
         }
     }//: Column

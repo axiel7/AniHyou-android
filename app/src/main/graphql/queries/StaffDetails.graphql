@@ -9,7 +9,7 @@ query StaffDetails($staffId: Int) {
         image {
             large
         }
-        description(asHtml: true)
+        description
         primaryOccupations
         gender
         dateOfBirth {
