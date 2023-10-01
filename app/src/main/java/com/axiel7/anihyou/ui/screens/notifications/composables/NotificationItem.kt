@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.profile.activity
+package com.axiel7.anihyou.ui.screens.notifications.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,61 +18,48 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.type.ActivityType
-import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.ui.screens.profile.activity.ACTIVITY_IMAGE_SIZE
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val ACTIVITY_IMAGE_SIZE = 48
+const val NOTIFICATION_IMAGE_SIZE = 48
 
 @Composable
-fun ActivityItem(
-    type: ActivityType,
+fun NotificationItem(
     title: String,
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
     subtitle: String? = null,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
-    navigateToFullscreenImage: (String) -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
     ) {
-        if (type == ActivityType.MEDIA_LIST) {
-            MediaPoster(
-                url = imageUrl,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(ACTIVITY_IMAGE_SIZE.dp)
-                    .clickable(onClick = onClickImage),
-                showShadow = false
-            )
-        }
+        MediaPoster(
+            url = imageUrl,
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .size(ACTIVITY_IMAGE_SIZE.dp)
+                .clickable(onClick = onClickImage),
+            showShadow = false
+        )
 
         Column(
             modifier = Modifier
                 .padding(end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (type == ActivityType.TEXT) {
-                DefaultMarkdownText(
-                    markdown = title,
-                    lineHeight = 20.sp,
-                    navigateToFullscreenImage = navigateToFullscreenImage
-                )
-            } else {
-                Text(
-                    text = title,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    lineHeight = 20.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3
-                )
-            }
+            Text(
+                text = title,
+                modifier = Modifier.padding(bottom = 4.dp),
+                lineHeight = 20.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 3
+            )
 
             subtitle?.let {
                 Text(
@@ -86,7 +73,7 @@ fun ActivityItem(
 }
 
 @Composable
-fun ActivityItemPlaceholder(
+fun NotificationItemPlaceholder(
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -95,7 +82,7 @@ fun ActivityItemPlaceholder(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .size(ACTIVITY_IMAGE_SIZE.dp)
+                .size(NOTIFICATION_IMAGE_SIZE.dp)
                 .defaultPlaceholder(visible = true)
         )
 
@@ -126,15 +113,14 @@ fun ActivityItemPreview() {
     AniHyouTheme {
         Surface {
             Column {
-                ActivityItem(
-                    type = ActivityType.MEDIA_LIST,
+                NotificationItem(
                     title = "Plans to watch Alice to Therese no Maboroshi Koujou",
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
                     subtitle = "14 h ago",
                     onClick = {}
                 )
-                ActivityItemPlaceholder(
+                NotificationItemPlaceholder(
                     modifier = Modifier.padding(8.dp)
                 )
             }

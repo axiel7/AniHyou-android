@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.data.model.activity.text
+import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.profile.ProfileViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -25,6 +26,7 @@ fun UserActivityView(
     viewModel: ProfileViewModel,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -44,19 +46,39 @@ fun UserActivityView(
         ) { item ->
             item.onListActivity?.listActivityFragment?.let { activity ->
                 ActivityItem(
+                    type = ActivityType.MEDIA_LIST,
                     title = activity.text(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     imageUrl = activity.media?.coverImage?.medium,
                     subtitle = activity.createdAt.toLong().timestampIntervalSinceNow()
                         .secondsToLegibleText(
                             maxUnit = ChronoUnit.WEEKS,
                             isFutureDate = false
                         ),
+                    onClick = {
+                        navigateToMediaDetails(activity.media?.id!!)
+                    },
+                    onClickImage = {
+                        navigateToMediaDetails(activity.media?.id!!)
+                    }
+                )
+            }
+            item.onTextActivity?.let { activity ->
+                ActivityItem(
+                    type = ActivityType.TEXT,
+                    title = activity.text ?: "",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    onClick = {
-                        navigateToMediaDetails(activity.media?.id!!)
-                    }
+                    subtitle = activity.createdAt.toLong().timestampIntervalSinceNow()
+                        .secondsToLegibleText(
+                            maxUnit = ChronoUnit.WEEKS,
+                            isFutureDate = false
+                        ),
+                    onClick = {},
+                    navigateToFullscreenImage = navigateToFullscreenImage
                 )
             }
         }
@@ -77,7 +99,8 @@ fun UserActivityViewPreview() {
         Surface {
             UserActivityView(
                 viewModel = viewModel(),
-                navigateToMediaDetails = {}
+                navigateToMediaDetails = {},
+                navigateToFullscreenImage = {}
             )
         }
     }

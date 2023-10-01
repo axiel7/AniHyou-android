@@ -32,8 +32,8 @@ import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.ui.screens.profile.activity.ActivityItem
-import com.axiel7.anihyou.ui.screens.profile.activity.ActivityItemPlaceholder
+import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItem
+import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
@@ -106,12 +106,12 @@ fun NotificationsView(
                 items = viewModel.notifications,
                 contentType = { it }
             ) { item ->
-                ActivityItem(
+                NotificationItem(
                     title = item.text,
-                    imageUrl = item.imageUrl,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
+                    imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
                         ?.secondsToLegibleText(
                             maxUnit = ChronoUnit.WEEKS,
@@ -148,7 +148,7 @@ fun NotificationsView(
             }
             if (viewModel.isLoading) {
                 items(10) {
-                    ActivityItemPlaceholder(
+                    NotificationItemPlaceholder(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
