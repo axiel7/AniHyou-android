@@ -70,8 +70,6 @@ fun ActivityFeedItem(
         }
 
         Column(
-            modifier = Modifier
-                .padding(end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
