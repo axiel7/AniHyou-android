@@ -68,6 +68,7 @@ fun HomeView(
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToNotifications: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToActivityDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
@@ -134,6 +135,7 @@ fun HomeView(
 
                 HomeTab.ACTIVITY_FEED -> ActivityFeedView(
                     modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                    navigateToActivityDetails = navigateToActivityDetails,
                     navigateToMediaDetails = navigateToMediaDetails,
                     navigateToUserDetails = navigateToUserDetails,
                     navigateToFullscreenImage = navigateToFullscreenImage,
@@ -155,6 +157,7 @@ fun HomeViewPreview() {
                 navigateToExplore = { _, _ -> },
                 navigateToNotifications = {},
                 navigateToUserDetails = {},
+                navigateToActivityDetails = {},
                 navigateToFullscreenImage = {},
             )
         }

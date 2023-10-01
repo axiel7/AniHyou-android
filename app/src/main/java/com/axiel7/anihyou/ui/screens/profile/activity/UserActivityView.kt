@@ -24,6 +24,7 @@ fun UserActivityView(
     viewModel: ProfileViewModel,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToActivityDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -55,10 +56,10 @@ fun UserActivityView(
                         .padding(8.dp),
                     imageUrl = activity.media?.coverImage?.medium,
                     onClick = {
-                        navigateToMediaDetails(activity.media?.id!!)
+                        navigateToActivityDetails(activity.id)
                     },
                     onClickImage = {
-                        navigateToMediaDetails(activity.media?.id!!)
+                        activity.media?.id?.let(navigateToMediaDetails)
                     },
                     onClickLike = {
                         viewModel.toggleLikeActivity(activity.id)
@@ -76,7 +77,9 @@ fun UserActivityView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    onClick = {},
+                    onClick = {
+                        navigateToActivityDetails(activity.id)
+                    },
                     onClickLike = {
                         viewModel.toggleLikeActivity(activity.id)
                     },
@@ -103,6 +106,7 @@ fun UserActivityViewPreview() {
             UserActivityView(
                 viewModel = viewModel(),
                 navigateToMediaDetails = {},
+                navigateToActivityDetails = {},
                 navigateToFullscreenImage = {}
             )
         }

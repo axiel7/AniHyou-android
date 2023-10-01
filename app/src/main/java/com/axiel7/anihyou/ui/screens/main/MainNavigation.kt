@@ -30,6 +30,9 @@ import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinatio
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
 import com.axiel7.anihyou.ui.composables.URL_ARGUMENT
+import com.axiel7.anihyou.ui.screens.activity.ACTIVITY_DETAILS_DESTINATION
+import com.axiel7.anihyou.ui.screens.activity.ACTIVITY_ID_ARGUMENT
+import com.axiel7.anihyou.ui.screens.activity.ActivityDetailsView
 import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
@@ -128,6 +131,12 @@ fun MainNavigation(
                 .replace(USER_ID_ARGUMENT, id.toString())
         )
     }
+    val navigateToActivityDetails: (Int) -> Unit = { id ->
+        navController.navigate(
+            ACTIVITY_DETAILS_DESTINATION
+                .replace(ACTIVITY_ID_ARGUMENT, id.toString())
+        )
+    }
     val navigateToFullscreenImage: (String) -> Unit = { url ->
         val encodedUrl = URLEncoder.encode(url, UTF_8)
         navController.navigate(
@@ -213,6 +222,7 @@ fun MainNavigation(
                     navController.navigate(NOTIFICATIONS_DESTINATION)
                 },
                 navigateToUserDetails = navigateToUserDetails,
+                navigateToActivityDetails = navigateToActivityDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
@@ -264,6 +274,7 @@ fun MainNavigation(
                     navigateToStaffDetails = navigateToStaffDetails,
                     navigateToStudioDetails = navigateToStudioDetails,
                     navigateToUserDetails = navigateToUserDetails,
+                    navigateToActivityDetails = navigateToActivityDetails,
                     navigateToUserMediaList = null
                 )
             }
@@ -485,6 +496,7 @@ fun MainNavigation(
                 navigateToStaffDetails = navigateToStaffDetails,
                 navigateToStudioDetails = navigateToStudioDetails,
                 navigateToUserDetails = navigateToUserDetails,
+                navigateToActivityDetails = navigateToActivityDetails,
                 navigateToUserMediaList = { mediaType, userId ->
                     navController.navigate(
                         USER_MEDIA_LIST_DESTINATION
@@ -599,6 +611,22 @@ fun MainNavigation(
                 imageUrl = navEntry.arguments?.getString(URL_ARGUMENT.removeFirstAndLast()),
                 onDismiss = navigateBack
             )
+        }
+
+        composable(
+            ACTIVITY_DETAILS_DESTINATION,
+            arguments = listOf(
+                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            )
+        ) { navEntry ->
+            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())?.let { id ->
+                ActivityDetailsView(
+                    activityId = id,
+                    navigateBack = navigateBack,
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateToFullscreenImage = navigateToFullscreenImage,
+                )
+            }
         }
     }
 }

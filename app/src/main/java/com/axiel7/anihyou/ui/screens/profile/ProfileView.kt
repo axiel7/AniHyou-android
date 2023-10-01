@@ -93,6 +93,7 @@ fun ProfileView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToActivityDetails: (Int) -> Unit,
     navigateToUserMediaList: ((MediaType, Int) -> Unit)?,
     navigateBack: () -> Unit = {},
 ) {
@@ -245,6 +246,7 @@ fun ProfileView(
                             viewModel = viewModel,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToActivityDetails = navigateToActivityDetails,
                             navigateToFullscreenImage = navigateToFullscreenImage,
                         )
 
@@ -288,6 +290,7 @@ fun ProfileViewPreview() {
                 navigateToStaffDetails = {},
                 navigateToStudioDetails = {},
                 navigateToUserDetails = {},
+                navigateToActivityDetails = {},
                 navigateToUserMediaList = { _, _ -> }
             )
         }

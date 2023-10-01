@@ -28,6 +28,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 @Composable
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
+    navigateToActivityDetails: (Int) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
@@ -69,7 +70,9 @@ fun ActivityFeedView(
                         likeCount = it.listActivityFragment.likeCount,
                         isLiked = it.listActivityFragment.isLiked,
                         mediaCoverUrl = it.listActivityFragment.media?.coverImage?.medium,
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navigateToActivityDetails(it.listActivityFragment.id)
+                        },
                         onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.listActivityFragment.id)
@@ -90,7 +93,9 @@ fun ActivityFeedView(
                         replyCount = it.textActivityFragment.replyCount,
                         likeCount = it.textActivityFragment.likeCount,
                         isLiked = it.textActivityFragment.isLiked,
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navigateToActivityDetails(it.textActivityFragment.id)
+                        },
                         onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.textActivityFragment.id)
@@ -117,6 +122,7 @@ fun ActivityFeedViewPreview() {
     AniHyouTheme {
         Surface {
             ActivityFeedView(
+                navigateToActivityDetails = {},
                 navigateToMediaDetails = {},
                 navigateToUserDetails = {},
                 navigateToFullscreenImage = {},
