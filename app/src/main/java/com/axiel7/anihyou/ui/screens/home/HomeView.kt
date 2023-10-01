@@ -68,6 +68,7 @@ fun HomeView(
     navigateToExplore: (MediaType, MediaSort) -> Unit,
     navigateToNotifications: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -134,7 +135,8 @@ fun HomeView(
                 HomeTab.ACTIVITY_FEED -> ActivityFeedView(
                     modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                     navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToUserDetails = navigateToUserDetails
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateToFullscreenImage = navigateToFullscreenImage,
                 )
             }
         }//:Column
@@ -152,7 +154,8 @@ fun HomeViewPreview() {
                 navigateToCalendar = {},
                 navigateToExplore = { _, _ -> },
                 navigateToNotifications = {},
-                navigateToUserDetails = {}
+                navigateToUserDetails = {},
+                navigateToFullscreenImage = {},
             )
         }
     }

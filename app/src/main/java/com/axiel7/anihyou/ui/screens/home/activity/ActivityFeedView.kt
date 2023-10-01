@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.data.model.activity.text
+import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
 import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
@@ -29,6 +30,7 @@ fun ActivityFeedView(
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel: ActivityViewModel = viewModel()
     val pullRefreshState = rememberPullRefreshState(
@@ -58,6 +60,7 @@ fun ActivityFeedView(
                 item.onListActivity?.let {
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
+                        type = ActivityType.MEDIA_LIST,
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
                         createdAt = it.listActivityFragment.createdAt,
@@ -79,6 +82,7 @@ fun ActivityFeedView(
                 item.onTextActivity?.let {
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
+                        type = ActivityType.TEXT,
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
                         createdAt = it.createdAt,
@@ -91,6 +95,7 @@ fun ActivityFeedView(
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.id)
                         },
+                        navigateToFullscreenImage = navigateToFullscreenImage
                     )
                 }
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
@@ -113,7 +118,8 @@ fun ActivityFeedViewPreview() {
         Surface {
             ActivityFeedView(
                 navigateToMediaDetails = {},
-                navigateToUserDetails = {}
+                navigateToUserDetails = {},
+                navigateToFullscreenImage = {},
             )
         }
     }

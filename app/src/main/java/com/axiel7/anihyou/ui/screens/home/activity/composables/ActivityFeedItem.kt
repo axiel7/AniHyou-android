@@ -20,7 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.CommentIconButton
+import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
@@ -33,6 +35,7 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun ActivityFeedItem(
     modifier: Modifier = Modifier,
+    type: ActivityType,
     username: String?,
     avatarUrl: String?,
     createdAt: Int,
@@ -45,16 +48,18 @@ fun ActivityFeedItem(
     onClickUser: () -> Unit,
     onClickLike: () -> Unit,
     onClickMedia: () -> Unit = {},
+    navigateToFullscreenImage: (String) -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick),
     ) {
-        if (mediaCoverUrl != null) {
+        if (type == ActivityType.MEDIA_LIST) {
             MediaPoster(
                 url = mediaCoverUrl,
                 modifier = Modifier
+                    .padding(end = 16.dp)
                     .size(
                         width = 48.dp,
                         height = 74.dp
@@ -66,7 +71,7 @@ fun ActivityFeedItem(
 
         Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 8.dp),
+                .padding(end = 8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -101,11 +106,20 @@ fun ActivityFeedItem(
                     fontSize = 14.sp
                 )
             }//:Row
-            Text(
-                text = text,
-                modifier = Modifier.padding(bottom = 4.dp),
-                lineHeight = 20.sp
-            )
+            if (type == ActivityType.TEXT) {
+                DefaultMarkdownText(
+                    markdown = text,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    lineHeight = 20.sp,
+                    navigateToFullscreenImage = navigateToFullscreenImage
+                )
+            } else {
+                Text(
+                    text = text,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    lineHeight = 20.sp
+                )
+            }
             Row(
                 modifier = Modifier.align(Alignment.End),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -136,6 +150,7 @@ fun MediaActivityItemPreview() {
     AniHyouTheme {
         Surface {
             ActivityFeedItem(
+                type = ActivityType.TEXT,
                 username = "axiel7",
                 avatarUrl = null,
                 createdAt = 12312321,

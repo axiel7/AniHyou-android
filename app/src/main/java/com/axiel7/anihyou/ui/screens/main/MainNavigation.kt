@@ -212,7 +212,8 @@ fun MainNavigation(
                 navigateToNotifications = {
                     navController.navigate(NOTIFICATIONS_DESTINATION)
                 },
-                navigateToUserDetails = navigateToUserDetails
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
 
