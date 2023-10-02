@@ -14,7 +14,7 @@ query MediaRelationsAndRecommendations($mediaId: Int) {
 }
 
 fragment MediaRelated on MediaEdge {
-    relationType
+    relationType(version: 2)
     node {
         id
         title {
