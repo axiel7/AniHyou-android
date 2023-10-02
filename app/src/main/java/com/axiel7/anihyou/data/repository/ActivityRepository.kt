@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
@@ -13,6 +14,7 @@ object ActivityRepository {
     fun getActivityFeed(
         isFollowing: Boolean,
         type: ActivityTypeGrouped? = null,
+        refreshCache: Boolean = false,
         page: Int,
         perPage: Int = 25,
     ) = flow {
@@ -23,7 +25,9 @@ object ActivityRepository {
             perPage = Optional.present(perPage),
             isFollowing = Optional.present(isFollowing),
             typeIn = Optional.presentIfNotNull(type?.value),
-        ).tryQuery()
+        ).tryQuery(
+            fetchPolicy = if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst
+        )
 
         val error = response.getError()
         if (error != null) emit(PagedResult.Error(message = error))

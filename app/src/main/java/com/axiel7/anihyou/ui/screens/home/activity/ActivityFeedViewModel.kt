@@ -23,7 +23,7 @@ class ActivityFeedViewModel : BaseViewModel() {
 
     fun onIsFollowingChanged(value: Boolean) {
         isFollowing = value
-        refresh()
+        refresh(refreshCache = false)
     }
 
     var type by mutableStateOf<ActivityTypeGrouped?>(null)
@@ -31,17 +31,18 @@ class ActivityFeedViewModel : BaseViewModel() {
 
     fun onTypeChanged(value: ActivityTypeGrouped?) {
         type = value
-        refresh()
+        refresh(refreshCache = false)
     }
 
     private var page = 1
     var hasNextPage = true
     val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
 
-    fun getActivityFeed() = viewModelScope.launch(dispatcher) {
+    fun getActivityFeed(refreshCache: Boolean = false) = viewModelScope.launch(dispatcher) {
         ActivityRepository.getActivityFeed(
             isFollowing = isFollowing,
             type = type,
+            refreshCache = refreshCache,
             page = page
         ).collect { result ->
             isLoading = result is PagedResult.Loading && page == 1
@@ -54,10 +55,11 @@ class ActivityFeedViewModel : BaseViewModel() {
         }
     }
 
-    fun refresh() {
+    fun refresh(refreshCache: Boolean) {
         page = 1
-        hasNextPage = true
+        hasNextPage = false
         activities.clear()
+        getActivityFeed(refreshCache)
     }
 
     fun toggleLikeActivity(id: Int) = viewModelScope.launch {

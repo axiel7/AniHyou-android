@@ -39,7 +39,7 @@ fun ActivityFeedView(
     val viewModel: ActivityFeedViewModel = viewModel()
     val pullRefreshState = rememberPullRefreshState(
         refreshing = viewModel.isLoading,
-        onRefresh = viewModel::refresh
+        onRefresh = { viewModel.refresh(refreshCache = true) }
     )
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3) {
