@@ -1,7 +1,8 @@
 package com.axiel7.anihyou.ui.screens.home.activity
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,8 @@ import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
 import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
 import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFeedItem
+import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFollowingChip
+import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityTypeChip
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -52,8 +55,22 @@ fun ActivityFeedView(
         LazyColumn(
             modifier = modifier,
             state = listState,
-            contentPadding = PaddingValues(top = 16.dp)
         ) {
+            item {
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ActivityTypeChip(
+                        value = viewModel.type,
+                        onValueChanged = viewModel::onTypeChanged
+                    )
+                    ActivityFollowingChip(
+                        value = viewModel.isFollowing,
+                        onValueChanged = viewModel::onIsFollowingChanged
+                    )
+                }
+            }
             items(
                 items = viewModel.activities,
                 contentType = { it }

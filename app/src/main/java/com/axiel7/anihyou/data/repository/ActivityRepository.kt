@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.repository
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
+import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
 import kotlinx.coroutines.flow.flow
@@ -10,6 +11,8 @@ import kotlinx.coroutines.flow.flow
 object ActivityRepository {
 
     fun getActivityFeed(
+        isFollowing: Boolean,
+        type: ActivityTypeGrouped? = null,
         page: Int,
         perPage: Int = 25,
     ) = flow {
@@ -17,7 +20,9 @@ object ActivityRepository {
 
         val response = ActivityFeedQuery(
             page = Optional.present(page),
-            perPage = Optional.present(perPage)
+            perPage = Optional.present(perPage),
+            isFollowing = Optional.present(isFollowing),
+            typeIn = Optional.presentIfNotNull(type?.value),
         ).tryQuery()
 
         val error = response.getError()

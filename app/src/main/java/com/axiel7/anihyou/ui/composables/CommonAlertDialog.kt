@@ -42,7 +42,7 @@ fun <T : Localizable> DialogWithRadioSelection(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = { if (selectedValue != null) onConfirm(selectedValue!!) }
+                onClick = { onConfirm(selectedValue) }
             ) {
                 Text(text = stringResource(R.string.ok))
             }

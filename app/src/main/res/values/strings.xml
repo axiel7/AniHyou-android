@@ -269,4 +269,8 @@
     <string name="color">Color</string>
     <string name="discover">Discover</string>
     <string name="default_home_tab">Default Home tab</string>
+    <string name="text_status">Text Status</string>
+    <string name="list_progress">List Progress</string>
+    <string name="all">All</string>
+    <string name="global_feed">Global</string>
 </resources>
