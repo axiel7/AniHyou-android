@@ -108,6 +108,8 @@ fun AniHyouTheme(
                 seedColor = colorFromHex(appColorHex) ?: seed,
                 isDark = darkTheme
             )
+            if (blackColors) scheme.toBlackScheme()
+            else scheme
         }
 
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
