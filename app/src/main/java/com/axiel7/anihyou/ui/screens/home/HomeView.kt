@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -69,6 +70,7 @@ fun HomeView(
     navigateToNotifications: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
+    navigateToPublishActivity: (Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel()
@@ -80,6 +82,18 @@ fun HomeView(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
         modifier = modifier,
+        floatingActionButton = {
+            if (selectedTabIndex == HomeTab.ACTIVITY_FEED.index) {
+                FloatingActionButton(
+                    onClick = { navigateToPublishActivity(null, null) }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.add_24),
+                        contentDescription = stringResource(R.string.add)
+                    )
+                }
+            }
+        },
         actions = {
             BadgedBox(
                 badge = {
@@ -158,6 +172,7 @@ fun HomeViewPreview() {
                 navigateToNotifications = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},
+                navigateToPublishActivity = { _, _ -> },
                 navigateToFullscreenImage = {},
             )
         }

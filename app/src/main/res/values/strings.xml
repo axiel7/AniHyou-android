@@ -273,4 +273,21 @@
     <string name="list_progress">List Progress</string>
     <string name="all">All</string>
     <string name="global_feed">Global</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_strikethrough">Strikethrough</string>
+    <string name="format_spoiler">Spoiler</string>
+    <string name="format_link">Link</string>
+    <string name="format_image">Image</string>
+    <string name="format_youtube">YouTube</string>
+    <string name="format_video">Video</string>
+    <string name="format_ol">Ordered list</string>
+    <string name="format_ul">Unordered list</string>
+    <string name="format_heading">Heading</string>
+    <string name="format_centered">Centered</string>
+    <string name="format_quote">Quote</string>
+    <string name="format_code">Code</string>
+    <string name="write_something">Write something…</string>
+    <string name="paste_your_link">Paste your link here</string>
+    <string name="publish">Publish</string>
 </resources>

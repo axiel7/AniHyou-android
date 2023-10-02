@@ -4,8 +4,11 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
+import com.axiel7.anihyou.UpdateActivityReplyMutation
+import com.axiel7.anihyou.UpdateTextActivityMutation
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
+import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
 import kotlinx.coroutines.flow.flow
 
@@ -58,6 +61,46 @@ object ActivityRepository {
         else {
             val activity = response?.data?.Activity
             if (activity != null) emit(DataResult.Success(data = activity))
+            else emit(DataResult.Error(message = "Error"))
+        }
+    }
+
+    fun updateTextActivity(
+        id: Int? = null,
+        text: String
+    ) = flow {
+        emit(DataResult.Loading)
+
+        val response = UpdateTextActivityMutation(
+            id = Optional.presentIfNotNull(id),
+            text = Optional.present(text)
+        ).tryMutation()
+
+        val error = response.getError()
+        if (error != null) emit(DataResult.Error(message = error))
+        else {
+            val activity = response?.data?.SaveTextActivity
+            if (activity != null) emit(DataResult.Success(data = true))
+            else emit(DataResult.Error(message = "Error"))
+        }
+    }
+
+    fun updateActivityReply(
+        id: Int? = null,
+        text: String
+    ) = flow {
+        emit(DataResult.Loading)
+
+        val response = UpdateActivityReplyMutation(
+            id = Optional.presentIfNotNull(id),
+            text = Optional.present(text)
+        ).tryMutation()
+
+        val error = response.getError()
+        if (error != null) emit(DataResult.Error(message = error))
+        else {
+            val reply = response?.data?.SaveActivityReply
+            if (reply != null) emit(DataResult.Success(data = true))
             else emit(DataResult.Error(message = "Error"))
         }
     }

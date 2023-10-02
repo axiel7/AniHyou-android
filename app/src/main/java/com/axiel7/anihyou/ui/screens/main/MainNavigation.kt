@@ -36,6 +36,9 @@ import com.axiel7.anihyou.ui.composables.URL_ARGUMENT
 import com.axiel7.anihyou.ui.screens.activity.ACTIVITY_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.activity.ACTIVITY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.activity.ActivityDetailsView
+import com.axiel7.anihyou.ui.screens.activity.publish.ACTIVITY_TEXT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.activity.publish.PUBLISH_ACTIVITY_DESTINATION
+import com.axiel7.anihyou.ui.screens.activity.publish.PublishActivityView
 import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
@@ -84,6 +87,7 @@ import com.axiel7.anihyou.ui.screens.thread.THREAD_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
+import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import com.axiel7.anihyou.utils.UTF_8
 import java.net.URLEncoder
@@ -145,6 +149,15 @@ fun MainNavigation(
         navController.navigate(
             FULLSCREEN_IMAGE_DESTINATION
                 .replace(URL_ARGUMENT, encodedUrl)
+        )
+    }
+    val navigateToPublishActivity: (Int?, String?) -> Unit = { id, text ->
+        navController.navigate(
+            PUBLISH_ACTIVITY_DESTINATION
+                .replace(ACTIVITY_ID_ARGUMENT, id.toStringOrZero())
+                .also {
+                    if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
+                }
         )
     }
 
@@ -226,6 +239,7 @@ fun MainNavigation(
                 },
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
+                navigateToPublishActivity = navigateToPublishActivity,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
@@ -630,6 +644,26 @@ fun MainNavigation(
                     navigateToFullscreenImage = navigateToFullscreenImage,
                 )
             }
+        }
+
+        composable(
+            PUBLISH_ACTIVITY_DESTINATION,
+            arguments = listOf(
+                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
+                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { navEntry ->
+            val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+            PublishActivityView(
+                id = if (id != 0) id else null,
+                text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
+                navigateBack = navigateBack
+            )
         }
     }
 }

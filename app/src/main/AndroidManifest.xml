@@ -29,7 +29,8 @@
         <activity
             android:name=".ui.screens.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AniHyou">
+            android:theme="@style/Theme.AniHyou"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
