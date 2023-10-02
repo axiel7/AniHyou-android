@@ -6,7 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +37,7 @@ fun ActivityDetailsView(
     activityId: Int,
     navigateBack: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToPublishActivityReply: (Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel = viewModel { ActivityDetailsViewModel(activityId) }
@@ -48,6 +52,16 @@ fun ActivityDetailsView(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.activity),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navigateToPublishActivityReply(null, null) }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.chat_bubble_24),
+                    contentDescription = stringResource(R.string.add)
+                )
+            }
+        },
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -116,6 +130,7 @@ fun ActivityDetailsViewPreview() {
                 activityId = 1,
                 navigateBack = {},
                 navigateToUserDetails = {},
+                navigateToPublishActivityReply = { _, _ -> },
                 navigateToFullscreenImage = {},
             )
         }

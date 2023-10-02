@@ -31,4 +31,23 @@ class PublishActivityViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun publishActivityReply(
+        id: Int? = null,
+        text: String
+    ) = viewModelScope.launch(dispatcher) {
+        ActivityRepository.updateActivityReply(
+            id = id,
+            text = text
+        ).collect { result ->
+            isLoading = result is DataResult.Loading
+
+            if (result is DataResult.Success) {
+                wasPublished = result.data
+            } else if (result is DataResult.Error) {
+                wasPublished = false
+                message = result.message
+            }
+        }
+    }
 }
