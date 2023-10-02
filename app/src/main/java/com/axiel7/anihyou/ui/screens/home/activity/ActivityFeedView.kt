@@ -90,12 +90,12 @@ fun ActivityFeedView(
                         onClick = {
                             navigateToActivityDetails(it.listActivityFragment.id)
                         },
-                        onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
+                        onClickUser = { it.listActivityFragment.userId?.let(navigateToUserDetails) },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.listActivityFragment.id)
                         },
                         onClickMedia = {
-                            it.listActivityFragment.media?.id?.let { id -> navigateToMediaDetails(id) }
+                            it.listActivityFragment.media?.id?.let(navigateToMediaDetails)
                         }
                     )
                 }
@@ -113,7 +113,7 @@ fun ActivityFeedView(
                         onClick = {
                             navigateToActivityDetails(it.textActivityFragment.id)
                         },
-                        onClickUser = { it.user?.id?.let { id -> navigateToUserDetails(id) } },
+                        onClickUser = { it.textActivityFragment.userId?.let(navigateToUserDetails) },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.textActivityFragment.id)
                         },

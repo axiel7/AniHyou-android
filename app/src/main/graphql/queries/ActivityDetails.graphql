@@ -3,7 +3,6 @@ query ActivityDetails($activityId: Int) {
         ... on TextActivity {
             ...TextActivityFragment
             user {
-                id
                 name
                 avatar {
                     medium
@@ -16,7 +15,6 @@ query ActivityDetails($activityId: Int) {
         ... on ListActivity {
             ...ListActivityFragment
             user {
-                id
                 name
                 avatar {
                     medium
@@ -41,8 +39,8 @@ fragment ActivityReplyFragment on ActivityReply {
     isLiked
     likeCount
     text
+    userId
     user {
-        id
         name
         avatar {
             medium

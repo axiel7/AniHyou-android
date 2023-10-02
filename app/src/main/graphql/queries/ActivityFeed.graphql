@@ -4,7 +4,6 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
             ... on TextActivity {
                 ...TextActivityFragment
                 user {
-                    id
                     name
                     avatar {
                         medium
@@ -14,7 +13,6 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
             ... on ListActivity {
                 ...ListActivityFragment
                 user {
-                    id
                     name
                     avatar {
                         medium
@@ -38,6 +36,7 @@ fragment ListActivityFragment on ListActivity {
     type
     progress
     status
+    userId
     media {
         id
         title {
@@ -56,6 +55,7 @@ fragment TextActivityFragment on TextActivity {
     likeCount
     replyCount
     text
+    userId
 }
 
 fragment MessageActivityFragment on MessageActivity {
@@ -65,8 +65,8 @@ fragment MessageActivityFragment on MessageActivity {
     likeCount
     replyCount
     message
+    messengerId
     messenger {
-        id
         name
         avatar {
             medium

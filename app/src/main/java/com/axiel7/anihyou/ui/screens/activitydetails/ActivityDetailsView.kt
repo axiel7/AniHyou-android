@@ -109,7 +109,7 @@ fun ActivityDetailsView(
                     likeCount = item.likeCount,
                     isLiked = item.isLiked,
                     onClickUser = {
-                        item.user?.id?.let(navigateToUserDetails)
+                        item.userId?.let(navigateToUserDetails)
                     },
                     onClickLike = {
                         viewModel.toggleLikeReply(item.id)
