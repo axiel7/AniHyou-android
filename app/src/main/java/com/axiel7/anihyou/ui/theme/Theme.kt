@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.App
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.materialkolor.dynamicColorScheme
 
@@ -95,10 +97,14 @@ fun AniHyouTheme(
     content: @Composable () -> Unit
 ) {
     val appColorHex by rememberPreference(APP_COLOR_PREFERENCE_KEY, App.appColor)
+    val appColorMode by rememberPreference(
+        APP_COLOR_MODE_PREFERENCE_KEY,
+        App.appColorMode.name
+    )
 
     val colorScheme = when {
-        appColorHex != null -> {
-            dynamicColorScheme(
+        appColorMode == AppColorMode.PROFILE.name -> {
+            val scheme = dynamicColorScheme(
                 seedColor = colorFromHex(appColorHex) ?: seed,
                 isDark = darkTheme
             )

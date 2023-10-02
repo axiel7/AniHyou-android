@@ -108,7 +108,7 @@ fun SettingsView(
     var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.value)
     var appColorModePreference by rememberPreference(
         APP_COLOR_MODE_PREFERENCE_KEY,
-        AppColorMode.DEFAULT.name
+        App.appColorMode.name
     )
     var appColorPreference by rememberPreference(
         APP_COLOR_PREFERENCE_KEY,

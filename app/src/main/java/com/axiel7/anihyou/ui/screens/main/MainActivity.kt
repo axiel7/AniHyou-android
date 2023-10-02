@@ -46,6 +46,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_DROPPED_LIST_STYLE_PRE
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PAUSED_LIST_STYLE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY
+import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
@@ -68,6 +69,7 @@ import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.base.ListStyle
 import com.axiel7.anihyou.ui.base.Theme
@@ -180,6 +182,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun preloadPreferences() {
+        App.dataStore.getValueSync(APP_COLOR_MODE_PREFERENCE_KEY)?.let {
+            App.appColorMode = AppColorMode.valueOf(it)
+        }
         App.dataStore.getValueSync(APP_COLOR_PREFERENCE_KEY)?.let {
             App.appColor = it
         }

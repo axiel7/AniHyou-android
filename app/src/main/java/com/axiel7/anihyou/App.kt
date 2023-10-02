@@ -10,6 +10,7 @@ import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.base.AppColorMode
 import com.axiel7.anihyou.ui.base.ListStyle
 
 class App : Application() {
@@ -64,5 +65,6 @@ class App : Application() {
         var notificationInterval = NotificationInterval.DAILY
 
         var appColor: String? = null
+        var appColorMode = AppColorMode.DEFAULT
     }
 }
