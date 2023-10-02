@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.activity.publish
+package com.axiel7.anihyou.ui.screens.activitydetails.publish
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

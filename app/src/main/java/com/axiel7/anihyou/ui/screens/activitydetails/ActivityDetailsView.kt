@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.activity
+package com.axiel7.anihyou.ui.screens.activitydetails
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -21,8 +21,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.screens.activity.composables.ActivityTextView
-import com.axiel7.anihyou.ui.screens.activity.composables.ActivityTextViewPlaceholder
+import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextView
+import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val ACTIVITY_ID_ARGUMENT = "{id}"

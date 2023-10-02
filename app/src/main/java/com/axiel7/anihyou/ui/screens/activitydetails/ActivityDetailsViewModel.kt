@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.activity
+package com.axiel7.anihyou.ui.screens.activitydetails
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

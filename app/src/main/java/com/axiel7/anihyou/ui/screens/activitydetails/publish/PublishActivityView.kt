@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.activity.publish
+package com.axiel7.anihyou.ui.screens.activitydetails.publish
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.ui.composables.markdown.PublishMarkdownView
-import com.axiel7.anihyou.ui.screens.activity.ACTIVITY_ID_ARGUMENT
+import com.axiel7.anihyou.ui.screens.activitydetails.ACTIVITY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 

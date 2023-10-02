@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.activity.composables
+package com.axiel7.anihyou.ui.screens.activitydetails.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
