@@ -48,7 +48,8 @@ class NotificationsViewModel : BaseViewModel() {
 
     fun resetPage() {
         page = 1
-        hasNextPage = true
+        hasNextPage = false
         notifications.clear()
+        getNotifications()
     }
 }
