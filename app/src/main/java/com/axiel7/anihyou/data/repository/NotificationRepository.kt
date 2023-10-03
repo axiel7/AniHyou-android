@@ -1,10 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.App
 import com.axiel7.anihyou.NotificationsQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
@@ -34,27 +31,20 @@ object NotificationRepository {
         else {
             val notificationsPage = response?.data?.Page
             if (notificationsPage != null) {
-                val lastCreatedAt = App.dataStore
-                    .getValueSync(LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY)
                 emit(
                     PagedResult.Success(
                         data = notificationsPage.notifications?.filterNotNull().orEmpty()
-                            .toGenericNotifications(
-                                lastCreatedAt = lastCreatedAt ?: 0
-                            ),
+                            .toGenericNotifications(),
                         nextPage = if (notificationsPage.pageInfo?.hasNextPage == true)
                             notificationsPage.pageInfo.currentPage?.plus(1)
                         else null
                     )
                 )
-            }
-            else emit(PagedResult.Error(message = "Empty"))
+            } else emit(PagedResult.Error(message = "Empty"))
         }
     }
 
-    private fun List<NotificationsQuery.Notification>.toGenericNotifications(
-        lastCreatedAt: Int = 0
-    ): List<GenericNotification> {
+    private fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
         val tempList = mutableListOf<GenericNotification>()
         this.forEach { aniListNotification ->
             aniListNotification.onAiringNotification?.let { noti ->
@@ -71,7 +61,6 @@ object NotificationRepository {
                         contentId = noti.animeId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -84,7 +73,6 @@ object NotificationRepository {
                         contentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -98,7 +86,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -112,7 +99,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -126,7 +112,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -140,7 +125,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -154,7 +138,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -168,7 +151,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -182,7 +164,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -196,7 +177,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -210,7 +190,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -224,7 +203,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -238,7 +216,6 @@ object NotificationRepository {
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -251,7 +228,6 @@ object NotificationRepository {
                         contentId = noti.mediaId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -264,7 +240,6 @@ object NotificationRepository {
                         contentId = noti.mediaId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -277,7 +252,6 @@ object NotificationRepository {
                         contentId = noti.mediaId,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }
@@ -290,7 +264,6 @@ object NotificationRepository {
                         contentId = 0,
                         type = noti.type,
                         createdAt = noti.createdAt,
-                        isUnread = lastCreatedAt < (noti.createdAt ?: 0),
                     )
                 )
             }

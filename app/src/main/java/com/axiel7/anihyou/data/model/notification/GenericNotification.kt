@@ -10,5 +10,5 @@ data class GenericNotification(
     val secondaryContentId: Int? = null,
     val type: NotificationType?,
     val createdAt: Int?,
-    val isUnread: Boolean,
+    val isUnread: Boolean = false,
 )

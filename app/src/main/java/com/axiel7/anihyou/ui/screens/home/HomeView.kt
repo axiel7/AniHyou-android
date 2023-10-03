@@ -67,7 +67,7 @@ fun HomeView(
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToExplore: (MediaType, MediaSort) -> Unit,
-    navigateToNotifications: () -> Unit,
+    navigateToNotifications: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
     navigateToPublishActivity: (Int?, String?) -> Unit,
@@ -95,9 +95,9 @@ fun HomeView(
             }
         },
         actions = {
+            val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsState()
             BadgedBox(
                 badge = {
-                    val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsState()
                     if (unreadNotificationCount > 0) {
                         Badge {
                             Text(text = unreadNotificationCount.toString())
@@ -107,7 +107,7 @@ fun HomeView(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        navigateToNotifications()
+                        navigateToNotifications(unreadNotificationCount)
                     }
             ) {
                 Icon(

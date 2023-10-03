@@ -66,6 +66,7 @@ import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
+import com.axiel7.anihyou.ui.screens.notifications.UNREAD_COUNT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
 import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
@@ -244,8 +245,11 @@ fun MainNavigation(
                             .replace(MEDIA_SORT_ARGUMENT, mediaSort.rawValue)
                     )
                 },
-                navigateToNotifications = {
-                    navController.navigate(NOTIFICATIONS_DESTINATION)
+                navigateToNotifications = { unread ->
+                    navController.navigate(
+                        NOTIFICATIONS_DESTINATION
+                            .replace(UNREAD_COUNT_ARGUMENT, unread.toString())
+                    )
                 },
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
@@ -411,8 +415,15 @@ fun MainNavigation(
             )
         }
 
-        composable(NOTIFICATIONS_DESTINATION) {
+        composable(
+            NOTIFICATIONS_DESTINATION,
+            arguments = listOf(
+                navArgument(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            )
+        ) { navEntry ->
             NotificationsView(
+                initialUnreadCount = navEntry.arguments
+                    ?.getInt(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) ?: 0,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateBack = navigateBack

@@ -40,17 +40,19 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 import java.time.temporal.ChronoUnit
 
-const val NOTIFICATIONS_DESTINATION = "notifications"
+const val UNREAD_COUNT_ARGUMENT = "{unread}"
+const val NOTIFICATIONS_DESTINATION = "notifications?unread=$UNREAD_COUNT_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsView(
+    initialUnreadCount: Int,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel: NotificationsViewModel = viewModel()
+    val viewModel = viewModel { NotificationsViewModel(initialUnreadCount) }
     val listState = rememberLazyListState()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -166,6 +168,7 @@ fun NotificationsViewPreview() {
     AniHyouTheme {
         Surface {
             NotificationsView(
+                initialUnreadCount = 3,
                 navigateToMediaDetails = {},
                 navigateToUserDetails = {},
                 navigateBack = {}

@@ -15,7 +15,9 @@ import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class NotificationsViewModel : BaseViewModel() {
+class NotificationsViewModel(
+    private val initialUnreadCount: Int = 0
+) : BaseViewModel() {
 
     var type by mutableStateOf(NotificationTypeGroup.ALL)
     private var resetCount = true
@@ -31,15 +33,23 @@ class NotificationsViewModel : BaseViewModel() {
             page = page,
         ).collect { result ->
             isLoading = result is PagedResult.Loading
-            resetCount = false
 
             if (result is PagedResult.Success) {
-                App.dataStore.edit {
-                    result.data.first().createdAt?.let { createdAt ->
-                        it[LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY] = createdAt
+                if (resetCount) {
+                    App.dataStore.edit {
+                        result.data.first().createdAt?.let { createdAt ->
+                            it[LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY] = createdAt
+                        }
                     }
+                    resetCount = false
+                    val unreads = result.data.take(initialUnreadCount)
+                        .map { it.copy(isUnread = true) }
+                    val readCount = result.data.size - initialUnreadCount
+                    val reads = if (readCount > 0) result.data.takeLast(readCount) else emptyList()
+                    notifications.addAll(unreads + reads)
+                } else {
+                    notifications.addAll(result.data)
                 }
-                notifications.addAll(result.data)
                 page = result.nextPage ?: page
                 hasNextPage = result.nextPage != null
             }
