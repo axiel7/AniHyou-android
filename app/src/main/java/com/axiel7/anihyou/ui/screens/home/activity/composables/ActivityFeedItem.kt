@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,8 +24,7 @@ import com.axiel7.anihyou.ui.composables.CommentIconButton
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
-import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
-import com.axiel7.anihyou.ui.composables.person.PersonImage
+import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
@@ -78,22 +76,11 @@ fun ActivityFeedItem(
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Row(
-                    modifier = Modifier.clickable(onClick = onClickUser),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    PersonImage(
-                        url = avatarUrl,
-                        modifier = Modifier
-                            .size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-                    )
-                    Text(
-                        text = username ?: "",
-                        modifier = Modifier.padding(start = 8.dp),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }//:Row
+                PersonItemSmall(
+                    avatarUrl = avatarUrl,
+                    username = username,
+                    onClick = onClickUser
+                )
                 Text(
                     text = createdAt.toLong().timestampIntervalSinceNow()
                         .secondsToLegibleText(

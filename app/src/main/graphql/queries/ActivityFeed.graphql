@@ -3,12 +3,6 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
         activities(isFollowing: $isFollowing, sort: [ID_DESC], type_in: $typeIn) {
             ... on TextActivity {
                 ...TextActivityFragment
-                user {
-                    name
-                    avatar {
-                        medium
-                    }
-                }
             }
             ... on ListActivity {
                 ...ListActivityFragment
@@ -56,6 +50,12 @@ fragment TextActivityFragment on TextActivity {
     replyCount
     text
     userId
+    user {
+        name
+        avatar {
+            medium
+        }
+    }
 }
 
 fragment MessageActivityFragment on MessageActivity {

@@ -26,6 +26,7 @@ import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
@@ -43,6 +44,7 @@ fun ActivityItem(
     isLiked: Boolean?,
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
+    username: String? = null,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
     onClickLike: () -> Unit,
@@ -67,7 +69,13 @@ fun ActivityItem(
         Column(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (type == ActivityType.TEXT) {
+            if (type == ActivityType.TEXT || type == ActivityType.MESSAGE) {
+                PersonItemSmall(
+                    avatarUrl = imageUrl,
+                    username = username,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    onClick = onClickImage
+                )
                 DefaultMarkdownText(
                     markdown = text,
                     lineHeight = 20.sp,

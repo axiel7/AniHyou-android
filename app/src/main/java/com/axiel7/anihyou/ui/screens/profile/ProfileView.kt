@@ -246,6 +246,7 @@ fun ProfileView(
                             viewModel = viewModel,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToUserDetails = navigateToUserDetails,
                             navigateToActivityDetails = navigateToActivityDetails,
                             navigateToFullscreenImage = navigateToFullscreenImage,
                         )

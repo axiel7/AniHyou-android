@@ -1,12 +1,10 @@
 package com.axiel7.anihyou.ui.screens.activitydetails.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,8 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.ui.composables.CommentIconButton
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
-import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
-import com.axiel7.anihyou.ui.composables.person.PersonImage
+import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
@@ -48,19 +45,13 @@ fun ActivityTextView(
             .fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.clickable(onClick = onClickUser),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PersonImage(
-                url = avatarUrl,
-                modifier = Modifier
-                    .size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-            )
-            Text(
-                text = username ?: "",
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .weight(1f)
+            PersonItemSmall(
+                avatarUrl = avatarUrl,
+                username = username,
+                modifier = Modifier.weight(1f),
+                onClick = onClickUser
             )
             Text(
                 text = createdAt.toLong().timestampIntervalSinceNow()

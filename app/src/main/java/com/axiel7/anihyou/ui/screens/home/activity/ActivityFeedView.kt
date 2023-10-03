@@ -102,25 +102,25 @@ fun ActivityFeedView(
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
-                item.onTextActivity?.let {
+                item.onTextActivity?.textActivityFragment?.let {
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         type = ActivityType.TEXT,
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
-                        createdAt = it.textActivityFragment.createdAt,
-                        text = it.textActivityFragment.text ?: "",
-                        replyCount = it.textActivityFragment.replyCount,
-                        likeCount = it.textActivityFragment.likeCount,
-                        isLiked = it.textActivityFragment.isLiked,
+                        createdAt = it.createdAt,
+                        text = it.text ?: "",
+                        replyCount = it.replyCount,
+                        likeCount = it.likeCount,
+                        isLiked = it.isLiked,
                         onClick = {
-                            navigateToActivityDetails(it.textActivityFragment.id)
+                            navigateToActivityDetails(it.id)
                         },
                         onClickUser = {
-                            it.textActivityFragment.userId?.let(navigateToUserDetails)
+                            it.userId?.let(navigateToUserDetails)
                         },
                         onClickLike = {
-                            viewModel.toggleLikeActivity(it.textActivityFragment.id)
+                            viewModel.toggleLikeActivity(it.id)
                         },
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )

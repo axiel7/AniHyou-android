@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.thread.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,8 +28,7 @@ import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.ui.composables.CommentIconButton
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
-import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
-import com.axiel7.anihyou.ui.composables.person.PersonImage
+import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
@@ -66,24 +63,13 @@ fun ChildCommentView(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    modifier = Modifier.clickable {
-                        navigateToUserDetails()
-                    },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    PersonImage(
-                        url = comment.user?.avatar?.medium,
-                        modifier = Modifier
-                            .size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-                    )
-                    Text(
-                        text = comment.user?.name ?: "",
-                        modifier = Modifier.padding(start = 8.dp),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                PersonItemSmall(
+                    avatarUrl = comment.user?.avatar?.medium,
+                    username = comment.user?.name,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    onClick = navigateToUserDetails
+                )
                 Text(
                     text = comment.createdAt.toLong().timestampIntervalSinceNow()
                         .secondsToLegibleText(

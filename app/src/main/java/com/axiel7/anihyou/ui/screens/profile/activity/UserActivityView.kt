@@ -24,6 +24,7 @@ fun UserActivityView(
     viewModel: ProfileViewModel,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit
 ) {
@@ -78,8 +79,36 @@ fun UserActivityView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
+                    imageUrl = activity.user?.avatar?.medium,
+                    username = activity.user?.name,
                     onClick = {
                         navigateToActivityDetails(activity.id)
+                    },
+                    onClickImage = {
+                        activity.userId?.let(navigateToUserDetails)
+                    },
+                    onClickLike = {
+                        viewModel.toggleLikeActivity(activity.id)
+                    },
+                    navigateToFullscreenImage = navigateToFullscreenImage
+                )
+                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+            }
+            item.onMessageActivity?.messageActivityFragment?.let { activity ->
+                ActivityItem(
+                    type = ActivityType.MESSAGE,
+                    text = activity.message ?: "",
+                    createdAt = activity.createdAt,
+                    replyCount = activity.replyCount,
+                    likeCount = activity.likeCount,
+                    isLiked = activity.isLiked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    imageUrl = activity.messenger?.avatar?.medium,
+                    username = activity.messenger?.name,
+                    onClick = {
+                        activity.messengerId?.let(navigateToUserDetails)
                     },
                     onClickLike = {
                         viewModel.toggleLikeActivity(activity.id)
@@ -107,6 +136,7 @@ fun UserActivityViewPreview() {
             UserActivityView(
                 viewModel = viewModel(),
                 navigateToMediaDetails = {},
+                navigateToUserDetails = {},
                 navigateToActivityDetails = {},
                 navigateToFullscreenImage = {}
             )

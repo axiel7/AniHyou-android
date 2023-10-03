@@ -28,9 +28,9 @@ fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     isLiked = textActivityFragment.isLiked,
     likeCount = textActivityFragment.likeCount,
     replyCount = textActivityFragment.replyCount,
-    userId = user?.id,
-    username = user?.name,
-    avatarUrl = user?.avatar?.medium,
+    userId = textActivityFragment.user?.id,
+    username = textActivityFragment.user?.name,
+    avatarUrl = textActivityFragment.user?.avatar?.medium,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment }
 )
 

@@ -2,12 +2,6 @@ query ActivityDetails($activityId: Int) {
     Activity(id: $activityId) {
         ... on TextActivity {
             ...TextActivityFragment
-            user {
-                name
-                avatar {
-                    medium
-                }
-            }
             replies {
                 ...ActivityReplyFragment
             }
