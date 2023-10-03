@@ -1,0 +1,6 @@
+mutation UpdateThreadComment($id: Int, $text: String, $threadId: Int, $parentCommentId: Int) {
+    SaveThreadComment(id: $id, comment: $text, threadId: $threadId, parentCommentId: $parentCommentId) {
+        id
+        createdAt
+    }
+}

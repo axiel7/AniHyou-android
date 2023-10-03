@@ -3,8 +3,10 @@ package com.axiel7.anihyou.data.repository
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ChildCommentsQuery
 import com.axiel7.anihyou.ThreadDetailsQuery
+import com.axiel7.anihyou.UpdateThreadCommentMutation
 import com.axiel7.anihyou.data.model.thread.ChildComment.Companion.toChildComment
 import com.axiel7.anihyou.data.repository.BaseRepository.getError
+import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
 import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
 import kotlinx.coroutines.flow.flow
 
@@ -54,6 +56,30 @@ object ThreadRepository {
                     )
                 )
             } else emit(PagedResult.Error(message = "Error"))
+        }
+    }
+
+    fun updateThreadComment(
+        threadId: Int?,
+        parentCommentId: Int?,
+        id: Int? = null,
+        text: String
+    ) = flow {
+        emit(DataResult.Loading)
+
+        val response = UpdateThreadCommentMutation(
+            threadId = Optional.presentIfNotNull(threadId),
+            parentCommentId = Optional.presentIfNotNull(parentCommentId),
+            id = Optional.presentIfNotNull(id),
+            text = Optional.present(text)
+        ).tryMutation()
+
+        val error = response.getError()
+        if (error != null) emit(DataResult.Error(message = error))
+        else {
+            val activity = response?.data?.SaveThreadComment
+            if (activity != null) emit(DataResult.Success(data = true))
+            else emit(DataResult.Error(message = "Error"))
         }
     }
 }

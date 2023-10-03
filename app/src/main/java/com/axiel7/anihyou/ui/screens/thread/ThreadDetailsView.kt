@@ -43,6 +43,8 @@ const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
 fun ThreadDetailsView(
     threadId: Int,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToPublishThreadComment: (Int?, String?) -> Unit,
+    navigateToPublishCommentReply: (parentCommentId: Int, Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -90,6 +92,9 @@ fun ThreadDetailsView(
                     ParentThreadView(
                         thread = threadDetails!!.basicThreadDetails,
                         onClickLike = { viewModel.toggleLikeThread() },
+                        onClickReply = {
+                            navigateToPublishThreadComment(null, null)
+                        },
                         navigateToUserDetails = navigateToUserDetails,
                     )
                 } else {
@@ -116,6 +121,7 @@ fun ThreadDetailsView(
                     navigateToUserDetails = {
                         navigateToUserDetails(item.user!!.id)
                     },
+                    navigateToPublishReply = navigateToPublishCommentReply,
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
@@ -138,6 +144,8 @@ fun ThreadDetailsViewPreview() {
             ThreadDetailsView(
                 threadId = 1,
                 navigateToUserDetails = {},
+                navigateToPublishThreadComment = { _, _ -> },
+                navigateToPublishCommentReply = { _, _, _ -> },
                 navigateToFullscreenImage = {},
                 navigateBack = {}
             )

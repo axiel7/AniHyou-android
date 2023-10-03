@@ -19,6 +19,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicThreadDetails
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.ReplyButton
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
@@ -29,6 +30,7 @@ import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
 fun ParentThreadView(
     thread: BasicThreadDetails,
     onClickLike: () -> Unit,
+    onClickReply: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
     Column(
@@ -55,13 +57,12 @@ fun ParentThreadView(
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             PersonItemSmall(
                 avatarUrl = thread.user?.avatar?.medium,
                 username = thread.user?.name,
+                modifier = Modifier.weight(1f),
                 isLocked = thread.isLocked,
                 onClick = {
                     thread.user?.id?.let(navigateToUserDetails)
@@ -72,6 +73,11 @@ fun ParentThreadView(
                 favoritesCount = thread.likeCount,
                 onClick = onClickLike
             )
+            if (thread.isLocked == false) {
+                ReplyButton(
+                    onClick = onClickReply
+                )
+            }
         }
     }
 }
@@ -154,6 +160,7 @@ fun ParentThreadViewPreview() {
                 ParentThreadView(
                     thread = thread,
                     onClickLike = {},
+                    onClickReply = {},
                     navigateToUserDetails = {},
                 )
                 ParentThreadViewPlaceholder()

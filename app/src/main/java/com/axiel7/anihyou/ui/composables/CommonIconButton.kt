@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -120,6 +121,34 @@ fun CommentIconButton(
                 .padding(start = 8.dp)
                 .size(iconSize),
             tint = tint
+        )
+    }
+}
+
+@Composable
+fun ReplyButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    iconSize: Dp = 24.dp,
+    tint: Color = MaterialTheme.colorScheme.onSurface
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.reply_24),
+            contentDescription = stringResource(R.string.reply),
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(iconSize),
+            tint = tint
+        )
+        Text(
+            text = stringResource(R.string.reply),
+            color = tint,
+            fontSize = fontSize,
         )
     }
 }

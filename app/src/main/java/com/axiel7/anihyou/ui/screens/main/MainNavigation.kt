@@ -88,6 +88,12 @@ import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.screens.thread.THREAD_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.thread.THREAD_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
+import com.axiel7.anihyou.ui.screens.thread.publish.COMMENT_ID_ARGUMENT
+import com.axiel7.anihyou.ui.screens.thread.publish.COMMENT_TEXT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.thread.publish.PARENT_COMMENT_ID_ARGUMENT
+import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_COMMENT_REPLY_DESTINATION
+import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_THREAD_COMMENT_DESTINATION
+import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
@@ -598,10 +604,30 @@ fun MainNavigation(
                 navArgument(THREAD_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let {
+            navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let { threadId ->
                 ThreadDetailsView(
-                    threadId = it,
+                    threadId = threadId,
                     navigateToUserDetails = navigateToUserDetails,
+                    navigateToPublishThreadComment = { commentId, text ->
+                        navController.navigate(
+                            PUBLISH_THREAD_COMMENT_DESTINATION
+                                .replace(THREAD_ID_ARGUMENT, threadId.toString())
+                                .replace(COMMENT_ID_ARGUMENT, commentId.toStringOrZero())
+                                .also {
+                                    if (text != null) it.replace(COMMENT_TEXT_ARGUMENT, text)
+                                }
+                        )
+                    },
+                    navigateToPublishCommentReply = { parentCommentId, commentId, text ->
+                        navController.navigate(
+                            PUBLISH_COMMENT_REPLY_DESTINATION
+                                .replace(PARENT_COMMENT_ID_ARGUMENT, parentCommentId.toString())
+                                .replace(COMMENT_ID_ARGUMENT, commentId.toStringOrZero())
+                                .also {
+                                    if (text != null) it.replace(COMMENT_TEXT_ARGUMENT, text)
+                                }
+                        )
+                    },
                     navigateToFullscreenImage = navigateToFullscreenImage,
                     navigateBack = navigateBack
                 )
@@ -717,6 +743,56 @@ fun MainNavigation(
                 id = if (id != 0) id else null,
                 text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
                 navigateBack = navigateBack
+            )
+        }
+
+        composable(
+            PUBLISH_THREAD_COMMENT_DESTINATION,
+            arguments = listOf(
+                navArgument(THREAD_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
+                navArgument(COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
+                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { navEntry ->
+            val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+            PublishCommentView(
+                threadId = navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast()),
+                parentCommentId = null,
+                id = commentId,
+                text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                navigateBack = navigateBack,
+            )
+        }
+
+        composable(
+            PUBLISH_COMMENT_REPLY_DESTINATION,
+            arguments = listOf(
+                navArgument(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
+                navArgument(COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
+                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { navEntry ->
+            val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+            PublishCommentView(
+                threadId = null,
+                parentCommentId = navEntry.arguments?.getInt(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()),
+                id = commentId,
+                text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                navigateBack = navigateBack,
             )
         }
     }

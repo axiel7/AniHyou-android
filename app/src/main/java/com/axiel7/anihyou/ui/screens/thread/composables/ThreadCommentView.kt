@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +24,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.ReplyButton
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
@@ -45,6 +47,7 @@ fun ThreadCommentView(
     childComments: List<ChildComment?>?,
     toggleLike: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
+    navigateToPublishReply: (parentCommentId: Int, Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -87,8 +90,7 @@ fun ThreadCommentView(
             navigateToFullscreenImage = navigateToFullscreenImage,
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            modifier = Modifier.align(Alignment.End)
         ) {
             FavoriteIconButton(
                 isFavorite = isLikedState,
@@ -99,12 +101,20 @@ fun ThreadCommentView(
                 fontSize = 14.sp,
                 iconSize = 20.dp,
             )
+            if (isLocked == false) {
+                ReplyButton(
+                    onClick = { navigateToPublishReply(id, null, null) },
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
+                )
+            }
         }
         childComments?.filterNotNull()?.forEach { comment ->
             ChildCommentView(
                 comment = comment,
                 toggleLike = toggleLike,
                 navigateToUserDetails = navigateToUserDetails,
+                navigateToPublishReply = navigateToPublishReply,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
@@ -163,11 +173,12 @@ fun ThreadCommentViewPreview() {
                     avatarUrl = "",
                     likeCount = 23,
                     isLiked = false,
-                    isLocked = true,
+                    isLocked = false,
                     createdAt = 1212370032,
                     childComments = listOf(ChildComment.preview, ChildComment.preview),
                     toggleLike = { true },
                     navigateToUserDetails = {},
+                    navigateToPublishReply = { _, _, _ -> },
                     navigateToFullscreenImage = {}
                 )
                 ThreadCommentViewPlaceholder()
