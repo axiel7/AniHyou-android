@@ -65,6 +65,7 @@ fun UserActivityView(
                         viewModel.toggleLikeActivity(activity.id)
                     }
                 )
+                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
             item.onTextActivity?.textActivityFragment?.let { activity ->
                 ActivityItem(
@@ -85,8 +86,8 @@ fun UserActivityView(
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
+                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
-            HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
         }
         if (viewModel.isLoadingActivity) {
             items(10) {

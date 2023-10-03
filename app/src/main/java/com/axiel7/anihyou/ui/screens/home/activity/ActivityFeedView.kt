@@ -90,7 +90,9 @@ fun ActivityFeedView(
                         onClick = {
                             navigateToActivityDetails(it.listActivityFragment.id)
                         },
-                        onClickUser = { it.listActivityFragment.userId?.let(navigateToUserDetails) },
+                        onClickUser = {
+                            it.listActivityFragment.userId?.let(navigateToUserDetails)
+                        },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.listActivityFragment.id)
                         },
@@ -98,6 +100,7 @@ fun ActivityFeedView(
                             it.listActivityFragment.media?.id?.let(navigateToMediaDetails)
                         }
                     )
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
                 item.onTextActivity?.let {
                     ActivityFeedItem(
@@ -113,14 +116,16 @@ fun ActivityFeedView(
                         onClick = {
                             navigateToActivityDetails(it.textActivityFragment.id)
                         },
-                        onClickUser = { it.textActivityFragment.userId?.let(navigateToUserDetails) },
+                        onClickUser = {
+                            it.textActivityFragment.userId?.let(navigateToUserDetails)
+                        },
                         onClickLike = {
                             viewModel.toggleLikeActivity(it.textActivityFragment.id)
                         },
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
-                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
         }//:LazyColumn
         PullRefreshIndicator(
