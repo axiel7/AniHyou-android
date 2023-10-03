@@ -45,6 +45,8 @@ fun ActivityItem(
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
     username: String? = null,
+    isPrivate: Boolean? = null,
+    isLocked: Boolean? = null,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
     onClickLike: () -> Unit,
@@ -74,6 +76,8 @@ fun ActivityItem(
                     avatarUrl = imageUrl,
                     username = username,
                     modifier = Modifier.padding(bottom = 8.dp),
+                    isPrivate = isPrivate,
+                    isLocked = isLocked,
                     onClick = onClickImage
                 )
                 DefaultMarkdownText(

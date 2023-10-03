@@ -27,6 +27,7 @@ fragment ListActivityFragment on ListActivity {
     isLiked
     likeCount
     replyCount
+    isLocked
     type
     progress
     status
@@ -48,6 +49,7 @@ fragment TextActivityFragment on TextActivity {
     isLiked
     likeCount
     replyCount
+    isLocked
     text
     userId
     user {
@@ -64,6 +66,8 @@ fragment MessageActivityFragment on MessageActivity {
     isLiked
     likeCount
     replyCount
+    isPrivate
+    isLocked
     message
     messengerId
     messenger {

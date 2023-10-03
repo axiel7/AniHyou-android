@@ -9,6 +9,7 @@ data class ChildComment(
     val comment: String?,
     val likeCount: Int,
     val isLiked: Boolean?,
+    val isLocked: Boolean?,
     val createdAt: Int,
     val user: User?,
     val childComments: List<ChildComment?>?,
@@ -32,6 +33,7 @@ data class ChildComment(
                 comment = this["comment"] as? String?,
                 likeCount = this["likeCount"] as Int,
                 isLiked = this["isLiked"] as? Boolean?,
+                isLocked = this["isLocked"] as? Boolean?,
                 createdAt = this["createdAt"] as Int,
                 user = (this["user"] as LinkedHashMap<String, Any?>).toUser(),
                 childComments = (this["childComments"] as ArrayList<*>).map {
@@ -65,6 +67,7 @@ data class ChildComment(
                 comment = comment,
                 likeCount = likeCount,
                 isLiked = isLiked,
+                isLocked = isLocked,
                 createdAt = createdAt,
                 user = if (user != null)
                     User(
@@ -85,6 +88,7 @@ data class ChildComment(
             comment = "This is a comment to your comment",
             likeCount = 1,
             isLiked = true,
+            isLocked = true,
             createdAt = 1212370032,
             user = null,
             childComments = listOf(
@@ -93,6 +97,7 @@ data class ChildComment(
                     comment = "This is a comment to your comment comment",
                     likeCount = 1,
                     isLiked = false,
+                    isLocked = false,
                     createdAt = 1212370032,
                     user = null,
                     childComments = null

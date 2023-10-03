@@ -56,6 +56,7 @@ fun UserActivityView(
                         .fillMaxWidth()
                         .padding(8.dp),
                     imageUrl = activity.media?.coverImage?.medium,
+                    isLocked = activity.isLocked,
                     onClick = {
                         navigateToActivityDetails(activity.id)
                     },
@@ -81,6 +82,7 @@ fun UserActivityView(
                         .padding(8.dp),
                     imageUrl = activity.user?.avatar?.medium,
                     username = activity.user?.name,
+                    isLocked = activity.isLocked,
                     onClick = {
                         navigateToActivityDetails(activity.id)
                     },
@@ -107,6 +109,8 @@ fun UserActivityView(
                         .padding(8.dp),
                     imageUrl = activity.messenger?.avatar?.medium,
                     username = activity.messenger?.name,
+                    isPrivate = activity.isPrivate,
+                    isLocked = activity.isLocked,
                     onClick = {
                         activity.messengerId?.let(navigateToUserDetails)
                     },

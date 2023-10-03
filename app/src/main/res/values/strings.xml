@@ -291,4 +291,5 @@
     <string name="paste_your_link">Paste your link here</string>
     <string name="publish">Publish</string>
     <string name="reply">Reply</string>
+    <string name="locked">Locked</string>
 </resources>

@@ -107,6 +107,7 @@ fun ThreadDetailsView(
                     avatarUrl = item.user?.avatar?.medium,
                     likeCount = item.likeCount,
                     isLiked = viewModel.isLiked,
+                    isLocked = item.isLocked,
                     createdAt = item.createdAt,
                     childComments = item.childComments,
                     toggleLike = viewModel::toggleLikeThread,

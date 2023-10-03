@@ -61,6 +61,7 @@ fun ParentThreadView(
             PersonItemSmall(
                 avatarUrl = thread.user?.avatar?.medium,
                 username = thread.user?.name,
+                isLocked = thread.isLocked,
                 onClick = {
                     thread.user?.id?.let(navigateToUserDetails)
                 }
@@ -135,6 +136,7 @@ fun ParentThreadViewPreview() {
         replyCount = 12,
         likeCount = 17,
         isLiked = false,
+        isLocked = false,
         user = BasicThreadDetails.User(
             id = 1,
             name = "KOMBRAT",

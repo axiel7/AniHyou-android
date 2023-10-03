@@ -66,6 +66,7 @@ fun ChildCommentView(
                 PersonItemSmall(
                     avatarUrl = comment.user?.avatar?.medium,
                     username = comment.user?.name,
+                    isLocked = comment.isLocked,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     onClick = navigateToUserDetails

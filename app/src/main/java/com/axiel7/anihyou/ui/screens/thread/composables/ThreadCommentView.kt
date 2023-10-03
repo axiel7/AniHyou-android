@@ -33,6 +33,7 @@ fun ThreadCommentView(
     avatarUrl: String?,
     likeCount: Int,
     isLiked: Boolean,
+    isLocked: Boolean?,
     createdAt: Int,
     childComments: List<ChildComment?>?,
     toggleLike: () -> Unit,
@@ -56,6 +57,7 @@ fun ThreadCommentView(
             PersonItemSmall(
                 avatarUrl = avatarUrl,
                 username = username,
+                isLocked = isLocked,
                 fontWeight = FontWeight.SemiBold,
                 onClick = navigateToUserDetails
             )
@@ -150,6 +152,7 @@ fun ThreadCommentViewPreview() {
                     avatarUrl = "",
                     likeCount = 23,
                     isLiked = false,
+                    isLocked = true,
                     createdAt = 1212370032,
                     childComments = listOf(ChildComment.preview, ChildComment.preview),
                     toggleLike = {},
