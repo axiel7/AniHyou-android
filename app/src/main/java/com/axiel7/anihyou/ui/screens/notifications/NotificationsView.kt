@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +34,6 @@ import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItem
 import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 import java.time.temporal.ChronoUnit
@@ -49,9 +47,10 @@ fun NotificationsView(
     initialUnreadCount: Int,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToActivityDetails: (Int) -> Unit,
+    navigateToThreadDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val viewModel = viewModel { NotificationsViewModel(initialUnreadCount) }
     val listState = rememberLazyListState()
 
@@ -126,23 +125,41 @@ fun NotificationsView(
                             NotificationType.RELATED_MEDIA_ADDITION,
                             NotificationType.MEDIA_DATA_CHANGE,
                             NotificationType.MEDIA_MERGE,
-                            NotificationType.MEDIA_DELETION -> navigateToMediaDetails(item.contentId)
+                            NotificationType.MEDIA_DELETION ->
+                                navigateToMediaDetails(item.contentId)
 
-                            else -> {
-                                context.showToast("Coming Soon")
-                            }
+                            NotificationType.THREAD_SUBSCRIBED,
+                            NotificationType.THREAD_LIKE,
+                            NotificationType.THREAD_COMMENT_MENTION,
+                            NotificationType.THREAD_COMMENT_REPLY,
+                            NotificationType.THREAD_COMMENT_LIKE->
+                                navigateToThreadDetails(item.contentId)
+
+                            NotificationType.ACTIVITY_MESSAGE,
+                            NotificationType.ACTIVITY_REPLY,
+                            NotificationType.ACTIVITY_MENTION,
+                            NotificationType.ACTIVITY_LIKE,
+                            NotificationType.ACTIVITY_REPLY_LIKE,
+                            NotificationType.ACTIVITY_REPLY_SUBSCRIBED->
+                                navigateToActivityDetails(item.contentId)
+
+                            NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
+
+                            else -> {}
                         }
                     },
                     onClickImage = {
                         when (item.type) {
                             NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
+
                             NotificationType.ACTIVITY_MESSAGE,
                             NotificationType.ACTIVITY_MENTION,
                             NotificationType.ACTIVITY_REPLY,
                             NotificationType.ACTIVITY_LIKE,
                             NotificationType.THREAD_COMMENT_MENTION,
                             NotificationType.THREAD_COMMENT_LIKE,
-                            NotificationType.THREAD_LIKE -> navigateToUserDetails(item.secondaryContentId!!)
+                            NotificationType.THREAD_LIKE ->
+                                navigateToUserDetails(item.secondaryContentId ?: item.contentId)
 
                             else -> {}
                         }
@@ -171,6 +188,8 @@ fun NotificationsViewPreview() {
                 initialUnreadCount = 3,
                 navigateToMediaDetails = {},
                 navigateToUserDetails = {},
+                navigateToActivityDetails = {},
+                navigateToThreadDetails = {},
                 navigateBack = {}
             )
         }

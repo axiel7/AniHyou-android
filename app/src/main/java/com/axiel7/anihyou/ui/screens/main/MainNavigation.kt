@@ -426,6 +426,13 @@ fun MainNavigation(
                     ?.getInt(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) ?: 0,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
+                navigateToActivityDetails = navigateToActivityDetails,
+                navigateToThreadDetails = { id ->
+                    navController.navigate(
+                        THREAD_DETAILS_DESTINATION
+                            .replace(THREAD_ID_ARGUMENT, id.toString())
+                    )
+                },
                 navigateBack = navigateBack
             )
         }

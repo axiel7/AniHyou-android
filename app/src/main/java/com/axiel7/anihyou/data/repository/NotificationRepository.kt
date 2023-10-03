@@ -158,9 +158,9 @@ object NotificationRepository {
                 tempList.add(
                     GenericNotification(
                         id = noti.id,
-                        text = "${noti.user?.name}${noti.context}",
+                        text = "${noti.user?.name}${noti.context}${noti.thread?.title}",
                         imageUrl = noti.user?.avatar?.medium,
-                        contentId = noti.commentId,
+                        contentId = noti.thread?.id ?: noti.commentId,
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
@@ -171,9 +171,9 @@ object NotificationRepository {
                 tempList.add(
                     GenericNotification(
                         id = noti.id,
-                        text = "${noti.user?.name}${noti.context}",
+                        text = "${noti.user?.name}${noti.context}${noti.thread?.title}",
                         imageUrl = noti.user?.avatar?.medium,
-                        contentId = noti.commentId,
+                        contentId = noti.thread?.id ?: noti.commentId,
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
@@ -184,9 +184,9 @@ object NotificationRepository {
                 tempList.add(
                     GenericNotification(
                         id = noti.id,
-                        text = "${noti.user?.name}${noti.context}",
+                        text = "${noti.user?.name}${noti.context}${noti.thread?.title}",
                         imageUrl = noti.user?.avatar?.medium,
-                        contentId = noti.commentId,
+                        contentId = noti.thread?.id ?: noti.commentId,
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
@@ -197,9 +197,9 @@ object NotificationRepository {
                 tempList.add(
                     GenericNotification(
                         id = noti.id,
-                        text = "${noti.user?.name}${noti.context}",
+                        text = "${noti.user?.name}${noti.context}${noti.thread?.title}",
                         imageUrl = noti.user?.avatar?.medium,
-                        contentId = noti.commentId,
+                        contentId = noti.thread?.id ?: noti.commentId,
                         secondaryContentId = noti.userId,
                         type = noti.type,
                         createdAt = noti.createdAt,
