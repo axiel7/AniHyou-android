@@ -23,4 +23,5 @@ fragment UserInfo on User {
     isFollowing
     isFollower
     siteUrl
+    donatorBadge
 }

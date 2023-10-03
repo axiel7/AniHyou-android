@@ -173,6 +173,13 @@ fun ProfileView(
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
+                    viewModel.userInfo?.donatorBadge?.let { donatorText ->
+                        Text(
+                            text = donatorText,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 14.sp
+                        )
+                    }
                     if (viewModel.userInfo?.isFollower == true) {
                         Text(
                             text = stringResource(R.string.follows_you),
