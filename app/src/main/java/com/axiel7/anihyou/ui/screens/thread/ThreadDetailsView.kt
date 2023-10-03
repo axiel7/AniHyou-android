@@ -89,6 +89,7 @@ fun ThreadDetailsView(
                 if (threadDetails != null) {
                     ParentThreadView(
                         thread = threadDetails!!.basicThreadDetails,
+                        onClickLike = { viewModel.toggleLikeThread() },
                         navigateToUserDetails = navigateToUserDetails,
                     )
                 } else {
@@ -102,6 +103,7 @@ fun ThreadDetailsView(
                 contentType = { it }
             ) { item ->
                 ThreadCommentView(
+                    id = item.id,
                     body = item.comment ?: "",
                     username = item.user?.name ?: "",
                     avatarUrl = item.user?.avatar?.medium,
@@ -110,10 +112,7 @@ fun ThreadDetailsView(
                     isLocked = item.isLocked,
                     createdAt = item.createdAt,
                     childComments = item.childComments,
-                    toggleLike = viewModel::toggleLikeThread,
-                    toggleLikeComment = {
-                        viewModel.toggleLikeComment(it)
-                    },
+                    toggleLike = { viewModel.toggleLikeComment(item.id) },
                     navigateToUserDetails = {
                         navigateToUserDetails(item.user!!.id)
                     },

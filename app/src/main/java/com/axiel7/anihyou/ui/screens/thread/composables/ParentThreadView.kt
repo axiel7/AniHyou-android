@@ -28,6 +28,7 @@ import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
 @Composable
 fun ParentThreadView(
     thread: BasicThreadDetails,
+    onClickLike: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
     Column(
@@ -69,7 +70,7 @@ fun ParentThreadView(
             FavoriteIconButton(
                 isFavorite = false,
                 favoritesCount = thread.likeCount,
-                onClick = { /*TODO*/ }
+                onClick = onClickLike
             )
         }
     }
@@ -152,6 +153,7 @@ fun ParentThreadViewPreview() {
             Column {
                 ParentThreadView(
                     thread = thread,
+                    onClickLike = {},
                     navigateToUserDetails = {},
                 )
                 ParentThreadViewPlaceholder()

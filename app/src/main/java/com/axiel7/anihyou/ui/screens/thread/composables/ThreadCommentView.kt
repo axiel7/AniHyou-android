@@ -9,6 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,10 +29,12 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import kotlinx.coroutines.launch
 import java.time.temporal.ChronoUnit
 
 @Composable
 fun ThreadCommentView(
+    id: Int,
     body: String,
     username: String,
     avatarUrl: String?,
@@ -36,11 +43,12 @@ fun ThreadCommentView(
     isLocked: Boolean?,
     createdAt: Int,
     childComments: List<ChildComment?>?,
-    toggleLike: () -> Unit,
-    toggleLikeComment: suspend (Int) -> Boolean,
+    toggleLike: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+    var isLikedState by remember { mutableStateOf(isLiked) }
     Column(
         modifier = Modifier
             .padding(
@@ -83,9 +91,11 @@ fun ThreadCommentView(
             horizontalArrangement = Arrangement.End
         ) {
             FavoriteIconButton(
-                isFavorite = isLiked,
+                isFavorite = isLikedState,
                 favoritesCount = likeCount,
-                onClick = toggleLike,
+                onClick = {
+                    scope.launch { isLikedState = toggleLike(id) }
+                },
                 fontSize = 14.sp,
                 iconSize = 20.dp,
             )
@@ -93,7 +103,7 @@ fun ThreadCommentView(
         childComments?.filterNotNull()?.forEach { comment ->
             ChildCommentView(
                 comment = comment,
-                toggleLike = toggleLikeComment,
+                toggleLike = toggleLike,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
@@ -147,6 +157,7 @@ fun ThreadCommentViewPreview() {
         Surface {
             Column {
                 ThreadCommentView(
+                    id = 1,
                     body = "Yet again, even more peak. ".repeat(4),
                     username = "Lap",
                     avatarUrl = "",
@@ -155,8 +166,7 @@ fun ThreadCommentViewPreview() {
                     isLocked = true,
                     createdAt = 1212370032,
                     childComments = listOf(ChildComment.preview, ChildComment.preview),
-                    toggleLike = {},
-                    toggleLikeComment = { true },
+                    toggleLike = { true },
                     navigateToUserDetails = {},
                     navigateToFullscreenImage = {}
                 )
