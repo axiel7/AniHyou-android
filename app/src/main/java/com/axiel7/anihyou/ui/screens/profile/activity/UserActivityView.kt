@@ -112,6 +112,9 @@ fun UserActivityView(
                     isPrivate = activity.isPrivate,
                     isLocked = activity.isLocked,
                     onClick = {
+                        navigateToActivityDetails(activity.id)
+                    },
+                    onClickImage = {
                         activity.messengerId?.let(navigateToUserDetails)
                     },
                     onClickLike = {
