@@ -6,14 +6,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -45,6 +49,11 @@ fun ActivityDetailsView(
         rememberTopAppBarState()
     )
     val listState = rememberLazyListState()
+    val expandedFab by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0
+        }
+    }
 
     LaunchedEffect(activityId) {
         if (viewModel.activityDetails == null) viewModel.getActivityDetails()
@@ -53,14 +62,19 @@ fun ActivityDetailsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.activity),
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navigateToPublishActivityReply(null, null) }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.chat_bubble_24),
-                    contentDescription = stringResource(R.string.add)
-                )
-            }
+            ExtendedFloatingActionButton(
+                text = {
+                    Text(text = stringResource(R.string.reply))
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.reply_24),
+                        contentDescription = stringResource(R.string.reply)
+                    )
+                },
+                onClick = { navigateToPublishActivityReply(null, null) },
+                expanded = expandedFab
+            )
         },
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         scrollBehavior = topAppBarScrollBehavior
