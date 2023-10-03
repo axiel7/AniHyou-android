@@ -86,12 +86,14 @@ object ActivityRepository {
     }
 
     fun updateActivityReply(
+        activityId: Int,
         id: Int? = null,
         text: String
     ) = flow {
         emit(DataResult.Loading)
 
         val response = UpdateActivityReplyMutation(
+            activityId = Optional.present(activityId),
             id = Optional.presentIfNotNull(id),
             text = Optional.present(text)
         ).tryMutation()

@@ -40,6 +40,7 @@ import com.axiel7.anihyou.ui.screens.activitydetails.publish.ACTIVITY_TEXT_ARGUM
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PUBLISH_ACTIVITY_DESTINATION
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PUBLISH_ACTIVITY_REPLY_DESTINATION
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivityView
+import com.axiel7.anihyou.ui.screens.activitydetails.publish.REPLY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
@@ -153,24 +154,6 @@ fun MainNavigation(
                 .replace(URL_ARGUMENT, encodedUrl)
         )
     }
-    val navigateToPublishActivity: (Int?, String?) -> Unit = { id, text ->
-        navController.navigate(
-            PUBLISH_ACTIVITY_DESTINATION
-                .replace(ACTIVITY_ID_ARGUMENT, id.toStringOrZero())
-                .also {
-                    if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
-                }
-        )
-    }
-    val navigateToPublishActivityReply: (Int?, String?) -> Unit = { id, text ->
-        navController.navigate(
-            PUBLISH_ACTIVITY_REPLY_DESTINATION
-                .replace(ACTIVITY_ID_ARGUMENT, id.toStringOrZero())
-                .also {
-                    if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
-                }
-        )
-    }
 
     LaunchedEffect(deepLink) {
         if (deepLink != null) {
@@ -253,7 +236,15 @@ fun MainNavigation(
                 },
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
-                navigateToPublishActivity = navigateToPublishActivity,
+                navigateToPublishActivity = { id, text ->
+                    navController.navigate(
+                        PUBLISH_ACTIVITY_DESTINATION
+                            .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
+                            .also {
+                                if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
+                            }
+                    )
+                },
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }
@@ -664,12 +655,21 @@ fun MainNavigation(
                 navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())?.let { id ->
+            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())?.let { activityId ->
                 ActivityDetailsView(
-                    activityId = id,
+                    activityId = activityId,
                     navigateBack = navigateBack,
                     navigateToUserDetails = navigateToUserDetails,
-                    navigateToPublishActivityReply = navigateToPublishActivityReply,
+                    navigateToPublishActivityReply = { id, text ->
+                        navController.navigate(
+                            PUBLISH_ACTIVITY_REPLY_DESTINATION
+                                .replace(ACTIVITY_ID_ARGUMENT, activityId.toString())
+                                .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
+                                .also {
+                                    if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
+                                }
+                        )
+                    },
                     navigateToFullscreenImage = navigateToFullscreenImage,
                 )
             }
@@ -678,7 +678,7 @@ fun MainNavigation(
         composable(
             PUBLISH_ACTIVITY_DESTINATION,
             arguments = listOf(
-                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
+                navArgument(REPLY_ID_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.IntType
                 },
                 navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
@@ -687,9 +687,9 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+            val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
             PublishActivityView(
-                isReply = false,
+                activityId = null,
                 id = if (id != 0) id else null,
                 text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
                 navigateBack = navigateBack
@@ -702,15 +702,18 @@ fun MainNavigation(
                 navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.IntType
                 },
+                navArgument(REPLY_ID_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.IntType
+                },
                 navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 }
             )
         ) { navEntry ->
-            val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+            val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
             PublishActivityView(
-                isReply = true,
+                activityId = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()),
                 id = if (id != 0) id else null,
                 text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
                 navigateBack = navigateBack

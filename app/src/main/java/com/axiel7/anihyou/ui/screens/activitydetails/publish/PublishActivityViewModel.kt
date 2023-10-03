@@ -33,10 +33,12 @@ class PublishActivityViewModel : BaseViewModel() {
     }
 
     fun publishActivityReply(
+        activityId: Int,
         id: Int? = null,
         text: String
     ) = viewModelScope.launch(dispatcher) {
         ActivityRepository.updateActivityReply(
+            activityId = activityId,
             id = id,
             text = text
         ).collect { result ->

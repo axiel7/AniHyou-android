@@ -12,14 +12,15 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 
 const val ACTIVITY_TEXT_ARGUMENT = "{text}"
+const val REPLY_ID_ARGUMENT = "{reply_id}"
 const val PUBLISH_ACTIVITY_DESTINATION =
     "activity/publish/$ACTIVITY_ID_ARGUMENT?text=$ACTIVITY_TEXT_ARGUMENT"
 const val PUBLISH_ACTIVITY_REPLY_DESTINATION =
-    "reply/publish/$ACTIVITY_ID_ARGUMENT?text=$ACTIVITY_TEXT_ARGUMENT"
+    "activity/$ACTIVITY_ID_ARGUMENT/reply/publish/$REPLY_ID_ARGUMENT?text=$ACTIVITY_TEXT_ARGUMENT"
 
 @Composable
 fun PublishActivityView(
-    isReply: Boolean,
+    activityId: Int?,
     id: Int? = null,
     text: String? = null,
     navigateBack: () -> Unit,
@@ -39,11 +40,11 @@ fun PublishActivityView(
     }
 
     PublishMarkdownView(
-        onPublish = {
-            if (isReply) {
-                viewModel.publishActivityReply(id = id, text = it)
+        onPublish = { finalText ->
+            if (activityId != null) {
+                viewModel.publishActivityReply(activityId, id, finalText)
             } else {
-                viewModel.publishActivity(id = id, text = it)
+                viewModel.publishActivity(id, finalText)
             }
         },
         isLoading = viewModel.isLoading,
@@ -58,7 +59,7 @@ fun PublishActivityViewPreview() {
     AniHyouTheme {
         Surface {
             PublishActivityView(
-                isReply = false,
+                activityId = null,
                 navigateBack = {}
             )
         }
