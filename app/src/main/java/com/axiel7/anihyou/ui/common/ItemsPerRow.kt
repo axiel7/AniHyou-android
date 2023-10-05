@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.base
+package com.axiel7.anihyou.ui.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -35,4 +35,10 @@ enum class ItemsPerRow(val value: Int) : Localizable {
 
     @Composable
     override fun localized() = stringResource(stringRes)
+    
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+
+        fun valueOf(value: Int) = entries.find { it.value == value }
+    }
 }

@@ -35,7 +35,7 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.ListStyle
+import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator

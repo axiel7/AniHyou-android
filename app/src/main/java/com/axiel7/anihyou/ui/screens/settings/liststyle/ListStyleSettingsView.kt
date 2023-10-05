@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.settings
+package com.axiel7.anihyou.ui.screens.settings.liststyle
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,19 +11,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
@@ -36,6 +35,7 @@ const val LIST_STYLE_SETTINGS_DESTINATION = "list_style_settings"
 fun ListStyleSettingsView(
     navigateBack: () -> Unit,
 ) {
+    val viewModel: ListStyleSettingsViewModel = hiltViewModel()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -58,39 +58,31 @@ fun ListStyleSettingsView(
             )
 
             PreferencesTitle(text = stringResource(R.string.anime_list))
-            MediaListStatus.knownValues().forEach { status ->
-                val listType = ListType(status, MediaType.ANIME)
-                var preference by rememberPreference(
-                    listType.stylePreferenceKey,
-                    listType.styleGlobalAppVariable.name
-                )
+            MediaListStatus.entries.forEach { status ->
+                val preference by viewModel.getAnimeListStyle(status).collectAsStateWithLifecycle()
 
                 ListPreference(
                     title = status.localized(),
-                    entriesValues = listStyleEntries,
+                    entriesValues = ListStyle.entriesLocalized,
                     preferenceValue = preference,
                     icon = status.icon(),
-                    onValueChange = {
-                        preference = it
+                    onValueChange = { value ->
+                        viewModel.setAnimeListStyle(status, value)
                     }
                 )
             }
 
             PreferencesTitle(text = stringResource(R.string.manga_list))
-            MediaListStatus.knownValues().forEach { status ->
-                val listType = ListType(status, MediaType.MANGA)
-                var preference by rememberPreference(
-                    listType.stylePreferenceKey,
-                    listType.styleGlobalAppVariable.name
-                )
+            MediaListStatus.entries.forEach { status ->
+                val preference by viewModel.getMangaListStyle(status).collectAsStateWithLifecycle()
 
                 ListPreference(
                     title = status.localized(),
-                    entriesValues = listStyleEntries,
+                    entriesValues = ListStyle.entriesLocalized,
                     preferenceValue = preference,
                     icon = status.icon(),
-                    onValueChange = {
-                        preference = it
+                    onValueChange = { value ->
+                        viewModel.setMangaListStyle(status, value)
                     }
                 )
             }

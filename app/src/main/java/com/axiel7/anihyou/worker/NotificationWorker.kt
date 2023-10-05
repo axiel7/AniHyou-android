@@ -5,31 +5,35 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.TaskStackBuilder
-import androidx.datastore.preferences.core.edit
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.axiel7.anihyou.App
-import com.axiel7.anihyou.data.PreferencesDataStore.LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
+import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.NotificationRepository
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.utils.NotificationUtils.createNotificationChannel
 import com.axiel7.anihyou.utils.NotificationUtils.showNotification
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 
-class NotificationWorker(
-    context: Context,
-    params: WorkerParameters
+@HiltWorker
+class NotificationWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : CoroutineWorker(context, params) {
 
     // AniList API does not have a socket for notifications, so we schedule a work with an interval
@@ -41,21 +45,21 @@ class NotificationWorker(
         // e.g.: the user read the notifications on web
         var unreadCount = 0
         runBlocking {
-            UserRepository.getUnreadNotificationCount().collect {
-                unreadCount = it
+            userRepository.getUnreadNotificationCount().collect {
+                if (it is DataResult.Success) unreadCount = it.data
             }
         }
         if (unreadCount == 0) return Result.success()
 
         var notifications: List<GenericNotification>? = null
         runBlocking {
-            NotificationRepository.getNotificationsPage(
+            notificationRepository.getNotificationsPage(
                 type = NotificationTypeGroup.ALL,
                 resetCount = false
             ).collect { result ->
                 when (result) {
-                    is PagedResult.Error -> notifications = null
-                    is PagedResult.Success -> notifications = result.data
+                    is DataResult.Error -> notifications = null
+                    is DataResult.Success -> notifications = result.data.list
                     else -> {}
                 }
             }
@@ -64,15 +68,14 @@ class NotificationWorker(
         else {
             // since AniList API does not have a filter for createdAt we need to filter
             // locally the new notifications by saving the latest createdAt to preferences
-            val lastCreatedAt = applicationContext.defaultPreferencesDataStore
-                .getValueSync(LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY) ?: 0
+            val lastCreatedAt = defaultPreferencesRepository.lastNotificationCreatedAt
+                .firstOrNull() ?: 0
             val newNotifications = notifications?.filter {
                 it.createdAt != null && it.createdAt > lastCreatedAt
             }
             if (!newNotifications.isNullOrEmpty()) {
-                applicationContext.defaultPreferencesDataStore.edit {
-                    it[LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY] =
-                        newNotifications.first().createdAt!!
+                newNotifications.firstOrNull()?.createdAt?.let { createdAt ->
+                    defaultPreferencesRepository.setLastNotificationCreatedAt(createdAt)
                 }
                 newNotifications.forEach {
                     var pendingIntent: PendingIntent? = null
@@ -112,32 +115,32 @@ class NotificationWorker(
     companion object {
         const val DEFAULT_CHANNEL_ID = "default_channel_id"
 
-        fun scheduleNotificationWork(
-            interval: NotificationInterval
-        ) {
+        fun Context.createDefaultNotificationChannels() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // TODO: create different channels for every NotificationType?
-                App.applicationContext.createNotificationChannel(
+                createNotificationChannel(
                     id = DEFAULT_CHANNEL_ID,
                     name = "Default"
                 )
             }
-            val workManager = WorkManager.getInstance(App.applicationContext)
+        }
 
+        fun WorkManager.scheduleNotificationWork(
+            interval: NotificationInterval
+        ) {
             val notificationWorkRequest =
                 PeriodicWorkRequestBuilder<NotificationWorker>(interval.value, interval.timeUnit)
                     .build()
 
-            workManager.enqueueUniquePeriodicWork(
+            enqueueUniquePeriodicWork(
                 "default_notifications",
                 ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
                 notificationWorkRequest
             )
         }
 
-        fun cancelNotificationWork() {
-            WorkManager.getInstance(App.applicationContext)
-                .cancelUniqueWork("default_notifications")
+        fun WorkManager.cancelNotificationWork() {
+            cancelUniqueWork("default_notifications")
         }
     }
 }

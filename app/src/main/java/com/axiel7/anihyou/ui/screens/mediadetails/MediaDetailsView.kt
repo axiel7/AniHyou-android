@@ -63,7 +63,7 @@ import com.axiel7.anihyou.data.model.media.durationText
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.base
+package com.axiel7.anihyou.ui.common
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

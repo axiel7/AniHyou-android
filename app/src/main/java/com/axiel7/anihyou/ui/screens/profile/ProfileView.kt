@@ -45,7 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.ShareIconButton

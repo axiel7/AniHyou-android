@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -24,7 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
@@ -38,13 +38,14 @@ const val ACTIVITY_DETAILS_DESTINATION = "activity/$ACTIVITY_ID_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsView(
-    activityId: Int,
     navigateBack: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToPublishActivityReply: (Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val viewModel = viewModel { ActivityDetailsViewModel(activityId) }
+    val viewModel: ActivityDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -53,10 +54,6 @@ fun ActivityDetailsView(
         derivedStateOf {
             listState.firstVisibleItemIndex == 0
         }
-    }
-
-    LaunchedEffect(activityId) {
-        if (viewModel.activityDetails == null) viewModel.getActivityDetails()
     }
 
     DefaultScaffoldWithSmallTopAppBar(
@@ -87,17 +84,17 @@ fun ActivityDetailsView(
             contentPadding = PaddingValues(top = 8.dp)
         ) {
             item {
-                if (viewModel.activityDetails != null) {
+                if (uiState.details != null) {
                     ActivityTextView(
-                        text = viewModel.activityDetails?.text ?: "",
-                        username = viewModel.activityDetails?.username,
-                        avatarUrl = viewModel.activityDetails?.avatarUrl,
-                        createdAt = viewModel.activityDetails?.createdAt ?: 0,
-                        replyCount = viewModel.activityDetails?.replyCount,
-                        likeCount = viewModel.activityDetails?.likeCount ?: 0,
-                        isLiked = viewModel.activityDetails?.isLiked,
+                        text = uiState.details?.text ?: "",
+                        username = uiState.details?.username,
+                        avatarUrl = uiState.details?.avatarUrl,
+                        createdAt = uiState.details?.createdAt ?: 0,
+                        replyCount = uiState.details?.replyCount,
+                        likeCount = uiState.details?.likeCount ?: 0,
+                        isLiked = uiState.details?.isLiked,
                         onClickUser = {
-                            viewModel.activityDetails?.userId?.let(navigateToUserDetails)
+                            uiState.details?.userId?.let(navigateToUserDetails)
                         },
                         onClickLike = {
                             viewModel.toggleLikeActivity()
@@ -141,7 +138,6 @@ fun ActivityDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             ActivityDetailsView(
-                activityId = 1,
                 navigateBack = {},
                 navigateToUserDetails = {},
                 navigateToPublishActivityReply = { _, _ -> },

@@ -20,12 +20,12 @@ import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class MediaDetailsViewModel(
     private val mediaId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
     init {
         isLoading = true
     }

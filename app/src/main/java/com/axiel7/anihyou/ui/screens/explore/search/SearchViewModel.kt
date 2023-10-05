@@ -20,7 +20,7 @@ import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -29,7 +29,7 @@ class SearchViewModel(
     initialMediaSort: MediaSort?,
     initialGenre: String?,
     initialTag: String?,
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     private val perPage = 25
 

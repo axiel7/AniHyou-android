@@ -15,7 +15,7 @@ import com.axiel7.anihyou.App
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
 import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.ui.base.AppColorMode
+import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.materialkolor.dynamicColorScheme
 

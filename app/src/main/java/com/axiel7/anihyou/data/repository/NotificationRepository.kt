@@ -1,48 +1,37 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.NotificationsQuery
+import com.axiel7.anihyou.data.api.NotificationsApi
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
-import com.axiel7.anihyou.data.repository.BaseRepository.getError
-import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-object NotificationRepository {
+class NotificationRepository @Inject constructor(
+    private val api: NotificationsApi
+) {
 
     fun getNotificationsPage(
         type: NotificationTypeGroup,
         resetCount: Boolean,
         page: Int = 1,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-
-        val response = NotificationsQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            typeIn = if (type == NotificationTypeGroup.ALL) Optional.absent()
-            else Optional.present(type.values.toList()),
-            resetCount = Optional.present(resetCount)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val notificationsPage = response?.data?.Page
-            if (notificationsPage != null) {
-                emit(
-                    PagedResult.Success(
-                        data = notificationsPage.notifications?.filterNotNull().orEmpty()
-                            .toGenericNotifications(),
-                        nextPage = if (notificationsPage.pageInfo?.hasNextPage == true)
-                            notificationsPage.pageInfo.currentPage?.plus(1)
-                        else null
-                    )
-                )
-            } else emit(PagedResult.Error(message = "Empty"))
+    ) = api
+        .notificationsQuery(
+            typeIn = if (type == NotificationTypeGroup.ALL) null else type.values.toList(),
+            resetCount,
+            page,
+            perPage
+        )
+        .watch()
+        .asDataResult {
+            PageResult(
+                list = it.Page?.notifications?.filterNotNull().orEmpty().toGenericNotifications(),
+                nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
+                    it.Page.pageInfo.currentPage?.plus(1)
+                else null
+            )
         }
-    }
 
     private fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
         val tempList = mutableListOf<GenericNotification>()

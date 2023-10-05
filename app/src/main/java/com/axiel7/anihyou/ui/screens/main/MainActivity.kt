@@ -69,20 +69,22 @@ import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.AppColorMode
-import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationIndex
-import com.axiel7.anihyou.ui.base.ListStyle
-import com.axiel7.anihyou.ui.base.Theme
+import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
+import com.axiel7.anihyou.ui.common.ListStyle
+import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()

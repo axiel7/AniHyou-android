@@ -19,17 +19,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.axiel7.anihyou.App
-import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BottomDestination
-import com.axiel7.anihyou.ui.base.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.ui.common.BottomDestination
+import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
 import com.axiel7.anihyou.ui.composables.URL_ARGUMENT
@@ -75,10 +72,10 @@ import com.axiel7.anihyou.ui.screens.profile.USER_NAME_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
-import com.axiel7.anihyou.ui.screens.settings.LIST_STYLE_SETTINGS_DESTINATION
-import com.axiel7.anihyou.ui.screens.settings.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
+import com.axiel7.anihyou.ui.screens.settings.liststyle.LIST_STYLE_SETTINGS_DESTINATION
+import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
@@ -109,7 +106,7 @@ fun MainNavigation(
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
 ) {
-    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, App.accessToken)
+    //val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, App.accessToken)
     val bottomPadding by animateDpAsState(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
@@ -681,24 +678,24 @@ fun MainNavigation(
                 navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())?.let { activityId ->
-                ActivityDetailsView(
-                    activityId = activityId,
-                    navigateBack = navigateBack,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToPublishActivityReply = { id, text ->
-                        navController.navigate(
-                            PUBLISH_ACTIVITY_REPLY_DESTINATION
-                                .replace(ACTIVITY_ID_ARGUMENT, activityId.toString())
-                                .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
-                                .also {
-                                    if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
-                                }
-                        )
-                    },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                )
-            }
+            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+                ?.let { activityId ->
+                    ActivityDetailsView(
+                        navigateBack = navigateBack,
+                        navigateToUserDetails = navigateToUserDetails,
+                        navigateToPublishActivityReply = { id, text ->
+                            navController.navigate(
+                                PUBLISH_ACTIVITY_REPLY_DESTINATION
+                                    .replace(ACTIVITY_ID_ARGUMENT, activityId.toString())
+                                    .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
+                                    .also {
+                                        if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
+                                    }
+                            )
+                        },
+                        navigateToFullscreenImage = navigateToFullscreenImage,
+                    )
+                }
         }
 
         composable(

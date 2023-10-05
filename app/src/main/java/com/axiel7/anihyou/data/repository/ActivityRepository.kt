@@ -1,18 +1,13 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.axiel7.anihyou.ActivityDetailsQuery
-import com.axiel7.anihyou.ActivityFeedQuery
-import com.axiel7.anihyou.UpdateActivityReplyMutation
-import com.axiel7.anihyou.UpdateTextActivityMutation
+import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.data.api.ActivityApi
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
-import com.axiel7.anihyou.data.repository.BaseRepository.getError
-import com.axiel7.anihyou.data.repository.BaseRepository.tryMutation
-import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-object ActivityRepository {
+class ActivityRepository @Inject constructor(
+    private val api: ActivityApi
+) {
 
     fun getActivityFeed(
         isFollowing: Boolean,
@@ -20,90 +15,43 @@ object ActivityRepository {
         refreshCache: Boolean = false,
         page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-
-        val response = ActivityFeedQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            isFollowing = Optional.present(isFollowing),
-            typeIn = Optional.presentIfNotNull(type?.value),
-        ).tryQuery(
-            fetchPolicy = if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst
-        )
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val activities = response?.data?.Page?.activities?.filterNotNull()
-            val pageInfo = response?.data?.Page?.pageInfo
-            if (activities != null) emit(
-                PagedResult.Success(
-                    data = activities,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
+    ) = api
+        .activityFeedQuery(isFollowing, type, refreshCache, page, perPage)
+        .watch()
+        .asDataResult {
+            PageResult(
+                list = it.Page?.activities?.filterNotNull().orEmpty(),
+                nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
+                    it.Page.pageInfo.currentPage?.plus(1)
+                else null
             )
-            else emit(PagedResult.Error(message = "Error"))
         }
-    }
 
-    fun getActivityDetails(activityId: Int) = flow {
-        emit(DataResult.Loading)
-
-        val response = ActivityDetailsQuery(
-            activityId = Optional.present(activityId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val activity = response?.data?.Activity
-            if (activity != null) emit(DataResult.Success(data = activity))
-            else emit(DataResult.Error(message = "Error"))
+    fun getActivityDetails(activityId: Int) = api
+        .activityDetailsQuery(activityId)
+        .watch()
+        .asDataResult {
+            it.Activity
         }
-    }
 
     fun updateTextActivity(
         id: Int? = null,
         text: String
-    ) = flow {
-        emit(DataResult.Loading)
-
-        val response = UpdateTextActivityMutation(
-            id = Optional.presentIfNotNull(id),
-            text = Optional.present(text)
-        ).tryMutation()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val activity = response?.data?.SaveTextActivity
-            if (activity != null) emit(DataResult.Success(data = true))
-            else emit(DataResult.Error(message = "Error"))
+    ) = api
+        .updateTextActivityMutation(id, text)
+        .toFlow()
+        .asDataResult {
+            it.SaveTextActivity
         }
-    }
 
     fun updateActivityReply(
         activityId: Int,
         id: Int? = null,
         text: String
-    ) = flow {
-        emit(DataResult.Loading)
-
-        val response = UpdateActivityReplyMutation(
-            activityId = Optional.present(activityId),
-            id = Optional.presentIfNotNull(id),
-            text = Optional.present(text)
-        ).tryMutation()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val reply = response?.data?.SaveActivityReply
-            if (reply != null) emit(DataResult.Success(data = true))
-            else emit(DataResult.Error(message = "Error"))
+    ) = api
+        .updateActivityReplyMutation(activityId, id, text)
+        .toFlow()
+        .asDataResult {
+            it.SaveActivityReply
         }
-    }
 }

@@ -1,68 +1,91 @@
 package com.axiel7.anihyou.ui.screens.activitydetails
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.activity.GenericActivity
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ActivityDetailsViewModel(
-    private val activityId: Int
-) : BaseViewModel() {
+@HiltViewModel
+class ActivityDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    activityRepository: ActivityRepository,
+    private val likeRepository: LikeRepository,
+) : UiStateViewModel<ActivityDetailsUiState>() {
 
-    var activityDetails by mutableStateOf<GenericActivity?>(null)
+    private val activityId: Int = savedStateHandle[ACTIVITY_ID_ARGUMENT.removeFirstAndLast()]!!
+
+    override val mutableUiState = MutableStateFlow(ActivityDetailsUiState())
+    override val uiState = mutableUiState.asStateFlow()
+
     val replies = mutableStateListOf<ActivityReplyFragment>()
 
-    fun getActivityDetails() = viewModelScope.launch(dispatcher) {
-        ActivityRepository.getActivityDetails(activityId = activityId).collect { result ->
-            isLoading = result is DataResult.Loading
-
-            if (result is DataResult.Success) {
-                activityDetails =
-                    result.data.onTextActivity?.toGenericActivity()
-                        ?: result.data.onListActivity?.toGenericActivity()
-                                ?: result.data.onMessageActivity?.toGenericActivity()
-                activityDetails?.replies?.let { replies.addAll(it) }
+    init {
+        activityRepository.getActivityDetails(activityId = activityId)
+            .onEach { result ->
+                result.handleDataResult { data ->
+                    mutableUiState.updateAndGet {
+                        it.copy(
+                            details = data?.onTextActivity?.toGenericActivity()
+                                ?: data?.onListActivity?.toGenericActivity()
+                                ?: data?.onMessageActivity?.toGenericActivity()
+                        )
+                    }.also {
+                        replies.addAll(it.details?.replies.orEmpty())
+                    }
+                }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
-    fun toggleLikeActivity() = viewModelScope.launch(dispatcher) {
-        LikeRepository.toggleLike(
+    fun toggleLikeActivity() = viewModelScope.launch {
+        likeRepository.toggleLike(
             likeableId = activityId,
             type = LikeableType.ACTIVITY
         ).collect { result ->
-            if (result is DataResult.Success) {
-                activityDetails = activityDetails?.updateLikeStatus(result.data)
+            result.handleDataResult { data ->
+                if (data != null) {
+                    mutableUiState.updateAndGet {
+                        it.copy(details = it.details?.updateLikeStatus(data))
+                    }
+                } else {
+                    mutableUiState.updateAndGet { it.setError("Like failed") }
+                }
             }
         }
     }
 
-    fun toggleLikeReply(id: Int) = viewModelScope.launch(dispatcher) {
-        LikeRepository.toggleLike(
+    fun toggleLikeReply(id: Int) = viewModelScope.launch {
+        likeRepository.toggleLike(
             likeableId = id,
             type = LikeableType.ACTIVITY_REPLY
         ).collect { result ->
-            if (result is DataResult.Success) {
-                val isLiked = result.data
-                val foundIndex = replies.indexOfFirst { it.id == id }
-                if (foundIndex != -1) {
-                    val oldItem = replies[foundIndex]
-                    replies[foundIndex] = oldItem.copy(
-                        isLiked = isLiked,
-                        likeCount = if (isLiked) oldItem.likeCount + 1
-                        else oldItem.likeCount - 1
-                    )
+            result.handleDataResult { data ->
+                if (data != null) {
+                    val foundIndex = replies.indexOfFirst { it.id == id }
+                    if (foundIndex != -1) {
+                        val oldItem = replies[foundIndex]
+                        replies[foundIndex] = oldItem.copy(
+                            isLiked = data,
+                            likeCount = if (data) oldItem.likeCount + 1
+                            else oldItem.likeCount - 1
+                        )
+                    }
                 }
+                null
             }
         }
     }

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

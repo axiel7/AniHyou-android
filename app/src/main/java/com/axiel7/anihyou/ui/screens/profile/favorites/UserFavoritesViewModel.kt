@@ -12,12 +12,12 @@ import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class UserFavoritesViewModel(
     private val userId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var favoritesType by mutableStateOf(FavoritesType.ANIME)
         private set

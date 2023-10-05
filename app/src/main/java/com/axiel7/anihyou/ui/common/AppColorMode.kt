@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.base
+package com.axiel7.anihyou.ui.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -18,4 +18,8 @@ enum class AppColorMode : Localizable {
             DEFAULT -> R.string.default_setting
             PROFILE -> R.string.profile
         }
+
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+    }
 }

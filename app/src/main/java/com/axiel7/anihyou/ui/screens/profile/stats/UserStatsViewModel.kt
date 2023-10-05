@@ -17,13 +17,13 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class UserStatsViewModel(
     private val userId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var statType by mutableStateOf(UserStatType.OVERVIEW)
     var mediaType by mutableStateOf(MediaType.ANIME)

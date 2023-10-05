@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 // TODO: replace with official material3 component when google decides to release it

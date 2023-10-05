@@ -3,9 +3,11 @@ package com.axiel7.anihyou.ui.screens.activitydetails.publish
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.ui.screens.activitydetails.ACTIVITY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -26,17 +28,18 @@ fun PublishActivityView(
     navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel: PublishActivityViewModel = viewModel()
+    val viewModel: PublishActivityViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.message) {
-        if (viewModel.message != null) {
-            context.showToast(viewModel.message)
-            viewModel.message = null
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            context.showToast(uiState.error)
+            viewModel.onErrorDisplayed()
         }
     }
 
-    LaunchedEffect(viewModel.wasPublished) {
-        if (viewModel.wasPublished == true) navigateBack()
+    LaunchedEffect(uiState.wasPublished) {
+        if (uiState.wasPublished == true) navigateBack()
     }
 
     PublishMarkdownView(
@@ -47,7 +50,7 @@ fun PublishActivityView(
                 viewModel.publishActivity(id, finalText)
             }
         },
-        isLoading = viewModel.isLoading,
+        isLoading = uiState.isLoading,
         initialText = text,
         navigateBack = navigateBack
     )

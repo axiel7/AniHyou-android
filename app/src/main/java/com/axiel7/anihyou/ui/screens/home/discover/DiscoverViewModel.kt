@@ -4,12 +4,12 @@ import androidx.compose.runtime.mutableStateListOf
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
 import java.time.LocalDateTime
 
-class DiscoverViewModel : BaseViewModel() {
+class DiscoverViewModel : UiStateViewModel() {
 
     val infos = mutableStateListOf(
         DiscoverInfo.AIRING,

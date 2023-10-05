@@ -109,13 +109,13 @@ fun SwitchPreference(
     subtitle: String? = null,
     preferenceValue: Boolean?,
     @DrawableRes icon: Int? = null,
-    onValueChange: (Boolean?) -> Unit
+    onValueChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                onValueChange(preferenceValue?.not())
+                onValueChange(preferenceValue?.not() ?: false)
             },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -178,7 +178,7 @@ fun <T> ListPreference(
     modifier: Modifier = Modifier,
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
-    onValueChange: (T?) -> Unit
+    onValueChange: (T) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     var openDialog by remember { mutableStateOf(false) }

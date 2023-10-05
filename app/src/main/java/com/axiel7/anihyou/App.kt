@@ -1,70 +1,18 @@
 package com.axiel7.anihyou
 
 import android.app.Application
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
-import com.axiel7.anihyou.data.model.notification.NotificationInterval
-import com.axiel7.anihyou.type.MediaListSort
-import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.base.AppColorMode
-import com.axiel7.anihyou.ui.base.ListStyle
+import androidx.work.Configuration
+import androidx.work.WorkerFactory
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-class App : Application() {
+@HiltAndroidApp
+class App : Application(), Configuration.Provider {
 
-    init {
-        INSTANCE = this
-    }
+    @Inject
+    lateinit var workerFactory: WorkerFactory
 
-    override fun onCreate() {
-        super.onCreate()
-        dataStore = defaultPreferencesDataStore
-        accessToken = dataStore.getValueSync(ACCESS_TOKEN_PREFERENCE_KEY)
-    }
-
-    companion object {
-        lateinit var INSTANCE: App
-            private set
-        val applicationContext: Context get() = INSTANCE.applicationContext
-
-        lateinit var dataStore: DataStore<Preferences>
-
-        var accessToken: String? = null
-
-        var animeListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
-        var mangaListSort = MediaListSort.UPDATED_TIME_DESC.rawValue
-
-        var scoreFormat: ScoreFormat = ScoreFormat.POINT_10
-
-        var defaultHomeTab = 0
-        var airingOnMyList = false
-
-        var generalListStyle = ListStyle.STANDARD
-        var useGeneralListStyle = true
-
-        var gridItemsPerRow = 0
-
-        var animeCurrentListStyle = ListStyle.STANDARD
-        var animePlanningListStyle = ListStyle.STANDARD
-        var animeCompletedListStyle = ListStyle.STANDARD
-        var animePausedListStyle = ListStyle.STANDARD
-        var animeDroppedListStyle = ListStyle.STANDARD
-        var animeRepeatingListStyle = ListStyle.STANDARD
-
-        var mangaCurrentListStyle = ListStyle.STANDARD
-        var mangaPlanningListStyle = ListStyle.STANDARD
-        var mangaCompletedListStyle = ListStyle.STANDARD
-        var mangaPausedListStyle = ListStyle.STANDARD
-        var mangaDroppedListStyle = ListStyle.STANDARD
-        var mangaRepeatingListStyle = ListStyle.STANDARD
-
-        var enabledNotifications = false
-        var notificationInterval = NotificationInterval.DAILY
-
-        var appColor: String? = null
-        var appColorMode = AppColorMode.DEFAULT
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder().setWorkerFactory(workerFactory).build()
     }
 }

@@ -18,8 +18,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.axiel7.anihyou.data.PreferencesDataStore
-import com.axiel7.anihyou.ui.base.BottomDestination
-import com.axiel7.anihyou.ui.base.BottomDestination.Companion.Icon
+import com.axiel7.anihyou.ui.common.BottomDestination
+import com.axiel7.anihyou.ui.common.BottomDestination.Companion.Icon
 
 @Composable
 fun MainNavigationRail(

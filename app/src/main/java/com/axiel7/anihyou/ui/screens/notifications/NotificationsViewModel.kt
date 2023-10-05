@@ -12,12 +12,12 @@ import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
 import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class NotificationsViewModel(
     private val initialUnreadCount: Int = 0
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var type by mutableStateOf(NotificationTypeGroup.ALL)
     private var resetCount = true

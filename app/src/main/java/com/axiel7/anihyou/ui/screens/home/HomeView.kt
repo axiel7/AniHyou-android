@@ -56,6 +56,12 @@ enum class HomeTab(val index: Int) : Localizable {
             DISCOVER -> R.string.discover
             ACTIVITY_FEED -> R.string.activity
         }
+
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+
+        fun valueOf(index: Int) = entries.find { it.index == index }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

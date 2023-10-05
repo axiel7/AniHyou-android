@@ -10,12 +10,12 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.StudioRepository
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class StudioDetailsViewModel(
     private val studioId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var page = 1
     var hasNextPage = true

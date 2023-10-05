@@ -1,74 +1,62 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.CharacterDetailsQuery
-import com.axiel7.anihyou.CharacterMediaQuery
+import androidx.paging.cachedIn
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
-import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class CharacterDetailsViewModel(
-    private val characterId: Int
-) : BaseViewModel() {
+    savedStateHandle: SavedStateHandle,
+    characterRepository: CharacterRepository,
+    private val favoriteRepository: FavoriteRepository,
+) : UiStateViewModel<CharacterDetailsUiState>() {
 
-    var characterDetails by mutableStateOf<CharacterDetailsQuery.Character?>(null)
-    val alternativeNames by derivedStateOf {
-        characterDetails?.name?.alternative?.filterNotNull()?.joinToString()
-    }
-    val alternativeNamesSpoiler by derivedStateOf {
-        characterDetails?.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
-    }
+    private val characterId: Int = savedStateHandle[CHARACTER_ID_ARGUMENT.removeFirstAndLast()]!!
 
-    fun getCharacterDetails() = viewModelScope.launch(dispatcher) {
-        CharacterRepository.getCharacterDetails(characterId).collect { result ->
-            isLoading = result is DataResult.Loading
+    override val mutableUiState = MutableStateFlow(CharacterDetailsUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-            if (result is DataResult.Success) {
-                characterDetails = result.data
-            } else if (result is DataResult.Error) {
-                message = result.message
+    init {
+        characterRepository
+            .getCharacterDetails(characterId)
+            .onEach { result ->
+                result.handleDataResult { data ->
+                    mutableUiState.updateAndGet { it.copy(character = data) }
+                }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
-    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
-        characterDetails?.let { details ->
-            FavoriteRepository.toggleFavorite(
-                characterId = characterId
-            ).collect { result ->
-                if (result is DataResult.Success && result.data) {
-                    characterDetails = details.copy(isFavourite = !details.isFavourite)
+    fun toggleFavorite() = viewModelScope.launch {
+        favoriteRepository.toggleFavorite(
+            characterId = characterId
+        ).collect { result ->
+            if (result is DataResult.Success && result.data != null) {
+                mutableUiState.update {
+                    it.copy(
+                        character = it.character?.copy(
+                            isFavourite = it.character.isFavourite.not()
+                        )
+                    )
                 }
             }
         }
     }
 
-    private var page = 1
-    var hasNextPage = true
-    var characterMedia = mutableStateListOf<CharacterMediaQuery.Edge>()
-
-    fun getCharacterMedia() = viewModelScope.launch(dispatcher) {
-        CharacterRepository.getCharacterMediaPage(
-            characterId = characterId,
-            page = page,
-        ).collect { result ->
-            isLoading = page == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                characterMedia.addAll(result.data)
-                page = result.nextPage ?: page
-                hasNextPage = result.nextPage != null
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
-    }
+    val characterMedia = characterRepository
+        .getCharacterMediaPage(characterId)
+        .cachedIn(viewModelScope)
 }

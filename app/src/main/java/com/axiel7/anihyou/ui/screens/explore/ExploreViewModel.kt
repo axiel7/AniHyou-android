@@ -12,10 +12,10 @@ import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
-class ExploreViewModel : BaseViewModel() {
+class ExploreViewModel : UiStateViewModel() {
 
     private val perPage = 25
     var page = 1

@@ -11,14 +11,14 @@ import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ThreadDetailsViewModel(
     private val threadId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var threadDetails = ThreadRepository.getThreadDetails(threadId)
         .onEach {

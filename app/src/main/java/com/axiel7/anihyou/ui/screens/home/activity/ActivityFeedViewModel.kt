@@ -13,10 +13,10 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
-class ActivityFeedViewModel : BaseViewModel() {
+class ActivityFeedViewModel : UiStateViewModel() {
 
     var isFollowing by mutableStateOf(true)
         private set

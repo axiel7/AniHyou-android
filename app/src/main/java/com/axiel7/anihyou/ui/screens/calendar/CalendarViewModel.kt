@@ -1,55 +1,55 @@
 package com.axiel7.anihyou.ui.screens.calendar
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.AiringAnimesQuery
+import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.axiel7.anihyou.data.repository.MediaRepository
-import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.thisWeekdayTimestamp
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import java.time.DayOfWeek
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class CalendarViewModel : BaseViewModel() {
+@HiltViewModel
+class CalendarViewModel @Inject constructor(
+    private val mediaRepository: MediaRepository
+) : UiStateViewModel<CalendarUiState>() {
+
+    override val mutableUiState = MutableStateFlow(CalendarUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
     private val now: LocalDateTime = LocalDateTime.now()
 
-    private var page = 1
-    var hasNextPage = false
-    val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
-    var onMyList = false
+    fun setOnMyList(value: Boolean) = mutableUiState.update { it.copy(onMyList = value) }
 
-    fun getAiringAnime(weekday: Int) = viewModelScope.launch(dispatcher) {
-        val weekdayStartTimestamp = now.thisWeekdayTimestamp(
-            dayOfWeek = DayOfWeek.of(weekday),
-            isEndOfDay = false
-        )
-        val weekdayEndTimestamp = now.thisWeekdayTimestamp(
-            dayOfWeek = DayOfWeek.of(weekday),
-            isEndOfDay = true
-        )
+    fun setWeekday(value: Int) = mutableUiState.update { it.copy(weekday = value) }
 
-        MediaRepository.getAiringAnimePage(
-            airingAtGreater = weekdayStartTimestamp,
-            airingAtLesser = weekdayEndTimestamp,
-            page = page,
-            perPage = 25
-        ).collect { result ->
-            isLoading = page == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                if (onMyList) weeklyAnime.addAll(result.data.filter { it.media?.mediaListEntry != null })
-                else weeklyAnime.addAll(result.data)
-                hasNextPage = result.nextPage != null
-                page = result.nextPage ?: page
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val weeklyAnime =
+        uiState
+            .flatMapLatest { uiState ->
+                val start = now.thisWeekdayTimestamp(
+                    dayOfWeek = DayOfWeek.of(uiState.weekday),
+                    isEndOfDay = false
+                )
+                val end = now.thisWeekdayTimestamp(
+                    dayOfWeek = DayOfWeek.of(uiState.weekday),
+                    isEndOfDay = true
+                )
+                mediaRepository.getAiringAnimesPage(
+                    airingAtGreater = start,
+                    airingAtLesser = end,
+                ).map { pagingData ->
+                    if (uiState.onMyList) pagingData.filter { it.media?.mediaListEntry != null }
+                    else pagingData
+                }
             }
-        }
-    }
-
-    fun resetPage() {
-        page = 1
-        hasNextPage = false
-        weeklyAnime.clear()
-    }
+            .cachedIn(viewModelScope)
 }

@@ -20,11 +20,11 @@ import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.base.AppColorMode
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
-class ProfileViewModel : BaseViewModel() {
+class ProfileViewModel : UiStateViewModel() {
 
     var userId = 0
     var userInfo by mutableStateOf<UserInfo?>(null)

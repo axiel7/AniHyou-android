@@ -13,7 +13,7 @@ import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
@@ -23,7 +23,7 @@ import java.time.LocalDate
 class EditMediaViewModel(
     private val mediaDetails: BasicMediaDetails,
     var listEntry: BasicMediaListEntry?
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     val isNewEntry by derivedStateOf { listEntry == null }
 

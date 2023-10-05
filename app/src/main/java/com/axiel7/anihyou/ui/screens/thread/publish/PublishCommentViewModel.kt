@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.ThreadRepository
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
-class PublishCommentViewModel : BaseViewModel() {
+class PublishCommentViewModel : UiStateViewModel() {
 
     var wasPublished by mutableStateOf<Boolean?>(null)
 

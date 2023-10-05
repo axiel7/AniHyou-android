@@ -9,12 +9,12 @@ import com.axiel7.anihyou.FollowersQuery
 import com.axiel7.anihyou.FollowingsQuery
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class UserSocialViewModel(
     private val userId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
         private set

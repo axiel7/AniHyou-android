@@ -1,33 +1,33 @@
 package com.axiel7.anihyou.ui.screens.activitydetails.publish
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.repository.ActivityRepository
-import com.axiel7.anihyou.data.repository.DataResult
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PublishActivityViewModel : BaseViewModel() {
+@HiltViewModel
+class PublishActivityViewModel @Inject constructor(
+    private val activityRepository: ActivityRepository
+) : UiStateViewModel<PublishActivityUiState>() {
 
-    var wasPublished by mutableStateOf<Boolean?>(null)
+    override val mutableUiState = MutableStateFlow(PublishActivityUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
     fun publishActivity(
         id: Int? = null,
         text: String
-    ) = viewModelScope.launch(dispatcher) {
-        ActivityRepository.updateTextActivity(
+    ) = viewModelScope.launch {
+        activityRepository.updateTextActivity(
             id = id,
             text = text
         ).collect { result ->
-            isLoading = result is DataResult.Loading
-
-            if (result is DataResult.Success) {
-                wasPublished = result.data
-            } else if (result is DataResult.Error) {
-                wasPublished = false
-                message = result.message
+            result.handleDataResult { data ->
+                mutableUiState.updateAndGet { it.copy(wasPublished = data != null) }
             }
         }
     }
@@ -36,19 +36,14 @@ class PublishActivityViewModel : BaseViewModel() {
         activityId: Int,
         id: Int? = null,
         text: String
-    ) = viewModelScope.launch(dispatcher) {
-        ActivityRepository.updateActivityReply(
+    ) = viewModelScope.launch {
+        activityRepository.updateActivityReply(
             activityId = activityId,
             id = id,
             text = text
         ).collect { result ->
-            isLoading = result is DataResult.Loading
-
-            if (result is DataResult.Success) {
-                wasPublished = result.data
-            } else if (result is DataResult.Error) {
-                wasPublished = false
-                message = result.message
+            result.handleDataResult { data ->
+                mutableUiState.updateAndGet { it.copy(wasPublished = data != null) }
             }
         }
     }

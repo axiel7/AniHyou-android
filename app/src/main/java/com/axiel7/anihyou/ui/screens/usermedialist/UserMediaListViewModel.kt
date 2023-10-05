@@ -17,13 +17,13 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class UserMediaListViewModel(
     val mediaType: MediaType,
     val userId: Int?,
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var status by mutableStateOf(MediaListStatus.CURRENT)
         private set

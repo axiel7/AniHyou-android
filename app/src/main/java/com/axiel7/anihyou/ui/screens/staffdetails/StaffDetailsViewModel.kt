@@ -12,12 +12,12 @@ import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.StaffRepository
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.UiStateViewModel
 import kotlinx.coroutines.launch
 
 class StaffDetailsViewModel(
     private val staffId: Int
-) : BaseViewModel() {
+) : UiStateViewModel() {
 
     var staffDetails by mutableStateOf<StaffDetailsQuery.Staff?>(null)
 

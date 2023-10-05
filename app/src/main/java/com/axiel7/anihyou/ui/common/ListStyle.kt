@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.base
+package com.axiel7.anihyou.ui.common
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
@@ -20,4 +20,8 @@ enum class ListStyle : Localizable {
 
     @Composable
     override fun localized() = stringResource(stringRes)
+
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+    }
 }
