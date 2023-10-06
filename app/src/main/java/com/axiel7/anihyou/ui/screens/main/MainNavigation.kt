@@ -20,9 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.ChartType
-import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination
@@ -53,10 +51,10 @@ import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
-import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ANIME_DESTINATION
-import com.axiel7.anihyou.ui.screens.explore.charts.SEASON_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.charts.SeasonAnimeView
-import com.axiel7.anihyou.ui.screens.explore.charts.YEAR_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ANIME_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
+import com.axiel7.anihyou.ui.screens.explore.season.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
@@ -493,10 +491,6 @@ fun MainNavigation(
             navEntry.arguments?.getString(SEASON_ARGUMENT.removeFirstAndLast())?.let { season ->
                 navEntry.arguments?.getInt(YEAR_ARGUMENT.removeFirstAndLast())?.let { year ->
                     SeasonAnimeView(
-                        initialSeason = AnimeSeason(
-                            year = year,
-                            season = MediaSeason.valueOf(season)
-                        ),
                         navigateBack = navigateBack,
                         navigateToMediaDetails = navigateToMediaDetails
                     )

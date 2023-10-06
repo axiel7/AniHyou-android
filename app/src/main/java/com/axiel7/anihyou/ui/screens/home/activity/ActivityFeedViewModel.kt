@@ -1,75 +1,62 @@
 package com.axiel7.anihyou.ui.screens.home.activity
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.ActivityFeedQuery
+import androidx.paging.cachedIn
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
-import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.repository.ActivityRepository
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.UiStateViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ActivityFeedViewModel : UiStateViewModel() {
+@HiltViewModel
+class ActivityFeedViewModel @Inject constructor(
+    private val activityRepository: ActivityRepository,
+    private val likeRepository: LikeRepository,
+) : UiStateViewModel<ActivityFeedUiState>() {
 
-    var isFollowing by mutableStateOf(true)
-        private set
+    override val mutableUiState = MutableStateFlow(ActivityFeedUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-    fun onIsFollowingChanged(value: Boolean) {
-        isFollowing = value
-        refresh(refreshCache = false)
+    fun setIsFollowing(value: Boolean) = mutableUiState.update { it.copy(isLoading = value) }
+
+    fun setType(value: ActivityTypeGrouped?) = mutableUiState.update { it.copy(type = value) }
+
+    private val refreshCache = MutableStateFlow(false)
+    fun setRefreshCache(value: Boolean) {
+        refreshCache.update { value }
+        mutableUiState.update { it }
     }
 
-    var type by mutableStateOf<ActivityTypeGrouped?>(null)
-        private set
-
-    fun onTypeChanged(value: ActivityTypeGrouped?) {
-        type = value
-        refresh(refreshCache = false)
-    }
-
-    private var page = 1
-    var hasNextPage = true
-    val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
-
-    fun getActivityFeed(refreshCache: Boolean = false) = viewModelScope.launch(dispatcher) {
-        ActivityRepository.getActivityFeed(
-            isFollowing = isFollowing,
-            type = type,
-            refreshCache = refreshCache,
-            page = page
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading && page == 1
-
-            if (result is PagedResult.Success) {
-                activities.addAll(result.data)
-                hasNextPage = result.nextPage != null
-                page = result.nextPage ?: page
-            }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val activities = uiState
+        .flatMapLatest {
+            activityRepository.getActivityFeed(
+                isFollowing = it.isFollowing,
+                type = it.type,
+                refreshCache = refreshCache.value,
+            )
         }
-    }
-
-    fun refresh(refreshCache: Boolean) {
-        page = 1
-        hasNextPage = false
-        activities.clear()
-        getActivityFeed(refreshCache)
-    }
+        .onCompletion {
+            if (refreshCache.value) setRefreshCache(false)
+        }
+        .cachedIn(viewModelScope)
 
     fun toggleLikeActivity(id: Int) = viewModelScope.launch {
-        LikeRepository.toggleLike(
+        likeRepository.toggleLike(
             likeableId = id,
             type = LikeableType.ACTIVITY
         ).collect { result ->
-            if (result is DataResult.Success) {
-                val isLiked = result.data
-                val foundIndex = activities.indexOfFirst {
+            result.handleDataResult { data ->
+                /*val foundIndex = activities.indexOfFirst {
                     it.onListActivity?.listActivityFragment?.id == id
                             || it.onTextActivity?.textActivityFragment?.id == id
                 }
@@ -85,7 +72,8 @@ class ActivityFeedViewModel : UiStateViewModel() {
                                 .updateLikeStatus(isLiked)
                         )
                     )
-                }
+                }*/
+                null
             }
         }
     }

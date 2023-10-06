@@ -73,6 +73,7 @@ fun ExploreView(
     var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(initialMediaType != null) }
     var isSearchActive by rememberSaveable { mutableStateOf(openSearch || initialMediaType != null) }
+
     val searchHorizontalPadding by animateDpAsState(
         targetValue = if (!isSearchActive) 16.dp else 0.dp,
         label = "searchHorizontalPadding"

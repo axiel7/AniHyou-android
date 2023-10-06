@@ -46,12 +46,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextCheckbox
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -69,31 +68,32 @@ private enum class GenresTagsSheetTab {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GenresTagsSheet(
-    viewModel: SearchViewModel,
+    genreCollection: List<SelectableGenre>,
+    tagCollection: List<SelectableGenre>,
     sheetState: SheetState,
-    bottomPadding: Dp,
+    bottomPadding: Dp = 0.dp,
+    onGenreSelected: (SelectableGenre) -> Unit,
+    onTagSelected: (SelectableGenre) -> Unit,
+    fetchCollection: () -> Unit,
+    isLoadingCollection: Boolean,
+    unselectAll: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-    val genresList by remember {
-        derivedStateOf { viewModel.genreCollection.toList().sortedBy { it.first } }
-    }
-    val tagsList by remember {
-        derivedStateOf { viewModel.tagCollection.toList().sortedBy { it.first } }
-    }
     var filter by remember { mutableStateOf("") }
+
     val filteredList by remember {
         derivedStateOf {
             when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
                 GenresTagsSheetTab.GENRES ->
                     if (filter.isNotBlank())
-                        genresList.filter { it.first.contains(filter, ignoreCase = true) }
-                    else genresList
+                        genreCollection.filter { it.name.contains(filter, ignoreCase = true) }
+                    else genreCollection
 
                 GenresTagsSheetTab.TAGS ->
                     if (filter.isNotBlank())
-                        tagsList.filter { it.first.contains(filter, ignoreCase = true) }
-                    else tagsList
+                        tagCollection.filter { it.name.contains(filter, ignoreCase = true) }
+                    else tagCollection
             }
         }
     }
@@ -105,9 +105,9 @@ fun GenresTagsSheet(
         scope.launch { if (isKeyboardVisible) sheetState.expand() }
     }
 
-    LaunchedEffect(viewModel) {
-        if (viewModel.genreCollection.isEmpty() || viewModel.tagCollection.isEmpty())
-            viewModel.getGenreTagCollection()
+    LaunchedEffect(Unit) {
+        if (genreCollection.isEmpty() || tagCollection.isEmpty())
+            fetchCollection()
     }
 
     ModalBottomSheet(
@@ -127,7 +127,7 @@ fun GenresTagsSheet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TextButton(
-                    onClick = { viewModel.unselectAllGenresAndTags() },
+                    onClick = unselectAll,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
@@ -183,7 +183,7 @@ fun GenresTagsSheet(
                 }
             )
 
-            if (viewModel.isLoadingGenres) {
+            if (isLoadingCollection) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -197,14 +197,15 @@ fun GenresTagsSheet(
             LazyColumn {
                 items(filteredList) { item ->
                     TextCheckbox(
-                        text = item.first,
-                        checked = item.second,
-                        onCheckedChange = {
+                        text = item.name,
+                        checked = item.isSelected,
+                        onCheckedChange = { isChecked ->
                             when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
-                                GenresTagsSheetTab.GENRES -> viewModel.genreCollection[item.first] =
-                                    it
+                                GenresTagsSheetTab.GENRES ->
+                                    onGenreSelected(item.copy(isSelected = isChecked))
 
-                                GenresTagsSheetTab.TAGS -> viewModel.tagCollection[item.first] = it
+                                GenresTagsSheetTab.TAGS ->
+                                    onTagSelected(item.copy(isSelected = isChecked))
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -222,9 +223,14 @@ fun GenresTagsSheetPreview() {
     AniHyouTheme {
         Surface {
             GenresTagsSheet(
-                viewModel = viewModel(),
+                genreCollection = emptyList(),
+                tagCollection = emptyList(),
                 sheetState = rememberModalBottomSheetState(),
-                bottomPadding = 0.dp,
+                onGenreSelected = {},
+                onTagSelected = {},
+                fetchCollection = {},
+                isLoadingCollection = false,
+                unselectAll = {},
                 onDismiss = {}
             )
         }

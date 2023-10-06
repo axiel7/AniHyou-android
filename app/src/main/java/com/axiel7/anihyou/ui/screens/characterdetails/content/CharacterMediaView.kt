@@ -34,8 +34,8 @@ fun CharacterMediaView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (pagingItems.loadState.refresh is LoadState.Loading) {
-            item {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            items(10) {
+                MediaItemHorizontalPlaceholder()
             }
         }
         items(
@@ -70,8 +70,8 @@ fun CharacterMediaView(
             }
         }
         if (pagingItems.loadState.append is LoadState.Loading) {
-            items(10) {
-                MediaItemHorizontalPlaceholder()
+            item {
+                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             }
         } else if (pagingItems.itemCount == 0) {
             item {

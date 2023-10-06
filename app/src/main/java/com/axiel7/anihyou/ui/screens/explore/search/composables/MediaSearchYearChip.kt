@@ -11,24 +11,24 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.GenericLocalizable
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.utils.DateUtils
 
 @Composable
 fun MediaSearchYearChip(
-    viewModel: SearchViewModel
+    selectedYear: Int?,
+    onYearChanged: (Int?) -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
     if (openDialog) {
         DialogWithRadioSelection(
             values = DateUtils.seasonYears.map { GenericLocalizable(it) }.toTypedArray(),
-            defaultValue = GenericLocalizable(viewModel.selectedYear),
+            defaultValue = GenericLocalizable(selectedYear),
             title = stringResource(R.string.year),
             isDeselectable = true,
             onConfirm = {
                 openDialog = false
-                viewModel.onYearChanged(it?.value)
+                onYearChanged(it?.value)
             },
             onDismiss = { openDialog = false }
         )

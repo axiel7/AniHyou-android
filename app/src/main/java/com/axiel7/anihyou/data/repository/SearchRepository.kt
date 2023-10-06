@@ -1,7 +1,11 @@
 package com.axiel7.anihyou.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.GenresAndTags
+import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.paging.SearchMediaPagingSourceFactory
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
@@ -9,7 +13,8 @@ import com.axiel7.anihyou.type.MediaType
 import javax.inject.Inject
 
 class SearchRepository @Inject constructor(
-    private val mediaApi: MediaApi
+    private val mediaApi: MediaApi,
+    private val searchMediaPagingSourceFactory: SearchMediaPagingSourceFactory
 ) {
 
     fun searchMedia(
@@ -22,10 +27,20 @@ class SearchRepository @Inject constructor(
         statusIn: List<MediaStatus>? = null,
         year: Int? = null,
         onList: Boolean? = null,
-        page: Int = 1,
-        perPage: Int = 25,
+    ) = Pager(
+        config = PagingConfig(pageSize = 25)
     ) {
-        TODO("use pagination")
+        searchMediaPagingSourceFactory.create(
+            mediaType,
+            query,
+            sort,
+            genreIn,
+            tagIn,
+            formatIn,
+            statusIn,
+            year,
+            onList
+        )
     }
 
     fun searchCharacter(
@@ -65,8 +80,10 @@ class SearchRepository @Inject constructor(
         .toFlow()
         .asDataResult { data ->
             GenresAndTags(
-                genres = data.GenreCollection?.filterNotNull().orEmpty(),
+                genres = data.GenreCollection?.filterNotNull().orEmpty()
+                    .map { SelectableGenre(it, false) },
                 tags = data.MediaTagCollection?.filterNotNull()?.map { it.name }.orEmpty()
+                    .map { SelectableGenre(it, false) }
             )
         }
 }

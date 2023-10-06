@@ -5,16 +5,22 @@ import androidx.paging.PagingConfig
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.api.MediaApi
+import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.data.paging.AiringAnimePagingSourceFactory
+import com.axiel7.anihyou.data.paging.AnimeSeasonalPagingSourceFactory
+import com.axiel7.anihyou.data.paging.MediaChartPagingSourceFactory
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaStatus
 import javax.inject.Inject
 
 class MediaRepository @Inject constructor(
     private val api: MediaApi,
-    private val airingAnimePagingSourceFactory: AiringAnimePagingSourceFactory
+    private val airingAnimePagingSourceFactory: AiringAnimePagingSourceFactory,
+    private val mediaChartPagingSourceFactory: MediaChartPagingSourceFactory,
+    private val animeSeasonalPagingSourceFactory: AnimeSeasonalPagingSourceFactory,
 ) {
 
     fun getAiringAnimesPage(
@@ -25,6 +31,22 @@ class MediaRepository @Inject constructor(
         config = PagingConfig(pageSize = 25),
     ) {
         airingAnimePagingSourceFactory.create(airingAtGreater, airingAtLesser, sort)
+    }.flow
+
+    fun getMediaChartPage(
+        type: ChartType
+    ) = Pager(
+        config = PagingConfig(pageSize = 25)
+    ) {
+        mediaChartPagingSourceFactory.create(type)
+    }.flow
+
+    fun getSeasonalAnimePage(
+        animeSeason: AnimeSeason
+    ) = Pager(
+        config = PagingConfig(pageSize = 25),
+    ) {
+        animeSeasonalPagingSourceFactory.create(animeSeason)
     }.flow
 
     fun getMediaDetails(mediaId: Int) = api

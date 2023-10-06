@@ -11,22 +11,22 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.ui.composables.DialogWithCheckboxSelection
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 
 @Composable
 fun MediaSearchStatusChip(
-    viewModel: SearchViewModel
+    selectedMediaStatuses: List<MediaStatusLocalizable>,
+    onMediaStatusesChanged: (List<MediaStatusLocalizable>) -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
     if (openDialog) {
         DialogWithCheckboxSelection(
             values = MediaStatusLocalizable.entries.toTypedArray(),
-            defaultValues = viewModel.selectedMediaStatuses.toTypedArray(),
+            defaultValues = selectedMediaStatuses.toTypedArray(),
             title = stringResource(R.string.media_status),
             onConfirm = {
                 openDialog = false
-                viewModel.onMediaStatusChanged(it)
+                onMediaStatusesChanged(it)
             },
             onDismiss = { openDialog = false }
         )

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.explore.charts
+package com.axiel7.anihyou.ui.screens.explore.season
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,10 +16,9 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
@@ -33,13 +32,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +45,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.icon
@@ -57,12 +58,10 @@ import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
-import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
-import com.axiel7.anihyou.ui.screens.explore.ExploreViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 import kotlinx.coroutines.launch
@@ -74,54 +73,34 @@ const val SEASON_ANIME_DESTINATION = "season/$YEAR_ARGUMENT/$SEASON_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeasonAnimeView(
-    initialSeason: AnimeSeason,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val viewModel: ExploreViewModel = viewModel()
+    val viewModel: SeasonAnimeViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pagingItems = viewModel.animeSeasonal.collectAsLazyPagingItems()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val listState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
-    var season by rememberSaveable { mutableStateOf(initialSeason.season) }
-    var year by rememberSaveable { mutableIntStateOf(initialSeason.year) }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage && !viewModel.isLoading)
-            viewModel.getAnimeSeasonal(
-                season = season,
-                year = year
-            )
-    }
-
-    LaunchedEffect(season, year) {
-        if (!viewModel.isLoading) {
-            viewModel.getAnimeSeasonal(
-                season = season,
-                year = year,
-                resetPage = true
-            )
-        }
-    }
 
     if (sheetState.isVisible) {
         SeasonChartFilterSheet(
             sheetState = sheetState,
-            initialSeason = AnimeSeason(year, season),
+            initialSeason = uiState.season,
             onDismiss = { scope.launch { sheetState.hide() } },
             onConfirm = {
-                season = it.season
-                year = it.year
+                viewModel.setSeason(it)
                 scope.launch { sheetState.hide() }
             }
         )
     }
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = "${season.localized()} $year",
+        title = "${uiState.season.season.localized()} ${uiState.season.year}",
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { scope.launch { sheetState.show() } },
@@ -145,32 +124,38 @@ fun SeasonAnimeView(
             modifier = Modifier
                 .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            items(
-                items = viewModel.animeSeasonal,
-                key = { it.id },
-                contentType = { it }
-            ) { item ->
-                MediaItemVertical(
-                    title = item.title?.userPreferred ?: "",
-                    imageUrl = item.coverImage?.large,
-                    modifier = Modifier.wrapContentWidth(),
-                    subtitle = {
-                        SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
-                    },
-                    minLines = 2,
-                    onClick = {
-                        navigateToMediaDetails(item.id)
-                    }
-                )
-            }
-            if (viewModel.isLoading) {
+            if (pagingItems.loadState.refresh is LoadState.Loading) {
                 items(13) {
                     MediaItemVerticalPlaceholder()
+                }
+            }
+            items(
+                count = pagingItems.itemCount,
+                key = pagingItems.itemKey { it.id },
+                contentType = { it }
+            ) { index ->
+                pagingItems[index]?.let { item ->
+                    MediaItemVertical(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        modifier = Modifier.wrapContentWidth(),
+                        subtitle = {
+                            SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
+                        },
+                        minLines = 2,
+                        onClick = {
+                            navigateToMediaDetails(item.id)
+                        }
+                    )
+                }
+            }
+            if (pagingItems.loadState.append is LoadState.Loading) {
+                item {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
             }
         }//: Grid
@@ -259,10 +244,6 @@ fun SeasonAnimeViewPreview() {
     AniHyouTheme {
         Surface {
             SeasonAnimeView(
-                initialSeason = AnimeSeason(
-                    year = 2023,
-                    season = MediaSeason.SPRING
-                ),
                 navigateBack = {},
                 navigateToMediaDetails = {}
             )

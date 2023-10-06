@@ -12,23 +12,24 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DialogWithCheckboxSelection
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 
 @Composable
 fun MediaSearchFormatChip(
-    viewModel: SearchViewModel
+    mediaType: MediaType,
+    selectedMediaFormats: List<MediaFormatLocalizable>,
+    onMediaFormatsChanged: (List<MediaFormatLocalizable>) -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
     if (openDialog) {
         DialogWithCheckboxSelection(
-            values = if (viewModel.mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
+            values = if (mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
             else MediaFormatLocalizable.mangaEntries,
-            defaultValues = viewModel.selectedMediaFormats.toTypedArray(),
+            defaultValues = selectedMediaFormats.toTypedArray(),
             title = stringResource(R.string.format),
             onConfirm = {
                 openDialog = false
-                viewModel.onMediaFormatChanged(it)
+                onMediaFormatsChanged(it)
             },
             onDismiss = { openDialog = false }
         )

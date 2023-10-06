@@ -1,171 +1,102 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.SearchCharacterQuery
-import com.axiel7.anihyou.SearchMediaQuery
-import com.axiel7.anihyou.SearchStaffQuery
-import com.axiel7.anihyou.SearchStudioQuery
-import com.axiel7.anihyou.SearchUserQuery
+import androidx.paging.cachedIn
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
-import com.axiel7.anihyou.data.repository.DataResult
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.UiStateViewModel
-import kotlinx.coroutines.Dispatchers
+import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(
-    initialMediaType: MediaType?,
-    initialMediaSort: MediaSort?,
-    initialGenre: String?,
-    initialTag: String?,
-) : UiStateViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val searchRepository: SearchRepository,
+) : UiStateViewModel<SearchUiState>() {
 
-    private val perPage = 25
+    private val initialMediaType = savedStateHandle
+        .get<String?>(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())?.let { MediaType.valueOf(it) }
 
-    var searchType by mutableStateOf(
-        if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME
+    private val initialMediaSort = savedStateHandle
+        .get<String?>(MEDIA_SORT_ARGUMENT.removeFirstAndLast())?.let { MediaSort.valueOf(it) }
+
+    private val initialGenre: String? = savedStateHandle[GENRE_ARGUMENT.removeFirstAndLast()]
+
+    private val initialTag: String? = savedStateHandle[TAG_ARGUMENT.removeFirstAndLast()]
+
+    override val mutableUiState = MutableStateFlow(
+        SearchUiState(
+            searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
+            mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
+            genreCollection = if (initialGenre != null)
+                listOf(SelectableGenre(initialGenre, true)) else emptyList(),
+            tagCollection = if (initialTag != null)
+                listOf(SelectableGenre(initialTag, true)) else emptyList(),
+        )
     )
-        private set
+    override val uiState = mutableUiState.asStateFlow()
 
-    fun onSearchTypeChanged(value: SearchType) {
-        searchType = value
-    }
+    fun setQuery(value: String) = mutableUiState.update { it.copy(query = value) }
 
-    val mediaType by derivedStateOf {
-        when (searchType) {
-            SearchType.ANIME -> MediaType.ANIME
-            SearchType.MANGA -> MediaType.MANGA
-            else -> null
+    fun setSearchType(value: SearchType) = mutableUiState.update { it.copy(searchType = value) }
+
+    fun setMediaSort(value: MediaSort) = mutableUiState.update { it.copy(mediaSort = value) }
+
+    fun setMediaFormats(values: List<MediaFormatLocalizable>) =
+        mutableUiState.update { it.copy(selectedMediaFormats = values) }
+
+    fun setMediaStatuses(values: List<MediaStatusLocalizable>) =
+        mutableUiState.update { it.copy(selectedMediaStatuses = values) }
+
+    fun setYear(value: Int?) = mutableUiState.update { it.copy(selectedYear = value) }
+
+    fun setOnMyList(value: Boolean) = mutableUiState.update { it.copy(onMyList = value) }
+
+    val searchedMedia = uiState
+        .filter {
+            it.performSearch
+                    && it.mediaType != null
+                    && it.query.isNotBlank()
         }
-    }
-
-    var mediaSort by mutableStateOf(initialMediaSort ?: MediaSort.SEARCH_MATCH)
-        private set
-
-    fun onMediaSortChanged(value: MediaSort) {
-        mediaSort = value
-    }
-
-    val genreCollection = if (initialGenre != null) mutableStateMapOf(initialGenre to true)
-    else mutableStateMapOf()
-
-    val tagCollection = if (initialTag != null) mutableStateMapOf(initialTag to true)
-    else mutableStateMapOf()
-
-    val selectedGenres by derivedStateOf { genreCollection.filter { it.value } }
-    val selectedTags by derivedStateOf { tagCollection.filter { it.value } }
-
-    val selectedMediaFormats = mutableStateListOf<MediaFormatLocalizable>()
-    fun onMediaFormatChanged(values: List<MediaFormatLocalizable>) {
-        selectedMediaFormats.clear()
-        selectedMediaFormats.addAll(values)
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
+        .map { it.copy(performSearch = false) }
+        .flatMapLatest { uiState ->
+            searchRepository.searchMedia(
+                mediaType = uiState.mediaType!!,
+                query = uiState.query,
+                sort = listOf(uiState.mediaSortForSearch),
+                genreIn = uiState.selectedGenres.map { it.name },
+                tagIn = uiState.selectedTags.map { it.name },
+                formatIn = uiState.selectedMediaFormats.map { it.value },
+                statusIn = uiState.selectedMediaStatuses.map { it.value },
+                year = uiState.selectedYear,
+                onList = if (uiState.onMyList) true else null,
+            ).flow
         }
-    }
+        .cachedIn(viewModelScope)
 
-    val selectedMediaStatuses = mutableStateListOf<MediaStatusLocalizable>()
-    fun onMediaStatusChanged(values: List<MediaStatusLocalizable>) {
-        selectedMediaStatuses.clear()
-        selectedMediaStatuses.addAll(values)
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
-    }
-
-    var selectedYear by mutableStateOf<Int?>(null)
-        private set
-
-    fun onYearChanged(value: Int?) {
-        selectedYear = value
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
-    }
-
-    var onMyList by mutableStateOf(false)
-        private set
-
-    fun onMyListChanged(value: Boolean) {
-        onMyList = value
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
-    }
-
-    private var lastQuery = ""
-    fun runSearch(query: String) {
-        lastQuery = query
-        when (searchType) {
-            SearchType.ANIME -> searchMedia(MediaType.ANIME, query, resetPage = true)
-            SearchType.MANGA -> searchMedia(MediaType.MANGA, query, resetPage = true)
-            SearchType.CHARACTER -> searchCharacter(query)
-            SearchType.STAFF -> searchStaff(query)
-            SearchType.STUDIO -> searchStudio(query)
-            SearchType.USER -> searchUser(query)
-        }
-    }
-
-    private var pageMedia = 1
-    private var hasNextPageMedia = true
-    val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
-
-    fun searchMedia(
-        mediaType: MediaType,
-        query: String,
-        resetPage: Boolean
-    ) = viewModelScope.launch(dispatcher) {
-        if (resetPage) pageMedia = 1
-
-        val selectedGenres = genreCollection.filterValues { it }.keys.toList()
-        val selectedTags = tagCollection.filterValues { it }.keys.toList()
-
-        if ((selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()
-            || selectedMediaFormats.isNotEmpty() || selectedMediaStatuses.isNotEmpty()
-            || selectedYear != null)
-            && mediaSort == MediaSort.SEARCH_MATCH
-        ) {
-            mediaSort = MediaSort.POPULARITY_DESC
-        }
-
-        SearchRepository.searchMedia(
-            mediaType = mediaType,
-            query = query,
-            sort = listOf(mediaSort),
-            genreIn = selectedGenres,
-            tagIn = selectedTags,
-            formatIn = selectedMediaFormats.map { it.value },
-            statusIn = selectedMediaStatuses.map { it.value },
-            year = selectedYear,
-            onList = onMyList,
-            page = pageMedia,
-            perPage = perPage,
-        ).collect { result ->
-            isLoading = pageMedia == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                if (resetPage) searchedMedia.clear()
-                searchedMedia.addAll(result.data)
-                hasNextPageMedia = result.nextPage != null
-                pageMedia = result.nextPage ?: pageMedia
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
-    }
-
-    val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
+    //TODO: other search types
+    /*val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
 
     private fun searchCharacter(query: String) = viewModelScope.launch(dispatcher) {
         SearchRepository.searchCharacter(query = query).collect { result ->
@@ -223,41 +154,61 @@ class SearchViewModel(
                 message = result.message
             }
         }
-    }
+    }*/
 
-    var isLoadingGenres by mutableStateOf(false)
-        private set
+    fun getGenreTagCollection() = viewModelScope.launch {
+        searchRepository.getGenreTagCollection().collect { result ->
+            result.handleDataResult { data ->
+                mutableUiState.updateAndGet { uiState ->
+                    val externalGenre = uiState.externalGenre
 
-    fun getGenreTagCollection() = viewModelScope.launch(dispatcher) {
-        SearchRepository.getGenreTagCollection().collect { result ->
-            isLoadingGenres = result is DataResult.Loading
+                    val externalTag = uiState.externalTag
 
-            if (result is DataResult.Success) {
-                result.data.genres.forEach {
-                    genreCollection[it] = false
+                    uiState.copy(
+                        genreCollection = data.genres.map {
+                            if (it == externalGenre) it.copy(isSelected = true) else it
+                        },
+                        tagCollection = data.tags.map {
+                            if (it == externalTag) it.copy(isSelected = true) else it
+                        }
+                    )
                 }
-                val externalGenre =
-                    if (genreCollection.size == 1) genreCollection.firstNotNullOf { it.key }
-                    else null
-                externalGenre?.let { genreCollection[externalGenre] = true }
-
-                result.data.tags.forEach {
-                    tagCollection[it] = false
-                }
-                val externalTag =
-                    if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
-                    else null
-                externalTag?.let { tagCollection[externalTag] = true }
-            } else if (result is DataResult.Error) {
-                message = result.message
             }
         }
     }
 
-    fun unselectAllGenresAndTags() {
-        viewModelScope.launch(Dispatchers.IO) {
-            genreCollection.forEach { (t, _) -> genreCollection[t] = false }
-            tagCollection.forEach { (t, _) -> tagCollection[t] = false }
+    fun onGenreUpdated(value: SelectableGenre) = viewModelScope.launch {
+        mutableUiState.update { uiState ->
+            val mutableList = uiState.genreCollection.toMutableList()
+            val foundIndex = mutableList.indexOf(value)
+            if (foundIndex != -1) {
+                mutableList[foundIndex] = value
+                uiState.copy(
+                    genreCollection = mutableList.toList()
+                )
+            } else uiState
+        }
+    }
+
+    fun onTagUpdated(value: SelectableGenre) = viewModelScope.launch {
+        mutableUiState.update { uiState ->
+            val mutableList = uiState.tagCollection.toMutableList()
+            val foundIndex = mutableList.indexOf(value)
+            if (foundIndex != -1) {
+                mutableList[foundIndex] = value
+                uiState.copy(
+                    tagCollection = mutableList.toList()
+                )
+            } else uiState
+        }
+    }
+
+    fun unselectAllGenresAndTags() = viewModelScope.launch {
+        mutableUiState.update { uiState ->
+            uiState.copy(
+                genreCollection = uiState.genreCollection.map { it.copy(isSelected = false) },
+                tagCollection = uiState.tagCollection.map { it.copy(isSelected = false) }
+            )
         }
     }
 }

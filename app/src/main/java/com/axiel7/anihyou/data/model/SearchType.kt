@@ -29,5 +29,7 @@ enum class SearchType : Localizable {
     USER {
         @Composable
         override fun localized() = stringResource(R.string.users)
-    },
+    };
+
+    val isSearchMedia get() = this == ANIME || this == MANGA
 }

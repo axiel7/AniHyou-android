@@ -7,7 +7,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,30 +20,26 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 
 @Composable
 fun MediaSearchSortChip(
-    viewModel: SearchViewModel,
-    performSearch: MutableState<Boolean>,
+    mediaSortSearch: MediaSortSearch,
+    onSortChanged: (MediaSort) -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
-    var selectedSort by remember {
-        mutableStateOf(MediaSortSearch.valueOf(viewModel.mediaSort) ?: MediaSortSearch.SEARCH_MATCH)
-    }
     var isDescending by remember { mutableStateOf(true) }
 
     if (openDialog) {
         DialogWithRadioSelection(
             values = MediaSortSearch.entries.toTypedArray(),
-            defaultValue = selectedSort,
+            defaultValue = mediaSortSearch,
             title = stringResource(R.string.sort),
             isDeselectable = false,
             onConfirm = {
-                selectedSort = it!!
-                viewModel.onMediaSortChanged(if (isDescending) it.desc else it.asc)
+                onSortChanged(
+                    (if (isDescending) it?.desc else it?.asc) ?: MediaSort.SEARCH_MATCH
+                )
                 openDialog = false
-                performSearch.value = true
             },
             onDismiss = { openDialog = false }
         )
@@ -55,7 +50,7 @@ fun MediaSearchSortChip(
     ) {
         AssistChip(
             onClick = { openDialog = !openDialog },
-            label = { Text(text = selectedSort.localized()) },
+            label = { Text(text = mediaSortSearch.localized()) },
             modifier = Modifier.padding(8.dp),
             leadingIcon = {
                 Icon(
@@ -72,12 +67,13 @@ fun MediaSearchSortChip(
             }
         )
 
-        if (viewModel.mediaSort != MediaSort.SEARCH_MATCH) {
+        if (mediaSortSearch != MediaSortSearch.SEARCH_MATCH) {
             AssistChip(
                 onClick = {
                     isDescending = !isDescending
-                    viewModel.onMediaSortChanged(if (isDescending) selectedSort.desc else selectedSort.asc)
-                    performSearch.value = true
+                    onSortChanged(
+                        if (isDescending) mediaSortSearch.desc else mediaSortSearch.asc
+                    )
                 },
                 label = {
                     Text(

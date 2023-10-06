@@ -10,6 +10,7 @@ import com.axiel7.anihyou.type.UserTitleLanguage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -23,8 +24,8 @@ class UserRepository @Inject constructor(
         .flatMapLatest {
             api.unreadNotificationCountQuery()
                 .watch()
-                .asDataResult {
-                    it.Viewer?.unreadNotificationCount ?: 0
+                .map {
+                    it.data?.Viewer?.unreadNotificationCount ?: 0
                 }
         }
 
