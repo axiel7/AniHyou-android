@@ -8,10 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,35 +16,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 
 @Composable
 fun MediaRelationsView(
-    viewModel: MediaDetailsViewModel,
+    uiState: MediaDetailsUiState,
+    fetchData: () -> Unit,
     navigateToDetails: (Int) -> Unit,
 ) {
-    val relationsAndRecommendations by viewModel.relationsAndRecommendations.collectAsState()
-    val isLoading by remember {
-        derivedStateOf { relationsAndRecommendations is DataResult.Loading }
+    val isLoading = uiState.relationsAndRecommendations == null
+
+    LaunchedEffect(uiState.relationsAndRecommendations) {
+        if (uiState.relationsAndRecommendations == null) fetchData()
     }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Related
-        val mediaRelated by remember {
-            derivedStateOf {
-                (relationsAndRecommendations as? DataResult.Success)?.data?.relations.orEmpty()
-            }
-        }
+        val mediaRelated = uiState.relationsAndRecommendations?.relations.orEmpty()
         if (isLoading || mediaRelated.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.related))
             DiscoverLazyRow {
@@ -76,11 +70,7 @@ fun MediaRelationsView(
         }
 
         // Recommendations
-        val mediaRecommendations by remember {
-            derivedStateOf {
-                (relationsAndRecommendations as? DataResult.Success)?.data?.recommendations.orEmpty()
-            }
-        }
+        val mediaRecommendations = uiState.relationsAndRecommendations?.recommendations.orEmpty()
         if (isLoading || mediaRecommendations.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.recommendations))
             DiscoverLazyRow {
@@ -118,7 +108,8 @@ fun MediaRelationsViewPreview() {
     AniHyouTheme {
         Surface {
             MediaRelationsView(
-                viewModel = MediaDetailsViewModel(mediaId = 1),
+                uiState = MediaDetailsUiState(),
+                fetchData = {},
                 navigateToDetails = {}
             )
         }

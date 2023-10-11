@@ -13,7 +13,9 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MediaListApi @Inject constructor(
     private val client: ApolloClient
 ) {
@@ -22,7 +24,7 @@ class MediaListApi @Inject constructor(
         mediaType: MediaType,
         status: MediaListStatus,
         sort: List<MediaListSort>,
-        refreshCache: Boolean,
+        fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
     ) = client
@@ -36,7 +38,7 @@ class MediaListApi @Inject constructor(
                 sort = Optional.present(sort)
             )
         )
-        .fetchPolicy(if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 
     fun updateEntryProgressMutation(
         entryId: Int,

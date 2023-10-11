@@ -12,7 +12,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -20,9 +19,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.common.TabRowItem
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
@@ -32,19 +30,6 @@ import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffCharacterView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffInfoView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
-
-private enum class StaffInfoType {
-    INFO, MEDIA, CHARACTER;
-
-    companion object {
-        val tabRows = arrayOf(
-            TabRowItem(INFO, icon = R.drawable.info_24),
-            TabRowItem(MEDIA, icon = R.drawable.movie_24),
-            TabRowItem(CHARACTER, icon = R.drawable.record_voice_over_24),
-        )
-    }
-}
 
 const val STAFF_ID_ARGUMENT = "{id}"
 const val STAFF_DETAILS_DESTINATION = "staff/$STAFF_ID_ARGUMENT"
@@ -52,14 +37,13 @@ const val STAFF_DETAILS_DESTINATION = "staff/$STAFF_ID_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffDetailsView(
-    staffId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val viewModel = viewModel { StaffDetailsViewModel(staffId) }
+    val viewModel: StaffDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -71,13 +55,13 @@ fun StaffDetailsView(
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
             FavoriteIconButton(
-                isFavorite = viewModel.staffDetails?.isFavourite ?: false,
-                favoritesCount = viewModel.staffDetails?.favourites ?: 0,
+                isFavorite = uiState.details?.isFavourite ?: false,
+                favoritesCount = uiState.details?.favourites ?: 0,
                 onClick = {
-                    scope.launch { viewModel.toggleFavorite() }
+                    viewModel.toggleFavorite()
                 }
             )
-            ShareIconButton(url = viewModel.staffDetails?.siteUrl ?: "")
+            ShareIconButton(url = uiState.details?.siteUrl.orEmpty())
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -91,8 +75,8 @@ fun StaffDetailsView(
         ) {
             SegmentedButtons(
                 items = StaffInfoType.tabRows,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                defaultSelectedIndex = selectedTabIndex,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                selectedIndex = selectedTabIndex,
                 onItemSelection = {
                     selectedTabIndex = it
                 }
@@ -100,8 +84,7 @@ fun StaffDetailsView(
             when (StaffInfoType.tabRows[selectedTabIndex].value) {
                 StaffInfoType.INFO ->
                     StaffInfoView(
-                        staffId = staffId,
-                        viewModel = viewModel,
+                        uiState = uiState,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
@@ -109,25 +92,33 @@ fun StaffDetailsView(
                         navigateToFullscreenImage = navigateToFullscreenImage
                     )
 
-                StaffInfoType.MEDIA ->
+                StaffInfoType.MEDIA -> {
                     StaffMediaView(
-                        viewModel = viewModel,
+                        staffMedia = viewModel.media,
+                        isLoading = uiState.isLoadingMedia,
+                        loadMore = viewModel::loadNextPageMedia,
+                        mediaOnMyList = uiState.mediaOnMyList,
+                        setMediaOnMyList = viewModel::setMediaOnMyList,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
                         navigateToMediaDetails = navigateToMediaDetails
                     )
+                }
 
-                StaffInfoType.CHARACTER ->
+                StaffInfoType.CHARACTER -> {
                     StaffCharacterView(
-                        viewModel = viewModel,
+                        staffCharacters = viewModel.characters,
+                        isLoading = uiState.isLoadingCharacters,
+                        loadMore = viewModel::loadNextPageCharacters,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
                         navigateToCharacterDetails = navigateToCharacterDetails
                     )
+                }
             }
         }//: Column
     }
@@ -139,7 +130,6 @@ fun StaffDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             StaffDetailsView(
-                staffId = 0,
                 navigateBack = {},
                 navigateToMediaDetails = {},
                 navigateToCharacterDetails = {},

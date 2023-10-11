@@ -1,96 +1,161 @@
 package com.axiel7.anihyou.ui.screens.staffdetails
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.StaffCharacterQuery
-import com.axiel7.anihyou.StaffDetailsQuery
+import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.StaffRepository
-import com.axiel7.anihyou.ui.common.UiStateViewModel
-import kotlinx.coroutines.launch
+import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class StaffDetailsViewModel(
-    private val staffId: Int
-) : UiStateViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class StaffDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val staffRepository: StaffRepository,
+    private val favoriteRepository: FavoriteRepository,
+) : UiStateViewModel<StaffDetailsUiState>() {
 
-    var staffDetails by mutableStateOf<StaffDetailsQuery.Staff?>(null)
+    val staffId = savedStateHandle.getStateFlow<Int?>(STAFF_ID_ARGUMENT.removeFirstAndLast(), null)
 
-    fun getStaffDetails() = viewModelScope.launch(dispatcher) {
-        StaffRepository.getStaffDetails(staffId).collect { result ->
-            isLoading = result is DataResult.Loading
+    override val mutableUiState = MutableStateFlow(StaffDetailsUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-            if (result is DataResult.Success) {
-                staffDetails = result.data
-            } else if (result is DataResult.Error) {
-                message = result.message
-            }
+    fun setMediaOnMyList(value: Boolean) = mutableUiState.update {
+        it.copy(mediaOnMyList = value, pageMedia = 1, hasNextPageMedia = true)
+    }
+
+    fun toggleFavorite() {
+        staffId.value?.let { staffId ->
+            favoriteRepository.toggleFavorite(staffId = staffId)
+                .onEach { result ->
+                    if (result is DataResult.Success && result.data != null) {
+                        mutableUiState.update { uiState ->
+                            uiState.copy(
+                                isLoading = false,
+                                details = uiState.details?.copy(
+                                    isFavourite = !uiState.details.isFavourite
+                                )
+                            )
+                        }
+                    }
+                }
+                .launchIn(viewModelScope)
         }
     }
 
-    fun toggleFavorite() = viewModelScope.launch(dispatcher) {
-        staffDetails?.let { details ->
-            FavoriteRepository.toggleFavorite(staffId = staffId).collect { result ->
-                if (result is DataResult.Success && result.data) {
-                    staffDetails = details.copy(isFavourite = !details.isFavourite)
+    val media = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
+
+    fun loadNextPageMedia() {
+        if (mutableUiState.value.hasNextPageMedia)
+            mutableUiState.update { it.copy(pageMedia = it.pageMedia + 1) }
+    }
+
+    val characters = mutableStateListOf<StaffCharacterQuery.Edge>()
+
+    fun loadNextPageCharacters() {
+        if (mutableUiState.value.hasNextPageCharacters)
+            mutableUiState.update { it.copy(pageCharacters = it.pageCharacters + 1) }
+    }
+
+    init {
+        // staff details
+        staffId
+            .filterNotNull()
+            .flatMapLatest { staffId ->
+                staffRepository.getStaffDetails(staffId)
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            details = result.data
+                        )
+                    } else {
+                        result.toUiState()
+                    }
                 }
             }
-        }
-    }
+            .launchIn(viewModelScope)
 
-    var mediaOnMyList by mutableStateOf(false)
-    private var pageMedia = 1
-    var hasNextPageMedia = true
-    var staffMedia = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
-
-    fun getStaffMedia() = viewModelScope.launch(dispatcher) {
-        StaffRepository.getStaffMediaPage(
-            staffId = staffId,
-            onList = mediaOnMyList,
-            page = pageMedia
-        ).collect { result ->
-            isLoading = pageMedia == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                staffMedia.addAll(result.data)
-                hasNextPageMedia = result.nextPage != null
-                pageMedia = result.nextPage ?: pageMedia
-            } else if (result is PagedResult.Error) {
-                message = result.message
+        // staff media
+        mutableUiState
+            .filter { it.hasNextPageMedia }
+            .distinctUntilChanged { old, new ->
+                old.pageMedia == new.pageMedia
+                        && old.mediaOnMyList == new.mediaOnMyList
             }
-        }
-    }
-
-    fun refreshStaffMedia() {
-        hasNextPageMedia = false
-        pageMedia = 1
-        staffMedia.clear()
-        getStaffMedia()
-    }
-
-    private var pageCharacter = 1
-    var hasNextPageCharacter = true
-    var staffCharacters = mutableStateListOf<StaffCharacterQuery.Edge>()
-
-    fun getStaffCharacters() = viewModelScope.launch(dispatcher) {
-        StaffRepository.getStaffCharactersPage(
-            staffId = staffId,
-            page = pageCharacter
-        ).collect { result ->
-            isLoading = pageCharacter == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                staffCharacters.addAll(result.data)
-                hasNextPageCharacter = result.nextPage != null
-                pageCharacter = result.nextPage ?: pageCharacter
-            } else if (result is PagedResult.Error) {
-                message = result.message
+            .combine(staffId.filterNotNull(), ::Pair)
+            .flatMapLatest { (uiState, staffId) ->
+                staffRepository.getStaffMediaPage(
+                    staffId = staffId,
+                    onList = uiState.mediaOnMyList,
+                    page = uiState.pageMedia
+                )
             }
-        }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.pageMedia == 1) media.clear()
+                        media.addAll(result.list)
+                        it.copy(
+                            hasNextPageMedia = result.hasNextPage,
+                            isLoadingMedia = false,
+                        )
+                    } else {
+                        it.copy(
+                            isLoadingMedia = result is PagedResult.Loading && it.pageMedia == 1
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // staff characters
+        mutableUiState
+            .filter { it.hasNextPageCharacters }
+            .distinctUntilChangedBy { it.pageCharacters }
+            .combine(staffId.filterNotNull(), ::Pair)
+            .flatMapLatest { (uiState, staffId) ->
+                staffRepository.getStaffCharactersPage(
+                    staffId = staffId,
+                    page = uiState.pageCharacters
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        characters.addAll(result.list)
+                        it.copy(
+                            hasNextPageCharacters = result.hasNextPage,
+                            isLoadingCharacters = false
+                        )
+                    } else {
+                        it.copy(
+                            isLoadingCharacters = result is PagedResult.Loading
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

@@ -12,8 +12,7 @@ query UserFavoritesAnime($userId: Int, $page: Int, $perPage: Int) {
                     }
                 }
                 pageInfo {
-                    currentPage
-                    hasNextPage
+                    ...CommonPage
                 }
             }
         }

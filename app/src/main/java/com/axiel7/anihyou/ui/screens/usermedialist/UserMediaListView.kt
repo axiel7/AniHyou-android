@@ -14,30 +14,24 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.App
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
 import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
 import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
@@ -45,14 +39,18 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaL
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun UserMediaListView(
     mediaList: List<UserMediaListQuery.MediaList>,
     status: MediaListStatus,
-    mediaType: MediaType,
+    scoreFormat: ScoreFormat,
+    listStyle: ListStyle,
+    itemsPerRowFlow: StateFlow<ItemsPerRow?>,
     isMyList: Boolean,
     isLoading: Boolean,
+    isRefreshing: Boolean,
     showAsGrid: Boolean,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     nestedScrollConnection: NestedScrollConnection,
@@ -63,27 +61,9 @@ fun UserMediaListView(
     onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isLoading,
+        refreshing = isRefreshing,
         onRefresh = onRefresh
     )
-    val useGeneralListStyle by rememberPreference(
-        USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
-        App.useGeneralListStyle
-    )
-    val generalListStyle by rememberPreference(
-        GENERAL_LIST_STYLE_PREFERENCE_KEY,
-        App.generalListStyle.name
-    )
-    val listStyle = if (useGeneralListStyle == true) generalListStyle
-    else ListType(status, mediaType).styleGlobalAppVariable.name
-
-    val scoreFormatPreference by rememberPreference(
-        SCORE_FORMAT_PREFERENCE_KEY,
-        App.scoreFormat.name
-    )
-    val scoreFormat by remember {
-        derivedStateOf { ScoreFormat.valueOf(scoreFormatPreference ?: App.scoreFormat.name) }
-    }
 
     Box(
         modifier = Modifier
@@ -94,16 +74,14 @@ fun UserMediaListView(
         val listModifier = Modifier
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
-        if (listStyle == ListStyle.GRID.name) {
-            val itemsPerRow by rememberPreference(
-                GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
-                App.gridItemsPerRow
-            )
+        if (listStyle == ListStyle.GRID) {
+            val itemsPerRow by itemsPerRowFlow.collectAsStateWithLifecycle()
             val listState = rememberLazyGridState()
             listState.OnBottomReached(buffer = 6, onLoadMore = onLoadMore)
 
             LazyVerticalGrid(
-                columns = if (itemsPerRow != null && itemsPerRow!! > 0) GridCells.Fixed(itemsPerRow!!)
+                columns = if (itemsPerRow != null && itemsPerRow!!.value > 0)
+                    GridCells.Fixed(itemsPerRow!!.value)
                 else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
                 modifier = listModifier,
                 state = listState,
@@ -123,6 +101,11 @@ fun UserMediaListView(
                         onLongClick = { onShowEditSheet(item) }
                     )
                 }
+                if (isLoading) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
+                }
             }
         } else if (showAsGrid) {
             val listState = rememberLazyGridState()
@@ -136,7 +119,7 @@ fun UserMediaListView(
                 horizontalArrangement = Arrangement.Center
             ) {
                 when (listStyle) {
-                    ListStyle.STANDARD.name -> {
+                    ListStyle.STANDARD -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -154,9 +137,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
 
-                    ListStyle.COMPACT.name -> {
+                    ListStyle.COMPACT -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -174,9 +162,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
 
-                    ListStyle.MINIMAL.name -> {
+                    ListStyle.MINIMAL -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -194,7 +187,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
+
+                    else -> {}
                 }
             }//: LazyVerticalGrid
         } else {
@@ -207,7 +207,7 @@ fun UserMediaListView(
                 contentPadding = contentPadding,
             ) {
                 when (listStyle) {
-                    ListStyle.STANDARD.name -> {
+                    ListStyle.STANDARD -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -225,9 +225,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
 
-                    ListStyle.COMPACT.name -> {
+                    ListStyle.COMPACT -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -245,9 +250,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
 
-                    ListStyle.MINIMAL.name -> {
+                    ListStyle.MINIMAL -> {
                         items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
@@ -265,7 +275,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        }
                     }
+
+                    else -> {}
                 }
             }//: LazyColumn
         }

@@ -6,7 +6,7 @@ import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
-import com.axiel7.anihyou.ui.common.UiState
+import com.axiel7.anihyou.ui.common.state.UiState
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 
 data class SettingsUiState(

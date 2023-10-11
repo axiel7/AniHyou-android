@@ -1,65 +1,78 @@
 package com.axiel7.anihyou.ui.screens.notifications
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.App
-import com.axiel7.anihyou.data.PreferencesDataStore.LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
-import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.common.UiStateViewModel
-import kotlinx.coroutines.launch
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class NotificationsViewModel(
-    private val initialUnreadCount: Int = 0
-) : UiStateViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class NotificationsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val notificationRepository: NotificationRepository,
+) : PagedUiStateViewModel<NotificationsUiState>() {
 
-    var type by mutableStateOf(NotificationTypeGroup.ALL)
+    private val initialUnreadCount: Int =
+        savedStateHandle[UNREAD_COUNT_ARGUMENT.removeFirstAndLast()] ?: 0
+
+    override val mutableUiState = MutableStateFlow(NotificationsUiState())
+    override val uiState = mutableUiState.asStateFlow()
+
     private var resetCount = true
 
-    val notifications = mutableStateListOf<GenericNotification>()
-    var page = 1
-    var hasNextPage = false
-
-    fun getNotifications() = viewModelScope.launch(dispatcher) {
-        NotificationRepository.getNotificationsPage(
-            type = type,
-            resetCount = resetCount,
-            page = page,
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                if (resetCount) {
-                    App.dataStore.edit {
-                        result.data.first().createdAt?.let { createdAt ->
-                            it[LAST_NOTIFICATION_CREATED_AT_PREFERENCE_KEY] = createdAt
-                        }
-                    }
-                    resetCount = false
-                    val unreads = result.data.take(initialUnreadCount)
-                        .map { it.copy(isUnread = true) }
-                    val readCount = result.data.size - initialUnreadCount
-                    val reads = if (readCount > 0) result.data.takeLast(readCount) else emptyList()
-                    notifications.addAll(unreads + reads)
-                } else {
-                    notifications.addAll(result.data)
-                }
-                page = result.nextPage ?: page
-                hasNextPage = result.nextPage != null
-            }
-        }
+    fun setType(value: NotificationTypeGroup) = mutableUiState.update {
+        it.copy(type = value, page = 1, hasNextPage = true)
     }
 
-    fun resetPage() {
-        page = 1
-        hasNextPage = false
-        notifications.clear()
-        getNotifications()
+    val notifications = mutableStateListOf<GenericNotification>()
+
+    init {
+        mutableUiState
+            .filter { it.hasNextPage }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.type == new.type
+            }
+            .flatMapLatest { uiState ->
+                notificationRepository.getNotificationsPage(
+                    type = uiState.type,
+                    resetCount = resetCount,
+                    initialUnreadCount = initialUnreadCount,
+                    page = uiState.page
+                ).also {
+                    resetCount = false // only reset on first call
+                }
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) notifications.clear()
+                        notifications.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

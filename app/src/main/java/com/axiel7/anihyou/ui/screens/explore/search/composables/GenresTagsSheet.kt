@@ -106,7 +106,7 @@ fun GenresTagsSheet(
     }
 
     LaunchedEffect(Unit) {
-        if (genreCollection.isEmpty() || tagCollection.isEmpty())
+        if (genreCollection.size < 2 || tagCollection.size < 2)
             fetchCollection()
     }
 
@@ -148,7 +148,7 @@ fun GenresTagsSheet(
                 items = GenresTagsSheetTab.tabRows,
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                defaultSelectedIndex = selectedTabIndex,
+                selectedIndex = selectedTabIndex,
                 onItemSelection = {
                     selectedTabIndex = it
                 }

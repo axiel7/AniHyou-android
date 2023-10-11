@@ -30,6 +30,9 @@ fun MediaSearchGenresChips(
     tagCollection: List<SelectableGenre>,
     onGenreSelected: (SelectableGenre) -> Unit,
     onTagSelected: (SelectableGenre) -> Unit,
+    fetchCollection: () -> Unit,
+    isLoadingCollection: Boolean,
+    unselectAll: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -43,9 +46,9 @@ fun MediaSearchGenresChips(
             bottomPadding = bottomBarPadding,
             onGenreSelected = onGenreSelected,
             onTagSelected = onTagSelected,
-            fetchCollection = {},
-            isLoadingCollection = false,
-            unselectAll = {},
+            fetchCollection = fetchCollection,
+            isLoadingCollection = isLoadingCollection,
+            unselectAll = unselectAll,
             onDismiss = {
                 scope.launch {
                     sheetState.hide()

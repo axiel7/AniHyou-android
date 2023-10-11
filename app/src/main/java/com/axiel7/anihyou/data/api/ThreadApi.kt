@@ -6,7 +6,9 @@ import com.axiel7.anihyou.ChildCommentsQuery
 import com.axiel7.anihyou.ThreadDetailsQuery
 import com.axiel7.anihyou.UpdateThreadCommentMutation
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ThreadApi @Inject constructor(
     private val client: ApolloClient
 ) {

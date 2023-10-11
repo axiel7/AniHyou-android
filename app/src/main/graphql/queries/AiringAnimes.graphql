@@ -20,8 +20,7 @@ query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGrea
             airingAt
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.UserFavoritesAnimeQuery
 import com.axiel7.anihyou.UserFavoritesCharacterQuery
@@ -11,13 +13,24 @@ import com.axiel7.anihyou.UserFavoritesMangaQuery
 import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.data.repository.FavoriteRepository
-import com.axiel7.anihyou.data.repository.PagedResult
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserFavoritesViewModel(
-    private val userId: Int
-) : UiStateViewModel() {
+@HiltViewModel
+class UserFavoritesViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val favoriteRepository: FavoriteRepository
+) : ViewModel() {
+
+    //TODO: user favorites
+
+    val userId: Int = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]!!
+
+    var isLoading by mutableStateOf(true)
+        private set
 
     var favoritesType by mutableStateOf(FavoritesType.ANIME)
         private set
@@ -37,8 +50,8 @@ class UserFavoritesViewModel(
     private var hasNextPageAnime = true
     var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
 
-    private fun getAnime(userId: Int) = viewModelScope.launch(dispatcher) {
-        FavoriteRepository.getFavoriteAnime(
+    private fun getAnime(userId: Int) = viewModelScope.launch {
+        /*FavoriteRepository.getFavoriteAnime(
             userId = userId,
             page = pageAnime
         ).collect { result ->
@@ -51,15 +64,15 @@ class UserFavoritesViewModel(
             } else if (result is PagedResult.Error) {
                 message = result.message
             }
-        }
+        }*/
     }
 
     private var pageManga = 1
     private var hasNextPageManga = true
     var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
 
-    private fun getManga(userId: Int) = viewModelScope.launch(dispatcher) {
-        FavoriteRepository.getFavoriteManga(
+    private fun getManga(userId: Int) = viewModelScope.launch {
+        /*FavoriteRepository.getFavoriteManga(
             userId = userId,
             page = pageManga
         ).collect { result ->
@@ -72,15 +85,15 @@ class UserFavoritesViewModel(
             } else if (result is PagedResult.Error) {
                 message = result.message
             }
-        }
+        }*/
     }
 
     private var pageCharacter = 1
     private var hasNextPageCharacter = true
     var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
 
-    private fun getCharacters(userId: Int) = viewModelScope.launch(dispatcher) {
-        FavoriteRepository.getFavoriteCharacters(
+    private fun getCharacters(userId: Int) = viewModelScope.launch {
+        /*FavoriteRepository.getFavoriteCharacters(
             userId = userId,
             page = pageCharacter
         ).collect { result ->
@@ -93,15 +106,15 @@ class UserFavoritesViewModel(
             } else if (result is PagedResult.Error) {
                 message = result.message
             }
-        }
+        }*/
     }
 
     private var pageStaff = 1
     private var hasNextPageStaff = true
     var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
 
-    private fun getStaff(userId: Int) = viewModelScope.launch(dispatcher) {
-        FavoriteRepository.getFavoriteStaff(
+    private fun getStaff(userId: Int) = viewModelScope.launch {
+        /*FavoriteRepository.getFavoriteStaff(
             userId = userId,
             page = pageStaff
         ).collect { result ->
@@ -114,15 +127,15 @@ class UserFavoritesViewModel(
             } else if (result is PagedResult.Error) {
                 message = result.message
             }
-        }
+        }*/
     }
 
     private var pageStudio = 1
     private var hasNextPageStudio = true
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 
-    private fun getStudios(userId: Int) = viewModelScope.launch(dispatcher) {
-        FavoriteRepository.getFavoriteStudio(
+    private fun getStudios(userId: Int) = viewModelScope.launch {
+        /*FavoriteRepository.getFavoriteStudio(
             userId = userId,
             page = pageStudio
         ).collect { result ->
@@ -135,6 +148,6 @@ class UserFavoritesViewModel(
             } else if (result is PagedResult.Error) {
                 message = result.message
             }
-        }
+        }*/
     }
 }

@@ -2,6 +2,8 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.UserApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
 import com.axiel7.anihyou.type.ScoreFormat
@@ -12,7 +14,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepository @Inject constructor(
     private val api: UserApi,
     private val defaultPreferencesRepository: DefaultPreferencesRepository
@@ -86,18 +90,13 @@ class UserRepository @Inject constructor(
     fun getUserActivity(
         userId: Int,
         sort: List<ActivitySort> = listOf(ActivitySort.ID_DESC),
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
     ) = api
         .userActivityQuery(userId, sort, page, perPage)
         .watch()
-        .asDataResult {
-            PageResult(
-                list = it.Page?.activities?.filterNotNull().orEmpty(),
-                nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                    it.Page.pageInfo.currentPage?.plus(1)
-                else null
-            )
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.activities?.filterNotNull().orEmpty()
         }
 
     fun getOverviewAnimeStats(userId: Int) = api
@@ -116,33 +115,23 @@ class UserRepository @Inject constructor(
 
     fun getFollowers(
         userId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
     ) = api
         .followersQuery(userId, page, perPage)
         .watch()
-        .asDataResult {
-            PageResult(
-                list = it.Page?.followers?.filterNotNull().orEmpty(),
-                nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                    it.Page.pageInfo.currentPage?.plus(1)
-                else null
-            )
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.followers?.filterNotNull().orEmpty()
         }
 
     fun getFollowing(
         userId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
     ) = api
         .followingsQuery(userId, page, perPage)
         .watch()
-        .asDataResult {
-            PageResult(
-                list = it.Page?.following?.filterNotNull().orEmpty(),
-                nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                    it.Page.pageInfo.currentPage?.plus(1)
-                else null
-            )
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.following?.filterNotNull().orEmpty()
         }
 }

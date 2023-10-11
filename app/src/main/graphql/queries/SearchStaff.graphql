@@ -11,8 +11,7 @@ query SearchStaff($page: Int, $perPage: Int, $search: String) {
             primaryOccupations
         }
         pageInfo {
-            hasNextPage
-            currentPage
+            ...CommonPage
         }
     }
 }

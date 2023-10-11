@@ -15,8 +15,7 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
             }
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

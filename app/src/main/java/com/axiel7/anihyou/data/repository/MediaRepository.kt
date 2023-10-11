@@ -1,62 +1,108 @@
 package com.axiel7.anihyou.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.api.MediaApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
-import com.axiel7.anihyou.data.paging.AiringAnimePagingSourceFactory
-import com.axiel7.anihyou.data.paging.AnimeSeasonalPagingSourceFactory
-import com.axiel7.anihyou.data.paging.MediaChartPagingSourceFactory
 import com.axiel7.anihyou.type.AiringSort
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
+import com.axiel7.anihyou.type.MediaType
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MediaRepository @Inject constructor(
     private val api: MediaApi,
-    private val airingAnimePagingSourceFactory: AiringAnimePagingSourceFactory,
-    private val mediaChartPagingSourceFactory: MediaChartPagingSourceFactory,
-    private val animeSeasonalPagingSourceFactory: AnimeSeasonalPagingSourceFactory,
 ) {
 
     fun getAiringAnimesPage(
-        airingAtGreater: Long,
-        airingAtLesser: Long,
-        sort: List<AiringSort> = listOf(AiringSort.TIME)
-    ) = Pager(
-        config = PagingConfig(pageSize = 25),
-    ) {
-        airingAnimePagingSourceFactory.create(airingAtGreater, airingAtLesser, sort)
-    }.flow
+        airingAtGreater: Long? = null,
+        airingAtLesser: Long? = null,
+        sort: List<AiringSort> = listOf(AiringSort.TIME),
+        onMyList: Boolean = false,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .airingAnimesQuery(
+            airingAtGreater = airingAtGreater,
+            airingAtLesser = airingAtLesser,
+            sort = sort,
+            page = page,
+            perPage = perPage,
+        )
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
+            if (onMyList) list.filter { it.media?.mediaListEntry != null }
+            else list
+        }
 
-    fun getMediaChartPage(
-        type: ChartType
-    ) = Pager(
-        config = PagingConfig(pageSize = 25)
-    ) {
-        mediaChartPagingSourceFactory.create(type)
-    }.flow
+    fun getAiringAnimeOnMyListPage(
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .airingOnMyListQuery(page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.media?.filterNotNull()
+                ?.filter { it.nextAiringEpisode != null }
+                ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
+                .orEmpty()
+        }
 
     fun getSeasonalAnimePage(
-        animeSeason: AnimeSeason
-    ) = Pager(
-        config = PagingConfig(pageSize = 25),
-    ) {
-        animeSeasonalPagingSourceFactory.create(animeSeason)
-    }.flow
+        animeSeason: AnimeSeason,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .seasonalAnimeQuery(animeSeason, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
+
+    fun getMediaSortedPage(
+        mediaType: MediaType,
+        sort: List<MediaSort>,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaSortedQuery(mediaType, sort, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
+
+    fun getMediaChartPage(
+        type: ChartType,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaChartQuery(
+            type = type.mediaType,
+            sort = listOf(type.mediaSort),
+            status = type.mediaStatus,
+            page = page,
+            perPage = perPage
+        )
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
 
     fun getMediaDetails(mediaId: Int) = api
         .mediaDetailsQuery(mediaId)
-        .watch()
+        .toFlow()
         .asDataResult { it.Media }
 
     fun getMediaCharactersAndStaff(mediaId: Int) = api
         .mediaCharactersAndStaffQuery(mediaId)
-        .watch()
+        .toFlow()
         .asDataResult {
             MediaCharactersAndStaff(
                 characters = it.Media?.characters?.edges?.filterNotNull().orEmpty(),
@@ -66,7 +112,7 @@ class MediaRepository @Inject constructor(
 
     fun getMediaRelationsAndRecommendations(mediaId: Int) = api
         .mediaRelationsAndRecommendationsQuery(mediaId)
-        .watch()
+        .toFlow()
         .asDataResult {
             MediaRelationsAndRecommendations(
                 relations = it.Media?.relations?.edges?.filterNotNull().orEmpty(),
@@ -76,9 +122,30 @@ class MediaRepository @Inject constructor(
 
     fun getMediaStats(mediaId: Int) = api
         .mediaStatsQuery(mediaId)
-        .watch()
+        .toFlow()
         .asDataResult { it.Media }
 
+    fun getMediaReviewsPage(
+        mediaId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaReviewsQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Media?.reviews?.pageInfo?.commonPage }) {
+            it.Media?.reviews?.nodes?.filterNotNull().orEmpty()
+        }
+
+    fun getMediaThreadsPage(
+        mediaId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaThreadsQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.threads?.filterNotNull().orEmpty()
+        }
 
     // widget
 

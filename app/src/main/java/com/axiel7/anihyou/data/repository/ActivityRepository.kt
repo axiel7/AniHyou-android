@@ -1,27 +1,30 @@
 package com.axiel7.anihyou.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.ActivityApi
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
-import com.axiel7.anihyou.data.paging.ActivityFeedPagingSourceFactory
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ActivityRepository @Inject constructor(
     private val api: ActivityApi,
-    private val activityFeedPagingSourceFactory: ActivityFeedPagingSourceFactory,
 ) {
 
     fun getActivityFeed(
         isFollowing: Boolean,
         type: ActivityTypeGrouped? = null,
-        refreshCache: Boolean = false,
-    ) = Pager(
-        config = PagingConfig(pageSize = 25)
-    ) {
-        activityFeedPagingSourceFactory.create(isFollowing, type, refreshCache)
-    }.flow
+        fetchFromNetwork: Boolean = false,
+        page: Int,
+        perPage: Int = 25
+    ) = api
+        .activityFeedQuery(isFollowing, type, fetchFromNetwork, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.activities?.filterNotNull().orEmpty()
+        }
 
     fun getActivityDetails(activityId: Int) = api
         .activityDetailsQuery(activityId)

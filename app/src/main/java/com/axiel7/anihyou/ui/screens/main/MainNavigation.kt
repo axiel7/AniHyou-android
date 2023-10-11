@@ -20,8 +20,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.data.model.media.ChartType
-import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
@@ -56,14 +54,13 @@ import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.ui.screens.explore.season.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeView
-import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.notifications.UNREAD_COUNT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.profile.ProfileView
+import com.axiel7.anihyou.ui.screens.profile.ProfileViewEntry
 import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.USER_NAME_ARGUMENT
@@ -90,7 +87,7 @@ import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_COMMENT_REPLY_DESTIN
 import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_THREAD_COMMENT_DESTINATION
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
-import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostViewEntry
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import com.axiel7.anihyou.utils.UTF_8
@@ -104,7 +101,6 @@ fun MainNavigation(
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
 ) {
-    //val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, App.accessToken)
     val bottomPadding by animateDpAsState(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
@@ -250,57 +246,53 @@ fun MainNavigation(
             )
         }
 
-        composable(BottomDestination.AnimeList.route) {
-            if (accessTokenPreference == null) {
-                LoginView(
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                )
-            } else {
-                UserMediaListHostView(
-                    mediaType = MediaType.ANIME,
-                    isCompactScreen = isCompactScreen,
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails
-                )
-            }
+        composable(
+            BottomDestination.AnimeList.route,
+            arguments = listOf(
+                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    defaultValue = MediaType.ANIME.rawValue
+                }
+            )
+        ) {
+            UserMediaListHostViewEntry(
+                isCompactScreen = isCompactScreen,
+                modifier = Modifier.padding(bottom = bottomPadding),
+                navigateToMediaDetails = navigateToMediaDetails
+            )
         }
 
-        composable(BottomDestination.MangaList.route) {
-            if (accessTokenPreference == null) {
-                LoginView(
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                )
-            } else {
-                UserMediaListHostView(
-                    mediaType = MediaType.MANGA,
-                    isCompactScreen = isCompactScreen,
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails
-                )
-            }
+        composable(
+            BottomDestination.MangaList.route,
+            arguments = listOf(
+                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                    defaultValue = MediaType.MANGA.rawValue
+                }
+            )
+        ) {
+            UserMediaListHostViewEntry(
+                isCompactScreen = isCompactScreen,
+                modifier = Modifier.padding(bottom = bottomPadding),
+                navigateToMediaDetails = navigateToMediaDetails
+            )
         }
 
         composable(BottomDestination.Profile.route) {
-            if (accessTokenPreference == null) {
-                LoginView(
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                )
-            } else {
-                ProfileView(
-                    modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                    navigateToSettings = {
-                        navController.navigate(SETTINGS_DESTINATION)
-                    },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToCharacterDetails = navigateToCharacterDetails,
-                    navigateToStaffDetails = navigateToStaffDetails,
-                    navigateToStudioDetails = navigateToStudioDetails,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToActivityDetails = navigateToActivityDetails,
-                    navigateToUserMediaList = null
-                )
-            }
+            ProfileViewEntry(
+                modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
+                navigateToSettings = {
+                    navController.navigate(SETTINGS_DESTINATION)
+                },
+                navigateToFullscreenImage = navigateToFullscreenImage,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
+                navigateToUserDetails = navigateToUserDetails,
+                navigateToActivityDetails = navigateToActivityDetails,
+                navigateToUserMediaList = null
+            )
         }
 
         composable(BottomDestination.Explore.route) {
@@ -359,8 +351,6 @@ fun MainNavigation(
                 modifier = Modifier.padding(bottom = bottomPadding),
                 initialMediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
                     ?.let { MediaType.safeValueOf(it) },
-                initialMediaSort = navEntry.arguments?.getString(MEDIA_SORT_ARGUMENT.removeFirstAndLast())
-                    ?.let { MediaSort.valueOf(it) },
                 initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
                 initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
                 openSearch = navEntry.arguments?.getString(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) == "true",
@@ -395,13 +385,10 @@ fun MainNavigation(
                 navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
                 navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
-        ) { navEntry ->
-            UserMediaListHostView(
-                mediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
-                    ?.let { MediaType.safeValueOf(it) }!!,
+        ) {
+            UserMediaListHostViewEntry(
                 isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
-                userId = navEntry.arguments?.getInt(USER_ID_ARGUMENT.removeFirstAndLast()),
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateBack = navigateBack
             )
@@ -412,10 +399,8 @@ fun MainNavigation(
             arguments = listOf(
                 navArgument(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
-        ) { navEntry ->
+        ) {
             NotificationsView(
-                initialUnreadCount = navEntry.arguments
-                    ?.getInt(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) ?: 0,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
@@ -434,9 +419,8 @@ fun MainNavigation(
             arguments = listOf(
                 navArgument(MEDIA_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             ),
-        ) { navEntry ->
+        ) {
             MediaDetailsView(
-                mediaId = navEntry.arguments?.getInt(MEDIA_ID_ARGUMENT.removeFirstAndLast()) ?: 0,
                 navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
@@ -474,7 +458,6 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.arguments?.getString(CHART_TYPE_ARGUMENT.removeFirstAndLast())?.let {
                 MediaChartListView(
-                    type = ChartType.valueOf(it),
                     navigateBack = navigateBack,
                     navigateToMediaDetails = navigateToMediaDetails
                 )
@@ -488,8 +471,8 @@ fun MainNavigation(
                 navArgument(YEAR_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getString(SEASON_ARGUMENT.removeFirstAndLast())?.let { season ->
-                navEntry.arguments?.getInt(YEAR_ARGUMENT.removeFirstAndLast())?.let { year ->
+            navEntry.arguments?.getString(SEASON_ARGUMENT.removeFirstAndLast())?.let {
+                navEntry.arguments?.getInt(YEAR_ARGUMENT.removeFirstAndLast())?.let {
                     SeasonAnimeView(
                         navigateBack = navigateBack,
                         navigateToMediaDetails = navigateToMediaDetails
@@ -518,7 +501,7 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            ProfileView(
+            ProfileViewEntry(
                 modifier = Modifier.padding(bottom = bottomPadding),
                 userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())
                     ?.toIntOrNull(),
@@ -547,15 +530,13 @@ fun MainNavigation(
                 navArgument(CHARACTER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())
-                ?.let { characterId ->
-                    CharacterDetailsView(
-                        characterId = characterId,
-                        navigateBack = navigateBack,
-                        navigateToMediaDetails = navigateToMediaDetails,
-                        navigateToFullscreenImage = navigateToFullscreenImage,
-                    )
-                }
+            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())?.let {
+                CharacterDetailsView(
+                    navigateBack = navigateBack,
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToFullscreenImage = navigateToFullscreenImage,
+                )
+            }
         }
 
         composable(
@@ -564,9 +545,8 @@ fun MainNavigation(
                 navArgument(STAFF_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) { navEntry ->
-            navEntry.arguments?.getInt(STAFF_ID_ARGUMENT.removeFirstAndLast())?.let { staffId ->
+            navEntry.arguments?.getInt(STAFF_ID_ARGUMENT.removeFirstAndLast())?.let {
                 StaffDetailsView(
-                    staffId = staffId,
                     navigateBack = navigateBack,
                     navigateToMediaDetails = navigateToMediaDetails,
                     navigateToCharacterDetails = navigateToCharacterDetails,
@@ -583,7 +563,6 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.arguments?.getInt(REVIEW_ID_ARGUMENT.removeFirstAndLast())?.let {
                 ReviewDetailsView(
-                    reviewId = it,
                     navigateBack = navigateBack
                 )
             }
@@ -597,7 +576,6 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let { threadId ->
                 ThreadDetailsView(
-                    threadId = threadId,
                     navigateToUserDetails = navigateToUserDetails,
                     navigateToPublishThreadComment = { commentId, text ->
                         navController.navigate(
@@ -633,7 +611,6 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.arguments?.getInt(STUDIO_ID_ARGUMENT.removeFirstAndLast())?.let {
                 StudioDetailsView(
-                    studioId = it,
                     navigateBack = navigateBack,
                     navigateToMediaDetails = navigateToMediaDetails
                 )

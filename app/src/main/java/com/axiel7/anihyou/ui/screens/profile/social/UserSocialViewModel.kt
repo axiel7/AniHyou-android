@@ -4,17 +4,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.FollowersQuery
 import com.axiel7.anihyou.FollowingsQuery
-import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserSocialViewModel(
-    private val userId: Int
-) : UiStateViewModel() {
+@HiltViewModel
+class UserSocialViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    //TODO: user social
+
+    val userId: Int = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]!!
+
+    var isLoading by mutableStateOf(true)
+        private set
 
     var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
         private set
@@ -31,19 +45,19 @@ class UserSocialViewModel(
     private var hasNextPageFollowers = true
     var followers = mutableStateListOf<FollowersQuery.Follower>()
 
-    private fun getFollowers() = viewModelScope.launch(dispatcher) {
-        UserRepository.getFollowers(
+    private fun getFollowers() = viewModelScope.launch {
+        userRepository.getFollowers(
             userId = userId,
             page = pageFollowers
         ).collect { result ->
             isLoading = pageFollowers == 1 && result is PagedResult.Loading
 
             if (result is PagedResult.Success) {
-                followers.addAll(result.data)
-                hasNextPageFollowers = result.nextPage != null
-                pageFollowers = result.nextPage ?: pageFollowers
+                followers.addAll(result.list)
+                //hasNextPageFollowers = result.nextPage != null
+                //pageFollowers = result.nextPage ?: pageFollowers
             } else if (result is PagedResult.Error) {
-                message = result.message
+                //message = result.message
             }
         }
     }
@@ -52,19 +66,19 @@ class UserSocialViewModel(
     private var hasNextPageFollowing = true
     var following = mutableStateListOf<FollowingsQuery.Following>()
 
-    private fun getFollowing() = viewModelScope.launch(dispatcher) {
-        UserRepository.getFollowing(
+    private fun getFollowing() = viewModelScope.launch {
+        userRepository.getFollowing(
             userId = userId,
             page = pageFollowing
         ).collect { result ->
             isLoading = pageFollowing == 1 && result is PagedResult.Loading
 
             if (result is PagedResult.Success) {
-                following.addAll(result.data)
-                hasNextPageFollowing = result.nextPage != null
-                pageFollowing = result.nextPage ?: pageFollowing
+                following.addAll(result.list)
+                //hasNextPageFollowing = result.nextPage != null
+                //pageFollowing = result.nextPage ?: pageFollowing
             } else if (result is PagedResult.Error) {
-                message = result.message
+                //message = result.message
             }
         }
     }

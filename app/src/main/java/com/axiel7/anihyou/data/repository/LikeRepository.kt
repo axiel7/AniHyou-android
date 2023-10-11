@@ -1,9 +1,12 @@
 package com.axiel7.anihyou.data.repository
 
 import com.axiel7.anihyou.data.api.LikeApi
+import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.type.LikeableType
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LikeRepository @Inject constructor(
     private val api: LikeApi
 ) {

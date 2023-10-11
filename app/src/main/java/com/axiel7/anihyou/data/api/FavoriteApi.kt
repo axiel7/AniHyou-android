@@ -9,7 +9,9 @@ import com.axiel7.anihyou.UserFavoritesMangaQuery
 import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FavoriteApi @Inject constructor(
     private val client: ApolloClient
 ) {

@@ -9,46 +9,40 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
 
 @Composable
 fun MediaCharacterStaffView(
-    viewModel: MediaDetailsViewModel,
+    uiState: MediaDetailsUiState,
+    fetchData: () -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
 ) {
-    val charactersAndStaff by viewModel.charactersAndStaff.collectAsState()
-    val isLoading by remember {
-        derivedStateOf { charactersAndStaff is DataResult.Loading }
+    val isLoading = uiState.charactersAndStaff == null
+
+    LaunchedEffect(uiState.charactersAndStaff) {
+        if (uiState.charactersAndStaff == null) fetchData()
     }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Staff
-        val mediaStaff by remember {
-            derivedStateOf {
-                (charactersAndStaff as? DataResult.Success)?.data?.staff.orEmpty()
-            }
-        }
+        val mediaStaff = uiState.charactersAndStaff?.staff.orEmpty()
         if (isLoading || mediaStaff.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.staff))
             Box(
@@ -77,11 +71,7 @@ fun MediaCharacterStaffView(
         }
 
         // Characters
-        val mediaCharacters by remember {
-            derivedStateOf {
-                (charactersAndStaff as? DataResult.Success)?.data?.characters.orEmpty()
-            }
-        }
+        val mediaCharacters = uiState.charactersAndStaff?.characters.orEmpty()
         if (isLoading || mediaCharacters.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.characters))
             Box(
@@ -117,7 +107,8 @@ fun MediaCharacterStaffViewPreview() {
     AniHyouTheme {
         Surface {
             MediaCharacterStaffView(
-                viewModel = MediaDetailsViewModel(mediaId = 1),
+                uiState = MediaDetailsUiState(),
+                fetchData = {},
                 navigateToCharacterDetails = {},
                 navigateToStaffDetails = {}
             )

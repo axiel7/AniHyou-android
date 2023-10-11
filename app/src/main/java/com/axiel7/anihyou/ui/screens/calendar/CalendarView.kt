@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,15 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.OnMyListChip
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
@@ -122,8 +122,8 @@ fun CalendarDayView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val viewModel: CalendarViewModel = hiltViewModel()
-    val pagingItems = viewModel.weeklyAnime.collectAsLazyPagingItems()
+    val viewModel: CalendarViewModel = hiltViewModel(key = weekday.toString())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // TODO: pass these to SavedStateHandle
     LaunchedEffect(weekday) {
@@ -133,48 +133,47 @@ fun CalendarDayView(
         viewModel.setOnMyList(onMyList)
     }
 
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3) {
+        viewModel.loadNextPage()
+    }
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
         modifier = modifier,
+        state = listState,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        if (pagingItems.loadState.refresh is LoadState.Loading) {
-            item {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-            }
-        }
         items(
-            count = pagingItems.itemCount,
-            key = pagingItems.itemKey { it.id },
+            items = viewModel.weeklyAnime,
+            key = { it.id },
             contentType = { it }
-        ) { index ->
-            pagingItems[index]?.let { item ->
-                MediaItemVertical(
-                    title = item.media?.title?.userPreferred ?: "",
-                    imageUrl = item.media?.coverImage?.large,
-                    modifier = Modifier.wrapContentWidth(),
-                    subtitle = {
-                        Text(
-                            text = stringResource(
-                                R.string.episode_airing_at,
-                                item.episode,
-                                item.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
-                            ),
-                            color = MaterialTheme.colorScheme.outline,
-                            fontSize = 14.sp,
-                            lineHeight = 17.sp
-                        )
-                    },
-                    minLines = 1,
-                    onClick = {
-                        navigateToMediaDetails(item.mediaId)
-                    }
-                )
-            }
+        ) { item ->
+            MediaItemVertical(
+                title = item.media?.title?.userPreferred ?: "",
+                imageUrl = item.media?.coverImage?.large,
+                modifier = Modifier.wrapContentWidth(),
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            R.string.episode_airing_at,
+                            item.episode,
+                            item.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
+                        ),
+                        color = MaterialTheme.colorScheme.outline,
+                        fontSize = 14.sp,
+                        lineHeight = 17.sp
+                    )
+                },
+                minLines = 1,
+                onClick = {
+                    navigateToMediaDetails(item.mediaId)
+                }
+            )
         }
-        if (pagingItems.loadState.append is LoadState.Loading) {
+        if (uiState.isLoading) {
             items(13) {
                 MediaItemVerticalPlaceholder()
             }

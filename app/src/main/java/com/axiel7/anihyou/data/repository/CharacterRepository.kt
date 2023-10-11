@@ -1,15 +1,15 @@
 package com.axiel7.anihyou.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.CharacterApi
-import com.axiel7.anihyou.data.paging.CharacterMediaPagingSourceFactory
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CharacterRepository @Inject constructor(
     private val api: CharacterApi,
-    private val characterMediaPagingSourceFactory: CharacterMediaPagingSourceFactory
 ) {
 
     fun getCharacterDetails(characterId: Int) = api
@@ -20,10 +20,13 @@ class CharacterRepository @Inject constructor(
         }
 
     fun getCharacterMediaPage(
-        characterId: Int
-    ) = Pager(
-        config = PagingConfig(pageSize = 25)
-    ) {
-        characterMediaPagingSourceFactory.create(characterId)
-    }.flow
+        characterId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .characterMediaQuery(characterId, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Character?.media?.pageInfo?.commonPage }) {
+            it.Character?.media?.edges?.filterNotNull().orEmpty()
+        }
 }

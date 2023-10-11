@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.activitydetails
 
 import com.axiel7.anihyou.data.model.activity.GenericActivity
-import com.axiel7.anihyou.ui.common.UiState
+import com.axiel7.anihyou.ui.common.state.UiState
 
 data class ActivityDetailsUiState(
     override val isLoading: Boolean = true,

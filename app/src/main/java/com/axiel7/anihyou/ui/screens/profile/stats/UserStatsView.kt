@@ -12,49 +12,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.Localizable
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-
-enum class UserStatType : Localizable {
-    OVERVIEW {
-        @Composable
-        override fun localized() = stringResource(R.string.overview)
-    },
-    GENRES {
-        @Composable
-        override fun localized() = stringResource(R.string.genres)
-    },
-    TAGS {
-        @Composable
-        override fun localized() = stringResource(R.string.tags)
-    },
-    STAFF {
-        @Composable
-        override fun localized() = stringResource(R.string.staff)
-    },
-    VOICE_ACTORS {
-        @Composable
-        override fun localized() = stringResource(R.string.voice_actors)
-    },
-    STUDIOS {
-        @Composable
-        override fun localized() = stringResource(R.string.studios)
-    }
-}
 
 @Composable
 fun UserStatsView(
     userId: Int,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: UserStatsViewModel = viewModel { UserStatsViewModel(userId) }
+    val viewModel: UserStatsViewModel = hiltViewModel()
 
     Column(
         modifier = modifier

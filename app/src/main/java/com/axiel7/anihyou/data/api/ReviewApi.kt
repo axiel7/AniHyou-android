@@ -4,7 +4,9 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ReviewDetailsQuery
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ReviewApi @Inject constructor(
     private val client: ApolloClient
 ) {

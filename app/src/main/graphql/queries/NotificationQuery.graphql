@@ -256,8 +256,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
             }
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
@@ -87,8 +87,8 @@ fun CharacterDetailsView(
         ) {
             SegmentedButtons(
                 items = CharacterInfoType.tabRows,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                defaultSelectedIndex = selectedTabIndex,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                selectedIndex = selectedTabIndex,
                 onItemSelection = {
                     selectedTabIndex = it
                 }
@@ -106,9 +106,13 @@ fun CharacterDetailsView(
                     )
 
                 CharacterInfoType.MEDIA -> {
-                    val pagingItems = viewModel.characterMedia.collectAsLazyPagingItems()
+                    LaunchedEffect(uiState.page) {
+                        if (uiState.page == 0) viewModel.loadNextPage()
+                    }
                     CharacterMediaView(
-                        pagingItems = pagingItems,
+                        media = viewModel.media,
+                        isLoading = uiState.isLoadingMedia,
+                        loadMore = viewModel::loadNextPage,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()

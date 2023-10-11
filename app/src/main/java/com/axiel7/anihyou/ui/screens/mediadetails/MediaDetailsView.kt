@@ -55,15 +55,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
 import com.axiel7.anihyou.data.model.media.durationText
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -97,24 +95,9 @@ import kotlinx.coroutines.launch
 const val MEDIA_ID_ARGUMENT = "{mediaId}"
 const val MEDIA_DETAILS_DESTINATION = "media_details/$MEDIA_ID_ARGUMENT"
 
-private enum class DetailsType {
-    INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;
-
-    companion object {
-        val tabRows = arrayOf(
-            TabRowItem(INFO, icon = R.drawable.info_24),
-            TabRowItem(STAFF_CHARACTERS, icon = R.drawable.group_24),
-            TabRowItem(RELATIONS, icon = R.drawable.shuffle_24),
-            TabRowItem(STATS, icon = R.drawable.bar_chart_24),
-            TabRowItem(REVIEWS, icon = R.drawable.rate_review_24)
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MediaDetailsView(
-    mediaId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
@@ -126,14 +109,16 @@ fun MediaDetailsView(
     navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel = viewModel { MediaDetailsViewModel(mediaId) }
+    val viewModel: MediaDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoadingDetails = uiState.details == null
+    val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     var isSynopsisExpanded by remember { mutableStateOf(false) }
     val maxLinesSynopsis by remember {
@@ -141,26 +126,18 @@ fun MediaDetailsView(
     }
     val iconExpand by remember {
         derivedStateOf {
-            if (maxLinesSynopsis == 5) R.drawable.expand_more_24
-            else R.drawable.expand_less_24
+            if (isSynopsisExpanded) R.drawable.expand_less_24
+            else R.drawable.expand_more_24
         }
     }
-    val isNewEntry by remember {
-        derivedStateOf { viewModel.mediaDetails?.mediaListEntry == null }
-    }
     val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
-    val accessTokenPreference by rememberPreference(ACCESS_TOKEN_PREFERENCE_KEY, null)
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    LaunchedEffect(mediaId) {
-        viewModel.getDetails()
-    }
-
-    if (sheetState.isVisible && viewModel.mediaDetails != null) {
+    if (sheetState.isVisible && uiState.details != null) {
         EditMediaSheet(
             sheetState = sheetState,
-            mediaDetails = viewModel.mediaDetails!!.basicMediaDetails,
-            listEntry = viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.details!!.basicMediaDetails,
+            listEntry = uiState.details?.mediaListEntry?.basicMediaListEntry,
             bottomPadding = bottomBarPadding,
             onDismiss = { updatedListEntry ->
                 scope.launch {
@@ -181,12 +158,12 @@ fun MediaDetailsView(
                 },
                 actions = {
                     FavoriteIconButton(
-                        isFavorite = viewModel.mediaDetails?.isFavourite ?: false,
+                        isFavorite = uiState.details?.isFavourite ?: false,
                         onClick = {
                             scope.launch { viewModel.toggleFavorite() }
                         }
                     )
-                    ShareIconButton(url = viewModel.mediaDetails?.siteUrl ?: "")
+                    ShareIconButton(url = uiState.details?.siteUrl ?: "")
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
@@ -196,18 +173,18 @@ fun MediaDetailsView(
             )
         },
         floatingActionButton = {
-            if (accessTokenPreference != null) {
+            if (accessToken != null) {
                 ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
                     Icon(
                         painter = painterResource(
-                            if (isNewEntry) R.drawable.add_24
+                            if (uiState.isNewEntry) R.drawable.add_24
                             else R.drawable.edit_24
                         ),
                         contentDescription = "edit"
                     )
                     Text(
-                        text = if (isNewEntry) stringResource(R.string.add)
-                        else viewModel.mediaDetails?.mediaListEntry?.basicMediaListEntry?.status?.localized()
+                        text = if (uiState.isNewEntry) stringResource(R.string.add)
+                        else uiState.details?.mediaListEntry?.basicMediaListEntry?.status?.localized()
                             ?: stringResource(R.string.edit),
                         modifier = Modifier.padding(start = 16.dp, end = 8.dp)
                     )
@@ -223,18 +200,18 @@ fun MediaDetailsView(
         ) {
             // Banner
             TopBannerView(
-                imageUrl = viewModel.mediaDetails?.bannerImage,
+                imageUrl = uiState.details?.bannerImage,
                 modifier = Modifier.clickable {
-                    viewModel.mediaDetails?.bannerImage?.let { navigateToFullscreenImage(it) }
+                    uiState.details?.bannerImage?.let { navigateToFullscreenImage(it) }
                 },
-                fallbackColor = colorFromHex(viewModel.mediaDetails?.coverImage?.color),
+                fallbackColor = colorFromHex(uiState.details?.coverImage?.color),
                 height = padding.calculateTopPadding() + 80.dp
             )
 
             // Poster and basic info
             Row {
                 MediaPoster(
-                    url = viewModel.mediaDetails?.coverImage?.large,
+                    url = uiState.details?.coverImage?.large,
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .size(
@@ -242,7 +219,7 @@ fun MediaDetailsView(
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
                         .clickable {
-                            viewModel.mediaDetails?.coverImage?.extraLarge?.let {
+                            uiState.details?.coverImage?.extraLarge?.let {
                                 navigateToFullscreenImage(it)
                             }
                         }
@@ -252,13 +229,13 @@ fun MediaDetailsView(
                 Surface {
                     Column {
                         Text(
-                            text = viewModel.mediaDetails?.title?.userPreferred ?: "Loading",
+                            text = uiState.details?.title?.userPreferred ?: "Loading",
                             modifier = Modifier
                                 .padding(bottom = 8.dp, end = 8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading)
+                                .defaultPlaceholder(visible = isLoadingDetails)
                                 .combinedClickable(
                                     onLongClick = {
-                                        viewModel.mediaDetails?.title?.userPreferred
+                                        uiState.details?.title?.userPreferred
                                             ?.let { context.copyToClipBoard(it) }
                                     },
                                     onClick = { }
@@ -267,28 +244,28 @@ fun MediaDetailsView(
                             fontWeight = FontWeight.Bold
                         )
                         TextIconHorizontal(
-                            text = viewModel.mediaDetails?.format?.localized() ?: "Loading",
-                            icon = if (viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true)
+                            text = uiState.details?.format?.localized() ?: "Loading",
+                            icon = if (uiState.details?.basicMediaDetails?.isAnime() == true)
                                 R.drawable.live_tv_24
                             else R.drawable.book_24,
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading)
+                                .defaultPlaceholder(visible = isLoadingDetails)
                         )
                         TextIconHorizontal(
-                            text = viewModel.mediaDetails?.basicMediaDetails?.durationText()
+                            text = uiState.details?.basicMediaDetails?.durationText()
                                 ?: UNKNOWN_CHAR,
                             icon = R.drawable.timer_24,
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading)
+                                .defaultPlaceholder(visible = isLoadingDetails)
                         )
                         TextIconHorizontal(
-                            text = viewModel.mediaDetails?.status.localized(),
+                            text = uiState.details?.status.localized(),
                             icon = R.drawable.rss_feed_24,
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
-                                .defaultPlaceholder(visible = viewModel.isLoading)
+                                .defaultPlaceholder(visible = isLoadingDetails)
                         )
                     }//:Column
                 }
@@ -301,7 +278,7 @@ fun MediaDetailsView(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 val dividerHeight = 36
-                viewModel.mediaDetails?.nextAiringEpisode?.let { nextAiringEpisode ->
+                uiState.details?.nextAiringEpisode?.let { nextAiringEpisode ->
                     TextSubtitleVertical(
                         text = stringResource(
                             R.string.episode_in_time,
@@ -309,7 +286,6 @@ fun MediaDetailsView(
                             nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
                         ),
                         subtitle = stringResource(R.string.airing),
-                        isLoading = viewModel.isLoading
                     )
                     VerticalDivider(
                         modifier = Modifier
@@ -318,9 +294,9 @@ fun MediaDetailsView(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${viewModel.mediaDetails?.averageScore ?: 0}%",
+                    text = "${uiState.details?.averageScore ?: 0}%",
                     subtitle = stringResource(R.string.average_score),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoadingDetails
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -328,9 +304,9 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = "${viewModel.mediaDetails?.meanScore ?: 0}%",
+                    text = "${uiState.details?.meanScore ?: 0}%",
                     subtitle = stringResource(R.string.mean_score),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoadingDetails
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -338,9 +314,9 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = viewModel.mediaDetails?.popularity?.format(),
+                    text = uiState.details?.popularity?.format(),
                     subtitle = stringResource(R.string.popularity),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoadingDetails
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -348,17 +324,17 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = viewModel.mediaDetails?.favourites?.format(),
+                    text = uiState.details?.favourites?.format(),
                     subtitle = stringResource(R.string.favorites),
-                    isLoading = viewModel.isLoading
+                    isLoading = isLoadingDetails
                 )
             }//: Row
 
             // Synopsis
             Text(
-                text = viewModel.mediaDetails?.description?.htmlDecoded()?.toAnnotatedString()
+                text = uiState.details?.description?.htmlDecoded()?.toAnnotatedString()
                     ?: buildAnnotatedString {
-                        if (viewModel.isLoading)
+                        if (isLoadingDetails)
                             append(stringResource(R.string.lorem_ipsun))
                         else
                             append(stringResource(R.string.no_description))
@@ -366,7 +342,7 @@ fun MediaDetailsView(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .clickable { isSynopsisExpanded = !isSynopsisExpanded }
-                    .defaultPlaceholder(visible = viewModel.isLoading),
+                    .defaultPlaceholder(visible = isLoadingDetails),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
                 lineHeight = 18.sp,
@@ -382,7 +358,7 @@ fun MediaDetailsView(
             ) {
                 if (isCurrentLanguageEn == false) {
                     IconButton(onClick = {
-                        viewModel.mediaDetails?.description?.let {
+                        uiState.details?.description?.let {
                             context.openInGoogleTranslate(it.htmlStripped())
                         }
                     }) {
@@ -401,7 +377,7 @@ fun MediaDetailsView(
 
                 IconButton(
                     onClick = {
-                        viewModel.mediaDetails?.description?.let {
+                        uiState.details?.description?.let {
                             context.copyToClipBoard(it.htmlStripped())
                         }
                     }
@@ -416,73 +392,115 @@ fun MediaDetailsView(
             // Genres
             Row(
                 modifier = Modifier
+                    .height(32.dp)
                     .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 8.dp)
             ) {
-                viewModel.mediaDetails?.genres?.forEach {
+                uiState.details?.genres?.forEach { genre ->
                     AssistChip(
                         onClick = {
                             navigateToExplore(
-                                viewModel.mediaDetails?.basicMediaDetails?.type,
-                                it,
+                                uiState.details?.basicMediaDetails?.type,
+                                genre,
                                 null
                             )
                         },
-                        label = { Text(text = it ?: "") },
+                        label = { Text(text = genre.orEmpty()) },
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
 
             // Other info
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                SegmentedButtons(
-                    items = DetailsType.tabRows,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    defaultSelectedIndex = selectedTabIndex,
-                    onItemSelection = {
-                        selectedTabIndex = it
-                    }
-                )
-                when (DetailsType.tabRows[selectedTabIndex].value) {
-                    DetailsType.INFO ->
-                        MediaInformationView(
-                            viewModel = viewModel,
-                            navigateToExplore = navigateToExplore,
-                            navigateToStudioDetails = navigateToStudioDetails
-                        )
-
-                    DetailsType.STAFF_CHARACTERS ->
-                        MediaCharacterStaffView(
-                            viewModel = viewModel,
-                            navigateToCharacterDetails = navigateToCharacterDetails,
-                            navigateToStaffDetails = navigateToStaffDetails
-                        )
-
-                    DetailsType.RELATIONS ->
-                        MediaRelationsView(
-                            viewModel = viewModel,
-                            navigateToDetails = navigateToMediaDetails
-                        )
-
-                    DetailsType.STATS -> MediaStatsView(
-                        viewModel = viewModel
-                    )
-
-                    DetailsType.REVIEWS -> ReviewThreadListView(
-                        viewModel = viewModel,
-                        navigateToReviewDetails = navigateToReviewDetails,
-                        navigateToThreadDetails = navigateToThreadDetails,
-                    )
-                }
-            }//: Column
+            MediaInfoTabs(
+                viewModel = viewModel,
+                uiState = uiState,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToReviewDetails = navigateToReviewDetails,
+                navigateToThreadDetails = navigateToThreadDetails,
+                navigateToExplore = navigateToExplore,
+            )
         }//: Column
     }//: Scaffold
+}
+
+@Composable
+fun MediaInfoTabs(
+    viewModel: MediaDetailsViewModel,
+    uiState: MediaDetailsUiState,
+    navigateToMediaDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
+    navigateToReviewDetails: (Int) -> Unit,
+    navigateToThreadDetails: (Int) -> Unit,
+    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
+) {
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SegmentedButtons(
+            items = MediaDetailsType.tabRows,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            selectedIndex = selectedTabIndex,
+            onItemSelection = {
+                selectedTabIndex = it
+            }
+        )
+        when (MediaDetailsType.tabRows[selectedTabIndex].value) {
+            MediaDetailsType.INFO ->
+                MediaInformationView(
+                    uiState = uiState,
+                    navigateToExplore = navigateToExplore,
+                    navigateToStudioDetails = navigateToStudioDetails
+                )
+
+            MediaDetailsType.STAFF_CHARACTERS ->
+                MediaCharacterStaffView(
+                    uiState = uiState,
+                    fetchData = viewModel::fetchCharactersAndStaff,
+                    navigateToCharacterDetails = navigateToCharacterDetails,
+                    navigateToStaffDetails = navigateToStaffDetails
+                )
+
+            MediaDetailsType.RELATIONS ->
+                MediaRelationsView(
+                    uiState = uiState,
+                    fetchData = viewModel::fetchRelationsAndRecommendations,
+                    navigateToDetails = navigateToMediaDetails
+                )
+
+            MediaDetailsType.STATS ->
+                MediaStatsView(
+                    uiState = uiState,
+                    fetchData = viewModel::fetchStats
+                )
+
+            MediaDetailsType.REVIEWS -> {
+                LaunchedEffect(uiState.threads, uiState.reviews) {
+                    if (uiState.threads.isEmpty() && uiState.reviews.isEmpty()) {
+                        viewModel.fetchThreads()
+                        viewModel.fetchReviews()
+                    }
+                }
+                ReviewThreadListView(
+                    mediaThreads = uiState.threads,
+                    mediaReviews = uiState.reviews,
+                    isLoadingThreads = uiState.isLoadingThreads,
+                    isLoadingReviews = uiState.isLoadingReviews,
+                    navigateToReviewDetails = navigateToReviewDetails,
+                    navigateToThreadDetails = navigateToThreadDetails,
+                )
+            }
+        }
+    }//: Column
 }
 
 @Preview
@@ -490,7 +508,6 @@ fun MediaDetailsView(
 fun MediaDetailsViewPreview() {
     AniHyouTheme {
         MediaDetailsView(
-            mediaId = 1,
             navigateBack = {},
             navigateToMediaDetails = {},
             navigateToFullscreenImage = {},

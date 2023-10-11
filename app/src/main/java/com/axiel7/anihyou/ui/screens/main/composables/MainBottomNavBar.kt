@@ -10,19 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.axiel7.anihyou.data.PreferencesDataStore
 import com.axiel7.anihyou.ui.common.BottomDestination
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.Icon
 
 @Composable
 fun MainBottomNavBar(
     navController: NavController,
-    lastTabOpened: Int
+    onItemSelected: (Int) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isVisible by remember {
@@ -36,10 +33,6 @@ fun MainBottomNavBar(
             }
         }
     }
-    var selectedItem by PreferencesDataStore.rememberPreference(
-        PreferencesDataStore.LAST_TAB_PREFERENCE_KEY,
-        lastTabOpened
-    )
 
     AnimatedVisibility(
         visible = isVisible,
@@ -56,7 +49,7 @@ fun MainBottomNavBar(
                     label = { Text(text = stringResource(dest.title)) },
                     selected = isSelected,
                     onClick = {
-                        selectedItem = index
+                        onItemSelected(index)
                         navController.navigate(dest.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true

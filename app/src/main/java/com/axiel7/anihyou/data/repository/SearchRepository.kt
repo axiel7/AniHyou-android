@@ -1,20 +1,29 @@
 package com.axiel7.anihyou.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.data.api.CharacterApi
 import com.axiel7.anihyou.data.api.MediaApi
+import com.axiel7.anihyou.data.api.StaffApi
+import com.axiel7.anihyou.data.api.StudioApi
+import com.axiel7.anihyou.data.api.UserApi
 import com.axiel7.anihyou.data.model.GenresAndTags
 import com.axiel7.anihyou.data.model.SelectableGenre
-import com.axiel7.anihyou.data.paging.SearchMediaPagingSourceFactory
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SearchRepository @Inject constructor(
     private val mediaApi: MediaApi,
-    private val searchMediaPagingSourceFactory: SearchMediaPagingSourceFactory
+    private val characterApi: CharacterApi,
+    private val staffApi: StaffApi,
+    private val studioApi: StudioApi,
+    private val userApi: UserApi,
 ) {
 
     fun searchMedia(
@@ -27,10 +36,10 @@ class SearchRepository @Inject constructor(
         statusIn: List<MediaStatus>? = null,
         year: Int? = null,
         onList: Boolean? = null,
-    ) = Pager(
-        config = PagingConfig(pageSize = 25)
-    ) {
-        searchMediaPagingSourceFactory.create(
+        page: Int,
+        perPage: Int = 25,
+    ) = mediaApi
+        .searchMediaQuery(
             mediaType,
             query,
             sort,
@@ -39,41 +48,58 @@ class SearchRepository @Inject constructor(
             formatIn,
             statusIn,
             year,
-            onList
+            onList,
+            page,
+            perPage
         )
-    }
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
 
     fun searchCharacter(
         query: String,
         page: Int = 1,
         perPage: Int = 25,
-    ) {
-        TODO("use pagination")
-    }
+    ) = characterApi
+        .searchCharacterQuery(query, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.characters?.filterNotNull().orEmpty()
+        }
 
     fun searchStaff(
         query: String,
         page: Int = 1,
         perPage: Int = 25,
-    ) {
-        TODO("use pagination")
-    }
+    ) = staffApi
+        .searchStaffQuery(query, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.staff?.filterNotNull().orEmpty()
+        }
 
     fun searchStudio(
         query: String,
         page: Int = 1,
         perPage: Int = 25,
-    ) {
-        TODO("use pagination")
-    }
+    ) = studioApi
+        .searchStudioQuery(query, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.studios?.filterNotNull().orEmpty()
+        }
 
     fun searchUser(
         query: String,
         page: Int = 1,
         perPage: Int = 25,
-    ) {
-        TODO("use pagination")
-    }
+    ) = userApi
+        .searchUserQuery(query, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.users?.filterNotNull().orEmpty()
+        }
 
     fun getGenreTagCollection() = mediaApi
         .genreTagCollectionQuery()

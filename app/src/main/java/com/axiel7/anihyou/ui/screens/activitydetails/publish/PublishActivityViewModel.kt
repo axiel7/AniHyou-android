@@ -1,12 +1,13 @@
 package com.axiel7.anihyou.ui.screens.activitydetails.publish
 
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.repository.ActivityRepository
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +27,15 @@ class PublishActivityViewModel @Inject constructor(
             id = id,
             text = text
         ).collect { result ->
-            result.handleDataResult { data ->
-                mutableUiState.updateAndGet { it.copy(wasPublished = data != null) }
+            mutableUiState.update {
+                if (result is DataResult.Success) {
+                    it.copy(
+                        isLoading = false,
+                        wasPublished = result.data != null
+                    )
+                } else {
+                    result.toUiState()
+                }
             }
         }
     }
@@ -42,8 +50,15 @@ class PublishActivityViewModel @Inject constructor(
             id = id,
             text = text
         ).collect { result ->
-            result.handleDataResult { data ->
-                mutableUiState.updateAndGet { it.copy(wasPublished = data != null) }
+            mutableUiState.update {
+                if (result is DataResult.Success) {
+                    it.copy(
+                        isLoading = false,
+                        wasPublished = result.data != null
+                    )
+                } else {
+                    result.toUiState()
+                }
             }
         }
     }

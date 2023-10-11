@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
@@ -29,14 +29,13 @@ import com.axiel7.anihyou.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 enum class UserSocialType : Localizable {
-    FOLLOWERS {
-        @Composable
-        override fun localized() = stringResource(R.string.followers)
-    },
-    FOLLOWING {
-        @Composable
-        override fun localized() = stringResource(R.string.following)
-    },
+    FOLLOWERS, FOLLOWING;
+
+    @Composable
+    override fun localized() = when (this) {
+        FOLLOWERS -> stringResource(R.string.followers)
+        FOLLOWING -> stringResource(R.string.following)
+    }
 }
 
 @Composable
@@ -45,7 +44,7 @@ fun UserSocialView(
     modifier: Modifier = Modifier,
     navigateToUserDetails: (Int) -> Unit,
 ) {
-    val viewModel = viewModel { UserSocialViewModel(userId) }
+    val viewModel: UserSocialViewModel = hiltViewModel()
     val listState = rememberLazyGridState()
 
     LaunchedEffect(userId) {

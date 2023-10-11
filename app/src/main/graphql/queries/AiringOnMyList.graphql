@@ -14,8 +14,7 @@ query AiringOnMyList($page: Int, $perPage: Int) {
             }
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

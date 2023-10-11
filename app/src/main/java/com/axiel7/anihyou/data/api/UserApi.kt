@@ -20,7 +20,9 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserApi @Inject constructor(
     private val client: ApolloClient
 ) {

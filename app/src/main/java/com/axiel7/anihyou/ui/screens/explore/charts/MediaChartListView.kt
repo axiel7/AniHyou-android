@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,12 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
@@ -40,16 +36,15 @@ fun MediaChartListView(
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val viewModel: MediaChartViewModel = viewModel()
+    val viewModel: MediaChartViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val pagingItems = viewModel.mediaChart.collectAsLazyPagingItems()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = uiState.chartType.localized(),
+        title = uiState.chartType?.localized().orEmpty(),
         navigationIcon = {
             BackIconButton(onClick = navigateBack)
         },
@@ -67,38 +62,31 @@ fun MediaChartListView(
                 bottom = padding.calculateBottomPadding()
             ),
         ) {
-            if (pagingItems.loadState.refresh is LoadState.Loading) {
+            itemsIndexed(
+                items = viewModel.mediaChart,
+                key = { _, item -> item.id },
+                contentType = { _, item -> item }
+            ) { index, item ->
+                MediaItemHorizontal(
+                    title = item.title?.userPreferred ?: "",
+                    imageUrl = item.coverImage?.large,
+                    badgeContent = {
+                        Text(
+                            text = "#${index + 1}",
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    },
+                    score = item.meanScore ?: 0,
+                    format = item.format ?: MediaFormat.UNKNOWN__,
+                    year = item.startDate?.year,
+                    onClick = {
+                        navigateToMediaDetails(item.id)
+                    }
+                )
+            }
+            if (uiState.isLoading) {
                 items(10) {
                     MediaItemHorizontalPlaceholder()
-                }
-            }
-            items(
-                count = pagingItems.itemCount,
-                key = pagingItems.itemKey { it.id },
-                contentType = { it }
-            ) { index ->
-                pagingItems[index]?.let { item ->
-                    MediaItemHorizontal(
-                        title = item.title?.userPreferred ?: "",
-                        imageUrl = item.coverImage?.large,
-                        badgeContent = {
-                            Text(
-                                text = "#${index + 1}",
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        },
-                        score = item.meanScore ?: 0,
-                        format = item.format ?: MediaFormat.UNKNOWN__,
-                        year = item.startDate?.year,
-                        onClick = {
-                            navigateToMediaDetails(item.id)
-                        }
-                    )
-                }
-            }
-            if (pagingItems.loadState.append is LoadState.Loading) {
-                item {
-                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
             }
         }

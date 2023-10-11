@@ -81,27 +81,26 @@ object DateUtils {
     }
 
     fun LocalDateTime.currentAnimeSeason(): AnimeSeason {
-        val animeSeason = AnimeSeason(year = year, season = season())
+        var animeSeason = AnimeSeason(year = year, season = season())
         if (month == Month.DECEMBER) {
-            animeSeason.year += 1
+            animeSeason = animeSeason.copy(year = year + 1)
         }
         return animeSeason
     }
 
     fun LocalDateTime.nextAnimeSeason(): AnimeSeason {
         val current = currentAnimeSeason()
-        when (current.season) {
-            MediaSeason.WINTER -> current.season = MediaSeason.SPRING
-            MediaSeason.SPRING -> current.season = MediaSeason.SUMMER
-            MediaSeason.SUMMER -> current.season = MediaSeason.FALL
-            MediaSeason.FALL -> {
-                current.season = MediaSeason.WINTER
-                current.year += 1
-            }
+        return when (current.season) {
+            MediaSeason.WINTER -> current.copy(season = MediaSeason.SPRING)
+            MediaSeason.SPRING -> current.copy(season = MediaSeason.SUMMER)
+            MediaSeason.SUMMER -> current.copy(season = MediaSeason.FALL)
+            MediaSeason.FALL -> current.copy(
+                season = MediaSeason.WINTER,
+                year = year + 1
+            )
 
-            else -> {}
+            else -> current
         }
-        return current
     }
 
     /**

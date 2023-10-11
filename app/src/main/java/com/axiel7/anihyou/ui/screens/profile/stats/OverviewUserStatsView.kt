@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
@@ -26,14 +27,13 @@ import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 enum class ScoreStatCountType : Localizable {
-    TITLES {
-        @Composable
-        override fun localized() = stringResource(R.string.title_count)
-    },
-    TIME {
-        @Composable
-        override fun localized() = stringResource(R.string.time_spent)
-    },
+    TITLES, TIME;
+
+    @Composable
+    override fun localized() = when (this) {
+        TITLES -> stringResource(R.string.title_count)
+        TIME -> stringResource(R.string.time_spent)
+    }
 }
 
 @Composable
@@ -187,7 +187,7 @@ fun OverviewUserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             OverviewUserStatsView(
-                viewModel = UserStatsViewModel(userId = 1)
+                viewModel = hiltViewModel()
             )
         }
     }

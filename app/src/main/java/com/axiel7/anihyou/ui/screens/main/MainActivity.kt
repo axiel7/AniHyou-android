@@ -1,12 +1,12 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,60 +36,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.App
-import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_COMPLETED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_CURRENT_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_DROPPED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PAUSED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.LAST_TAB_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_COMPLETED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_CURRENT_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_DROPPED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_PAUSED_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_PLANNING_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATION_INTERVAL_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.data.model.notification.NotificationInterval
-import com.axiel7.anihyou.data.repository.LoginRepository
-import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
-import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
-import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.accessToken.collectLatest { App.accessToken = it }
+        }
 
         var deepLink: DeepLink? = null
         when {
@@ -109,7 +86,7 @@ class MainActivity : ComponentActivity() {
             }
             // Login intent or anilist link
             intent.data != null -> {
-                parseLoginIntentData(intent.data)
+                viewModel.onIntentDataReceived(intent.data)
                 // Manually handle deep links because the uri pattern in the compose navigation
                 // matches this -> https://anilist.co/manga/41514/
                 // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
@@ -126,17 +103,19 @@ class MainActivity : ComponentActivity() {
         }
 
         //get necessary preferences while on splashscreen
-        val startTab = App.dataStore.getValueSync(LAST_TAB_PREFERENCE_KEY)
+        val startTab = viewModel.startTab.firstBlocking()
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
-        val theme = App.dataStore.getValueSync(THEME_PREFERENCE_KEY) ?: "follow_system"
-
-        preloadPreferences()
+        //val initialTheme = viewModel.theme.firstBlocking() ?: Theme.FOLLOW_SYSTEM
+        //val initialAppColor = viewModel.appColor.firstBlocking()
+        //val initialAppColorMode = viewModel.appColorMode.firstBlocking() ?: AppColorMode.DEFAULT
 
         setContent {
-            val themePreference by rememberPreference(THEME_PREFERENCE_KEY, theme)
+            val theme by viewModel.theme.collectAsStateWithLifecycle()
             val windowSizeClass = calculateWindowSizeClass(this)
-            val darkTheme = if (themePreference == Theme.FOLLOW_SYSTEM.value) isSystemInDarkTheme()
-            else themePreference == Theme.DARK.value || themePreference == Theme.BLACK.value
+            val darkTheme = if (theme == null || theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+            else theme == Theme.DARK || theme == Theme.BLACK
+            val appColor by viewModel.appColor.collectAsStateWithLifecycle()
+            val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(AppColorMode.DEFAULT)
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
@@ -154,7 +133,9 @@ class MainActivity : ComponentActivity() {
 
             AniHyouTheme(
                 darkTheme = darkTheme,
-                blackColors = themePreference == Theme.BLACK.value
+                blackColors = theme == Theme.BLACK,
+                appColor = appColor,
+                appColorMode = appColorMode,
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -163,6 +144,7 @@ class MainActivity : ComponentActivity() {
                     MainView(
                         windowSizeClass = windowSizeClass,
                         lastTabOpened = lastTabOpened ?: 0,
+                        saveLastTab = viewModel::saveLastTab,
                         deepLink = deepLink,
                     )
                 }
@@ -172,87 +154,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        parseLoginIntentData(intent?.data)
-    }
-
-    private fun parseLoginIntentData(data: Uri?) {
-        if (data?.scheme == ANIHYOU_SCHEME) {
-            lifecycleScope.launch {
-                LoginRepository.parseRedirectUri(data)
-            }
-        }
-    }
-
-    private fun preloadPreferences() {
-        App.dataStore.getValueSync(APP_COLOR_MODE_PREFERENCE_KEY)?.let {
-            App.appColorMode = AppColorMode.valueOf(it)
-        }
-        App.dataStore.getValueSync(APP_COLOR_PREFERENCE_KEY)?.let {
-            App.appColor = it
-        }
-        App.dataStore.getValueSync(ANIME_LIST_SORT_PREFERENCE_KEY)?.let {
-            App.animeListSort = it
-        }
-        App.dataStore.getValueSync(MANGA_LIST_SORT_PREFERENCE_KEY)?.let {
-            App.mangaListSort = it
-        }
-        App.dataStore.getValueSync(SCORE_FORMAT_PREFERENCE_KEY)?.let {
-            App.scoreFormat = ScoreFormat.valueOf(it)
-        }
-        App.dataStore.getValueSync(DEFAULT_HOME_TAB_PREFERENCE_KEY)?.let {
-            App.defaultHomeTab = it
-        }
-        App.dataStore.getValueSync(AIRING_ON_MY_LIST_PREFERENCE_KEY)?.let {
-            App.airingOnMyList = it
-        }
-        App.dataStore.getValueSync(GENERAL_LIST_STYLE_PREFERENCE_KEY)?.let {
-            App.generalListStyle = ListStyle.valueOf(it)
-        }
-        App.dataStore.getValueSync(USE_GENERAL_LIST_STYLE_PREFERENCE_KEY)?.let {
-            App.useGeneralListStyle = it
-        }
-        App.dataStore.getValueSync(GRID_ITEMS_PER_ROW_PREFERENCE_KEY)?.let {
-            App.gridItemsPerRow = it
-        }
-        App.dataStore.getValueSync(ANIME_CURRENT_LIST_STYLE_PREFERENCE_KEY)?.let {
-            App.animeCurrentListStyle = ListStyle.valueOf(it)
-        }
-        App.dataStore.getValueSync(MANGA_CURRENT_LIST_STYLE_PREFERENCE_KEY)?.let {
-            App.mangaCurrentListStyle = ListStyle.valueOf(it)
-        }
-        // load preferences used later in another thread
-        lifecycleScope.launch(Dispatchers.IO) {
-            App.dataStore.getValueSync(ANIME_PLANNING_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.animePlanningListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(ANIME_COMPLETED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.animeCompletedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(ANIME_PAUSED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.animePausedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(ANIME_DROPPED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.animeDroppedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(MANGA_PLANNING_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.mangaPlanningListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(MANGA_COMPLETED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.mangaCompletedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(MANGA_PAUSED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.mangaPausedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(MANGA_DROPPED_LIST_STYLE_PREFERENCE_KEY)?.let {
-                App.mangaDroppedListStyle = ListStyle.valueOf(it)
-            }
-            App.dataStore.getValueSync(NOTIFICATIONS_ENABLED_PREFERENCE_KEY)?.let {
-                App.enabledNotifications = it
-            }
-            App.dataStore.getValueSync(NOTIFICATION_INTERVAL_PREFERENCE_KEY)?.let {
-                App.notificationInterval = NotificationInterval.valueOf(it)
-            }
-        }
+        viewModel.onIntentDataReceived(intent?.data)
     }
 }
 
@@ -260,6 +162,7 @@ class MainActivity : ComponentActivity() {
 fun MainView(
     windowSizeClass: WindowSizeClass,
     lastTabOpened: Int,
+    saveLastTab: (Int) -> Unit,
     deepLink: DeepLink?,
 ) {
     val navController = rememberNavController()
@@ -270,7 +173,7 @@ fun MainView(
             if (isCompactScreen) {
                 MainBottomNavBar(
                     navController = navController,
-                    lastTabOpened = lastTabOpened
+                    onItemSelected = saveLastTab
                 )
             }
         },
@@ -290,7 +193,7 @@ fun MainView(
             Row {
                 MainNavigationRail(
                     navController = navController,
-                    lastTabOpened = lastTabOpened
+                    onItemSelected = saveLastTab
                 )
                 MainNavigation(
                     navController = navController,
@@ -319,6 +222,7 @@ fun MainPreview() {
                 DpSize(width = 1280.dp, height = 1920.dp)
             ),
             lastTabOpened = 0,
+            saveLastTab = {},
             deepLink = null
         )
     }

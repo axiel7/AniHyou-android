@@ -42,7 +42,7 @@ import com.axiel7.anihyou.ui.composables.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.VIDEO_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.VideoThumbnailItem
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.formatted
@@ -51,13 +51,13 @@ import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MediaInformationView(
-    viewModel: MediaDetailsViewModel,
+    uiState: MediaDetailsUiState,
     navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
-    val isAnime = viewModel.mediaDetails?.basicMediaDetails?.isAnime() == true
+    val isAnime = uiState.details?.basicMediaDetails?.isAnime() == true
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -66,54 +66,54 @@ fun MediaInformationView(
 
         InfoItemView(
             title = stringResource(R.string.duration),
-            info = viewModel.mediaDetails?.duration?.toLong()?.minutesToLegibleText(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.duration?.toLong()?.minutesToLegibleText(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.start_date),
-            info = viewModel.mediaDetails?.startDate?.fuzzyDate?.formatted(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.startDate?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.end_date),
-            info = viewModel.mediaDetails?.endDate?.fuzzyDate?.formatted(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.endDate?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         if (isAnime) {
             InfoItemView(
                 title = stringResource(R.string.season),
-                info = viewModel.mediaDetails?.seasonAndYear()
+                info = uiState.details?.seasonAndYear()
             )
         }
         InfoItemView(
             title = stringResource(R.string.source),
-            info = viewModel.mediaDetails?.source?.localized(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.source?.localized(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.romaji),
-            info = viewModel.mediaDetails?.title?.romaji,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.title?.romaji,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.english),
-            info = viewModel.mediaDetails?.title?.english,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.title?.english,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.native_title),
-            info = viewModel.mediaDetails?.title?.native,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.title?.native,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = "Synonyms",
-            info = viewModel.mediaDetails?.synonyms?.joinToString("\n"),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.synonyms?.joinToString("\n"),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         if (isAnime) {
             InfoClickableItemView(
                 title = stringResource(R.string.studios),
-                items = viewModel.studios.orEmpty(),
+                items = uiState.studios.orEmpty(),
                 itemName = { it.name },
                 onItemClicked = {
                     navigateToStudioDetails(it.id)
@@ -121,7 +121,7 @@ fun MediaInformationView(
             )
             InfoClickableItemView(
                 title = stringResource(R.string.producers),
-                items = viewModel.producers.orEmpty(),
+                items = uiState.producers.orEmpty(),
                 itemName = { it.name },
                 onItemClicked = {
                     navigateToStudioDetails(it.id)
@@ -147,7 +147,7 @@ fun MediaInformationView(
                 .padding(horizontal = 8.dp)
                 .animateContentSize()
         ) {
-            viewModel.mediaDetails?.tags?.forEach { tag ->
+            uiState.details?.tags?.forEach { tag ->
                 if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
                         TagChip(
@@ -156,7 +156,7 @@ fun MediaInformationView(
                             rank = tag.rank,
                             onClick = {
                                 navigateToExplore(
-                                    viewModel.mediaDetails?.basicMediaDetails?.type,
+                                    uiState.details.basicMediaDetails.type,
                                     null,
                                     tag.name
                                 )
@@ -170,7 +170,7 @@ fun MediaInformationView(
                             visible = showSpoiler,
                             onClick = {
                                 navigateToExplore(
-                                    viewModel.mediaDetails?.basicMediaDetails?.type,
+                                    uiState.details.basicMediaDetails.type,
                                     null,
                                     tag.name
                                 )
@@ -182,7 +182,7 @@ fun MediaInformationView(
         }//: FlowRow
 
         // Trailer
-        viewModel.mediaDetails?.trailer?.let { trailer ->
+        uiState.details?.trailer?.let { trailer ->
             InfoTitle(text = stringResource(R.string.trailer))
             VideoThumbnailItem(
                 imageUrl = trailer.thumbnail,
@@ -194,13 +194,13 @@ fun MediaInformationView(
         }
 
         // Streaming episodes
-        if (!viewModel.mediaDetails?.streamingEpisodes.isNullOrEmpty()) {
+        if (!uiState.details?.streamingEpisodes.isNullOrEmpty()) {
             InfoTitle(text = stringResource(R.string.episodes))
             LazyRow(
                 modifier = Modifier.padding(bottom = 4.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(viewModel.mediaDetails!!.streamingEpisodes!!) { item ->
+                items(uiState.details!!.streamingEpisodes!!) { item ->
                     Column {
                         VideoThumbnailItem(
                             imageUrl = item?.thumbnail,
@@ -225,7 +225,7 @@ fun MediaInformationView(
         }
 
         // Streaming links
-        viewModel.mediaDetails?.streamingLinks()?.let { streamingLinks ->
+        uiState.details?.streamingLinks()?.let { streamingLinks ->
             if (streamingLinks.isNotEmpty()) {
                 InfoTitle(text = stringResource(R.string.streaming_sites))
                 FlowRow(
@@ -241,7 +241,7 @@ fun MediaInformationView(
         }
 
         //External links
-        viewModel.mediaDetails?.externalLinks()?.let { externalLinks ->
+        uiState.details?.externalLinks()?.let { externalLinks ->
             if (externalLinks.isNotEmpty()) {
                 InfoTitle(text = stringResource(R.string.external_links))
                 FlowRow(
@@ -264,7 +264,7 @@ fun MediaInformationViewPreview() {
     AniHyouTheme {
         Surface {
             MediaInformationView(
-                viewModel = MediaDetailsViewModel(mediaId = 1),
+                uiState = MediaDetailsUiState(),
                 navigateToExplore = { _, _, _ -> },
                 navigateToStudioDetails = {}
             )

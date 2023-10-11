@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,22 +25,17 @@ import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
-import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsViewModel
+import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsUiState
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
 
 @Composable
 fun StaffInfoView(
-    staffId: Int,
-    viewModel: StaffDetailsViewModel,
+    uiState: StaffDetailsUiState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    LaunchedEffect(staffId) {
-        viewModel.getStaffDetails()
-    }
-
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -52,14 +46,12 @@ fun StaffInfoView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PersonImage(
-                url = viewModel.staffDetails?.image?.large,
+                url = uiState.details?.image?.large,
                 modifier = Modifier
                     .padding(16.dp)
                     .size(PERSON_IMAGE_SIZE_BIG.dp)
                     .clickable {
-                        viewModel.staffDetails?.image?.large?.let {
-                            navigateToFullscreenImage(it)
-                        }
+                        uiState.details?.image?.large?.let(navigateToFullscreenImage)
                     },
                 showShadow = true
             )
@@ -69,25 +61,25 @@ fun StaffInfoView(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = viewModel.staffDetails?.name?.userPreferred ?: "Loading",
+                    text = uiState.details?.name?.userPreferred ?: "Loading",
                     modifier = Modifier
                         .padding(8.dp)
-                        .defaultPlaceholder(visible = viewModel.isLoading),
+                        .defaultPlaceholder(visible = uiState.isLoading),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
 
-                if (!viewModel.staffDetails?.name?.native.isNullOrBlank() || viewModel.isLoading) {
+                if (!uiState.details?.name?.native.isNullOrBlank() || uiState.isLoading) {
                     Text(
-                        text = viewModel.staffDetails?.name?.native ?: "Loading...",
+                        text = uiState.details?.name?.native ?: "Loading...",
                         modifier = Modifier
                             .padding(8.dp)
-                            .defaultPlaceholder(visible = viewModel.isLoading),
+                            .defaultPlaceholder(visible = uiState.isLoading),
                     )
                 }
-                if (!viewModel.staffDetails?.name?.alternative.isNullOrEmpty()) {
+                if (!uiState.details?.name?.alternative.isNullOrEmpty()) {
                     Text(
-                        text = viewModel.staffDetails?.name?.alternative?.joinToString() ?: "",
+                        text = uiState.details?.name?.alternative?.joinToString().orEmpty(),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
@@ -96,41 +88,41 @@ fun StaffInfoView(
 
         InfoItemView(
             title = stringResource(R.string.birthday),
-            info = viewModel.staffDetails?.dateOfBirth?.fuzzyDate?.formatted(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.dateOfBirth?.fuzzyDate?.formatted(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.age),
-            info = viewModel.staffDetails?.age.toStringOrNull(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.age.toStringOrNull(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.gender),
-            info = viewModel.staffDetails?.gender,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.gender,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.blood_type),
-            info = viewModel.staffDetails?.bloodType,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.bloodType,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.years_active),
-            info = viewModel.staffDetails?.yearsActiveFormatted(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.yearsActiveFormatted(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.hometown),
-            info = viewModel.staffDetails?.homeTown,
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.homeTown,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
             title = stringResource(R.string.occupations),
-            info = viewModel.staffDetails?.primaryOccupations?.filterNotNull()?.joinToString(),
-            modifier = Modifier.defaultPlaceholder(visible = viewModel.isLoading)
+            info = uiState.details?.primaryOccupations?.filterNotNull()?.joinToString(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
 
-        if (viewModel.isLoading) {
+        if (uiState.isLoading) {
             Text(
                 text = stringResource(R.string.lorem_ipsun),
                 modifier = Modifier
@@ -138,9 +130,9 @@ fun StaffInfoView(
                     .defaultPlaceholder(visible = true),
                 lineHeight = 18.sp
             )
-        } else if (viewModel.staffDetails?.description != null) {
+        } else if (uiState.details?.description != null) {
             DefaultMarkdownText(
-                markdown = viewModel.staffDetails?.description ?: "",
+                markdown = uiState.details.description,
                 modifier = Modifier.padding(16.dp)
             )
         }

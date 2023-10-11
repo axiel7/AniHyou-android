@@ -20,13 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.Localizable
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
@@ -35,29 +32,6 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-
-enum class FavoritesType : Localizable {
-    ANIME {
-        @Composable
-        override fun localized() = stringResource(R.string.anime)
-    },
-    MANGA {
-        @Composable
-        override fun localized() = stringResource(R.string.manga)
-    },
-    CHARACTERS {
-        @Composable
-        override fun localized() = stringResource(R.string.characters)
-    },
-    STAFF {
-        @Composable
-        override fun localized() = stringResource(R.string.staff)
-    },
-    STUDIOS {
-        @Composable
-        override fun localized() = stringResource(R.string.studios)
-    },
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +43,7 @@ fun UserFavoritesView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
 ) {
-    val viewModel = viewModel { UserFavoritesViewModel(userId) }
+    val viewModel: UserFavoritesViewModel = hiltViewModel()
     val listState = rememberLazyGridState()
 
     LaunchedEffect(userId) {

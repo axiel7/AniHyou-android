@@ -15,8 +15,7 @@ query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType
             meanScore
         }
         pageInfo {
-            hasNextPage
-            currentPage
+            ...CommonPage
         }
     }
 }

@@ -7,7 +7,9 @@ import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.StaffMediaQuery
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class StaffApi @Inject constructor(
     private val client: ApolloClient
 ) {

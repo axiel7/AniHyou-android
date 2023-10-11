@@ -1,13 +1,16 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
-import com.apollographql.apollo3.exception.ApolloException
 import com.axiel7.anihyou.data.api.StaffApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class StaffRepository @Inject constructor(
-    private val api: StaffApi
+    private val api: StaffApi,
 ) {
 
     fun getStaffDetails(staffId: Int) = api
@@ -17,21 +20,17 @@ class StaffRepository @Inject constructor(
             it.Staff
         }
 
-    @Throws(ApolloException::class)
-    suspend fun getStaffMediaPage(
+    fun getStaffMediaPage(
         staffId: Int,
         onList: Boolean = false,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ): PageResult<Pair<Int, StaffMediaGrouped>>? {
-        val data = api
-            .staffMediaQuery(staffId, onList, page, perPage)
-            .execute()
-            .dataOrThrow()
+    ) = api
+        .staffMediaQuery(staffId, onList, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Staff?.staffMedia?.pageInfo?.commonPage }) { data ->
+            val media = data.Staff?.staffMedia?.edges?.filterNotNull().orEmpty()
 
-        val media = data.Staff?.staffMedia?.edges?.filterNotNull()
-        val pageInfo = data.Staff?.staffMedia?.pageInfo
-        return if (media != null) {
             // group media to display staff roles joined
             val mediaGroupMap = mutableMapOf<Int, StaffMediaGrouped>()
             media.groupBy { it.node?.id ?: 0 }.forEach { (mediaId, value) ->
@@ -40,20 +39,17 @@ class StaffRepository @Inject constructor(
                     staffRoles = value.map { it.staffRole ?: "" }
                 )
             }
-            PageResult(
-                list = mediaGroupMap.toList(),
-                nextPage = if (pageInfo?.hasNextPage == true)
-                    pageInfo.currentPage?.plus(1)
-                else null
-            )
-        } else null
-    }
+            mediaGroupMap.toList()
+        }
 
-    suspend fun getStaffCharactersPage(
+    fun getStaffCharactersPage(
         staffId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
     ) = api
         .staffCharacterQuery(staffId, page, perPage)
-        .execute()
+        .watch()
+        .asPagedResult(page = { it.Staff?.characterMedia?.pageInfo?.commonPage }) {
+            it.Staff?.characterMedia?.edges?.filterNotNull().orEmpty()
+        }
 }

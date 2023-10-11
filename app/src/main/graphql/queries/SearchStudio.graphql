@@ -5,8 +5,7 @@ query SearchStudio($page: Int, $perPage: Int, $search: String) {
             name
         }
         pageInfo {
-            hasNextPage
-            currentPage
+            ...CommonPage
         }
     }
 }

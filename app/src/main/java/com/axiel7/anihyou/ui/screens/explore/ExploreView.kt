@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
-import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.screens.explore.search.SearchView
@@ -56,7 +55,6 @@ const val EXPLORE_GENRE_DESTINATION =
 fun ExploreView(
     modifier: Modifier = Modifier,
     initialMediaType: MediaType? = null,
-    initialMediaSort: MediaSort? = null,
     initialGenre: String? = null,
     initialTag: String? = null,
     openSearch: Boolean = false,
@@ -153,7 +151,6 @@ fun ExploreView(
                         query = query,
                         performSearch = performSearch,
                         initialMediaType = initialMediaType,
-                        initialMediaSort = initialMediaSort,
                         initialGenre = initialGenre,
                         initialTag = initialTag,
                         navigateToMediaDetails = navigateToMediaDetails,

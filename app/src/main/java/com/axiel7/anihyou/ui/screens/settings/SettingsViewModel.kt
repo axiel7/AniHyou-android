@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.settings
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
+import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
@@ -15,7 +16,7 @@ import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.scheduleNotificationWork
@@ -31,7 +32,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -159,8 +159,15 @@ class SettingsViewModel @Inject constructor(
             airingNotifications = airingNotifications,
         )
         .onEach { result ->
-            result.handleDataResult { data ->
-                mutableUiState.updateAndGet { it.copy(userOptions = data) }
+            mutableUiState.update {
+                if (result is DataResult.Success) {
+                    it.copy(
+                        isLoading = false,
+                        userOptions = result.data
+                    )
+                } else {
+                    result.toUiState()
+                }
             }
         }
 
@@ -172,8 +179,15 @@ class SettingsViewModel @Inject constructor(
     init {
         userRepository.getUserOptions()
             .onEach { result ->
-                result.handleDataResult { data ->
-                    mutableUiState.updateAndGet { it.copy(userOptions = data) }
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            userOptions = result.data
+                        )
+                    } else {
+                        result.toUiState()
+                    }
                 }
             }
             .launchIn(viewModelScope)

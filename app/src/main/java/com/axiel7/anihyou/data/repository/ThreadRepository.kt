@@ -2,10 +2,15 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.ThreadApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
+import com.axiel7.anihyou.data.model.thread.ChildComment.Companion.toChildComment
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ThreadRepository @Inject constructor(
-    private val api: ThreadApi
+    private val api: ThreadApi,
 ) {
 
     fun getThreadDetails(threadId: Int) = api
@@ -17,11 +22,14 @@ class ThreadRepository @Inject constructor(
 
     fun getThreadCommentsPage(
         threadId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) {
-        TODO("use paging")
-    }
+    ) = api
+        .childCommentsQuery(threadId, page, perPage)
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.threadComments?.filterNotNull().orEmpty().map { it.toChildComment() }
+        }
 
     fun updateThreadComment(
         threadId: Int?,

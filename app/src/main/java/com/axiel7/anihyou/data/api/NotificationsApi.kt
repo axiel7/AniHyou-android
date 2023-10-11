@@ -5,7 +5,9 @@ import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.NotificationsQuery
 import com.axiel7.anihyou.type.NotificationType
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NotificationsApi @Inject constructor(
     private val client: ApolloClient
 ) {

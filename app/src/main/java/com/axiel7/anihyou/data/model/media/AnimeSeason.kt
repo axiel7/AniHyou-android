@@ -7,8 +7,8 @@ import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.MediaSeason
 
 data class AnimeSeason(
-    var year: Int,
-    var season: MediaSeason
+    val year: Int,
+    val season: MediaSeason
 ) : Localizable {
     @Composable
     override fun localized() = "${season.localized()} $year"

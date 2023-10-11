@@ -12,26 +12,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMediaDatePicker(
-    viewModel: EditMediaViewModel,
     datePickerState: DatePickerState,
-    onDateSelected: (Long) -> Unit
+    onDateSelected: (Long) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val dateConfirmEnabled by remember {
         derivedStateOf { datePickerState.selectedDateMillis != null }
     }
 
     DatePickerDialog(
-        onDismissRequest = { viewModel.openDatePicker = false },
+        onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    viewModel.openDatePicker = false
                     onDateSelected(datePickerState.selectedDateMillis!!)
+                    onDismiss()
                 },
                 enabled = dateConfirmEnabled
             ) {
@@ -39,7 +38,7 @@ fun EditMediaDatePicker(
             }
         },
         dismissButton = {
-            TextButton(onClick = { viewModel.openDatePicker = false }) {
+            TextButton(onClick = onDismiss) {
                 Text(text = stringResource(R.string.cancel))
             }
         }

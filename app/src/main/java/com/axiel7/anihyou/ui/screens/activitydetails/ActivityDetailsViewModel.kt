@@ -3,22 +3,28 @@ package com.axiel7.anihyou.ui.screens.activitydetails
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ActivityDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -26,7 +32,8 @@ class ActivityDetailsViewModel @Inject constructor(
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>() {
 
-    private val activityId: Int = savedStateHandle[ACTIVITY_ID_ARGUMENT.removeFirstAndLast()]!!
+    private val activityId =
+        savedStateHandle.getStateFlow<Int?>(ACTIVITY_ID_ARGUMENT.removeFirstAndLast(), null)
 
     override val mutableUiState = MutableStateFlow(ActivityDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
@@ -34,35 +41,48 @@ class ActivityDetailsViewModel @Inject constructor(
     val replies = mutableStateListOf<ActivityReplyFragment>()
 
     init {
-        activityRepository.getActivityDetails(activityId = activityId)
+        activityId
+            .filterNotNull()
+            .flatMapLatest { activityId ->
+                activityRepository.getActivityDetails(activityId = activityId)
+            }
             .onEach { result ->
-                result.handleDataResult { data ->
+                if (result is DataResult.Success) {
                     mutableUiState.updateAndGet {
                         it.copy(
-                            details = data?.onTextActivity?.toGenericActivity()
-                                ?: data?.onListActivity?.toGenericActivity()
-                                ?: data?.onMessageActivity?.toGenericActivity()
+                            isLoading = false,
+                            details = result.data?.onTextActivity?.toGenericActivity()
+                                ?: result.data?.onListActivity?.toGenericActivity()
+                                ?: result.data?.onMessageActivity?.toGenericActivity()
                         )
                     }.also {
                         replies.addAll(it.details?.replies.orEmpty())
                     }
+                } else {
+                    mutableUiState.update { result.toUiState() }
                 }
             }
             .launchIn(viewModelScope)
     }
 
     fun toggleLikeActivity() = viewModelScope.launch {
-        likeRepository.toggleLike(
-            likeableId = activityId,
-            type = LikeableType.ACTIVITY
-        ).collect { result ->
-            result.handleDataResult { data ->
-                if (data != null) {
-                    mutableUiState.updateAndGet {
-                        it.copy(details = it.details?.updateLikeStatus(data))
+        activityId.value?.let { activityId ->
+            likeRepository.toggleLike(
+                likeableId = activityId,
+                type = LikeableType.ACTIVITY
+            ).collect { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    mutableUiState.update {
+                        it.copy(
+                            details = it.details?.updateLikeStatus(result.data)
+                        )
                     }
-                } else {
-                    mutableUiState.updateAndGet { it.setError("Like failed") }
+                } else if (result !is DataResult.Loading) {
+                    mutableUiState.update {
+                        it.copy(
+                            error = "Like failed",
+                        )
+                    }
                 }
             }
         }
@@ -73,19 +93,22 @@ class ActivityDetailsViewModel @Inject constructor(
             likeableId = id,
             type = LikeableType.ACTIVITY_REPLY
         ).collect { result ->
-            result.handleDataResult { data ->
-                if (data != null) {
-                    val foundIndex = replies.indexOfFirst { it.id == id }
-                    if (foundIndex != -1) {
-                        val oldItem = replies[foundIndex]
-                        replies[foundIndex] = oldItem.copy(
-                            isLiked = data,
-                            likeCount = if (data) oldItem.likeCount + 1
-                            else oldItem.likeCount - 1
-                        )
-                    }
+            if (result is DataResult.Success && result.data != null) {
+                val foundIndex = replies.indexOfFirst { it.id == id }
+                if (foundIndex != -1) {
+                    val oldItem = replies[foundIndex]
+                    replies[foundIndex] = oldItem.copy(
+                        isLiked = result.data,
+                        likeCount = if (result.data) oldItem.likeCount + 1
+                        else oldItem.likeCount - 1
+                    )
                 }
-                null
+            } else if (result !is DataResult.Loading) {
+                mutableUiState.update {
+                    it.copy(
+                        error = "Like failed",
+                    )
+                }
             }
         }
     }

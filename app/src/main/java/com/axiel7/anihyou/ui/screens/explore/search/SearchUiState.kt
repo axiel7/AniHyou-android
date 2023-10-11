@@ -6,7 +6,7 @@ import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.UiState
+import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class SearchUiState(
     val query: String = "",
@@ -14,17 +14,17 @@ data class SearchUiState(
     val mediaSort: MediaSort,
     val genreCollection: List<SelectableGenre>,
     val tagCollection: List<SelectableGenre>,
+    val isLoadingGenres: Boolean = true,
     val selectedMediaFormats: List<MediaFormatLocalizable> = emptyList(),
     val selectedMediaStatuses: List<MediaStatusLocalizable> = emptyList(),
     val selectedYear: Int? = null,
     val onMyList: Boolean = false,
-    val performSearch: Boolean = false,
 
+    override val page: Int = 0,
+    override val hasNextPage: Boolean = true,
     override val error: String? = null,
     override val isLoading: Boolean = false,
-) : UiState<SearchUiState> {
-    override fun setError(value: String?) = copy(error = value)
-    override fun setLoading(value: Boolean) = copy(isLoading = value)
+) : PagedUiState<SearchUiState> {
 
     val mediaType
         get() = when (searchType) {
@@ -56,4 +56,9 @@ data class SearchUiState(
         ) {
             MediaSort.POPULARITY_DESC
         } else mediaSort
+
+    override fun setError(value: String?) = copy(error = value)
+    override fun setLoading(value: Boolean) = copy(isLoading = value)
+    override fun setPage(value: Int) = copy(page = value)
+    override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
 }

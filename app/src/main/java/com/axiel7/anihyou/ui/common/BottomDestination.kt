@@ -54,18 +54,18 @@ sealed class BottomDestination(
         iconSelected = R.drawable.explore_filled_24
     )
 
+    @Composable
+    fun Icon(selected: Boolean) {
+        androidx.compose.material3.Icon(
+            painter = painterResource(if (selected) iconSelected else icon),
+            contentDescription = stringResource(title)
+        )
+    }
+
     companion object {
         val values = listOf(Home, AnimeList, MangaList, Profile, Explore)
 
         val railValues = listOf(Home, AnimeList, MangaList, Profile)
-
-        @Composable
-        fun BottomDestination.Icon(selected: Boolean) {
-            androidx.compose.material3.Icon(
-                painter = painterResource(if (selected) iconSelected else icon),
-                contentDescription = stringResource(title)
-            )
-        }
 
         fun String.toBottomDestinationIndex() = values.find { it.route == this }?.index
 

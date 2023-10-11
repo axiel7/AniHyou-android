@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.model.stats
 
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
+import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.point100PrimaryColor
@@ -19,4 +20,11 @@ data class ScoreDistribution(
     @Composable
     override fun localized(): String = score.format()
 
+    companion object {
+        fun MediaStatsQuery.ScoreDistribution.asStat() =
+            StatLocalizableAndColorable(
+                type = ScoreDistribution(score = score ?: 0),
+                value = amount?.toFloat() ?: 0f
+            )
+    }
 }

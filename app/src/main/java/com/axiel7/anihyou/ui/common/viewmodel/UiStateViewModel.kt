@@ -1,8 +1,9 @@
-package com.axiel7.anihyou.ui.common
+package com.axiel7.anihyou.ui.common.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.ui.common.state.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,15 +16,13 @@ abstract class UiStateViewModel<S : UiState<S>> : ViewModel() {
     protected abstract val mutableUiState: MutableStateFlow<S>
     abstract val uiState: StateFlow<S>
 
-    fun <T> DataResult<T>.handleDataResult(onSuccess: (T) -> S?) {
-        mutableUiState.update { it.setLoading(this is DataResult.Loading) }
-        when (this) {
-            is DataResult.Error -> mutableUiState.update { it.setError(message) }
-            is DataResult.Success -> {
-                onSuccess(data)?.let { data -> mutableUiState.update { data } }
-            }
+    protected fun <D> DataResult<D>.toUiState(): S {
+        return when (this) {
+            is DataResult.Loading -> mutableUiState.value.setLoading(true)
 
-            else -> {}
+            is DataResult.Error -> mutableUiState.value.setError(message).setLoading(false)
+
+            is DataResult.Success -> mutableUiState.value.setLoading(false)
         }
     }
 

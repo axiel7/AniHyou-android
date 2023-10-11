@@ -8,8 +8,7 @@ query SearchUser($page: Int, $perPage: Int, $search: String) {
             }
         }
         pageInfo {
-            hasNextPage
-            currentPage
+            ...CommonPage
         }
     }
 }

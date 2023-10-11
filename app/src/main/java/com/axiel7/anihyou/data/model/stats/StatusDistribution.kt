@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
@@ -68,5 +69,15 @@ enum class StatusDistribution(
     companion object {
         fun valueOf(rawValue: String?) =
             entries.find { it.value.rawValue == rawValue }
+
+        fun MediaStatsQuery.StatusDistribution.asStat(): StatLocalizableAndColorable<StatusDistribution>? {
+            val status = StatusDistribution.valueOf(status?.rawValue)
+            return if (status != null) {
+                StatLocalizableAndColorable(
+                    type = status,
+                    value = amount?.toFloat() ?: 0f
+                )
+            } else null
+        }
     }
 }

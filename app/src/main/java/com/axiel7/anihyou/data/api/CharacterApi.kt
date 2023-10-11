@@ -6,7 +6,9 @@ import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.SearchCharacterQuery
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CharacterApi @Inject constructor(
     private val client: ApolloClient
 ) {

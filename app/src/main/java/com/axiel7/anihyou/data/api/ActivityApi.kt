@@ -10,14 +10,16 @@ import com.axiel7.anihyou.UpdateActivityReplyMutation
 import com.axiel7.anihyou.UpdateTextActivityMutation
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ActivityApi @Inject constructor(
     private val client: ApolloClient
 ) {
     fun activityFeedQuery(
         isFollowing: Boolean,
         type: ActivityTypeGrouped?,
-        refreshCache: Boolean,
+        fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
     ) = client
@@ -29,7 +31,7 @@ class ActivityApi @Inject constructor(
                 typeIn = Optional.presentIfNotNull(type?.value),
             )
         )
-        .fetchPolicy(if (refreshCache) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 
     fun activityDetailsQuery(activityId: Int) = client
         .query(

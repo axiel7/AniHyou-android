@@ -1,62 +1,60 @@
 package com.axiel7.anihyou.ui.screens.home.activity
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
+import com.axiel7.anihyou.ActivityFeedQuery
+import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
+import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.UiStateViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ActivityFeedViewModel @Inject constructor(
     private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
-) : UiStateViewModel<ActivityFeedUiState>() {
+) : PagedUiStateViewModel<ActivityFeedUiState>() {
 
     override val mutableUiState = MutableStateFlow(ActivityFeedUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setIsFollowing(value: Boolean) = mutableUiState.update { it.copy(isLoading = value) }
-
-    fun setType(value: ActivityTypeGrouped?) = mutableUiState.update { it.copy(type = value) }
-
-    private val refreshCache = MutableStateFlow(false)
-    fun setRefreshCache(value: Boolean) {
-        refreshCache.update { value }
-        mutableUiState.update { it }
+    fun setIsFollowing(value: Boolean) = mutableUiState.update {
+        it.copy(isLoading = value, page = 1, hasNextPage = true)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val activities = uiState
-        .flatMapLatest {
-            activityRepository.getActivityFeed(
-                isFollowing = it.isFollowing,
-                type = it.type,
-                refreshCache = refreshCache.value,
-            )
-        }
-        .onCompletion {
-            if (refreshCache.value) setRefreshCache(false)
-        }
-        .cachedIn(viewModelScope)
+    fun setType(value: ActivityTypeGrouped?) = mutableUiState.update {
+        it.copy(type = value, page = 1, hasNextPage = true)
+    }
+
+    fun refreshList() = mutableUiState.update {
+        it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true)
+    }
+
+    val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
 
     fun toggleLikeActivity(id: Int) = viewModelScope.launch {
         likeRepository.toggleLike(
             likeableId = id,
             type = LikeableType.ACTIVITY
         ).collect { result ->
-            result.handleDataResult { data ->
-                /*val foundIndex = activities.indexOfFirst {
+            if (result is DataResult.Success && result.data != null) {
+                val foundIndex = activities.indexOfFirst {
                     it.onListActivity?.listActivityFragment?.id == id
                             || it.onTextActivity?.textActivityFragment?.id == id
                 }
@@ -65,16 +63,50 @@ class ActivityFeedViewModel @Inject constructor(
                     activities[foundIndex] = oldItem.copy(
                         onTextActivity = oldItem.onTextActivity?.copy(
                             textActivityFragment = oldItem.onTextActivity.textActivityFragment
-                                .updateLikeStatus(isLiked)
+                                .updateLikeStatus(result.data)
                         ),
                         onListActivity = oldItem.onListActivity?.copy(
                             listActivityFragment = oldItem.onListActivity.listActivityFragment
-                                .updateLikeStatus(isLiked)
+                                .updateLikeStatus(result.data)
                         )
                     )
-                }*/
-                null
+                }
             }
         }
+    }
+
+    init {
+        mutableUiState
+            .filter { it.hasNextPage }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.isFollowing == new.isFollowing
+                        && old.type == new.type
+                        && !new.fetchFromNetwork
+            }
+            .flatMapLatest {
+                activityRepository.getActivityFeed(
+                    isFollowing = it.isFollowing,
+                    type = it.type,
+                    fetchFromNetwork = it.fetchFromNetwork,
+                    page = it.page
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) activities.clear()
+                        activities.addAll(result.list)
+                        it.copy(
+                            fetchFromNetwork = false,
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

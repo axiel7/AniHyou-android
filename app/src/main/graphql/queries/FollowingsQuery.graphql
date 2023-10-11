@@ -4,8 +4,7 @@ query Followings($userId: Int!, $page: Int, $perPage: Int) {
             ...UserFollow
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.MediaListApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
@@ -8,17 +11,19 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MediaListRepository @Inject constructor(
     private val api: MediaListApi
 ) {
 
-    suspend fun getUserMediaListPage(
+    fun getUserMediaListPage(
         userId: Int,
         mediaType: MediaType,
         status: MediaListStatus,
         sort: MediaListSort,
-        refreshCache: Boolean = false,
+        fetchFromNetwork: Boolean = false,
         page: Int = 1,
         perPage: Int = 15,
     ) = api
@@ -27,11 +32,14 @@ class MediaListRepository @Inject constructor(
             mediaType = mediaType,
             status = status,
             sort = listOf(sort, MediaListSort.MEDIA_ID_DESC),
-            refreshCache = refreshCache,
+            fetchFromNetwork = fetchFromNetwork,
             page = page,
             perPage = perPage,
         )
-        .execute()
+        .watch()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.mediaList?.filterNotNull().orEmpty()
+        }
 
     fun updateEntryProgress(
         entryId: Int,

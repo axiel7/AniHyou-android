@@ -1,15 +1,18 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -21,9 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
@@ -31,8 +31,12 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.OnMyListChip
+import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
+import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchFormatChip
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchSortChip
@@ -55,13 +59,6 @@ fun SearchView(
     val viewModel: SearchViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val mediaItems = viewModel.searchedMedia.collectAsLazyPagingItems()
-
-    val isLoading =
-        mediaItems.loadState.refresh is LoadState.Loading
-    val isLoadingMore =
-        mediaItems.loadState.append is LoadState.Loading
-
     val listState = rememberLazyListState()
     var searchByGenre by remember { mutableStateOf(initialMediaType != null) }
 
@@ -78,6 +75,8 @@ fun SearchView(
             performSearch.value = false
         }
     }
+
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     LazyColumn(
         state = listState
@@ -111,7 +110,10 @@ fun SearchView(
                     genreCollection = uiState.genreCollection,
                     tagCollection = uiState.tagCollection,
                     onGenreSelected = viewModel::onGenreUpdated,
-                    onTagSelected = viewModel::onTagUpdated
+                    onTagSelected = viewModel::onTagUpdated,
+                    fetchCollection = viewModel::getGenreTagCollection,
+                    isLoadingCollection = uiState.isLoading,
+                    unselectAll = viewModel::unselectAllGenresAndTags
                 )
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
@@ -146,37 +148,35 @@ fun SearchView(
         }
         when (uiState.searchType) {
             SearchType.ANIME, SearchType.MANGA -> {
-                items(
-                    count = mediaItems.itemCount,
-                    key = mediaItems.itemKey { it.id },
-                    contentType = { it }
-                ) { index ->
-                    mediaItems[index]?.let { item ->
-                        MediaItemHorizontal(
-                            title = item.title?.userPreferred ?: "",
-                            imageUrl = item.coverImage?.large,
-                            score = item.meanScore ?: 0,
-                            format = item.format ?: MediaFormat.UNKNOWN__,
-                            year = item.startDate?.year,
-                            onClick = {
-                                navigateToMediaDetails(item.id)
-                            }
-                        )
-                    }
-
-                }
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
+                } else items(
+                    items = viewModel.media,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    MediaItemHorizontal(
+                        title = item.title?.userPreferred ?: "",
+                        imageUrl = item.coverImage?.large,
+                        score = item.meanScore ?: 0,
+                        format = item.format ?: MediaFormat.UNKNOWN__,
+                        year = item.startDate?.year,
+                        onClick = {
+                            navigateToMediaDetails(item.id)
+                        }
+                    )
                 }
             }
 
-            else -> {}
-
-            /*SearchType.CHARACTER -> {
-                items(
-                    items = viewModel.searchedCharacters,
+            SearchType.CHARACTER -> {
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.characters,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -189,16 +189,15 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
             }
 
             SearchType.STAFF -> {
-                items(
-                    items = viewModel.searchedStaff,
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.staff,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -211,16 +210,20 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
             }
 
             SearchType.STUDIO -> {
-                items(
-                    items = viewModel.searchedStudios,
+                if (uiState.isLoading) {
+                    items(10) {
+                        Text(
+                            text = "Loading placeholder",
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .defaultPlaceholder(visible = true)
+                        )
+                    }
+                } else items(
+                    items = viewModel.studios,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -232,21 +235,15 @@ fun SearchView(
                             .padding(16.dp)
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        Text(
-                            text = "Loading placeholder",
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .defaultPlaceholder(visible = true)
-                        )
-                    }
-                }
             }
 
             SearchType.USER -> {
-                items(
-                    items = viewModel.searchedUsers,
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.users,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -259,16 +256,6 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
-            }*/
-        }
-        if (isLoadingMore) {
-            item {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             }
         }
     }//: LazyColumn

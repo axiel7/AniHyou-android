@@ -3,10 +3,14 @@ package com.axiel7.anihyou.data.repository
 import android.net.Uri
 import androidx.work.WorkManager
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ViewerIdQuery
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LoginRepository @Inject constructor(
     private val client: ApolloClient,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
@@ -23,7 +27,9 @@ class LoginRepository @Inject constructor(
     }
 
     private suspend fun refreshUserIdAndOptions() {
-        val response = client.query(ViewerIdQuery()).execute()
+        val response = client.query(ViewerIdQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .execute()
         if (!response.hasErrors()) {
             response.data?.Viewer?.let { viewer ->
                 defaultPreferencesRepository.saveViewerInfo(viewer)

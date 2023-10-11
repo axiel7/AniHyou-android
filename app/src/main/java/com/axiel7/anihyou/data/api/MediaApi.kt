@@ -24,7 +24,9 @@ import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ThreadSort
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MediaApi @Inject constructor(
     private val client: ApolloClient
 ) {
@@ -64,9 +66,9 @@ class MediaApi @Inject constructor(
     fun genreTagCollectionQuery() = client.query(GenreTagCollectionQuery())
 
     fun airingAnimesQuery(
-        airingAtGreater: Long? = null,
-        airingAtLesser: Long? = null,
-        sort: List<AiringSort> = listOf(AiringSort.TIME),
+        airingAtGreater: Long?,
+        airingAtLesser: Long?,
+        sort: List<AiringSort>,
         page: Int,
         perPage: Int,
     ) = client
@@ -90,18 +92,6 @@ class MediaApi @Inject constructor(
                 perPage = Optional.present(perPage)
             )
         )
-    /*.watch()
-    .asDataResult { data ->
-        PageResult(
-            list = data.Page?.media?.filterNotNull()
-                ?.filter { it.nextAiringEpisode != null }
-                ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
-                .orEmpty(),
-            nextPage = if (data.Page?.pageInfo?.hasNextPage == true)
-                data.Page.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun seasonalAnimeQuery(
         animeSeason: AnimeSeason,
@@ -117,15 +107,6 @@ class MediaApi @Inject constructor(
                 sort = Optional.present(listOf(MediaSort.POPULARITY_DESC))
             )
         )
-    /*.watch()
-    .asDataResult {
-        PageResult(
-            list = it.Page?.media?.filterNotNull().orEmpty(),
-            nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                it.Page.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun mediaSortedQuery(
         mediaType: MediaType,
@@ -141,15 +122,6 @@ class MediaApi @Inject constructor(
                 sort = Optional.present(sort)
             )
         )
-    /*.watch()
-    .asDataResult {
-        PageResult(
-            list = it.Page?.media?.filterNotNull().orEmpty(),
-            nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                it.Page.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun mediaDetailsQuery(mediaId: Int) = client
         .query(
@@ -191,15 +163,6 @@ class MediaApi @Inject constructor(
                 perPage = Optional.present(perPage)
             )
         )
-    /*.watch()
-    .asDataResult {
-        PageResult(
-            list = it.Media?.reviews?.nodes?.filterNotNull().orEmpty(),
-            nextPage = if (it.Media?.reviews?.pageInfo?.hasNextPage == true)
-                it.Media.reviews.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun mediaThreadsQuery(
         mediaId: Int,
@@ -214,15 +177,6 @@ class MediaApi @Inject constructor(
                 sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
             )
         )
-    /*.watch()
-    .asDataResult {
-        PageResult(
-            list = it.Page?.threads?.filterNotNull().orEmpty(),
-            nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                it.Page.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun mediaChartQuery(
         type: MediaType,
@@ -240,15 +194,6 @@ class MediaApi @Inject constructor(
                 status = Optional.presentIfNotNull(status)
             )
         )
-    /*.watch()
-    .asDataResult {
-        PageResult(
-            list = it.Page?.media?.filterNotNull().orEmpty(),
-            nextPage = if (it.Page?.pageInfo?.hasNextPage == true)
-                it.Page.pageInfo.currentPage?.plus(1)
-            else null
-        )
-    }*/
 
     fun userCurrentAnimeListQuery(userId: Int) = client
         .query(

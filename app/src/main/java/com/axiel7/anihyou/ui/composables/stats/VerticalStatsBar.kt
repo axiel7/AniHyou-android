@@ -106,7 +106,7 @@ fun VerticalStatsBarPreview() {
             VerticalStatsBar(
                 stats = stats,
                 modifier = Modifier.padding(8.dp),
-                isLoading = true
+                isLoading = false
             )
         }
     }
