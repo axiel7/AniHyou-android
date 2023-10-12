@@ -90,7 +90,11 @@ fun UserMediaListView(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
-                items(
+                if (isLoading) {
+                    items(10) {
+                        MediaItemVerticalPlaceholder()
+                    }
+                } else items(
                     items = mediaList,
                     //key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -101,11 +105,6 @@ fun UserMediaListView(
                         onClick = { navigateToDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) }
                     )
-                }
-                if (isLoading) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
                 }
             }
         } else if (showAsGrid) {
@@ -121,7 +120,11 @@ fun UserMediaListView(
             ) {
                 when (listStyle) {
                     ListStyle.STANDARD -> {
-                        items(
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -141,15 +144,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                    }
+
+                    ListStyle.COMPACT -> {
                         if (isLoading) {
                             items(10) {
                                 MediaItemHorizontalPlaceholder()
                             }
-                        }
-                    }
-
-                    ListStyle.COMPACT -> {
-                        items(
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -169,15 +171,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                    }
+
+                    ListStyle.MINIMAL -> {
                         if (isLoading) {
                             items(10) {
                                 MediaItemHorizontalPlaceholder()
                             }
-                        }
-                    }
-
-                    ListStyle.MINIMAL -> {
-                        items(
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -196,11 +197,6 @@ fun UserMediaListView(
                                     onClickNotes(item)
                                 }
                             )
-                        }
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
                         }
                     }
 
@@ -218,7 +214,11 @@ fun UserMediaListView(
             ) {
                 when (listStyle) {
                     ListStyle.STANDARD -> {
-                        items(
+                        if (isLoading) {
+                            items(10) {
+                                MediaItemHorizontalPlaceholder()
+                            }
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -238,15 +238,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                    }
+
+                    ListStyle.COMPACT -> {
                         if (isLoading) {
                             items(10) {
                                 MediaItemHorizontalPlaceholder()
                             }
-                        }
-                    }
-
-                    ListStyle.COMPACT -> {
-                        items(
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -266,15 +265,14 @@ fun UserMediaListView(
                                 }
                             )
                         }
+                    }
+
+                    ListStyle.MINIMAL -> {
                         if (isLoading) {
                             items(10) {
                                 MediaItemHorizontalPlaceholder()
                             }
-                        }
-                    }
-
-                    ListStyle.MINIMAL -> {
-                        items(
+                        } else items(
                             items = mediaList,
                             key = { it.basicMediaListEntry.id },
                             contentType = { it.basicMediaListEntry }
@@ -293,11 +291,6 @@ fun UserMediaListView(
                                     onClickNotes(item)
                                 }
                             )
-                        }
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
                         }
                     }
 
