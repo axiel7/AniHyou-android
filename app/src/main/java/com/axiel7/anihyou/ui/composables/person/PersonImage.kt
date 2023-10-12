@@ -11,9 +11,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val PERSON_IMAGE_SIZE_VERY_SMALL = 30
@@ -29,7 +31,7 @@ fun PersonImage(
 ) {
     AsyncImage(
         model = url,
-        contentDescription = "profile",
+        contentDescription = stringResource(R.string.profile),
         placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
         error = ColorPainter(MaterialTheme.colorScheme.outline),
         fallback = ColorPainter(MaterialTheme.colorScheme.outline),

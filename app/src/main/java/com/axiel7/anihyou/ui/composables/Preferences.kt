@@ -68,7 +68,7 @@ fun PlainPreference(
             if (icon != null) {
                 Icon(
                     painter = painterResource(icon),
-                    contentDescription = "",
+                    contentDescription = title,
                     modifier = Modifier.padding(16.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -128,7 +128,7 @@ fun SwitchPreference(
             if (icon != null) {
                 Icon(
                     painter = painterResource(icon),
-                    contentDescription = "",
+                    contentDescription = title,
                     modifier = Modifier.padding(16.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -192,7 +192,7 @@ fun <T> ListPreference(
         if (icon != null) {
             Icon(
                 painter = painterResource(icon),
-                contentDescription = "",
+                contentDescription = title,
                 modifier = Modifier.padding(16.dp),
                 tint = MaterialTheme.colorScheme.primary
             )

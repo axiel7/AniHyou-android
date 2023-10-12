@@ -129,13 +129,13 @@ fun ExploreView(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.arrow_back_24),
-                                    contentDescription = "back"
+                                    contentDescription = stringResource(R.string.action_back)
                                 )
                             }
                         } else {
                             Icon(
                                 painter = painterResource(R.drawable.search_24),
-                                contentDescription = "search"
+                                contentDescription = stringResource(R.string.search)
                             )
                         }
                     },
@@ -144,7 +144,7 @@ fun ExploreView(
                             IconButton(onClick = { query = "" }) {
                                 Icon(
                                     painter = painterResource(R.drawable.close_24),
-                                    contentDescription = "delete"
+                                    contentDescription = stringResource(R.string.delete)
                                 )
                             }
                         }

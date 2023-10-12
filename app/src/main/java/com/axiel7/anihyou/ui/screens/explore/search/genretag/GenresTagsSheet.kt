@@ -157,7 +157,7 @@ fun GenresTagsSheet(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.search_24),
-                        contentDescription = "search"
+                        contentDescription = stringResource(R.string.search)
                     )
                 },
                 trailingIcon = {
@@ -165,7 +165,7 @@ fun GenresTagsSheet(
                         IconButton(onClick = { viewModel.onFilterChanged("") }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
-                                contentDescription = "clear"
+                                contentDescription = stringResource(R.string.clear)
                             )
                         }
                     }

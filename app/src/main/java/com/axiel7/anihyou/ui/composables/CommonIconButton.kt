@@ -28,7 +28,7 @@ fun BackIconButton(
     IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(R.drawable.arrow_back_24),
-            contentDescription = "back",
+            contentDescription = stringResource(R.string.action_back),
             tint = MaterialTheme.colorScheme.onSurface
         )
     }
@@ -40,7 +40,7 @@ fun ShareIconButton(url: String) {
     IconButton(onClick = { context.openShareSheet(url) }) {
         Icon(
             painter = painterResource(R.drawable.share_24),
-            contentDescription = "share",
+            contentDescription = stringResource(R.string.share),
             tint = MaterialTheme.colorScheme.onSurface
         )
     }
@@ -52,7 +52,7 @@ fun OpenInBrowserIconButton(url: String) {
     IconButton(onClick = { context.openLink(url) }) {
         Icon(
             painter = painterResource(R.drawable.open_in_browser_24),
-            contentDescription = "share",
+            contentDescription = stringResource(R.string.external_links),
             tint = MaterialTheme.colorScheme.onSurface
         )
     }
@@ -85,7 +85,7 @@ fun FavoriteIconButton(
                 if (isFavorite) R.drawable.favorite_filled_24
                 else R.drawable.favorite_24
             ),
-            contentDescription = "heart",
+            contentDescription = stringResource(R.string.favorites),
             modifier = Modifier
                 .padding(start = 8.dp)
                 .size(iconSize),
@@ -116,7 +116,7 @@ fun CommentIconButton(
         }
         Icon(
             painter = painterResource(R.drawable.chat_bubble_24),
-            contentDescription = "chat_bubble",
+            contentDescription = stringResource(R.string.comments),
             modifier = Modifier
                 .padding(start = 8.dp)
                 .size(iconSize),

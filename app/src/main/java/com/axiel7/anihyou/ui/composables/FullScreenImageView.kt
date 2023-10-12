@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.axiel7.anihyou.R
@@ -69,10 +70,16 @@ fun FullScreenImageView(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             FilledTonalIconButton(onClick = { context.openShareSheet(imageUrl ?: "") }) {
-                Icon(painter = painterResource(R.drawable.share_24), contentDescription = "close")
+                Icon(
+                    painter = painterResource(R.drawable.share_24),
+                    contentDescription = stringResource(R.string.share)
+                )
             }
             FilledTonalIconButton(onClick = onDismiss) {
-                Icon(painter = painterResource(R.drawable.close_24), contentDescription = "close")
+                Icon(
+                    painter = painterResource(R.drawable.close_24),
+                    contentDescription = stringResource(R.string.close)
+                )
             }
         }
     }

@@ -82,7 +82,7 @@ fun MediaSearchGenresChips(
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),
-                        contentDescription = "remove"
+                        contentDescription = stringResource(R.string.delete)
                     )
                 }
             )
@@ -98,7 +98,7 @@ fun MediaSearchGenresChips(
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),
-                        contentDescription = "remove"
+                        contentDescription = stringResource(R.string.delete)
                     )
                 }
             )
@@ -107,7 +107,10 @@ fun MediaSearchGenresChips(
             onClick = { scope.launch { sheetState.show() } },
             label = { Text(text = stringResource(R.string.add_genre)) },
             leadingIcon = {
-                Icon(painter = painterResource(R.drawable.add_24), contentDescription = "add")
+                Icon(
+                    painter = painterResource(R.drawable.add_24),
+                    contentDescription = stringResource(R.string.add)
+                )
             }
         )
     }//: FlowRow

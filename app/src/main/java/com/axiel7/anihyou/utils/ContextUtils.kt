@@ -38,7 +38,7 @@ object ContextUtils {
                 startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {
-            showToast("No app found for this action")
+            showToast(getString(R.string.no_app_found_for_this_action))
         }
     }
 
@@ -144,7 +144,7 @@ object ContextUtils {
                 startActivity(this)
             }
         } catch (e: ActivityNotFoundException) {
-            showToast("Google Translate not installed")
+            showToast(getString(R.string.google_translate_not_installed))
         } catch (e: Exception) {
             Log.d("translate", e.toString())
         }

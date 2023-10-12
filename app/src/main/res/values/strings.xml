@@ -102,7 +102,7 @@
     <string name="characters">Characters</string>
     <string name="staff">Staff</string>
     <string name="users">Users</string>
-    <string name="id">Id</string>
+    <string name="id" translatable="false">Id</string>
     <string name="title_romaji">Title Romaji</string>
     <string name="title_english">Title English</string>
     <string name="title_native">Title Native</string>
@@ -293,4 +293,15 @@
     <string name="reply">Reply</string>
     <string name="locked">Locked</string>
     <string name="donator">Donator</string>
+    <string name="google_translate_not_installed">Google Translate not installed</string>
+    <string name="no_app_found_for_this_action">No app found for this action</string>
+    <string name="list_status">Status</string>
+    <string name="action_back">Back</string>
+    <string name="share">Share</string>
+    <string name="comments">Comments</string>
+    <string name="see_all">See All</string>
+    <string name="search">Search</string>
+    <string name="expand">Expand</string>
+    <string name="copy">Copy</string>
+    <string name="translate">Translate</string>
 </resources>

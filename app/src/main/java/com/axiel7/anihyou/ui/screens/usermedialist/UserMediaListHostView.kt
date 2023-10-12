@@ -171,7 +171,7 @@ private fun UserMediaListHostView(
                 ) {
                     Icon(
                         painter = painterResource(uiState.status.icon()),
-                        contentDescription = "status",
+                        contentDescription = stringResource(R.string.list_status),
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(text = uiState.status.localized())
@@ -185,7 +185,10 @@ private fun UserMediaListHostView(
         },
         actions = {
             IconButton(onClick = { viewModel.toggleSortDialog(true) }) {
-                Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
+                Icon(
+                    painter = painterResource(R.drawable.sort_24),
+                    contentDescription = stringResource(R.string.sort)
+                )
             }
         },
         scrollBehavior = topAppBarScrollBehavior,

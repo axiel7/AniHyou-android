@@ -180,7 +180,7 @@ fun MediaDetailsView(
                             if (uiState.isNewEntry) R.drawable.add_24
                             else R.drawable.edit_24
                         ),
-                        contentDescription = "edit"
+                        contentDescription = stringResource(R.string.edit)
                     )
                     Text(
                         text = if (uiState.isNewEntry) stringResource(R.string.add)
@@ -364,7 +364,7 @@ fun MediaDetailsView(
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.translate_24),
-                            contentDescription = "translate"
+                            contentDescription = stringResource(R.string.translate)
                         )
                     }
                 } else Spacer(modifier = Modifier.size(48.dp))
@@ -372,7 +372,10 @@ fun MediaDetailsView(
                 IconButton(
                     onClick = { isSynopsisExpanded = !isSynopsisExpanded }
                 ) {
-                    Icon(painter = painterResource(iconExpand), contentDescription = "expand")
+                    Icon(
+                        painter = painterResource(iconExpand),
+                        contentDescription = stringResource(R.string.expand)
+                    )
                 }
 
                 IconButton(
@@ -384,7 +387,7 @@ fun MediaDetailsView(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.content_copy_24),
-                        contentDescription = "copy"
+                        contentDescription = stringResource(R.string.copy)
                     )
                 }
             }//: Row

@@ -72,7 +72,7 @@ fun MediaStatsView(
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(it.type.icon()),
-                                contentDescription = "rank",
+                                contentDescription = it.type.name,
                                 modifier = if (it.type == MediaRankType.POPULAR)
                                     Modifier.padding(start = 2.dp)
                                 else Modifier,
