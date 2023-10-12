@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsSheet
 import kotlinx.coroutines.launch
 
@@ -78,7 +79,7 @@ fun MediaSearchGenresChips(
                     selectedGenres.remove(genre)
                     onGenreTagSelected(selectedGenres, selectedTags)
                 },
-                label = { Text(text = genre) },
+                label = { Text(text = genre.genreTagLocalized()) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),
@@ -94,7 +95,7 @@ fun MediaSearchGenresChips(
                     selectedTags.remove(tag)
                     onGenreTagSelected(selectedGenres, selectedTags)
                 },
-                label = { Text(text = tag) },
+                label = { Text(text = tag.genreTagLocalized()) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),

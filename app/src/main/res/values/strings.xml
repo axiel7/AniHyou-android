@@ -304,4 +304,23 @@
     <string name="expand">Expand</string>
     <string name="copy">Copy</string>
     <string name="translate">Translate</string>
+    <string name="genre_action">Action</string>
+    <string name="genre_adventure">Adventure</string>
+    <string name="genre_comedy">Comedy</string>
+    <string name="genre_drama">Drama</string>
+    <string name="genre_ecchi">Ecchi</string>
+    <string name="genre_fantasy">Fantasy</string>
+    <string name="genre_hentai">Hentai</string>
+    <string name="genre_horror">Horror</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mecha">Mecha</string>
+    <string name="genre_music">Music</string>
+    <string name="genre_mystery">Mystery</string>
+    <string name="genre_pyshological">Psychological</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_scifi">Sci-Fi</string>
+    <string name="genre_slice_of_life">Slice of Life</string>
+    <string name="genre_sports">Sports</string>
+    <string name="genre_supernatural">Supernatural</string>
+    <string name="genre_thriller">Thriller</string>
 </resources>

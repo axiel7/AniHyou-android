@@ -49,6 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TextCheckbox
@@ -189,7 +190,7 @@ fun GenresTagsSheet(
                     GenresTagsSheetTab.GENRES ->
                         items(viewModel.displayGenres) { item ->
                             TextCheckbox(
-                                text = item.name,
+                                text = item.name.genreTagLocalized(),
                                 checked = item.isSelected,
                                 onCheckedChange = { isChecked ->
                                     viewModel.onGenreUpdated(item.copy(isSelected = isChecked))
@@ -201,7 +202,7 @@ fun GenresTagsSheet(
                     GenresTagsSheetTab.TAGS ->
                         items(viewModel.displayTags) { item ->
                             TextCheckbox(
-                                text = item.name,
+                                text = item.name.genreTagLocalized(),
                                 checked = item.isSelected,
                                 onCheckedChange = { isChecked ->
                                     viewModel.onTagUpdated(item.copy(isSelected = isChecked))
