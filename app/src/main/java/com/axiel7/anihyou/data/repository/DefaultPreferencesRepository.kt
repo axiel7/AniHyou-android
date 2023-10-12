@@ -90,7 +90,7 @@ class DefaultPreferencesRepository @Inject constructor(
 
     // app
     val theme = dataStore.getValue(key = THEME_KEY, default = Theme.FOLLOW_SYSTEM.name).map {
-        Theme.valueOf(it)
+        Theme.valueOfOrNull(it) ?: Theme.FOLLOW_SYSTEM
     }
 
     suspend fun setTheme(value: Theme) {

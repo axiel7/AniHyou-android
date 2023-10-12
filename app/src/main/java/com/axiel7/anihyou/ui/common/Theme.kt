@@ -24,5 +24,11 @@ enum class Theme : Localizable {
 
     companion object {
         val entriesLocalized = entries.associateWith { it.stringRes }
+
+        fun valueOfOrNull(value: String) = try {
+            valueOf(value)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 }
