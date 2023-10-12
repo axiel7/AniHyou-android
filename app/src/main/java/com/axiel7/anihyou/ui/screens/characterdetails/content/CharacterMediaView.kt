@@ -14,25 +14,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
-import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsViewModel
 
 @Composable
 fun CharacterMediaView(
-    viewModel: CharacterDetailsViewModel,
+    media: List<CharacterMediaQuery.Edge>,
+    isLoading: Boolean,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getCharacterMedia()
-    }
+    listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -41,8 +40,8 @@ fun CharacterMediaView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(
-            items = viewModel.characterMedia,
-            key = { it.id!! },
+            items = media,
+            //key = { it.id!! },
             contentType = { it }
         ) { item ->
             MediaItemHorizontal(
@@ -69,11 +68,11 @@ fun CharacterMediaView(
                 }
             )
         }
-        if (viewModel.isLoading) {
+        if (isLoading) {
             items(10) {
                 MediaItemHorizontalPlaceholder()
             }
-        } else if (viewModel.characterMedia.isEmpty()) {
+        } else if (media.isEmpty()) {
             item {
                 Text(
                     text = stringResource(R.string.no_information),

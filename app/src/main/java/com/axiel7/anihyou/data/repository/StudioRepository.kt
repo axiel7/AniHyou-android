@@ -1,40 +1,35 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.StudioDetailsQuery
-import com.axiel7.anihyou.data.repository.BaseRepository.getError
-import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import kotlinx.coroutines.flow.flow
+import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.data.api.StudioApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object StudioRepository {
+@Singleton
+class StudioRepository @Inject constructor(
+    private val api: StudioApi,
+) {
 
     fun getStudioDetails(
         studioId: Int,
-        page: Int = 1,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-
-        val response = StudioDetailsQuery(
-            studioId = Optional.present(studioId),
-            page = Optional.present(page),
-            perPage = Optional.present(perPage)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val studio = response?.data?.Studio
-            val pageInfo = studio?.media?.pageInfo
-            if (studio != null) emit(
-                PagedResult.Success(
-                    data = studio,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Error"))
+    ) = api
+        .studioDetailsQuery(studioId, perPage)
+        .watch()
+        .asDataResult {
+            it.Studio
         }
-    }
+
+    fun getStudioMediaPage(
+        studioId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .studioMediaQuery(studioId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Studio?.media?.pageInfo?.commonPage }) {
+            it.Studio?.media?.commonStudioMedia?.nodes?.filterNotNull().orEmpty()
+        }
 }

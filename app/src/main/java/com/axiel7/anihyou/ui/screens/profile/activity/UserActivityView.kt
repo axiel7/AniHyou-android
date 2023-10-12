@@ -12,16 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.ui.screens.profile.ProfileViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun UserActivityView(
-    viewModel: ProfileViewModel,
+    activities: List<UserActivityQuery.Activity>,
+    isLoading: Boolean,
+    loadMore: () -> Unit,
+    toggleLike: (Int) -> Unit,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
@@ -29,11 +31,7 @@ fun UserActivityView(
     navigateToFullscreenImage: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPageActivity)
-            viewModel.getUserActivity(viewModel.userId)
-    }
+    listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -41,7 +39,7 @@ fun UserActivityView(
         contentPadding = PaddingValues(top = 8.dp)
     ) {
         items(
-            items = viewModel.userActivities,
+            items = activities,
             contentType = { it }
         ) { item ->
             item.onListActivity?.listActivityFragment?.let { activity ->
@@ -64,7 +62,7 @@ fun UserActivityView(
                         activity.media?.id?.let(navigateToMediaDetails)
                     },
                     onClickLike = {
-                        viewModel.toggleLikeActivity(activity.id)
+                        toggleLike(activity.id)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
@@ -90,7 +88,7 @@ fun UserActivityView(
                         activity.userId?.let(navigateToUserDetails)
                     },
                     onClickLike = {
-                        viewModel.toggleLikeActivity(activity.id)
+                        toggleLike(activity.id)
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
@@ -118,17 +116,17 @@ fun UserActivityView(
                         activity.messengerId?.let(navigateToUserDetails)
                     },
                     onClickLike = {
-                        viewModel.toggleLikeActivity(activity.id)
+                        toggleLike(activity.id)
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
         }
-        if (viewModel.isLoadingActivity) {
+        if (isLoading) {
             items(10) {
                 ActivityItemPlaceholder(
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(8.dp)
                 )
             }
         }
@@ -141,7 +139,10 @@ fun UserActivityViewPreview() {
     AniHyouTheme {
         Surface {
             UserActivityView(
-                viewModel = viewModel(),
+                activities = emptyList(),
+                isLoading = true,
+                loadMore = {},
+                toggleLike = {},
                 navigateToMediaDetails = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},

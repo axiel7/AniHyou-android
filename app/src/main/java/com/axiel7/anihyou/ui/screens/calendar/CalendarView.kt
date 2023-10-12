@@ -32,9 +32,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
@@ -67,10 +68,11 @@ fun CalendarView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
+    var onMyList by rememberSaveable { mutableStateOf(false) }
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var onMyList by rememberSaveable { mutableStateOf(false) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
@@ -78,9 +80,7 @@ fun CalendarView(
         actions = {
             OnMyListChip(
                 selected = onMyList,
-                onClick = {
-                    onMyList = !onMyList
-                },
+                onClick = { onMyList = !onMyList },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
         },
@@ -122,19 +122,20 @@ fun CalendarDayView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val viewModel: CalendarViewModel = viewModel(key = "$weekday")
+    val viewModel: CalendarViewModel = hiltViewModel(key = weekday.toString())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val listState = rememberLazyGridState()
-
+    // TODO: pass these to SavedStateHandle
+    LaunchedEffect(weekday) {
+        viewModel.setWeekday(weekday)
+    }
     LaunchedEffect(onMyList) {
-        viewModel.onMyList = onMyList
-        viewModel.resetPage()
-        viewModel.getAiringAnime(weekday)
+        viewModel.setOnMyList(onMyList)
     }
 
+    val listState = rememberLazyGridState()
     listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage)
-            viewModel.getAiringAnime(weekday)
+        viewModel.loadNextPage()
     }
 
     LazyVerticalGrid(
@@ -172,7 +173,7 @@ fun CalendarDayView(
                 }
             )
         }
-        if (viewModel.isLoading) {
+        if (uiState.isLoading) {
             items(13) {
                 MediaItemVerticalPlaceholder()
             }

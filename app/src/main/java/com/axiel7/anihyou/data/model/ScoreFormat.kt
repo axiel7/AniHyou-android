@@ -66,6 +66,9 @@ fun ScoreFormat.stringRes() = when (this) {
     ScoreFormat.UNKNOWN__ -> R.string.unknown
 }
 
+val ScoreFormat.Companion.entriesLocalized
+    get() = knownEntries.associateWith { it.stringRes() }
+
 @Composable
 fun Double?.scorePrimaryColor(format: ScoreFormat): Color {
     if (this == null) return MaterialTheme.colorScheme.outline

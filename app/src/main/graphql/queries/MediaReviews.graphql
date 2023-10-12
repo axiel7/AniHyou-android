@@ -11,8 +11,7 @@ query MediaReviews($mediaId: Int, $page: Int, $perPage: Int) {
                 }
             }
             pageInfo {
-                currentPage
-                hasNextPage
+                ...CommonPage
             }
         }
     }

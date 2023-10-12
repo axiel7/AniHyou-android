@@ -11,34 +11,31 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.composables.OnMyListChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
-import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun StaffMediaView(
-    viewModel: StaffDetailsViewModel,
+    staffMedia: List<Pair<Int, StaffMediaGrouped>>,
+    isLoading: Boolean,
+    loadMore: () -> Unit,
+    mediaOnMyList: Boolean,
+    setMediaOnMyList: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPageMedia) viewModel.getStaffMedia()
-    }
-
+    listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
@@ -48,24 +45,21 @@ fun StaffMediaView(
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
                 OnMyListChip(
-                    selected = viewModel.mediaOnMyList,
+                    selected = mediaOnMyList,
                     onClick = {
-                        scope.launch {
-                            viewModel.mediaOnMyList = !viewModel.mediaOnMyList
-                            viewModel.refreshStaffMedia()
-                        }
+                        setMediaOnMyList(!mediaOnMyList)
                     },
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
         }
         items(
-            items = viewModel.staffMedia,
+            items = staffMedia,
             key = { it.second.value.id!! },
             contentType = { it.second }
         ) { item ->
             MediaItemHorizontal(
-                title = item.second.value.node?.title?.userPreferred ?: "",
+                title = item.second.value.node?.title?.userPreferred.orEmpty(),
                 imageUrl = item.second.value.node?.coverImage?.large,
                 subtitle1 = {
                     Text(
@@ -79,11 +73,11 @@ fun StaffMediaView(
                 }
             )
         }
-        if (viewModel.isLoading) {
+        if (isLoading) {
             items(10) {
                 MediaItemHorizontalPlaceholder()
             }
-        } else if (viewModel.staffMedia.isEmpty()) {
+        } else if (staffMedia.isEmpty()) {
             item {
                 Text(
                     text = stringResource(R.string.no_information),

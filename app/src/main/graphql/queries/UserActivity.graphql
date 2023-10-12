@@ -12,8 +12,7 @@ query UserActivity($page: Int, $perPage: Int, $userId: Int, $sort: [ActivitySort
             }
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

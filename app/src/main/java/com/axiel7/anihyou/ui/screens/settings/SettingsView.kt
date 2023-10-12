@@ -11,45 +11,27 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.App
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.PreferencesDataStore.AIRING_ON_MY_LIST_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.DEFAULT_HOME_TAB_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.GRID_ITEMS_PER_ROW_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATION_INTERVAL_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.THEME_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.USE_GENERAL_LIST_STYLE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
+import com.axiel7.anihyou.data.model.entriesLocalized
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
-import com.axiel7.anihyou.data.model.stringRes
-import com.axiel7.anihyou.data.model.user.preferenceValues
-import com.axiel7.anihyou.data.model.user.stringRes
-import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.data.model.user.entriesLocalized
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
-import com.axiel7.anihyou.ui.base.AppColorMode
-import com.axiel7.anihyou.ui.base.ItemsPerRow
-import com.axiel7.anihyou.ui.base.ListStyle
-import com.axiel7.anihyou.ui.base.Theme
+import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.ItemsPerRow
+import com.axiel7.anihyou.ui.common.ListStyle
+import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
@@ -68,23 +50,9 @@ import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DISCORD_SERVER_URL
 import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
-import com.axiel7.anihyou.worker.NotificationWorker
+import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotificationChannels
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.launch
-
-val themeEntries = Theme.entries.associate { it.value to it.stringRes }
-val colorModeEntries = AppColorMode.entries.associate { it.name to it.stringRes }
-val listStyleEntries = ListStyle.entries.associate { it.name to it.stringRes }
-val itemsPerRowEntries = ItemsPerRow.entries.associate { it.value.toString() to it.stringRes }
-val homeTabEntries = HomeTab.entries.associate { it.index to it.stringRes }
-val titleLanguageEntries =
-    UserTitleLanguage.preferenceValues().associate { it.rawValue to it.stringRes() }
-val staffNameLanguageEntries =
-    UserStaffNameLanguage.knownValues().associate { it.rawValue to it.stringRes() }
-val scoreFormatEntries = ScoreFormat.knownValues().associate { it.rawValue to it.stringRes() }
-val notificationIntervalEntries = NotificationInterval.entries.associate { it.name to it.stringRes }
 
 const val SETTINGS_DESTINATION = "settings"
 
@@ -95,8 +63,12 @@ fun SettingsView(
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val viewModel: SettingsViewModel = viewModel()
+    val viewModel: SettingsViewModel = hiltViewModel()
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val notificationCheckInterval by viewModel.notificationCheckInterval.collectAsStateWithLifecycle(
+        initialValue = NotificationInterval.DAILY
+    )
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -105,57 +77,13 @@ fun SettingsView(
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
     } else null
 
-    var themePreference by rememberPreference(THEME_PREFERENCE_KEY, Theme.FOLLOW_SYSTEM.value)
-    var appColorModePreference by rememberPreference(
-        APP_COLOR_MODE_PREFERENCE_KEY,
-        App.appColorMode.name
-    )
-    var appColorPreference by rememberPreference(
-        APP_COLOR_PREFERENCE_KEY,
-        App.appColor
-    )
-    val profileColor by rememberPreference(PROFILE_COLOR_PREFERENCE_KEY, null)
-    var useGeneralListStylePreference by rememberPreference(
-        USE_GENERAL_LIST_STYLE_PREFERENCE_KEY,
-        App.useGeneralListStyle
-    )
-    var generalListStylePreference by rememberPreference(
-        GENERAL_LIST_STYLE_PREFERENCE_KEY,
-        App.generalListStyle.name
-    )
-    var itemsPerRowPreference by rememberPreference(
-        GRID_ITEMS_PER_ROW_PREFERENCE_KEY,
-        App.gridItemsPerRow
-    )
-    var defaultHomeTabPreference by rememberPreference(
-        DEFAULT_HOME_TAB_PREFERENCE_KEY,
-        App.defaultHomeTab
-    )
-    var airingOnMyList by rememberPreference(AIRING_ON_MY_LIST_PREFERENCE_KEY, App.airingOnMyList)
-    var scoreFormatPreference by rememberPreference(
-        SCORE_FORMAT_PREFERENCE_KEY,
-        App.scoreFormat.name
-    )
-    var notificationsEnabledPreference by rememberPreference(
-        NOTIFICATIONS_ENABLED_PREFERENCE_KEY,
-        App.enabledNotifications
-    )
-    var notificationInterval by rememberPreference(
-        NOTIFICATION_INTERVAL_PREFERENCE_KEY,
-        App.notificationInterval.name
-    )
-
-    LaunchedEffect(viewModel) {
-        if (!viewModel.isLoading) viewModel.getUserOptions()
-    }
-
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
         navigationIcon = {
             BackIconButton(onClick = navigateBack)
         },
         actions = {
-            if (viewModel.isLoading) {
+            if (uiState.isLoading) {
                 SmallCircularProgressIndicator(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -173,67 +101,42 @@ fun SettingsView(
 
             ListPreference(
                 title = stringResource(R.string.theme),
-                entriesValues = themeEntries,
-                preferenceValue = themePreference,
+                entriesValues = Theme.entriesLocalized,
+                preferenceValue = uiState.theme,
                 icon = R.drawable.palette_24,
-                onValueChange = { value ->
-                    themePreference = value
-                }
+                onValueChange = viewModel::setTheme
             )
 
             ListPreference(
                 title = stringResource(R.string.color),
-                entriesValues = colorModeEntries,
-                preferenceValue = appColorModePreference,
+                entriesValues = AppColorMode.entriesLocalized,
+                preferenceValue = uiState.appColorMode,
                 icon = R.drawable.colors_24,
-                onValueChange = { value ->
-                    appColorModePreference = value
-                    when (value) {
-                        AppColorMode.DEFAULT.name -> {
-                            appColorPreference = null
-                        }
-
-                        AppColorMode.PROFILE.name -> {
-                            if (profileColor != null) {
-                                appColorPreference = profileColor
-                                App.appColor = profileColor
-                            }
-                        }
-                    }
-                }
+                onValueChange = viewModel::setAppColorMode
             )
 
             ListPreference(
                 title = stringResource(R.string.default_home_tab),
-                entriesValues = homeTabEntries,
-                preferenceValue = defaultHomeTabPreference,
+                entriesValues = HomeTab.entriesLocalized,
+                preferenceValue = uiState.defaultHomeTab,
                 icon = R.drawable.home_24,
-                onValueChange = { value ->
-                    defaultHomeTabPreference = value
-                }
+                onValueChange = viewModel::setDefaultHomeTab
             )
 
             SwitchPreference(
                 title = stringResource(R.string.use_separated_list_styles),
-                preferenceValue = useGeneralListStylePreference?.not(),
+                preferenceValue = uiState.useGeneralListStyle?.not(),
                 onValueChange = {
-                    useGeneralListStylePreference = it?.not()
-                    App.useGeneralListStyle = it?.not() ?: true
+                    viewModel.setUseGeneralListStyle(it.not())
                 }
             )
-            if (useGeneralListStylePreference == true) {
+            if (uiState.useGeneralListStyle == true) {
                 ListPreference(
                     title = stringResource(R.string.list_style),
-                    entriesValues = listStyleEntries,
-                    preferenceValue = generalListStylePreference,
+                    entriesValues = ListStyle.entriesLocalized,
+                    preferenceValue = uiState.generalListStyle,
                     icon = R.drawable.format_list_bulleted_24,
-                    onValueChange = { value ->
-                        value?.let {
-                            val listStyle = ListStyle.valueOf(it)
-                            generalListStylePreference = listStyle.name
-                            App.generalListStyle = listStyle
-                        }
-                    }
+                    onValueChange = viewModel::setGeneralListStyle
                 )
             } else {
                 PlainPreference(
@@ -243,129 +146,87 @@ fun SettingsView(
                 )
             }
 
-            if (generalListStylePreference == ListStyle.GRID.name
-                || useGeneralListStylePreference == false
-            ) {
+            if (uiState.generalListStyle == ListStyle.GRID || uiState.useGeneralListStyle == false) {
                 ListPreference(
                     title = stringResource(R.string.items_per_row),
-                    entriesValues = itemsPerRowEntries,
-                    preferenceValue = itemsPerRowPreference.toString(),
+                    entriesValues = ItemsPerRow.entriesLocalized,
+                    preferenceValue = uiState.gridItemsPerRow,
                     icon = R.drawable.grid_view_24,
-                    onValueChange = { value ->
-                        value?.toIntOrNull()?.let {
-                            itemsPerRowPreference = it
-                            App.gridItemsPerRow = it
-                        }
-                    }
+                    onValueChange = viewModel::setGridItemsPerRow
                 )
             }
 
             ListPreference(
                 title = stringResource(R.string.title_language),
-                entriesValues = titleLanguageEntries,
-                preferenceValue = viewModel.userOptions?.options?.titleLanguage?.rawValue,
+                entriesValues = UserTitleLanguage.entriesLocalized,
+                preferenceValue = uiState.userOptions?.options?.titleLanguage,
                 icon = R.drawable.title_24,
                 onValueChange = { value ->
-                    value?.let {
-                        val titleLanguage = UserTitleLanguage.valueOf(it)
-                        viewModel.onTitleLanguageChanged(titleLanguage)
-                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                    }
+                    viewModel.setTitleLanguage(value)
+                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
                 }
             )
 
             ListPreference(
                 title = stringResource(R.string.staff_character_name_language),
-                entriesValues = staffNameLanguageEntries,
-                preferenceValue = viewModel.userOptions?.options?.staffNameLanguage?.rawValue,
+                entriesValues = UserStaffNameLanguage.entriesLocalized,
+                preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
                 icon = R.drawable.group_24,
                 onValueChange = { value ->
-                    value?.let {
-                        val staffNameLanguage = UserStaffNameLanguage.valueOf(it)
-                        viewModel.onStaffNameLanguageChanged(staffNameLanguage)
-                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                    }
+                    viewModel.setStaffNameLanguage(value)
+                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
                 }
             )
 
             ListPreference(
                 title = stringResource(R.string.score_format),
-                entriesValues = scoreFormatEntries,
-                preferenceValue = scoreFormatPreference,
+                entriesValues = ScoreFormat.entriesLocalized,
+                preferenceValue = uiState.scoreFormat,
                 icon = R.drawable.star_24,
-                onValueChange = { value ->
-                    value?.let {
-                        scoreFormatPreference = it
-                        val scoreFormat = ScoreFormat.valueOf(it)
-                        viewModel.onScoreFormatChanged(scoreFormat)
-                    }
-                }
+                onValueChange = viewModel::setScoreFormat
             )
 
             PreferencesTitle(text = stringResource(R.string.content))
             SwitchPreference(
                 title = stringResource(R.string.display_adult_content),
-                preferenceValue = viewModel.userOptions?.options?.displayAdultContent,
+                preferenceValue = uiState.userOptions?.options?.displayAdultContent,
                 icon = R.drawable.no_adult_content_24,
-                onValueChange = { value ->
-                    if (value != null) {
-                        viewModel.onDisplayAdultContentChanged(value)
-                    }
-                }
+                onValueChange = viewModel::setDisplayAdultContent
             )
             SwitchPreference(
                 title = stringResource(R.string.airing_on_my_list),
-                preferenceValue = airingOnMyList,
+                preferenceValue = uiState.airingOnMyList,
                 subtitle = stringResource(R.string.airing_on_my_list_summary),
-                onValueChange = {
-                    airingOnMyList = it
-                }
+                onValueChange = viewModel::setAiringOnMyList
             )
 
             PreferencesTitle(text = stringResource(R.string.notifications))
             SwitchPreference(
                 title = stringResource(R.string.push_notifications),
-                preferenceValue = notificationsEnabledPreference,
+                preferenceValue = uiState.isNotificationsEnabled,
                 icon = R.drawable.notifications_24,
-                onValueChange = {
-                    notificationsEnabledPreference = it
-                    if (it == false) NotificationWorker.cancelNotificationWork()
-                    else if (it == true) {
-                        if (notificationPermission == null || notificationPermission.status.isGranted) {
-                            NotificationWorker.scheduleNotificationWork(
-                                interval = NotificationInterval.valueOf(
-                                    notificationInterval ?: App.notificationInterval.name
-                                )
-                            )
-                        } else {
-                            notificationPermission.launchPermissionRequest()
+                onValueChange = { isEnabled ->
+                    viewModel.setNotificationsEnabled(
+                        isEnabled = isEnabled,
+                        notificationPermission = notificationPermission,
+                        createNotificationChannels = {
+                            context.createDefaultNotificationChannels()
                         }
-                    }
+                    )
                 }
             )
-            if (notificationsEnabledPreference == true) {
+            if (uiState.isNotificationsEnabled == true) {
                 ListPreference(
                     title = stringResource(R.string.update_interval),
-                    entriesValues = notificationIntervalEntries,
-                    preferenceValue = notificationInterval,
-                    onValueChange = { value ->
-                        value?.let {
-                            notificationInterval = it
-                            NotificationWorker.scheduleNotificationWork(
-                                interval = NotificationInterval.valueOf(it)
-                            )
-                        }
-                    }
+                    entriesValues = NotificationInterval.entriesLocalized,
+                    preferenceValue = notificationCheckInterval,
+                    onValueChange = viewModel::setNotificationCheckInterval
                 )
                 SwitchPreference(
                     title = stringResource(R.string.airing_anime_notifications),
-                    preferenceValue = viewModel.userOptions?.options?.airingNotifications,
+                    preferenceValue = uiState.userOptions?.options?.airingNotifications,
                     icon = R.drawable.podcasts_24,
-                    onValueChange = { value ->
-                        if (value != null) {
-                            viewModel.onAiringNotificationChanged(value)
-                        }
-                    }
+                    onValueChange = viewModel::setAiringNotification
                 )
             }
 
@@ -381,8 +242,7 @@ fun SettingsView(
                 title = stringResource(R.string.logout),
                 icon = R.drawable.logout_24,
                 onClick = {
-                    scope.launch {
-                        LoginRepository.removeUserInfo()
+                    viewModel.logOut {
                         context.getActivity()?.recreate()
                     }
                 }

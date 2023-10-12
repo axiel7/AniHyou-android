@@ -7,8 +7,7 @@ query UserFavoritesStudio($userId: Int, $page: Int, $perPage: Int) {
                     name
                 }
                 pageInfo {
-                    currentPage
-                    hasNextPage
+                    ...CommonPage
                 }
             }
         }

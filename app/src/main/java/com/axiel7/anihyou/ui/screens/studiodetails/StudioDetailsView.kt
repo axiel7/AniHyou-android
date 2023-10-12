@@ -18,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,7 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
@@ -38,7 +39,6 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 const val STUDIO_ID_ARGUMENT = "{id}"
 const val STUDIO_DETAILS_DESTINATION = "studio/$STUDIO_ID_ARGUMENT"
@@ -46,30 +46,27 @@ const val STUDIO_DETAILS_DESTINATION = "studio/$STUDIO_ID_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudioDetailsView(
-    studioId: Int,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val viewModel = viewModel { StudioDetailsViewModel(studioId) }
-    val listState = rememberLazyGridState()
+    val viewModel: StudioDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getStudioDetails()
-    }
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     DefaultScaffoldWithSmallTopAppBar(
-        title = viewModel.studioDetails?.name ?: stringResource(R.string.loading),
+        title = uiState.details?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
             FavoriteIconButton(
-                isFavorite = viewModel.studioDetails?.isFavourite ?: false,
-                favoritesCount = viewModel.studioDetails?.favourites ?: 0,
+                isFavorite = uiState.details?.isFavourite ?: false,
+                favoritesCount = uiState.details?.favourites ?: 0,
                 onClick = {
-                    scope.launch { viewModel.toggleFavorite() }
+                    viewModel.toggleFavorite()
                 }
             )
         },
@@ -84,7 +81,6 @@ fun StudioDetailsView(
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 )
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
             contentPadding = PaddingValues(
                 bottom = padding.calculateBottomPadding()
             ),
@@ -113,7 +109,7 @@ fun StudioDetailsView(
                     }
                 )
             }
-            if (viewModel.isLoading) {
+            if (uiState.isLoading) {
                 items(13) {
                     MediaItemVerticalPlaceholder()
                 }
@@ -137,7 +133,6 @@ fun StudioDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             StudioDetailsView(
-                studioId = 1,
                 navigateBack = {},
                 navigateToMediaDetails = {}
             )

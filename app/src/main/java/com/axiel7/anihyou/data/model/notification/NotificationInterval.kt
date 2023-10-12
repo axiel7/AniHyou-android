@@ -29,4 +29,8 @@ enum class NotificationInterval(
 
     @Composable
     override fun localized() = stringResource(stringRes)
+
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+    }
 }

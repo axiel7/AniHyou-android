@@ -26,42 +26,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.MediaReviewsQuery
+import com.axiel7.anihyou.MediaThreadsQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
-import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.ui.composables.post.PostItem
 import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReviewThreadListView(
-    viewModel: MediaDetailsViewModel,
+    mediaThreads: List<MediaThreadsQuery.Thread>,
+    mediaReviews: List<MediaReviewsQuery.Node>,
+    isLoadingThreads: Boolean,
+    isLoadingReviews: Boolean,
     navigateToReviewDetails: (Int) -> Unit,
     navigateToThreadDetails: (Int) -> Unit,
 ) {
     val reviewsListState = rememberLazyGridState()
     val threadsListState = rememberLazyListState()
 
-    reviewsListState.OnBottomReached(buffer = 2) {
-        if (viewModel.hasNextPageReviews)
-            viewModel.getMediaReviews()
-    }
-
-    threadsListState.OnBottomReached(buffer = 2) {
-        if (viewModel.hasNextPageThreads)
-            viewModel.getMediaThreads()
-    }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
         InfoTitle(text = stringResource(R.string.threads))
-        if (viewModel.isLoadingThreads || viewModel.mediaThreads.isNotEmpty()) {
+        if (isLoadingThreads || mediaThreads.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 16.dp),
@@ -71,7 +64,8 @@ fun ReviewThreadListView(
                 flingBehavior = rememberSnapFlingBehavior(lazyListState = threadsListState),
             ) {
                 items(
-                    items = viewModel.mediaThreads,
+                    items = mediaThreads,
+                    key = { it.basicThreadDetails.id },
                     contentType = { it }
                 ) { item ->
                     PostItem(
@@ -101,7 +95,7 @@ fun ReviewThreadListView(
                         }
                     )
                 }
-                if (viewModel.isLoadingThreads) {
+                if (isLoadingThreads) {
                     items(2) {
                         PostItemPlaceholder()
                     }
@@ -119,7 +113,7 @@ fun ReviewThreadListView(
         }
 
         InfoTitle(text = stringResource(R.string.reviews))
-        if (viewModel.isLoadingReviews || viewModel.mediaReviews.isNotEmpty()) {
+        if (isLoadingReviews || mediaReviews.isNotEmpty()) {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(2),
                 modifier = Modifier
@@ -131,7 +125,8 @@ fun ReviewThreadListView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
-                    items = viewModel.mediaReviews,
+                    items = mediaReviews,
+                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     PostItem(
@@ -161,7 +156,7 @@ fun ReviewThreadListView(
                         }
                     )
                 }
-                if (viewModel.isLoadingReviews) {
+                if (isLoadingReviews) {
                     items(4) {
                         PostItemPlaceholder()
                     }
@@ -186,7 +181,10 @@ fun ReviewThreadListViewPreview() {
     AniHyouTheme {
         Surface {
             ReviewThreadListView(
-                viewModel = MediaDetailsViewModel(mediaId = 1),
+                mediaReviews = emptyList(),
+                mediaThreads = emptyList(),
+                isLoadingThreads = true,
+                isLoadingReviews = true,
                 navigateToReviewDetails = {},
                 navigateToThreadDetails = {}
             )

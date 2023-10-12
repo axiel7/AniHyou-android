@@ -11,12 +11,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -36,15 +38,15 @@ fun ActivityFeedView(
     navigateToUserDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val viewModel: ActivityFeedViewModel = viewModel()
+    val viewModel: ActivityFeedViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = viewModel.isLoading,
-        onRefresh = { viewModel.refresh(refreshCache = true) }
+        refreshing = uiState.isLoading,
+        onRefresh = viewModel::refreshList
     )
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getActivityFeed()
-    }
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     Box(
         modifier = Modifier
@@ -54,7 +56,6 @@ fun ActivityFeedView(
     ) {
         LazyColumn(
             modifier = modifier,
-            state = listState,
         ) {
             item {
                 Row(
@@ -62,12 +63,12 @@ fun ActivityFeedView(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ActivityTypeChip(
-                        value = viewModel.type,
-                        onValueChanged = viewModel::onTypeChanged
+                        value = uiState.type,
+                        onValueChanged = viewModel::setType
                     )
                     ActivityFollowingChip(
-                        value = viewModel.isFollowing,
-                        onValueChanged = viewModel::onIsFollowingChanged
+                        value = uiState.isFollowing,
+                        onValueChanged = viewModel::setIsFollowing
                     )
                 }
             }
@@ -129,7 +130,7 @@ fun ActivityFeedView(
             }
         }//:LazyColumn
         PullRefreshIndicator(
-            refreshing = viewModel.isLoading,
+            refreshing = uiState.isLoading,
             state = pullRefreshState,
             modifier = Modifier
                 .padding(8.dp)

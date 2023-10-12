@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,8 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.App
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.AnimeSeason
@@ -56,6 +55,12 @@ enum class HomeTab(val index: Int) : Localizable {
             DISCOVER -> R.string.discover
             ACTIVITY_FEED -> R.string.activity
         }
+
+    companion object {
+        val entriesLocalized = entries.associateWith { it.stringRes }
+
+        fun valueOf(index: Int) = entries.find { it.index == index }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,11 +78,13 @@ fun HomeView(
     navigateToPublishActivity: (Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val viewModel: HomeViewModel = hiltViewModel()
+    val defaultHomeTab by viewModel.defaultHomeTab.collectAsStateWithLifecycle()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(App.defaultHomeTab) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab?.index ?: 0) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
@@ -95,7 +102,7 @@ fun HomeView(
             }
         },
         actions = {
-            val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsState()
+            val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
             BadgedBox(
                 badge = {
                     if (unreadNotificationCount > 0) {

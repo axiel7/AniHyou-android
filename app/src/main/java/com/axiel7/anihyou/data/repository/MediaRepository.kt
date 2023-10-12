@@ -1,332 +1,164 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.AiringAnimesQuery
-import com.axiel7.anihyou.AiringOnMyListQuery
-import com.axiel7.anihyou.MediaCharactersAndStaffQuery
-import com.axiel7.anihyou.MediaChartQuery
-import com.axiel7.anihyou.MediaDetailsQuery
-import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
-import com.axiel7.anihyou.MediaReviewsQuery
-import com.axiel7.anihyou.MediaSortedQuery
-import com.axiel7.anihyou.MediaStatsQuery
-import com.axiel7.anihyou.MediaThreadsQuery
-import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
+import com.axiel7.anihyou.data.api.MediaApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
-import com.axiel7.anihyou.data.repository.BaseRepository.getError
-import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import com.axiel7.anihyou.network.apolloClient
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.type.ThreadSort
-import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object MediaRepository {
+@Singleton
+class MediaRepository @Inject constructor(
+    private val api: MediaApi,
+) {
 
-    fun getAiringAnimePage(
+    fun getAiringAnimesPage(
         airingAtGreater: Long? = null,
         airingAtLesser: Long? = null,
         sort: List<AiringSort> = listOf(AiringSort.TIME),
-        page: Int = 1,
-        perPage: Int = 15,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = AiringAnimesQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            sort = Optional.present(sort),
-            airingAtGreater = Optional.presentIfNotNull(airingAtGreater?.toInt()),
-            airingAtLesser = Optional.presentIfNotNull(airingAtLesser?.toInt()),
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val airingPage = response?.data?.Page
-            if (airingPage != null) emit(
-                PagedResult.Success(
-                    data = airingPage.airingSchedules?.filterNotNull().orEmpty(),
-                    nextPage = if (airingPage.pageInfo?.hasNextPage == true)
-                        airingPage.pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Empty"))
+        onMyList: Boolean = false,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .airingAnimesQuery(
+            airingAtGreater = airingAtGreater,
+            airingAtLesser = airingAtLesser,
+            sort = sort,
+            page = page,
+            perPage = perPage,
+        )
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
+            if (onMyList) list.filter { it.media?.mediaListEntry != null }
+            else list
         }
-    }
 
     fun getAiringAnimeOnMyListPage(
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = AiringOnMyListQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val airingAnime = response?.data?.Page?.media?.filterNotNull()
+    ) = api
+        .airingOnMyListQuery(page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.media?.filterNotNull()
                 ?.filter { it.nextAiringEpisode != null }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
-            val pageInfo = response?.data?.Page?.pageInfo
-            if (airingAnime != null) emit(
-                PagedResult.Success(
-                    data = airingAnime,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Empty"))
+                .orEmpty()
         }
-    }
 
     fun getSeasonalAnimePage(
         animeSeason: AnimeSeason,
-        page: Int = 1,
-        perPage: Int = 15,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = SeasonalAnimeQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            season = Optional.present(animeSeason.season),
-            seasonYear = Optional.present(animeSeason.year),
-            sort = Optional.present(listOf(MediaSort.POPULARITY_DESC))
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val seasonalAnime = response?.data?.Page?.media?.filterNotNull()
-            val pageInfo = response?.data?.Page?.pageInfo
-            if (seasonalAnime != null) emit(
-                PagedResult.Success(
-                    data = seasonalAnime,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Empty"))
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .seasonalAnimeQuery(animeSeason, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
         }
-    }
 
     fun getMediaSortedPage(
         mediaType: MediaType,
         sort: List<MediaSort>,
-        page: Int = 1,
-        perPage: Int = 15,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = MediaSortedQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            type = Optional.present(mediaType),
-            sort = Optional.present(sort)
-        ).tryQuery()
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaSortedQuery(mediaType, sort, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
 
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val media = response?.data?.Page?.media?.filterNotNull()
-            val pageInfo = response?.data?.Page?.pageInfo
-            if (media != null) emit(
-                PagedResult.Success(
-                    data = media,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
+    fun getMediaChartPage(
+        type: ChartType,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaChartQuery(
+            type = type.mediaType,
+            sort = listOf(type.mediaSort),
+            status = type.mediaStatus,
+            page = page,
+            perPage = perPage
+        )
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.media?.filterNotNull().orEmpty()
+        }
+
+    fun getMediaDetails(mediaId: Int) = api
+        .mediaDetailsQuery(mediaId)
+        .toFlow()
+        .asDataResult { it.Media }
+
+    fun getMediaCharactersAndStaff(mediaId: Int) = api
+        .mediaCharactersAndStaffQuery(mediaId)
+        .toFlow()
+        .asDataResult {
+            MediaCharactersAndStaff(
+                characters = it.Media?.characters?.edges?.filterNotNull().orEmpty(),
+                staff = it.Media?.staff?.edges?.filterNotNull().orEmpty()
             )
-            else emit(PagedResult.Error(message = "Empty"))
         }
-    }
 
-    fun getMediaDetails(mediaId: Int) = flow {
-        emit(DataResult.Loading)
-        val response = MediaDetailsQuery(
-            mediaId = Optional.present(mediaId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val media = response?.data?.Media
-            if (media != null) emit(DataResult.Success(data = media))
-            else emit(DataResult.Error(message = "Empty"))
+    fun getMediaRelationsAndRecommendations(mediaId: Int) = api
+        .mediaRelationsAndRecommendationsQuery(mediaId)
+        .toFlow()
+        .asDataResult {
+            MediaRelationsAndRecommendations(
+                relations = it.Media?.relations?.edges?.filterNotNull().orEmpty(),
+                recommendations = it.Media?.recommendations?.nodes?.filterNotNull().orEmpty()
+            )
         }
-    }
 
-    fun getMediaCharactersAndStaff(mediaId: Int) = flow {
-        emit(DataResult.Loading)
-        val response = MediaCharactersAndStaffQuery(
-            mediaId = Optional.present(mediaId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val media = response?.data?.Media
-            if (media != null) {
-                val charactersAndStaff = MediaCharactersAndStaff(
-                    characters = media.characters?.edges?.filterNotNull().orEmpty(),
-                    staff = media.staff?.edges?.filterNotNull().orEmpty()
-                )
-                emit(DataResult.Success(data = charactersAndStaff))
-            } else emit(DataResult.Error(message = "Empty"))
-        }
-    }
-
-    fun getMediaRelationsRecommendations(mediaId: Int) = flow {
-        emit(DataResult.Loading)
-        val response = MediaRelationsAndRecommendationsQuery(
-            mediaId = Optional.present(mediaId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val media = response?.data?.Media
-            if (media != null) {
-                val relationsAndRecommendations = MediaRelationsAndRecommendations(
-                    relations = media.relations?.edges?.filterNotNull().orEmpty(),
-                    recommendations = media.recommendations?.nodes?.filterNotNull().orEmpty()
-                )
-                emit(DataResult.Success(data = relationsAndRecommendations))
-            } else emit(DataResult.Error(message = "Empty"))
-        }
-    }
-
-    fun getMediaStats(mediaId: Int) = flow {
-        emit(DataResult.Loading)
-        val response = MediaStatsQuery(
-            mediaId = Optional.present(mediaId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val media = response?.data?.Media
-            if (media != null) {
-                emit(DataResult.Success(data = media))
-            } else emit(DataResult.Error(message = "Error"))
-        }
-    }
+    fun getMediaStats(mediaId: Int) = api
+        .mediaStatsQuery(mediaId)
+        .toFlow()
+        .asDataResult { it.Media }
 
     fun getMediaReviewsPage(
         mediaId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = MediaReviewsQuery(
-            mediaId = Optional.present(mediaId),
-            page = Optional.present(page),
-            perPage = Optional.present(perPage)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val reviews = response?.data?.Media?.reviews?.nodes?.filterNotNull()
-            val pageInfo = response?.data?.Media?.reviews?.pageInfo
-            if (reviews != null) {
-                emit(
-                    PagedResult.Success(
-                        data = reviews,
-                        nextPage = if (pageInfo?.hasNextPage == true)
-                            pageInfo.currentPage?.plus(1)
-                        else null
-                    )
-                )
-            } else emit(PagedResult.Error(message = "Error"))
+    ) = api
+        .mediaReviewsQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Media?.reviews?.pageInfo?.commonPage }) {
+            it.Media?.reviews?.nodes?.filterNotNull().orEmpty()
         }
-    }
 
     fun getMediaThreadsPage(
         mediaId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-        val response = MediaThreadsQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            mediaCategoryId = Optional.present(mediaId),
-            sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val threadsPage = response?.data?.Page
-            if (threadsPage != null) {
-                emit(
-                    PagedResult.Success(
-                        data = threadsPage.threads?.filterNotNull().orEmpty(),
-                        nextPage = if (threadsPage.pageInfo?.hasNextPage == true)
-                            threadsPage.pageInfo.currentPage?.plus(1)
-                        else null
-                    )
-                )
-            } else emit(PagedResult.Error(message = "Error"))
+    ) = api
+        .mediaThreadsQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.threads?.filterNotNull().orEmpty()
         }
-    }
 
-    fun getMediaChartPage(
-        type: MediaType,
-        sort: List<MediaSort> = listOf(MediaSort.ID),
-        status: MediaStatus? = null,
-        page: Int = 1,
-        perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
+    // widget
 
-        val response = MediaChartQuery(
-            page = Optional.present(page),
-            perPage = Optional.present(perPage),
-            sort = Optional.present(sort),
-            type = Optional.present(type),
-            status = Optional.presentIfNotNull(status)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val media = response?.data?.Page?.media?.filterNotNull()
-            val pageInfo = response?.data?.Page?.pageInfo
-            if (media != null) emit(
-                PagedResult.Success(
-                    data = media,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Error"))
-        }
-    }
-
-    suspend fun getUserCurrentAiringAnime(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
-        val response = apolloClient.query(
-            UserCurrentAnimeListQuery(
-                userId = Optional.present(userId)
-            )
-        ).execute()
+    suspend fun getUserCurrentAnimeAiringList(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
+        val response = api.userCurrentAnimeListQuery(userId).execute()
         return if (response.hasErrors()) null
         else {
             response.data?.Page?.mediaList?.filterNotNull()?.let { mediaList ->
                 return mediaList
-                    .filter { it.media?.status == MediaStatus.RELEASING }
+                    .filter {
+                        it.media?.status == MediaStatus.RELEASING
+                                && it.media.nextAiringEpisode != null
+                    }
                     .sortedBy { it.media?.nextAiringEpisode?.timeUntilAiring }
             }
             return null

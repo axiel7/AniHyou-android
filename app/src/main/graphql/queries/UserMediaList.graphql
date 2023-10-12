@@ -7,7 +7,6 @@ query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $
                 ...BasicMediaDetails
                 coverImage {
                     large
-                    color
                 }
                 nextAiringEpisode {
                     episode
@@ -17,8 +16,7 @@ query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $
             }
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

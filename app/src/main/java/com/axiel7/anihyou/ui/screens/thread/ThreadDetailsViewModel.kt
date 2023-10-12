@@ -1,72 +1,116 @@
 package com.axiel7.anihyou.ui.screens.thread
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.thread.ChildComment
-import com.axiel7.anihyou.data.repository.DataResult
 import com.axiel7.anihyou.data.repository.LikeRepository
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class ThreadDetailsViewModel(
-    private val threadId: Int
-) : BaseViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class ThreadDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    threadRepository: ThreadRepository,
+    private val likeRepository: LikeRepository,
+) : PagedUiStateViewModel<ThreadDetailsUiState>() {
 
-    var threadDetails = ThreadRepository.getThreadDetails(threadId)
-        .onEach {
-            if (it is DataResult.Success) isLiked = it.data.basicThreadDetails.isLiked ?: false
-        }
-        .dataResultStateInViewModel()
-    var isLiked by mutableStateOf(false)
+    val threadId =
+        savedStateHandle.getStateFlow<Int?>(THREAD_ID_ARGUMENT.removeFirstAndLast(), null)
 
-    var threadComments = mutableStateListOf<ChildComment>()
-    var page = 1
-    var hasNextPage = true
+    override val mutableUiState = MutableStateFlow(ThreadDetailsUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-    fun getThreadComments(threadId: Int) = viewModelScope.launch(dispatcher) {
-        ThreadRepository.getThreadCommentsPage(
-            threadId = threadId,
-            page = page
-        ).collect { result ->
-            isLoading = page == 1 && result is PagedResult.Loading
+    val threadComments = mutableStateListOf<ChildComment>()
 
-            if (result is PagedResult.Success) {
-                threadComments.addAll(result.data)
-                hasNextPage = result.nextPage != null
-                page = result.nextPage ?: page
-            }
-        }
-    }
-
-    fun toggleLikeThread() = viewModelScope.launch(dispatcher) {
-        LikeRepository.toggleLike(
-            likeableId = threadId,
-            type = LikeableType.THREAD
-        ).collect { result ->
-            if (result is DataResult.Success && result.data) {
-                isLiked = !isLiked
-            }
+    fun toggleLikeThread() {
+        threadId.value?.let { threadId ->
+            likeRepository.toggleLike(
+                likeableId = threadId,
+                type = LikeableType.THREAD
+            ).onEach { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    mutableUiState.update { it.copy(isLiked = result.data) }
+                }
+            }.launchIn(viewModelScope)
         }
     }
 
     suspend fun toggleLikeComment(id: Int): Boolean {
-        var success = false
+        var liked = false
         runBlocking {
-            LikeRepository.toggleLike(
+            likeRepository.toggleLike(
                 likeableId = id,
                 type = LikeableType.THREAD_COMMENT
-            ).collect { result ->
-                success = result is DataResult.Success && result.data
+            ).onEach { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    //TODO: update child comment
+                    //mutableUiState.update { it.copy(isLiked = result.data) }
+                }
+            }.collect { result ->
+                liked = result is DataResult.Success && result.data == true
             }
         }
-        return success
+        return liked
+    }
+
+    init {
+        // details
+        // TODO: also get first comments page with this call
+        threadId
+            .filterNotNull()
+            .flatMapLatest { threadId ->
+                threadRepository.getThreadDetails(threadId)
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            details = result.data,
+                            isLiked = result.data?.basicThreadDetails?.isLiked ?: false
+                        )
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // comments
+        mutableUiState
+            .filter { it.hasNextPage }
+            .distinctUntilChangedBy { it.page }
+            .combine(threadId.filterNotNull(), ::Pair)
+            .flatMapLatest { (uiState, threadId) ->
+                threadRepository.getThreadCommentsPage(
+                    threadId = threadId,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                if (result is PagedResult.Success) {
+                    threadComments.addAll(result.list)
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

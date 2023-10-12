@@ -3,9 +3,11 @@ package com.axiel7.anihyou.ui.screens.thread.publish
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.ui.screens.thread.THREAD_ID_ARGUMENT
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -28,17 +30,21 @@ fun PublishCommentView(
     navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel: PublishCommentViewModel = viewModel()
+    val viewModel: PublishCommentViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.message) {
-        if (viewModel.message != null) {
-            context.showToast(viewModel.message)
-            viewModel.message = null
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            context.showToast(uiState.error)
+            viewModel.onErrorDisplayed()
         }
     }
 
-    LaunchedEffect(viewModel.wasPublished) {
-        if (viewModel.wasPublished == true) navigateBack()
+    LaunchedEffect(uiState.wasPublished) {
+        if (uiState.wasPublished == true) {
+            viewModel.setWasPublished(false)
+            navigateBack()
+        }
     }
 
     PublishMarkdownView(
@@ -50,7 +56,7 @@ fun PublishCommentView(
                 text = it
             )
         },
-        isLoading = viewModel.isLoading,
+        isLoading = uiState.isLoading,
         initialText = text,
         navigateBack = navigateBack
     )

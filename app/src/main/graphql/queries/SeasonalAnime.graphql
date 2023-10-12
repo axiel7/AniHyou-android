@@ -11,8 +11,7 @@ query SeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear
             meanScore
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

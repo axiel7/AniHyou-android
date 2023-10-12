@@ -16,7 +16,7 @@ import androidx.compose.runtime.snapshotFlow
  */
 @Composable
 fun LazyListState.OnBottomReached(
-    buffer: Int = 0,
+    buffer: Int,
     onLoadMore: suspend () -> Unit
 ) {
     // Buffer must be positive.
@@ -47,7 +47,7 @@ fun LazyListState.OnBottomReached(
  */
 @Composable
 fun LazyGridState.OnBottomReached(
-    buffer: Int = 0,
+    buffer: Int,
     onLoadMore: suspend () -> Unit
 ) {
     // Buffer must be positive.

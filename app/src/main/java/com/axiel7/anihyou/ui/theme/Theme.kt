@@ -9,14 +9,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.axiel7.anihyou.App
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_MODE_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.APP_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.rememberPreference
-import com.axiel7.anihyou.ui.base.AppColorMode
-import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
+import com.axiel7.anihyou.ui.common.AppColorMode
 import com.materialkolor.dynamicColorScheme
 
 private val LightColorScheme = lightColorScheme(
@@ -94,18 +89,14 @@ fun AniHyouTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     blackColors: Boolean = false,
+    appColor: Color? = null,
+    appColorMode: AppColorMode = AppColorMode.DEFAULT,
     content: @Composable () -> Unit
 ) {
-    val appColorHex by rememberPreference(APP_COLOR_PREFERENCE_KEY, App.appColor)
-    val appColorMode by rememberPreference(
-        APP_COLOR_MODE_PREFERENCE_KEY,
-        App.appColorMode.name
-    )
-
     val colorScheme = when {
-        appColorMode == AppColorMode.PROFILE.name -> {
+        appColorMode == AppColorMode.PROFILE -> {
             val scheme = dynamicColorScheme(
-                seedColor = colorFromHex(appColorHex) ?: seed,
+                seedColor = appColor ?: seed,
                 isDark = darkTheme
             )
             if (blackColors) scheme.toBlackScheme()

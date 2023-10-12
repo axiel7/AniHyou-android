@@ -13,17 +13,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.data.repository.DataResult
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
@@ -41,34 +38,26 @@ const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadDetailsView(
-    threadId: Int,
     navigateToUserDetails: (Int) -> Unit,
     navigateToPublishThreadComment: (Int?, String?) -> Unit,
     navigateToPublishCommentReply: (parentCommentId: Int, Int?, String?) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    val viewModel = viewModel { ThreadDetailsViewModel(threadId) }
-    val listState = rememberLazyListState()
+    val viewModel: ThreadDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
-
-    val threadDetailsState by viewModel.threadDetails.collectAsState()
-    val threadDetails by remember {
-        derivedStateOf { (threadDetailsState as? DataResult.Success)?.data }
-    }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getThreadComments(threadId)
-    }
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + threadId)
+            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + viewModel.threadId)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -80,17 +69,17 @@ fun ThreadDetailsView(
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 )
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
             contentPadding = PaddingValues(
                 bottom = padding.calculateBottomPadding()
             )
         ) {
             item(
-                contentType = threadDetails
+                contentType = uiState.details
             ) {
-                if (threadDetails != null) {
+                if (uiState.details != null) {
                     ParentThreadView(
-                        thread = threadDetails!!.basicThreadDetails,
+                        thread = uiState.details!!.basicThreadDetails,
+                        isLiked = uiState.isLiked,
                         onClickLike = { viewModel.toggleLikeThread() },
                         onClickReply = {
                             navigateToPublishThreadComment(null, null)
@@ -113,7 +102,7 @@ fun ThreadDetailsView(
                     username = item.user?.name ?: "",
                     avatarUrl = item.user?.avatar?.medium,
                     likeCount = item.likeCount,
-                    isLiked = viewModel.isLiked,
+                    isLiked = item.isLiked == true,
                     isLocked = item.isLocked,
                     createdAt = item.createdAt,
                     childComments = item.childComments,
@@ -126,7 +115,7 @@ fun ThreadDetailsView(
                 )
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
             }
-            if (viewModel.isLoading) {
+            if (uiState.isLoading) {
                 items(10) {
                     ThreadCommentViewPlaceholder()
                     HorizontalDivider()
@@ -142,7 +131,6 @@ fun ThreadDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             ThreadDetailsView(
-                threadId = 1,
                 navigateToUserDetails = {},
                 navigateToPublishThreadComment = { _, _ -> },
                 navigateToPublishCommentReply = { _, _, _ -> },

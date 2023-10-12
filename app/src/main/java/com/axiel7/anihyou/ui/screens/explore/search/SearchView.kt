@@ -16,12 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -41,10 +45,10 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearC
 
 @Composable
 fun SearchView(
+    viewModel: SearchViewModel,
     query: String,
     performSearch: MutableState<Boolean>,
     initialMediaType: MediaType?,
-    initialMediaSort: MediaSort?,
     initialGenre: String?,
     initialTag: String?,
     navigateToMediaDetails: (Int) -> Unit,
@@ -53,41 +57,24 @@ fun SearchView(
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
-    val viewModel = viewModel {
-        SearchViewModel(
-            initialMediaSort = initialMediaSort,
-            initialMediaType = initialMediaType,
-            initialGenre = initialGenre,
-            initialTag = initialTag
-        )
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val listState = rememberLazyListState()
-    val searchByGenre = remember { mutableStateOf(initialMediaType != null) }
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+
+    var searchByGenre by remember { mutableStateOf(initialMediaType != null) }
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank() || searchByGenre.value
+            if (query.isNotBlank() || searchByGenre
                 || initialGenre != null || initialTag != null
-                || viewModel.mediaSort != MediaSort.SEARCH_MATCH
+                || uiState.mediaSort != MediaSort.SEARCH_MATCH
             ) {
                 listState.scrollToItem(0)
-                viewModel.runSearch(query)
-                searchByGenre.value = false
+                viewModel.setQuery(query)
+                searchByGenre = false
             }
             performSearch.value = false
-        }
-    }
-
-    listState.OnBottomReached(buffer = 2) {
-        if ((viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA)
-            && viewModel.searchedMedia.isNotEmpty()
-        ) {
-            viewModel.searchMedia(
-                mediaType = if (viewModel.searchType == SearchType.ANIME) MediaType.ANIME
-                else MediaType.MANGA,
-                query = query,
-                resetPage = false
-            )
         }
     }
 
@@ -102,24 +89,27 @@ fun SearchView(
             ) {
                 SearchType.entries.forEach {
                     FilterSelectionChip(
-                        selected = viewModel.searchType == it,
+                        selected = uiState.searchType == it,
                         text = it.localized(),
                         onClick = {
-                            viewModel.onSearchTypeChanged(it)
-                            performSearch.value = true
+                            viewModel.setSearchType(it)
+                            //performSearch.value = true
                         }
                     )
                 }
             }
-            if (viewModel.searchType == SearchType.ANIME || viewModel.searchType == SearchType.MANGA) {
+            if (uiState.searchType.isSearchMedia) {
                 MediaSearchSortChip(
-                    viewModel = viewModel,
-                    performSearch = performSearch
+                    mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
+                        ?: MediaSortSearch.SEARCH_MATCH,
+                    onSortChanged = {
+                        viewModel.setMediaSort(it)
+                    }
                 )
                 MediaSearchGenresChips(
-                    viewModel = viewModel,
-                    performSearch = performSearch,
-                    searchByGenre = searchByGenre,
+                    externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                    externalTag = initialTag?.let { SelectableGenre(name = it) },
+                    onGenreTagSelected = viewModel::setSelectedGenresAndTags,
                 )
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
@@ -127,25 +117,39 @@ fun SearchView(
                 ) {
                     Spacer(modifier = Modifier.size(0.dp))
 
-                    MediaSearchFormatChip(viewModel = viewModel)
+                    MediaSearchFormatChip(
+                        mediaType = uiState.mediaType ?: MediaType.ANIME,
+                        selectedMediaFormats = uiState.selectedMediaFormats,
+                        onMediaFormatsChanged = viewModel::setMediaFormats
+                    )
 
-                    MediaSearchStatusChip(viewModel = viewModel)
+                    MediaSearchStatusChip(
+                        selectedMediaStatuses = uiState.selectedMediaStatuses,
+                        onMediaStatusesChanged = viewModel::setMediaStatuses
+                    )
 
-                    MediaSearchYearChip(viewModel = viewModel)
+                    MediaSearchYearChip(
+                        selectedYear = uiState.selectedYear,
+                        onYearChanged = viewModel::setYear
+                    )
 
                     OnMyListChip(
-                        selected = viewModel.onMyList,
+                        selected = uiState.onMyList,
                         onClick = {
-                            viewModel.onMyListChanged(!viewModel.onMyList)
+                            viewModel.setOnMyList(uiState.onMyList.not())
                         }
                     )
                 }
             }
         }
-        when (viewModel.searchType) {
+        when (uiState.searchType) {
             SearchType.ANIME, SearchType.MANGA -> {
-                items(
-                    items = viewModel.searchedMedia,
+                if (uiState.isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.media,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -160,16 +164,15 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
             }
 
             SearchType.CHARACTER -> {
-                items(
-                    items = viewModel.searchedCharacters,
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.characters,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -182,16 +185,15 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
             }
 
             SearchType.STAFF -> {
-                items(
-                    items = viewModel.searchedStaff,
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.staff,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -204,16 +206,20 @@ fun SearchView(
                         }
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
             }
 
             SearchType.STUDIO -> {
-                items(
-                    items = viewModel.searchedStudios,
+                if (uiState.isLoading) {
+                    items(10) {
+                        Text(
+                            text = "Loading placeholder",
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .defaultPlaceholder(visible = true)
+                        )
+                    }
+                } else items(
+                    items = viewModel.studios,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -225,21 +231,15 @@ fun SearchView(
                             .padding(16.dp)
                     )
                 }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        Text(
-                            text = "Loading placeholder",
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .defaultPlaceholder(visible = true)
-                        )
-                    }
-                }
             }
 
             SearchType.USER -> {
-                items(
-                    items = viewModel.searchedUsers,
+                if (uiState.isLoading) {
+                    items(10) {
+                        PersonItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = viewModel.users,
                     key = { it.id },
                     contentType = { it }
                 ) { item ->
@@ -251,11 +251,6 @@ fun SearchView(
                             navigateToUserDetails(item.id)
                         }
                     )
-                }
-                if (viewModel.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
                 }
             }
         }

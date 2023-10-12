@@ -1,56 +1,44 @@
 package com.axiel7.anihyou.data.repository
 
 import android.net.Uri
-import androidx.datastore.preferences.core.edit
-import com.axiel7.anihyou.App
+import androidx.work.WorkManager
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ViewerIdQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.ACCESS_TOKEN_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.NOTIFICATIONS_ENABLED_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.PROFILE_COLOR_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.SCORE_FORMAT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
-import com.axiel7.anihyou.network.apolloClient
-import com.axiel7.anihyou.worker.NotificationWorker
+import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object LoginRepository {
+@Singleton
+class LoginRepository @Inject constructor(
+    private val client: ApolloClient,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val workManager: WorkManager,
+) {
 
-    fun getUserId() = App.dataStore.getValueSync(USER_ID_PREFERENCE_KEY)
-
+    // login
     suspend fun parseRedirectUri(uri: Uri) {
         val dummyUrl = Uri.parse("http://dummyurl.com?${uri.fragment}")
         dummyUrl.getQueryParameter("access_token")?.let { token ->
-            App.accessToken = token
-            App.dataStore.edit {
-                it[ACCESS_TOKEN_PREFERENCE_KEY] = token
-            }
+            defaultPreferencesRepository.setAccessToken(token)
             refreshUserIdAndOptions()
         }
     }
 
     private suspend fun refreshUserIdAndOptions() {
-        val response = apolloClient.query(ViewerIdQuery()).execute()
+        val response = client.query(ViewerIdQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .execute()
         if (!response.hasErrors()) {
             response.data?.Viewer?.let { viewer ->
-                App.dataStore.edit {
-                    it[USER_ID_PREFERENCE_KEY] = viewer.id
-                    it[PROFILE_COLOR_PREFERENCE_KEY] = viewer.options?.profileColor ?: "#526CFD"
-                    it[SCORE_FORMAT_PREFERENCE_KEY] =
-                        viewer.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
-                }
+                defaultPreferencesRepository.saveViewerInfo(viewer)
             }
         }
     }
 
-    suspend fun removeUserInfo() {
-        App.dataStore.edit {
-            it.remove(ACCESS_TOKEN_PREFERENCE_KEY)
-            it.remove(USER_ID_PREFERENCE_KEY)
-            it.remove(PROFILE_COLOR_PREFERENCE_KEY)
-            it.remove(SCORE_FORMAT_PREFERENCE_KEY)
-            it.remove(NOTIFICATIONS_ENABLED_PREFERENCE_KEY)
-        }
-        App.accessToken = null
-        NotificationWorker.cancelNotificationWork()
+    suspend fun logOut() {
+        defaultPreferencesRepository.removeViewerInfo()
+        workManager.cancelNotificationWork()
     }
 }

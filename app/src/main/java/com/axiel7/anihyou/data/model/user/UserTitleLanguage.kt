@@ -15,3 +15,6 @@ fun UserTitleLanguage.stringRes() = when (this) {
     UserTitleLanguage.NATIVE, UserTitleLanguage.NATIVE_STYLISED -> R.string.native_title
     UserTitleLanguage.UNKNOWN__ -> R.string.unknown
 }
+
+val UserTitleLanguage.Companion.entriesLocalized
+    get() = preferenceValues().associateWith { it.stringRes() }

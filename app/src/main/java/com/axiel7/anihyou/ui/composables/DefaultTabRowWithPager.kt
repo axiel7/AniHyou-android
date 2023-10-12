@@ -6,9 +6,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.ui.base.TabRowItem
+import com.axiel7.anihyou.ui.common.TabRowItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,7 +56,7 @@ fun <T> DefaultTabRowWithPager(
         }
 
         if (isTabScrollable) {
-            ScrollableTabRow(
+            PrimaryScrollableTabRow(
                 selectedTabIndex = state.currentPage,
                 edgePadding = 16.dp,
                 indicator = { tabPositions ->
@@ -65,7 +65,7 @@ fun <T> DefaultTabRowWithPager(
                 tabs = tabsLayout
             )
         } else {
-            TabRow(
+            PrimaryTabRow(
                 selectedTabIndex = state.currentPage,
                 indicator = { tabPositions ->
                     RoundedTabRowIndicator(tabPositions[state.currentPage])
@@ -77,8 +77,12 @@ fun <T> DefaultTabRowWithPager(
         HorizontalPager(
             state = state,
             key = { tabs[it].value!! }
-        ) {
-            pageContent(it)
+        ) { page ->
+            if (page !in ((state.currentPage - 1)..(state.currentPage + 1))) {
+                // To make sure only one offscreen page is being composed
+                return@HorizontalPager
+            }
+            pageContent(page)
         }
     }//: Column
 }

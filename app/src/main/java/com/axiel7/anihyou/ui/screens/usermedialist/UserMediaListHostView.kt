@@ -27,10 +27,8 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -39,7 +37,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
@@ -49,6 +48,7 @@ import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
@@ -57,23 +57,42 @@ import kotlinx.coroutines.launch
 
 const val USER_MEDIA_LIST_DESTINATION = "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT"
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMediaListHostView(
-    mediaType: MediaType,
+fun UserMediaListHostViewEntry(
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
-    userId: Int? = null,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateBack: (() -> Unit)? = null,
 ) {
-    val viewModel: UserMediaListViewModel = viewModel {
-        UserMediaListViewModel(mediaType, userId)
+    val viewModel: UserMediaListViewModel = hiltViewModel()
+    val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
+
+    if (accessToken == null) {
+        LoginView()
+    } else {
+        UserMediaListHostView(
+            viewModel = viewModel,
+            isCompactScreen = isCompactScreen,
+            modifier = modifier,
+            navigateToMediaDetails = navigateToMediaDetails,
+            navigateBack = navigateBack,
+        )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun UserMediaListHostView(
+    viewModel: UserMediaListViewModel,
+    isCompactScreen: Boolean,
+    modifier: Modifier = Modifier,
+    navigateToMediaDetails: (mediaId: Int) -> Unit,
+    navigateBack: (() -> Unit)? = null,
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-
-    var openSortDialog by remember { mutableStateOf(false) }
 
     val statusSheetState = rememberModalBottomSheetState()
     val editSheetState = rememberModalBottomSheetState()
@@ -86,33 +105,32 @@ fun UserMediaListHostView(
             topAppBarScrollBehavior.state.heightOffset != topAppBarScrollBehavior.state.heightOffsetLimit
         }
     }
-    val isMyList = remember { userId == null }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    if (openSortDialog) {
+    if (uiState.openSortDialog) {
         DialogWithRadioSelection(
             values = UserMediaListSort.entries.toTypedArray(),
-            defaultValue = UserMediaListSort.valueOf(viewModel.sort),
+            defaultValue = UserMediaListSort.valueOf(uiState.sort),
             title = stringResource(R.string.sort),
             isDeselectable = false,
             onConfirm = {
-                openSortDialog = false
-                viewModel.onSortChanged(it!!.value)
+                viewModel.toggleSortDialog(false)
+                viewModel.setSort(it!!.value)
             },
-            onDismiss = { openSortDialog = false }
+            onDismiss = { viewModel.toggleSortDialog(false) }
         )
     }
 
     if (statusSheetState.isVisible) {
         ListStatusSheet(
-            selectedStatus = viewModel.status,
+            selectedStatus = uiState.status,
             sheetState = statusSheetState,
             bottomPadding = bottomBarPadding,
-            onStatusChanged = viewModel::onStatusChanged
+            onStatusChanged = viewModel::setStatus
         )
     }
 
-    if (isMyList && editSheetState.isVisible && viewModel.selectedItem != null) {
+    if (viewModel.isMyList && editSheetState.isVisible && viewModel.selectedItem != null) {
         EditMediaSheet(
             sheetState = editSheetState,
             mediaDetails = viewModel.selectedItem!!.media!!.basicMediaDetails,
@@ -128,7 +146,7 @@ fun UserMediaListHostView(
     }
 
     DefaultScaffoldWithSmallTopAppBar(
-        title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
+        title = if (viewModel.mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
         modifier = modifier,
         floatingActionButton = {
@@ -142,11 +160,11 @@ fun UserMediaListHostView(
                     onClick = { scope.launch { statusSheetState.show() } }
                 ) {
                     Icon(
-                        painter = painterResource(viewModel.status.icon()),
+                        painter = painterResource(uiState.status.icon()),
                         contentDescription = "status",
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(text = viewModel.status.localized())
+                    Text(text = uiState.status.localized())
                 }
             }
         },
@@ -156,12 +174,12 @@ fun UserMediaListHostView(
             }
         },
         actions = {
-            IconButton(onClick = { openSortDialog = true }) {
+            IconButton(onClick = { viewModel.toggleSortDialog(true) }) {
                 Icon(painter = painterResource(R.drawable.sort_24), contentDescription = "sort")
             }
         },
         scrollBehavior = topAppBarScrollBehavior,
-        contentWindowInsets = if (!isMyList) WindowInsets.systemBars
+        contentWindowInsets = if (!viewModel.isMyList) WindowInsets.systemBars
         else WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
     ) { padding ->
         Column(
@@ -170,40 +188,37 @@ fun UserMediaListHostView(
                     start = padding.calculateStartPadding(LocalLayoutDirection.current),
                     top = padding.calculateTopPadding(),
                     end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                    bottom = if (!isMyList) 0.dp
+                    bottom = if (!viewModel.isMyList) 0.dp
                     else padding.calculateBottomPadding()
                 )
         ) {
             UserMediaListView(
-                mediaList = viewModel.mediaList,
-                status = viewModel.status,
-                mediaType = mediaType,
-                isMyList = isMyList,
-                isLoading = viewModel.isLoading,
+                mediaList = viewModel.media,
+                status = uiState.status,
+                scoreFormat = uiState.scoreFormat,
+                listStyle = uiState.listStyle,
+                itemsPerRowFlow = viewModel.itemsPerRow,
+                isMyList = viewModel.isMyList,
+                isLoading = uiState.isLoading,
+                isRefreshing = uiState.fetchFromNetwork,
                 showAsGrid = !isCompactScreen,
-                contentPadding = if (!isMyList)
+                contentPadding = if (!viewModel.isMyList)
                     PaddingValues(top = 8.dp, bottom = padding.calculateBottomPadding())
                 else PaddingValues(vertical = 8.dp),
                 nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
                 navigateToDetails = navigateToMediaDetails,
-                onLoadMore = {
-                    if (viewModel.hasNextPage) viewModel.getUserMediaList()
-                },
-                onRefresh = {
-                    scope.launch { viewModel.refreshList(refreshCache = true) }
-                },
+                onLoadMore = viewModel::loadNextPage,
+                onRefresh = viewModel::refreshList,
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     viewModel.selectedItem = it
                     scope.launch { editSheetState.show() }
                 },
                 onUpdateProgress = { entry ->
-                    scope.launch {
-                        viewModel.updateEntryProgress(
-                            entryId = entry.id,
-                            progress = (entry.progress ?: 0) + 1
-                        )
-                    }
+                    viewModel.updateEntryProgress(
+                        entryId = entry.id,
+                        progress = (entry.progress ?: 0) + 1
+                    )
                 }
             )
         }//: Column
@@ -216,7 +231,7 @@ fun UserMediaListViewPreview() {
     AniHyouTheme {
         Surface {
             UserMediaListHostView(
-                mediaType = MediaType.ANIME,
+                viewModel = hiltViewModel(),
                 isCompactScreen = true,
                 navigateToMediaDetails = {}
             )

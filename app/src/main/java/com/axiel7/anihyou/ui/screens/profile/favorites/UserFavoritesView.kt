@@ -18,46 +18,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.Localizable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-
-enum class FavoritesType : Localizable {
-    ANIME {
-        @Composable
-        override fun localized() = stringResource(R.string.anime)
-    },
-    MANGA {
-        @Composable
-        override fun localized() = stringResource(R.string.manga)
-    },
-    CHARACTERS {
-        @Composable
-        override fun localized() = stringResource(R.string.characters)
-    },
-    STAFF {
-        @Composable
-        override fun localized() = stringResource(R.string.staff)
-    },
-    STUDIOS {
-        @Composable
-        override fun localized() = stringResource(R.string.studios)
-    },
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,12 +46,15 @@ fun UserFavoritesView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
 ) {
-    val viewModel = viewModel { UserFavoritesViewModel(userId) }
-    val listState = rememberLazyGridState()
+    val viewModel: UserFavoritesViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(userId) {
-        viewModel.onFavoriteTypeChanged(FavoritesType.ANIME)
+        viewModel.setUserId(userId)
     }
+
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -86,9 +66,9 @@ fun UserFavoritesView(
         ) {
             FavoritesType.entries.forEach {
                 FilterSelectionChip(
-                    selected = viewModel.favoritesType == it,
+                    selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.onFavoriteTypeChanged(it) }
+                    onClick = { viewModel.setType(it) }
                 )
             }
         }//: Row
@@ -100,7 +80,7 @@ fun UserFavoritesView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            when (viewModel.favoritesType) {
+            when (uiState.type) {
                 FavoritesType.ANIME -> {
                     items(
                         items = viewModel.anime,
@@ -116,7 +96,7 @@ fun UserFavoritesView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             MediaItemVerticalPlaceholder()
                         }
@@ -138,7 +118,7 @@ fun UserFavoritesView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             MediaItemVerticalPlaceholder()
                         }
@@ -159,7 +139,7 @@ fun UserFavoritesView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             PersonItemVerticalPlaceholder()
                         }
@@ -180,7 +160,7 @@ fun UserFavoritesView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             PersonItemVerticalPlaceholder()
                         }
@@ -205,7 +185,7 @@ fun UserFavoritesView(
                             )
                         }
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             Card(
                                 modifier = Modifier

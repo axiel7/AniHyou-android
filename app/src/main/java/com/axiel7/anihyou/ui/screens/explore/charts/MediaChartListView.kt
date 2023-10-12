@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,19 +13,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.axiel7.anihyou.data.model.media.ChartType
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
-import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
-import com.axiel7.anihyou.ui.screens.explore.ExploreViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val CHART_TYPE_ARGUMENT = "{type}"
@@ -35,22 +33,18 @@ const val MEDIA_CHART_DESTINATION = "media_chart/$CHART_TYPE_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaChartListView(
-    type: ChartType,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
-    val viewModel: ExploreViewModel = viewModel()
+    val viewModel: MediaChartViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val listState = rememberLazyListState()
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.loadMoreChart(type)
-    }
 
     DefaultScaffoldWithMediumTopAppBar(
-        title = type.localized(),
+        title = uiState.chartType?.localized().orEmpty(),
         navigationIcon = {
             BackIconButton(onClick = navigateBack)
         },
@@ -64,7 +58,6 @@ fun MediaChartListView(
                     top = padding.calculateTopPadding(),
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 ),
-            state = listState,
             contentPadding = PaddingValues(
                 bottom = padding.calculateBottomPadding()
             ),
@@ -91,7 +84,7 @@ fun MediaChartListView(
                     }
                 )
             }
-            if (viewModel.isLoading) {
+            if (uiState.isLoading) {
                 items(10) {
                     MediaItemHorizontalPlaceholder()
                 }
@@ -106,7 +99,6 @@ fun MediaChartListViewPreview() {
     AniHyouTheme {
         Surface {
             MediaChartListView(
-                type = ChartType.TOP_ANIME,
                 navigateBack = {},
                 navigateToMediaDetails = {}
             )

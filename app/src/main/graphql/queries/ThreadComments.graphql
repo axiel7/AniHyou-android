@@ -18,8 +18,7 @@ query ChildComments($page: Int, $perPage: Int, $threadId: Int) {
             childComments
         }
         pageInfo {
-            currentPage
-            hasNextPage
+            ...CommonPage
         }
     }
 }

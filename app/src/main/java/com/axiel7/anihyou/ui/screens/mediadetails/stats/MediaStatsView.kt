@@ -28,27 +28,29 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsViewModel
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun MediaStatsView(
-    viewModel: MediaDetailsViewModel,
+    uiState: MediaDetailsUiState,
+    fetchData: () -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        if (!viewModel.isSuccessStats) viewModel.getMediaStats()
+    val isLoading = !uiState.isSuccessStats
+    LaunchedEffect(uiState.isSuccessStats) {
+        if (!uiState.isSuccessStats) fetchData()
     }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Rankings
-        if (viewModel.isLoadingStats || viewModel.mediaRankings.isNotEmpty()) {
+        if (isLoading || uiState.mediaRankings.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.rankings))
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                viewModel.mediaRankings.forEach {
+                uiState.mediaRankings.forEach {
                     AssistChip(
                         onClick = { },
                         label = {
@@ -82,7 +84,7 @@ fun MediaStatsView(
                         }
                     )
                 }
-                if (viewModel.isLoadingStats) {
+                if (isLoading) {
                     for (i in 1..3) {
                         Text(
                             text = "This is a loading placeholder",
@@ -99,17 +101,17 @@ fun MediaStatsView(
         // Status distribution
         InfoTitle(text = stringResource(R.string.status_distribution))
         HorizontalStatsBar(
-            stats = viewModel.mediaStatusDistribution,
+            stats = uiState.mediaStatusDistribution,
             horizontalPadding = 16.dp,
-            isLoading = viewModel.isLoadingStats
+            isLoading = isLoading
         )
 
         // Score distribution
         InfoTitle(text = stringResource(R.string.score_distribution))
         VerticalStatsBar(
-            stats = viewModel.mediaScoreDistribution,
+            stats = uiState.mediaScoreDistribution,
             modifier = Modifier.padding(16.dp),
-            isLoading = viewModel.isLoadingStats
+            isLoading = isLoading
         )
     }
 }
@@ -120,7 +122,8 @@ fun MediaStatsViewPreview() {
     AniHyouTheme {
         Surface {
             MediaStatsView(
-                viewModel = MediaDetailsViewModel(mediaId = 1)
+                uiState = MediaDetailsUiState(),
+                fetchData = {}
             )
         }
     }

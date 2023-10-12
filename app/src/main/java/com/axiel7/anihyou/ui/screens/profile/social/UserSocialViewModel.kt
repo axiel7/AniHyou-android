@@ -1,71 +1,101 @@
 package com.axiel7.anihyou.ui.screens.profile.social
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.FollowersQuery
 import com.axiel7.anihyou.FollowingsQuery
-import com.axiel7.anihyou.data.repository.PagedResult
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
-import com.axiel7.anihyou.ui.base.BaseViewModel
-import kotlinx.coroutines.launch
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class UserSocialViewModel(
-    private val userId: Int
-) : BaseViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class UserSocialViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : PagedUiStateViewModel<UserSocialUiState>() {
 
-    var userSocialType by mutableStateOf(UserSocialType.FOLLOWERS)
-        private set
+    override val mutableUiState = MutableStateFlow(UserSocialUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-    fun onUserSocialTypeChanged(value: UserSocialType) {
-        userSocialType = value
-        when (userSocialType) {
-            UserSocialType.FOLLOWERS -> if (hasNextPageFollowers) getFollowers()
-            UserSocialType.FOLLOWING -> if (hasNextPageFollowing) getFollowing()
-        }
+    fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
+
+    fun setType(value: UserSocialType) = mutableUiState.update {
+        it.copy(type = value, page = 1, hasNextPage = true)
     }
 
-    private var pageFollowers = 1
-    private var hasNextPageFollowers = true
-    var followers = mutableStateListOf<FollowersQuery.Follower>()
+    val followers = mutableStateListOf<FollowersQuery.Follower>()
+    val following = mutableStateListOf<FollowingsQuery.Following>()
 
-    private fun getFollowers() = viewModelScope.launch(dispatcher) {
-        UserRepository.getFollowers(
-            userId = userId,
-            page = pageFollowers
-        ).collect { result ->
-            isLoading = pageFollowers == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                followers.addAll(result.data)
-                hasNextPageFollowers = result.nextPage != null
-                pageFollowers = result.nextPage ?: pageFollowers
-            } else if (result is PagedResult.Error) {
-                message = result.message
+    init {
+        // followers
+        mutableUiState
+            .filter {
+                it.type == UserSocialType.FOLLOWERS
+                        && it.hasNextPage
+                        && it.userId != null
             }
-        }
-    }
-
-    private var pageFollowing = 1
-    private var hasNextPageFollowing = true
-    var following = mutableStateListOf<FollowingsQuery.Following>()
-
-    private fun getFollowing() = viewModelScope.launch(dispatcher) {
-        UserRepository.getFollowing(
-            userId = userId,
-            page = pageFollowing
-        ).collect { result ->
-            isLoading = pageFollowing == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                following.addAll(result.data)
-                hasNextPageFollowing = result.nextPage != null
-                pageFollowing = result.nextPage ?: pageFollowing
-            } else if (result is PagedResult.Error) {
-                message = result.message
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    userRepository.getFollowers(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
             }
-        }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        followers.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // following
+        mutableUiState
+            .filter {
+                it.type == UserSocialType.FOLLOWING
+                        && it.hasNextPage
+                        && it.userId != null
+            }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    userRepository.getFollowing(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        following.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

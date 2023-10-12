@@ -9,3 +9,6 @@ fun UserStaffNameLanguage.stringRes() = when (this) {
     UserStaffNameLanguage.NATIVE -> R.string.native_title
     UserStaffNameLanguage.UNKNOWN__ -> R.string.unknown
 }
+
+val UserStaffNameLanguage.Companion.entriesLocalized
+    get() = knownEntries.associateWith { it.stringRes() }

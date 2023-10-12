@@ -22,21 +22,35 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.USER_ID_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.defaultPreferencesDataStore
-import com.axiel7.anihyou.data.PreferencesDataStore.getValueSync
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.currentTimeSeconds
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import kotlin.math.absoluteValue
 
 class AiringWidget : GlanceAppWidget() {
 
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface AiringWidgetEntryPoint {
+        val defaultPreferencesRepository: DefaultPreferencesRepository
+        val mediaRepository: MediaRepository
+    }
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val animeList = getAiringAnime(context)
+        val appContext = context.applicationContext ?: throw IllegalStateException()
+        val hiltEntryPoint =
+            EntryPointAccessors.fromApplication(appContext, AiringWidgetEntryPoint::class.java)
+
+        val animeList = getAiringAnime(hiltEntryPoint)
 
         provideContent {
             GlanceTheme {
@@ -83,7 +97,8 @@ class AiringWidget : GlanceAppWidget() {
                                     )
 
                                     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-                                        val airingIn = nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
+                                        val airingIn =
+                                            nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
                                         val airingText = if (airingIn > 0) {
                                             val timeText = airingIn.secondsToLegibleText(
                                                 buildString = { id, time ->
@@ -96,11 +111,12 @@ class AiringWidget : GlanceAppWidget() {
                                                 timeText
                                             )
                                         } else {
-                                            val timeText = airingIn.absoluteValue.secondsToLegibleText(
-                                                buildString = { id, time ->
-                                                    LocalContext.current.getString(id, time)
-                                                }
-                                            )
+                                            val timeText =
+                                                airingIn.absoluteValue.secondsToLegibleText(
+                                                    buildString = { id, time ->
+                                                        LocalContext.current.getString(id, time)
+                                                    }
+                                                )
                                             LocalContext.current.getString(
                                                 R.string.episode_aired_ago,
                                                 nextAiringEpisode.episode,
@@ -123,14 +139,16 @@ class AiringWidget : GlanceAppWidget() {
             }
         }
     }
-}
 
-suspend fun getAiringAnime(context: Context): List<UserCurrentAnimeListQuery.MediaList>? {
-    return try {
-        val userId = context.defaultPreferencesDataStore.getValueSync(USER_ID_PREFERENCE_KEY)!!
-        MediaRepository.getUserCurrentAiringAnime(userId)
-    } catch (e: Exception) {
-        null
+    private suspend fun getAiringAnime(
+        hiltEntryPoint: AiringWidgetEntryPoint
+    ): List<UserCurrentAnimeListQuery.MediaList>? {
+        return try {
+            val userId = hiltEntryPoint.defaultPreferencesRepository.userId.first()!!
+            hiltEntryPoint.mediaRepository.getUserCurrentAnimeAiringList(userId)
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 

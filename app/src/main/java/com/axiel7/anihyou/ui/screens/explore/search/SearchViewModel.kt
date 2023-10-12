@@ -1,263 +1,307 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SearchStaffQuery
 import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.SearchUserQuery
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
-import com.axiel7.anihyou.data.repository.DataResult
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class SearchViewModel(
-    initialMediaType: MediaType?,
-    initialMediaSort: MediaSort?,
-    initialGenre: String?,
-    initialTag: String?,
-) : BaseViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val searchRepository: SearchRepository,
+) : PagedUiStateViewModel<SearchUiState>() {
 
-    private val perPage = 25
+    private val initialMediaType = savedStateHandle
+        .get<String?>(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())?.let { MediaType.valueOf(it) }
 
-    var searchType by mutableStateOf(
-        if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME
+    private val initialMediaSort = savedStateHandle
+        .get<String?>(MEDIA_SORT_ARGUMENT.removeFirstAndLast())?.let { MediaSort.valueOf(it) }
+
+    private val initialGenre: String? = savedStateHandle[GENRE_ARGUMENT.removeFirstAndLast()]
+
+    private val initialTag: String? = savedStateHandle[TAG_ARGUMENT.removeFirstAndLast()]
+
+    override val mutableUiState = MutableStateFlow(
+        SearchUiState(
+            searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
+            mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
+            selectedGenres = if (initialGenre != null)
+                listOf(initialGenre) else emptyList(),
+            selectedTags = if (initialTag != null)
+                listOf(initialTag) else emptyList(),
+            hasNextPage = initialGenre != null
+                    || initialTag != null
+                    || initialMediaType != null
+                    || initialMediaSort != null
+        )
     )
-        private set
+    override val uiState = mutableUiState.asStateFlow()
 
-    fun onSearchTypeChanged(value: SearchType) {
-        searchType = value
+    fun setQuery(value: String) = mutableUiState.update {
+        it.copy(query = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    val mediaType by derivedStateOf {
-        when (searchType) {
-            SearchType.ANIME -> MediaType.ANIME
-            SearchType.MANGA -> MediaType.MANGA
-            else -> null
-        }
+    fun setSearchType(value: SearchType) = mutableUiState.update {
+        it.copy(searchType = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    var mediaSort by mutableStateOf(initialMediaSort ?: MediaSort.SEARCH_MATCH)
-        private set
-
-    fun onMediaSortChanged(value: MediaSort) {
-        mediaSort = value
+    fun setMediaSort(value: MediaSort) = mutableUiState.update {
+        it.copy(mediaSort = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    val genreCollection = if (initialGenre != null) mutableStateMapOf(initialGenre to true)
-    else mutableStateMapOf()
-
-    val tagCollection = if (initialTag != null) mutableStateMapOf(initialTag to true)
-    else mutableStateMapOf()
-
-    val selectedGenres by derivedStateOf { genreCollection.filter { it.value } }
-    val selectedTags by derivedStateOf { tagCollection.filter { it.value } }
-
-    val selectedMediaFormats = mutableStateListOf<MediaFormatLocalizable>()
-    fun onMediaFormatChanged(values: List<MediaFormatLocalizable>) {
-        selectedMediaFormats.clear()
-        selectedMediaFormats.addAll(values)
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
+    fun setMediaFormats(values: List<MediaFormatLocalizable>) = mutableUiState.update {
+        it.copy(
+            selectedMediaFormats = values,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true,
+            mediaFormatsChanged = true,
+        )
     }
 
-    val selectedMediaStatuses = mutableStateListOf<MediaStatusLocalizable>()
-    fun onMediaStatusChanged(values: List<MediaStatusLocalizable>) {
-        selectedMediaStatuses.clear()
-        selectedMediaStatuses.addAll(values)
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
+    fun setMediaStatuses(values: List<MediaStatusLocalizable>) = mutableUiState.update {
+        it.copy(
+            selectedMediaStatuses = values,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true,
+            mediaStatusesChanged = true,
+        )
     }
 
-    var selectedYear by mutableStateOf<Int?>(null)
-        private set
-
-    fun onYearChanged(value: Int?) {
-        selectedYear = value
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
+    fun setYear(value: Int?) = mutableUiState.update {
+        it.copy(selectedYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    var onMyList by mutableStateOf(false)
-        private set
-
-    fun onMyListChanged(value: Boolean) {
-        onMyList = value
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaType?.let { searchMedia(mediaType = it, lastQuery, resetPage = true) }
-        }
+    fun setOnMyList(value: Boolean) = mutableUiState.update {
+        it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    private var lastQuery = ""
-    fun runSearch(query: String) {
-        lastQuery = query
-        when (searchType) {
-            SearchType.ANIME -> searchMedia(MediaType.ANIME, query, resetPage = true)
-            SearchType.MANGA -> searchMedia(MediaType.MANGA, query, resetPage = true)
-            SearchType.CHARACTER -> searchCharacter(query)
-            SearchType.STAFF -> searchStaff(query)
-            SearchType.STUDIO -> searchStudio(query)
-            SearchType.USER -> searchUser(query)
-        }
-    }
-
-    private var pageMedia = 1
-    private var hasNextPageMedia = true
-    val searchedMedia = mutableStateListOf<SearchMediaQuery.Medium>()
-
-    fun searchMedia(
-        mediaType: MediaType,
-        query: String,
-        resetPage: Boolean
-    ) = viewModelScope.launch(dispatcher) {
-        if (resetPage) pageMedia = 1
-
-        val selectedGenres = genreCollection.filterValues { it }.keys.toList()
-        val selectedTags = tagCollection.filterValues { it }.keys.toList()
-
-        if ((selectedGenres.isNotEmpty() || selectedTags.isNotEmpty()
-            || selectedMediaFormats.isNotEmpty() || selectedMediaStatuses.isNotEmpty()
-            || selectedYear != null)
-            && mediaSort == MediaSort.SEARCH_MATCH
-        ) {
-            mediaSort = MediaSort.POPULARITY_DESC
+    fun setSelectedGenresAndTags(genres: List<String>, tags: List<String>) =
+        mutableUiState.update {
+            it.copy(
+                selectedGenres = genres,
+                selectedTags = tags,
+                genresOrTagsChanged = true,
+                page = 1,
+                hasNextPage = true,
+                isLoading = true
+            )
         }
 
-        SearchRepository.searchMedia(
-            mediaType = mediaType,
-            query = query,
-            sort = listOf(mediaSort),
-            genreIn = selectedGenres,
-            tagIn = selectedTags,
-            formatIn = selectedMediaFormats.map { it.value },
-            statusIn = selectedMediaStatuses.map { it.value },
-            year = selectedYear,
-            onList = onMyList,
-            page = pageMedia,
-            perPage = perPage,
-        ).collect { result ->
-            isLoading = pageMedia == 1 && result is PagedResult.Loading
+    val media = mutableStateListOf<SearchMediaQuery.Medium>()
+    val characters = mutableStateListOf<SearchCharacterQuery.Character>()
+    val staff = mutableStateListOf<SearchStaffQuery.Staff>()
+    val studios = mutableStateListOf<SearchStudioQuery.Studio>()
+    val users = mutableStateListOf<SearchUserQuery.User>()
 
-            if (result is PagedResult.Success) {
-                if (resetPage) searchedMedia.clear()
-                searchedMedia.addAll(result.data)
-                hasNextPageMedia = result.nextPage != null
-                pageMedia = result.nextPage ?: pageMedia
-            } else if (result is PagedResult.Error) {
-                message = result.message
+    init {
+        // media search
+        mutableUiState
+            .filter { it.searchType.isSearchMedia && it.hasNextPage }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.query == new.query
+                        && old.mediaType == new.mediaType
+                        && old.mediaSort == new.mediaSort
+                        && old.selectedYear == new.selectedYear
+                        && old.onMyList == new.onMyList
+                        && !new.genresOrTagsChanged
+                        && !new.mediaFormatsChanged
+                        && !new.mediaStatusesChanged
             }
-        }
-    }
-
-    val searchedCharacters = mutableStateListOf<SearchCharacterQuery.Character>()
-
-    private fun searchCharacter(query: String) = viewModelScope.launch(dispatcher) {
-        SearchRepository.searchCharacter(query = query).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                searchedCharacters.clear()
-                searchedCharacters.addAll(result.data)
-            } else if (result is PagedResult.Error) {
-                message = result.message
+            .flatMapLatest { uiState ->
+                searchRepository.searchMedia(
+                    mediaType = uiState.mediaType!!,
+                    query = uiState.query,
+                    sort = listOf(uiState.mediaSortForSearch),
+                    genreIn = uiState.selectedGenres,
+                    tagIn = uiState.selectedTags,
+                    formatIn = uiState.selectedMediaFormats.map { it.value },
+                    statusIn = uiState.selectedMediaStatuses.map { it.value },
+                    year = uiState.selectedYear,
+                    onList = if (uiState.onMyList) true else null,
+                    page = uiState.page
+                )
             }
-        }
-    }
-
-    val searchedStaff = mutableStateListOf<SearchStaffQuery.Staff>()
-
-    private fun searchStaff(query: String) = viewModelScope.launch(dispatcher) {
-        SearchRepository.searchStaff(query = query).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                searchedStaff.clear()
-                searchedStaff.addAll(result.data)
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
-    }
-
-    val searchedStudios = mutableStateListOf<SearchStudioQuery.Studio>()
-
-    private fun searchStudio(query: String) = viewModelScope.launch(dispatcher) {
-        SearchRepository.searchStudio(query = query).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                searchedStudios.clear()
-                searchedStudios.addAll(result.data)
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
-    }
-
-    val searchedUsers = mutableStateListOf<SearchUserQuery.User>()
-
-    private fun searchUser(query: String) = viewModelScope.launch(dispatcher) {
-        SearchRepository.searchUser(query = query).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                searchedUsers.clear()
-                searchedUsers.addAll(result.data)
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
-    }
-
-    var isLoadingGenres by mutableStateOf(false)
-        private set
-
-    fun getGenreTagCollection() = viewModelScope.launch(dispatcher) {
-        SearchRepository.getGenreTagCollection().collect { result ->
-            isLoadingGenres = result is DataResult.Loading
-
-            if (result is DataResult.Success) {
-                result.data.genres.forEach {
-                    genreCollection[it] = false
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) media.clear()
+                        media.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                            genresOrTagsChanged = false,
+                            mediaFormatsChanged = false,
+                            mediaStatusesChanged = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
                 }
-                val externalGenre =
-                    if (genreCollection.size == 1) genreCollection.firstNotNullOf { it.key }
-                    else null
-                externalGenre?.let { genreCollection[externalGenre] = true }
-
-                result.data.tags.forEach {
-                    tagCollection[it] = false
-                }
-                val externalTag =
-                    if (tagCollection.size == 1) tagCollection.firstNotNullOf { it.key }
-                    else null
-                externalTag?.let { tagCollection[externalTag] = true }
-            } else if (result is DataResult.Error) {
-                message = result.message
             }
-        }
-    }
+            .launchIn(viewModelScope)
 
-    fun unselectAllGenresAndTags() {
-        viewModelScope.launch(Dispatchers.IO) {
-            genreCollection.forEach { (t, _) -> genreCollection[t] = false }
-            tagCollection.forEach { (t, _) -> tagCollection[t] = false }
-        }
+        // character search
+        mutableUiState
+            .filter {
+                it.searchType == SearchType.CHARACTER
+                        && it.hasNextPage
+                        && it.query.isNotBlank()
+            }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.query == new.query
+            }
+            .flatMapLatest { uiState ->
+                searchRepository.searchCharacter(
+                    query = uiState.query,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) characters.clear()
+                        characters.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // staff search
+        mutableUiState
+            .filter {
+                it.searchType == SearchType.STAFF
+                        && it.hasNextPage
+                        && it.query.isNotBlank()
+            }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.query == new.query
+            }
+            .flatMapLatest { uiState ->
+                searchRepository.searchStaff(
+                    query = uiState.query,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) staff.clear()
+                        staff.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // studio search
+        mutableUiState
+            .filter {
+                it.searchType == SearchType.STUDIO
+                        && it.hasNextPage
+                        && it.query.isNotBlank()
+            }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.query == new.query
+            }
+            .flatMapLatest { uiState ->
+                searchRepository.searchStudio(
+                    query = uiState.query,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) studios.clear()
+                        studios.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // user search
+        mutableUiState
+            .filter {
+                it.searchType == SearchType.USER
+                        && it.hasNextPage
+                        && it.query.isNotBlank()
+            }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.query == new.query
+            }
+            .flatMapLatest { uiState ->
+                searchRepository.searchUser(
+                    query = uiState.query,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) users.clear()
+                        users.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

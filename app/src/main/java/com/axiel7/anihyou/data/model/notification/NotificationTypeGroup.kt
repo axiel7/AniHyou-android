@@ -6,8 +6,8 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.NotificationType
 
-enum class NotificationTypeGroup(val values: Array<NotificationType>) : Localizable {
-    ALL(arrayOf()) {
+enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localizable {
+    ALL(null) {
         @Composable
         override fun localized() = stringResource(R.string.notifications_all)
     },

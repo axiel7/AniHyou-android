@@ -1,111 +1,106 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.data.PreferencesDataStore.ANIME_LIST_SORT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.PreferencesDataStore.MANGA_LIST_SORT_PREFERENCE_KEY
-import com.axiel7.anihyou.data.repository.DataResult
+import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.model.media.ListType
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
-import com.axiel7.anihyou.data.repository.PagedResult
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.base.BaseViewModel
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
+import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserMediaListViewModel(
-    val mediaType: MediaType,
-    val userId: Int?,
-) : BaseViewModel() {
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class UserMediaListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val mediaListRepository: MediaListRepository,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val listPreferencesRepository: ListPreferencesRepository,
+) : PagedUiStateViewModel<UserMediaListUiState>() {
 
-    var status by mutableStateOf(MediaListStatus.CURRENT)
-        private set
-
-    fun onStatusChanged(status: MediaListStatus) {
-        this.status = status
-        viewModelScope.launch { refreshList(refreshCache = false) }
-    }
-
-    var page = 1
-    var hasNextPage = true
-    var mediaList = mutableStateListOf<UserMediaListQuery.MediaList>()
-
-    var sort = MediaListSort.safeValueOf(
-        if (mediaType == MediaType.ANIME) App.animeListSort else App.mangaListSort
+    val mediaType: MediaType = MediaType.safeValueOf(
+        savedStateHandle[MEDIA_TYPE_ARGUMENT.removeFirstAndLast()]!!
     )
-        private set
+    val userId: Int? = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]
+    val isMyList = userId == null
 
-    fun onSortChanged(sort: MediaListSort) {
-        this.sort = sort
-        viewModelScope.launch {
-            App.dataStore.edit {
-                if (mediaType == MediaType.ANIME)
-                    it[ANIME_LIST_SORT_PREFERENCE_KEY] = sort.rawValue
-                else
-                    it[MANGA_LIST_SORT_PREFERENCE_KEY] = sort.rawValue
-            }
+    private val myUserId = defaultPreferencesRepository.userId
+        .filterNotNull()
 
-            refreshList(refreshCache = false)
-        }
+    override val mutableUiState = MutableStateFlow(UserMediaListUiState())
+    override val uiState = mutableUiState.asStateFlow()
+
+    fun setStatus(value: MediaListStatus) = mutableUiState.update {
+        it.copy(status = value, page = 1, hasNextPage = true)
     }
 
-    fun getUserMediaList(
-        refreshCache: Boolean = false
-    ) = viewModelScope.launch(dispatcher) {
-        MediaListRepository.getUserMediaListPage(
-            userId = userId,
-            mediaType = mediaType,
-            status = status,
-            sort = sort,
-            refreshCache = refreshCache,
-            page = page
-        ).collect { result ->
-            isLoading = page == 1 && result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                mediaList.addAll(result.data)
-                hasNextPage = result.nextPage != null
-                page = result.nextPage ?: page
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }
+    fun setSort(value: MediaListSort) = viewModelScope.launch {
+        if (mediaType == MediaType.ANIME)
+            defaultPreferencesRepository.setAnimeListSort(value)
+        else defaultPreferencesRepository.setMangaListSort(value)
     }
 
+    fun toggleSortDialog(open: Boolean) = mutableUiState.update { it.copy(openSortDialog = open) }
 
-    fun refreshList(
-        refreshCache: Boolean
-    ) {
-        hasNextPage = false
-        page = 1
-        mediaList.clear()
-        getUserMediaList(refreshCache)
+    fun refreshList() = mutableUiState.update {
+        it.copy(
+            fetchFromNetwork = true,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true
+        )
     }
 
     fun updateEntryProgress(
         entryId: Int,
         progress: Int
-    ) = viewModelScope.launch(dispatcher) {
-        MediaListRepository.updateEntryProgress(
+    ) {
+        mediaListRepository.updateEntryProgress(
             entryId = entryId,
             progress = progress,
-        ).collect { result ->
-            isLoading = result is DataResult.Loading
-
-            if (result is DataResult.Success) {
-                val foundIndex = mediaList.indexOfFirst { it.basicMediaListEntry.id == entryId }
-                if (foundIndex != -1) mediaList[foundIndex] = mediaList[foundIndex].copy(
-                    basicMediaListEntry = mediaList[foundIndex].basicMediaListEntry.copy(progress = progress)
-                )
+        ).onEach { result ->
+            mutableUiState.update {
+                if (result is DataResult.Success && result.data != null) {
+                    val foundIndex = media.indexOfFirst { it.basicMediaListEntry.id == entryId }
+                    if (foundIndex != -1) {
+                        media[foundIndex] = media[foundIndex].copy(
+                            basicMediaListEntry = media[foundIndex].basicMediaListEntry.copy(
+                                progress = progress
+                            )
+                        )
+                    }
+                }
+                result.toUiState()
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     var selectedItem: UserMediaListQuery.MediaList? = null
@@ -113,13 +108,118 @@ class UserMediaListViewModel(
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         if (selectedItem != null && selectedItem?.basicMediaListEntry != newListEntry) {
             if (newListEntry != null) {
-                val index = mediaList.indexOf(selectedItem)
+                val index = media.indexOf(selectedItem)
                 if (index != -1) {
-                    mediaList[index] = selectedItem!!.copy(basicMediaListEntry = newListEntry)
+                    media[index] = selectedItem!!.copy(basicMediaListEntry = newListEntry)
                 }
             } else {
-                mediaList.remove(selectedItem)
+                media.remove(selectedItem)
             }
         }
+    }
+
+    val itemsPerRow = listPreferencesRepository.gridItemsPerRow.stateInViewModel()
+
+    val accessToken = defaultPreferencesRepository.accessToken
+        .stateInViewModel(initialValue = App.accessToken)
+
+    val media = mutableStateListOf<UserMediaListQuery.MediaList>()
+
+    init {
+        // score format
+        defaultPreferencesRepository.scoreFormat
+            .filterNotNull()
+            .onEach { format ->
+                //TODO: change accordingly if viewing other user list
+                mutableUiState.update { it.copy(scoreFormat = format) }
+            }
+            .launchIn(viewModelScope)
+
+        // list style
+        combine(
+            listPreferencesRepository.useGeneralListStyle,
+            listPreferencesRepository.generalListStyle
+        ) { useGeneral, generalStyle ->
+            if (useGeneral) {
+                mutableUiState.update { it.copy(listStyle = generalStyle) }
+            } else {
+                uiState
+                    .distinctUntilChangedBy { it.status }
+                    .collectLatest { uiState ->
+                        ListType(uiState.status, mediaType)
+                            .stylePreference(listPreferencesRepository)
+                            ?.collectLatest { style ->
+                                mutableUiState.update { it.copy(listStyle = style) }
+                            }
+                    }
+            }
+        }.launchIn(viewModelScope)
+
+        // sort preference
+        val sortPreference = if (mediaType == MediaType.ANIME)
+            defaultPreferencesRepository.animeListSort
+        else defaultPreferencesRepository.mangaListSort
+
+        sortPreference
+            .filterNotNull()
+            .onEach { sort ->
+                mutableUiState.update {
+                    it.copy(sort = sort, page = 1, hasNextPage = true)
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // filters
+        /*mutableUiState
+            .distinctUntilChanged { old, new ->
+                old.status == new.status
+                        && old.sort == new.sort
+                        && old.fetchFromNetwork == new.fetchFromNetwork
+            }
+            .filter { it.page > 0 }
+            .onEach {
+                mutableUiState.update {
+                    it.copy(refresh = true, page = 1, isLoading = true)
+                }
+            }
+            .launchIn(viewModelScope)*/
+
+        mutableUiState
+            .filter { it.hasNextPage }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.status == new.status
+                        && old.sort == new.sort
+                        && !new.fetchFromNetwork
+            }
+            .flatMapLatest { uiState ->
+                val listUserId = userId ?: myUserId.first()
+                mediaListRepository.getUserMediaListPage(
+                    userId = listUserId,
+                    mediaType = mediaType,
+                    status = uiState.status,
+                    sort = uiState.sort,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                if (result is PagedResult.Success) {
+                    mutableUiState.update {
+                        if (it.page == 1) media.clear()
+                        media.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            fetchFromNetwork = false,
+                            isLoading = false,
+                        )
+                    }
+                } else {
+                    mutableUiState.update {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

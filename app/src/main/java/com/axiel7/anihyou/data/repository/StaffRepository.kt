@@ -1,100 +1,55 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.api.Optional
-import com.axiel7.anihyou.StaffCharacterQuery
-import com.axiel7.anihyou.StaffDetailsQuery
-import com.axiel7.anihyou.StaffMediaQuery
+import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.data.api.StaffApi
+import com.axiel7.anihyou.data.model.asDataResult
+import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
-import com.axiel7.anihyou.data.repository.BaseRepository.getError
-import com.axiel7.anihyou.data.repository.BaseRepository.tryQuery
-import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object StaffRepository {
+@Singleton
+class StaffRepository @Inject constructor(
+    private val api: StaffApi,
+) {
 
-    fun getStaffDetails(staffId: Int) = flow {
-        emit(DataResult.Loading)
-
-        val response = StaffDetailsQuery(
-            staffId = Optional.present(staffId)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(DataResult.Error(message = error))
-        else {
-            val staff = response?.data?.Staff
-            if (staff != null) emit(DataResult.Success(data = staff))
-            else emit(DataResult.Error(message = "Error"))
+    fun getStaffDetails(staffId: Int) = api
+        .staffDetailsQuery(staffId)
+        .watch()
+        .asDataResult {
+            it.Staff
         }
-    }
 
     fun getStaffMediaPage(
         staffId: Int,
         onList: Boolean = false,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
+    ) = api
+        .staffMediaQuery(staffId, onList, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Staff?.staffMedia?.pageInfo?.commonPage }) { data ->
+            val media = data.Staff?.staffMedia?.edges?.filterNotNull().orEmpty()
 
-        val response = StaffMediaQuery(
-            staffId = Optional.present(staffId),
-            onList = if (onList) Optional.present(true) else Optional.absent(),
-            page = Optional.present(page),
-            perPage = Optional.present(perPage)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val media = response?.data?.Staff?.staffMedia?.edges?.filterNotNull()
-            val pageInfo = response?.data?.Staff?.staffMedia?.pageInfo
-            if (media != null) {
-                // group media to display staff roles joined
-                val mediaGroupMap = mutableMapOf<Int, StaffMediaGrouped>()
-                media.groupBy { it.node?.id ?: 0 }.forEach { (mediaId, value) ->
-                    mediaGroupMap[mediaId] = StaffMediaGrouped(
-                        value = value[0],
-                        staffRoles = value.map { it.staffRole ?: "" }
-                    )
-                }
-                emit(
-                    PagedResult.Success(
-                        data = mediaGroupMap.toList(),
-                        nextPage = if (pageInfo?.hasNextPage == true)
-                            pageInfo.currentPage?.plus(1)
-                        else null
-                    )
+            // group media to display staff roles joined
+            val mediaGroupMap = mutableMapOf<Int, StaffMediaGrouped>()
+            media.groupBy { it.node?.id ?: 0 }.forEach { (mediaId, value) ->
+                mediaGroupMap[mediaId] = StaffMediaGrouped(
+                    value = value[0],
+                    staffRoles = value.map { it.staffRole ?: "" }
                 )
-            } else emit(PagedResult.Error(message = "Error"))
+            }
+            mediaGroupMap.toList()
         }
-    }
 
     fun getStaffCharactersPage(
         staffId: Int,
-        page: Int = 1,
+        page: Int,
         perPage: Int = 25,
-    ) = flow {
-        emit(PagedResult.Loading)
-
-        val response = StaffCharacterQuery(
-            staffId = Optional.present(staffId),
-            page = Optional.present(page),
-            perPage = Optional.present(perPage)
-        ).tryQuery()
-
-        val error = response.getError()
-        if (error != null) emit(PagedResult.Error(message = error))
-        else {
-            val characters = response?.data?.Staff?.characterMedia?.edges?.filterNotNull()
-            val pageInfo = response?.data?.Staff?.characterMedia?.pageInfo
-            if (characters != null) emit(
-                PagedResult.Success(
-                    data = characters,
-                    nextPage = if (pageInfo?.hasNextPage == true)
-                        pageInfo.currentPage?.plus(1)
-                    else null
-                )
-            )
-            else emit(PagedResult.Error(message = "Error"))
+    ) = api
+        .staffCharacterQuery(staffId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Staff?.characterMedia?.pageInfo?.commonPage }) {
+            it.Staff?.characterMedia?.edges?.filterNotNull().orEmpty()
         }
-    }
 }

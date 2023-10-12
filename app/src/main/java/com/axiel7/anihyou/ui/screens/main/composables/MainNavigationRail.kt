@@ -11,32 +11,25 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.axiel7.anihyou.data.PreferencesDataStore
-import com.axiel7.anihyou.ui.base.BottomDestination
-import com.axiel7.anihyou.ui.base.BottomDestination.Companion.Icon
+import com.axiel7.anihyou.ui.common.BottomDestination
 
 @Composable
 fun MainNavigationRail(
     navController: NavController,
-    lastTabOpened: Int,
+    onItemSelected: (Int) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var selectedItem by PreferencesDataStore.rememberPreference(
-        PreferencesDataStore.LAST_TAB_PREFERENCE_KEY,
-        lastTabOpened
-    )
 
     NavigationRail(
         header = {
             FloatingActionButton(
                 onClick = {
-                    selectedItem = 4
+                    onItemSelected(4)
                     navController.navigate(BottomDestination.Explore.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
@@ -63,7 +56,7 @@ fun MainNavigationRail(
                 NavigationRailItem(
                     selected = isSelected,
                     onClick = {
-                        selectedItem = index
+                        onItemSelected(index)
                         navController.navigate(dest.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true

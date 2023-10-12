@@ -10,8 +10,7 @@ query SearchCharacter($page: Int, $perPage: Int, $search: String) {
             }
         }
         pageInfo {
-            hasNextPage
-            currentPage
+            ...CommonPage
         }
     }
 }

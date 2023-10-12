@@ -16,14 +16,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.type.NotificationType
@@ -44,27 +45,20 @@ const val NOTIFICATIONS_DESTINATION = "notifications?unread=$UNREAD_COUNT_ARGUME
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsView(
-    initialUnreadCount: Int,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
     navigateToThreadDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
-    val viewModel = viewModel { NotificationsViewModel(initialUnreadCount) }
-    val listState = rememberLazyListState()
+    val viewModel: NotificationsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
-
-    LaunchedEffect(viewModel.type) {
-        viewModel.resetPage()
-    }
-
-    listState.OnBottomReached(buffer = 3) {
-        if (viewModel.hasNextPage) viewModel.getNotifications()
-    }
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.notifications),
@@ -85,7 +79,7 @@ fun NotificationsView(
             )
         ) {
             item(
-                contentType = viewModel.type
+                contentType = uiState.type
             ) {
                 Row(
                     modifier = Modifier
@@ -94,16 +88,24 @@ fun NotificationsView(
                 ) {
                     NotificationTypeGroup.entries.forEach {
                         FilterSelectionChip(
-                            selected = viewModel.type == it,
+                            selected = uiState.type == it,
                             text = it.localized(),
                             onClick = {
-                                viewModel.type = it
+                                viewModel.setType(it)
                             }
                         )
                     }
                 }
             }
-            items(
+            if (uiState.isLoading) {
+                items(10) {
+                    NotificationItemPlaceholder(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                    )
+                }
+            } else items(
                 items = viewModel.notifications,
                 contentType = { it }
             ) { item ->
@@ -132,7 +134,7 @@ fun NotificationsView(
                             NotificationType.THREAD_LIKE,
                             NotificationType.THREAD_COMMENT_MENTION,
                             NotificationType.THREAD_COMMENT_REPLY,
-                            NotificationType.THREAD_COMMENT_LIKE->
+                            NotificationType.THREAD_COMMENT_LIKE ->
                                 navigateToThreadDetails(item.contentId)
 
                             NotificationType.ACTIVITY_MESSAGE,
@@ -140,7 +142,7 @@ fun NotificationsView(
                             NotificationType.ACTIVITY_MENTION,
                             NotificationType.ACTIVITY_LIKE,
                             NotificationType.ACTIVITY_REPLY_LIKE,
-                            NotificationType.ACTIVITY_REPLY_SUBSCRIBED->
+                            NotificationType.ACTIVITY_REPLY_SUBSCRIBED ->
                                 navigateToActivityDetails(item.contentId)
 
                             NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
@@ -166,15 +168,6 @@ fun NotificationsView(
                     }
                 )
             }
-            if (viewModel.isLoading) {
-                items(10) {
-                    NotificationItemPlaceholder(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                    )
-                }
-            }
         }//:LazyColumn
     }//:Scaffold
 }
@@ -185,7 +178,6 @@ fun NotificationsViewPreview() {
     AniHyouTheme {
         Surface {
             NotificationsView(
-                initialUnreadCount = 3,
                 navigateToMediaDetails = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},
