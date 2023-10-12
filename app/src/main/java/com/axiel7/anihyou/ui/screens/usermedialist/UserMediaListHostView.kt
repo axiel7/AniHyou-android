@@ -56,7 +56,9 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-const val USER_MEDIA_LIST_DESTINATION = "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT"
+const val SCORE_FORMAT_ARGUMENT = "{score_format}"
+const val USER_MEDIA_LIST_DESTINATION =
+    "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT/$SCORE_FORMAT_ARGUMENT"
 
 @Composable
 fun UserMediaListHostViewEntry(

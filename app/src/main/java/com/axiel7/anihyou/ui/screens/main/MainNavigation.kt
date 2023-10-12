@@ -86,6 +86,7 @@ import com.axiel7.anihyou.ui.screens.thread.publish.PARENT_COMMENT_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_COMMENT_REPLY_DESTINATION
 import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_THREAD_COMMENT_DESTINATION
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
+import com.axiel7.anihyou.ui.screens.usermedialist.SCORE_FORMAT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostViewEntry
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
@@ -383,7 +384,8 @@ fun MainNavigation(
             USER_MEDIA_LIST_DESTINATION,
             arguments = listOf(
                 navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
-                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType },
+                navArgument(SCORE_FORMAT_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
             )
         ) {
             UserMediaListHostViewEntry(
@@ -513,11 +515,12 @@ fun MainNavigation(
                 navigateToStudioDetails = navigateToStudioDetails,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
-                navigateToUserMediaList = { mediaType, userId ->
+                navigateToUserMediaList = { mediaType, userId, scoreFormat ->
                     navController.navigate(
                         USER_MEDIA_LIST_DESTINATION
                             .replace(USER_ID_ARGUMENT, userId.toString())
                             .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                            .replace(SCORE_FORMAT_ARGUMENT, scoreFormat.rawValue)
                     )
                 },
                 navigateBack = navigateBack,

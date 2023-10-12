@@ -15,6 +15,7 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
@@ -52,11 +53,19 @@ class UserMediaListViewModel @Inject constructor(
     val userId: Int? = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]
     val isMyList = userId == null
 
+    private val scoreFormatArg: String? = savedStateHandle[SCORE_FORMAT_ARGUMENT.removeFirstAndLast()]
+
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
 
-    override val mutableUiState = MutableStateFlow(UserMediaListUiState())
+    override val mutableUiState = MutableStateFlow(
+        UserMediaListUiState(
+            scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
+        )
+    )
     override val uiState = mutableUiState.asStateFlow()
+
+    fun setScoreFormat(value: ScoreFormat) = mutableUiState.update { it.copy(scoreFormat = value) }
 
     fun setStatus(value: MediaListStatus) = mutableUiState.update {
         it.copy(status = value, page = 1, hasNextPage = true)
@@ -133,14 +142,15 @@ class UserMediaListViewModel @Inject constructor(
     val media = mutableStateListOf<UserMediaListQuery.MediaList>()
 
     init {
-        // score format
-        defaultPreferencesRepository.scoreFormat
-            .filterNotNull()
-            .onEach { format ->
-                //TODO: change accordingly if viewing other user list
-                mutableUiState.update { it.copy(scoreFormat = format) }
-            }
-            .launchIn(viewModelScope)
+        if (isMyList) {
+            // score format
+            defaultPreferencesRepository.scoreFormat
+                .filterNotNull()
+                .onEach { format ->
+                    mutableUiState.update { it.copy(scoreFormat = format) }
+                }
+                .launchIn(viewModelScope)
+        }
 
         // list style
         combine(

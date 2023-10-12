@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.ShareIconButton
@@ -79,7 +80,7 @@ fun ProfileViewEntry(
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
-    navigateToUserMediaList: ((MediaType, Int) -> Unit)?,
+    navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
@@ -125,7 +126,7 @@ private fun ProfileView(
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
-    navigateToUserMediaList: ((MediaType, Int) -> Unit)?,
+    navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
     navigateBack: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
@@ -278,7 +279,8 @@ private fun ProfileView(
                                     { mediaType ->
                                         navigateToUserMediaList(
                                             mediaType,
-                                            uiState.userInfo!!.id
+                                            uiState.userInfo!!.id,
+                                            uiState.userInfo!!.mediaListOptions!!.scoreFormat!!
                                         )
                                     }
                                 } else null,
@@ -345,7 +347,7 @@ fun ProfileViewPreview() {
                 navigateToStudioDetails = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},
-                navigateToUserMediaList = { _, _ -> }
+                navigateToUserMediaList = { _, _, _ -> }
             )
         }
     }
