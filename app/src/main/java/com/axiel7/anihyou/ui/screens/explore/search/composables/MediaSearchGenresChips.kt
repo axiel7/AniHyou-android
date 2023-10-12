@@ -14,6 +14,8 @@ import androidx.compose.material3.InputChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,38 +23,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun MediaSearchGenresChips(
-    genreCollection: List<SelectableGenre>,
-    tagCollection: List<SelectableGenre>,
-    onGenreSelected: (SelectableGenre) -> Unit,
-    onTagSelected: (SelectableGenre) -> Unit,
-    fetchCollection: () -> Unit,
-    isLoadingCollection: Boolean,
-    unselectAll: () -> Unit,
+    externalGenre: SelectableGenre?,
+    externalTag: SelectableGenre?,
+    onGenreTagSelected: (selectedGenres: List<String>, selectedTags: List<String>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
+    val selectedGenres = remember { mutableStateListOf<String>() }
+    val selectedTags = remember { mutableStateListOf<String>() }
+
     if (sheetState.isVisible) {
         GenresTagsSheet(
-            genreCollection = genreCollection,
-            tagCollection = tagCollection,
             sheetState = sheetState,
             bottomPadding = bottomBarPadding,
-            onGenreSelected = onGenreSelected,
-            onTagSelected = onTagSelected,
-            fetchCollection = fetchCollection,
-            isLoadingCollection = isLoadingCollection,
-            unselectAll = unselectAll,
-            onDismiss = {
+            externalGenre = externalGenre,
+            externalTag = externalTag,
+            onDismiss = { genres, tags ->
                 scope.launch {
+                    selectedGenres.clear()
+                    selectedGenres.addAll(genres)
+
+                    selectedTags.clear()
+                    selectedTags.addAll(tags)
+
                     sheetState.hide()
-                    //TODO: manually perform search?
+                    onGenreTagSelected(genres, tags)
                 }
             }
         )
@@ -62,13 +65,14 @@ fun MediaSearchGenresChips(
         modifier = Modifier.padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        genreCollection.filter { it.isSelected }.forEach {
+        selectedGenres.forEach { genre ->
             InputChip(
                 selected = false,
                 onClick = {
-                    onGenreSelected(it.copy(isSelected = false))
+                    selectedGenres.remove(genre)
+                    onGenreTagSelected(selectedGenres, selectedTags)
                 },
-                label = { Text(text = it.name) },
+                label = { Text(text = genre) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),
@@ -77,13 +81,14 @@ fun MediaSearchGenresChips(
                 }
             )
         }
-        tagCollection.filter { it.isSelected }.forEach {
+        selectedTags.forEach { tag ->
             InputChip(
                 selected = false,
                 onClick = {
-                    onTagSelected(it.copy(isSelected = false))
+                    selectedTags.remove(tag)
+                    onGenreTagSelected(selectedGenres, selectedTags)
                 },
-                label = { Text(text = it.name) },
+                label = { Text(text = tag) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),

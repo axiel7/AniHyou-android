@@ -8,10 +8,8 @@ import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SearchStaffQuery
 import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.SearchUserQuery
-import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
-import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.SearchRepository
@@ -33,7 +31,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -57,10 +54,14 @@ class SearchViewModel @Inject constructor(
         SearchUiState(
             searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
-            genreCollection = if (initialGenre != null)
-                listOf(SelectableGenre(initialGenre, true)) else emptyList(),
-            tagCollection = if (initialTag != null)
-                listOf(SelectableGenre(initialTag, true)) else emptyList(),
+            selectedGenres = if (initialGenre != null)
+                listOf(initialGenre) else emptyList(),
+            selectedTags = if (initialTag != null)
+                listOf(initialTag) else emptyList(),
+            hasNextPage = initialGenre != null
+                    || initialTag != null
+                    || initialMediaType != null
+                    || initialMediaSort != null
         )
     )
     override val uiState = mutableUiState.asStateFlow()
@@ -78,11 +79,23 @@ class SearchViewModel @Inject constructor(
     }
 
     fun setMediaFormats(values: List<MediaFormatLocalizable>) = mutableUiState.update {
-        it.copy(selectedMediaFormats = values, page = 1, hasNextPage = true, isLoading = true)
+        it.copy(
+            selectedMediaFormats = values,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true,
+            mediaFormatsChanged = true,
+        )
     }
 
     fun setMediaStatuses(values: List<MediaStatusLocalizable>) = mutableUiState.update {
-        it.copy(selectedMediaStatuses = values, page = 1, hasNextPage = true, isLoading = true)
+        it.copy(
+            selectedMediaStatuses = values,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true,
+            mediaStatusesChanged = true,
+        )
     }
 
     fun setYear(value: Int?) = mutableUiState.update {
@@ -93,6 +106,18 @@ class SearchViewModel @Inject constructor(
         it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    fun setSelectedGenresAndTags(genres: List<String>, tags: List<String>) =
+        mutableUiState.update {
+            it.copy(
+                selectedGenres = genres,
+                selectedTags = tags,
+                genresOrTagsChanged = true,
+                page = 1,
+                hasNextPage = true,
+                isLoading = true
+            )
+        }
+
     val media = mutableStateListOf<SearchMediaQuery.Medium>()
     val characters = mutableStateListOf<SearchCharacterQuery.Character>()
     val staff = mutableStateListOf<SearchStaffQuery.Staff>()
@@ -102,24 +127,25 @@ class SearchViewModel @Inject constructor(
     init {
         // media search
         mutableUiState
-            .filter { it.searchType.isSearchMedia && it.hasNextPage && it.query.isNotBlank() }
+            .filter { it.searchType.isSearchMedia && it.hasNextPage }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && old.query == new.query
                         && old.mediaType == new.mediaType
                         && old.mediaSort == new.mediaSort
-                        && old.selectedMediaFormats == new.selectedMediaFormats
-                        && old.selectedMediaStatuses == new.selectedMediaStatuses
                         && old.selectedYear == new.selectedYear
                         && old.onMyList == new.onMyList
+                        && !new.genresOrTagsChanged
+                        && !new.mediaFormatsChanged
+                        && !new.mediaStatusesChanged
             }
             .flatMapLatest { uiState ->
                 searchRepository.searchMedia(
                     mediaType = uiState.mediaType!!,
                     query = uiState.query,
                     sort = listOf(uiState.mediaSortForSearch),
-                    genreIn = uiState.selectedGenres.map { it.name },
-                    tagIn = uiState.selectedTags.map { it.name },
+                    genreIn = uiState.selectedGenres,
+                    tagIn = uiState.selectedTags,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },
                     year = uiState.selectedYear,
@@ -135,6 +161,9 @@ class SearchViewModel @Inject constructor(
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
+                            genresOrTagsChanged = false,
+                            mediaFormatsChanged = false,
+                            mediaStatusesChanged = false,
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)
@@ -274,67 +303,5 @@ class SearchViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    fun getGenreTagCollection() {
-        searchRepository.getGenreTagCollection()
-            .onEach { result ->
-                mutableUiState.update { uiState ->
-                    if (result is DataResult.Success) {
-                        val externalGenre = uiState.externalGenre
-
-                        val externalTag = uiState.externalTag
-
-                        uiState.copy(
-                            isLoadingGenres = false,
-                            genreCollection = result.data.genres.map {
-                                if (it == externalGenre) it.copy(isSelected = true) else it
-                            },
-                            tagCollection = result.data.tags.map {
-                                if (it == externalTag) it.copy(isSelected = true) else it
-                            }
-                        )
-                    } else {
-                        uiState.copy(
-                            isLoadingGenres = result is DataResult.Loading
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
-    }
-
-    fun onGenreUpdated(value: SelectableGenre) = viewModelScope.launch {
-        mutableUiState.update { uiState ->
-            val mutableList = uiState.genreCollection.toMutableList()
-            val foundIndex = mutableList.indexOf(value)
-            if (foundIndex != -1) {
-                mutableList[foundIndex] = value
-                uiState.copy(
-                    genreCollection = mutableList.toList()
-                )
-            } else uiState
-        }
-    }
-
-    fun onTagUpdated(value: SelectableGenre) = viewModelScope.launch {
-        mutableUiState.update { uiState ->
-            val mutableList = uiState.tagCollection.toMutableList()
-            val foundIndex = mutableList.indexOf(value)
-            if (foundIndex != -1) {
-                mutableList[foundIndex] = value
-                uiState.copy(
-                    tagCollection = mutableList.toList()
-                )
-            } else uiState
-        }
-    }
-
-    fun unselectAllGenresAndTags() = viewModelScope.launch {
-        mutableUiState.update { uiState ->
-            uiState.copy(
-                genreCollection = uiState.genreCollection.map { it.copy(isSelected = false) },
-                tagCollection = uiState.tagCollection.map { it.copy(isSelected = false) }
-            )
-        }
     }
 }

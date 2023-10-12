@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
@@ -107,13 +108,9 @@ fun SearchView(
                     }
                 )
                 MediaSearchGenresChips(
-                    genreCollection = uiState.genreCollection,
-                    tagCollection = uiState.tagCollection,
-                    onGenreSelected = viewModel::onGenreUpdated,
-                    onTagSelected = viewModel::onTagUpdated,
-                    fetchCollection = viewModel::getGenreTagCollection,
-                    isLoadingCollection = uiState.isLoading,
-                    unselectAll = viewModel::unselectAllGenresAndTags
+                    externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                    externalTag = initialTag?.let { SelectableGenre(name = it) },
+                    onGenreTagSelected = viewModel::setSelectedGenresAndTags,
                 )
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
