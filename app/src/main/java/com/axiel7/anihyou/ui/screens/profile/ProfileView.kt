@@ -205,12 +205,15 @@ private fun ProfileView(
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
-                    uiState.userInfo?.donatorBadge?.let { donatorText ->
-                        Text(
-                            text = donatorText,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 14.sp
-                        )
+                    uiState.userInfo?.donatorTier?.let { donatorTier ->
+                        if (donatorTier > 1) {
+                            Text(
+                                text = uiState.userInfo?.donatorBadge
+                                    ?: stringResource(R.string.donator),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 14.sp
+                            )
+                        }
                     }
                     if (uiState.userInfo?.isFollower == true) {
                         Text(

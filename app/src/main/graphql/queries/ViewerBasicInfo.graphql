@@ -14,8 +14,6 @@ fragment UserInfo on User {
     about(asHtml: true)
     options {
         profileColor
-        staffNameLanguage
-        titleLanguage
     }
     mediaListOptions {
         scoreFormat
@@ -24,4 +22,5 @@ fragment UserInfo on User {
     isFollower
     siteUrl
     donatorBadge
+    donatorTier
 }
