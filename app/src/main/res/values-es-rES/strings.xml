@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="explore">Explorar</string>
+    <string name="hour_abbreviation">%s h</string>
+    <string name="minutes_abbreviation">%s min</string>
+    <string name="airing_soon">En emisión</string>
+    <string name="mean_score">Puntuación media</string>
+    <string name="trending_now">Tendencia Ahora</string>
+    <string name="next_season">Próxima Temporada</string>
+    <string name="trending_manga">Manga en Tendencia</string>
+</resources>
