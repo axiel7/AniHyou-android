@@ -58,6 +58,7 @@ fun UserMediaListView(
     onLoadMore: suspend () -> Unit,
     onRefresh: () -> Unit,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
     onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
     val pullRefreshState = rememberPullRefreshState(
@@ -134,6 +135,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }
@@ -159,6 +163,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }
@@ -184,6 +191,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }
@@ -222,6 +232,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }
@@ -247,6 +260,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }
@@ -272,6 +288,9 @@ fun UserMediaListView(
                                 onLongClick = { onShowEditSheet(item) },
                                 onClickPlus = {
                                     onUpdateProgress(item.basicMediaListEntry)
+                                },
+                                onClickNotes = {
+                                    onClickNotes(item)
                                 }
                             )
                         }

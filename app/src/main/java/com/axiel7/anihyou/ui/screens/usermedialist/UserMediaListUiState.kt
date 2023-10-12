@@ -13,6 +13,7 @@ data class UserMediaListUiState(
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,
     val fetchFromNetwork: Boolean = false,
     val openSortDialog: Boolean = false,
+    val openNotesDialog: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,

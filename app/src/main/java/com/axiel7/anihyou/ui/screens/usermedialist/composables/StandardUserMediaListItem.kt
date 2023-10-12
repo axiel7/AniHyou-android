@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -25,13 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.media.duration
@@ -55,6 +51,7 @@ fun StandardUserMediaListItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
+    onClickNotes: () -> Unit,
 ) {
     OutlinedCard(
         modifier = Modifier
@@ -124,16 +121,10 @@ fun StandardUserMediaListItem(
                             verticalAlignment = Alignment.Bottom
                         ) {
                             if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
-                                Icon(
-                                    painter = painterResource(R.drawable.replay_20),
-                                    contentDescription = stringResource(R.string.repeat_count)
-                                )
+                                RepeatIndicator(count = item.basicMediaListEntry.repeat ?: 0)
                             }
                             if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
-                                Icon(
-                                    painter = painterResource(R.drawable.notes_20),
-                                    contentDescription = stringResource(R.string.notes)
-                                )
+                                NotesIndicator(onClick = onClickNotes)
                             }
                             if (isMyList && (status == MediaListStatus.CURRENT
                                         || status == MediaListStatus.REPEATING)
@@ -172,7 +163,8 @@ fun StandardUserMediaListItemPreview() {
                 isMyList = true,
                 onClick = { },
                 onLongClick = { },
-                onClickPlus = { }
+                onClickPlus = { },
+                onClickNotes = {},
             )
         }
     }

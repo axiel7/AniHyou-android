@@ -70,6 +70,8 @@ class UserMediaListViewModel @Inject constructor(
 
     fun toggleSortDialog(open: Boolean) = mutableUiState.update { it.copy(openSortDialog = open) }
 
+    fun toggleNotesDialog(open: Boolean) = mutableUiState.update { it.copy(openNotesDialog = open) }
+
     fun refreshList() = mutableUiState.update {
         it.copy(
             fetchFromNetwork = true,
@@ -104,6 +106,11 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     var selectedItem: UserMediaListQuery.MediaList? = null
+        private set
+
+    fun selectItem(value: UserMediaListQuery.MediaList?) {
+        selectedItem = value
+    }
 
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         if (selectedItem != null && selectedItem?.basicMediaListEntry != newListEntry) {
@@ -168,21 +175,6 @@ class UserMediaListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
-
-        // filters
-        /*mutableUiState
-            .distinctUntilChanged { old, new ->
-                old.status == new.status
-                        && old.sort == new.sort
-                        && old.fetchFromNetwork == new.fetchFromNetwork
-            }
-            .filter { it.page > 0 }
-            .onEach {
-                mutableUiState.update {
-                    it.copy(refresh = true, page = 1, isLoading = true)
-                }
-            }
-            .launchIn(viewModelScope)*/
 
         mutableUiState
             .filter { it.hasNextPage }

@@ -52,6 +52,7 @@ import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -106,6 +107,13 @@ private fun UserMediaListHostView(
         }
     }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    if (uiState.openNotesDialog) {
+        NotesDialog(
+            note = viewModel.selectedItem?.basicMediaListEntry?.notes.orEmpty(),
+            onDismiss = { viewModel.toggleNotesDialog(false) }
+        )
+    }
 
     if (uiState.openSortDialog) {
         DialogWithRadioSelection(
@@ -211,7 +219,7 @@ private fun UserMediaListHostView(
                 onRefresh = viewModel::refreshList,
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    viewModel.selectedItem = it
+                    viewModel.selectItem(it)
                     scope.launch { editSheetState.show() }
                 },
                 onUpdateProgress = { entry ->
@@ -219,6 +227,10 @@ private fun UserMediaListHostView(
                         entryId = entry.id,
                         progress = (entry.progress ?: 0) + 1
                     )
+                },
+                onClickNotes = {
+                    viewModel.selectItem(it)
+                    viewModel.toggleNotesDialog(true)
                 }
             )
         }//: Column
