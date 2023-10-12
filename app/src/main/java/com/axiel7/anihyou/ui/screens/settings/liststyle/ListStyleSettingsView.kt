@@ -22,6 +22,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
@@ -62,7 +63,7 @@ fun ListStyleSettingsView(
                 val preference by viewModel.getAnimeListStyle(status).collectAsStateWithLifecycle()
 
                 ListPreference(
-                    title = status.localized(),
+                    title = status.localized(mediaType = MediaType.ANIME),
                     entriesValues = ListStyle.entriesLocalized,
                     preferenceValue = preference,
                     icon = status.icon(),
@@ -77,7 +78,7 @@ fun ListStyleSettingsView(
                 val preference by viewModel.getMangaListStyle(status).collectAsStateWithLifecycle()
 
                 ListPreference(
-                    title = status.localized(),
+                    title = status.localized(mediaType = MediaType.MANGA),
                     entriesValues = ListStyle.entriesLocalized,
                     preferenceValue = preference,
                     icon = status.icon(),

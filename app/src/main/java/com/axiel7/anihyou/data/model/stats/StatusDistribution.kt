@@ -9,6 +9,7 @@ import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.theme.stat_dark_blue
 import com.axiel7.anihyou.ui.theme.stat_dark_green
 import com.axiel7.anihyou.ui.theme.stat_dark_onBlue
@@ -27,9 +28,10 @@ import com.axiel7.anihyou.ui.theme.stat_light_red
 import com.axiel7.anihyou.ui.theme.stat_light_yellow
 
 enum class StatusDistribution(
-    val value: MediaListStatus
+    val status: MediaListStatus,
 ) : Localizable, Colorable {
-    CURRENT(MediaListStatus.CURRENT),
+    WATCHING(MediaListStatus.CURRENT),
+    READING(MediaListStatus.CURRENT),
     COMPLETED(MediaListStatus.COMPLETED),
     PAUSED(MediaListStatus.PAUSED),
     DROPPED(MediaListStatus.DROPPED),
@@ -38,7 +40,7 @@ enum class StatusDistribution(
     @Composable
     override fun primaryColor(): Color {
         val isDark = isSystemInDarkTheme()
-        return when (value) {
+        return when (status) {
             MediaListStatus.CURRENT -> if (isDark) stat_dark_green else stat_light_green
             MediaListStatus.PLANNING -> MaterialTheme.colorScheme.outline
             MediaListStatus.COMPLETED -> if (isDark) stat_dark_blue else stat_light_blue
@@ -52,7 +54,7 @@ enum class StatusDistribution(
     @Composable
     override fun onPrimaryColor(): Color {
         val isDark = isSystemInDarkTheme()
-        return when (value) {
+        return when (status) {
             MediaListStatus.CURRENT -> if (isDark) stat_dark_onGreen else stat_light_onGreen
             MediaListStatus.PLANNING -> MaterialTheme.colorScheme.onSurface
             MediaListStatus.COMPLETED -> if (isDark) stat_dark_onBlue else stat_light_onBlue
@@ -64,11 +66,26 @@ enum class StatusDistribution(
     }
 
     @Composable
-    override fun localized() = value.localized()
+    override fun localized() = status.localized(
+        mediaType = when (this) {
+            WATCHING -> MediaType.ANIME
+            READING -> MediaType.MANGA
+            else -> MediaType.UNKNOWN__
+        }
+    )
 
     companion object {
-        fun valueOf(rawValue: String?) =
-            entries.find { it.value.rawValue == rawValue }
+        fun valueOf(
+            rawValue: String?,
+            mediaType: MediaType = MediaType.UNKNOWN__
+        ) =
+            if (rawValue == MediaListStatus.CURRENT.rawValue) {
+                when (mediaType) {
+                    MediaType.ANIME -> WATCHING
+                    MediaType.MANGA -> READING
+                    MediaType.UNKNOWN__ -> null
+                }
+            } else entries.find { it.status.rawValue == rawValue }
 
         fun MediaStatsQuery.StatusDistribution.asStat(): StatLocalizableAndColorable<StatusDistribution>? {
             val status = StatusDistribution.valueOf(status?.rawValue)

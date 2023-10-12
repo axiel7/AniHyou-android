@@ -134,6 +134,7 @@ private fun UserMediaListHostView(
     if (statusSheetState.isVisible) {
         ListStatusSheet(
             selectedStatus = uiState.status,
+            mediaType = viewModel.mediaType,
             sheetState = statusSheetState,
             bottomPadding = bottomBarPadding,
             onStatusChanged = viewModel::setStatus
@@ -174,7 +175,7 @@ private fun UserMediaListHostView(
                         contentDescription = stringResource(R.string.list_status),
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(text = uiState.status.localized())
+                    Text(text = uiState.status.localized(mediaType = viewModel.mediaType))
                 }
             }
         },

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.model.stats
 
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 import kotlin.math.roundToInt
 
 fun UserStatsAnimeOverviewQuery.Anime.planned() =
@@ -26,7 +27,10 @@ fun UserStatsAnimeOverviewQuery.Anime.scoreStatsTime() =
 fun UserStatsAnimeOverviewQuery.Anime.statusDistribution() =
     statuses?.filterNotNull()?.filter { it.status != null }?.map {
         StatLocalizableAndColorable(
-            type = StatusDistribution.valueOf(it.status!!.rawValue),
+            type = StatusDistribution.valueOf(
+                rawValue = it.status?.rawValue,
+                mediaType = MediaType.ANIME
+            ) ?: StatusDistribution.WATCHING,
             value = it.count.toFloat()
         )
     }

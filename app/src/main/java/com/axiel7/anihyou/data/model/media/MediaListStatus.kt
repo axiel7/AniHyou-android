@@ -4,10 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 
 @Composable
-fun MediaListStatus.localized() = when (this) {
-    MediaListStatus.CURRENT -> stringResource(R.string.current)
+fun MediaListStatus.localized(
+    mediaType: MediaType = MediaType.UNKNOWN__
+) = when (this) {
+    MediaListStatus.CURRENT -> {
+        when (mediaType) {
+            MediaType.ANIME -> stringResource(R.string.watching)
+            MediaType.MANGA -> stringResource(R.string.reading)
+            MediaType.UNKNOWN__ -> stringResource(R.string.current)
+        }
+    }
     MediaListStatus.PLANNING -> stringResource(R.string.planning)
     MediaListStatus.COMPLETED -> stringResource(R.string.completed)
     MediaListStatus.DROPPED -> stringResource(R.string.dropped)

@@ -323,4 +323,6 @@
     <string name="genre_sports">Sports</string>
     <string name="genre_supernatural">Supernatural</string>
     <string name="genre_thriller">Thriller</string>
+    <string name="watching">Watching</string>
+    <string name="reading">Reading</string>
 </resources>

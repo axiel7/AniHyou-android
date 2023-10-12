@@ -99,7 +99,7 @@ fun HorizontalStatsBarPreview() {
     val stats by remember {
         mutableStateOf(
             listOf(
-                StatLocalizableAndColorable(type = StatusDistribution.CURRENT, value = 12f),
+                StatLocalizableAndColorable(type = StatusDistribution.WATCHING, value = 12f),
                 StatLocalizableAndColorable(type = StatusDistribution.COMPLETED, value = 420f),
                 StatLocalizableAndColorable(type = StatusDistribution.PAUSED, value = 5f),
                 StatLocalizableAndColorable(type = StatusDistribution.DROPPED, value = 3f),

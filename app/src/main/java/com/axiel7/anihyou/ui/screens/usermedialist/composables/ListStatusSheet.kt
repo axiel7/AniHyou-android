@@ -21,11 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListStatusSheet(
     selectedStatus: MediaListStatus,
+    mediaType: MediaType,
     sheetState: SheetState,
     bottomPadding: Dp,
     onStatusChanged: (MediaListStatus) -> Unit,
@@ -56,7 +58,7 @@ fun ListStatusSheet(
                     )
 
                     Text(
-                        text = it.localized(),
+                        text = it.localized(mediaType = mediaType),
                         modifier = Modifier.padding(start = 8.dp),
                         color = if (isSelected) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurfaceVariant

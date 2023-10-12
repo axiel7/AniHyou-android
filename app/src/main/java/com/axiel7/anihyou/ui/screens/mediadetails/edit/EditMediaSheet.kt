@@ -177,7 +177,9 @@ fun EditMediaSheet(
                 MediaListStatus.knownEntries.forEach { status ->
                     SelectableIconToggleButton(
                         icon = status.icon(),
-                        tooltipText = status.localized(),
+                        tooltipText = status.localized(
+                            mediaType = mediaDetails.type ?: MediaType.UNKNOWN__
+                        ),
                         value = status,
                         selectedValue = uiState.status,
                         onClick = {

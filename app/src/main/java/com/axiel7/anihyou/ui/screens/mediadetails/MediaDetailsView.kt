@@ -184,8 +184,10 @@ fun MediaDetailsView(
                     )
                     Text(
                         text = if (uiState.isNewEntry) stringResource(R.string.add)
-                        else uiState.details?.mediaListEntry?.basicMediaListEntry?.status?.localized()
-                            ?: stringResource(R.string.edit),
+                        else uiState.details?.mediaListEntry?.basicMediaListEntry?.status?.localized(
+                            mediaType = uiState.details?.basicMediaDetails?.type
+                                ?: MediaType.UNKNOWN__
+                        ) ?: stringResource(R.string.edit),
                         modifier = Modifier.padding(start = 16.dp, end = 8.dp)
                     )
                 }
