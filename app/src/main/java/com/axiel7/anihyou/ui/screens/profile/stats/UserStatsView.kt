@@ -11,11 +11,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
@@ -25,6 +28,11 @@ fun UserStatsView(
     modifier: Modifier = Modifier
 ) {
     val viewModel: UserStatsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(userId) {
+        viewModel.setUserId(userId)
+    }
 
     Column(
         modifier = modifier
@@ -39,15 +47,24 @@ fun UserStatsView(
         ) {
             UserStatType.entries.forEach {
                 FilterSelectionChip(
-                    selected = viewModel.statType == it,
+                    selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.statType = it }
+                    onClick = {
+                        viewModel.setType(it)
+                    }
                 )
             }
         }//: Row
 
-        when (viewModel.statType) {
-            UserStatType.OVERVIEW -> OverviewUserStatsView(viewModel = viewModel)
+        when (uiState.type) {
+            UserStatType.OVERVIEW -> {
+                OverviewUserStatsView(
+                    uiState = uiState,
+                    setMediaType = viewModel::setMediaType,
+                    setScoreCountType = viewModel::setScoreCountType
+                )
+            }
+
             UserStatType.GENRES -> ComingSoonText()
             UserStatType.TAGS -> ComingSoonText()
             UserStatType.STAFF -> ComingSoonText()
