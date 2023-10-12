@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.SelectableGenre
@@ -46,6 +45,7 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearC
 
 @Composable
 fun SearchView(
+    viewModel: SearchViewModel,
     query: String,
     performSearch: MutableState<Boolean>,
     initialMediaType: MediaType?,
@@ -57,7 +57,6 @@ fun SearchView(
     navigateToStudioDetails: (Int) -> Unit,
     navigateToUserDetails: (Int) -> Unit,
 ) {
-    val viewModel: SearchViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()

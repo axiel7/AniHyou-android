@@ -32,12 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.screens.explore.search.SearchView
+import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
@@ -93,6 +95,7 @@ fun ExploreView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val searchViewModel: SearchViewModel = hiltViewModel()
                 SearchBar(
                     query = query,
                     onQueryChange = { query = it },
@@ -148,6 +151,7 @@ fun ExploreView(
                     }
                 ) {
                     SearchView(
+                        viewModel = searchViewModel,
                         query = query,
                         performSearch = performSearch,
                         initialMediaType = initialMediaType,
