@@ -71,7 +71,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun setSearchType(value: SearchType) = mutableUiState.update {
-        it.copy(searchType = value, page = 1, hasNextPage = true, isLoading = true)
+        it.copy(searchType = value, page = 1, hasNextPage = true)
     }
 
     fun setMediaSort(value: MediaSort) = mutableUiState.update {
