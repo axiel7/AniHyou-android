@@ -37,8 +37,14 @@ fun MediaSearchGenresChips(
     val sheetState = rememberModalBottomSheetState()
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    val selectedGenres = remember { mutableStateListOf<String>() }
-    val selectedTags = remember { mutableStateListOf<String>() }
+    val selectedGenres = remember {
+        if (externalGenre != null) mutableStateListOf(externalGenre.name)
+        else mutableStateListOf()
+    }
+    val selectedTags = remember {
+        if (externalTag != null) mutableStateListOf(externalTag.name)
+        else mutableStateListOf()
+    }
 
     if (sheetState.isVisible) {
         GenresTagsSheet(

@@ -60,6 +60,8 @@ fun SearchView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+
     var searchByGenre by remember { mutableStateOf(initialMediaType != null) }
 
     LaunchedEffect(performSearch.value) {
@@ -75,8 +77,6 @@ fun SearchView(
             performSearch.value = false
         }
     }
-
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     LazyColumn(
         state = listState
