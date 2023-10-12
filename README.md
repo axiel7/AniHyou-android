@@ -41,11 +41,15 @@ MRw5XPLsM9SVf48tv4nwQoY12nMXaiVzmD
 ## Libraries used
 * [AniList GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
 * [Apollo Kotlin](https://github.com/apollographql/apollo-kotlin)
+* [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+* [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager)
+* Forked [compose-markdown](https://github.com/axiel7/compose-markdown)
+* [MaterialKolor](https://github.com/jordond/MaterialKolor)
+* [Hilt](https://dagger.dev/hilt)
+* [Coil](https://github.com/coil-kt/coil)
 * [Material3 Components](https://github.com/material-components/material-components-android)
 * [Jetpack Compose](https://developer.android.com/jetpack/compose)
-* [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-* [Coil](https://github.com/coil-kt/coil)
-* Forked [compose-markdown](https://github.com/axiel7/compose-markdown)
+* [Jetpack Glance](https://developer.android.com/jetpack/compose/glance)
 
 # Building
 Put the following content on your local.properties file:
