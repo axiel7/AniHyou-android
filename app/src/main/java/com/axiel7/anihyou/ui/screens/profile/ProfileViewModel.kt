@@ -140,14 +140,15 @@ class ProfileViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        //if (it.page == 1) userActivities.clear()
                         userActivities.addAll(result.list)
                         it.copy(
                             isLoadingActivity = false,
                             hasNextPage = result.hasNextPage
                         )
                     } else {
-                        result.toUiState(loadingWhen = it.page == 1)
+                        it.copy(
+                            isLoadingActivity = result is PagedResult.Loading && it.page == 1
+                        )
                     }
                 }
             }
