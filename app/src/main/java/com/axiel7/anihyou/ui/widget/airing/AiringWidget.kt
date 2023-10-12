@@ -145,7 +145,7 @@ class AiringWidget : GlanceAppWidget() {
     ): List<UserCurrentAnimeListQuery.MediaList>? {
         return try {
             val userId = hiltEntryPoint.defaultPreferencesRepository.userId.first()!!
-            hiltEntryPoint.mediaRepository.getUserCurrentAnimeList(userId)
+            hiltEntryPoint.mediaRepository.getUserCurrentAnimeAiringList(userId)
         } catch (e: Exception) {
             null
         }

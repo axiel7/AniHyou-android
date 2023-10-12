@@ -149,13 +149,16 @@ class MediaRepository @Inject constructor(
 
     // widget
 
-    suspend fun getUserCurrentAnimeList(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
+    suspend fun getUserCurrentAnimeAiringList(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
         val response = api.userCurrentAnimeListQuery(userId).execute()
         return if (response.hasErrors()) null
         else {
             response.data?.Page?.mediaList?.filterNotNull()?.let { mediaList ->
                 return mediaList
-                    .filter { it.media?.status == MediaStatus.RELEASING }
+                    .filter {
+                        it.media?.status == MediaStatus.RELEASING
+                                && it.media.nextAiringEpisode != null
+                    }
                     .sortedBy { it.media?.nextAiringEpisode?.timeUntilAiring }
             }
             return null
