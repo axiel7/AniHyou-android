@@ -25,7 +25,7 @@ class CharacterRepository @Inject constructor(
         perPage: Int = 25,
     ) = api
         .characterMediaQuery(characterId, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Character?.media?.pageInfo?.commonPage }) {
             it.Character?.media?.edges?.filterNotNull().orEmpty()
         }

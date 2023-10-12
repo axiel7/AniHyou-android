@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.CharacterApi
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.api.StaffApi
@@ -52,7 +51,7 @@ class SearchRepository @Inject constructor(
             page,
             perPage
         )
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.media?.filterNotNull().orEmpty()
         }
@@ -63,7 +62,7 @@ class SearchRepository @Inject constructor(
         perPage: Int = 25,
     ) = characterApi
         .searchCharacterQuery(query, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.characters?.filterNotNull().orEmpty()
         }
@@ -74,7 +73,7 @@ class SearchRepository @Inject constructor(
         perPage: Int = 25,
     ) = staffApi
         .searchStaffQuery(query, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.staff?.filterNotNull().orEmpty()
         }
@@ -85,7 +84,7 @@ class SearchRepository @Inject constructor(
         perPage: Int = 25,
     ) = studioApi
         .searchStudioQuery(query, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.studios?.filterNotNull().orEmpty()
         }
@@ -96,7 +95,7 @@ class SearchRepository @Inject constructor(
         perPage: Int = 25,
     ) = userApi
         .searchUserQuery(query, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.users?.filterNotNull().orEmpty()
         }

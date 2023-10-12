@@ -28,7 +28,7 @@ class StudioRepository @Inject constructor(
         perPage: Int = 25,
     ) = api
         .studioMediaQuery(studioId, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Studio?.media?.pageInfo?.commonPage }) {
             it.Studio?.media?.commonStudioMedia?.nodes?.filterNotNull().orEmpty()
         }

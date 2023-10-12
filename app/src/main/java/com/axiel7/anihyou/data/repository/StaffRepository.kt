@@ -27,7 +27,7 @@ class StaffRepository @Inject constructor(
         perPage: Int = 25,
     ) = api
         .staffMediaQuery(staffId, onList, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Staff?.staffMedia?.pageInfo?.commonPage }) { data ->
             val media = data.Staff?.staffMedia?.edges?.filterNotNull().orEmpty()
 
@@ -48,7 +48,7 @@ class StaffRepository @Inject constructor(
         perPage: Int = 25,
     ) = api
         .staffCharacterQuery(staffId, page, perPage)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { it.Staff?.characterMedia?.pageInfo?.commonPage }) {
             it.Staff?.characterMedia?.edges?.filterNotNull().orEmpty()
         }
