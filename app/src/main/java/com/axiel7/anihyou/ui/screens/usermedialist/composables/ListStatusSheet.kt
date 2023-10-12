@@ -39,7 +39,7 @@ fun ListStatusSheet(
         Column(
             modifier = Modifier.padding(bottom = 8.dp + bottomPadding)
         ) {
-            MediaListStatus.knownValues().forEach {
+            MediaListStatus.knownEntries.forEach {
                 val isSelected = selectedStatus == it
                 Row(
                     modifier = Modifier

@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainView(
                         windowSizeClass = windowSizeClass,
-                        lastTabOpened = lastTabOpened ?: 0,
+                        lastTabOpened = lastTabOpened,
                         saveLastTab = viewModel::saveLastTab,
                         deepLink = deepLink,
                     )
