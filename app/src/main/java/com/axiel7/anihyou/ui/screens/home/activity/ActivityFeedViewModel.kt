@@ -35,7 +35,7 @@ class ActivityFeedViewModel @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
 
     fun setIsFollowing(value: Boolean) = mutableUiState.update {
-        it.copy(isLoading = value, page = 1, hasNextPage = true)
+        it.copy(isFollowing = value, page = 1, hasNextPage = true)
     }
 
     fun setType(value: ActivityTypeGrouped?) = mutableUiState.update {
@@ -43,7 +43,7 @@ class ActivityFeedViewModel @Inject constructor(
     }
 
     fun refreshList() = mutableUiState.update {
-        it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true)
+        it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true, isLoading = true)
     }
 
     val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
