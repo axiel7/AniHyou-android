@@ -14,29 +14,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.Localizable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-
-enum class UserSocialType : Localizable {
-    FOLLOWERS, FOLLOWING;
-
-    @Composable
-    override fun localized() = when (this) {
-        FOLLOWERS -> stringResource(R.string.followers)
-        FOLLOWING -> stringResource(R.string.following)
-    }
-}
 
 @Composable
 fun UserSocialView(
@@ -45,11 +35,14 @@ fun UserSocialView(
     navigateToUserDetails: (Int) -> Unit,
 ) {
     val viewModel: UserSocialViewModel = hiltViewModel()
-    val listState = rememberLazyGridState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(userId) {
-        viewModel.onUserSocialTypeChanged(UserSocialType.FOLLOWERS)
+        viewModel.setUserId(userId)
     }
+
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -61,9 +54,9 @@ fun UserSocialView(
         ) {
             UserSocialType.entries.forEach {
                 FilterSelectionChip(
-                    selected = viewModel.userSocialType == it,
+                    selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.onUserSocialTypeChanged(it) }
+                    onClick = { viewModel.setType(it) }
                 )
             }
         }//: Row
@@ -75,7 +68,7 @@ fun UserSocialView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            when (viewModel.userSocialType) {
+            when (uiState.type) {
                 UserSocialType.FOLLOWERS -> {
                     items(
                         items = viewModel.followers,
@@ -90,7 +83,7 @@ fun UserSocialView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             PersonItemVerticalPlaceholder()
                         }
@@ -111,7 +104,7 @@ fun UserSocialView(
                             }
                         )
                     }
-                    if (viewModel.isLoading) {
+                    if (uiState.isLoading) {
                         items(14) {
                             PersonItemVerticalPlaceholder()
                         }
