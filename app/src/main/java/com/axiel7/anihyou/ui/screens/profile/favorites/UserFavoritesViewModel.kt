@@ -1,153 +1,203 @@
 package com.axiel7.anihyou.ui.screens.profile.favorites
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.UserFavoritesAnimeQuery
 import com.axiel7.anihyou.UserFavoritesCharacterQuery
 import com.axiel7.anihyou.UserFavoritesMangaQuery
 import com.axiel7.anihyou.UserFavoritesStaffQuery
 import com.axiel7.anihyou.UserFavoritesStudioQuery
+import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
-import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
+import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class UserFavoritesViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val favoriteRepository: FavoriteRepository
-) : ViewModel() {
+) : PagedUiStateViewModel<UserFavoritesUiState>() {
 
-    //TODO: user favorites
+    override val mutableUiState = MutableStateFlow(UserFavoritesUiState())
+    override val uiState = mutableUiState.asStateFlow()
 
-    val userId: Int = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]!!
+    fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 
-    var isLoading by mutableStateOf(true)
-        private set
-
-    var favoritesType by mutableStateOf(FavoritesType.ANIME)
-        private set
-
-    fun onFavoriteTypeChanged(value: FavoritesType) {
-        favoritesType = value
-        when (favoritesType) {
-            FavoritesType.ANIME -> if (hasNextPageAnime) getAnime(userId)
-            FavoritesType.MANGA -> if (hasNextPageManga) getManga(userId)
-            FavoritesType.CHARACTERS -> if (hasNextPageCharacter) getCharacters(userId)
-            FavoritesType.STAFF -> if (hasNextPageStaff) getStaff(userId)
-            FavoritesType.STUDIOS -> if (hasNextPageStudio) getStudios(userId)
-        }
+    fun setType(value: FavoritesType) = mutableUiState.update {
+        it.copy(type = value, page = 1, hasNextPage = true)
     }
 
-    private var pageAnime = 1
-    private var hasNextPageAnime = true
-    var anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
-
-    private fun getAnime(userId: Int) = viewModelScope.launch {
-        /*FavoriteRepository.getFavoriteAnime(
-            userId = userId,
-            page = pageAnime
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                anime.addAll(result.data)
-                hasNextPageAnime = result.nextPage != null
-                pageAnime = result.nextPage ?: pageAnime
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }*/
-    }
-
-    private var pageManga = 1
-    private var hasNextPageManga = true
-    var manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
-
-    private fun getManga(userId: Int) = viewModelScope.launch {
-        /*FavoriteRepository.getFavoriteManga(
-            userId = userId,
-            page = pageManga
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                manga.addAll(result.data)
-                hasNextPageManga = result.nextPage != null
-                pageManga = result.nextPage ?: pageManga
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }*/
-    }
-
-    private var pageCharacter = 1
-    private var hasNextPageCharacter = true
-    var characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
-
-    private fun getCharacters(userId: Int) = viewModelScope.launch {
-        /*FavoriteRepository.getFavoriteCharacters(
-            userId = userId,
-            page = pageCharacter
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                characters.addAll(result.data)
-                hasNextPageCharacter = result.nextPage != null
-                pageCharacter = result.nextPage ?: pageCharacter
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }*/
-    }
-
-    private var pageStaff = 1
-    private var hasNextPageStaff = true
-    var staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
-
-    private fun getStaff(userId: Int) = viewModelScope.launch {
-        /*FavoriteRepository.getFavoriteStaff(
-            userId = userId,
-            page = pageStaff
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                staff.addAll(result.data)
-                hasNextPageStaff = result.nextPage != null
-                pageStaff = result.nextPage ?: pageStaff
-            } else if (result is PagedResult.Error) {
-                message = result.message
-            }
-        }*/
-    }
-
-    private var pageStudio = 1
-    private var hasNextPageStudio = true
+    val anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
+    val manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
+    val characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
+    val staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
     var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
 
-    private fun getStudios(userId: Int) = viewModelScope.launch {
-        /*FavoriteRepository.getFavoriteStudio(
-            userId = userId,
-            page = pageStudio
-        ).collect { result ->
-            isLoading = result is PagedResult.Loading
-
-            if (result is PagedResult.Success) {
-                studios.addAll(result.data)
-                hasNextPageStudio = result.nextPage != null
-                pageStudio = result.nextPage ?: pageStudio
-            } else if (result is PagedResult.Error) {
-                message = result.message
+    init {
+        // anime
+        mutableUiState
+            .filter {
+                it.type == FavoritesType.ANIME
+                        && it.hasNextPage
+                        && it.userId != null
             }
-        }*/
+            .distinctUntilChangedBy { it.page }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    favoriteRepository.getFavoriteAnime(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        anime.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // manga
+        mutableUiState
+            .filter {
+                it.type == FavoritesType.MANGA
+                        && it.hasNextPage
+                        && it.userId != null
+            }
+            .distinctUntilChangedBy { it.page }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    favoriteRepository.getFavoriteManga(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        manga.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // characters
+        mutableUiState
+            .filter {
+                it.type == FavoritesType.CHARACTERS
+                        && it.hasNextPage
+                        && it.userId != null
+            }
+            .distinctUntilChangedBy { it.page }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    favoriteRepository.getFavoriteCharacters(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        characters.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // staff
+        mutableUiState
+            .filter {
+                it.type == FavoritesType.STAFF
+                        && it.hasNextPage
+                        && it.userId != null
+            }
+            .distinctUntilChangedBy { it.page }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    favoriteRepository.getFavoriteStaff(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        staff.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // studios
+        mutableUiState
+            .filter {
+                it.type == FavoritesType.STUDIOS
+                        && it.hasNextPage
+                        && it.userId != null
+            }
+            .distinctUntilChangedBy { it.page }
+            .flatMapLatest { uiState ->
+                if (uiState.userId != null)
+                    favoriteRepository.getFavoriteStudio(
+                        userId = uiState.userId,
+                        page = uiState.page
+                    )
+                else emptyFlow()
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        studios.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }
