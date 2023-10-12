@@ -236,7 +236,7 @@ fun MainNavigation(
                 navigateToPublishActivity = { id, text ->
                     navController.navigate(
                         PUBLISH_ACTIVITY_DESTINATION
-                            .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
+                            .replace(ACTIVITY_ID_ARGUMENT, id.toStringOrZero())
                             .also {
                                 if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
                             }
