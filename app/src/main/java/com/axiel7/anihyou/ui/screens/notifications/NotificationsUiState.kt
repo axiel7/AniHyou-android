@@ -5,7 +5,7 @@ import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class NotificationsUiState(
     val type: NotificationTypeGroup = NotificationTypeGroup.ALL,
-    override val page: Int = 0,
+    override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,
     override val isLoading: Boolean = true,

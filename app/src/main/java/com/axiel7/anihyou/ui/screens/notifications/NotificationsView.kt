@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -30,6 +31,7 @@ import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItem
 import com.axiel7.anihyou.ui.screens.notifications.composables.NotificationItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -55,6 +57,8 @@ fun NotificationsView(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.notifications),
@@ -69,6 +73,7 @@ fun NotificationsView(
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 )
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            state = listState,
             contentPadding = PaddingValues(
                 bottom = padding.calculateBottomPadding()
             )
@@ -92,7 +97,15 @@ fun NotificationsView(
                     }
                 }
             }
-            items(
+            if (uiState.isLoading) {
+                items(10) {
+                    NotificationItemPlaceholder(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                    )
+                }
+            } else items(
                 items = viewModel.notifications,
                 contentType = { it }
             ) { item ->
@@ -154,15 +167,6 @@ fun NotificationsView(
                         }
                     }
                 )
-            }
-            if (uiState.isLoading) {
-                items(10) {
-                    NotificationItemPlaceholder(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                    )
-                }
             }
         }//:LazyColumn
     }//:Scaffold
