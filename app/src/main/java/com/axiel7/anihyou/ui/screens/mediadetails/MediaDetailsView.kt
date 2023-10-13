@@ -296,8 +296,8 @@ fun MediaDetailsView(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${uiState.details?.averageScore ?: 0}%",
-                    subtitle = stringResource(R.string.average_score),
+                    text = "${uiState.details?.meanScore ?: 0}%",
+                    subtitle = stringResource(R.string.mean_score),
                     isLoading = isLoadingDetails
                 )
                 VerticalDivider(
@@ -306,8 +306,8 @@ fun MediaDetailsView(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = "${uiState.details?.meanScore ?: 0}%",
-                    subtitle = stringResource(R.string.mean_score),
+                    text = "${uiState.details?.averageScore ?: 0}%",
+                    subtitle = stringResource(R.string.average_score),
                     isLoading = isLoadingDetails
                 )
                 VerticalDivider(
