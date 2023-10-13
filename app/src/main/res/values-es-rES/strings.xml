@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="explore">Explorar</string>
+    <string name="hour_abbreviation">%s h</string>
+    <string name="minutes_abbreviation">%s min</string>
+    <string name="airing_soon">En emisión</string>
+    <string name="mean_score" comment="This is the normalized score. You could translate it simply as (Score)">Puntuación</string>
+    <string name="trending_now">Tendencia Ahora</string>
+    <string name="next_season">Próxima Temporada</string>
+    <string name="trending_manga">Manga en Tendencia</string>
+    <string name="current">Viendo/Leyendo</string>
+    <string name="planning" comment="alt: planned">Planeado</string>
+    <string name="paused">Pausado</string>
+    <string name="repeating">Repitiendo</string>
+    <string name="anime_list">Lista de anime</string>
+    <string name="manga_list">Lista de manga</string>
+    <string name="sort_score">Puntuación</string>
+    <string name="sort_updated">Fecha de actualización</string>
+    <string name="sort_added">Fecha en la que se añadió</string>
+    <string name="sort">Orden</string>
+    <string name="add">Añadir</string>
+    <string name="edit">Editar</string>
+    <string name="copied">Copiado</string>
+    <string name="tv">TV</string>
+    <string name="tv_short">Corto de TV</string>
+    <string name="movie">Película</string>
+    <string name="special">Especial</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
+    <string name="music">Música</string>
+    <string name="novel">Novela</string>
+    <string name="one_shot">One Shot</string>
+    <string name="num_episodes">%s episodios</string>
+    <string name="num_chapters">%s capítulos</string>
+    <string name="finished">Finalizado</string>
+    <string name="releasing" comment="anime/manga status">Publicándose</string>
+    <string name="not_yet_released">Sin publicarse</string>
+    <string name="cancelled">Cancelado</string>
+    <string name="hiatus">Hiatus</string>
+    <string name="average_score" comment="weighted average score">Nota ponderada</string>
+    <string name="popularity">Popularidad</string>
+    <string name="favorites">Favoritos</string>
+    <string name="episode_in_time">Ep %d en %s</string>
+    <string name="airing">En emisión</string>
+    <string name="num_episodes_behind">%s episodios atrasados</string>
+    <string name="information">Información</string>
+    <string name="duration">Duración</string>
+    <string name="start_date">Fecha de inicio</string>
+    <string name="end_date">Fecha de finalización</string>
+    <string name="season">Temporada</string>
+    <string name="studios">Estudios</string>
+    <string name="producers">Productores</string>
+    <string name="source">Fuente</string>
+    <string name="original">Original</string>
+    <string name="light_novel">Novela ligera</string>
+    <string name="visual_novel">Novela visual</string>
+    <string name="video_game">Videojuego</string>
+    <string name="other">Otros</string>
+    <string name="doujinshi">Doujinshi</string>
+    <string name="web_novel">Novela web</string>
+    <string name="live_action">Live action</string>
+    <string name="game">Videojuego</string>
+    <string name="comic">Cómic</string>
+    <string name="multimedia_project">Proyecto multimedia</string>
+    <string name="picture_book">Libro ilustrado</string>
+    <string name="romaji">Romaji</string>
+    <string name="english">Inglés</string>
+    <string name="native_title">Nativo</string>
+    <string name="save">Guardar</string>
+    <string name="episodes">Episodios</string>
+    <string name="chapters">Capítulos</string>
+    <string name="volumes">Volúmenes</string>
+    <string name="repeat_count">Número de repeticiones</string>
+    <string name="delete">Eliminar</string>
+    <string name="delete_confirmation">¿Estás seguro de que quieres eliminar esta entrada?</string>
+    <string name="tags">Etiquetas</string>
+    <string name="show_spoiler">Mostrar Spoilers</string>
+    <string name="hide_spoiler">Ocultar Spoilers</string>
+    <string name="anime_manga_and_more">Anime, Manga, y Más</string>
+    <string name="characters">Personajes</string>
+    <string name="staff">Staff</string>
+    <string name="users">Usuarios</string>
+    <string name="title_romaji">Título Romaji</string>
+    <string name="title_english">Título Inglés</string>
+    <string name="title_native">Título Nativo</string>
+    <string name="sort_type">Tipo</string>
+    <string name="format" comment="media format.&#10;Eg: TV, Movie, Novel, etc">Formato</string>
+    <string name="trending">En tendencia</string>
+    <string name="sort_status">Estado</string>
+    <string name="search_match">Coincidencias de búsqueda</string>
+    <string name="top_100">Top 100</string>
+    <string name="top_popular">Top Popular</string>
+    <string name="apply">Aplicar</string>
+    <string name="sort_default">Por defecto</string>
+    <string name="descending">Descendente</string>
+    <string name="ascending">Ascendente</string>
+    <string name="role_main">Principal</string>
+    <string name="role_supporting">Secundario</string>
+    <string name="role_background" comment="character role">De fondo</string>
+    <string name="related">Relacionados</string>
+    <string name="relation_adaptation">Adaptación</string>
+    <string name="prequel">Precuela</string>
+    <string name="sequel">Secuela</string>
+    <string name="relation_parent">Padre</string>
+    <string name="side_story">Historia paralela</string>
+    <string name="relation_character">Personaje</string>
+    <string name="relation_summary">Resumen</string>
+    <string name="relation_alternative">Alternativo</string>
+    <string name="spin_off">Spin Off</string>
+    <string name="relation_other">Otros</string>
+    <string name="relation_source">Fuente</string>
+    <string name="relation_compilation">Compilación</string>
+    <string name="relation_contains">Contiene</string>
+    <string name="recommendations">Recomendaciones</string>
+    <string name="settings">Ajustes</string>
+    <string name="display" comment="display settings">Visualización</string>
+    <string name="theme" comment="app theme">Tema</string>
+    <string name="language">Idioma</string>
+    <string name="open_al_links_in_the_app">Abrir enlaces de AniList en la aplicación</string>
+    <string name="github_repository">Repositorio de GitHub</string>
+    <string name="developed_by_axiel7">Desarrollado por axiel7</string>
+    <string name="anilist_account_settings">Ajustes de la cuenta de AniList</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="character_media">Medios</string>
+    <string name="birthday">Cumpleaños</string>
+    <string name="age">Edad</string>
+    <string name="gender">Género</string>
+    <string name="blood_type">Grupo sanguíneo</string>
+    <string name="years_active">Años activos</string>
+    <string name="present">Presente</string>
+    <string name="hometown">Ciudad natal</string>
+    <string name="occupations">Ocupaciones</string>
+    <string name="no_information">Sin información</string>
+    <string name="score">Puntuación</string>
+    <string name="status_distribution">Distribución de estado</string>
+    <string name="rankings">Clasificaciones</string>
+    <string name="score_distribution">Distribución de puntuación</string>
+    <string name="no_description">Sin descripción</string>
+    <string name="reviews">Reseñas</string>
+    <string name="users_likes" comment="review: users likes">A los usuarios les gusta</string>
+    <string name="no_reviews">Sin reseñas</string>
+    <string name="close">Cerrar</string>
+    <string name="genres">Géneros</string>
+    <string name="add_genre">Añadir género</string>
+    <string name="clear" comment="clear selection">Restablecer</string>
+    <string name="list_private">Privado</string>
+    <string name="followers">Seguidores</string>
+    <string name="following">Siguiendo</string>
+    <string name="trailer">Tráiler</string>
+    <string name="streaming_sites">Sitios de streaming</string>
+    <string name="external_links">Enlaces externos</string>
+    <string name="on_my_list">En mi lista</string>
+    <string name="episode_airing_on" comment="time relative.&#10;Eg: Ep 2 airing on 1h 30min">Ep %d se emite en %s</string>
+    <string name="display_adult_content">Mostrar contenido para adultos</string>
+    <string name="overview">Visión general</string>
+    <string name="voice_actors">Actores de voz</string>
+    <string name="chapters_read" comment="chapters read count">Capítulos leídos</string>
+    <string name="episodes_watched" comment="episodes watched count">Episodios vistos</string>
+    <string name="days_watched" comment="Anime stat: sum of num days watched">Días vistos</string>
+    <string name="volumes_read" comment="volumes read count">Volúmenes leídos</string>
+    <string name="days_planned" comment="Stat: sum of num of days planned">Días planeados</string>
+    <string name="chapters_planned">Capítulos planeados</string>
+    <string name="standard_deviation">Desviación estándar</string>
+    <string name="title_count">Número de títulos</string>
+    <string name="time_spent">Tiempo dedicado</string>
+    <string name="format_distribution">Distribución de formatos</string>
+    <string name="episode_airing_at" comment="Specific time.&#10;Eg: Ep 2 airing at 12:00">Ep %s se emite a las %s</string>
+    <string name="filter" comment="as verb">Filtrar</string>
+    <string name="threads">Discusiones</string>
+    <string name="no_threads">Sin discusiones</string>
+    <string name="notifications_airing">En emisión</string>
+    <string name="activity">Actividad</string>
+    <string name="forum">Foro</string>
+    <string name="notifications_media">Medios</string>
+    <string name="airing_on_my_list" comment="Filter to show airing anime on my list">Emitiéndose en mi lista</string>
+    <string name="airing_on_my_list_summary">Muestra solamente animes en emisión que están en tu lista</string>
+    <string name="follow">Seguir</string>
+    <string name="follows_you">Te sigue</string>
+    <string name="view_anime_list">Ver Lista de Anime</string>
+    <string name="view_manga_list">Ver Lista de Manga</string>
+    <string name="default_setting">Por defecto</string>
+    <string name="media_status">Estado</string>
+    <string name="episode_aired_ago">Ep %d emitido hace %s</string>
+    <string name="romaji_western_order">Romaji (Orden Occidental)</string>
+    <string name="staff_character_name_language"><![CDATA[Idioma de los nombres de Staff y Personajes]]></string>
+    <string name="score_format">Formato de puntuación</string>
+    <string name="score_point_100">100 Puntos (55/100)</string>
+    <string name="score_point_10_decimal">10 Puntos Decimales (5.5/10)</string>
+    <string name="score_point_10">10 Puntos (5/10)</string>
+    <string name="score_point_5">5 Estrellas (3/5)</string>
+    <string name="score_point_3">Caritas de 3 Puntos :)</string>
+    <string name="no_media" comment="Alt: no content">Sin contenido</string>
+    <string name="every_six_hours">Cada 6 horas</string>
+    <string name="every_twelve_hours">Cada 12 horas</string>
+    <string name="daily">Diariamente</string>
+    <string name="every_two_days">Cada 2 días</string>
+    <string name="every_three_days">Cada 3 días</string>
+    <string name="weekly">Semanalmente</string>
+    <string name="push_notifications">Notificaciones push</string>
+    <string name="update_interval">Intervalo de actualización</string>
+    <string name="airing_anime_notifications">Notificaciones de anime en emisión</string>
+    <string name="color">Color</string>
+    <string name="discover">Descubre</string>
+    <string name="default_home_tab">Pestaña por defecto en Inicio</string>
+    <string name="text_status" comment="Activity type: text status">Texto</string>
+    <string name="list_progress">Progreso de lista</string>
+    <string name="global_feed">Global</string>
+    <string name="format_bold">Negrita</string>
+    <string name="format_italic">Cursiva</string>
+    <string name="format_strikethrough">Tachado</string>
+    <string name="format_spoiler">Spoiler</string>
+    <string name="format_link">Enlace</string>
+    <string name="format_youtube">YouTube</string>
+    <string name="format_video">Vídeo</string>
+    <string name="format_ol">Lista ordenada</string>
+    <string name="format_ul">Lista sin ordenar</string>
+    <string name="format_heading">Encabezado</string>
+    <string name="format_centered" comment="text format centered">Centrado</string>
+    <string name="format_quote" comment="text format quote">Cita</string>
+    <string name="format_code" comment="text format code block">Código</string>
+    <string name="write_something">Escribe algo…</string>
+    <string name="paste_your_link">Pega aquí tu enlace</string>
+    <string name="publish">Publicar</string>
+    <string name="reply">Responder</string>
+    <string name="locked" comment="thread/comment locked">Bloqueado</string>
+    <string name="donator" comment="default text for a donator user">Donador</string>
+    <string name="google_translate_not_installed">Traductor de Google no está instalado</string>
+    <string name="no_app_found_for_this_action">No se encontró ninguna aplicación para esta acción</string>
+    <string name="list_status">Estado</string>
+    <string name="action_back">Atrás</string>
+    <string name="comments">Comentarios</string>
+    <string name="see_all">Ver Todo</string>
+    <string name="expand">Expandir</string>
+    <string name="copy">Copiar</string>
+    <string name="genre_music">Música</string>
+</resources>
