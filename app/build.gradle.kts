@@ -75,6 +75,9 @@ android {
     }
     buildFeatures {
         compose = true
+        aidl = false
+        renderScript = false
+        shaders = false
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
@@ -83,6 +86,12 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    androidResources {
+        generateLocaleConfig = true
+    }
+    dependenciesInfo {
+        includeInApk = false
     }
 }
 
