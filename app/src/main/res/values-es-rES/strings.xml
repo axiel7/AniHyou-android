@@ -24,7 +24,7 @@
     <string name="trending_manga">Manga en Tendencia</string>
     <string name="not_logged_text">Por favor, inicie sesión para utilizar esta función</string>
     <string name="login">Iniciar sesión</string>
-    <string name="current" comment="currently watching/reading anime or manga list.">Viendo/Leyendo</string>
+    <string name="current" comment="currently watching/reading anime or manga list.&#10;Please try to use the shortest text">Actual</string>
     <string name="planning">Planeado</string>
     <string name="completed">Completado</string>
     <string name="dropped">Descartado</string>
