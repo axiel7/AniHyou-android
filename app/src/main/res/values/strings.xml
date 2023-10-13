@@ -325,4 +325,7 @@
     <string name="genre_thriller">Thriller</string>
     <string name="watching">Watching</string>
     <string name="reading">Reading</string>
+    <string name="english_native" translatable="false">English</string>
+    <string name="brazilian_native" translatable="false">Português (Brasil)</string>
+    <string name="spanish_native" translatable="false">Español</string>
 </resources>

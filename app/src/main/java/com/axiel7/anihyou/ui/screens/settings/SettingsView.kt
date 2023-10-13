@@ -40,6 +40,7 @@ import com.axiel7.anihyou.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.screens.home.HomeTab
+import com.axiel7.anihyou.ui.screens.settings.composables.LanguagePreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
@@ -114,6 +115,8 @@ fun SettingsView(
                 icon = R.drawable.colors_24,
                 onValueChange = viewModel::setAppColorMode
             )
+
+            LanguagePreference()
 
             ListPreference(
                 title = stringResource(R.string.default_home_tab),

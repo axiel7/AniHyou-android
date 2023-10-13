@@ -27,7 +27,7 @@ android {
         archivesName.set("anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations.add("en")
+        resourceConfigurations.addAll(listOf("en", "es-rES"))
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -86,9 +86,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-    androidResources {
-        generateLocaleConfig = true
     }
     dependenciesInfo {
         includeInApk = false
