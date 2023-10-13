@@ -106,7 +106,7 @@ fun MediaInformationView(
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
-            title = "Synonyms",
+            title = stringResource(R.string.synonyms),
             info = uiState.details?.synonyms?.joinToString("\n"),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
