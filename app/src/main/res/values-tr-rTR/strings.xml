@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home">Ana Sayfa</string>
+    <string name="anime">Anime</string>
+    <string name="manga">Manga</string>
+    <string name="explore">Keşfet</string>
+    <string name="num_years">%s yıl</string>
+    <string name="num_months">%s ay</string>
+    <string name="num_weeks">%s hafta</string>
+    <string name="num_days">%s gün</string>
+    <string name="hour_abbreviation">%s sa.</string>
+    <string name="minutes_abbreviation">%s dk</string>
+    <string name="unknown">Bilinmiyor</string>
+    <string name="airing_in">%s sonra yayınlanacak</string>
+    <string name="spring">Bahar</string>
+    <string name="summer">Yaz</string>
+    <string name="fall">Sonbahar</string>
+    <string name="profile">Profil</string>
+</resources>
