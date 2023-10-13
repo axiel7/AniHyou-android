@@ -165,6 +165,7 @@
     <string name="time_spent">Tiempo dedicado</string>
     <string name="format_distribution">Distribución de formatos</string>
     <string name="episode_airing_at" comment="Specific time.&#10;Eg: Ep 2 airing at 12:00">Ep %s se emite a las %s</string>
+    <string name="filter" comment="as verb">Filtrar</string>
     <string name="threads">Discusiones</string>
     <string name="no_threads">Sin discusiones</string>
     <string name="notifications_airing">En emisión</string>
@@ -216,6 +217,20 @@
     <string name="format_heading">Encabezado</string>
     <string name="format_centered" comment="text format centered">Centrado</string>
     <string name="format_quote" comment="text format quote">Cita</string>
+    <string name="format_code" comment="text format code block">Código</string>
+    <string name="write_something">Escribe algo…</string>
+    <string name="paste_your_link">Pega aquí tu enlace</string>
+    <string name="publish">Publicar</string>
+    <string name="reply">Responder</string>
+    <string name="locked" comment="thread/comment locked">Bloqueado</string>
+    <string name="donator" comment="default text for a donator user">Donador</string>
+    <string name="google_translate_not_installed">Traductor de Google no está instalado</string>
+    <string name="no_app_found_for_this_action">No se encontró ninguna aplicación para esta acción</string>
     <string name="list_status">Estado</string>
+    <string name="action_back">Atrás</string>
+    <string name="comments">Comentarios</string>
+    <string name="see_all">Ver Todo</string>
+    <string name="expand">Expandir</string>
+    <string name="copy">Copiar</string>
     <string name="genre_music">Música</string>
 </resources>
