@@ -56,7 +56,7 @@
     <string name="finished">Finalizado</string>
     <string name="releasing">Publicándose</string>
     <string name="not_yet_released">Sin publicarse</string>
-    <string name="cancelled">Cancelado</string>
+    <string name="cancelled" comment="anime/manga cancelled">Cancelado</string>
     <string name="hiatus">Hiatus</string>
     <string name="average_score">Nota ponderada</string>
     <string name="popularity">Popularidad</string>
@@ -122,11 +122,11 @@
     <string name="relation_adaptation">Adaptación</string>
     <string name="prequel">Precuela</string>
     <string name="sequel">Secuela</string>
-    <string name="relation_parent">Padre</string>
+    <string name="relation_parent" comment="relation parent story">Padre</string>
     <string name="side_story">Historia paralela</string>
     <string name="relation_character">Personaje</string>
     <string name="relation_summary">Resumen</string>
-    <string name="relation_alternative">Alternativo</string>
+    <string name="relation_alternative" comment="relation alternative story">Alternativo</string>
     <string name="spin_off">Spin Off</string>
     <string name="relation_other">Otros</string>
     <string name="relation_source">Fuente</string>
