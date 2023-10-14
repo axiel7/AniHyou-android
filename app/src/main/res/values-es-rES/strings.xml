@@ -108,7 +108,7 @@
     <string name="format">Formato</string>
     <string name="trending">En tendencia</string>
     <string name="sort_status">Estado</string>
-    <string name="search_match">Coincidencias de búsqueda</string>
+    <string name="search_match" comment="search order.&#10;you can translate it as (Default)">Coincidencias de búsqueda</string>
     <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popular</string>
     <string name="apply">Aplicar</string>
