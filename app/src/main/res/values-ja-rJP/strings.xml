@@ -54,6 +54,8 @@
     <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
+    <string name="not_yet_released">未発表</string>
+    <string name="cancelled" comment="anime/manga cancelled">中止</string>
     <string name="hiatus">中断</string>
     <string name="average_score">平均スコア</string>
     <string name="popularity">人気</string>
@@ -76,6 +78,7 @@
     <string name="other">他</string>
     <string name="doujinshi">同人誌</string>
     <string name="web_novel">WEBノベル</string>
+    <string name="live_action">実写版</string>
     <string name="game">ゲーム</string>
     <string name="comic">コミック</string>
     <string name="multimedia_project">マルチメディアプロジェクト</string>
@@ -83,9 +86,11 @@
     <string name="romaji">ローマ字</string>
     <string name="english">英語</string>
     <string name="native_title">ネイティブ</string>
+    <string name="save">保存</string>
     <string name="episodes">話</string>
     <string name="chapters">章</string>
     <string name="volumes">単行本</string>
+    <string name="repeat_count">繰り返し回数</string>
     <string name="delete">削除する</string>
     <string name="delete_confirmation">このエントリーを削除してもよろしいですか？</string>
     <string name="tags">タグ</string>
@@ -107,6 +112,8 @@
     <string name="top_popular">人気のトップ</string>
     <string name="apply">適用する</string>
     <string name="sort_default">デフォルト</string>
+    <string name="descending" comment="sort order">降順</string>
+    <string name="ascending" comment="sort order">昇順</string>
     <string name="role_main" comment="character role">主人公</string>
     <string name="role_supporting" comment="character role">助演</string>
     <string name="role_background">背景</string>
