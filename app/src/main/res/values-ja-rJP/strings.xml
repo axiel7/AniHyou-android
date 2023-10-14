@@ -7,25 +7,42 @@
     <string name="num_months">%sヵ月</string>
     <string name="num_weeks">%s週間</string>
     <string name="num_days">%s日</string>
+    <string name="hour_abbreviation">%s時間</string>
+    <string name="minutes_abbreviation">%s分</string>
     <string name="unknown">不明</string>
+    <string name="airing_soon">まもなく配信中</string>
+    <string name="mean_score">スコア</string>
     <string name="airing_in">%sで配信中</string>
     <string name="winter">冬</string>
     <string name="spring">春</string>
     <string name="summer">夏</string>
     <string name="fall">秋</string>
     <string name="profile">プロファイル</string>
+    <string name="trending_now">今のトレンド</string>
+    <string name="next_season">次のシーズン</string>
+    <string name="trending_manga"> トレンド漫画</string>
     <string name="not_logged_text">この機能を使用するには、ログインしてください。</string>
     <string name="login">ログイン</string>
+    <string name="current" comment="currently watching/reading anime or manga list.&#10;Please try to use the shortest text">今時</string>
+    <string name="planning">視聴予定</string>
     <string name="completed">完了</string>
     <string name="dropped">視聴を中断</string>
+    <string name="paused">保留</string>
+    <string name="repeating">繰り返し</string>
+    <string name="anime_list">アニメリスト</string>
+    <string name="manga_list">マンガリスト</string>
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
     <string name="sort_title">作品名</string>
     <string name="sort_score">スコア</string>
+    <string name="sort_updated">更新日時</string>
+    <string name="sort_added">追加日</string>
     <string name="sort">並び替え</string>
     <string name="add">追加</string>
     <string name="edit">編集</string>
+    <string name="copied">コピーしました</string>
     <string name="tv">テレビ</string>
+    <string name="tv_short">テレビショート</string>
     <string name="movie">動画</string>
     <string name="special">スペシャル</string>
     <string name="ova">OVA</string>
@@ -33,36 +50,144 @@
     <string name="music">音楽</string>
     <string name="novel">小説</string>
     <string name="one_shot">ワンショット</string>
+    <string name="num_episodes">%s話</string>
+    <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
+    <string name="releasing">公開中</string>
+    <string name="hiatus">中断</string>
+    <string name="average_score">平均スコア</string>
     <string name="popularity">人気</string>
+    <string name="favorites">お気に入り</string>
+    <string name="episode_in_time" comment="Eg: Ep 2 in 30min">第%d話 %s</string>
     <string name="airing">配信中</string>
+    <string name="num_episodes_behind">%s話遅い</string>
     <string name="duration">放送時間</string>
     <string name="start_date">公開日</string>
+    <string name="end_date">終了日</string>
     <string name="season">季節</string>
     <string name="studios">スタジオ</string>
+    <string name="producers">プロデューサー</string>
     <string name="source">原作</string>
     <string name="original">オリジナル</string>
+    <string name="light_novel">ライトノベル</string>
+    <string name="visual_novel">ビジュアルノベル</string>
+    <string name="video_game">ゲーム</string>
     <string name="other">他</string>
+    <string name="doujinshi">同人誌</string>
+    <string name="web_novel">WEBノベル</string>
     <string name="game">ゲーム</string>
+    <string name="comic">コミック</string>
+    <string name="picture_book">絵本</string>
     <string name="romaji">ローマ字</string>
     <string name="english">英語</string>
+    <string name="native_title">ネイティブ</string>
     <string name="episodes">話</string>
     <string name="chapters">章</string>
     <string name="volumes">単行本</string>
     <string name="delete">削除する</string>
+    <string name="delete_confirmation">このエントリーを削除してもよろしいですか？</string>
+    <string name="tags">タグ</string>
+    <string name="show_spoiler">ネタバレを表示</string>
+    <string name="hide_spoiler">ネタバレを隠す</string>
+    <string name="anime_manga_and_more">アニメ、マンガ、その他</string>
+    <string name="characters">キャラクター</string>
+    <string name="staff">スタッフ</string>
+    <string name="users">ユーザー</string>
+    <string name="title_romaji">作品名（ローマ字）</string>
+    <string name="title_english">作品名（英語）</string>
     <string name="sort_status">ステータス</string>
+    <string name="search_match">デフォルト</string>
+    <string name="top_100">トップ１００</string>
+    <string name="top_popular">人気のトップ</string>
+    <string name="apply">適用する</string>
     <string name="sort_default">デフォルト</string>
+    <string name="role_main" comment="character role">主人公</string>
+    <string name="role_supporting" comment="character role">助演</string>
+    <string name="role_background">背景</string>
+    <string name="related" comment="related anime or manga">関連</string>
+    <string name="relation_adaptation">適応</string>
+    <string name="prequel">前篇</string>
+    <string name="sequel">続</string>
+    <string name="side_story">サイドストーリー</string>
+    <string name="relation_character">キャラクター</string>
+    <string name="relation_summary">摘要</string>
     <string name="relation_other">他</string>
     <string name="relation_source">原作</string>
+    <string name="recommendations">おすすめ</string>
+    <string name="settings">設定</string>
+    <string name="display">ディスプレー</string>
+    <string name="theme">テーマ</string>
+    <string name="language">言語</string>
+    <string name="theme_system">システムに従う</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_black">ブラック</string>
+    <string name="account">アカウント</string>
+    <string name="version">バージョン</string>
     <string name="score">スコア</string>
+    <string name="total_entries">合計：%s</string>
+    <string name="loading">読み込み中</string>
+    <string name="following">フォロー中</string>
+    <string name="standard" comment="list style standard">スタンダード</string>
+    <string name="compact">コンパクト</string>
+    <string name="minimal" comment="list style minimal">ミニマル</string>
+    <string name="list_style">リストスタイル</string>
+    <string name="on_my_list" comment="filter anime/manga on my list">自分のリストに</string>
+    <string name="refresh">更新する</string>
+    <string name="episode_airing_on">第%d話は%sで配信中</string>
+    <string name="voice_actors">声優</string>
+    <string name="total">合計</string>
+    <string name="chapters_read">読んだ章</string>
+    <string name="episodes_watched">見た第</string>
+    <string name="days_watched">見た日</string>
+    <string name="volumes_read">読んだ巻</string>
+    <string name="notes">メモ</string>
+    <string name="calendar">カレンダー</string>
+    <string name="monday">月曜日</string>
+    <string name="tuesday">火曜日</string>
+    <string name="wednesday">水曜日</string>
+    <string name="thursday">木曜日</string>
+    <string name="friday">金曜日</string>
+    <string name="saturday">土曜日</string>
+    <string name="sunday">日曜日</string>
+    <string name="notifications">通知</string>
     <string name="notifications_all">すべて</string>
     <string name="notifications_airing">配信中</string>
+    <string name="content">コンテンツ</string>
+    <string name="follow" comment="follow user">フォロー</string>
+    <string name="follows_you" comment="the user follows you">フォローされています</string>
+    <string name="view_anime_list">アニメリストを表示</string>
+    <string name="view_manga_list">マンガリストを表示</string>
+    <string name="upcoming">近日公開</string>
+    <string name="publishing">公開中</string>
+    <string name="grid" comment="grid list style">グリッド</string>
+    <string name="use_separated_list_styles">分離されたリストスタイルを使用する</string>
     <string name="changes_will_take_effect_on_app_restart">変更はアプリの再起動時に反映</string>
     <string name="items_per_row">行ごとの項目</string>
     <string name="default_setting">デフォルト</string>
     <string name="media_status" comment="Eg: Status Publishing">ステータス</string>
     <string name="year">年</string>
+    <string name="episode_aired_ago" comment="relative time.&#10;Eg: Ep 3 aired 40min ago">第%d話は%sで配信しました</string>
     <string name="title_language">作品名の言語</string>
+    <string name="staff_character_name_language"><![CDATA[スタッフとキャラクター名の言語]]></string>
+    <string name="score_format">スコアの形式</string>
+    <string name="score_point_100">１００点（５５/１００）</string>
+    <string name="score_point_10_decimal">１０小数点（５.５/１０）</string>
+    <string name="score_point_10">１０点（５/１０）</string>
+    <string name="score_point_5">５点（３/５）</string>
+    <string name="score_point_3">3点スマイリー　( ◠‿◠ )</string>
+    <string name="no_media">メディアなし</string>
+    <string name="every_six_hours" comment="notification check interval">６時間毎</string>
+    <string name="every_twelve_hours" comment="notification check interval">１２時間毎</string>
+    <string name="daily" comment="notification check interval">毎日</string>
+    <string name="every_two_days" comment="notification check interval">２日毎</string>
+    <string name="every_three_days" comment="notification check interval">３日毎</string>
+    <string name="weekly" comment="notification check interval">毎週</string>
+    <string name="push_notifications">プッシュ通知</string>
+    <string name="update_interval">更新間隔</string>
+    <string name="airing_anime_notifications">配信中のアニメ通知</string>
+    <string name="color">カラー</string>
+    <string name="discover">ディスカバー</string>
     <string name="all">すべて</string>
     <string name="format_image">画像</string>
     <string name="list_status">ステータス</string>
@@ -77,5 +202,17 @@
     <string name="genre_fantasy">ファンタジー</string>
     <string name="genre_hentai">変態</string>
     <string name="genre_horror">ホラー</string>
+    <string name="genre_mecha">メカ</string>
     <string name="genre_music">音楽</string>
+    <string name="genre_mystery">ミステリー</string>
+    <string name="genre_pyshological">心理的</string>
+    <string name="genre_romance">ロマンス</string>
+    <string name="genre_scifi">SF</string>
+    <string name="genre_slice_of_life">日常</string>
+    <string name="genre_sports">スポーツ</string>
+    <string name="genre_supernatural">神秘的な</string>
+    <string name="genre_thriller">スリラー</string>
+    <string name="watching">視聴中</string>
+    <string name="reading">読んでいます</string>
+    <string name="synonyms">同義語</string>
 </resources>
