@@ -54,9 +54,56 @@
     <string name="num_episodes">%s эпизодов</string>
     <string name="num_chapters">%s глав</string>
     <string name="finished">Завершено</string>
+    <string name="releasing">Выпускается</string>
+    <string name="not_yet_released">Еще не выпущено</string>
+    <string name="cancelled">Отменено</string>
+    <string name="hiatus">Пауза на неопределенный срок</string>
+    <string name="average_score">Средний счет</string>
+    <string name="popularity">Популярность</string>
+    <string name="favorites">Избранное</string>
+    <string name="episode_in_time" comment="Eg: Ep 2 in 30min">Эп %d через %s</string>
     <string name="airing">Выходит</string>
+    <string name="num_episodes_behind">%s эпизодов позади</string>
+    <string name="information">Информация</string>
+    <string name="duration">Длительность</string>
+    <string name="start_date">Дата начала</string>
+    <string name="end_date">Дата завершения</string>
+    <string name="season">Сезон</string>
+    <string name="studios">Студии</string>
+    <string name="producers">Продюсеры</string>
     <string name="source">Источник</string>
+    <string name="original">Первоисточник</string>
+    <string name="light_novel">Легкая новелла</string>
+    <string name="visual_novel">Визуальная новелла</string>
+    <string name="video_game">Видеоигра</string>
     <string name="other">Прочее</string>
+    <string name="doujinshi">Додзинси</string>
+    <string name="web_novel">Веб новелла</string>
+    <string name="live_action">Живое действие</string>
+    <string name="game">Игра</string>
+    <string name="comic">Комикс</string>
+    <string name="multimedia_project">Мультимедийный проект</string>
+    <string name="picture_book">Книга с картинками</string>
+    <string name="romaji">Ромадзи</string>
+    <string name="english">Английский</string>
+    <string name="native_title">Родное</string>
+    <string name="save">Сохранить</string>
+    <string name="episodes">Эпизоды</string>
+    <string name="chapters">Главы</string>
+    <string name="volumes">Тома</string>
+    <string name="repeat_count">Количество повторов</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_confirmation">Вы уверены, что хотите удалить эту запись?</string>
+    <string name="tags">Теги</string>
+    <string name="show_spoiler">Показать спойлер</string>
+    <string name="hide_spoiler">Скрыть спойлер</string>
+    <string name="anime_manga_and_more">Аниме, Манга, и Много чего еще</string>
+    <string name="characters">Персонажи</string>
+    <string name="staff">Персонал</string>
+    <string name="users">Пользователи</string>
+    <string name="title_romaji">Название Ромадзи</string>
+    <string name="title_english">Название на английском</string>
+    <string name="title_native">Название Родного</string>
     <string name="sort_type">Тип</string>
     <string name="format">Формат</string>
     <string name="trending">В тренде</string>
@@ -107,7 +154,59 @@
     <string name="gender">Гендер</string>
     <string name="blood_type">Группа крови</string>
     <string name="years_active">Годы активности</string>
+    <string name="present" comment="Eg: 1968-Present">Присутствует</string>
+    <string name="hometown">Родной город</string>
+    <string name="occupations">Профессии</string>
+    <string name="no_information">Нет информации</string>
     <string name="score">Оценка</string>
+    <string name="total_entries">Всего: %s</string>
+    <string name="status_distribution">Статус распределение</string>
+    <string name="rankings">Рейтинги</string>
+    <string name="score_distribution">Очки распределение</string>
+    <string name="no_description">Нет описания</string>
+    <string name="reviews" comment="anime/manga reviews">Отзывы</string>
+    <string name="loading">Загрузка</string>
+    <string name="users_likes">Пользователям понравилось</string>
+    <string name="no_reviews">Нет отзывов</string>
+    <string name="close">Закрыть</string>
+    <string name="genres">Жанры</string>
+    <string name="add_genre">Добавить жанр</string>
+    <string name="clear">Очистить</string>
+    <string name="list_private">Приватное</string>
+    <string name="followers">Подписчиков</string>
+    <string name="following">Подписки</string>
+    <string name="trailer">Трейлер</string>
+    <string name="streaming_sites">Стриминг сайты</string>
+    <string name="external_links">Внешние ссылки</string>
+    <string name="standard" comment="list style standard">Стандарт</string>
+    <string name="compact">Компактный</string>
+    <string name="minimal" comment="list style minimal">Минимализм</string>
+    <string name="list_style">Стиль списка</string>
+    <string name="on_my_list" comment="filter anime/manga on my list">В моем списке</string>
+    <string name="refresh">Обновить</string>
+    <string name="episode_airing_on">Эп %d выйдет через %s</string>
+    <string name="display_adult_content">Отображать контент для взрослых</string>
+    <string name="overview">Общие сведения</string>
+    <string name="voice_actors">Актеры озвучивания</string>
+    <string name="total">Всего</string>
+    <string name="chapters_read">Прочитано глав</string>
+    <string name="episodes_watched">Эпизодов просмотрено</string>
+    <string name="days_watched">Дней просмотров</string>
+    <string name="volumes_read">Прочитано томов</string>
+    <string name="days_planned">Запланировано дней</string>
+    <string name="chapters_planned">Запланировано глав</string>
+    <string name="standard_deviation">Стандартное отклонение</string>
+    <string name="title_count">Количество названий</string>
+    <string name="time_spent">Потрачено времени</string>
+    <string name="format_distribution">Распределение форматов</string>
+    <string name="notes">Примечания</string>
+    <string name="calendar">Календарь</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
     <string name="episode_airing_at">Эп %s выйдет в %s</string>
     <string name="filter">Фильтр</string>
@@ -129,9 +228,89 @@
     <string name="upcoming">Предстоящие</string>
     <string name="publishing">Издается</string>
     <string name="grid" comment="grid list style">Сетка</string>
+    <string name="use_separated_list_styles">Использование стилей разделенных списков</string>
+    <string name="changes_will_take_effect_on_app_restart">Изменения вступят в силу после перезапуска приложения</string>
+    <string name="items_per_row">Элементы в строке</string>
     <string name="default_setting">По умолчанию</string>
     <string name="media_status" comment="Eg: Status Publishing">Статус</string>
+    <string name="year">Год</string>
+    <string name="episode_aired_ago" comment="relative time.&#10;Eg: Ep 3 aired 40min ago">Эп %d вышел %s назад</string>
+    <string name="title_language">Язык названия</string>
+    <string name="romaji_western_order">Ромадзи (Западный Порядок)</string>
+    <string name="staff_character_name_language"><![CDATA[Язык имен сотрудников и персонажей]]></string>
+    <string name="score_format">Формат счета</string>
+    <string name="score_point_100">100 Очков (55/100)</string>
+    <string name="score_point_10_decimal">10-балльная десятичная система (5,5/10)</string>
+    <string name="score_point_10">10 Очков (5/10)</string>
+    <string name="score_point_5">5 Звезд (3/5)</string>
+    <string name="score_point_3">3 Очка Смайл :)</string>
+    <string name="no_media">Нет медиа</string>
+    <string name="every_six_hours" comment="notification check interval">Каждые 6 часов</string>
+    <string name="every_twelve_hours" comment="notification check interval">Каждые 12 часов</string>
+    <string name="daily" comment="notification check interval">Ежедневно</string>
+    <string name="every_two_days" comment="notification check interval">Каждые 2 дня</string>
+    <string name="every_three_days" comment="notification check interval">Каждые 3 дня</string>
+    <string name="weekly" comment="notification check interval">Еженедельно</string>
+    <string name="push_notifications">Push-уведомления</string>
+    <string name="update_interval">Интервал обновлений</string>
+    <string name="airing_anime_notifications">Уведомления выходящих аниме</string>
+    <string name="color">Цвет</string>
+    <string name="discover">Узнать</string>
+    <string name="default_home_tab">Вкладка домашней страницы по умолчанию</string>
+    <string name="text_status">Статус текста</string>
+    <string name="list_progress" comment="activity type: list progress">Прогресс списка</string>
     <string name="all">Все</string>
+    <string name="global_feed">Глобальное</string>
+    <string name="format_bold">Жирный</string>
+    <string name="format_italic">Курсив</string>
+    <string name="format_strikethrough">Зачеркнутый</string>
+    <string name="format_spoiler">Спойлер</string>
+    <string name="format_link">Ссылка</string>
+    <string name="format_image">Изображение</string>
+    <string name="format_video">Видео</string>
+    <string name="format_ol">Упорядоченный список</string>
+    <string name="format_ul">Неупорядоченный список</string>
+    <string name="format_heading">Заголовок</string>
+    <string name="format_centered">По центру</string>
+    <string name="format_quote">Цитата</string>
+    <string name="format_code">Код</string>
+    <string name="write_something">Напишите что-то…</string>
+    <string name="paste_your_link">Вставьте вашу ссылку сюда</string>
+    <string name="publish">Опубликовать</string>
+    <string name="reply">Ответить</string>
+    <string name="locked">Заблокировано</string>
+    <string name="donator">Пожертвователь</string>
+    <string name="google_translate_not_installed">Google Переводчик не установлен</string>
+    <string name="no_app_found_for_this_action">Не найдено приложений для этого действия</string>
     <string name="list_status">Статус</string>
+    <string name="action_back">Назад</string>
+    <string name="share">Поделиться</string>
+    <string name="comments">Комментарии</string>
+    <string name="see_all">Показать все</string>
+    <string name="search">Поиск</string>
+    <string name="expand">Развернуть</string>
+    <string name="copy">Скопировать</string>
+    <string name="translate">Перевести</string>
+    <string name="genre_action">Экшен</string>
+    <string name="genre_adventure">Приключения</string>
+    <string name="genre_comedy">Комедия</string>
+    <string name="genre_drama">Драма</string>
+    <string name="genre_ecchi">Этти</string>
+    <string name="genre_fantasy">Фэнтези</string>
+    <string name="genre_hentai">Хэнтай</string>
+    <string name="genre_horror">Ужасы</string>
+    <string name="genre_mahou_shoujo">Махо-седзе</string>
+    <string name="genre_mecha">Меха</string>
     <string name="genre_music">Музыка</string>
+    <string name="genre_mystery">Таинственное</string>
+    <string name="genre_pyshological">Психологическое</string>
+    <string name="genre_romance">Романтика</string>
+    <string name="genre_scifi">Фантастика</string>
+    <string name="genre_slice_of_life">Повседневность</string>
+    <string name="genre_sports">Спорт</string>
+    <string name="genre_supernatural">Сверхъестественное</string>
+    <string name="genre_thriller">Триллер</string>
+    <string name="watching">Смотрит</string>
+    <string name="reading">Читает</string>
+    <string name="synonyms">Синонимы</string>
 </resources>
