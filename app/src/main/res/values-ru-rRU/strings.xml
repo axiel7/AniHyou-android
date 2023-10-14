@@ -108,7 +108,7 @@
     <string name="format">Формат</string>
     <string name="trending">В тренде</string>
     <string name="sort_status">Статус</string>
-    <string name="search_match">Поиск совпадений</string>
+    <string name="search_match" comment="search order.&#10;you can translate it as (Default)">Поиск совпадений</string>
     <string name="top_100">Топ 100</string>
     <string name="top_popular">Топ Популярных</string>
     <string name="apply">Применить</string>
