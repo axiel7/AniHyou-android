@@ -95,8 +95,8 @@
     <string name="delete">Eliminar</string>
     <string name="delete_confirmation">¿Estás seguro de que quieres eliminar esta entrada?</string>
     <string name="tags">Etiquetas</string>
-    <string name="show_spoiler">Mostrar Spoilers</string>
-    <string name="hide_spoiler">Ocultar Spoilers</string>
+    <string name="show_spoiler">Mostrar Spoiler</string>
+    <string name="hide_spoiler">Ocultar Spoiler</string>
     <string name="anime_manga_and_more">Anime, Manga, y Más</string>
     <string name="characters">Personajes</string>
     <string name="staff">Staff</string>
@@ -225,7 +225,7 @@
     <string name="follows_you" comment="the user follows you">Te sigue</string>
     <string name="view_anime_list">Ver Lista de Anime</string>
     <string name="view_manga_list">Ver Lista de Manga</string>
-    <string name="upcoming">Próximamente</string>
+    <string name="upcoming">Próximos</string>
     <string name="publishing">Publicándose</string>
     <string name="grid" comment="grid list style">Cuadrícula</string>
     <string name="use_separated_list_styles">Usar estilos de lista separados</string>
