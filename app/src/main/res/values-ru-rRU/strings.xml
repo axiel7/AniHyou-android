@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home">Главная</string>
+    <string name="anime">Аниме</string>
+    <string name="manga">Манга</string>
+    <string name="explore">Исследовать</string>
+    <string name="num_years">%s года</string>
+    <string name="num_months">%s месяца</string>
+    <string name="num_weeks">%s недели</string>
+    <string name="num_days">%s дня</string>
+    <string name="hour_abbreviation">%s ч</string>
+    <string name="minutes_abbreviation">%s мин</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="airing_soon">Скоро выйдет</string>
+    <string name="mean_score">Средний счет</string>
+    <string name="airing_in">Выйдет через %s</string>
+    <string name="winter">Зима</string>
+    <string name="spring">Весна</string>
+    <string name="summer">Лето</string>
+    <string name="fall">Осень</string>
+    <string name="profile">Профиль</string>
+    <string name="trending_now">Сейчас в тренде</string>
+    <string name="next_season">Следующий сезон</string>
+    <string name="trending_manga">Манга в тренде</string>
+    <string name="not_logged_text">Чтобы воспользоваться этой функцией, войдите в систему</string>
+    <string name="login">Вход</string>
+    <string name="current" comment="currently watching/reading anime or manga list.&#10;Please try to use the shortest text">Текущее</string>
+    <string name="planning">Планируется</string>
+</resources>
