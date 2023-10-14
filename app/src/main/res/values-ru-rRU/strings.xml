@@ -56,7 +56,7 @@
     <string name="finished">Завершено</string>
     <string name="releasing">Выпускается</string>
     <string name="not_yet_released">Еще не выпущено</string>
-    <string name="cancelled">Отменено</string>
+    <string name="cancelled" comment="anime/manga cancelled">Отменено</string>
     <string name="hiatus">Пауза на неопределенный срок</string>
     <string name="average_score">Средний счет</string>
     <string name="popularity">Популярность</string>
@@ -122,11 +122,11 @@
     <string name="relation_adaptation">Адаптация</string>
     <string name="prequel">Предыстория</string>
     <string name="sequel">Продолжение</string>
-    <string name="relation_parent">Родитель</string>
+    <string name="relation_parent" comment="relation parent story">Родитель</string>
     <string name="side_story">Другая история</string>
     <string name="relation_character">Персонаж</string>
     <string name="relation_summary">Обобщение</string>
-    <string name="relation_alternative">Альтернативная</string>
+    <string name="relation_alternative" comment="relation alternative story">Альтернативная</string>
     <string name="spin_off">Спин-офф</string>
     <string name="relation_other">Прочее</string>
     <string name="relation_source">Источник</string>
