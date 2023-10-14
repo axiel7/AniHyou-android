@@ -56,7 +56,7 @@
     <string name="finished">Tamamlandı</string>
     <string name="releasing">Yayımlanıyor</string>
     <string name="not_yet_released">Henüz yayımlanmadı</string>
-    <string name="cancelled">İptal edildi</string>
+    <string name="cancelled" comment="anime/manga cancelled">İptal edildi</string>
     <string name="hiatus">Süresiz arada</string>
     <string name="average_score">Ortalama puan</string>
     <string name="popularity">Popülerlik</string>
@@ -121,11 +121,11 @@
     <string name="relation_adaptation">Uyarlama</string>
     <string name="prequel">Öncesi</string>
     <string name="sequel">Devam Serisi</string>
-    <string name="relation_parent">Kaynak</string>
+    <string name="relation_parent" comment="relation parent story">Kaynak</string>
     <string name="side_story">Yan hikaye</string>
     <string name="relation_character">Karakter</string>
     <string name="relation_summary">Özet</string>
-    <string name="relation_alternative">Alternatif</string>
+    <string name="relation_alternative" comment="relation alternative story">Alternatif</string>
     <string name="spin_off">Uyarlama</string>
     <string name="relation_other">Diğer</string>
     <string name="relation_source">Kaynak</string>
