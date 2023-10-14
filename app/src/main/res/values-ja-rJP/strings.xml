@@ -50,7 +50,7 @@
     <string name="music">音楽</string>
     <string name="novel">小説</string>
     <string name="one_shot">ワンショット</string>
-    <string name="num_episodes">%s話</string>
+    <string name="num_episodes">第%s話</string>
     <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
@@ -60,7 +60,8 @@
     <string name="favorites">お気に入り</string>
     <string name="episode_in_time" comment="Eg: Ep 2 in 30min">第%d話 %s</string>
     <string name="airing">配信中</string>
-    <string name="num_episodes_behind">%s話遅い</string>
+    <string name="num_episodes_behind">第%s話遅い</string>
+    <string name="information">情報</string>
     <string name="duration">放送時間</string>
     <string name="start_date">公開日</string>
     <string name="end_date">終了日</string>
@@ -77,6 +78,7 @@
     <string name="web_novel">WEBノベル</string>
     <string name="game">ゲーム</string>
     <string name="comic">コミック</string>
+    <string name="multimedia_project">マルチメディアプロジェクト</string>
     <string name="picture_book">絵本</string>
     <string name="romaji">ローマ字</string>
     <string name="english">英語</string>
@@ -95,8 +97,12 @@
     <string name="users">ユーザー</string>
     <string name="title_romaji">作品名（ローマ字）</string>
     <string name="title_english">作品名（英語）</string>
+    <string name="title_native">作品名（ネイティブ）</string>
+    <string name="sort_type">タイプ</string>
+    <string name="format">形式</string>
+    <string name="trending">トレンド</string>
     <string name="sort_status">ステータス</string>
-    <string name="search_match">デフォルト</string>
+    <string name="search_match" comment="search order.&#10;you can translate it as (Default)">デフォルト</string>
     <string name="top_100">トップ１００</string>
     <string name="top_popular">人気のトップ</string>
     <string name="apply">適用する</string>
@@ -113,6 +119,7 @@
     <string name="relation_summary">摘要</string>
     <string name="relation_other">他</string>
     <string name="relation_source">原作</string>
+    <string name="relation_compilation">コンパイル</string>
     <string name="recommendations">おすすめ</string>
     <string name="settings">設定</string>
     <string name="display">ディスプレー</string>
@@ -122,12 +129,37 @@
     <string name="theme_light">ライト</string>
     <string name="theme_dark">ダーク</string>
     <string name="theme_black">ブラック</string>
+    <string name="open_al_links_in_the_app">アプリで AniList リンクを開く</string>
     <string name="account">アカウント</string>
+    <string name="github_repository">GitHubリポジトリ</string>
     <string name="version">バージョン</string>
+    <string name="anilist_account_settings">AniListアカウントの設定</string>
+    <string name="logout">ログアウト</string>
+    <string name="character_media" comment="character anime/manga">メディア</string>
+    <string name="birthday">誕生日</string>
+    <string name="age">年齢</string>
+    <string name="gender">性別</string>
+    <string name="blood_type">血液型</string>
+    <string name="years_active">生産年数</string>
+    <string name="hometown">故郷</string>
+    <string name="occupations">職業</string>
+    <string name="no_information">情報なし</string>
     <string name="score">スコア</string>
     <string name="total_entries">合計：%s</string>
+    <string name="rankings">ランキング</string>
+    <string name="reviews" comment="anime/manga reviews">レビュー</string>
     <string name="loading">読み込み中</string>
+    <string name="users_likes">ユーザーのいいね！</string>
+    <string name="no_reviews">レビューなし</string>
+    <string name="close">閉じる</string>
+    <string name="genres">ジャンル</string>
+    <string name="add_genre">ジャンルを追加</string>
+    <string name="clear">削除する</string>
+    <string name="list_private">非公開</string>
+    <string name="followers">フォロワー</string>
     <string name="following">フォロー中</string>
+    <string name="trailer">PV</string>
+    <string name="external_links">外部リンク</string>
     <string name="standard" comment="list style standard">スタンダード</string>
     <string name="compact">コンパクト</string>
     <string name="minimal" comment="list style minimal">ミニマル</string>
@@ -135,6 +167,7 @@
     <string name="on_my_list" comment="filter anime/manga on my list">自分のリストに</string>
     <string name="refresh">更新する</string>
     <string name="episode_airing_on">第%d話は%sで配信中</string>
+    <string name="display_adult_content">アダルトコンテンツを表示</string>
     <string name="voice_actors">声優</string>
     <string name="total">合計</string>
     <string name="chapters_read">読んだ章</string>
@@ -150,9 +183,16 @@
     <string name="friday">金曜日</string>
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
+    <string name="episode_airing_at">第%s話は%sに配信中</string>
+    <string name="filter">検索</string>
     <string name="notifications">通知</string>
+    <string name="threads" comment="anime/manga discussion threads">スレッド</string>
+    <string name="no_threads">スレッドなし</string>
     <string name="notifications_all">すべて</string>
     <string name="notifications_airing">配信中</string>
+    <string name="activity">アクティビティ</string>
+    <string name="forum">フォーラム</string>
+    <string name="notifications_media">メディア</string>
     <string name="content">コンテンツ</string>
     <string name="follow" comment="follow user">フォロー</string>
     <string name="follows_you" comment="the user follows you">フォローされています</string>
@@ -187,12 +227,36 @@
     <string name="update_interval">更新間隔</string>
     <string name="airing_anime_notifications">配信中のアニメ通知</string>
     <string name="color">カラー</string>
-    <string name="discover">ディスカバー</string>
+    <string name="discover">見つける</string>
+    <string name="default_home_tab">デフォルトのホームタブ</string>
+    <string name="text_status">テキストのステータス</string>
     <string name="all">すべて</string>
+    <string name="global_feed">グローバル</string>
+    <string name="format_bold">太字</string>
+    <string name="format_italic">イタリック体</string>
+    <string name="format_strikethrough">取り消し線</string>
+    <string name="format_spoiler">ネタバレ</string>
+    <string name="format_link">リンク</string>
     <string name="format_image">画像</string>
+    <string name="format_video">動画</string>
+    <string name="format_heading">見出し</string>
+    <string name="format_centered">中央</string>
+    <string name="format_code">コード</string>
+    <string name="write_something">何か書きましょう！</string>
+    <string name="paste_your_link">ここにリンクを貼ってください</string>
+    <string name="publish">公開する</string>
+    <string name="reply">返信する</string>
+    <string name="donator">ドナー</string>
+    <string name="google_translate_not_installed">Google翻訳がインストールされていません</string>
+    <string name="no_app_found_for_this_action">このアクションのアプリが見つかりませんでした</string>
     <string name="list_status">ステータス</string>
+    <string name="action_back">戻る</string>
     <string name="share">分け合う</string>
+    <string name="comments">コメント</string>
+    <string name="see_all">すべてを表示</string>
     <string name="search">検索</string>
+    <string name="expand">展開する</string>
+    <string name="copy">コピー</string>
     <string name="translate">翻訳する</string>
     <string name="genre_action">アクション</string>
     <string name="genre_adventure">冒険</string>
@@ -202,6 +266,7 @@
     <string name="genre_fantasy">ファンタジー</string>
     <string name="genre_hentai">変態</string>
     <string name="genre_horror">ホラー</string>
+    <string name="genre_mahou_shoujo">魔法少女</string>
     <string name="genre_mecha">メカ</string>
     <string name="genre_music">音楽</string>
     <string name="genre_mystery">ミステリー</string>
