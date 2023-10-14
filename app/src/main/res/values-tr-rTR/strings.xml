@@ -57,6 +57,7 @@
     <string name="releasing">Yayımlanıyor</string>
     <string name="not_yet_released">Henüz yayımlanmadı</string>
     <string name="cancelled">İptal edildi</string>
+    <string name="hiatus">Süresiz arada</string>
     <string name="average_score">Ortalama puan</string>
     <string name="popularity">Popülerlik</string>
     <string name="favorites">Favoriler</string>
@@ -106,7 +107,7 @@
     <string name="sort_type">Tür</string>
     <string name="trending">Popüler</string>
     <string name="sort_status">Durum</string>
-    <string name="search_match">Eşleşen Arama</string>
+    <string name="search_match" comment="search order.&#10;you can translate it as (Default)">Eşleşen Arama</string>
     <string name="top_100">En İyi 100</string>
     <string name="top_popular">En Popüler</string>
     <string name="apply">Uygula</string>
@@ -256,6 +257,7 @@
     <string name="discover">Keşfet</string>
     <string name="default_home_tab">Varsayılan Ana Sayfa</string>
     <string name="text_status">Metin Durumu</string>
+    <string name="list_progress" comment="activity type: list progress">Listele</string>
     <string name="all">Tümü</string>
     <string name="global_feed">Evrensel</string>
     <string name="format_bold">Kalın</string>
@@ -267,6 +269,7 @@
     <string name="format_video">Video</string>
     <string name="format_ol">Sıralı Liste</string>
     <string name="format_ul">Sırasız Liste</string>
+    <string name="format_heading">Başlık</string>
     <string name="format_centered">Ortada</string>
     <string name="format_quote">Alıntı</string>
     <string name="format_code">Kod</string>
