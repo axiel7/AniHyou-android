@@ -166,6 +166,7 @@
     <string name="followers">フォロワー</string>
     <string name="following">フォロー中</string>
     <string name="trailer">PV</string>
+    <string name="streaming_sites">配信サイト</string>
     <string name="external_links">外部リンク</string>
     <string name="standard" comment="list style standard">スタンダード</string>
     <string name="compact">コンパクト</string>
