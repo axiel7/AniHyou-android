@@ -61,6 +61,7 @@ const val SETTINGS_DESTINATION = "settings"
 @Composable
 fun SettingsView(
     navigateToListStyleSettings: () -> Unit,
+    navigateToTranslations: () -> Unit,
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -285,6 +286,12 @@ fun SettingsView(
                 }
             )
 
+            PlainPreference(
+                title = stringResource(R.string.translations),
+                icon = R.drawable.language_24,
+                onClick = navigateToTranslations
+            )
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PlainPreference(
                     title = stringResource(R.string.open_al_links_in_the_app),
@@ -305,6 +312,7 @@ fun SettingsViewPreview() {
         Surface {
             SettingsView(
                 navigateToListStyleSettings = {},
+                navigateToTranslations = {},
                 navigateBack = {}
             )
         }

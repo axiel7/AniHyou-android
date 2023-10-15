@@ -69,6 +69,8 @@ import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
+import com.axiel7.anihyou.ui.screens.settings.TRANSLATIONS_DESTINATION
+import com.axiel7.anihyou.ui.screens.settings.TranslationsView
 import com.axiel7.anihyou.ui.screens.settings.liststyle.LIST_STYLE_SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
@@ -625,11 +627,19 @@ fun MainNavigation(
                 navigateToListStyleSettings = {
                     navController.navigate(LIST_STYLE_SETTINGS_DESTINATION)
                 },
+                navigateToTranslations = {
+                    navController.navigate(TRANSLATIONS_DESTINATION)
+                },
                 navigateBack = navigateBack
             )
         }
         composable(LIST_STYLE_SETTINGS_DESTINATION) {
             ListStyleSettingsView(
+                navigateBack = navigateBack
+            )
+        }
+        composable(TRANSLATIONS_DESTINATION) {
+            TranslationsView(
                 navigateBack = navigateBack
             )
         }
