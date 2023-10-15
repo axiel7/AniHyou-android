@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home">Ana Sayfa</string>
+    <string name="home" comment="as short as possible">Ana Sayfa</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Keşfet</string>
@@ -18,7 +18,7 @@
     <string name="spring">Bahar</string>
     <string name="summer">Yaz</string>
     <string name="fall">Sonbahar</string>
-    <string name="profile">Profil</string>
+    <string name="profile" comment="as short as possible">Profil</string>
     <string name="trending_now">Şu An Popüler</string>
     <string name="next_season">Sonraki Sezon</string>
     <string name="trending_manga">Popüler Manga</string>
@@ -312,5 +312,9 @@
     <string name="watching">İzleniyor</string>
     <string name="reading">Okunuyor</string>
     <string name="synonyms">Eş anlamlılar</string>
+    <string name="translations">Çeviriler</string>
     <string name="japanese">Japonca</string>
+    <string name="russian">Rusça</string>
+    <string name="spanish">İspanyolca</string>
+    <string name="turkish">Türkçe</string>
 </resources>
