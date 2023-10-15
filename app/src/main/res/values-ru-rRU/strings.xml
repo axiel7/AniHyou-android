@@ -46,8 +46,8 @@
     <string name="tv_short">ТВ Короткометражка</string>
     <string name="movie">Фильм</string>
     <string name="special">Спешл</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">Музыка</string>
     <string name="novel">Новелла</string>
     <string name="one_shot">Ваншот</string>
