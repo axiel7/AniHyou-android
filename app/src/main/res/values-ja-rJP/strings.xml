@@ -59,7 +59,7 @@
     <string name="cancelled">中止</string>
     <string name="hiatus">中断</string>
     <string name="average_score">平均スコア</string>
-    <string name="popularity">人気</string>
+    <string name="popularity" comment="popularity sort">人気</string>
     <string name="favorites">お気に入り</string>
     <string name="episode_in_time">第%d話は%s後</string>
     <string name="airing">配信中</string>
@@ -71,16 +71,16 @@
     <string name="season">季節</string>
     <string name="studios">スタジオ</string>
     <string name="producers">プロデューサー</string>
-    <string name="source">原作</string>
-    <string name="original">オリジナル</string>
+    <string name="source" comment="relation: source">原作</string>
+    <string name="original" comment="relation: original">オリジナル</string>
     <string name="light_novel">ライトノベル</string>
     <string name="visual_novel">ビジュアルノベル</string>
     <string name="video_game">ゲーム</string>
-    <string name="other">他</string>
+    <string name="other" comment="relation: other">他</string>
     <string name="doujinshi">同人誌</string>
     <string name="web_novel">WEBノベル</string>
     <string name="live_action">実写版</string>
-    <string name="game">ゲーム</string>
+    <string name="game" comment="relation: game">ゲーム</string>
     <string name="comic">コミック</string>
     <string name="multimedia_project">マルチメディアプロジェクト</string>
     <string name="picture_book">絵本</string>
