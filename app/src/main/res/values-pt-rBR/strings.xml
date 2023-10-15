@@ -1,2 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home">Início</string>
+    <string name="anime">Anime</string>
+    <string name="manga">Mangá</string>
+    <string name="explore">Explorar</string>
+    <string name="num_years">%s anos</string>
+    <string name="num_months">%s meses</string>
+    <string name="num_weeks">%s semanas</string>
+    <string name="num_days">%s dias</string>
+    <string name="hour_abbreviation">%s h</string>
+    <string name="minutes_abbreviation">%s min</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="airing_soon">Em breve</string>
+    <string name="airing_in">Exibição em %s</string>
+    <string name="winter">Inverno</string>
+    <string name="spring">Primavera</string>
+    <string name="summer">Verão</string>
+    <string name="fall">Outono</string>
+    <string name="profile">Perfil</string>
+    <string name="trending_now">Em Alta Agora</string>
+    <string name="next_season">Próxima Temporada</string>
+    <string name="trending_manga">Mangás Em Alta</string>
+    <string name="not_logged_text">Por favor, inicie sessão para usar esta função</string>
+    <string name="login">Fazer login</string>
+    <string name="current">Atual</string>
+    <string name="planning">Planejado</string>
+    <string name="completed">Concluído</string>
+    <string name="dropped">Dropado</string>
+    <string name="paused">Pausado</string>
+    <string name="repeating">Repetindo</string>
+    <string name="anime_list">Lista de Animes</string>
+    <string name="manga_list">Lista de Mangás</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="sort_title">Título</string>
+    <string name="sort_score">Nota</string>
+    <string name="sort">Ordenar</string>
+    <string name="add">Adicionar</string>
+    <string name="edit">Editar</string>
+    <string name="copied">Copiado</string>
+    <string name="tv">TV</string>
+    <string name="movie">Filme</string>
+    <string name="special">Especial</string>
+    <string name="score">Nota</string>
+</resources>
