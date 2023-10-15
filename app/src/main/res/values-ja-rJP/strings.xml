@@ -23,7 +23,7 @@
     <string name="trending_manga"> トレンド漫画</string>
     <string name="not_logged_text">この機能を使用するには、ログインしてください。</string>
     <string name="login">ログイン</string>
-    <string name="current" comment="currently watching/reading anime or manga list.&#10;Please try to use the shortest text">今時</string>
+    <string name="current">今時</string>
     <string name="planning">視聴予定</string>
     <string name="completed">完了</string>
     <string name="dropped">視聴を中断</string>
@@ -55,12 +55,12 @@
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
     <string name="not_yet_released">未発表</string>
-    <string name="cancelled" comment="anime/manga cancelled">中止</string>
+    <string name="cancelled">中止</string>
     <string name="hiatus">中断</string>
     <string name="average_score">平均スコア</string>
     <string name="popularity">人気</string>
     <string name="favorites">お気に入り</string>
-    <string name="episode_in_time" comment="Eg: Ep 2 in 30min">第%d話 %s</string>
+    <string name="episode_in_time">第%d話 %s</string>
     <string name="airing">配信中</string>
     <string name="num_episodes_behind">第%s話遅い</string>
     <string name="information">情報</string>
@@ -107,17 +107,17 @@
     <string name="format">形式</string>
     <string name="trending">トレンド</string>
     <string name="sort_status">ステータス</string>
-    <string name="search_match" comment="search order.&#10;you can translate it as (Default)">デフォルト</string>
+    <string name="search_match">デフォルト</string>
     <string name="top_100">トップ１００</string>
     <string name="top_popular">人気のトップ</string>
     <string name="apply">適用する</string>
     <string name="sort_default">デフォルト</string>
-    <string name="descending" comment="sort order">降順</string>
-    <string name="ascending" comment="sort order">昇順</string>
-    <string name="role_main" comment="character role">主人公</string>
-    <string name="role_supporting" comment="character role">助演</string>
+    <string name="descending">降順</string>
+    <string name="ascending">昇順</string>
+    <string name="role_main">主人公</string>
+    <string name="role_supporting">助演</string>
     <string name="role_background">背景</string>
-    <string name="related" comment="related anime or manga">関連</string>
+    <string name="related">関連</string>
     <string name="relation_adaptation">適応</string>
     <string name="prequel">前篇</string>
     <string name="sequel">続</string>
@@ -142,7 +142,7 @@
     <string name="version">バージョン</string>
     <string name="anilist_account_settings">AniListアカウントの設定</string>
     <string name="logout">ログアウト</string>
-    <string name="character_media" comment="character anime/manga">メディア</string>
+    <string name="character_media">メディア</string>
     <string name="birthday">誕生日</string>
     <string name="age">年齢</string>
     <string name="gender">性別</string>
@@ -154,7 +154,7 @@
     <string name="score">スコア</string>
     <string name="total_entries">合計：%s</string>
     <string name="rankings">ランキング</string>
-    <string name="reviews" comment="anime/manga reviews">レビュー</string>
+    <string name="reviews">レビュー</string>
     <string name="loading">読み込み中</string>
     <string name="users_likes">ユーザーのいいね！</string>
     <string name="no_reviews">レビューなし</string>
@@ -168,11 +168,11 @@
     <string name="trailer">PV</string>
     <string name="streaming_sites">配信サイト</string>
     <string name="external_links">外部リンク</string>
-    <string name="standard" comment="list style standard">スタンダード</string>
+    <string name="standard">スタンダード</string>
     <string name="compact">コンパクト</string>
-    <string name="minimal" comment="list style minimal">ミニマル</string>
+    <string name="minimal">ミニマル</string>
     <string name="list_style">リストスタイル</string>
-    <string name="on_my_list" comment="filter anime/manga on my list">自分のリストに</string>
+    <string name="on_my_list">自分のリストに</string>
     <string name="refresh">更新する</string>
     <string name="episode_airing_on">第%d話は%sで配信中</string>
     <string name="display_adult_content">アダルトコンテンツを表示</string>
@@ -194,7 +194,7 @@
     <string name="episode_airing_at">第%s話は%sに配信中</string>
     <string name="filter">検索</string>
     <string name="notifications">通知</string>
-    <string name="threads" comment="anime/manga discussion threads">スレッド</string>
+    <string name="threads">スレッド</string>
     <string name="no_threads">スレッドなし</string>
     <string name="notifications_all">すべて</string>
     <string name="notifications_airing">配信中</string>
@@ -202,20 +202,20 @@
     <string name="forum">フォーラム</string>
     <string name="notifications_media">メディア</string>
     <string name="content">コンテンツ</string>
-    <string name="follow" comment="follow user">フォロー</string>
-    <string name="follows_you" comment="the user follows you">フォローされています</string>
+    <string name="follow">フォロー</string>
+    <string name="follows_you">フォローされています</string>
     <string name="view_anime_list">アニメリストを表示</string>
     <string name="view_manga_list">マンガリストを表示</string>
     <string name="upcoming">近日公開</string>
     <string name="publishing">公開中</string>
-    <string name="grid" comment="grid list style">グリッド</string>
+    <string name="grid">グリッド</string>
     <string name="use_separated_list_styles">分離されたリストスタイルを使用する</string>
     <string name="changes_will_take_effect_on_app_restart">変更はアプリの再起動時に反映</string>
     <string name="items_per_row">行ごとの項目</string>
     <string name="default_setting">デフォルト</string>
-    <string name="media_status" comment="Eg: Status Publishing">ステータス</string>
+    <string name="media_status">ステータス</string>
     <string name="year">年</string>
-    <string name="episode_aired_ago" comment="relative time.&#10;Eg: Ep 3 aired 40min ago">第%d話は%sで配信しました</string>
+    <string name="episode_aired_ago">第%d話は%sで配信しました</string>
     <string name="title_language">作品名の言語</string>
     <string name="staff_character_name_language"><![CDATA[スタッフとキャラクター名の言語]]></string>
     <string name="score_format">スコアの形式</string>
@@ -225,12 +225,12 @@
     <string name="score_point_5">５点（３/５）</string>
     <string name="score_point_3">3点スマイリー　( ◠‿◠ )</string>
     <string name="no_media">メディアなし</string>
-    <string name="every_six_hours" comment="notification check interval">６時間毎</string>
-    <string name="every_twelve_hours" comment="notification check interval">１２時間毎</string>
-    <string name="daily" comment="notification check interval">毎日</string>
-    <string name="every_two_days" comment="notification check interval">２日毎</string>
-    <string name="every_three_days" comment="notification check interval">３日毎</string>
-    <string name="weekly" comment="notification check interval">毎週</string>
+    <string name="every_six_hours">６時間毎</string>
+    <string name="every_twelve_hours">１２時間毎</string>
+    <string name="daily">毎日</string>
+    <string name="every_two_days">２日毎</string>
+    <string name="every_three_days">３日毎</string>
+    <string name="weekly">毎週</string>
     <string name="push_notifications">プッシュ通知</string>
     <string name="update_interval">更新間隔</string>
     <string name="airing_anime_notifications">配信中のアニメ通知</string>
@@ -288,4 +288,9 @@
     <string name="watching">視聴中</string>
     <string name="reading">読んでいます</string>
     <string name="synonyms">同義語</string>
+    <string name="translations">翻訳</string>
+    <string name="japanese">日本語</string>
+    <string name="russian">ロシア語</string>
+    <string name="spanish">スペイン語</string>
+    <string name="turkish">トルコ語</string>
 </resources>
