@@ -59,7 +59,7 @@
     <string name="cancelled">İptal edildi</string>
     <string name="hiatus">Süresiz arada</string>
     <string name="average_score">Ortalama puan</string>
-    <string name="popularity">Popülerlik</string>
+    <string name="popularity" comment="popularity sort">Popülerlik</string>
     <string name="favorites">Favoriler</string>
     <string name="episode_in_time">Bölüm %d, %s sonra</string>
     <string name="airing">Yayınlanıyor</string>
@@ -71,16 +71,16 @@
     <string name="season">Sezon</string>
     <string name="studios">Stüdyolar</string>
     <string name="producers">Yapımcılar</string>
-    <string name="source">Kaynak</string>
-    <string name="original">Orijinal</string>
+    <string name="source" comment="relation: source">Kaynak</string>
+    <string name="original" comment="relation: original">Orijinal</string>
     <string name="light_novel">Hafif Roman</string>
     <string name="visual_novel">Görsel Roman</string>
     <string name="video_game">Video Oyunu</string>
-    <string name="other">Diğer</string>
+    <string name="other" comment="relation: other">Diğer</string>
     <string name="doujinshi">Fan yapımı</string>
     <string name="web_novel">Web romanı</string>
     <string name="live_action">Canlandırma</string>
-    <string name="game">Oyun</string>
+    <string name="game" comment="relation: game">Oyun</string>
     <string name="comic">Çizgi Roman</string>
     <string name="multimedia_project">Multimedya Projesi</string>
     <string name="picture_book">Fotoğraf albümü</string>
