@@ -46,8 +46,8 @@
     <string name="tv_short">TV - Kısa</string>
     <string name="movie">Film</string>
     <string name="special">Özel</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">Müzik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">Tek Seferlik</string>
