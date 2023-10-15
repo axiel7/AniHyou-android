@@ -43,8 +43,8 @@
     <string name="tv">TV</string>
     <string name="movie">Filme</string>
     <string name="special">Especial</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">Música</string>
     <string name="novel">Novel</string>
     <string name="one_shot">One Shot</string>
@@ -140,6 +140,22 @@
     <string name="genre_fantasy">Fantasia</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Terror</string>
+    <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Música</string>
+    <string name="genre_mystery">Mistério</string>
+    <string name="genre_pyshological">Psicológico</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_scifi">Ficção Científica</string>
+    <string name="genre_slice_of_life">Vida Diária</string>
+    <string name="genre_sports">Esportes</string>
+    <string name="genre_supernatural">Sobrenatural</string>
+    <string name="genre_thriller">Suspense</string>
+    <string name="watching">Assistindo</string>
+    <string name="reading">Lendo</string>
+    <string name="synonyms">Sinônimos</string>
+    <string name="translations">Traduções</string>
     <string name="japanese">Japonês</string>
+    <string name="russian">Russo</string>
+    <string name="spanish">Espanhol</string>
+    <string name="turkish">Turco</string>
 </resources>
