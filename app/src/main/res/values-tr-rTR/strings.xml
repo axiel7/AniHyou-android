@@ -51,7 +51,7 @@
     <string name="music">Müzik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">Tek Seferlik</string>
-    <string name="num_episodes">%s bölüm</string>
+    <string name="num_episodes" comment="total episodes of an anime">%s bölüm</string>
     <string name="num_chapters">%s bölüm</string>
     <string name="finished">Tamamlandı</string>
     <string name="releasing">Yayımlanıyor</string>
