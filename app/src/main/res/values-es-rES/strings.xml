@@ -46,8 +46,8 @@
     <string name="tv_short">Corto de TV</string>
     <string name="movie">Película</string>
     <string name="special">Especial</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">Música</string>
     <string name="novel">Novela</string>
     <string name="one_shot">One Shot</string>
