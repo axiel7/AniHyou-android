@@ -46,12 +46,12 @@
     <string name="tv_short">ТВ Короткометражка</string>
     <string name="movie">Фильм</string>
     <string name="special">Спешл</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">Музыка</string>
     <string name="novel">Новелла</string>
     <string name="one_shot">Ваншот</string>
-    <string name="num_episodes">%s эпизодов</string>
+    <string name="num_episodes" comment="total episodes of an anime">%s эпизодов</string>
     <string name="num_chapters">%s глав</string>
     <string name="finished">Завершено</string>
     <string name="releasing">Выпускается</string>
@@ -59,7 +59,7 @@
     <string name="cancelled">Отменено</string>
     <string name="hiatus">Пауза на неопределенный срок</string>
     <string name="average_score">Средний счет</string>
-    <string name="popularity">Популярность</string>
+    <string name="popularity" comment="popularity sort">Популярность</string>
     <string name="favorites">Избранное</string>
     <string name="episode_in_time">Эп %d через %s</string>
     <string name="airing">Выходит</string>
@@ -71,16 +71,16 @@
     <string name="season">Сезон</string>
     <string name="studios">Студии</string>
     <string name="producers">Продюсеры</string>
-    <string name="source">Источник</string>
-    <string name="original">Первоисточник</string>
+    <string name="source" comment="relation: source">Источник</string>
+    <string name="original" comment="relation: original">Первоисточник</string>
     <string name="light_novel">Легкая новелла</string>
     <string name="visual_novel">Визуальная новелла</string>
     <string name="video_game">Видеоигра</string>
-    <string name="other">Прочее</string>
+    <string name="other" comment="relation: other">Прочее</string>
     <string name="doujinshi">Додзинси</string>
     <string name="web_novel">Веб новелла</string>
     <string name="live_action">Живое действие</string>
-    <string name="game">Игра</string>
+    <string name="game" comment="relation: game">Игра</string>
     <string name="comic">Комикс</string>
     <string name="multimedia_project">Мультимедийный проект</string>
     <string name="picture_book">Книга с картинками</string>

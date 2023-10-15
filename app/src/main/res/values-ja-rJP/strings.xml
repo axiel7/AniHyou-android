@@ -3,6 +3,7 @@
     <string name="home">ホーム</string>
     <string name="anime">アニメ</string>
     <string name="manga">マンガ</string>
+    <string name="explore">検索</string>
     <string name="num_years">%s年</string>
     <string name="num_months">%sヵ月</string>
     <string name="num_weeks">%s週間</string>
@@ -17,7 +18,7 @@
     <string name="spring">春</string>
     <string name="summer">夏</string>
     <string name="fall">秋</string>
-    <string name="profile">プロファイル</string>
+    <string name="profile">プロフ</string>
     <string name="trending_now">今のトレンド</string>
     <string name="next_season">次のシーズン</string>
     <string name="trending_manga"> トレンド漫画</string>
@@ -45,12 +46,12 @@
     <string name="tv_short">テレビショート</string>
     <string name="movie">動画</string>
     <string name="special">スペシャル</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
+    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
     <string name="music">音楽</string>
     <string name="novel">小説</string>
     <string name="one_shot">ワンショット</string>
-    <string name="num_episodes">第%s話</string>
+    <string name="num_episodes" comment="total episodes of an anime">%s話</string>
     <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
@@ -58,11 +59,11 @@
     <string name="cancelled">中止</string>
     <string name="hiatus">中断</string>
     <string name="average_score">平均スコア</string>
-    <string name="popularity">人気</string>
+    <string name="popularity" comment="popularity sort">人気</string>
     <string name="favorites">お気に入り</string>
-    <string name="episode_in_time">第%d話 %s</string>
+    <string name="episode_in_time">第%d話は%s後</string>
     <string name="airing">配信中</string>
-    <string name="num_episodes_behind">第%s話遅い</string>
+    <string name="num_episodes_behind">%s話遅い</string>
     <string name="information">情報</string>
     <string name="duration">放送時間</string>
     <string name="start_date">公開日</string>
@@ -70,16 +71,16 @@
     <string name="season">季節</string>
     <string name="studios">スタジオ</string>
     <string name="producers">プロデューサー</string>
-    <string name="source">原作</string>
-    <string name="original">オリジナル</string>
+    <string name="source" comment="relation: source">原作</string>
+    <string name="original" comment="relation: original">オリジナル</string>
     <string name="light_novel">ライトノベル</string>
     <string name="visual_novel">ビジュアルノベル</string>
     <string name="video_game">ゲーム</string>
-    <string name="other">他</string>
+    <string name="other" comment="relation: other">他</string>
     <string name="doujinshi">同人誌</string>
     <string name="web_novel">WEBノベル</string>
     <string name="live_action">実写版</string>
-    <string name="game">ゲーム</string>
+    <string name="game" comment="relation: game">ゲーム</string>
     <string name="comic">コミック</string>
     <string name="multimedia_project">マルチメディアプロジェクト</string>
     <string name="picture_book">絵本</string>
