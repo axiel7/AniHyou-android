@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.data.model.media.durationText
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.localized
@@ -396,7 +397,7 @@ fun MediaDetailsView(
                     .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 8.dp)
             ) {
-                uiState.details?.genres?.forEach { genre ->
+                uiState.details?.genres?.filterNotNull()?.forEach { genre ->
                     AssistChip(
                         onClick = {
                             navigateToExplore(
@@ -405,7 +406,7 @@ fun MediaDetailsView(
                                 null
                             )
                         },
-                        label = { Text(text = genre.orEmpty()) },
+                        label = { Text(text = genre.genreTagLocalized()) },
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
