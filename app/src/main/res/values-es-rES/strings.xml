@@ -51,7 +51,7 @@
     <string name="music">Música</string>
     <string name="novel">Novela</string>
     <string name="one_shot">One Shot</string>
-    <string name="num_episodes">%s episodios</string>
+    <string name="num_episodes" comment="total episodes of an anime">%s episodios</string>
     <string name="num_chapters">%s capítulos</string>
     <string name="finished">Finalizado</string>
     <string name="releasing">Publicándose</string>
