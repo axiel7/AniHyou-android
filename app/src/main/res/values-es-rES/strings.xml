@@ -59,7 +59,7 @@
     <string name="cancelled">Cancelado</string>
     <string name="hiatus">Hiatus</string>
     <string name="average_score">Nota ponderada</string>
-    <string name="popularity">Popularidad</string>
+    <string name="popularity" comment="popularity sort">Popularidad</string>
     <string name="favorites">Favoritos</string>
     <string name="episode_in_time">Ep %d en %s</string>
     <string name="airing">En emisión</string>
@@ -71,16 +71,16 @@
     <string name="season">Temporada</string>
     <string name="studios">Estudios</string>
     <string name="producers">Productores</string>
-    <string name="source">Fuente</string>
-    <string name="original">Original</string>
+    <string name="source" comment="relation: source">Fuente</string>
+    <string name="original" comment="relation: original">Original</string>
     <string name="light_novel">Novela ligera</string>
     <string name="visual_novel">Novela visual</string>
     <string name="video_game">Videojuego</string>
-    <string name="other">Otros</string>
+    <string name="other" comment="relation: other">Otros</string>
     <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Novela web</string>
     <string name="live_action">Live action</string>
-    <string name="game">Videojuego</string>
+    <string name="game" comment="relation: game">Videojuego</string>
     <string name="comic">Cómic</string>
     <string name="multimedia_project">Proyecto multimedia</string>
     <string name="picture_book">Libro ilustrado</string>
