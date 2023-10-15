@@ -1,2 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home">Início</string>
+    <string name="anime">Anime</string>
+    <string name="manga">Mangá</string>
+    <string name="explore">Explorar</string>
+    <string name="num_years">%s anos</string>
+    <string name="num_months">%s meses</string>
+    <string name="num_weeks">%s semanas</string>
+    <string name="num_days">%s dias</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="airing_in">Exibindo em %s</string>
+    <string name="winter">Inverno</string>
+    <string name="spring">Primavera</string>
+    <string name="summer">Verão</string>
+    <string name="fall">Outono</string>
+    <string name="profile">Perfil</string>
+</resources>
