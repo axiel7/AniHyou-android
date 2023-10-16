@@ -109,6 +109,8 @@ class ThreadDetailsViewModel @Inject constructor(
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     threadComments.addAll(result.list)
+                } else {
+                    result.toUiState()
                 }
             }
             .launchIn(viewModelScope)
