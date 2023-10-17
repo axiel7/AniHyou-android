@@ -12,7 +12,7 @@
     <string name="spring">الربيع</string>
     <string name="summer">الصيف</string>
     <string name="fall">الخريف</string>
-    <string name="profile" comment="as short as possible">الملفّ الشخصي</string>
+    <string name="profile">الملفّ الشخصي</string>
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
     <string name="completed">أكملته</string>
@@ -28,22 +28,22 @@
     <string name="tv">تلفزيوني</string>
     <string name="movie">فيلم</string>
     <string name="special">حلقة خاصة</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">موسيقى</string>
     <string name="novel">رواية</string>
     <string name="one_shot">ون شوت</string>
     <string name="finished">منتهي</string>
-    <string name="popularity" comment="popularity sort">الشعبية</string>
+    <string name="popularity">الشعبية</string>
     <string name="airing">يبث</string>
     <string name="duration">المدة</string>
     <string name="start_date">تاريخ البث</string>
     <string name="season">موسم</string>
     <string name="studios">الاستوديو</string>
-    <string name="source" comment="relation: source">المصدر</string>
-    <string name="original" comment="relation: original">أصلي</string>
-    <string name="other" comment="relation: other">أخرى</string>
-    <string name="game" comment="relation: game">لعبة</string>
+    <string name="source">المصدر</string>
+    <string name="original">أصلي</string>
+    <string name="other">أخرى</string>
+    <string name="game">لعبة</string>
     <string name="romaji">روماجي</string>
     <string name="english">الإنجليزية</string>
     <string name="episodes">الحلقات</string>
