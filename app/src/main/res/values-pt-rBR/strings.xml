@@ -43,22 +43,22 @@
     <string name="tv">TV</string>
     <string name="movie">Filme</string>
     <string name="special">Especial</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">Música</string>
     <string name="novel">Novel</string>
     <string name="one_shot">One Shot</string>
     <string name="finished">Finalizado</string>
-    <string name="popularity" comment="popularity sort">Popularidade</string>
+    <string name="popularity">Popularidade</string>
     <string name="airing">Em Exibição</string>
     <string name="duration">Duração</string>
     <string name="start_date">Data de início</string>
     <string name="season">Temporada</string>
     <string name="studios">Estúdios</string>
-    <string name="source" comment="relation: source">Fonte</string>
-    <string name="original" comment="relation: original">Original</string>
-    <string name="other" comment="relation: other">Outros</string>
-    <string name="game" comment="relation: game">Jogo</string>
+    <string name="source">Fonte</string>
+    <string name="original">Original</string>
+    <string name="other">Outros</string>
+    <string name="game">Jogo</string>
     <string name="romaji">Romaji</string>
     <string name="english">Inglês</string>
     <string name="episodes">Episódios</string>
