@@ -29,22 +29,22 @@
     <string name="tv">TV</string>
     <string name="movie">Фільм</string>
     <string name="special">Спешл</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">Музика</string>
     <string name="novel">Новела</string>
     <string name="one_shot">Ваншот</string>
     <string name="finished">Завершено</string>
-    <string name="popularity" comment="popularity sort">За популярністю</string>
+    <string name="popularity">За популярністю</string>
     <string name="airing">Виходить</string>
     <string name="duration">Тривалість</string>
     <string name="start_date">Дата початку</string>
     <string name="season">Сезон</string>
     <string name="studios">Студії</string>
-    <string name="source" comment="relation: source">Першоджерело</string>
-    <string name="original" comment="relation: original">Оригінальне</string>
-    <string name="other" comment="relation: other">Інше</string>
-    <string name="game" comment="relation: game">Гра</string>
+    <string name="source">Першоджерело</string>
+    <string name="original">Оригінальне</string>
+    <string name="other">Інше</string>
+    <string name="game">Гра</string>
     <string name="romaji">Романджі</string>
     <string name="english">Англійська</string>
     <string name="episodes">епізод(-ів)</string>
