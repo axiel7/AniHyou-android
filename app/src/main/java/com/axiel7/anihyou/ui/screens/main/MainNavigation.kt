@@ -685,7 +685,7 @@ fun MainNavigation(
         composable(
             PUBLISH_ACTIVITY_DESTINATION,
             arguments = listOf(
-                navArgument(REPLY_ID_ARGUMENT.removeFirstAndLast()) {
+                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.IntType
                 },
                 navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
@@ -694,7 +694,7 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
+            val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
             PublishActivityView(
                 activityId = null,
                 id = if (id != 0) id else null,
