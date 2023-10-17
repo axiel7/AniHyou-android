@@ -111,7 +111,6 @@ fun MediaDetailsView(
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isLoadingDetails = uiState.details == null
     val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
@@ -231,7 +230,7 @@ fun MediaDetailsView(
                         text = uiState.details?.title?.userPreferred ?: "Loading",
                         modifier = Modifier
                             .padding(bottom = 8.dp, end = 8.dp)
-                            .defaultPlaceholder(visible = isLoadingDetails)
+                            .defaultPlaceholder(visible = uiState.isLoading)
                             .combinedClickable(
                                 onLongClick = {
                                     uiState.details?.title?.userPreferred
@@ -249,7 +248,7 @@ fun MediaDetailsView(
                         else R.drawable.book_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = isLoadingDetails)
+                            .defaultPlaceholder(visible = uiState.isLoading)
                     )
                     TextIconHorizontal(
                         text = uiState.details?.basicMediaDetails?.durationText()
@@ -257,14 +256,14 @@ fun MediaDetailsView(
                         icon = R.drawable.timer_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = isLoadingDetails)
+                            .defaultPlaceholder(visible = uiState.isLoading)
                     )
                     TextIconHorizontal(
                         text = uiState.details?.status.localized(),
                         icon = R.drawable.rss_feed_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = isLoadingDetails)
+                            .defaultPlaceholder(visible = uiState.isLoading)
                     )
                 }//:Column
             }//:Row
@@ -294,7 +293,7 @@ fun MediaDetailsView(
                 TextSubtitleVertical(
                     text = "${uiState.details?.meanScore ?: 0}%",
                     subtitle = stringResource(R.string.mean_score),
-                    isLoading = isLoadingDetails
+                    isLoading = uiState.isLoading
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -304,7 +303,7 @@ fun MediaDetailsView(
                 TextSubtitleVertical(
                     text = "${uiState.details?.averageScore ?: 0}%",
                     subtitle = stringResource(R.string.average_score),
-                    isLoading = isLoadingDetails
+                    isLoading = uiState.isLoading
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -314,7 +313,7 @@ fun MediaDetailsView(
                 TextSubtitleVertical(
                     text = uiState.details?.popularity?.format(),
                     subtitle = stringResource(R.string.popularity),
-                    isLoading = isLoadingDetails
+                    isLoading = uiState.isLoading
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -324,7 +323,7 @@ fun MediaDetailsView(
                 TextSubtitleVertical(
                     text = uiState.details?.favourites?.format(),
                     subtitle = stringResource(R.string.favorites),
-                    isLoading = isLoadingDetails
+                    isLoading = uiState.isLoading
                 )
             }//: Row
 
@@ -332,7 +331,7 @@ fun MediaDetailsView(
             Text(
                 text = uiState.details?.description?.htmlDecoded()?.toAnnotatedString()
                     ?: buildAnnotatedString {
-                        if (isLoadingDetails)
+                        if (uiState.isLoading)
                             append(stringResource(R.string.lorem_ipsun))
                         else
                             append(stringResource(R.string.no_description))
@@ -340,7 +339,7 @@ fun MediaDetailsView(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .clickable { isSynopsisExpanded = !isSynopsisExpanded }
-                    .defaultPlaceholder(visible = isLoadingDetails),
+                    .defaultPlaceholder(visible = uiState.isLoading),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
                 lineHeight = 18.sp,
