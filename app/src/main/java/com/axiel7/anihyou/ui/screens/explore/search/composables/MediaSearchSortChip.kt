@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.explore.search.composables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
@@ -46,12 +47,13 @@ fun MediaSearchSortChip(
     }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AssistChip(
             onClick = { openDialog = !openDialog },
             label = { Text(text = mediaSortSearch.localized()) },
-            modifier = Modifier.padding(8.dp),
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.sort_24),
@@ -80,8 +82,7 @@ fun MediaSearchSortChip(
                         text = if (isDescending) stringResource(R.string.descending)
                         else stringResource(R.string.ascending)
                     )
-                },
-                modifier = Modifier.padding(8.dp),
+                }
             )
         }
     }//: Row

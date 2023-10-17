@@ -333,4 +333,8 @@
     <string name="turkish">Turkish</string>
     <string name="from_year">From year</string>
     <string name="to_year">To year</string>
+    <string name="staff_role_a_and_r_producer"><![CDATA[A&R Producer]]></string>
+    <string name="staff_role_adr_director">ADR Director</string>
+    <string name="hide_filters">Hide filters</string>
+    <string name="more_filters">More filters</string>
 </resources>

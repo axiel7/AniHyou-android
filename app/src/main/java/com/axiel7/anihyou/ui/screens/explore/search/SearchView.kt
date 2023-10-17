@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -21,8 +22,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
@@ -63,6 +66,7 @@ fun SearchView(
     listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     var searchByGenre by remember { mutableStateOf(initialMediaType != null) }
+    var showMoreFilters by remember { mutableStateOf(false) }
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
@@ -93,7 +97,6 @@ fun SearchView(
                         text = it.localized(),
                         onClick = {
                             viewModel.setSearchType(it)
-                            //performSearch.value = true
                         }
                     )
                 }
@@ -106,41 +109,51 @@ fun SearchView(
                         viewModel.setMediaSort(it)
                     }
                 )
-                Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Spacer(modifier = Modifier.size(0.dp))
+                if (showMoreFilters) {
+                    Row(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Spacer(modifier = Modifier.size(0.dp))
 
-                    MediaSearchFormatChip(
-                        mediaType = uiState.mediaType ?: MediaType.ANIME,
-                        selectedMediaFormats = uiState.selectedMediaFormats,
-                        onMediaFormatsChanged = viewModel::setMediaFormats
+                        MediaSearchFormatChip(
+                            mediaType = uiState.mediaType ?: MediaType.ANIME,
+                            selectedMediaFormats = uiState.selectedMediaFormats,
+                            onMediaFormatsChanged = viewModel::setMediaFormats
+                        )
+
+                        MediaSearchStatusChip(
+                            selectedMediaStatuses = uiState.selectedMediaStatuses,
+                            onMediaStatusesChanged = viewModel::setMediaStatuses
+                        )
+
+                        OnMyListChip(
+                            selected = uiState.onMyList,
+                            onClick = {
+                                viewModel.setOnMyList(uiState.onMyList.not())
+                            }
+                        )
+                    }
+                    MediaSearchYearChip(
+                        startYear = uiState.startYear,
+                        endYear = uiState.endYear,
+                        onStartYearChanged = viewModel::setStartYear,
+                        onEndYearChanged = viewModel::setEndYear
                     )
-
-                    MediaSearchStatusChip(
-                        selectedMediaStatuses = uiState.selectedMediaStatuses,
-                        onMediaStatusesChanged = viewModel::setMediaStatuses
-                    )
-
-                    OnMyListChip(
-                        selected = uiState.onMyList,
-                        onClick = {
-                            viewModel.setOnMyList(uiState.onMyList.not())
-                        }
+                    MediaSearchGenresChips(
+                        externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                        externalTag = initialTag?.let { SelectableGenre(name = it) },
+                        onGenreTagSelected = viewModel::setSelectedGenresAndTags,
                     )
                 }
-                MediaSearchYearChip(
-                    startYear = uiState.startYear,
-                    endYear = uiState.endYear,
-                    onStartYearChanged = viewModel::setStartYear,
-                    onEndYearChanged = viewModel::setEndYear
-                )
-                MediaSearchGenresChips(
-                    externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-                    externalTag = initialTag?.let { SelectableGenre(name = it) },
-                    onGenreTagSelected = viewModel::setSelectedGenresAndTags,
-                )
+                TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
+                    Text(
+                        text = stringResource(
+                            if (showMoreFilters) R.string.hide_filters
+                            else R.string.more_filters
+                        )
+                    )
+                }
             }
         }
         when (uiState.searchType) {
