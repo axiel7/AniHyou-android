@@ -228,6 +228,7 @@
     <string name="year">年</string>
     <string name="episode_aired_ago">第%d話は%sで配信しました</string>
     <string name="title_language">作品名の言語</string>
+    <string name="romaji_western_order">英語表記（ローマ字）</string>
     <string name="staff_character_name_language"><![CDATA[スタッフとキャラクター名の言語]]></string>
     <string name="score_format">スコアの形式</string>
     <string name="score_point_100">１００点（５５/１００）</string>
@@ -308,6 +309,10 @@
     <string name="russian">ロシア語</string>
     <string name="spanish">スペイン語</string>
     <string name="turkish">トルコ語</string>
+    <string name="from_year">年から</string>
+    <string name="to_year">年まで</string>
+    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[A&R プロデューサー]]></string>
+    <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">ADR ディレクター</string>
     <string name="hide_filters">フィルターを非表示</string>
     <string name="more_filters">その他のフィルター</string>
 </resources>
