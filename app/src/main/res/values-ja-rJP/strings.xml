@@ -46,12 +46,12 @@
     <string name="tv_short">テレビショート</string>
     <string name="movie">動画</string>
     <string name="special">スペシャル</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">音楽</string>
     <string name="novel">小説</string>
     <string name="one_shot">ワンショット</string>
-    <string name="num_episodes" comment="total episodes of an anime">%s話</string>
+    <string name="num_episodes">%s話</string>
     <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
@@ -59,7 +59,7 @@
     <string name="cancelled">中止</string>
     <string name="hiatus">中断</string>
     <string name="average_score">平均スコア</string>
-    <string name="popularity" comment="popularity sort">人気</string>
+    <string name="popularity">人気</string>
     <string name="favorites">お気に入り</string>
     <string name="episode_in_time">第%d話は%s後</string>
     <string name="airing">配信中</string>
@@ -71,16 +71,16 @@
     <string name="season">季節</string>
     <string name="studios">スタジオ</string>
     <string name="producers">プロデューサー</string>
-    <string name="source" comment="relation: source">原作</string>
-    <string name="original" comment="relation: original">オリジナル</string>
+    <string name="source">原作</string>
+    <string name="original">オリジナル</string>
     <string name="light_novel">ライトノベル</string>
     <string name="visual_novel">ビジュアルノベル</string>
     <string name="video_game">ゲーム</string>
-    <string name="other" comment="relation: other">他</string>
+    <string name="other">他</string>
     <string name="doujinshi">同人誌</string>
     <string name="web_novel">WEBノベル</string>
     <string name="live_action">実写版</string>
-    <string name="game" comment="relation: game">ゲーム</string>
+    <string name="game">ゲーム</string>
     <string name="comic">コミック</string>
     <string name="multimedia_project">マルチメディアプロジェクト</string>
     <string name="picture_book">絵本</string>
@@ -128,6 +128,7 @@
     <string name="relation_other">他</string>
     <string name="relation_source">原作</string>
     <string name="relation_compilation">コンパイル</string>
+    <string name="relation_contains">含む</string>
     <string name="recommendations">おすすめ</string>
     <string name="settings">設定</string>
     <string name="display">ディスプレー</string>
@@ -141,6 +142,7 @@
     <string name="account">アカウント</string>
     <string name="github_repository">GitHubリポジトリ</string>
     <string name="version">バージョン</string>
+    <string name="developed_by_axiel7">開発：axiel7</string>
     <string name="anilist_account_settings">AniListアカウントの設定</string>
     <string name="logout">ログアウト</string>
     <string name="character_media">メディア</string>
@@ -149,12 +151,16 @@
     <string name="gender">性別</string>
     <string name="blood_type">血液型</string>
     <string name="years_active">生産年数</string>
+    <string name="present">現在</string>
     <string name="hometown">故郷</string>
     <string name="occupations">職業</string>
     <string name="no_information">情報なし</string>
     <string name="score">スコア</string>
     <string name="total_entries">合計：%s</string>
+    <string name="status_distribution">ステータスの内訳</string>
     <string name="rankings">ランキング</string>
+    <string name="score_distribution">スコアの内訳</string>
+    <string name="no_description">説明なし</string>
     <string name="reviews">レビュー</string>
     <string name="loading">読み込み中</string>
     <string name="users_likes">ユーザーのいいね！</string>
@@ -177,12 +183,16 @@
     <string name="refresh">更新する</string>
     <string name="episode_airing_on">第%d話は%sで配信中</string>
     <string name="display_adult_content">アダルトコンテンツを表示</string>
+    <string name="overview">概要</string>
     <string name="voice_actors">声優</string>
     <string name="total">合計</string>
     <string name="chapters_read">読んだ章</string>
     <string name="episodes_watched">見た第</string>
     <string name="days_watched">見た日</string>
     <string name="volumes_read">読んだ巻</string>
+    <string name="standard_deviation">標準偏差</string>
+    <string name="title_count">タイトル数</string>
+    <string name="format_distribution">形式の内訳</string>
     <string name="notes">メモ</string>
     <string name="calendar">カレンダー</string>
     <string name="monday">月曜日</string>
@@ -248,13 +258,17 @@
     <string name="format_link">リンク</string>
     <string name="format_image">画像</string>
     <string name="format_video">動画</string>
+    <string name="format_ol">順序付きリスト</string>
+    <string name="format_ul">順序なしリスト</string>
     <string name="format_heading">見出し</string>
     <string name="format_centered">中央</string>
+    <string name="format_quote">引用文</string>
     <string name="format_code">コード</string>
     <string name="write_something">何か書きましょう！</string>
     <string name="paste_your_link">ここにリンクを貼ってください</string>
     <string name="publish">公開する</string>
     <string name="reply">返信する</string>
+    <string name="locked">ロックされた</string>
     <string name="donator">ドナー</string>
     <string name="google_translate_not_installed">Google翻訳がインストールされていません</string>
     <string name="no_app_found_for_this_action">このアクションのアプリが見つかりませんでした</string>
@@ -294,4 +308,6 @@
     <string name="russian">ロシア語</string>
     <string name="spanish">スペイン語</string>
     <string name="turkish">トルコ語</string>
+    <string name="hide_filters">フィルターを非表示</string>
+    <string name="more_filters">その他のフィルター</string>
 </resources>
