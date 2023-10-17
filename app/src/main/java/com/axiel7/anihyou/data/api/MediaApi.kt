@@ -38,7 +38,8 @@ class MediaApi @Inject constructor(
         tagIn: List<String>?,
         formatIn: List<MediaFormat>?,
         statusIn: List<MediaStatus>?,
-        year: Int?,
+        startYear: Int?,
+        endYear: Int?,
         onList: Boolean?,
         page: Int,
         perPage: Int,
@@ -58,7 +59,13 @@ class MediaApi @Inject constructor(
                 else Optional.present(formatIn),
                 status_in = if (statusIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(statusIn),
-                seasonYear = Optional.presentIfNotNull(year),
+                startDateGreater = if (startYear != null)
+                // Unknown dates represented by 0. E.g. 2016: 20160000
+                    Optional.present(startYear * 10000)
+                else Optional.absent(),
+                startDateLesser = if (endYear != null)
+                    Optional.present(endYear * 10000)
+                else Optional.absent(),
                 onList = if (onList == true) Optional.present(true) else Optional.absent()
             )
         )

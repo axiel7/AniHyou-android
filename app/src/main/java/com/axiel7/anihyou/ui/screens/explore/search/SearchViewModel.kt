@@ -98,8 +98,11 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    fun setYear(value: Int?) = mutableUiState.update {
-        it.copy(selectedYear = value, page = 1, hasNextPage = true, isLoading = true)
+    fun setStartYear(value: Int?) = mutableUiState.update {
+        it.copy(startYear = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+    fun setEndYear(value: Int?) = mutableUiState.update {
+        it.copy(endYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
     fun setOnMyList(value: Boolean) = mutableUiState.update {
@@ -133,7 +136,8 @@ class SearchViewModel @Inject constructor(
                         && old.query == new.query
                         && old.mediaType == new.mediaType
                         && old.mediaSort == new.mediaSort
-                        && old.selectedYear == new.selectedYear
+                        && old.startYear == new.startYear
+                        && old.endYear == new.endYear
                         && old.onMyList == new.onMyList
                         && !new.genresOrTagsChanged
                         && !new.mediaFormatsChanged
@@ -148,7 +152,8 @@ class SearchViewModel @Inject constructor(
                     tagIn = uiState.selectedTags,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },
-                    year = uiState.selectedYear,
+                    startYear = uiState.startYear,
+                    endYear = uiState.endYear,
                     onList = if (uiState.onMyList) true else null,
                     page = uiState.page
                 )

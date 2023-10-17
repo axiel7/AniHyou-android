@@ -331,4 +331,6 @@
     <string name="russian">Russian</string>
     <string name="spanish">Spanish</string>
     <string name="turkish">Turkish</string>
+    <string name="from_year">From year</string>
+    <string name="to_year">To year</string>
 </resources>

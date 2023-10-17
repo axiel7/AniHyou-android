@@ -106,11 +106,6 @@ fun SearchView(
                         viewModel.setMediaSort(it)
                     }
                 )
-                MediaSearchGenresChips(
-                    externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-                    externalTag = initialTag?.let { SelectableGenre(name = it) },
-                    onGenreTagSelected = viewModel::setSelectedGenresAndTags,
-                )
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -128,11 +123,6 @@ fun SearchView(
                         onMediaStatusesChanged = viewModel::setMediaStatuses
                     )
 
-                    MediaSearchYearChip(
-                        selectedYear = uiState.selectedYear,
-                        onYearChanged = viewModel::setYear
-                    )
-
                     OnMyListChip(
                         selected = uiState.onMyList,
                         onClick = {
@@ -140,6 +130,17 @@ fun SearchView(
                         }
                     )
                 }
+                MediaSearchYearChip(
+                    startYear = uiState.startYear,
+                    endYear = uiState.endYear,
+                    onStartYearChanged = viewModel::setStartYear,
+                    onEndYearChanged = viewModel::setEndYear
+                )
+                MediaSearchGenresChips(
+                    externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                    externalTag = initialTag?.let { SelectableGenre(name = it) },
+                    onGenreTagSelected = viewModel::setSelectedGenresAndTags,
+                )
             }
         }
         when (uiState.searchType) {

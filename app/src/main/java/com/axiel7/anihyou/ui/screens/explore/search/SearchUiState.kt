@@ -18,7 +18,8 @@ data class SearchUiState(
     val mediaFormatsChanged: Boolean = false,
     val selectedMediaStatuses: List<MediaStatusLocalizable> = emptyList(),
     val mediaStatusesChanged: Boolean = false,
-    val selectedYear: Int? = null,
+    val startYear: Int? = null,
+    val endYear: Int? = null,
     val onMyList: Boolean = false,
 
     override val page: Int = 0,
@@ -40,7 +41,8 @@ data class SearchUiState(
                     || selectedTags.isNotEmpty()
                     || selectedMediaFormats.isNotEmpty()
                     || selectedMediaStatuses.isNotEmpty()
-                    || selectedYear != null)
+                    || startYear != null
+                    || endYear != null)
             && mediaSort == MediaSort.SEARCH_MATCH
         ) {
             MediaSort.POPULARITY_DESC
