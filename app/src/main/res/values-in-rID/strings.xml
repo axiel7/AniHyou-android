@@ -29,22 +29,22 @@
     <string name="tv">TV</string>
     <string name="movie">Movie</string>
     <string name="special">Spesial</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">Musik</string>
     <string name="novel">Novel</string>
     <string name="one_shot">Edisi Tunggal</string>
     <string name="finished">Selesai</string>
-    <string name="popularity" comment="popularity sort">Popularitas</string>
+    <string name="popularity">Popularitas</string>
     <string name="airing">Ditayangkan</string>
     <string name="duration">Durasi</string>
     <string name="start_date">Tanggal mulai</string>
     <string name="season">Musim</string>
     <string name="studios">Studio</string>
-    <string name="source" comment="relation: source">Sumber</string>
-    <string name="original" comment="relation: original">Original</string>
-    <string name="other" comment="relation: other">Lainnya</string>
-    <string name="game" comment="relation: game">Game</string>
+    <string name="source">Sumber</string>
+    <string name="original">Original</string>
+    <string name="other">Lainnya</string>
+    <string name="game">Game</string>
     <string name="romaji">Romaji</string>
     <string name="english">Inggris</string>
     <string name="episodes">Episode</string>
