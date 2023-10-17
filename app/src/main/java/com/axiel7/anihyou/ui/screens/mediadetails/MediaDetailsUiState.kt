@@ -39,5 +39,5 @@ data class MediaDetailsUiState(
         get() = details?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
 
     val isNewEntry
-        get() = details?.basicMediaDetails == null
+        get() = details?.mediaListEntry == null
 }
