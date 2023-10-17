@@ -29,7 +29,7 @@ abstract class PagedUiStateViewModel<S : PagedUiState<S>> : UiStateViewModel<S>(
     fun setHasNextPage(value: Boolean) = mutableUiState.update { it.setHasNextPage(value) }
 
     fun loadNextPage() {
-        if (uiState.value.hasNextPage) {
+        if (uiState.value.hasNextPage && !uiState.value.isLoading) {
             mutableUiState.update { it.setPage(it.page + 1) }
         }
     }

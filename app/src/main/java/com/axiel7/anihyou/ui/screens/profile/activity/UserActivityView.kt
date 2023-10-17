@@ -38,7 +38,13 @@ fun UserActivityView(
         state = listState,
         contentPadding = PaddingValues(top = 8.dp)
     ) {
-        items(
+        if (isLoading) {
+            items(10) {
+                ActivityItemPlaceholder(
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        } else items(
             items = activities,
             contentType = { it }
         ) { item ->
@@ -121,13 +127,6 @@ fun UserActivityView(
                     navigateToFullscreenImage = navigateToFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
-            }
-        }
-        if (isLoading) {
-            items(10) {
-                ActivityItemPlaceholder(
-                    modifier = Modifier.padding(8.dp)
-                )
             }
         }
     }//: LazyColumn
