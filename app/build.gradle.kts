@@ -161,6 +161,7 @@ apollo {
     generateSourcesDuringGradleSync.set(false)
     service("service") {
         packageName.set("com.axiel7.anihyou")
+        mapScalarToKotlinInt("FuzzyDateInt")
         introspection {
             endpointUrl.set("https://graphql.anilist.co")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
