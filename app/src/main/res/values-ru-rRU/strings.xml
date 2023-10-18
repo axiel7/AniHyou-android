@@ -318,6 +318,10 @@
     <string name="russian">Русский</string>
     <string name="spanish">Испанский</string>
     <string name="turkish">Турецкий</string>
+    <string name="from_year">За год</string>
+    <string name="to_year">В год</string>
+    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[А&Р Продюсер]]></string>
+    <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">Директор дублирования</string>
     <string name="hide_filters">Скрыть фильтры</string>
     <string name="more_filters">Больше фильтров</string>
 </resources>
