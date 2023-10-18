@@ -318,6 +318,8 @@
     <string name="russian">Rusça</string>
     <string name="spanish">İspanyolca</string>
     <string name="turkish">Türkçe</string>
+    <string name="from_year">Şu yıldan</string>
+    <string name="to_year">Şu yıla</string>
     <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[Ekip & Rol Yapımcısı]]></string>
     <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">Dublaj Yöneticisi</string>
     <string name="hide_filters">Filtreleri gizle</string>
