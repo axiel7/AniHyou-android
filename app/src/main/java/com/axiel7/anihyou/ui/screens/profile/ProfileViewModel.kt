@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.screens.profile
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -125,9 +124,6 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
-    val accessToken = defaultPreferencesRepository.accessToken
-        .stateInViewModel(initialValue = App.accessToken)
 
     init {
         mutableUiState

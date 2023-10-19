@@ -107,9 +107,6 @@ class MainActivity : AppCompatActivity() {
         val startTab = viewModel.startTab.firstBlocking()
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
-        //val initialTheme = viewModel.theme.firstBlocking() ?: Theme.FOLLOW_SYSTEM
-        //val initialAppColor = viewModel.appColor.firstBlocking()
-        //val initialAppColorMode = viewModel.appColorMode.firstBlocking() ?: AppColorMode.DEFAULT
 
         setContent {
             val theme by viewModel.theme.collectAsStateWithLifecycle()
@@ -118,6 +115,7 @@ class MainActivity : AppCompatActivity() {
             else theme == Theme.DARK || theme == Theme.BLACK
             val appColor by viewModel.appColor.collectAsStateWithLifecycle()
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(AppColorMode.DEFAULT)
+            val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
@@ -145,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     MainView(
                         windowSizeClass = windowSizeClass,
+                        isLoggedIn = accessToken != null,
                         lastTabOpened = lastTabOpened,
                         saveLastTab = viewModel::saveLastTab,
                         homeTab = homeTab,
@@ -164,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MainView(
     windowSizeClass: WindowSizeClass,
+    isLoggedIn: Boolean,
     lastTabOpened: Int,
     saveLastTab: (Int) -> Unit,
     homeTab: HomeTab,
@@ -188,6 +188,7 @@ fun MainView(
             MainNavigation(
                 navController = navController,
                 isCompactScreen = true,
+                isLoggedIn = isLoggedIn,
                 lastTabOpened = lastTabOpened,
                 deepLink = deepLink,
                 homeTab = homeTab,
@@ -203,6 +204,7 @@ fun MainView(
                 MainNavigation(
                     navController = navController,
                     isCompactScreen = false,
+                    isLoggedIn = isLoggedIn,
                     lastTabOpened = lastTabOpened,
                     deepLink = deepLink,
                     homeTab = homeTab,
@@ -227,6 +229,7 @@ fun MainPreview() {
             windowSizeClass = WindowSizeClass.calculateFromSize(
                 DpSize(width = 1280.dp, height = 1920.dp)
             ),
+            isLoggedIn = false,
             lastTabOpened = 0,
             saveLastTab = {},
             homeTab = HomeTab.DISCOVER,

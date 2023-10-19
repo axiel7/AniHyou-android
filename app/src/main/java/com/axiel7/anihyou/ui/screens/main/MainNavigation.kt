@@ -55,13 +55,14 @@ import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.ui.screens.explore.season.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.home.HomeView
+import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.notifications.UNREAD_COUNT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.profile.ProfileViewEntry
+import com.axiel7.anihyou.ui.screens.profile.ProfileView
 import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.USER_NAME_ARGUMENT
@@ -91,7 +92,7 @@ import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_THREAD_COMMENT_DESTI
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
 import com.axiel7.anihyou.ui.screens.usermedialist.SCORE_FORMAT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
-import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostViewEntry
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import com.axiel7.anihyou.utils.UTF_8
@@ -101,6 +102,7 @@ import java.net.URLEncoder
 fun MainNavigation(
     navController: NavHostController,
     isCompactScreen: Boolean,
+    isLoggedIn: Boolean,
     lastTabOpened: Int,
     homeTab: HomeTab,
     deepLink: DeepLink?,
@@ -209,6 +211,7 @@ fun MainNavigation(
     ) {
         composable(BottomDestination.Home.route) {
             HomeView(
+                isLoggedIn = isLoggedIn,
                 defaultHomeTab = homeTab,
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
@@ -261,11 +264,15 @@ fun MainNavigation(
                 }
             )
         ) {
-            UserMediaListHostViewEntry(
-                isCompactScreen = isCompactScreen,
-                modifier = Modifier.padding(bottom = bottomPadding),
-                navigateToMediaDetails = navigateToMediaDetails
-            )
+            if (isLoggedIn) {
+                UserMediaListHostView(
+                    isCompactScreen = isCompactScreen,
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                    navigateToMediaDetails = navigateToMediaDetails
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(
@@ -277,28 +284,36 @@ fun MainNavigation(
                 }
             )
         ) {
-            UserMediaListHostViewEntry(
-                isCompactScreen = isCompactScreen,
-                modifier = Modifier.padding(bottom = bottomPadding),
-                navigateToMediaDetails = navigateToMediaDetails
-            )
+            if (isLoggedIn) {
+                UserMediaListHostView(
+                    isCompactScreen = isCompactScreen,
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                    navigateToMediaDetails = navigateToMediaDetails
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(BottomDestination.Profile.route) {
-            ProfileViewEntry(
-                modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                navigateToSettings = {
-                    navController.navigate(SETTINGS_DESTINATION)
-                },
-                navigateToFullscreenImage = navigateToFullscreenImage,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToStudioDetails = navigateToStudioDetails,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToActivityDetails = navigateToActivityDetails,
-                navigateToUserMediaList = null
-            )
+            if (isLoggedIn) {
+                ProfileView(
+                    modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
+                    navigateToSettings = {
+                        navController.navigate(SETTINGS_DESTINATION)
+                    },
+                    navigateToFullscreenImage = navigateToFullscreenImage,
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToCharacterDetails = navigateToCharacterDetails,
+                    navigateToStaffDetails = navigateToStaffDetails,
+                    navigateToStudioDetails = navigateToStudioDetails,
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateToActivityDetails = navigateToActivityDetails,
+                    navigateToUserMediaList = null
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(BottomDestination.Explore.route) {
@@ -390,10 +405,12 @@ fun MainNavigation(
             arguments = listOf(
                 navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
                 navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType },
-                navArgument(SCORE_FORMAT_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
+                navArgument(SCORE_FORMAT_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType
+                }
             )
         ) {
-            UserMediaListHostViewEntry(
+            UserMediaListHostView(
                 isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
                 navigateToMediaDetails = navigateToMediaDetails,
@@ -407,18 +424,22 @@ fun MainNavigation(
                 navArgument(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
             )
         ) {
-            NotificationsView(
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToActivityDetails = navigateToActivityDetails,
-                navigateToThreadDetails = { id ->
-                    navController.navigate(
-                        THREAD_DETAILS_DESTINATION
-                            .replace(THREAD_ID_ARGUMENT, id.toString())
-                    )
-                },
-                navigateBack = navigateBack
-            )
+            if (isLoggedIn) {
+                NotificationsView(
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateToActivityDetails = navigateToActivityDetails,
+                    navigateToThreadDetails = { id ->
+                        navController.navigate(
+                            THREAD_DETAILS_DESTINATION
+                                .replace(THREAD_ID_ARGUMENT, id.toString())
+                        )
+                    },
+                    navigateBack = navigateBack
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(
@@ -428,6 +449,7 @@ fun MainNavigation(
             ),
         ) {
             MediaDetailsView(
+                isLoggedIn = isLoggedIn,
                 navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
@@ -508,7 +530,7 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            ProfileViewEntry(
+            ProfileView(
                 modifier = Modifier.padding(bottom = bottomPadding),
                 userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())
                     ?.toIntOrNull(),
@@ -697,13 +719,17 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
-            PublishActivityView(
-                activityId = null,
-                id = if (id != 0) id else null,
-                text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
-                navigateBack = navigateBack
-            )
+            if (isLoggedIn) {
+                val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+                PublishActivityView(
+                    activityId = null,
+                    id = if (id != 0) id else null,
+                    text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
+                    navigateBack = navigateBack
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(
@@ -721,13 +747,17 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
-            PublishActivityView(
-                activityId = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()),
-                id = if (id != 0) id else null,
-                text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
-                navigateBack = navigateBack
-            )
+            if (isLoggedIn) {
+                val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
+                PublishActivityView(
+                    activityId = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()),
+                    id = if (id != 0) id else null,
+                    text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
+                    navigateBack = navigateBack
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(
@@ -745,14 +775,18 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
-            PublishCommentView(
-                threadId = navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast()),
-                parentCommentId = null,
-                id = commentId,
-                text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
-                navigateBack = navigateBack,
-            )
+            if (isLoggedIn) {
+                val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+                PublishCommentView(
+                    threadId = navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast()),
+                    parentCommentId = null,
+                    id = commentId,
+                    text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                    navigateBack = navigateBack,
+                )
+            } else {
+                LoginView()
+            }
         }
 
         composable(
@@ -770,14 +804,18 @@ fun MainNavigation(
                 }
             )
         ) { navEntry ->
-            val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
-            PublishCommentView(
-                threadId = null,
-                parentCommentId = navEntry.arguments?.getInt(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()),
-                id = commentId,
-                text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
-                navigateBack = navigateBack,
-            )
+            if (isLoggedIn) {
+                val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+                PublishCommentView(
+                    threadId = null,
+                    parentCommentId = navEntry.arguments?.getInt(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()),
+                    id = commentId,
+                    text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                    navigateBack = navigateBack,
+                )
+            } else {
+                LoginView()
+            }
         }
     }
 }

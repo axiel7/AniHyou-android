@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.App
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -53,7 +52,8 @@ class UserMediaListViewModel @Inject constructor(
     val userId: Int? = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]
     val isMyList = userId == null
 
-    private val scoreFormatArg: String? = savedStateHandle[SCORE_FORMAT_ARGUMENT.removeFirstAndLast()]
+    private val scoreFormatArg: String? =
+        savedStateHandle[SCORE_FORMAT_ARGUMENT.removeFirstAndLast()]
 
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
@@ -135,9 +135,6 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     val itemsPerRow = listPreferencesRepository.gridItemsPerRow.stateInViewModel()
-
-    val accessToken = defaultPreferencesRepository.accessToken
-        .stateInViewModel(initialValue = App.accessToken)
 
     val media = mutableStateListOf<UserMediaListQuery.MediaList>()
 

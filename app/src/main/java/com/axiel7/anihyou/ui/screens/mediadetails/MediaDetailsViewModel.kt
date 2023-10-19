@@ -6,7 +6,6 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution.Companion.asStat
 import com.axiel7.anihyou.data.model.stats.StatusDistribution.Companion.asStat
-import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
@@ -30,15 +29,12 @@ class MediaDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
-    defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : UiStateViewModel<MediaDetailsUiState>() {
 
     val mediaId = savedStateHandle.getStateFlow<Int?>(MEDIA_ID_ARGUMENT.removeFirstAndLast(), null)
 
     override val mutableUiState = MutableStateFlow(MediaDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
-
-    val accessToken = defaultPreferencesRepository.accessToken.stateInViewModel()
 
     init {
         mediaId

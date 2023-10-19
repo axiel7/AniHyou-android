@@ -98,6 +98,7 @@ const val MEDIA_DETAILS_DESTINATION = "media_details/$MEDIA_ID_ARGUMENT"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MediaDetailsView(
+    isLoggedIn: Boolean,
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
@@ -111,7 +112,6 @@ fun MediaDetailsView(
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -156,12 +156,14 @@ fun MediaDetailsView(
                     BackIconButton(onClick = navigateBack)
                 },
                 actions = {
-                    FavoriteIconButton(
-                        isFavorite = uiState.details?.isFavourite ?: false,
-                        onClick = {
-                            scope.launch { viewModel.toggleFavorite() }
-                        }
-                    )
+                    if (isLoggedIn) {
+                        FavoriteIconButton(
+                            isFavorite = uiState.details?.isFavourite ?: false,
+                            onClick = {
+                                scope.launch { viewModel.toggleFavorite() }
+                            }
+                        )
+                    }
                     ShareIconButton(url = uiState.details?.siteUrl ?: "")
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -172,7 +174,7 @@ fun MediaDetailsView(
             )
         },
         floatingActionButton = {
-            if (accessToken != null) {
+            if (isLoggedIn) {
                 ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
                     Icon(
                         painter = painterResource(
@@ -508,6 +510,7 @@ fun MediaInfoTabs(
 fun MediaDetailsViewPreview() {
     AniHyouTheme {
         MediaDetailsView(
+            isLoggedIn = true,
             navigateBack = {},
             navigateToMediaDetails = {},
             navigateToFullscreenImage = {},

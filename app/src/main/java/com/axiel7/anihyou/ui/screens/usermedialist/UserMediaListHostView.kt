@@ -48,7 +48,6 @@ import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
@@ -60,38 +59,15 @@ const val SCORE_FORMAT_ARGUMENT = "{score_format}"
 const val USER_MEDIA_LIST_DESTINATION =
     "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT/$SCORE_FORMAT_ARGUMENT"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMediaListHostViewEntry(
+fun UserMediaListHostView(
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
     navigateBack: (() -> Unit)? = null,
 ) {
     val viewModel: UserMediaListViewModel = hiltViewModel()
-    val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
-
-    if (accessToken == null) {
-        LoginView()
-    } else {
-        UserMediaListHostView(
-            viewModel = viewModel,
-            isCompactScreen = isCompactScreen,
-            modifier = modifier,
-            navigateToMediaDetails = navigateToMediaDetails,
-            navigateBack = navigateBack,
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun UserMediaListHostView(
-    viewModel: UserMediaListViewModel,
-    isCompactScreen: Boolean,
-    modifier: Modifier = Modifier,
-    navigateToMediaDetails: (mediaId: Int) -> Unit,
-    navigateBack: (() -> Unit)? = null,
-) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -249,7 +225,6 @@ fun UserMediaListViewPreview() {
     AniHyouTheme {
         Surface {
             UserMediaListHostView(
-                viewModel = hiltViewModel(),
                 isCompactScreen = true,
                 navigateToMediaDetails = {}
             )

@@ -40,6 +40,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
+import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 enum class HomeTab(val index: Int) : Localizable {
@@ -65,6 +66,7 @@ enum class HomeTab(val index: Int) : Localizable {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
+    isLoggedIn: Boolean,
     defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -89,7 +91,7 @@ fun HomeView(
         title = stringResource(R.string.home),
         modifier = modifier,
         floatingActionButton = {
-            if (selectedTabIndex == HomeTab.ACTIVITY_FEED.index) {
+            if (selectedTabIndex == HomeTab.ACTIVITY_FEED.index && isLoggedIn) {
                 FloatingActionButton(
                     onClick = { navigateToPublishActivity(null, null) }
                 ) {
@@ -150,13 +152,19 @@ fun HomeView(
                     navigateToExplore = navigateToExplore
                 )
 
-                HomeTab.ACTIVITY_FEED -> ActivityFeedView(
-                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                    navigateToActivityDetails = navigateToActivityDetails,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                )
+                HomeTab.ACTIVITY_FEED -> {
+                    if (isLoggedIn) {
+                        ActivityFeedView(
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToActivityDetails = navigateToActivityDetails,
+                            navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToUserDetails = navigateToUserDetails,
+                            navigateToFullscreenImage = navigateToFullscreenImage,
+                        )
+                    } else {
+                        LoginView()
+                    }
+                }
             }
         }//:Column
     }//:Scaffold
@@ -168,6 +176,7 @@ fun HomeViewPreview() {
     AniHyouTheme {
         Surface {
             HomeView(
+                isLoggedIn = true,
                 defaultHomeTab = HomeTab.DISCOVER,
                 navigateToMediaDetails = {},
                 navigateToAnimeSeason = {},

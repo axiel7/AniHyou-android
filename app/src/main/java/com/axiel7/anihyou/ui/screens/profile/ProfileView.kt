@@ -53,7 +53,6 @@ import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
-import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.profile.about.UserAboutView
 import com.axiel7.anihyou.ui.screens.profile.activity.UserActivityView
 import com.axiel7.anihyou.ui.screens.profile.favorites.UserFavoritesView
@@ -67,8 +66,9 @@ const val USER_ID_ARGUMENT = "{userId}"
 const val USER_NAME_ARGUMENT = "{name}"
 const val USER_DETAILS_DESTINATION = "user?id=$USER_ID_ARGUMENT?name=$USER_NAME_ARGUMENT"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileViewEntry(
+fun ProfileView(
     modifier: Modifier = Modifier,
     userId: Int? = null,
     username: String? = null,
@@ -84,54 +84,10 @@ fun ProfileViewEntry(
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
-    val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
-    val isMyProfile = remember { userId == null && username == null }
-
-    if (accessToken == null && isMyProfile) {
-        LoginView()
-    } else {
-        ProfileView(
-            viewModel = viewModel,
-            modifier = modifier,
-            userId = userId,
-            username = username,
-            isMyProfile = isMyProfile,
-            navigateToSettings = navigateToSettings,
-            navigateToFullscreenImage = navigateToFullscreenImage,
-            navigateToMediaDetails = navigateToMediaDetails,
-            navigateToCharacterDetails = navigateToCharacterDetails,
-            navigateToStaffDetails = navigateToStaffDetails,
-            navigateToStudioDetails = navigateToStudioDetails,
-            navigateToUserDetails = navigateToUserDetails,
-            navigateToActivityDetails = navigateToActivityDetails,
-            navigateToUserMediaList = navigateToUserMediaList,
-            navigateBack = navigateBack,
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ProfileView(
-    viewModel: ProfileViewModel,
-    modifier: Modifier = Modifier,
-    userId: Int? = null,
-    username: String? = null,
-    isMyProfile: Boolean,
-    navigateToSettings: () -> Unit = {},
-    navigateToFullscreenImage: (String) -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
-    navigateBack: () -> Unit = {},
-) {
-    val scope = rememberCoroutineScope()
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val isMyProfile = remember { userId == null && username == null }
+    val scope = rememberCoroutineScope()
 
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -338,8 +294,6 @@ fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
             ProfileView(
-                viewModel = hiltViewModel(),
-                isMyProfile = true,
                 navigateToFullscreenImage = {},
                 navigateToMediaDetails = {},
                 navigateToCharacterDetails = {},
