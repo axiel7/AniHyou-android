@@ -28,6 +28,7 @@ import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFeedItem
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityTypeChip
+import com.axiel7.anihyou.ui.screens.profile.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -69,6 +70,13 @@ fun ActivityFeedView(
                     ActivityFollowingChip(
                         value = uiState.isFollowing,
                         onValueChanged = viewModel::setIsFollowing
+                    )
+                }
+            }
+            if (uiState.isLoading) {
+                items(10) {
+                    ActivityItemPlaceholder(
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }
