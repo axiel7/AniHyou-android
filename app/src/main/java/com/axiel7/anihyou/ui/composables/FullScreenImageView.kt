@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,13 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 
@@ -53,13 +53,16 @@ fun FullScreenImageView(
             },
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = imageUrl,
             contentDescription = "image",
-            placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
-            error = ColorPainter(MaterialTheme.colorScheme.outline),
-            fallback = ColorPainter(MaterialTheme.colorScheme.outline),
             modifier = Modifier.fillMaxWidth(),
+            loading = {
+                CircularProgressIndicator()
+            },
+            error = {
+                Icon(painter = painterResource(R.drawable.cancel_24), contentDescription = null)
+            },
             contentScale = ContentScale.FillWidth
         )
 
