@@ -44,7 +44,8 @@ fun UserActivityView(
                     modifier = Modifier.padding(8.dp)
                 )
             }
-        } else items(
+        }
+        items(
             items = activities,
             contentType = { it }
         ) { item ->

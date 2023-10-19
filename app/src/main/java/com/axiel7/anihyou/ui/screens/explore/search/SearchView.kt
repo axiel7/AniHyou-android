@@ -163,7 +163,8 @@ fun SearchView(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = viewModel.media,
                     key = { it.id },
                     contentType = { it }
@@ -186,7 +187,8 @@ fun SearchView(
                     items(10) {
                         PersonItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = viewModel.characters,
                     key = { it.id },
                     contentType = { it }
@@ -207,7 +209,8 @@ fun SearchView(
                     items(10) {
                         PersonItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = viewModel.staff,
                     key = { it.id },
                     contentType = { it }
@@ -233,7 +236,8 @@ fun SearchView(
                                 .defaultPlaceholder(visible = true)
                         )
                     }
-                } else items(
+                }
+                items(
                     items = viewModel.studios,
                     key = { it.id },
                     contentType = { it }
@@ -253,7 +257,8 @@ fun SearchView(
                     items(10) {
                         PersonItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = viewModel.users,
                     key = { it.id },
                     contentType = { it }

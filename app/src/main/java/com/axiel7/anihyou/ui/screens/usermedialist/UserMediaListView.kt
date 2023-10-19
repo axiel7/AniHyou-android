@@ -158,7 +158,8 @@ private fun LazyListGrid(
             items(10) {
                 MediaItemVerticalPlaceholder()
             }
-        } else items(
+        }
+        items(
             items = mediaList,
             //key = { it.basicMediaListEntry.id },
             contentType = { it.basicMediaListEntry }
@@ -205,7 +206,8 @@ private fun LazyListTablet(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -232,7 +234,8 @@ private fun LazyListTablet(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -259,7 +262,8 @@ private fun LazyListTablet(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -316,7 +320,8 @@ private fun LazyListPhone(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -343,7 +348,8 @@ private fun LazyListPhone(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
@@ -370,7 +376,8 @@ private fun LazyListPhone(
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
-                } else items(
+                }
+                items(
                     items = mediaList,
                     key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }

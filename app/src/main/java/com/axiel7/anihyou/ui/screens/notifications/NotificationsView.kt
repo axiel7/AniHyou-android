@@ -105,7 +105,8 @@ fun NotificationsView(
                             .padding(8.dp),
                     )
                 }
-            } else items(
+            }
+            items(
                 items = viewModel.notifications,
                 contentType = { it }
             ) { item ->

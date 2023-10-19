@@ -137,7 +137,7 @@ fun StandardUserMediaListItem(
                         }
                     }//:Row
                     LinearProgressIndicator(
-                        progress = { item.calculateProgressBarValue() },
+                        progress = item.calculateProgressBarValue(),
                         modifier = Modifier
                             .padding(vertical = 1.dp)
                             .fillMaxWidth(),

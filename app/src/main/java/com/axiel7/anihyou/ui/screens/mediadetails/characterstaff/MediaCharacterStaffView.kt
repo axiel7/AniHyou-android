@@ -56,7 +56,11 @@ fun MediaCharacterStaffView(
                         items(6) {
                             PersonItemHorizontalPlaceholder()
                         }
-                    } else items(mediaStaff) { item ->
+                    }
+                    items(
+                        items = mediaStaff,
+                        contentType = { it }
+                    ) { item ->
                         PersonItemHorizontal(
                             title = item.mediaStaff.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaStaff.node?.image?.medium,
@@ -85,7 +89,8 @@ fun MediaCharacterStaffView(
                         items(6) {
                             PersonItemHorizontalPlaceholder()
                         }
-                    } else items(mediaCharacters) { item ->
+                    }
+                    items(mediaCharacters) { item ->
                         PersonItemHorizontal(
                             title = item.mediaCharacter.node?.name?.userPreferred ?: "",
                             imageUrl = item.mediaCharacter.node?.image?.medium,

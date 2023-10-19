@@ -49,7 +49,11 @@ fun MediaRelationsView(
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
-                } else items(mediaRelated) { item ->
+                }
+                items(
+                    items = mediaRelated,
+                    contentType = { it }
+                ) { item ->
                     MediaItemVertical(
                         title = item.mediaRelated.node?.title?.userPreferred ?: "",
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
@@ -62,7 +66,7 @@ fun MediaRelationsView(
                             )
                         },
                         onClick = {
-                            navigateToDetails(item.mediaRelated.node?.id!!)
+                            navigateToDetails(item.mediaRelated.node?.id ?: 0)
                         }
                     )
                 }
@@ -78,7 +82,12 @@ fun MediaRelationsView(
                     items(10) {
                         MediaItemVerticalPlaceholder()
                     }
-                } else items(mediaRecommendations) { item ->
+                }
+                items(
+                    count = mediaRecommendations.size,
+                    contentType = { it }
+                ) {
+                    val item = mediaRecommendations[it]
                     MediaItemVertical(
                         title = item.mediaRecommended.mediaRecommendation?.title?.userPreferred
                             ?: "",

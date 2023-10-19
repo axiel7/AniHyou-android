@@ -104,10 +104,12 @@ class MediaDetailsViewModel @Inject constructor(
             mediaRepository.getMediaCharactersAndStaff(mediaId)
         }
         .onEach { result ->
-            mutableUiState.update {
-                it.copy(
-                    charactersAndStaff = (result as? DataResult.Success)?.data
-                )
+            if (result is DataResult.Success) {
+                mutableUiState.update {
+                    it.copy(
+                        charactersAndStaff = result.data
+                    )
+                }
             }
         }
         .launchIn(viewModelScope)
@@ -118,10 +120,12 @@ class MediaDetailsViewModel @Inject constructor(
             mediaRepository.getMediaRelationsAndRecommendations(mediaId)
         }
         .onEach { result ->
-            mutableUiState.update {
-                it.copy(
-                    relationsAndRecommendations = (result as? DataResult.Success)?.data
-                )
+            if (result is DataResult.Success) {
+                mutableUiState.update {
+                    it.copy(
+                        relationsAndRecommendations = result.data
+                    )
+                }
             }
         }
         .launchIn(viewModelScope)
@@ -132,16 +136,17 @@ class MediaDetailsViewModel @Inject constructor(
             mediaRepository.getMediaStats(mediaId)
         }
         .onEach { result ->
-            mutableUiState.update { uiState ->
-                uiState.copy(
-                    isSuccessStats = result is DataResult.Success,
-                    mediaStatusDistribution = (result as? DataResult.Success)
-                        ?.data?.stats?.statusDistribution?.mapNotNull { it?.asStat() }.orEmpty(),
-                    mediaScoreDistribution = (result as? DataResult.Success)
-                        ?.data?.stats?.scoreDistribution?.mapNotNull { it?.asStat() }.orEmpty(),
-                    mediaRankings = (result as? DataResult.Success)
-                        ?.data?.rankings?.filterNotNull().orEmpty()
-                )
+            if (result is DataResult.Success) {
+                mutableUiState.update { uiState ->
+                    uiState.copy(
+                        isSuccessStats = true,
+                        mediaStatusDistribution = result.data?.stats?.statusDistribution
+                            ?.mapNotNull { it?.asStat() }.orEmpty(),
+                        mediaScoreDistribution = result.data?.stats?.scoreDistribution
+                            ?.mapNotNull { it?.asStat() }.orEmpty(),
+                        mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
+                    )
+                }
             }
         }
         .launchIn(viewModelScope)
@@ -153,10 +158,16 @@ class MediaDetailsViewModel @Inject constructor(
         }
         .onEach { result ->
             mutableUiState.update { uiState ->
-                uiState.copy(
-                    isLoadingThreads = result is PagedResult.Loading,
-                    threads = (result as? PagedResult.Success)?.list.orEmpty()
-                )
+                if (result is PagedResult.Success) {
+                    uiState.copy(
+                        isLoadingThreads = false,
+                        threads = result.list
+                    )
+                } else {
+                    uiState.copy(
+                        isLoadingThreads = result is PagedResult.Loading,
+                    )
+                }
             }
         }
         .launchIn(viewModelScope)
@@ -168,10 +179,16 @@ class MediaDetailsViewModel @Inject constructor(
         }
         .onEach { result ->
             mutableUiState.update { uiState ->
-                uiState.copy(
-                    isLoadingReviews = result is PagedResult.Loading,
-                    reviews = (result as? PagedResult.Success)?.list.orEmpty()
-                )
+                if (result is PagedResult.Success) {
+                    uiState.copy(
+                        isLoadingReviews = false,
+                        reviews = result.list
+                    )
+                } else {
+                    uiState.copy(
+                        isLoadingThreads = result is PagedResult.Loading,
+                    )
+                }
             }
         }
         .launchIn(viewModelScope)

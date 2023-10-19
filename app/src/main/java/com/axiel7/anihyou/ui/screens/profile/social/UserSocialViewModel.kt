@@ -56,6 +56,7 @@ class UserSocialViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
+                        if (it.page == 1) followers.clear()
                         followers.addAll(result.list)
                         it.copy(
                             isLoading = false,
@@ -86,6 +87,7 @@ class UserSocialViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
+                        if (it.page == 1) following.clear()
                         following.addAll(result.list)
                         it.copy(
                             isLoading = false,
