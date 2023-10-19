@@ -33,6 +33,7 @@ fun ParentThreadView(
     onClickLike: () -> Unit,
     onClickReply: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    navigateToFullscreenImage: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -55,6 +56,7 @@ fun ParentThreadView(
             markdown = thread.body,
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 17.sp,
+            navigateToFullscreenImage = navigateToFullscreenImage,
         )
 
         Row(
@@ -164,6 +166,7 @@ fun ParentThreadViewPreview() {
                     onClickLike = {},
                     onClickReply = {},
                     navigateToUserDetails = {},
+                    navigateToFullscreenImage = {},
                 )
                 ParentThreadViewPlaceholder()
             }

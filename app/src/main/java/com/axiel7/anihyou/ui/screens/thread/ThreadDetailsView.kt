@@ -85,6 +85,7 @@ fun ThreadDetailsView(
                             navigateToPublishThreadComment(null, null)
                         },
                         navigateToUserDetails = navigateToUserDetails,
+                        navigateToFullscreenImage = navigateToFullscreenImage,
                     )
                 } else {
                     ParentThreadViewPlaceholder()
