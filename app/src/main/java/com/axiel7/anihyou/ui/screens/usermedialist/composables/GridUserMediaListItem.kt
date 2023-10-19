@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.ui.screens.usermedialist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,16 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,15 +42,13 @@ fun GridUserMediaListItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    OutlinedCard(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(onLongClick = onLongClick, onClick = onClick),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box {
@@ -72,15 +66,10 @@ fun GridUserMediaListItem(
                     scoreFormat = scoreFormat
                 )
                 if (item.media?.nextAiringEpisode != null) {
-                    Row(
+                    ElevatedCard(
                         modifier = Modifier
-                            .shadow(8.dp)
                             .fillMaxWidth()
                             .align(Alignment.TopCenter)
-                            .clip(RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
-                            .background(MaterialTheme.colorScheme.surface),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         AiringScheduleText(
                             item = item,

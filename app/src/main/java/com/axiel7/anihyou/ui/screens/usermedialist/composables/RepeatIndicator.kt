@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.screens.usermedialist.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ fun RepeatIndicator(
         Icon(
             painter = painterResource(R.drawable.replay_20),
             contentDescription = stringResource(R.string.repeat_count),
-            modifier = Modifier.padding(bottom = 4.dp),
         )
     }
 }

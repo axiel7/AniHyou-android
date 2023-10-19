@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,11 +49,11 @@ fun CompactUserMediaListItem(
     onClickPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
-    OutlinedCard(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
-            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick)
+            .padding(start = 16.dp, end = 0.dp, top = 4.dp, bottom = 8.dp),
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Max)
@@ -79,7 +79,7 @@ fun CompactUserMediaListItem(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -114,12 +114,11 @@ fun CompactUserMediaListItem(
                         if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
                             RepeatIndicator(
                                 count = item.basicMediaListEntry.repeat ?: 0,
-                                modifier = Modifier.padding(bottom = 4.dp),
                             )
                         }
                         if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
                             NotesIndicator(
-                                modifier = Modifier.padding(bottom = 4.dp),
+                                modifier = Modifier.padding(bottom = 2.dp),
                                 onClick = onClickNotes
                             )
                         }
@@ -134,7 +133,10 @@ fun CompactUserMediaListItem(
                 }//:Row
             }//:Column
         }//:Row
-    }//:Card
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 12.dp)
+        )
+    }//:Column
 }
 
 @Preview
@@ -142,16 +144,32 @@ fun CompactUserMediaListItem(
 fun CompactUserMediaListItemPreview() {
     AniHyouTheme {
         Surface {
-            CompactUserMediaListItem(
-                item = exampleMediaList,
-                status = MediaListStatus.CURRENT,
-                scoreFormat = ScoreFormat.POINT_100,
-                isMyList = true,
-                onClick = { },
-                onLongClick = { },
-                onClickPlus = { },
-                onClickNotes = {}
-            )
+            Column {
+                CompactUserMediaListItem(
+                    item = exampleMediaList,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {}
+                )
+                CompactUserMediaListItem(
+                    item = exampleMediaList.copy(
+                        basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
+                            score = 3.0
+                        )
+                    ),
+                    status = MediaListStatus.PLANNING,
+                    scoreFormat = ScoreFormat.POINT_3,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {}
+                )
+            }
         }
     }
 }

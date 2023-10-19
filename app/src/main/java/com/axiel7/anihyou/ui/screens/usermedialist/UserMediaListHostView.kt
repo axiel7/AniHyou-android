@@ -217,8 +217,8 @@ private fun UserMediaListHostView(
                 isRefreshing = uiState.fetchFromNetwork,
                 showAsGrid = !isCompactScreen,
                 contentPadding = if (!viewModel.isMyList)
-                    PaddingValues(top = 8.dp, bottom = padding.calculateBottomPadding())
-                else PaddingValues(vertical = 8.dp),
+                    PaddingValues(bottom = padding.calculateBottomPadding())
+                else PaddingValues(bottom = 8.dp),
                 nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
                 navigateToDetails = navigateToMediaDetails,
                 onLoadMore = viewModel::loadNextPage,

@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -53,11 +53,11 @@ fun StandardUserMediaListItem(
     onClickPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
-    OutlinedCard(
+    Column(
         modifier = Modifier
-            .padding(vertical = 6.dp, horizontal = 16.dp)
             .fillMaxWidth()
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .padding(vertical = 6.dp, horizontal = 16.dp),
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Max),
@@ -81,16 +81,16 @@ fun StandardUserMediaListItem(
             }//:Box
 
             Column(
-                modifier = Modifier.heightIn(min = MEDIA_POSTER_SMALL_HEIGHT.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .heightIn(min = MEDIA_POSTER_SMALL_HEIGHT.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
+                Column {
                     Text(
                         text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
                         modifier = Modifier
-                            .padding(vertical = 8.dp),
+                            .padding(bottom = 8.dp),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
                         lineHeight = 22.sp,
@@ -102,12 +102,11 @@ fun StandardUserMediaListItem(
                         fontSize = 16.sp
                     )
                 }//:Column
-
                 Column {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
+                            .padding(bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
@@ -115,7 +114,6 @@ fun StandardUserMediaListItem(
                             text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
                             fontSize = 16.sp
                         )
-
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.Bottom
@@ -124,7 +122,10 @@ fun StandardUserMediaListItem(
                                 RepeatIndicator(count = item.basicMediaListEntry.repeat ?: 0)
                             }
                             if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
-                                NotesIndicator(onClick = onClickNotes)
+                                NotesIndicator(
+                                    onClick = onClickNotes,
+                                    modifier = Modifier.padding(bottom = 2.dp),
+                                )
                             }
                             if (isMyList && (status == MediaListStatus.CURRENT
                                         || status == MediaListStatus.REPEATING)
@@ -135,20 +136,22 @@ fun StandardUserMediaListItem(
                             }
                         }
                     }//:Row
-
                     LinearProgressIndicator(
-                        progress = item.calculateProgressBarValue(),
+                        progress = { item.calculateProgressBarValue() },
                         modifier = Modifier
                             .padding(vertical = 1.dp)
                             .fillMaxWidth(),
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp),
-                        strokeCap = StrokeCap.Round
+                        strokeCap = StrokeCap.Round,
                     )
                 }//:Column
             }//:Column
         }//:Row
-    }//: Card
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 12.dp)
+        )
+    }//:Column
 }
 
 @Preview
@@ -156,16 +159,32 @@ fun StandardUserMediaListItem(
 fun StandardUserMediaListItemPreview() {
     AniHyouTheme {
         Surface {
-            StandardUserMediaListItem(
-                item = exampleMediaList,
-                status = MediaListStatus.CURRENT,
-                scoreFormat = ScoreFormat.POINT_100,
-                isMyList = true,
-                onClick = { },
-                onLongClick = { },
-                onClickPlus = { },
-                onClickNotes = {},
-            )
+            Column {
+                StandardUserMediaListItem(
+                    item = exampleMediaList,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {},
+                )
+                StandardUserMediaListItem(
+                    item = exampleMediaList.copy(
+                        basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
+                            score = 3.0
+                        )
+                    ),
+                    status = MediaListStatus.PLANNING,
+                    scoreFormat = ScoreFormat.POINT_3,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {},
+                )
+            }
         }
     }
 }

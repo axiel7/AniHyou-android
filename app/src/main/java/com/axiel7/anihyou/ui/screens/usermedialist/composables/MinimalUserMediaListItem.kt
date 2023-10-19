@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,16 +44,16 @@ fun MinimalUserMediaListItem(
     onClickPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
-    OutlinedCard(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
-            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick)
+            .padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
     ) {
         Row(
             modifier = Modifier
                 .height(IntrinsicSize.Max)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(end = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
@@ -64,6 +64,7 @@ fun MinimalUserMediaListItem(
             ) {
                 Text(
                     text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                    modifier = Modifier.padding(end = 4.dp, bottom = 4.dp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 15.sp,
                     lineHeight = 17.sp,
@@ -107,7 +108,10 @@ fun MinimalUserMediaListItem(
                 }
             }
         }//:Row
-    }//:Card
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }//:Column
 }
 
 @Preview
@@ -115,16 +119,32 @@ fun MinimalUserMediaListItem(
 fun MinimalUserMediaListItemPreview() {
     AniHyouTheme {
         Surface {
-            MinimalUserMediaListItem(
-                item = exampleMediaList,
-                status = MediaListStatus.CURRENT,
-                scoreFormat = ScoreFormat.POINT_100,
-                isMyList = true,
-                onClick = { },
-                onLongClick = { },
-                onClickPlus = { },
-                onClickNotes = {}
-            )
+            Column {
+                MinimalUserMediaListItem(
+                    item = exampleMediaList,
+                    status = MediaListStatus.CURRENT,
+                    scoreFormat = ScoreFormat.POINT_100,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {}
+                )
+                MinimalUserMediaListItem(
+                    item = exampleMediaList.copy(
+                        basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
+                            score = 3.0
+                        )
+                    ),
+                    status = MediaListStatus.PLANNING,
+                    scoreFormat = ScoreFormat.POINT_3,
+                    isMyList = true,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickPlus = { },
+                    onClickNotes = {}
+                )
+            }
         }
     }
 }
