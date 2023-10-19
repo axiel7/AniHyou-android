@@ -76,227 +76,48 @@ fun UserMediaListView(
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
         if (listStyle == ListStyle.GRID) {
-            val itemsPerRow by itemsPerRowFlow.collectAsStateWithLifecycle()
-            val listState = rememberLazyGridState()
-            listState.OnBottomReached(buffer = 6, onLoadMore = onLoadMore)
-
-            LazyVerticalGrid(
-                columns = if (itemsPerRow != null && itemsPerRow!!.value > 0)
-                    GridCells.Fixed(itemsPerRow!!.value)
-                else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
+            LazyListGrid(
+                mediaList = mediaList,
+                scoreFormat = scoreFormat,
+                isLoading = isLoading,
+                itemsPerRowFlow = itemsPerRowFlow,
                 modifier = listModifier,
-                state = listState,
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                if (isLoading) {
-                    items(10) {
-                        MediaItemVerticalPlaceholder()
-                    }
-                } else items(
-                    items = mediaList,
-                    //key = { it.basicMediaListEntry.id },
-                    contentType = { it.basicMediaListEntry }
-                ) { item ->
-                    GridUserMediaListItem(
-                        item = item,
-                        scoreFormat = scoreFormat,
-                        onClick = { navigateToDetails(item.mediaId) },
-                        onLongClick = { onShowEditSheet(item) }
-                    )
-                }
-            }
+                onLoadMore = onLoadMore,
+                navigateToDetails = navigateToDetails,
+                onShowEditSheet = onShowEditSheet,
+            )
         } else if (showAsGrid) {
-            val listState = rememberLazyGridState()
-            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+            LazyListTablet(
+                mediaList = mediaList,
+                listStyle = listStyle,
+                status = status,
+                scoreFormat = scoreFormat,
+                isMyList = isMyList,
+                isLoading = isLoading,
                 modifier = listModifier,
-                state = listState,
                 contentPadding = contentPadding,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                when (listStyle) {
-                    ListStyle.STANDARD -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            StandardUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    ListStyle.COMPACT -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            CompactUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    ListStyle.MINIMAL -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            MinimalUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    else -> {}
-                }
-            }//: LazyVerticalGrid
+                onLoadMore = onLoadMore,
+                navigateToDetails = navigateToDetails,
+                onShowEditSheet = onShowEditSheet,
+                onUpdateProgress = onUpdateProgress,
+                onClickNotes = onClickNotes,
+            )
         } else {
-            val listState = rememberLazyListState()
-            listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
-
-            LazyColumn(
+            LazyListPhone(
+                mediaList = mediaList,
+                listStyle = listStyle,
+                status = status,
+                scoreFormat = scoreFormat,
+                isMyList = isMyList,
+                isLoading = isLoading,
                 modifier = listModifier,
-                state = listState,
                 contentPadding = contentPadding,
-            ) {
-                when (listStyle) {
-                    ListStyle.STANDARD -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            StandardUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    ListStyle.COMPACT -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            CompactUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    ListStyle.MINIMAL -> {
-                        if (isLoading) {
-                            items(10) {
-                                MediaItemHorizontalPlaceholder()
-                            }
-                        } else items(
-                            items = mediaList,
-                            key = { it.basicMediaListEntry.id },
-                            contentType = { it.basicMediaListEntry }
-                        ) { item ->
-                            MinimalUserMediaListItem(
-                                item = item,
-                                status = status,
-                                scoreFormat = scoreFormat,
-                                isMyList = isMyList,
-                                onClick = { navigateToDetails(item.mediaId) },
-                                onLongClick = { onShowEditSheet(item) },
-                                onClickPlus = {
-                                    onUpdateProgress(item.basicMediaListEntry)
-                                },
-                                onClickNotes = {
-                                    onClickNotes(item)
-                                }
-                            )
-                        }
-                    }
-
-                    else -> {}
-                }
-            }//: LazyColumn
+                onLoadMore = onLoadMore,
+                navigateToDetails = navigateToDetails,
+                onShowEditSheet = onShowEditSheet,
+                onUpdateProgress = onUpdateProgress,
+                onClickNotes = onClickNotes,
+            )
         }
         PullRefreshIndicator(
             refreshing = isLoading,
@@ -306,4 +127,272 @@ fun UserMediaListView(
                 .align(Alignment.TopCenter)
         )
     }//: Box
+}
+
+@Composable
+private fun LazyListGrid(
+    mediaList: List<UserMediaListQuery.MediaList>,
+    scoreFormat: ScoreFormat,
+    isLoading: Boolean,
+    itemsPerRowFlow: StateFlow<ItemsPerRow?>,
+    modifier: Modifier,
+    onLoadMore: suspend () -> Unit,
+    navigateToDetails: (mediaId: Int) -> Unit,
+    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+) {
+    val itemsPerRow by itemsPerRowFlow.collectAsStateWithLifecycle()
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 6, onLoadMore = onLoadMore)
+
+    LazyVerticalGrid(
+        columns = if (itemsPerRow != null && itemsPerRow!!.value > 0)
+            GridCells.Fixed(itemsPerRow!!.value)
+        else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
+        modifier = modifier,
+        state = listState,
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+    ) {
+        if (isLoading) {
+            items(10) {
+                MediaItemVerticalPlaceholder()
+            }
+        } else items(
+            items = mediaList,
+            //key = { it.basicMediaListEntry.id },
+            contentType = { it.basicMediaListEntry }
+        ) { item ->
+            GridUserMediaListItem(
+                item = item,
+                scoreFormat = scoreFormat,
+                onClick = { navigateToDetails(item.mediaId) },
+                onLongClick = { onShowEditSheet(item) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun LazyListTablet(
+    mediaList: List<UserMediaListQuery.MediaList>,
+    listStyle: ListStyle,
+    status: MediaListStatus,
+    scoreFormat: ScoreFormat,
+    isMyList: Boolean,
+    isLoading: Boolean,
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    onLoadMore: suspend () -> Unit,
+    navigateToDetails: (mediaId: Int) -> Unit,
+    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onUpdateProgress: (BasicMediaListEntry) -> Unit,
+    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
+) {
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier,
+        state = listState,
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        when (listStyle) {
+            ListStyle.STANDARD -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    StandardUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            ListStyle.COMPACT -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    CompactUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            ListStyle.MINIMAL -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    MinimalUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            else -> {}
+        }
+    }//: LazyVerticalGrid
+}
+
+@Composable
+private fun LazyListPhone(
+    mediaList: List<UserMediaListQuery.MediaList>,
+    listStyle: ListStyle,
+    status: MediaListStatus,
+    scoreFormat: ScoreFormat,
+    isMyList: Boolean,
+    isLoading: Boolean,
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    onLoadMore: suspend () -> Unit,
+    navigateToDetails: (mediaId: Int) -> Unit,
+    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onUpdateProgress: (BasicMediaListEntry) -> Unit,
+    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
+) {
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+
+    LazyColumn(
+        modifier = modifier,
+        state = listState,
+        contentPadding = contentPadding,
+    ) {
+        when (listStyle) {
+            ListStyle.STANDARD -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    StandardUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            ListStyle.COMPACT -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    CompactUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            ListStyle.MINIMAL -> {
+                if (isLoading) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else items(
+                    items = mediaList,
+                    key = { it.basicMediaListEntry.id },
+                    contentType = { it.basicMediaListEntry }
+                ) { item ->
+                    MinimalUserMediaListItem(
+                        item = item,
+                        status = status,
+                        scoreFormat = scoreFormat,
+                        isMyList = isMyList,
+                        onClick = { navigateToDetails(item.mediaId) },
+                        onLongClick = { onShowEditSheet(item) },
+                        onClickPlus = {
+                            onUpdateProgress(item.basicMediaListEntry)
+                        },
+                        onClickNotes = {
+                            onClickNotes(item)
+                        }
+                    )
+                }
+            }
+
+            else -> {}
+        }
+    }//: LazyColumn
 }
