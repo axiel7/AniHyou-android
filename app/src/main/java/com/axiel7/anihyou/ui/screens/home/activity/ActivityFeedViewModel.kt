@@ -38,7 +38,7 @@ class ActivityFeedViewModel @Inject constructor(
         it.copy(isFollowing = value, page = 1, hasNextPage = true)
     }
 
-    fun setType(value: ActivityTypeGrouped?) = mutableUiState.update {
+    fun setType(value: ActivityTypeGrouped) = mutableUiState.update {
         it.copy(type = value, page = 1, hasNextPage = true)
     }
 

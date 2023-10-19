@@ -7,6 +7,9 @@ import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.ActivityType
 
 enum class ActivityTypeGrouped(val value: List<ActivityType>) : Localizable {
+    ALL(
+        emptyList()
+    ),
     TEXT(
         listOf(
             ActivityType.TEXT,
@@ -23,6 +26,7 @@ enum class ActivityTypeGrouped(val value: List<ActivityType>) : Localizable {
 
     @Composable
     override fun localized() = when (this) {
+        ALL -> stringResource(R.string.all)
         TEXT -> stringResource(R.string.text_status)
         LIST_PROGRESS -> stringResource(R.string.list_progress)
     }

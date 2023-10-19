@@ -7,15 +7,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
 
 @Composable
 fun ActivityTypeChip(
-    value: ActivityTypeGrouped?,
-    onValueChanged: (ActivityTypeGrouped?) -> Unit,
+    value: ActivityTypeGrouped,
+    onValueChanged: (ActivityTypeGrouped) -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
@@ -23,10 +21,10 @@ fun ActivityTypeChip(
         DialogWithRadioSelection(
             values = ActivityTypeGrouped.entries.toTypedArray(),
             defaultValue = value,
-            isDeselectable = true,
+            isDeselectable = false,
             onConfirm = {
                 openDialog = false
-                onValueChanged(it)
+                onValueChanged(it ?: value)
             },
             onDismiss = { openDialog = false }
         )
@@ -34,6 +32,6 @@ fun ActivityTypeChip(
 
     AssistChip(
         onClick = { openDialog = true },
-        label = { Text(text = value?.localized() ?: stringResource(R.string.all)) },
+        label = { Text(text = value.localized()) },
     )
 }

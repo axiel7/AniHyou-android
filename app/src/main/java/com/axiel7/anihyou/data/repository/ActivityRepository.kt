@@ -15,12 +15,18 @@ class ActivityRepository @Inject constructor(
 
     fun getActivityFeed(
         isFollowing: Boolean,
-        type: ActivityTypeGrouped? = null,
+        type: ActivityTypeGrouped,
         fetchFromNetwork: Boolean = false,
         page: Int,
         perPage: Int = 25
     ) = api
-        .activityFeedQuery(isFollowing, type, fetchFromNetwork, page, perPage)
+        .activityFeedQuery(
+            isFollowing = isFollowing,
+            typeIn = if (type == ActivityTypeGrouped.ALL) null else type.value,
+            fetchFromNetwork = fetchFromNetwork,
+            page = page,
+            perPage = perPage
+        )
         .watch()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.activities?.filterNotNull().orEmpty()

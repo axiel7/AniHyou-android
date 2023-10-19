@@ -5,7 +5,7 @@ import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class ActivityFeedUiState(
     val isFollowing: Boolean = true,
-    val type: ActivityTypeGrouped? = null,
+    val type: ActivityTypeGrouped = ActivityTypeGrouped.ALL,
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,

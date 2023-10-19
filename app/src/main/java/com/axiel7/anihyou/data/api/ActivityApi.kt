@@ -8,7 +8,7 @@ import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.UpdateActivityReplyMutation
 import com.axiel7.anihyou.UpdateTextActivityMutation
-import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
+import com.axiel7.anihyou.type.ActivityType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +18,7 @@ class ActivityApi @Inject constructor(
 ) {
     fun activityFeedQuery(
         isFollowing: Boolean,
-        type: ActivityTypeGrouped?,
+        typeIn: List<ActivityType>?,
         fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
@@ -28,7 +28,7 @@ class ActivityApi @Inject constructor(
                 page = Optional.present(page),
                 perPage = Optional.present(perPage),
                 isFollowing = Optional.present(isFollowing),
-                typeIn = Optional.presentIfNotNull(type?.value),
+                typeIn = Optional.presentIfNotNull(typeIn),
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
