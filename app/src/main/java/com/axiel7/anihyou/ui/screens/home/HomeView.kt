@@ -38,7 +38,6 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.RoundedTabRowIndicator
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -132,9 +131,6 @@ fun HomeView(
         ) {
             PrimaryTabRow(
                 selectedTabIndex = selectedTabIndex,
-                indicator = { tabPositions ->
-                    RoundedTabRowIndicator(tabPositions[selectedTabIndex])
-                }
             ) {
                 HomeTab.entries.forEach { tab ->
                     Tab(

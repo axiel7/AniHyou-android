@@ -8,6 +8,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ fun <T> DefaultTabRowWithPager(
     modifier: Modifier = Modifier,
     initialPage: Int = 0,
     isTabScrollable: Boolean = false,
+    isPrimaryTab: Boolean = true,
     pageContent: @Composable (Int) -> Unit,
 ) {
     val state = rememberPagerState(initialPage = initialPage) { tabs.size }
@@ -56,22 +59,31 @@ fun <T> DefaultTabRowWithPager(
         }
 
         if (isTabScrollable) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = state.currentPage,
-                edgePadding = 16.dp,
-                indicator = { tabPositions ->
-                    RoundedTabRowIndicator(tabPositions[state.currentPage])
-                },
-                tabs = tabsLayout
-            )
+            if (isPrimaryTab) {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = state.currentPage,
+                    edgePadding = 16.dp,
+                    tabs = tabsLayout
+                )
+            } else {
+                SecondaryScrollableTabRow(
+                    selectedTabIndex = state.currentPage,
+                    edgePadding = 16.dp,
+                    tabs = tabsLayout
+                )
+            }
         } else {
-            PrimaryTabRow(
-                selectedTabIndex = state.currentPage,
-                indicator = { tabPositions ->
-                    RoundedTabRowIndicator(tabPositions[state.currentPage])
-                },
-                tabs = tabsLayout
-            )
+            if (isPrimaryTab) {
+                PrimaryTabRow(
+                    selectedTabIndex = state.currentPage,
+                    tabs = tabsLayout
+                )
+            } else {
+                SecondaryTabRow(
+                    selectedTabIndex = state.currentPage,
+                    tabs = tabsLayout
+                )
+            }
         }
 
         HorizontalPager(
