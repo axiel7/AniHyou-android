@@ -30,6 +30,8 @@ class MainViewModel @Inject constructor(
 
     val startTab = defaultPreferencesRepository.lastTab
 
+    val homeTab = defaultPreferencesRepository.defaultHomeTab
+
     val theme = defaultPreferencesRepository.theme
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 

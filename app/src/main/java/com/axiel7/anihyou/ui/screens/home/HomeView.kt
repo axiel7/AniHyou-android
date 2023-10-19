@@ -65,6 +65,7 @@ enum class HomeTab(val index: Int) : Localizable {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
+    defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (mediaId: Int) -> Unit,
@@ -78,12 +79,11 @@ fun HomeView(
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val defaultHomeTab by viewModel.defaultHomeTab.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab?.index ?: 0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab.index) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
@@ -168,6 +168,7 @@ fun HomeViewPreview() {
     AniHyouTheme {
         Surface {
             HomeView(
+                defaultHomeTab = HomeTab.DISCOVER,
                 navigateToMediaDetails = {},
                 navigateToAnimeSeason = {},
                 navigateToCalendar = {},

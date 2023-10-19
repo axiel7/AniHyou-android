@@ -45,6 +45,7 @@ import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.common.Theme
+import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         //get necessary preferences while on splashscreen
         val startTab = viewModel.startTab.firstBlocking()
+        val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
         //val initialTheme = viewModel.theme.firstBlocking() ?: Theme.FOLLOW_SYSTEM
         //val initialAppColor = viewModel.appColor.firstBlocking()
@@ -145,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                         windowSizeClass = windowSizeClass,
                         lastTabOpened = lastTabOpened,
                         saveLastTab = viewModel::saveLastTab,
+                        homeTab = homeTab,
                         deepLink = deepLink,
                     )
                 }
@@ -163,6 +166,7 @@ fun MainView(
     windowSizeClass: WindowSizeClass,
     lastTabOpened: Int,
     saveLastTab: (Int) -> Unit,
+    homeTab: HomeTab,
     deepLink: DeepLink?,
 ) {
     val navController = rememberNavController()
@@ -186,6 +190,7 @@ fun MainView(
                 isCompactScreen = true,
                 lastTabOpened = lastTabOpened,
                 deepLink = deepLink,
+                homeTab = homeTab,
                 padding = padding,
             )
         } else {
@@ -200,6 +205,7 @@ fun MainView(
                     isCompactScreen = false,
                     lastTabOpened = lastTabOpened,
                     deepLink = deepLink,
+                    homeTab = homeTab,
                     padding = PaddingValues(
                         start = padding.calculateStartPadding(LocalLayoutDirection.current),
                         top = padding.calculateTopPadding(),
@@ -223,6 +229,7 @@ fun MainPreview() {
             ),
             lastTabOpened = 0,
             saveLastTab = {},
+            homeTab = HomeTab.DISCOVER,
             deepLink = null
         )
     }
