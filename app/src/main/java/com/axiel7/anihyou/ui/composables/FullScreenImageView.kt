@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -58,7 +59,11 @@ fun FullScreenImageView(
             contentDescription = "image",
             modifier = Modifier.fillMaxWidth(),
             loading = {
-                CircularProgressIndicator()
+                Box(contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
             },
             error = {
                 Icon(painter = painterResource(R.drawable.cancel_24), contentDescription = null)
