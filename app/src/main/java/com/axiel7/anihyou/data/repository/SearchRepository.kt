@@ -5,10 +5,10 @@ import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.api.StaffApi
 import com.axiel7.anihyou.data.api.StudioApi
 import com.axiel7.anihyou.data.api.UserApi
-import com.axiel7.anihyou.data.model.GenresAndTags
-import com.axiel7.anihyou.data.model.SelectableGenre
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
+import com.axiel7.anihyou.data.model.genre.GenresAndTags
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
@@ -30,7 +30,9 @@ class SearchRepository @Inject constructor(
         query: String,
         sort: List<MediaSort> = listOf(MediaSort.SEARCH_MATCH),
         genreIn: List<String>? = null,
+        genreNotIn: List<String>? = null,
         tagIn: List<String>? = null,
+        tagNotIn: List<String>? = null,
         formatIn: List<MediaFormat>? = null,
         statusIn: List<MediaStatus>? = null,
         startYear: Int? = null,
@@ -44,7 +46,9 @@ class SearchRepository @Inject constructor(
             query,
             sort,
             genreIn,
+            genreNotIn,
             tagIn,
+            tagNotIn,
             formatIn,
             statusIn,
             startYear,
@@ -108,9 +112,9 @@ class SearchRepository @Inject constructor(
         .asDataResult { data ->
             GenresAndTags(
                 genres = data.GenreCollection?.filterNotNull().orEmpty()
-                    .map { SelectableGenre(it, false) },
+                    .map { SelectableGenre(it) },
                 tags = data.MediaTagCollection?.filterNotNull()?.map { it.name }.orEmpty()
-                    .map { SelectableGenre(it, false) }
+                    .map { SelectableGenre(it) }
             )
         }
 }

@@ -7,7 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,11 +58,25 @@ class GenresTagsViewModel @Inject constructor(
         else tags
     }
 
-    val selectedGenres
-        get() = genres.filter { it.isSelected }.map { it.name }
+    private val selectedGenres
+        get() = genres.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }
 
-    val selectedTags
-        get() = tags.filter { it.isSelected }.map { it.name }
+    private val excludedGenres
+        get() = genres.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }
+
+    private val selectedTags
+        get() = tags.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }
+
+    private val excludedTags
+        get() = tags.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }
+
+    val genresAndTagsForSearch
+        get() = GenresAndTagsForSearch(
+            genreIn = selectedGenres,
+            genreNot = excludedGenres,
+            tagIn = selectedTags,
+            tagNot = excludedTags
+        )
 
     fun onGenreUpdated(value: SelectableGenre) = viewModelScope.launch {
         val foundIndex = genres.indexOfFirst { it.name == value.name }
@@ -78,11 +93,11 @@ class GenresTagsViewModel @Inject constructor(
     }
 
     fun unselectAllGenresAndTags() = viewModelScope.launch {
-        val unselectedGenres = genres.map { it.copy(isSelected = false) }
+        val unselectedGenres = genres.map { it.copy(state = SelectableGenre.State.NONE) }
         genres.clear()
         genres.addAll(unselectedGenres)
 
-        val unselectedTags = tags.map { it.copy(isSelected = false) }
+        val unselectedTags = tags.map { it.copy(state = SelectableGenre.State.NONE) }
         tags.clear()
         tags.addAll(unselectedTags)
     }
@@ -99,14 +114,18 @@ class GenresTagsViewModel @Inject constructor(
                         genres.clear()
                         genres.addAll(
                             result.data.genres.map {
-                                if (it == externalGenre) it.copy(isSelected = true) else it
+                                if (it == externalGenre)
+                                    it.copy(state = SelectableGenre.State.SELECTED)
+                                else it
                             }
                         )
 
                         tags.clear()
                         tags.addAll(
                             result.data.tags.map {
-                                if (it == externalTag) it.copy(isSelected = true) else it
+                                if (it == externalTag)
+                                    it.copy(state = SelectableGenre.State.SELECTED)
+                                else it
                             }
                         )
                         uiState.copy(

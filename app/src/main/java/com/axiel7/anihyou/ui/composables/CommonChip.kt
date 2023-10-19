@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.composables
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
@@ -7,6 +8,9 @@ import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
@@ -117,4 +121,31 @@ fun SpoilerTagChip(
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InputChipError(
+    selected: Boolean = false,
+    onClick: () -> Unit,
+    text: String,
+    @DrawableRes icon: Int?,
+    iconDescription: String?,
+) {
+    InputChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text = text) },
+        trailingIcon = icon?.let {
+            {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = iconDescription
+                )
+            }
+        },
+        colors = InputChipDefaults.inputChipColors(
+            labelColor = MaterialTheme.colorScheme.error
+        )
+    )
 }

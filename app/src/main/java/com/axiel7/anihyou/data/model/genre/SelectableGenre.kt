@@ -1,14 +1,35 @@
-package com.axiel7.anihyou.data.model
+package com.axiel7.anihyou.data.model.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.state.ToggleableState
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 
 data class SelectableGenre(
     val name: String,
-    val isSelected: Boolean = false,
+    val state: State = State.NONE,
 ) : Localizable {
+
+    enum class State {
+        NONE, SELECTED, EXCLUDED;
+
+        val toggleableState
+            get() = when (this) {
+                NONE -> ToggleableState.Off
+                SELECTED -> ToggleableState.On
+                EXCLUDED -> ToggleableState.Indeterminate
+            }
+    }
+
+    fun setState(toggleableState: ToggleableState) =
+        copy(
+            state = when (toggleableState) {
+                ToggleableState.On -> State.SELECTED
+                ToggleableState.Off -> State.NONE
+                ToggleableState.Indeterminate -> State.EXCLUDED
+            }
+        )
 
     @Composable
     override fun localized() = name.genreTagLocalized()

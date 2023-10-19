@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.ui.screens.explore.search.genretag
 
-import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.ui.common.state.UiState
 
 data class GenresTagsUiState(

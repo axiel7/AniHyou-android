@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SearchType
-import com.axiel7.anihyou.data.model.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
@@ -143,7 +143,7 @@ fun SearchView(
                     MediaSearchGenresChips(
                         externalGenre = initialGenre?.let { SelectableGenre(name = it) },
                         externalTag = initialTag?.let { SelectableGenre(name = it) },
-                        onGenreTagSelected = viewModel::setSelectedGenresAndTags,
+                        onGenreTagStateChanged = viewModel::onGenreTagStateChanged,
                     )
                 }
                 TextButton(onClick = { showMoreFilters = !showMoreFilters }) {

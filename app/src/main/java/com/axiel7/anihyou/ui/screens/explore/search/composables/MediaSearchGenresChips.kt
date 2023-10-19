@@ -22,8 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.SelectableGenre
-import com.axiel7.anihyou.data.model.SelectableGenre.Companion.genreTagLocalized
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
+import com.axiel7.anihyou.ui.composables.InputChipError
 import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsSheet
 import kotlinx.coroutines.launch
 
@@ -32,7 +34,7 @@ import kotlinx.coroutines.launch
 fun MediaSearchGenresChips(
     externalGenre: SelectableGenre?,
     externalTag: SelectableGenre?,
-    onGenreTagSelected: (selectedGenres: List<String>, selectedTags: List<String>) -> Unit
+    onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -42,10 +44,20 @@ fun MediaSearchGenresChips(
         if (externalGenre != null) mutableStateListOf(externalGenre.name)
         else mutableStateListOf()
     }
+    val excludedGenres = remember { mutableStateListOf<String>() }
     val selectedTags = remember {
         if (externalTag != null) mutableStateListOf(externalTag.name)
         else mutableStateListOf()
     }
+    val excludedTags = remember { mutableStateListOf<String>() }
+
+    fun getGenresAndTagsForSearch() =
+        GenresAndTagsForSearch(
+            genreIn = selectedGenres,
+            genreNot = excludedGenres,
+            tagIn = selectedTags,
+            tagNot = excludedTags,
+        )
 
     if (sheetState.isVisible) {
         GenresTagsSheet(
@@ -53,16 +65,20 @@ fun MediaSearchGenresChips(
             bottomPadding = bottomBarPadding,
             externalGenre = externalGenre,
             externalTag = externalTag,
-            onDismiss = { genres, tags ->
+            onDismiss = {
                 scope.launch {
                     selectedGenres.clear()
-                    selectedGenres.addAll(genres)
+                    selectedGenres.addAll(it.genreIn)
+                    excludedGenres.clear()
+                    excludedGenres.addAll(it.genreNot)
 
                     selectedTags.clear()
-                    selectedTags.addAll(tags)
+                    selectedTags.addAll(it.tagIn)
+                    excludedTags.clear()
+                    excludedTags.addAll(it.tagNot)
 
                     sheetState.hide()
-                    onGenreTagSelected(genres, tags)
+                    onGenreTagStateChanged(it)
                 }
             }
         )
@@ -77,7 +93,7 @@ fun MediaSearchGenresChips(
                 selected = false,
                 onClick = {
                     selectedGenres.remove(genre)
-                    onGenreTagSelected(selectedGenres, selectedTags)
+                    onGenreTagStateChanged(getGenresAndTagsForSearch())
                 },
                 label = { Text(text = genre.genreTagLocalized()) },
                 trailingIcon = {
@@ -88,20 +104,42 @@ fun MediaSearchGenresChips(
                 }
             )
         }
+        excludedGenres.forEach { genre ->
+            InputChipError(
+                onClick = {
+                    excludedGenres.remove(genre)
+                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                },
+                text = genre.genreTagLocalized(),
+                icon = R.drawable.close_20,
+                iconDescription = stringResource(R.string.delete)
+            )
+        }
         selectedTags.forEach { tag ->
             InputChip(
                 selected = false,
                 onClick = {
                     selectedTags.remove(tag)
-                    onGenreTagSelected(selectedGenres, selectedTags)
+                    onGenreTagStateChanged(getGenresAndTagsForSearch())
                 },
-                label = { Text(text = tag.genreTagLocalized()) },
+                label = { Text(text = tag) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.close_20),
                         contentDescription = stringResource(R.string.delete)
                     )
                 }
+            )
+        }
+        excludedTags.forEach { tag ->
+            InputChipError(
+                onClick = {
+                    excludedTags.remove(tag)
+                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                },
+                text = tag,
+                icon = R.drawable.close_20,
+                iconDescription = stringResource(R.string.delete)
             )
         }
         AssistChip(

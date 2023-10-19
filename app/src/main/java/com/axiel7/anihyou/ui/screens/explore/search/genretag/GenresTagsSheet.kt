@@ -48,11 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.SelectableGenre
-import com.axiel7.anihyou.data.model.SelectableGenre.Companion.genreTagLocalized
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
+import com.axiel7.anihyou.data.model.genre.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
-import com.axiel7.anihyou.ui.composables.TextCheckbox
+import com.axiel7.anihyou.ui.composables.TextTriCheckbox
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -74,7 +75,7 @@ fun GenresTagsSheet(
     bottomPadding: Dp = 0.dp,
     externalGenre: SelectableGenre?,
     externalTag: SelectableGenre?,
-    onDismiss: (selectedGenres: List<String>, selectedTags: List<String>) -> Unit,
+    onDismiss: (GenresAndTagsForSearch) -> Unit,
 ) {
     val viewModel: GenresTagsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,7 +102,7 @@ fun GenresTagsSheet(
 
     ModalBottomSheet(
         onDismissRequest = {
-            onDismiss(viewModel.selectedGenres, viewModel.selectedTags)
+            onDismiss(viewModel.genresAndTagsForSearch)
         },
         sheetState = sheetState,
         windowInsets = WindowInsets(0, 0, 0, 0)
@@ -128,7 +129,7 @@ fun GenresTagsSheet(
 
                 TextButton(
                     onClick = {
-                        onDismiss(viewModel.selectedGenres, viewModel.selectedTags)
+                        onDismiss(viewModel.genresAndTagsForSearch)
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
@@ -189,11 +190,11 @@ fun GenresTagsSheet(
                 when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
                     GenresTagsSheetTab.GENRES ->
                         items(viewModel.displayGenres) { item ->
-                            TextCheckbox(
+                            TextTriCheckbox(
                                 text = item.name.genreTagLocalized(),
-                                checked = item.isSelected,
-                                onCheckedChange = { isChecked ->
-                                    viewModel.onGenreUpdated(item.copy(isSelected = isChecked))
+                                state = item.state.toggleableState,
+                                onStateChange = {
+                                    viewModel.onGenreUpdated(item.setState(it))
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -201,11 +202,11 @@ fun GenresTagsSheet(
 
                     GenresTagsSheetTab.TAGS ->
                         items(viewModel.displayTags) { item ->
-                            TextCheckbox(
-                                text = item.name.genreTagLocalized(),
-                                checked = item.isSelected,
-                                onCheckedChange = { isChecked ->
-                                    viewModel.onTagUpdated(item.copy(isSelected = isChecked))
+                            TextTriCheckbox(
+                                text = item.name,
+                                state = item.state.toggleableState,
+                                onStateChange = {
+                                    viewModel.onTagUpdated(item.setState(it))
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -226,7 +227,7 @@ fun GenresTagsSheetPreview() {
                 externalGenre = null,
                 externalTag = null,
                 sheetState = rememberModalBottomSheetState(),
-                onDismiss = { _, _ -> }
+                onDismiss = { }
             )
         }
     }

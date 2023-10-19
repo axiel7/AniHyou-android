@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.type.MediaSort
@@ -11,8 +12,7 @@ data class SearchUiState(
     val query: String = "",
     val searchType: SearchType,
     val mediaSort: MediaSort,
-    val selectedGenres: List<String>,
-    val selectedTags: List<String>,
+    val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val genresOrTagsChanged: Boolean = false,
     val selectedMediaFormats: List<MediaFormatLocalizable> = emptyList(),
     val mediaFormatsChanged: Boolean = false,
@@ -37,8 +37,8 @@ data class SearchUiState(
 
     val mediaSortForSearch
         get() = if (
-            (selectedGenres.isNotEmpty()
-                    || selectedTags.isNotEmpty()
+            (genresAndTagsForSearch.genreIn.isNotEmpty()
+                    || genresAndTagsForSearch.tagIn.isNotEmpty()
                     || selectedMediaFormats.isNotEmpty()
                     || selectedMediaStatuses.isNotEmpty()
                     || startYear != null

@@ -10,6 +10,7 @@ import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.SearchRepository
@@ -54,10 +55,10 @@ class SearchViewModel @Inject constructor(
         SearchUiState(
             searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
-            selectedGenres = if (initialGenre != null)
-                listOf(initialGenre) else emptyList(),
-            selectedTags = if (initialTag != null)
-                listOf(initialTag) else emptyList(),
+            genresAndTagsForSearch = GenresAndTagsForSearch(
+                genreIn = initialGenre?.let { listOf(it) } ?: emptyList(),
+                tagIn = initialTag?.let { listOf(it) } ?: emptyList()
+            ),
             hasNextPage = initialGenre != null
                     || initialTag != null
                     || initialMediaType != null
@@ -101,6 +102,7 @@ class SearchViewModel @Inject constructor(
     fun setStartYear(value: Int?) = mutableUiState.update {
         it.copy(startYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
+
     fun setEndYear(value: Int?) = mutableUiState.update {
         it.copy(endYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
@@ -109,11 +111,10 @@ class SearchViewModel @Inject constructor(
         it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    fun setSelectedGenresAndTags(genres: List<String>, tags: List<String>) =
+    fun onGenreTagStateChanged(genresAndTagsForSearch: GenresAndTagsForSearch) =
         mutableUiState.update {
             it.copy(
-                selectedGenres = genres,
-                selectedTags = tags,
+                genresAndTagsForSearch = genresAndTagsForSearch,
                 genresOrTagsChanged = true,
                 page = 1,
                 hasNextPage = true,
@@ -148,8 +149,10 @@ class SearchViewModel @Inject constructor(
                     mediaType = uiState.mediaType!!,
                     query = uiState.query,
                     sort = listOf(uiState.mediaSortForSearch),
-                    genreIn = uiState.selectedGenres,
-                    tagIn = uiState.selectedTags,
+                    genreIn = uiState.genresAndTagsForSearch.genreIn,
+                    genreNotIn = uiState.genresAndTagsForSearch.genreNot,
+                    tagIn = uiState.genresAndTagsForSearch.tagIn,
+                    tagNotIn = uiState.genresAndTagsForSearch.tagNot,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },
                     startYear = uiState.startYear,

@@ -35,7 +35,9 @@ class MediaApi @Inject constructor(
         query: String,
         sort: List<MediaSort>,
         genreIn: List<String>?,
+        genreNotIn: List<String>?,
         tagIn: List<String>?,
+        tagNotIn: List<String>?,
         formatIn: List<MediaFormat>?,
         statusIn: List<MediaStatus>?,
         startYear: Int?,
@@ -53,8 +55,12 @@ class MediaApi @Inject constructor(
                 sort = Optional.present(sort),
                 genre_in = if (genreIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(genreIn),
+                genre_not_in = if (genreNotIn.isNullOrEmpty()) Optional.absent()
+                else Optional.present(genreNotIn),
                 tag_in = if (tagIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(tagIn),
+                tag_not_in = if (tagNotIn.isNullOrEmpty()) Optional.absent()
+                else Optional.present(tagNotIn),
                 format_in = if (formatIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(formatIn),
                 status_in = if (statusIn.isNullOrEmpty()) Optional.absent()
