@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home" comment="as short as possible">Ana Sayfa</string>
+    <string name="home">Ana Sayfa</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Keşfet</string>
@@ -18,7 +18,7 @@
     <string name="spring">Bahar</string>
     <string name="summer">Yaz</string>
     <string name="fall">Sonbahar</string>
-    <string name="profile" comment="as short as possible">Profil</string>
+    <string name="profile">Profil</string>
     <string name="trending_now">Şu An Popüler</string>
     <string name="next_season">Sonraki Sezon</string>
     <string name="trending_manga">Popüler Manga</string>
@@ -28,7 +28,7 @@
     <string name="planning">Planlanan</string>
     <string name="completed">Tamamlandı</string>
     <string name="dropped">Bırakıldı</string>
-    <string name="paused">Durdurulmuş</string>
+    <string name="paused">Bekletilen</string>
     <string name="repeating">Tekrarlanan</string>
     <string name="anime_list">Anime Listesi</string>
     <string name="manga_list">Manga Listesi</string>
@@ -46,12 +46,12 @@
     <string name="tv_short">TV - Kısa</string>
     <string name="movie">Film</string>
     <string name="special">Özel</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">Müzik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">Tek Seferlik</string>
-    <string name="num_episodes" comment="total episodes of an anime">%s bölüm</string>
+    <string name="num_episodes">%s bölüm</string>
     <string name="num_chapters">%s bölüm</string>
     <string name="finished">Tamamlandı</string>
     <string name="releasing">Yayımlanıyor</string>
@@ -59,11 +59,11 @@
     <string name="cancelled">İptal edildi</string>
     <string name="hiatus">Süresiz arada</string>
     <string name="average_score">Ortalama puan</string>
-    <string name="popularity" comment="popularity sort">Popülerlik</string>
+    <string name="popularity">Popülerlik</string>
     <string name="favorites">Favoriler</string>
-    <string name="episode_in_time">Bölüm %d, %s sonra</string>
+    <string name="episode_in_time">Bölüm %d, %s sonra yayında</string>
     <string name="airing">Yayınlanıyor</string>
-    <string name="num_episodes_behind">%s bölüm izlenecek</string>
+    <string name="num_episodes_behind">%s bölüm izlenmeyi bekliyor</string>
     <string name="information">Bilgilendirme</string>
     <string name="duration">Süre uzunluğu</string>
     <string name="start_date">Başlangıç tarihi</string>
@@ -71,22 +71,22 @@
     <string name="season">Sezon</string>
     <string name="studios">Stüdyolar</string>
     <string name="producers">Yapımcılar</string>
-    <string name="source" comment="relation: source">Kaynak</string>
-    <string name="original" comment="relation: original">Orijinal</string>
+    <string name="source">Kaynak</string>
+    <string name="original">Orijinal</string>
     <string name="light_novel">Hafif Roman</string>
     <string name="visual_novel">Görsel Roman</string>
     <string name="video_game">Video Oyunu</string>
-    <string name="other" comment="relation: other">Diğer</string>
+    <string name="other">Diğer</string>
     <string name="doujinshi">Fan yapımı</string>
     <string name="web_novel">Web romanı</string>
     <string name="live_action">Canlandırma</string>
-    <string name="game" comment="relation: game">Oyun</string>
+    <string name="game">Oyun</string>
     <string name="comic">Çizgi Roman</string>
     <string name="multimedia_project">Multimedya Projesi</string>
     <string name="picture_book">Fotoğraf albümü</string>
     <string name="romaji">Japonca Okunuşu</string>
     <string name="english">İngilizce</string>
-    <string name="native_title">Özgün</string>
+    <string name="native_title">Ana Dilde</string>
     <string name="save">Kaydet</string>
     <string name="episodes">Bölümler</string>
     <string name="chapters">Bölümler</string>
@@ -105,6 +105,7 @@
     <string name="title_english">Başlık, İngilizce</string>
     <string name="title_native">Başlık, Ana Dil</string>
     <string name="sort_type">Tür</string>
+    <string name="format">Medya Türü</string>
     <string name="trending">Popüler</string>
     <string name="sort_status">Durum</string>
     <string name="search_match">Eşleşen Arama</string>
@@ -317,4 +318,10 @@
     <string name="russian">Rusça</string>
     <string name="spanish">İspanyolca</string>
     <string name="turkish">Türkçe</string>
+    <string name="from_year">Şu yıldan</string>
+    <string name="to_year">Şu yıla</string>
+    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[Ekip & Rol Yapımcısı]]></string>
+    <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">Dublaj Yöneticisi</string>
+    <string name="hide_filters">Filtreleri gizle</string>
+    <string name="more_filters">Detaylı filtre</string>
 </resources>

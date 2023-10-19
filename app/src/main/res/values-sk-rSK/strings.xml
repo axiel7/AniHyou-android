@@ -29,21 +29,21 @@
     <string name="tv">TV</string>
     <string name="movie">Film</string>
     <string name="special">Špeciálne</string>
-    <string name="ova" comment="You can leave it as it.&#10;Original Video Animation. Refers to an anime that has not been aired on TV and just released directly on DVD/Blue-Ray, usually extra expisodes.&#10;">OVA</string>
-    <string name="ona" comment="you can leave it as it.&#10;same as OVA but released only on streaming.">ONA</string>
+    <string name="ova">OVA</string>
+    <string name="ona">ONA</string>
     <string name="music">Hudba</string>
     <string name="novel">Novinka</string>
     <string name="one_shot">Jednorázový</string>
     <string name="finished">Dokončené</string>
-    <string name="popularity" comment="popularity sort">Obľúbenosť</string>
+    <string name="popularity">Obľúbenosť</string>
     <string name="airing">Vysielanie</string>
     <string name="duration">Trvanie</string>
     <string name="season">Sezóna</string>
     <string name="studios">Štúdiá</string>
-    <string name="source" comment="relation: source">Zdroj</string>
-    <string name="original" comment="relation: original">Originál</string>
-    <string name="other" comment="relation: other">Ostatné</string>
-    <string name="game" comment="relation: game">Hra</string>
+    <string name="source">Zdroj</string>
+    <string name="original">Originál</string>
+    <string name="other">Ostatné</string>
+    <string name="game">Hra</string>
     <string name="romaji">Romaji</string>
     <string name="english">Angličtina</string>
     <string name="episodes">Epizódy</string>
