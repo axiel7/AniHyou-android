@@ -76,6 +76,9 @@ class ActivityFeedViewModel @Inject constructor(
     }
 
     init {
+        //first load
+        refreshList()
+
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->

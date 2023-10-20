@@ -8,7 +8,7 @@ data class ActivityFeedUiState(
     val type: ActivityTypeGrouped = ActivityTypeGrouped.ALL,
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
-    override val hasNextPage: Boolean = true,
+    override val hasNextPage: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = true
 ) : PagedUiState<ActivityFeedUiState> {
