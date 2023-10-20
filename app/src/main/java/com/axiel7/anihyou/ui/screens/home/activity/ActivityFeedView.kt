@@ -76,7 +76,7 @@ fun ActivityFeedView(
             if (uiState.isLoading) {
                 items(10) {
                     ActivityItemPlaceholder(
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
             }
