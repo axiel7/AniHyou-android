@@ -11,6 +11,7 @@ import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
+import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.SearchRepository
@@ -119,6 +120,10 @@ class SearchViewModel @Inject constructor(
         it.copy(isAdult = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    fun setCountry(value: CountryOfOrigin?) = mutableUiState.update {
+        it.copy(country = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+
     fun onGenreTagStateChanged(genresAndTagsForSearch: GenresAndTagsForSearch) =
         mutableUiState.update {
             it.copy(
@@ -150,6 +155,7 @@ class SearchViewModel @Inject constructor(
                         && old.onMyList == new.onMyList
                         && old.isDoujin == new.isDoujin
                         && old.isAdult == new.isAdult
+                        && old.country == new.country
                         && !new.genresOrTagsChanged
                         && !new.mediaFormatsChanged
                         && !new.mediaStatusesChanged
@@ -170,6 +176,7 @@ class SearchViewModel @Inject constructor(
                     onList = uiState.onMyList,
                     isLicensed = uiState.isDoujin?.not(),
                     isAdult = uiState.isAdult,
+                    country = uiState.country,
                     page = uiState.page
                 )
             }

@@ -41,6 +41,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontalPlaceholder
+import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchCountryChip
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchFormatChip
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchSortChip
@@ -132,6 +133,11 @@ fun SearchView(
                             text = stringResource(R.string.on_my_list),
                             value = uiState.onMyList,
                             onValueChanged = viewModel::setOnMyList,
+                        )
+
+                        MediaSearchCountryChip(
+                            value = uiState.country,
+                            onValueChanged = viewModel::setCountry
                         )
                     }
                     MediaSearchYearChip(

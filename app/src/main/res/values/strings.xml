@@ -338,4 +338,9 @@
     <string name="hide_filters">Hide filters</string>
     <string name="more_filters">More filters</string>
     <string name="is_adult">Adult</string>
+    <string name="japan">Japan</string>
+    <string name="south_korea">South Korea</string>
+    <string name="china">China</string>
+    <string name="taiwan">Taiwan</string>
+    <string name="country">Country</string>
 </resources>

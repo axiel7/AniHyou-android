@@ -32,6 +32,7 @@ fun <T : Localizable> DialogWithRadioSelection(
     defaultValue: T?,
     title: String? = null,
     isDeselectable: Boolean = false,
+    showAllCasesOption: Boolean = false,
     onConfirm: (T?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -59,6 +60,22 @@ fun <T : Localizable> DialogWithRadioSelection(
                     maxHeight = (configuration.screenHeightDp - 48).dp
                 )
             ) {
+                if (showAllCasesOption) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedValue = null },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selectedValue == null,
+                                onClick = { selectedValue = null }
+                            )
+                            Text(text = stringResource(R.string.all))
+                        }
+                    }
+                }
                 items(values) { value ->
                     Row(
                         modifier = Modifier

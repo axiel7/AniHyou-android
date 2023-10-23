@@ -17,6 +17,7 @@ import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
@@ -45,6 +46,7 @@ class MediaApi @Inject constructor(
         onList: Boolean?,
         isLicensed: Boolean?,
         isAdult: Boolean?,
+        country: CountryOfOrigin?,
         page: Int,
         perPage: Int,
     ) = client
@@ -77,6 +79,7 @@ class MediaApi @Inject constructor(
                 onList = Optional.presentIfNotNull(onList),
                 isLicensed = Optional.presentIfNotNull(isLicensed),
                 isAdult = Optional.presentIfNotNull(isAdult),
+                country = Optional.presentIfNotNull(country),
             )
         )
 

@@ -9,6 +9,7 @@ import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.genre.GenresAndTags
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
+import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
@@ -40,6 +41,7 @@ class SearchRepository @Inject constructor(
         onList: Boolean? = null,
         isLicensed: Boolean? = null,
         isAdult: Boolean? = null,
+        country: CountryOfOrigin? = null,
         page: Int,
         perPage: Int = 25,
     ) = mediaApi
@@ -58,6 +60,7 @@ class SearchRepository @Inject constructor(
             onList,
             isLicensed,
             isAdult,
+            country,
             page,
             perPage
         )
