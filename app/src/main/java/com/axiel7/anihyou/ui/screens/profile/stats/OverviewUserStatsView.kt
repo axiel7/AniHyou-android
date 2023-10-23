@@ -20,9 +20,9 @@ import com.axiel7.anihyou.data.model.stats.scoreStatsCount
 import com.axiel7.anihyou.data.model.stats.scoreStatsTime
 import com.axiel7.anihyou.data.model.stats.statusDistribution
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.composables.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
+import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

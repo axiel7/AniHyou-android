@@ -25,10 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.data.model.thread.ChildComment
-import com.axiel7.anihyou.ui.composables.CommentIconButton
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
-import com.axiel7.anihyou.ui.composables.FavoriteIconButton
-import com.axiel7.anihyou.ui.composables.ReplyButton
+import com.axiel7.anihyou.ui.composables.common.CommentIconButton
+import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.common.ReplyButton
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText

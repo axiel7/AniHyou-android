@@ -44,9 +44,9 @@ import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.user.UserMediaListSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT

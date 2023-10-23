@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
-import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 
 @Composable
 fun MediaSearchCountryChip(

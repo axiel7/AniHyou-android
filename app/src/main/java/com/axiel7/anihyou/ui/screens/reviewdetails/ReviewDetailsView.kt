@@ -28,10 +28,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.review.userRatingsString
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

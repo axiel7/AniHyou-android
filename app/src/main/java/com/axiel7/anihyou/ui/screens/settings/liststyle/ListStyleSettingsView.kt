@@ -24,10 +24,10 @@ import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.ListStyle
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
 
 const val LIST_STYLE_SETTINGS_DESTINATION = "list_style_settings"
 

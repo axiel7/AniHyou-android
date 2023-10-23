@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.composables.DialogWithCheckboxSelection
+import com.axiel7.anihyou.ui.composables.common.DialogWithCheckboxSelection
 
 @Composable
 fun MediaSearchFormatChip(

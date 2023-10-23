@@ -53,8 +53,8 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.ClickableOutlinedTextField
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
-import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
-import com.axiel7.anihyou.ui.composables.TextCheckbox
+import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
+import com.axiel7.anihyou.ui.composables.common.TextCheckbox
 import com.axiel7.anihyou.ui.composables.scores.FiveStarRatingView
 import com.axiel7.anihyou.ui.composables.scores.SliderRatingView
 import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView

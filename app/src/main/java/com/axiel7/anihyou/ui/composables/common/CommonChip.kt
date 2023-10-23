@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables
+package com.axiel7.anihyou.ui.composables.common
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility

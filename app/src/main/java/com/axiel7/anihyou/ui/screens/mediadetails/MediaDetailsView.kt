@@ -62,13 +62,13 @@ import com.axiel7.anihyou.data.model.media.durationText
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.composables.BackIconButton
-import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
-import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.TopBannerView
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH

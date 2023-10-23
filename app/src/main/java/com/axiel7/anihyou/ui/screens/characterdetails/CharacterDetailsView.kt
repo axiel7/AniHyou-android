@@ -24,11 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.common.TabRowItem
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
-import com.axiel7.anihyou.ui.composables.ShareIconButton
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

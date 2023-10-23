@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.GenericLocalizable
-import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 

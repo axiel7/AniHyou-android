@@ -32,13 +32,13 @@ import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
-import com.axiel7.anihyou.ui.composables.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.SwitchPreference
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.settings.composables.LanguagePreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

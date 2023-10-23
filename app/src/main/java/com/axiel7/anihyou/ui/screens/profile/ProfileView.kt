@@ -46,10 +46,10 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
-import com.axiel7.anihyou.ui.composables.ShareIconButton
 import com.axiel7.anihyou.ui.composables.TopBannerView
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage

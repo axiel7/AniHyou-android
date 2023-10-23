@@ -37,8 +37,8 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoClickableItemView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
-import com.axiel7.anihyou.ui.composables.SpoilerTagChip
-import com.axiel7.anihyou.ui.composables.TagChip
+import com.axiel7.anihyou.ui.composables.common.SpoilerTagChip
+import com.axiel7.anihyou.ui.composables.common.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.VIDEO_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.VideoThumbnailItem

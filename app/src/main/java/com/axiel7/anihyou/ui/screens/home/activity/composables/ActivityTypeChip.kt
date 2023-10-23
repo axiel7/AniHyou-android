@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
-import com.axiel7.anihyou.ui.composables.DialogWithRadioSelection
+import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 
 @Composable
 fun ActivityTypeChip(

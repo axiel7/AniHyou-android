@@ -53,7 +53,7 @@ import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
-import com.axiel7.anihyou.ui.composables.TextTriCheckbox
+import com.axiel7.anihyou.ui.composables.common.TextTriCheckbox
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 

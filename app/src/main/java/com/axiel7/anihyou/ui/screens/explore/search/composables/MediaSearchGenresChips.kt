@@ -25,7 +25,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.ui.composables.InputChipError
+import com.axiel7.anihyou.ui.composables.common.InputChipError
 import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsSheet
 import kotlinx.coroutines.launch
 

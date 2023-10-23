@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme

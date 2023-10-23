@@ -33,8 +33,8 @@ import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.composables.FilterSelectionChip
-import com.axiel7.anihyou.ui.composables.TriFilterChip
+import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
+import com.axiel7.anihyou.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
