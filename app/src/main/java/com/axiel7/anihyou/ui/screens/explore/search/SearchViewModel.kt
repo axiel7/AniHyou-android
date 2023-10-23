@@ -135,6 +135,23 @@ class SearchViewModel @Inject constructor(
             )
         }
 
+    fun clearFilters() = mutableUiState.update {
+        it.copy(
+            genresAndTagsForSearch = GenresAndTagsForSearch(),
+            selectedMediaFormats = emptyList(),
+            selectedMediaStatuses = emptyList(),
+            startYear = null,
+            endYear = null,
+            onMyList = null,
+            isDoujin = null,
+            isAdult = null,
+            country = null,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true
+        )
+    }
+
     val media = mutableStateListOf<SearchMediaQuery.Medium>()
     val characters = mutableStateListOf<SearchCharacterQuery.Character>()
     val staff = mutableStateListOf<SearchStaffQuery.Staff>()

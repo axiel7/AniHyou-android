@@ -20,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
@@ -53,6 +52,7 @@ import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
+import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.TextTriCheckbox
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
@@ -117,15 +117,11 @@ fun GenresTagsSheet(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(
+                ErrorTextButton(
+                    text = stringResource(R.string.clear),
                     onClick = viewModel::unselectAllGenresAndTags,
                     modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.clear),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                )
 
                 TextButton(
                     onClick = {

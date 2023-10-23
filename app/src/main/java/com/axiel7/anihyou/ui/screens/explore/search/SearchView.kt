@@ -33,6 +33,7 @@ import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -168,12 +169,21 @@ fun SearchView(
                         )
                     }
                 }
-                TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
-                    Text(
-                        text = stringResource(
-                            if (showMoreFilters) R.string.hide_filters
-                            else R.string.more_filters
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
+                        Text(
+                            text = stringResource(
+                                if (showMoreFilters) R.string.hide_filters
+                                else R.string.more_filters
+                            )
                         )
+                    }
+                    ErrorTextButton(
+                        text = stringResource(R.string.clear),
+                        onClick = viewModel::clearFilters
                     )
                 }
             }
