@@ -321,8 +321,8 @@
     <string name="turkish">Turco</string>
     <string name="from_year">Desde el año</string>
     <string name="to_year">Hasta el año</string>
-    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[Productor A&R]]></string>
-    <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">Director de ADR</string>
+    <string name="staff_role_a_and_r_producer"><![CDATA[Productor A&R]]></string>
+    <string name="staff_role_adr_director">Director de ADR</string>
     <string name="hide_filters">Ocultar filtros</string>
     <string name="more_filters">Más filtros</string>
 </resources>
