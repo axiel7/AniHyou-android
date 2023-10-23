@@ -162,6 +162,11 @@ apollo {
     service("service") {
         packageName.set("com.axiel7.anihyou")
         mapScalarToKotlinInt("FuzzyDateInt")
+        mapScalar(
+            "CountryCode",
+            "com.axiel7.anihyou.data.model.media.CountryOfOrigin",
+            "com.axiel7.anihyou.data.model.media.CountryOfOrigin.countryOfOriginAdapter",
+        )
         introspection {
             endpointUrl.set("https://graphql.anilist.co")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
