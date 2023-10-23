@@ -72,7 +72,7 @@ class MediaApi @Inject constructor(
                 startDateLesser = if (endYear != null)
                     Optional.present(endYear * 10000)
                 else Optional.absent(),
-                onList = if (onList == true) Optional.present(true) else Optional.absent()
+                onList = Optional.presentIfNotNull(onList)
             )
         )
 

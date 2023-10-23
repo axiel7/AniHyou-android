@@ -68,7 +68,7 @@ fun CalendarView(
     navigateToMediaDetails: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
-    var onMyList by rememberSaveable { mutableStateOf(false) }
+    var onMyList by rememberSaveable { mutableStateOf<Boolean?>(null) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -79,8 +79,8 @@ fun CalendarView(
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
             OnMyListChip(
-                selected = onMyList,
-                onClick = { onMyList = !onMyList },
+                onMyList = onMyList,
+                onMyListChanged = { onMyList = it },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
         },
@@ -117,7 +117,7 @@ fun CalendarView(
 @Composable
 fun CalendarDayView(
     weekday: Int,
-    onMyList: Boolean,
+    onMyList: Boolean?,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,

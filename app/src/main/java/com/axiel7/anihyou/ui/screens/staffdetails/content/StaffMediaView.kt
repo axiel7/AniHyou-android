@@ -28,8 +28,8 @@ fun StaffMediaView(
     staffMedia: List<Pair<Int, StaffMediaGrouped>>,
     isLoading: Boolean,
     loadMore: () -> Unit,
-    mediaOnMyList: Boolean,
-    setMediaOnMyList: (Boolean) -> Unit,
+    mediaOnMyList: Boolean?,
+    setMediaOnMyList: (Boolean?) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
@@ -45,10 +45,8 @@ fun StaffMediaView(
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
                 OnMyListChip(
-                    selected = mediaOnMyList,
-                    onClick = {
-                        setMediaOnMyList(!mediaOnMyList)
-                    },
+                    onMyList = mediaOnMyList,
+                    onMyListChanged = setMediaOnMyList,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }

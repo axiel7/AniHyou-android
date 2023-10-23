@@ -107,7 +107,7 @@ class SearchViewModel @Inject constructor(
         it.copy(endYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    fun setOnMyList(value: Boolean) = mutableUiState.update {
+    fun setOnMyList(value: Boolean?) = mutableUiState.update {
         it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
@@ -157,7 +157,7 @@ class SearchViewModel @Inject constructor(
                     statusIn = uiState.selectedMediaStatuses.map { it.value },
                     startYear = uiState.startYear,
                     endYear = uiState.endYear,
-                    onList = if (uiState.onMyList) true else null,
+                    onList = uiState.onMyList,
                     page = uiState.page
                 )
             }

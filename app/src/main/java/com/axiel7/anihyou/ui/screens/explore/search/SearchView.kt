@@ -129,10 +129,8 @@ fun SearchView(
                         )
 
                         OnMyListChip(
-                            selected = uiState.onMyList,
-                            onClick = {
-                                viewModel.setOnMyList(uiState.onMyList.not())
-                            }
+                            onMyList = uiState.onMyList,
+                            onMyListChanged = viewModel::setOnMyList
                         )
                     }
                     MediaSearchYearChip(

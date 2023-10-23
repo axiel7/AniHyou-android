@@ -22,7 +22,7 @@ class StaffRepository @Inject constructor(
 
     fun getStaffMediaPage(
         staffId: Int,
-        onList: Boolean = false,
+        onList: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = api

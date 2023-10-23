@@ -35,14 +35,14 @@ class StaffApi @Inject constructor(
 
     fun staffMediaQuery(
         staffId: Int,
-        onList: Boolean,
+        onList: Boolean?,
         page: Int,
         perPage: Int,
     ) = client
         .query(
             StaffMediaQuery(
                 staffId = Optional.present(staffId),
-                onList = if (onList) Optional.present(true) else Optional.absent(),
+                onList = Optional.presentIfNotNull(onList),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage)
             )

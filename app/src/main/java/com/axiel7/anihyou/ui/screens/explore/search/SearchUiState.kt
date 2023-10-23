@@ -20,7 +20,7 @@ data class SearchUiState(
     val mediaStatusesChanged: Boolean = false,
     val startYear: Int? = null,
     val endYear: Int? = null,
-    val onMyList: Boolean = false,
+    val onMyList: Boolean? = null,
 
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,

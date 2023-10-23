@@ -39,7 +39,7 @@ class StaffDetailsViewModel @Inject constructor(
     override val mutableUiState = MutableStateFlow(StaffDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setMediaOnMyList(value: Boolean) = mutableUiState.update {
+    fun setMediaOnMyList(value: Boolean?) = mutableUiState.update {
         it.copy(mediaOnMyList = value, pageMedia = 1, hasNextPageMedia = true)
     }
 

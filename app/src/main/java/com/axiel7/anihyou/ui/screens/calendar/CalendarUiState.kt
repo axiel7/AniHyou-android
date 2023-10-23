@@ -3,8 +3,8 @@ package com.axiel7.anihyou.ui.screens.calendar
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class CalendarUiState(
-    val onMyList: Boolean = false,
     val weekday: Int = 0,
+    val onMyList: Boolean? = null,
     val refresh: Boolean = false,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,

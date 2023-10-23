@@ -32,7 +32,7 @@ class CalendarViewModel @Inject constructor(
 
     private val now: LocalDateTime = LocalDateTime.now()
 
-    fun setOnMyList(value: Boolean) = mutableUiState.update { it.copy(onMyList = value) }
+    fun setOnMyList(value: Boolean?) = mutableUiState.update { it.copy(onMyList = value) }
 
     fun setWeekday(value: Int) = mutableUiState.update { it.copy(weekday = value) }
 

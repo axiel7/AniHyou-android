@@ -24,7 +24,7 @@ class MediaRepository @Inject constructor(
         airingAtGreater: Long? = null,
         airingAtLesser: Long? = null,
         sort: List<AiringSort> = listOf(AiringSort.TIME),
-        onMyList: Boolean = false,
+        onMyList: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = api
@@ -38,8 +38,11 @@ class MediaRepository @Inject constructor(
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
-            if (onMyList) list.filter { it.media?.mediaListEntry != null }
-            else list
+            when (onMyList) {
+                true -> list.filter { it.media?.mediaListEntry != null }
+                false -> list.filter { it.media?.mediaListEntry == null }
+                null -> list
+            }
         }
 
     fun getAiringAnimeOnMyListPage(

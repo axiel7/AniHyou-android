@@ -5,7 +5,7 @@ import com.axiel7.anihyou.ui.common.state.UiState
 
 data class StaffDetailsUiState(
     val details: StaffDetailsQuery.Staff? = null,
-    val mediaOnMyList: Boolean = false,
+    val mediaOnMyList: Boolean? = null,
     val pageMedia: Int = 0,
     val hasNextPageMedia: Boolean = true,
     val isLoadingMedia: Boolean = true,
