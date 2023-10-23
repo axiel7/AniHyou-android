@@ -145,6 +145,17 @@
     <string name="github_repository">Repositório GitHub</string>
     <string name="version">Versão</string>
     <string name="developed_by_axiel7">Desenvolvido por axiel7</string>
+    <string name="anilist_account_settings">Ajustes da conta AniList</string>
+    <string name="logout">Deslogar</string>
+    <string name="character_media">Mídia</string>
+    <string name="birthday">Aniversário</string>
+    <string name="age">Idade</string>
+    <string name="gender">Gênero</string>
+    <string name="blood_type">Tipo Sanguíneo</string>
+    <string name="years_active" comment="how many years the person has been working">Anos de atividade</string>
+    <string name="present">Presente</string>
+    <string name="hometown">Cidade natal</string>
+    <string name="occupations">Ocupações</string>
     <string name="score">Nota</string>
     <string name="total_entries">Total: %s</string>
     <string name="loading">Carregando</string>
@@ -166,6 +177,7 @@
     <string name="notifications">Notificações</string>
     <string name="notifications_all">Todos</string>
     <string name="notifications_airing">Em Exibição</string>
+    <string name="notifications_media">Mídia</string>
     <string name="content">Conteúdo</string>
     <string name="upcoming">Próximos</string>
     <string name="publishing">Em Publicação</string>
