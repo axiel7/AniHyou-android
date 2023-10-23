@@ -21,6 +21,8 @@ data class SearchUiState(
     val startYear: Int? = null,
     val endYear: Int? = null,
     val onMyList: Boolean? = null,
+    val isDoujin: Boolean? = null,
+    val isAdult: Boolean? = null,
 
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,

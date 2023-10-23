@@ -43,6 +43,8 @@ class MediaApi @Inject constructor(
         startYear: Int?,
         endYear: Int?,
         onList: Boolean?,
+        isLicensed: Boolean?,
+        isAdult: Boolean?,
         page: Int,
         perPage: Int,
     ) = client
@@ -72,7 +74,9 @@ class MediaApi @Inject constructor(
                 startDateLesser = if (endYear != null)
                     Optional.present(endYear * 10000)
                 else Optional.absent(),
-                onList = Optional.presentIfNotNull(onList)
+                onList = Optional.presentIfNotNull(onList),
+                isLicensed = Optional.presentIfNotNull(isLicensed),
+                isAdult = Optional.presentIfNotNull(isAdult),
             )
         )
 

@@ -34,7 +34,7 @@ import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.FilterSelectionChip
-import com.axiel7.anihyou.ui.composables.OnMyListChip
+import com.axiel7.anihyou.ui.composables.TriFilterChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
@@ -128,9 +128,10 @@ fun SearchView(
                             onMediaStatusesChanged = viewModel::setMediaStatuses
                         )
 
-                        OnMyListChip(
-                            onMyList = uiState.onMyList,
-                            onMyListChanged = viewModel::setOnMyList
+                        TriFilterChip(
+                            text = stringResource(R.string.on_my_list),
+                            value = uiState.onMyList,
+                            onValueChanged = viewModel::setOnMyList,
                         )
                     }
                     MediaSearchYearChip(
@@ -144,6 +145,22 @@ fun SearchView(
                         externalTag = initialTag?.let { SelectableGenre(name = it) },
                         onGenreTagStateChanged = viewModel::onGenreTagStateChanged,
                     )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Spacer(modifier = Modifier.size(0.dp))
+
+                        TriFilterChip(
+                            text = stringResource(R.string.doujinshi),
+                            value = uiState.isDoujin,
+                            onValueChanged = viewModel::setIsDoujin
+                        )
+                        TriFilterChip(
+                            text = stringResource(R.string.is_adult),
+                            value = uiState.isAdult,
+                            onValueChanged = viewModel::setIsAdult
+                        )
+                    }
                 }
                 TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
                     Text(

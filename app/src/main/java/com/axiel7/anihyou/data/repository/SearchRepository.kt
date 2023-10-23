@@ -38,6 +38,8 @@ class SearchRepository @Inject constructor(
         startYear: Int? = null,
         endYear: Int? = null,
         onList: Boolean? = null,
+        isLicensed: Boolean? = null,
+        isAdult: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = mediaApi
@@ -54,6 +56,8 @@ class SearchRepository @Inject constructor(
             startYear,
             endYear,
             onList,
+            isLicensed,
+            isAdult,
             page,
             perPage
         )

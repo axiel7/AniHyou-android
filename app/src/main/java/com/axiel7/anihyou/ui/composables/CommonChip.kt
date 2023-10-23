@@ -46,28 +46,29 @@ fun FilterSelectionChip(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnMyListChip(
-    onMyList: Boolean?,
-    onMyListChanged: (Boolean?) -> Unit,
+fun TriFilterChip(
+    text: String,
+    value: Boolean?,
+    onValueChanged: (Boolean?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FilterChip(
-        selected = onMyList != null,
+        selected = value != null,
         onClick = {
-            onMyListChanged(
-                when (onMyList) {
+            onValueChanged(
+                when (value) {
                     null -> true
                     true -> false
                     false -> null
                 }
             )
         },
-        label = { Text(text = stringResource(R.string.on_my_list)) },
+        label = { Text(text = text) },
         modifier = modifier,
         leadingIcon = {
-            if (onMyList == true) {
+            if (value == true) {
                 Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
-            } else if (onMyList == false) {
+            } else if (value == false) {
                 Icon(painter = painterResource(R.drawable.close_24), contentDescription = "close")
             }
         }

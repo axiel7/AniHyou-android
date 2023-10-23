@@ -39,7 +39,7 @@ import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.BackIconButton
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
-import com.axiel7.anihyou.ui.composables.OnMyListChip
+import com.axiel7.anihyou.ui.composables.TriFilterChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -78,9 +78,10 @@ fun CalendarView(
         title = stringResource(R.string.calendar),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-            OnMyListChip(
-                onMyList = onMyList,
-                onMyListChanged = { onMyList = it },
+            TriFilterChip(
+                text = stringResource(R.string.on_my_list),
+                value = onMyList,
+                onValueChanged = { onMyList = it },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
         },

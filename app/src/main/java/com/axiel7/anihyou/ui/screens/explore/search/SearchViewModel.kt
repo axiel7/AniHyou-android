@@ -111,6 +111,14 @@ class SearchViewModel @Inject constructor(
         it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    fun setIsDoujin(value: Boolean?) = mutableUiState.update {
+        it.copy(isDoujin = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+
+    fun setIsAdult(value: Boolean?) = mutableUiState.update {
+        it.copy(isAdult = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+
     fun onGenreTagStateChanged(genresAndTagsForSearch: GenresAndTagsForSearch) =
         mutableUiState.update {
             it.copy(
@@ -140,6 +148,8 @@ class SearchViewModel @Inject constructor(
                         && old.startYear == new.startYear
                         && old.endYear == new.endYear
                         && old.onMyList == new.onMyList
+                        && old.isDoujin == new.isDoujin
+                        && old.isAdult == new.isAdult
                         && !new.genresOrTagsChanged
                         && !new.mediaFormatsChanged
                         && !new.mediaStatusesChanged
@@ -158,6 +168,8 @@ class SearchViewModel @Inject constructor(
                     startYear = uiState.startYear,
                     endYear = uiState.endYear,
                     onList = uiState.onMyList,
+                    isLicensed = uiState.isDoujin?.not(),
+                    isAdult = uiState.isAdult,
                     page = uiState.page
                 )
             }

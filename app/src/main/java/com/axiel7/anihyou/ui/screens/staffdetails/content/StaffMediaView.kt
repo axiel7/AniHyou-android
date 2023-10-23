@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
-import com.axiel7.anihyou.ui.composables.OnMyListChip
+import com.axiel7.anihyou.ui.composables.TriFilterChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -44,9 +44,10 @@ fun StaffMediaView(
     ) {
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
-                OnMyListChip(
-                    onMyList = mediaOnMyList,
-                    onMyListChanged = setMediaOnMyList,
+                TriFilterChip(
+                    text = stringResource(R.string.on_my_list),
+                    value = mediaOnMyList,
+                    onValueChanged = setMediaOnMyList,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
