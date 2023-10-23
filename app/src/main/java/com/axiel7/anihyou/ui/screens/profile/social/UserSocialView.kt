@@ -50,13 +50,14 @@ fun UserSocialView(
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             UserSocialType.entries.forEach {
                 FilterSelectionChip(
                     selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.setType(it) }
+                    onClick = { viewModel.setType(it) },
+                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
         }//: Row

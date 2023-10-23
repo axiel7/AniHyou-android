@@ -48,7 +48,7 @@ fun StaffMediaView(
                     text = stringResource(R.string.on_my_list),
                     value = mediaOnMyList,
                     onValueChanged = setMediaOnMyList,
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         }

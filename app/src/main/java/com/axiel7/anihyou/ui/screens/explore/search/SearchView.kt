@@ -4,10 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -92,7 +90,7 @@ fun SearchView(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 4.dp)
+                    .padding(start = 16.dp, top = 8.dp, end = 8.dp)
             ) {
                 SearchType.entries.forEach {
                     FilterSelectionChip(
@@ -100,7 +98,8 @@ fun SearchView(
                         text = it.localized(),
                         onClick = {
                             viewModel.setSearchType(it)
-                        }
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
                     )
                 }
             }
@@ -114,11 +113,11 @@ fun SearchView(
                 )
                 if (showMoreFilters) {
                     Row(
-                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Spacer(modifier = Modifier.size(0.dp))
-
                         MediaSearchFormatChip(
                             mediaType = uiState.mediaType ?: MediaType.ANIME,
                             selectedMediaFormats = uiState.selectedMediaFormats,
@@ -153,10 +152,9 @@ fun SearchView(
                         onGenreTagStateChanged = viewModel::onGenreTagStateChanged,
                     )
                     Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Spacer(modifier = Modifier.size(0.dp))
-
                         TriFilterChip(
                             text = stringResource(R.string.doujinshi),
                             value = uiState.isDoujin,

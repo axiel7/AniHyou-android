@@ -35,7 +35,7 @@ fun FilterSelectionChip(
         selected = selected,
         onClick = onClick,
         label = { Text(text = text) },
-        modifier = modifier.padding(horizontal = 4.dp),
+        modifier = modifier,
         leadingIcon = {
             if (selected) {
                 Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")

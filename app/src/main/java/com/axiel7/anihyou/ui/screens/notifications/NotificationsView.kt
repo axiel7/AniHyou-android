@@ -84,15 +84,14 @@ fun NotificationsView(
                 Row(
                     modifier = Modifier
                         .horizontalScroll(rememberScrollState())
-                        .padding(horizontal = 8.dp)
+                        .padding(start = 16.dp, end = 8.dp)
                 ) {
                     NotificationTypeGroup.entries.forEach {
                         FilterSelectionChip(
                             selected = uiState.type == it,
                             text = it.localized(),
-                            onClick = {
-                                viewModel.setType(it)
-                            }
+                            onClick = { viewModel.setType(it) },
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
                 }
@@ -102,7 +101,7 @@ fun NotificationsView(
                     NotificationItemPlaceholder(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
             }
@@ -114,7 +113,7 @@ fun NotificationsView(
                     title = item.text,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                     imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
                         ?.secondsToLegibleText(

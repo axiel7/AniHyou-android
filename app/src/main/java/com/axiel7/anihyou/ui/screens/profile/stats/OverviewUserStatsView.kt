@@ -51,13 +51,14 @@ fun OverviewUserStatsView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             MediaType.knownEntries.forEach {
                 FilterSelectionChip(
                     selected = uiState.mediaType == it,
                     text = it.localized(),
-                    onClick = { setMediaType(it) }
+                    onClick = { setMediaType(it) },
+                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
         }
@@ -65,7 +66,7 @@ fun OverviewUserStatsView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             TextSubtitleVertical(
                 text = if (uiState.mediaType == MediaType.ANIME)
@@ -98,7 +99,7 @@ fun OverviewUserStatsView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             TextSubtitleVertical(
                 text = if (uiState.mediaType == MediaType.ANIME)
@@ -133,13 +134,14 @@ fun OverviewUserStatsView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
             ScoreStatCountType.entries.forEach {
                 FilterSelectionChip(
                     selected = uiState.scoreCountType == it,
                     text = it.localized(),
-                    onClick = { setScoreCountType(it) }
+                    onClick = { setScoreCountType(it) },
+                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
         }
