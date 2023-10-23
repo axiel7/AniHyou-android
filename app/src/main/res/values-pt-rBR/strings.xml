@@ -86,12 +86,12 @@
     <string name="picture_book">Picture book</string>
     <string name="romaji">Romaji</string>
     <string name="english">Inglês</string>
-    <string name="native_title" comment="option for anime/manga title language">Nativo</string>
-    <string name="save" comment="save changes">Salvar</string>
+    <string name="native_title">Nativo</string>
+    <string name="save">Salvar</string>
     <string name="episodes">Episódios</string>
     <string name="chapters">Capítulos</string>
     <string name="volumes">Volumes</string>
-    <string name="repeat_count" comment="number of times the user watched/read an anime/manga">Contagem de repetição</string>
+    <string name="repeat_count">Contagem de repetição</string>
     <string name="delete">Excluir</string>
     <string name="delete_confirmation">Tem certeza que deseja excluir essa entrada?</string>
     <string name="tags">Etiquetas</string>
@@ -99,14 +99,14 @@
     <string name="hide_spoiler">Ocultar Spoiler</string>
     <string name="anime_manga_and_more">Anime, Mangá, e Mais</string>
     <string name="characters">Personagens</string>
-    <string name="staff" comment="staff: original creator, director, character design, etc">Equipe</string>
+    <string name="staff">Equipe</string>
     <string name="users">Usuários</string>
     <string name="title_romaji">Título Romaji</string>
     <string name="title_english">Título Inglês</string>
     <string name="title_native">Título Nativo</string>
     <string name="sort_type">Tipo</string>
     <string name="format">Formato</string>
-    <string name="trending" comment="trending anime or manga">Em alta</string>
+    <string name="trending">Em alta</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Pesquisa Correspondente</string>
     <string name="top_100">Top 100</string>
@@ -152,7 +152,7 @@
     <string name="age">Idade</string>
     <string name="gender">Gênero</string>
     <string name="blood_type">Tipo Sanguíneo</string>
-    <string name="years_active" comment="how many years the person has been working">Anos de atividade</string>
+    <string name="years_active">Anos de atividade</string>
     <string name="present">Presente</string>
     <string name="hometown">Cidade natal</string>
     <string name="occupations">Ocupações</string>
@@ -269,7 +269,7 @@
     <string name="turkish">Turco</string>
     <string name="from_year">Do ano</string>
     <string name="to_year">Até o ano</string>
-    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[Produtores A&R]]></string>
+    <string name="staff_role_a_and_r_producer"><![CDATA[Produtores A&R]]></string>
     <string name="hide_filters">Ocultar filtros</string>
     <string name="more_filters">Mais filtros</string>
 </resources>
