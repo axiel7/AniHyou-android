@@ -2,7 +2,8 @@ package com.axiel7.anihyou.ui.screens.explore.search.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaSearchYearChip(
     startYear: Int?,
@@ -64,14 +66,16 @@ fun MediaSearchYearChip(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AssistChip(
+        FilterChip(
+            selected = startYear != null,
             onClick = { openStartDialog = true },
             label = {
                 Text(text = startYear?.toString() ?: stringResource(R.string.from_year))
             }
         )
         Text(text = " - ")
-        AssistChip(
+        FilterChip(
+            selected = endYear != null,
             onClick = { openEndDialog = true },
             label = {
                 Text(text = endYear?.toString() ?: stringResource(R.string.to_year))

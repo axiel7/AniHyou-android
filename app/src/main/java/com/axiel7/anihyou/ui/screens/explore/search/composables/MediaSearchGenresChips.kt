@@ -90,7 +90,7 @@ fun MediaSearchGenresChips(
     ) {
         selectedGenres.forEach { genre ->
             InputChip(
-                selected = false,
+                selected = true,
                 onClick = {
                     selectedGenres.remove(genre)
                     onGenreTagStateChanged(getGenresAndTagsForSearch())
@@ -106,6 +106,7 @@ fun MediaSearchGenresChips(
         }
         excludedGenres.forEach { genre ->
             InputChipError(
+                selected = true,
                 onClick = {
                     excludedGenres.remove(genre)
                     onGenreTagStateChanged(getGenresAndTagsForSearch())
@@ -117,7 +118,7 @@ fun MediaSearchGenresChips(
         }
         selectedTags.forEach { tag ->
             InputChip(
-                selected = false,
+                selected = true,
                 onClick = {
                     selectedTags.remove(tag)
                     onGenreTagStateChanged(getGenresAndTagsForSearch())
@@ -133,6 +134,7 @@ fun MediaSearchGenresChips(
         }
         excludedTags.forEach { tag ->
             InputChipError(
+                selected = true,
                 onClick = {
                     excludedTags.remove(tag)
                     onGenreTagStateChanged(getGenresAndTagsForSearch())
