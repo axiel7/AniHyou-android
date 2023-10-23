@@ -86,6 +86,7 @@ fun WebView(
         },
         modifier = modifier,
         onRelease = {
+            it.visibility = View.INVISIBLE
             onDispose(it)
             it.stopLoading()
             it.destroy()
