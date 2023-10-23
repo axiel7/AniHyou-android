@@ -122,6 +122,7 @@
     <string name="relation_adaptation">適応</string>
     <string name="prequel">前篇</string>
     <string name="sequel">続</string>
+    <string name="relation_parent">原作</string>
     <string name="side_story">サイドストーリー</string>
     <string name="relation_character">キャラクター</string>
     <string name="relation_summary">摘要</string>
@@ -190,6 +191,7 @@
     <string name="episodes_watched">見た第</string>
     <string name="days_watched">見た日</string>
     <string name="volumes_read">読んだ巻</string>
+    <string name="days_planned">視聴予定時間</string>
     <string name="standard_deviation">標準偏差</string>
     <string name="title_count">タイトル数</string>
     <string name="format_distribution">形式の内訳</string>
@@ -311,8 +313,8 @@
     <string name="turkish">トルコ語</string>
     <string name="from_year">年から</string>
     <string name="to_year">年まで</string>
-    <string name="staff_role_a_and_r_producer" comment="see: https://en.wikipedia.org/wiki/Artists_and_repertoire"><![CDATA[A&R プロデューサー]]></string>
-    <string name="staff_role_adr_director" comment="see: https://en.wikipedia.org/wiki/Dubbing#ADR/post-sync">ADR ディレクター</string>
+    <string name="staff_role_a_and_r_producer"><![CDATA[A&R プロデューサー]]></string>
+    <string name="staff_role_adr_director">ADR ディレクター</string>
     <string name="hide_filters">フィルターを非表示</string>
     <string name="more_filters">その他のフィルター</string>
 </resources>
