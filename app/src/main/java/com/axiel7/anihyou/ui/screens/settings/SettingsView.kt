@@ -55,8 +55,6 @@ import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotif
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
-const val SETTINGS_DESTINATION = "settings"
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsView(

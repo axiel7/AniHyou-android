@@ -29,8 +29,6 @@ import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 
-const val LIST_STYLE_SETTINGS_DESTINATION = "list_style_settings"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListStyleSettingsView(

@@ -41,7 +41,6 @@ import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
-import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
 import com.axiel7.anihyou.ui.screens.settings.TranslationsView
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
@@ -277,7 +276,7 @@ fun MainNavigation(
                 ProfileView(
                     modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                     navigateToSettings = {
-                        navController.navigate(SETTINGS_DESTINATION)
+                        navController.navigate(NavDestination.Settings.route())
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage,
                     navigateToMediaDetails = navigateToMediaDetails,
