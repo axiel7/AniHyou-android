@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.apollographql.apollo3") version "4.0.0-beta.1"
+    id("com.apollographql.apollo3") version "4.0.0-beta.2"
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
@@ -128,7 +128,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
     implementation("io.coil-kt:coil-gif:$coilVersion")
 
-    val apolloVersion = "4.0.0-beta.1"
+    val apolloVersion = "4.0.0-beta.2"
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
