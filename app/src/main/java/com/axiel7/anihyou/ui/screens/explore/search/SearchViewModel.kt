@@ -18,8 +18,8 @@ import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,17 +40,17 @@ class SearchViewModel @Inject constructor(
 ) : PagedUiStateViewModel<SearchUiState>() {
 
     private val initialMediaType = savedStateHandle
-        .get<String?>(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())?.let { MediaType.valueOf(it) }
+        .get<String?>(NavArgument.MediaType.name)?.let { MediaType.valueOf(it) }
 
     private val initialMediaSort = savedStateHandle
-        .get<String?>(MEDIA_SORT_ARGUMENT.removeFirstAndLast())?.let { MediaSort.valueOf(it) }
+        .get<String?>(NavArgument.MediaSort.name)?.let { MediaSort.valueOf(it) }
 
-    private val initialGenre: String? = savedStateHandle[GENRE_ARGUMENT.removeFirstAndLast()]
+    private val initialGenre: String? = savedStateHandle[NavArgument.Genre.name]
 
-    private val initialTag: String? = savedStateHandle[TAG_ARGUMENT.removeFirstAndLast()]
+    private val initialTag: String? = savedStateHandle[NavArgument.Tag.name]
 
     private val initialOnList: Boolean? = savedStateHandle
-        .get<String?>(ON_LIST_ARGUMENT.removeFirstAndLast())?.toBooleanStrictOrNull()
+        .get<String?>(NavArgument.OnList.name)?.toBooleanStrictOrNull()
 
     override val mutableUiState = MutableStateFlow(
         SearchUiState(

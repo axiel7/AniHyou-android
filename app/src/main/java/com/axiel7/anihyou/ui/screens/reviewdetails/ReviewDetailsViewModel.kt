@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.repository.ReviewRepository
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +24,7 @@ class ReviewDetailsViewModel @Inject constructor(
     reviewRepository: ReviewRepository
 ) : UiStateViewModel<ReviewDetailsUiState>() {
 
-    val reviewId =
-        savedStateHandle.getStateFlow<Int?>(REVIEW_ID_ARGUMENT.removeFirstAndLast(), null)
+    val reviewId = savedStateHandle.getStateFlow<Int?>(NavArgument.ReviewId.name, null)
 
     override val mutableUiState = MutableStateFlow(ReviewDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

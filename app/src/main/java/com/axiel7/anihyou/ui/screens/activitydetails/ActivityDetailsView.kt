@@ -32,9 +32,6 @@ import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextVie
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val ACTIVITY_ID_ARGUMENT = "{id}"
-const val ACTIVITY_DETAILS_DESTINATION = "activity/$ACTIVITY_ID_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsView(

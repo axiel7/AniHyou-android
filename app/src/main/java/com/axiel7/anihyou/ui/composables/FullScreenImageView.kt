@@ -30,9 +30,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 
-const val URL_ARGUMENT = "{url}"
-const val FULLSCREEN_IMAGE_DESTINATION = "full_image/$URL_ARGUMENT"
-
 @Composable
 fun FullScreenImageView(
     imageUrl: String?,

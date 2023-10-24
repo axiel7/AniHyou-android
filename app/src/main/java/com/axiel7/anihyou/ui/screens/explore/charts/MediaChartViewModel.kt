@@ -7,8 +7,8 @@ import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class MediaChartViewModel @Inject constructor(
 ) : PagedUiStateViewModel<MediaChartUiState>() {
 
     private val initialType =
-        savedStateHandle.getStateFlow<String?>(CHART_TYPE_ARGUMENT.removeFirstAndLast(), null)
+        savedStateHandle.getStateFlow<String?>(NavArgument.ChartType.name, null)
 
     override val mutableUiState = MutableStateFlow(MediaChartUiState())
     override val uiState = mutableUiState.asStateFlow()

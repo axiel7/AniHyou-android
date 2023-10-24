@@ -9,8 +9,8 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StaffRepository
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +34,7 @@ class StaffDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<StaffDetailsUiState>() {
 
-    val staffId = savedStateHandle.getStateFlow<Int?>(STAFF_ID_ARGUMENT.removeFirstAndLast(), null)
+    val staffId = savedStateHandle.getStateFlow<Int?>(NavArgument.StaffId.name, null)
 
     override val mutableUiState = MutableStateFlow(StaffDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

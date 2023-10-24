@@ -72,16 +72,6 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearC
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import kotlinx.coroutines.launch
 
-const val MEDIA_TYPE_ARGUMENT = "{mediaType}"
-const val MEDIA_SORT_ARGUMENT = "{mediaSort}"
-const val GENRE_ARGUMENT = "{genre}"
-const val TAG_ARGUMENT = "{tag}"
-const val ON_LIST_ARGUMENT = "{onList}"
-const val FOCUS_ARGUMENT = "{focus}"
-const val SEARCH_DESTINATION =
-    "search?mediaType=$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT" +
-            "?tag=$TAG_ARGUMENT?onList=$ON_LIST_ARGUMENT?focus=$FOCUS_ARGUMENT"
-
 @Composable
 fun SearchView(
     modifier: Modifier = Modifier,

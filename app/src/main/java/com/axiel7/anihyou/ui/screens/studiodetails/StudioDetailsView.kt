@@ -40,9 +40,6 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val STUDIO_ID_ARGUMENT = "{id}"
-const val STUDIO_DETAILS_DESTINATION = "studio/$STUDIO_ID_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudioDetailsView(

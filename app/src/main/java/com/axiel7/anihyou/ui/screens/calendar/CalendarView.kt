@@ -50,8 +50,6 @@ import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-const val CALENDAR_DESTINATION = "CALENDAR/{day}"
-
 private val calendarTabs = arrayOf(
     TabRowItem(value = DayOfWeek.MONDAY, title = R.string.monday),
     TabRowItem(value = DayOfWeek.TUESDAY, title = R.string.tuesday),

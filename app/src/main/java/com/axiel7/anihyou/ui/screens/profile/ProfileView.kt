@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -62,16 +61,10 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import kotlinx.coroutines.launch
 
-const val USER_ID_ARGUMENT = "{userId}"
-const val USER_NAME_ARGUMENT = "{name}"
-const val USER_DETAILS_DESTINATION = "user?id=$USER_ID_ARGUMENT?name=$USER_NAME_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
     modifier: Modifier = Modifier,
-    userId: Int? = null,
-    username: String? = null,
     navigateToSettings: () -> Unit = {},
     navigateToFullscreenImage: (String) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
@@ -86,7 +79,6 @@ fun ProfileView(
     val viewModel: ProfileViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val isMyProfile = remember { userId == null && username == null }
     val scope = rememberCoroutineScope()
 
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -94,19 +86,13 @@ fun ProfileView(
         rememberTopAppBarState()
     )
 
-    LaunchedEffect(userId, username) {
-        if (userId != null || username != null)
-            viewModel.getUserInfo(userId = userId, username = username)
-        else viewModel.getMyUserInfo()
-    }
-
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    if (!isMyProfile) BackIconButton(onClick = navigateBack)
+                    if (uiState.isMyProfile == false) BackIconButton(onClick = navigateBack)
                 },
                 actions = {
                     ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
@@ -181,7 +167,7 @@ fun ProfileView(
                     }
                 }
 
-                if (isMyProfile) {
+                if (uiState.isMyProfile == true) {
                     OutlinedIconButton(
                         onClick = navigateToSettings,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -193,7 +179,7 @@ fun ProfileView(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                } else {
+                } else if (uiState.isMyProfile == false) {
                     if (uiState.userInfo?.isFollowing == true) {
                         OutlinedButton(
                             onClick = { scope.launch { viewModel.toggleFollow() } },

@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.profile
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.DataResult
@@ -10,11 +11,13 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.LikeableType
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -26,15 +29,19 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>() {
 
+    private val userId = savedStateHandle.getStateFlow<Int?>(NavArgument.UserId.name, null)
+    private val userName = savedStateHandle.getStateFlow<String?>(NavArgument.UserName.name, null)
+
     override val mutableUiState = MutableStateFlow(ProfileUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun getMyUserInfo() {
+    private fun getMyUserInfo() {
         mutableUiState
             .filter { it.userInfo == null }
             .flatMapLatest {
@@ -57,7 +64,7 @@ class ProfileViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun getUserInfo(
+    private fun getUserInfo(
         userId: Int? = null,
         username: String? = null,
     ) {
@@ -126,6 +133,15 @@ class ProfileViewModel @Inject constructor(
     }
 
     init {
+        combine(userId, userName) { id, name ->
+            mutableUiState.update {
+                it.copy(isMyProfile = id == null && name == null)
+            }
+            if (id != null || name != null) getUserInfo(id, name)
+            else getMyUserInfo()
+        }.launchIn(viewModelScope)
+
+        // activities
         mutableUiState
             .filter { it.userInfo != null && it.hasNextPage && it.page != 0 }
             .distinctUntilChangedBy { it.page }

@@ -9,8 +9,8 @@ import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.type.LikeableType
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +32,7 @@ class ActivityDetailsViewModel @Inject constructor(
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>() {
 
-    private val activityId =
-        savedStateHandle.getStateFlow<Int?>(ACTIVITY_ID_ARGUMENT.removeFirstAndLast(), null)
+    private val activityId = savedStateHandle.getStateFlow<Int?>(NavArgument.ActivityId.name, null)
 
     override val mutableUiState = MutableStateFlow(ActivityDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

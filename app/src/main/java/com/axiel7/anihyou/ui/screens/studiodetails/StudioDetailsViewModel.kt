@@ -8,8 +8,8 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StudioRepository
 import com.axiel7.anihyou.fragment.CommonStudioMedia
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +32,7 @@ class StudioDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<StudioDetailsUiState>() {
 
-    val studioId =
-        savedStateHandle.getStateFlow<Int?>(STUDIO_ID_ARGUMENT.removeFirstAndLast(), null)
+    val studioId = savedStateHandle.getStateFlow<Int?>(NavArgument.StudioId.name, null)
 
     override val mutableUiState = MutableStateFlow(StudioDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

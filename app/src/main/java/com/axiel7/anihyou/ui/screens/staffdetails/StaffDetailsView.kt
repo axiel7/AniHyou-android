@@ -31,9 +31,6 @@ import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffInfoView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val STAFF_ID_ARGUMENT = "{id}"
-const val STAFF_DETAILS_DESTINATION = "staff/$STAFF_ID_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffDetailsView(

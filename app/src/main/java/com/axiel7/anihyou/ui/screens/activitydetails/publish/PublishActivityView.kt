@@ -9,20 +9,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.composables.markdown.PublishMarkdownView
-import com.axiel7.anihyou.ui.screens.activitydetails.ACTIVITY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 
-const val ACTIVITY_TEXT_ARGUMENT = "{text}"
-const val REPLY_ID_ARGUMENT = "{reply_id}"
-const val PUBLISH_ACTIVITY_DESTINATION =
-    "activity/publish/$ACTIVITY_ID_ARGUMENT?text=$ACTIVITY_TEXT_ARGUMENT"
-const val PUBLISH_ACTIVITY_REPLY_DESTINATION =
-    "activity/$ACTIVITY_ID_ARGUMENT/reply/publish/$REPLY_ID_ARGUMENT?text=$ACTIVITY_TEXT_ARGUMENT"
-
 @Composable
 fun PublishActivityView(
-    activityId: Int?,
+    activityId: Int? = null,
     id: Int? = null,
     text: String? = null,
     navigateBack: () -> Unit,

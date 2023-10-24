@@ -8,8 +8,8 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +34,7 @@ class CharacterDetailsViewModel @Inject constructor(
 ) : PagedUiStateViewModel<CharacterDetailsUiState>() {
 
     private val characterId =
-        savedStateHandle.getStateFlow<Int?>(CHARACTER_ID_ARGUMENT.removeFirstAndLast(), null)
+        savedStateHandle.getStateFlow<Int?>(NavArgument.CharacterId.name, null)
 
     override val mutableUiState = MutableStateFlow(CharacterDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

@@ -15,24 +15,26 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,14 +48,15 @@ class UserMediaListViewModel @Inject constructor(
     private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>() {
 
-    val mediaType: MediaType = MediaType.safeValueOf(
-        savedStateHandle[MEDIA_TYPE_ARGUMENT.removeFirstAndLast()]!!
-    )
-    val userId: Int? = savedStateHandle[USER_ID_ARGUMENT.removeFirstAndLast()]
+    val mediaType =
+        savedStateHandle.getStateFlow(NavArgument.MediaType.name, MediaType.UNKNOWN__.name)
+            .map { MediaType.safeValueOf(it) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, MediaType.UNKNOWN__)
+
+    val userId: Int? = savedStateHandle[NavArgument.UserId.name]
     val isMyList = userId == null
 
-    private val scoreFormatArg: String? =
-        savedStateHandle[SCORE_FORMAT_ARGUMENT.removeFirstAndLast()]
+    private val scoreFormatArg: String? = savedStateHandle[NavArgument.ScoreFormat.name]
 
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
@@ -72,9 +75,10 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     fun setSort(value: MediaListSort) = viewModelScope.launch {
-        if (mediaType == MediaType.ANIME)
+        if (mediaType.value == MediaType.ANIME)
             defaultPreferencesRepository.setAnimeListSort(value)
-        else defaultPreferencesRepository.setMangaListSort(value)
+        else if (mediaType.value == MediaType.MANGA)
+            defaultPreferencesRepository.setMangaListSort(value)
     }
 
     fun toggleSortDialog(open: Boolean) = mutableUiState.update { it.copy(openSortDialog = open) }
@@ -151,9 +155,10 @@ class UserMediaListViewModel @Inject constructor(
 
         // list style
         combine(
+            mediaType,
             listPreferencesRepository.useGeneralListStyle,
             listPreferencesRepository.generalListStyle
-        ) { useGeneral, generalStyle ->
+        ) { mediaType, useGeneral, generalStyle ->
             if (useGeneral) {
                 mutableUiState.update { it.copy(listStyle = generalStyle) }
             } else {
@@ -170,11 +175,14 @@ class UserMediaListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         // sort preference
-        val sortPreference = if (mediaType == MediaType.ANIME)
-            defaultPreferencesRepository.animeListSort
-        else defaultPreferencesRepository.mangaListSort
-
-        sortPreference
+        mediaType
+            .flatMapLatest {
+                when (it) {
+                    MediaType.ANIME -> defaultPreferencesRepository.animeListSort
+                    MediaType.MANGA -> defaultPreferencesRepository.mangaListSort
+                    else -> emptyFlow()
+                }
+            }
             .filterNotNull()
             .onEach { sort ->
                 mutableUiState.update {
@@ -191,7 +199,8 @@ class UserMediaListViewModel @Inject constructor(
                         && old.sort == new.sort
                         && !new.fetchFromNetwork
             }
-            .flatMapLatest { uiState ->
+            .combine(mediaType, ::Pair)
+            .flatMapLatest { (uiState, mediaType) ->
                 val listUserId = userId ?: myUserId.first()
                 mediaListRepository.getUserMediaListPage(
                     userId = listUserId,

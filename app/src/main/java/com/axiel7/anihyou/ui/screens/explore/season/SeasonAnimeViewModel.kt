@@ -8,8 +8,8 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,10 +31,9 @@ class SeasonAnimeViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
 ) : PagedUiStateViewModel<SeasonAnimeUiState>() {
 
-    private val initialYear =
-        savedStateHandle.getStateFlow<Int?>(YEAR_ARGUMENT.removeFirstAndLast(), null)
+    private val initialYear = savedStateHandle.getStateFlow<Int?>(NavArgument.Year.name, null)
     private val initialSeason =
-        savedStateHandle.getStateFlow<String?>(SEASON_ARGUMENT.removeFirstAndLast(), null)
+        savedStateHandle.getStateFlow<String?>(NavArgument.Season.name, null)
 
     override val mutableUiState = MutableStateFlow(SeasonAnimeUiState())
     override val uiState = mutableUiState.asStateFlow()

@@ -9,8 +9,8 @@ import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.type.LikeableType
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,8 +34,7 @@ class ThreadDetailsViewModel @Inject constructor(
     private val likeRepository: LikeRepository,
 ) : PagedUiStateViewModel<ThreadDetailsUiState>() {
 
-    val threadId =
-        savedStateHandle.getStateFlow<Int?>(THREAD_ID_ARGUMENT.removeFirstAndLast(), null)
+    val threadId = savedStateHandle.getStateFlow<Int?>(NavArgument.ThreadId.name, null)
 
     override val mutableUiState = MutableStateFlow(ThreadDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

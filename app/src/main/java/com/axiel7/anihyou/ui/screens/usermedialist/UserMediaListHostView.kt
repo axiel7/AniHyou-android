@@ -47,17 +47,11 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
-import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
-import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
-
-const val SCORE_FORMAT_ARGUMENT = "{score_format}"
-const val USER_MEDIA_LIST_DESTINATION =
-    "media_list/$USER_ID_ARGUMENT/$MEDIA_TYPE_ARGUMENT/$SCORE_FORMAT_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +64,7 @@ fun UserMediaListHostView(
 ) {
     val viewModel: UserMediaListViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val mediaType by viewModel.mediaType.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
@@ -111,7 +106,7 @@ fun UserMediaListHostView(
     if (statusSheetState.isVisible) {
         ListStatusSheet(
             selectedStatus = uiState.status,
-            mediaType = viewModel.mediaType,
+            mediaType = mediaType,
             sheetState = statusSheetState,
             bottomPadding = bottomBarPadding,
             onStatusChanged = viewModel::setStatus
@@ -134,7 +129,7 @@ fun UserMediaListHostView(
     }
 
     DefaultScaffoldWithSmallTopAppBar(
-        title = if (viewModel.mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
+        title = if (mediaType == MediaType.ANIME) stringResource(R.string.anime_list)
         else stringResource(R.string.manga_list),
         modifier = modifier,
         floatingActionButton = {
@@ -152,7 +147,7 @@ fun UserMediaListHostView(
                         contentDescription = stringResource(R.string.list_status),
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(text = uiState.status.localized(mediaType = viewModel.mediaType))
+                    Text(text = uiState.status.localized(mediaType = mediaType))
                 }
             }
         },
@@ -163,7 +158,7 @@ fun UserMediaListHostView(
         },
         actions = {
             navigateToSearch?.let {
-                IconButton(onClick = { navigateToSearch(viewModel.mediaType) }) {
+                IconButton(onClick = { navigateToSearch(mediaType) }) {
                     Icon(
                         painter = painterResource(R.drawable.search_24),
                         contentDescription = stringResource(R.string.search)

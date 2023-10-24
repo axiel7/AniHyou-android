@@ -44,10 +44,6 @@ import com.axiel7.anihyou.ui.screens.explore.season.composables.SeasonChartFilte
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-const val YEAR_ARGUMENT = "{year}"
-const val SEASON_ARGUMENT = "{season}"
-const val SEASON_ANIME_DESTINATION = "season/$YEAR_ARGUMENT/$SEASON_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeasonAnimeView(

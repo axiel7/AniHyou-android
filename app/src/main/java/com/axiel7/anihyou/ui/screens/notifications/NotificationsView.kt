@@ -39,9 +39,6 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 import java.time.temporal.ChronoUnit
 
-const val UNREAD_COUNT_ARGUMENT = "{unread}"
-const val NOTIFICATIONS_DESTINATION = "notifications?unread=$UNREAD_COUNT_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsView(

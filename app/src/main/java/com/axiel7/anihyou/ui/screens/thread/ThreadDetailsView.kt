@@ -32,9 +32,6 @@ import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceho
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_THREAD_URL
 
-const val THREAD_ID_ARGUMENT = "{id}"
-const val THREAD_DETAILS_DESTINATION = "thread/$THREAD_ID_ARGUMENT"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadDetailsView(

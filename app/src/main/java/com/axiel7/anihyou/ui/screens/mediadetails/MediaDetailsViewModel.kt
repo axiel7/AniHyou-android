@@ -10,8 +10,8 @@ import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,7 @@ class MediaDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<MediaDetailsUiState>() {
 
-    val mediaId = savedStateHandle.getStateFlow<Int?>(MEDIA_ID_ARGUMENT.removeFirstAndLast(), null)
+    val mediaId = savedStateHandle.getStateFlow<Int?>(NavArgument.MediaId.name, null)
 
     override val mutableUiState = MutableStateFlow(MediaDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()

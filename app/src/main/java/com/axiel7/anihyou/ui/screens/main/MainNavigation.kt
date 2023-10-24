@@ -15,88 +15,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
-import com.axiel7.anihyou.ui.composables.FULLSCREEN_IMAGE_DESTINATION
+import com.axiel7.anihyou.ui.common.DestArgument.Companion.getBoolean
+import com.axiel7.anihyou.ui.common.DestArgument.Companion.getIntArg
+import com.axiel7.anihyou.ui.common.DestArgument.Companion.getStringArg
+import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.NavDestination
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
-import com.axiel7.anihyou.ui.composables.URL_ARGUMENT
-import com.axiel7.anihyou.ui.screens.activitydetails.ACTIVITY_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.activitydetails.ACTIVITY_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetailsView
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.ACTIVITY_TEXT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.PUBLISH_ACTIVITY_DESTINATION
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.PUBLISH_ACTIVITY_REPLY_DESTINATION
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivityView
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.REPLY_ID_ARGUMENT
-import com.axiel7.anihyou.ui.screens.calendar.CALENDAR_DESTINATION
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
-import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
-import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
-import com.axiel7.anihyou.ui.screens.explore.search.FOCUS_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.search.GENRE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_SORT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.search.ON_LIST_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.search.SEARCH_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.search.SearchView
-import com.axiel7.anihyou.ui.screens.explore.search.TAG_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ANIME_DESTINATION
-import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
-import com.axiel7.anihyou.ui.screens.explore.season.YEAR_ARGUMENT
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
-import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.mediadetails.MEDIA_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
-import com.axiel7.anihyou.ui.screens.notifications.NOTIFICATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
-import com.axiel7.anihyou.ui.screens.notifications.UNREAD_COUNT_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
-import com.axiel7.anihyou.ui.screens.profile.USER_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
-import com.axiel7.anihyou.ui.screens.profile.USER_NAME_ARGUMENT
-import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.reviewdetails.REVIEW_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.ui.screens.settings.SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
-import com.axiel7.anihyou.ui.screens.settings.TRANSLATIONS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.TranslationsView
-import com.axiel7.anihyou.ui.screens.settings.liststyle.LIST_STYLE_SETTINGS_DESTINATION
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
-import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.staffdetails.STAFF_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
-import com.axiel7.anihyou.ui.screens.studiodetails.STUDIO_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.studiodetails.STUDIO_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
-import com.axiel7.anihyou.ui.screens.thread.THREAD_DETAILS_DESTINATION
-import com.axiel7.anihyou.ui.screens.thread.THREAD_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
-import com.axiel7.anihyou.ui.screens.thread.publish.COMMENT_ID_ARGUMENT
-import com.axiel7.anihyou.ui.screens.thread.publish.COMMENT_TEXT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.thread.publish.PARENT_COMMENT_ID_ARGUMENT
-import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_COMMENT_REPLY_DESTINATION
-import com.axiel7.anihyou.ui.screens.thread.publish.PUBLISH_THREAD_COMMENT_DESTINATION
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
-import com.axiel7.anihyou.ui.screens.usermedialist.SCORE_FORMAT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.usermedialist.USER_MEDIA_LIST_DESTINATION
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import com.axiel7.anihyou.utils.UTF_8
 import java.net.URLEncoder
 
@@ -119,45 +73,45 @@ fun MainNavigation(
     val navigateBack: () -> Unit = { navController.popBackStack() }
     val navigateToMediaDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            MEDIA_DETAILS_DESTINATION
-                .replace(MEDIA_ID_ARGUMENT, id.toString())
+            NavDestination.MediaDetails
+                .putArguments(mapOf(NavArgument.MediaId to id.toString()))
         )
     }
     val navigateToCharacterDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            CHARACTER_DETAILS_DESTINATION
-                .replace(CHARACTER_ID_ARGUMENT, id.toString())
+            NavDestination.CharacterDetails
+                .putArguments(mapOf(NavArgument.CharacterId to id.toString()))
         )
     }
     val navigateToStaffDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            STAFF_DETAILS_DESTINATION
-                .replace(STAFF_ID_ARGUMENT, id.toString())
+            NavDestination.StaffDetails
+                .putArguments(mapOf(NavArgument.StaffId to id.toString()))
         )
     }
     val navigateToStudioDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            STUDIO_DETAILS_DESTINATION
-                .replace(STUDIO_ID_ARGUMENT, id.toString())
+            NavDestination.StudioDetails
+                .putArguments(mapOf(NavArgument.StudioId to id.toString()))
         )
     }
     val navigateToUserDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            USER_DETAILS_DESTINATION
-                .replace(USER_ID_ARGUMENT, id.toString())
+            NavDestination.UserDetails
+                .putArguments(mapOf(NavArgument.UserId to id.toString()))
         )
     }
     val navigateToActivityDetails: (Int) -> Unit = { id ->
         navController.navigate(
-            ACTIVITY_DETAILS_DESTINATION
-                .replace(ACTIVITY_ID_ARGUMENT, id.toString())
+            NavDestination.ActivityDetails
+                .putArguments(mapOf(NavArgument.ActivityId to id.toString()))
         )
     }
     val navigateToFullscreenImage: (String) -> Unit = { url ->
         val encodedUrl = URLEncoder.encode(url, UTF_8)
         navController.navigate(
-            FULLSCREEN_IMAGE_DESTINATION
-                .replace(URL_ARGUMENT, encodedUrl)
+            NavDestination.FullscreenImage
+                .putArguments(mapOf(NavArgument.Url to encodedUrl))
         )
     }
 
@@ -170,26 +124,31 @@ fun MainNavigation(
 
                 DeepLink.Type.USER -> {
                     val userId = deepLink.id.toIntOrNull()
-                    var dest = USER_DETAILS_DESTINATION
-                    dest = if (userId != null) dest.replace(USER_ID_ARGUMENT, userId.toString())
-                    else dest.replace(USER_NAME_ARGUMENT, deepLink.id)
-                    navController.navigate(dest)
+                    navController.navigate(
+                        NavDestination.UserDetails.putArguments(
+                            mapOf(
+                                NavArgument.UserId to userId?.toString(),
+                                NavArgument.UserName to deepLink.id
+                            )
+                        )
+                    )
                 }
 
-                DeepLink.Type.SEARCH -> {
-                    navController.navigate(SEARCH_DESTINATION)
-                }
+                DeepLink.Type.SEARCH -> navController.navigate(NavDestination.Search.route())
 
-                else -> {
-                    navController.navigate("${deepLink.type.name.lowercase()}/${deepLink.id}")
-                }
+                DeepLink.Type.CHARACTER -> navigateToCharacterDetails(deepLink.id.toInt())
+
+                DeepLink.Type.STAFF -> navigateToStaffDetails(deepLink.id.toInt())
+
+                DeepLink.Type.STUDIO -> navigateToStudioDetails(deepLink.id.toInt())
             }
         }
     }
 
     NavHost(
         navController = navController,
-        startDestination = lastTabOpened.toBottomDestinationRoute() ?: BottomDestination.Home.route,
+        startDestination = lastTabOpened.toBottomDestinationRoute()
+            ?: NavDestination.HomeTab.route(),
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
@@ -218,36 +177,43 @@ fun MainNavigation(
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToAnimeSeason = { animeSeason ->
                     navController.navigate(
-                        SEASON_ANIME_DESTINATION
-                            .replace(YEAR_ARGUMENT, animeSeason.year.toString())
-                            .replace(SEASON_ARGUMENT, animeSeason.season.name)
+                        NavDestination.SeasonAnime.putArguments(
+                            mapOf(
+                                NavArgument.Year to animeSeason.year.toString(),
+                                NavArgument.Season to animeSeason.season.name
+                            )
+                        )
                     )
                 },
                 navigateToCalendar = {
-                    navController.navigate(CALENDAR_DESTINATION)
+                    navController.navigate(NavDestination.Calendar.route())
                 },
                 navigateToExplore = { mediaType, mediaSort ->
                     navController.navigate(
-                        SEARCH_DESTINATION
-                            .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
-                            .replace(MEDIA_SORT_ARGUMENT, mediaSort.rawValue)
+                        NavDestination.Search.putArguments(
+                            mapOf(
+                                NavArgument.MediaType to mediaType.rawValue,
+                                NavArgument.MediaSort to mediaSort.rawValue
+                            )
+                        )
                     )
                 },
                 navigateToNotifications = { unread ->
                     navController.navigate(
-                        NOTIFICATIONS_DESTINATION
-                            .replace(UNREAD_COUNT_ARGUMENT, unread.toString())
+                        NavDestination.Notifications
+                            .putArguments(mapOf(NavArgument.UnreadCount to unread.toString()))
                     )
                 },
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToActivityDetails = navigateToActivityDetails,
                 navigateToPublishActivity = { id, text ->
                     navController.navigate(
-                        PUBLISH_ACTIVITY_DESTINATION
-                            .replace(ACTIVITY_ID_ARGUMENT, id.toStringOrZero())
-                            .also {
-                                if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
-                            }
+                        NavDestination.PublishActivity.putArguments(
+                            mapOf(
+                                NavArgument.ActivityId to id.toStringOrZero(),
+                                NavArgument.Text to text
+                            )
+                        )
                     )
                 },
                 navigateToFullscreenImage = navigateToFullscreenImage,
@@ -255,13 +221,8 @@ fun MainNavigation(
         }
 
         composable(
-            BottomDestination.AnimeList.route,
-            arguments = listOf(
-                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    defaultValue = MediaType.ANIME.rawValue
-                }
-            )
+            route = BottomDestination.AnimeList.route,
+            arguments = NavDestination.AnimeTab.namedNavArguments
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -270,10 +231,13 @@ fun MainNavigation(
                     navigateToMediaDetails = navigateToMediaDetails,
                     navigateToSearch = { mediaType ->
                         navController.navigate(
-                            SEARCH_DESTINATION
-                                .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
-                                .replace(ON_LIST_ARGUMENT, true.toString())
-                                .replace(FOCUS_ARGUMENT, true.toString())
+                            NavDestination.Search.putArguments(
+                                mapOf(
+                                    NavArgument.MediaType to mediaType.rawValue,
+                                    NavArgument.OnList to true.toString(),
+                                    NavArgument.Focus to true.toString()
+                                )
+                            )
                         )
                     }
                 )
@@ -283,13 +247,8 @@ fun MainNavigation(
         }
 
         composable(
-            BottomDestination.MangaList.route,
-            arguments = listOf(
-                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    defaultValue = MediaType.MANGA.rawValue
-                }
-            )
+            route = BottomDestination.MangaList.route,
+            arguments = NavDestination.MangaTab.namedNavArguments
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -298,10 +257,13 @@ fun MainNavigation(
                     navigateToMediaDetails = navigateToMediaDetails,
                     navigateToSearch = { mediaType ->
                         navController.navigate(
-                            SEARCH_DESTINATION
-                                .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
-                                .replace(ON_LIST_ARGUMENT, true.toString())
-                                .replace(FOCUS_ARGUMENT, true.toString())
+                            NavDestination.Search.putArguments(
+                                mapOf(
+                                    NavArgument.MediaType to mediaType.rawValue,
+                                    NavArgument.OnList to true.toString(),
+                                    NavArgument.Focus to true.toString()
+                                )
+                            )
                         )
                     }
                 )
@@ -341,56 +303,42 @@ fun MainNavigation(
                 navigateToStudioDetails = navigateToStudioDetails,
                 navigateToMediaChart = { type ->
                     navController.navigate(
-                        MEDIA_CHART_DESTINATION
-                            .replace(CHART_TYPE_ARGUMENT, type.name)
+                        NavDestination.MediaChart.putArguments(
+                            mapOf(NavArgument.ChartType to type.name)
+                        )
                     )
                 },
                 navigateToAnimeSeason = { year, season ->
                     navController.navigate(
-                        SEASON_ANIME_DESTINATION
-                            .replace(YEAR_ARGUMENT, year.toString())
-                            .replace(SEASON_ARGUMENT, season)
+                        NavDestination.SeasonAnime.putArguments(
+                            mapOf(
+                                NavArgument.Year to year.toString(),
+                                NavArgument.Season to season
+                            )
+                        )
                     )
                 },
                 navigateToCalendar = {
-                    navController.navigate(CALENDAR_DESTINATION)
+                    navController.navigate(NavDestination.Calendar.route())
                 }
             )
         }
 
-        composable(SEARCH_DESTINATION,
-            arguments = listOf(
-                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument(MEDIA_SORT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument(GENRE_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument(TAG_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument(ON_LIST_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType //this should be boolean but null is not supported :)
-                    nullable = true
-                },
-                navArgument(FOCUS_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+        composable(
+            route = NavDestination.Search.route(),
+            arguments = NavDestination.Search.namedNavArguments
         ) { navEntry ->
             SearchView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
-                initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
-                initialFocus = navEntry.arguments?.getString(FOCUS_ARGUMENT.removeFirstAndLast()) == "true",
+                initialGenre = navEntry.getStringArg(
+                    NavDestination.Search.findDestArgument(NavArgument.Genre)
+                ),
+                initialTag = navEntry.getStringArg(
+                    NavDestination.Search.findDestArgument(NavArgument.Tag)
+                ),
+                initialFocus = navEntry.getBoolean(
+                    NavDestination.Search.findDestArgument(NavArgument.Focus)
+                ) == true,
                 navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
@@ -401,14 +349,8 @@ fun MainNavigation(
         }
 
         composable(
-            USER_MEDIA_LIST_DESTINATION,
-            arguments = listOf(
-                navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
-                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType },
-                navArgument(SCORE_FORMAT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                }
-            )
+            route = NavDestination.UserMediaList.route(),
+            arguments = NavDestination.UserMediaList.namedNavArguments
         ) {
             UserMediaListHostView(
                 isCompactScreen = isCompactScreen,
@@ -419,10 +361,8 @@ fun MainNavigation(
         }
 
         composable(
-            NOTIFICATIONS_DESTINATION,
-            arguments = listOf(
-                navArgument(UNREAD_COUNT_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
-            )
+            route = NavDestination.Notifications.route(),
+            arguments = NavDestination.Notifications.namedNavArguments
         ) {
             if (isLoggedIn) {
                 NotificationsView(
@@ -431,8 +371,9 @@ fun MainNavigation(
                     navigateToActivityDetails = navigateToActivityDetails,
                     navigateToThreadDetails = { id ->
                         navController.navigate(
-                            THREAD_DETAILS_DESTINATION
-                                .replace(THREAD_ID_ARGUMENT, id.toString())
+                            NavDestination.ThreadDetails.putArguments(
+                                mapOf(NavArgument.ThreadId to id.toString())
+                            )
                         )
                     },
                     navigateBack = navigateBack
@@ -443,10 +384,8 @@ fun MainNavigation(
         }
 
         composable(
-            MEDIA_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(MEDIA_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
-            ),
+            route = NavDestination.MediaDetails.route(),
+            arguments = NavDestination.MediaDetails.namedNavArguments,
         ) {
             MediaDetailsView(
                 isLoggedIn = isLoggedIn,
@@ -458,59 +397,53 @@ fun MainNavigation(
                 navigateToStaffDetails = navigateToStaffDetails,
                 navigateToReviewDetails = { id ->
                     navController.navigate(
-                        REVIEW_DETAILS_DESTINATION
-                            .replace(REVIEW_ID_ARGUMENT, id.toString())
+                        NavDestination.ReviewDetails.putArguments(
+                            mapOf(NavArgument.ReviewId to id.toString())
+                        )
                     )
                 },
                 navigateToThreadDetails = { id ->
                     navController.navigate(
-                        THREAD_DETAILS_DESTINATION
-                            .replace(THREAD_ID_ARGUMENT, id.toString())
+                        NavDestination.ThreadDetails.putArguments(
+                            mapOf(NavArgument.ThreadId to id.toString())
+                        )
                     )
                 },
                 navigateToExplore = { mediaType, genre, tag ->
-                    var dest = SEARCH_DESTINATION
-                    if (mediaType != null) dest =
-                        dest.replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
-                    if (genre != null) dest = dest.replace(GENRE_ARGUMENT, genre)
-                    if (tag != null) dest = dest.replace(TAG_ARGUMENT, tag)
-                    navController.navigate(dest)
-                }
-            )
-        }
-
-        composable(
-            MEDIA_CHART_DESTINATION,
-            arguments = listOf(
-                navArgument(CHART_TYPE_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
-            )
-        ) { navEntry ->
-            navEntry.arguments?.getString(CHART_TYPE_ARGUMENT.removeFirstAndLast())?.let {
-                MediaChartListView(
-                    navigateBack = navigateBack,
-                    navigateToMediaDetails = navigateToMediaDetails
-                )
-            }
-        }
-
-        composable(
-            SEASON_ANIME_DESTINATION,
-            arguments = listOf(
-                navArgument(SEASON_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType },
-                navArgument(YEAR_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
-            )
-        ) { navEntry ->
-            navEntry.arguments?.getString(SEASON_ARGUMENT.removeFirstAndLast())?.let {
-                navEntry.arguments?.getInt(YEAR_ARGUMENT.removeFirstAndLast())?.let {
-                    SeasonAnimeView(
-                        navigateBack = navigateBack,
-                        navigateToMediaDetails = navigateToMediaDetails
+                    navController.navigate(
+                        NavDestination.Search.putArguments(
+                            mapOf(
+                                NavArgument.MediaType to mediaType?.rawValue,
+                                NavArgument.Genre to genre,
+                                NavArgument.Tag to tag
+                            )
+                        )
                     )
                 }
-            }
+            )
         }
 
-        composable(CALENDAR_DESTINATION) {
+        composable(
+            route = NavDestination.MediaChart.route(),
+            arguments = NavDestination.MediaChart.namedNavArguments
+        ) {
+            MediaChartListView(
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails
+            )
+        }
+
+        composable(
+            NavDestination.SeasonAnime.route(),
+            arguments = NavDestination.SeasonAnime.namedNavArguments
+        ) {
+            SeasonAnimeView(
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails
+            )
+        }
+
+        composable(NavDestination.Calendar.route()) {
             CalendarView(
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateBack = navigateBack
@@ -518,23 +451,11 @@ fun MainNavigation(
         }
 
         composable(
-            USER_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(USER_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument(USER_NAME_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
-        ) { navEntry ->
+            route = NavDestination.UserDetails.route(),
+            arguments = NavDestination.UserDetails.namedNavArguments
+        ) {
             ProfileView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                userId = navEntry.arguments?.getString(USER_ID_ARGUMENT.removeFirstAndLast())
-                    ?.toIntOrNull(),
-                username = navEntry.arguments?.getString(USER_NAME_ARGUMENT.removeFirstAndLast()),
                 navigateToFullscreenImage = navigateToFullscreenImage,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToCharacterDetails = navigateToCharacterDetails,
@@ -544,10 +465,13 @@ fun MainNavigation(
                 navigateToActivityDetails = navigateToActivityDetails,
                 navigateToUserMediaList = { mediaType, userId, scoreFormat ->
                     navController.navigate(
-                        USER_MEDIA_LIST_DESTINATION
-                            .replace(USER_ID_ARGUMENT, userId.toString())
-                            .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
-                            .replace(SCORE_FORMAT_ARGUMENT, scoreFormat.rawValue)
+                        NavDestination.UserMediaList.putArguments(
+                            mapOf(
+                                NavArgument.UserId to userId.toString(),
+                                NavArgument.MediaType to mediaType.rawValue,
+                                NavArgument.ScoreFormat to scoreFormat.rawValue
+                            )
+                        )
                     )
                 },
                 navigateBack = navigateBack,
@@ -555,76 +479,66 @@ fun MainNavigation(
         }
 
         composable(
-            CHARACTER_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(CHARACTER_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            route = NavDestination.CharacterDetails.route(),
+            arguments = NavDestination.CharacterDetails.namedNavArguments
+        ) {
+            CharacterDetailsView(
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage,
             )
-        ) { navEntry ->
-            navEntry.arguments?.getInt(CHARACTER_ID_ARGUMENT.removeFirstAndLast())?.let {
-                CharacterDetailsView(
-                    navigateBack = navigateBack,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                )
-            }
         }
 
         composable(
-            STAFF_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(STAFF_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            route = NavDestination.StaffDetails.route(),
+            arguments = NavDestination.StaffDetails.namedNavArguments
+        ) {
+            StaffDetailsView(
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToFullscreenImage = navigateToFullscreenImage
             )
-        ) { navEntry ->
-            navEntry.arguments?.getInt(STAFF_ID_ARGUMENT.removeFirstAndLast())?.let {
-                StaffDetailsView(
-                    navigateBack = navigateBack,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToCharacterDetails = navigateToCharacterDetails,
-                    navigateToFullscreenImage = navigateToFullscreenImage
-                )
-            }
         }
 
         composable(
-            REVIEW_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(REVIEW_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            route = NavDestination.ReviewDetails.route(),
+            arguments = NavDestination.ReviewDetails.namedNavArguments
+        ) {
+            ReviewDetailsView(
+                navigateBack = navigateBack
             )
-        ) { navEntry ->
-            navEntry.arguments?.getInt(REVIEW_ID_ARGUMENT.removeFirstAndLast())?.let {
-                ReviewDetailsView(
-                    navigateBack = navigateBack
-                )
-            }
         }
 
         composable(
-            THREAD_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(THREAD_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
-            )
+            route = NavDestination.ThreadDetails.route(),
+            arguments = NavDestination.ThreadDetails.namedNavArguments
         ) { navEntry ->
-            navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast())?.let { threadId ->
+            navEntry.getIntArg(
+                NavDestination.ThreadDetails.findDestArgument(NavArgument.ThreadId)
+            )?.let { threadId ->
                 ThreadDetailsView(
                     navigateToUserDetails = navigateToUserDetails,
                     navigateToPublishThreadComment = { commentId, text ->
                         navController.navigate(
-                            PUBLISH_THREAD_COMMENT_DESTINATION
-                                .replace(THREAD_ID_ARGUMENT, threadId.toString())
-                                .replace(COMMENT_ID_ARGUMENT, commentId.toStringOrZero())
-                                .also {
-                                    if (text != null) it.replace(COMMENT_TEXT_ARGUMENT, text)
-                                }
+                            NavDestination.PublishThreadComment.putArguments(
+                                mapOf(
+                                    NavArgument.ThreadId to threadId.toString(),
+                                    NavArgument.CommentId to commentId.toStringOrZero(),
+                                    NavArgument.Text to text
+                                )
+                            )
                         )
                     },
                     navigateToPublishCommentReply = { parentCommentId, commentId, text ->
                         navController.navigate(
-                            PUBLISH_COMMENT_REPLY_DESTINATION
-                                .replace(PARENT_COMMENT_ID_ARGUMENT, parentCommentId.toString())
-                                .replace(COMMENT_ID_ARGUMENT, commentId.toStringOrZero())
-                                .also {
-                                    if (text != null) it.replace(COMMENT_TEXT_ARGUMENT, text)
-                                }
+                            NavDestination.PublishCommentReply.putArguments(
+                                mapOf(
+                                    NavArgument.ParentCommentId to parentCommentId.toString(),
+                                    NavArgument.CommentId to commentId.toStringOrZero(),
+                                    NavArgument.Text to text
+                                )
+                            )
                         )
                     },
                     navigateToFullscreenImage = navigateToFullscreenImage,
@@ -634,97 +548,88 @@ fun MainNavigation(
         }
 
         composable(
-            STUDIO_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(STUDIO_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
+            route = NavDestination.StudioDetails.route(),
+            arguments = NavDestination.StudioDetails.namedNavArguments
+        ) {
+            StudioDetailsView(
+                navigateBack = navigateBack,
+                navigateToMediaDetails = navigateToMediaDetails
             )
-        ) { navEntry ->
-            navEntry.arguments?.getInt(STUDIO_ID_ARGUMENT.removeFirstAndLast())?.let {
-                StudioDetailsView(
-                    navigateBack = navigateBack,
-                    navigateToMediaDetails = navigateToMediaDetails
-                )
-            }
         }
 
-        composable(SETTINGS_DESTINATION) {
+        composable(NavDestination.Settings.route()) {
             SettingsView(
                 navigateToListStyleSettings = {
-                    navController.navigate(LIST_STYLE_SETTINGS_DESTINATION)
+                    navController.navigate(NavDestination.ListStyleSettings.route())
                 },
                 navigateToTranslations = {
-                    navController.navigate(TRANSLATIONS_DESTINATION)
+                    navController.navigate(NavDestination.Translations.route())
                 },
                 navigateBack = navigateBack
             )
         }
-        composable(LIST_STYLE_SETTINGS_DESTINATION) {
+        composable(NavDestination.ListStyleSettings.route()) {
             ListStyleSettingsView(
                 navigateBack = navigateBack
             )
         }
-        composable(TRANSLATIONS_DESTINATION) {
+        composable(NavDestination.Translations.route()) {
             TranslationsView(
                 navigateBack = navigateBack
             )
         }
 
         composable(
-            FULLSCREEN_IMAGE_DESTINATION,
-            arguments = listOf(
-                navArgument(URL_ARGUMENT.removeFirstAndLast()) { type = NavType.StringType }
-            )
+            route = NavDestination.FullscreenImage.route(),
+            arguments = NavDestination.FullscreenImage.namedNavArguments
         ) { navEntry ->
             FullScreenImageView(
-                imageUrl = navEntry.arguments?.getString(URL_ARGUMENT.removeFirstAndLast()),
+                imageUrl = navEntry.getStringArg(
+                    NavDestination.FullscreenImage.findDestArgument(NavArgument.Url)
+                ),
                 onDismiss = navigateBack
             )
         }
 
         composable(
-            ACTIVITY_DETAILS_DESTINATION,
-            arguments = listOf(
-                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) { type = NavType.IntType }
-            )
+            route = NavDestination.ActivityDetails.route(),
+            arguments = NavDestination.ActivityDetails.namedNavArguments
         ) { navEntry ->
-            navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
-                ?.let { activityId ->
-                    ActivityDetailsView(
-                        navigateBack = navigateBack,
-                        navigateToUserDetails = navigateToUserDetails,
-                        navigateToPublishActivityReply = { id, text ->
-                            navController.navigate(
-                                PUBLISH_ACTIVITY_REPLY_DESTINATION
-                                    .replace(ACTIVITY_ID_ARGUMENT, activityId.toString())
-                                    .replace(REPLY_ID_ARGUMENT, id.toStringOrZero())
-                                    .also {
-                                        if (text != null) it.replace(ACTIVITY_TEXT_ARGUMENT, text)
-                                    }
+            navEntry.getIntArg(
+                NavDestination.ActivityDetails.findDestArgument(NavArgument.ActivityId)
+            )?.let { activityId ->
+                ActivityDetailsView(
+                    navigateBack = navigateBack,
+                    navigateToUserDetails = navigateToUserDetails,
+                    navigateToPublishActivityReply = { id, text ->
+                        navController.navigate(
+                            NavDestination.PublishActivityReply.putArguments(
+                                mapOf(
+                                    NavArgument.ActivityId to activityId.toString(),
+                                    NavArgument.ReplyId to id.toStringOrZero(),
+                                    NavArgument.Text to text
+                                )
                             )
-                        },
-                        navigateToFullscreenImage = navigateToFullscreenImage,
-                    )
-                }
+                        )
+                    },
+                    navigateToFullscreenImage = navigateToFullscreenImage,
+                )
+            }
         }
 
         composable(
-            PUBLISH_ACTIVITY_DESTINATION,
-            arguments = listOf(
-                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+            route = NavDestination.PublishActivity.route(),
+            arguments = NavDestination.PublishActivity.namedNavArguments
         ) { navEntry ->
             if (isLoggedIn) {
-                val id = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast())
+                val id = navEntry.getIntArg(
+                    NavDestination.PublishActivity.findDestArgument(NavArgument.ActivityId)
+                )
                 PublishActivityView(
-                    activityId = null,
                     id = if (id != 0) id else null,
-                    text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
+                    text = navEntry.getStringArg(
+                        NavDestination.PublishActivity.findDestArgument(NavArgument.Text)
+                    ),
                     navigateBack = navigateBack
                 )
             } else {
@@ -733,26 +638,21 @@ fun MainNavigation(
         }
 
         composable(
-            PUBLISH_ACTIVITY_REPLY_DESTINATION,
-            arguments = listOf(
-                navArgument(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(REPLY_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+            route = NavDestination.PublishActivityReply.route(),
+            arguments = NavDestination.PublishActivityReply.namedNavArguments
         ) { navEntry ->
             if (isLoggedIn) {
-                val id = navEntry.arguments?.getInt(REPLY_ID_ARGUMENT.removeFirstAndLast())
+                val id = navEntry.getIntArg(
+                    NavDestination.PublishActivityReply.findDestArgument(NavArgument.ReplyId)
+                )
                 PublishActivityView(
-                    activityId = navEntry.arguments?.getInt(ACTIVITY_ID_ARGUMENT.removeFirstAndLast()),
+                    activityId = navEntry.getIntArg(
+                        NavDestination.PublishActivityReply.findDestArgument(NavArgument.ActivityId)
+                    ),
                     id = if (id != 0) id else null,
-                    text = navEntry.arguments?.getString(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()),
+                    text = navEntry.getStringArg(
+                        NavDestination.PublishActivityReply.findDestArgument(NavArgument.Text)
+                    ),
                     navigateBack = navigateBack
                 )
             } else {
@@ -761,27 +661,22 @@ fun MainNavigation(
         }
 
         composable(
-            PUBLISH_THREAD_COMMENT_DESTINATION,
-            arguments = listOf(
-                navArgument(THREAD_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+            route = NavDestination.PublishThreadComment.route(),
+            arguments = NavDestination.PublishThreadComment.namedNavArguments
         ) { navEntry ->
             if (isLoggedIn) {
-                val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+                val commentId = navEntry.getIntArg(
+                    NavDestination.PublishThreadComment.findDestArgument(NavArgument.CommentId)
+                )
                 PublishCommentView(
-                    threadId = navEntry.arguments?.getInt(THREAD_ID_ARGUMENT.removeFirstAndLast()),
+                    threadId = navEntry.getIntArg(
+                        NavDestination.PublishThreadComment.findDestArgument(NavArgument.ThreadId)
+                    ),
                     parentCommentId = null,
                     id = commentId,
-                    text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                    text = navEntry.getStringArg(
+                        NavDestination.PublishThreadComment.findDestArgument(NavArgument.Text)
+                    ),
                     navigateBack = navigateBack,
                 )
             } else {
@@ -790,27 +685,22 @@ fun MainNavigation(
         }
 
         composable(
-            PUBLISH_COMMENT_REPLY_DESTINATION,
-            arguments = listOf(
-                navArgument(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(COMMENT_ID_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.IntType
-                },
-                navArgument(ACTIVITY_TEXT_ARGUMENT.removeFirstAndLast()) {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+            route = NavDestination.PublishCommentReply.route(),
+            arguments = NavDestination.PublishCommentReply.namedNavArguments
         ) { navEntry ->
             if (isLoggedIn) {
-                val commentId = navEntry.arguments?.getInt(COMMENT_ID_ARGUMENT.removeFirstAndLast())
+                val commentId = navEntry.getIntArg(
+                    NavDestination.PublishCommentReply.findDestArgument(NavArgument.CommentId)
+                )
                 PublishCommentView(
                     threadId = null,
-                    parentCommentId = navEntry.arguments?.getInt(PARENT_COMMENT_ID_ARGUMENT.removeFirstAndLast()),
+                    parentCommentId = navEntry.getIntArg(
+                        NavDestination.PublishCommentReply.findDestArgument(NavArgument.ParentCommentId)
+                    ),
                     id = commentId,
-                    text = navEntry.arguments?.getString(COMMENT_TEXT_ARGUMENT.removeFirstAndLast()),
+                    text = navEntry.getStringArg(
+                        NavDestination.PublishCommentReply.findDestArgument(NavArgument.Text)
+                    ),
                     navigateBack = navigateBack,
                 )
             } else {

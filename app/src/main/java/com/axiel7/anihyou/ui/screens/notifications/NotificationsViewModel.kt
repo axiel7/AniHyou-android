@@ -7,8 +7,8 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
+import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +28,7 @@ class NotificationsViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>() {
 
-    private val initialUnreadCount: Int =
-        savedStateHandle[UNREAD_COUNT_ARGUMENT.removeFirstAndLast()] ?: 0
+    private val initialUnreadCount: Int = savedStateHandle[NavArgument.UnreadCount.name] ?: 0
 
     override val mutableUiState = MutableStateFlow(NotificationsUiState())
     override val uiState = mutableUiState.asStateFlow()
