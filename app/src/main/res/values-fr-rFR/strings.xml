@@ -145,4 +145,6 @@
     <string name="russian">Russe</string>
     <string name="spanish">Espagnol</string>
     <string name="turkish">Turque</string>
+    <string name="arabic">Arabe</string>
+    <string name="brazilian">Brésilien</string>
 </resources>
