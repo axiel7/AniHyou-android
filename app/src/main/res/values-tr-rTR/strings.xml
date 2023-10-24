@@ -3,7 +3,7 @@
     <string name="home">Ana Sayfa</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
-    <string name="explore" comment="as short as possible">Keşfet</string>
+    <string name="explore">Keşfet</string>
     <string name="num_years">%s yıl</string>
     <string name="num_months">%s ay</string>
     <string name="num_weeks">%s hafta</string>
@@ -243,7 +243,7 @@
     <string name="score_point_10_decimal">10 puan ondalık (5.5/10)</string>
     <string name="score_point_10">10 Puan (5/10)</string>
     <string name="score_point_5">5 Yıldız (3/5)</string>
-    <string name="score_point_3" comment="feel free to use an emoji or another smile face representation that is understandable in your language instead of :)">3 Puan Gülücük :)</string>
+    <string name="score_point_3">3 Puan Gülücük :)</string>
     <string name="no_media">İçerik yok</string>
     <string name="every_six_hours">Her 6 saatte</string>
     <string name="every_twelve_hours">Her 12 saatte</string>
