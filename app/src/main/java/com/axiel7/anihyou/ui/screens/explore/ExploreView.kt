@@ -16,7 +16,6 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,8 +23,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,31 +33,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.IconCard
-import com.axiel7.anihyou.ui.screens.explore.search.SearchView
+import com.axiel7.anihyou.ui.screens.explore.search.SearchContentView
 import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
-const val MEDIA_TYPE_ARGUMENT = "{mediaType}"
-const val MEDIA_SORT_ARGUMENT = "{mediaSort}"
-const val GENRE_ARGUMENT = "{genre}"
-const val TAG_ARGUMENT = "{tag}"
-const val OPEN_SEARCH_ARGUMENT = "{openSearch}"
-const val EXPLORE_GENRE_DESTINATION =
-    "explore?mediaType=$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT" +
-            "?tag=$TAG_ARGUMENT?openSearch=$OPEN_SEARCH_ARGUMENT"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
     modifier: Modifier = Modifier,
-    initialMediaType: MediaType? = null,
-    initialGenre: String? = null,
-    initialTag: String? = null,
-    openSearch: Boolean = false,
-    navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
     navigateToCharacterDetails: (Int) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
@@ -71,8 +54,8 @@ fun ExploreView(
     navigateToCalendar: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val performSearch = remember { mutableStateOf(initialMediaType != null) }
-    var isSearchActive by rememberSaveable { mutableStateOf(openSearch || initialMediaType != null) }
+    val performSearch = remember { mutableStateOf(false) }
+    var isSearchActive by rememberSaveable { mutableStateOf(false) }
 
     val searchHorizontalPadding by animateDpAsState(
         targetValue = if (!isSearchActive) 16.dp else 0.dp,
@@ -82,11 +65,6 @@ fun ExploreView(
         targetValue = if (!isSearchActive) 4.dp else 0.dp,
         label = "searchBottomPadding"
     )
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(openSearch) {
-        if (openSearch) focusRequester.requestFocus()
-    }
 
     Scaffold(
         modifier = modifier,
@@ -104,27 +82,20 @@ fun ExploreView(
                     },
                     active = isSearchActive,
                     onActiveChange = {
-                        if (initialMediaType != null) navigateBack()
-                        else {
-                            isSearchActive = it
-                            if (!isSearchActive) query = ""
-                        }
+                        isSearchActive = it
+                        if (!isSearchActive) query = ""
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = searchHorizontalPadding)
-                        .padding(bottom = searchBottomPadding)
-                        .focusRequester(focusRequester),
+                        .padding(bottom = searchBottomPadding),
                     placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                     leadingIcon = {
                         if (isSearchActive) {
                             IconButton(
                                 onClick = {
-                                    if (initialMediaType != null) navigateBack()
-                                    else {
-                                        isSearchActive = false
-                                        query = ""
-                                    }
+                                    isSearchActive = false
+                                    query = ""
                                 }
                             ) {
                                 Icon(
@@ -150,20 +121,19 @@ fun ExploreView(
                         }
                     }
                 ) {
-                    SearchView(
+                    SearchContentView(
                         viewModel = searchViewModel,
                         query = query,
                         performSearch = performSearch,
-                        initialMediaType = initialMediaType,
-                        initialGenre = initialGenre,
-                        initialTag = initialTag,
+                        initialGenre = null,
+                        initialTag = null,
                         navigateToMediaDetails = navigateToMediaDetails,
                         navigateToCharacterDetails = navigateToCharacterDetails,
                         navigateToStaffDetails = navigateToStaffDetails,
                         navigateToStudioDetails = navigateToStudioDetails,
                         navigateToUserDetails = navigateToUserDetails
                     )
-                }
+                }//:SearchBar
             }
         }
     ) { padding ->
@@ -361,7 +331,6 @@ fun ExploreViewPreview() {
     AniHyouTheme {
         Surface {
             ExploreView(
-                navigateBack = {},
                 navigateToMediaDetails = {},
                 navigateToMediaChart = {},
                 navigateToAnimeSeason = { _, _ -> },

@@ -16,7 +16,7 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel

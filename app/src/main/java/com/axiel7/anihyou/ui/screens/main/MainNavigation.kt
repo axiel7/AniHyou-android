@@ -39,16 +39,18 @@ import com.axiel7.anihyou.ui.screens.calendar.CalendarView
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_DETAILS_DESTINATION
 import com.axiel7.anihyou.ui.screens.characterdetails.CHARACTER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
-import com.axiel7.anihyou.ui.screens.explore.EXPLORE_GENRE_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
-import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.OPEN_SEARCH_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.CHART_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.charts.MEDIA_CHART_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
+import com.axiel7.anihyou.ui.screens.explore.search.FOCUS_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.GENRE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_SORT_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.ON_LIST_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.SEARCH_DESTINATION
+import com.axiel7.anihyou.ui.screens.explore.search.SearchView
+import com.axiel7.anihyou.ui.screens.explore.search.TAG_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ANIME_DESTINATION
 import com.axiel7.anihyou.ui.screens.explore.season.SEASON_ARGUMENT
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
@@ -175,10 +177,7 @@ fun MainNavigation(
                 }
 
                 DeepLink.Type.SEARCH -> {
-                    navController.navigate(
-                        EXPLORE_GENRE_DESTINATION
-                            .replace(OPEN_SEARCH_ARGUMENT, deepLink.id)
-                    )
+                    navController.navigate(SEARCH_DESTINATION)
                 }
 
                 else -> {
@@ -229,7 +228,7 @@ fun MainNavigation(
                 },
                 navigateToExplore = { mediaType, mediaSort ->
                     navController.navigate(
-                        EXPLORE_GENRE_DESTINATION
+                        SEARCH_DESTINATION
                             .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
                             .replace(MEDIA_SORT_ARGUMENT, mediaSort.rawValue)
                     )
@@ -268,7 +267,15 @@ fun MainNavigation(
                 UserMediaListHostView(
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToSearch = { mediaType ->
+                        navController.navigate(
+                            SEARCH_DESTINATION
+                                .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                                .replace(ON_LIST_ARGUMENT, true.toString())
+                                .replace(FOCUS_ARGUMENT, true.toString())
+                        )
+                    }
                 )
             } else {
                 LoginView()
@@ -288,7 +295,15 @@ fun MainNavigation(
                 UserMediaListHostView(
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails
+                    navigateToMediaDetails = navigateToMediaDetails,
+                    navigateToSearch = { mediaType ->
+                        navController.navigate(
+                            SEARCH_DESTINATION
+                                .replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
+                                .replace(ON_LIST_ARGUMENT, true.toString())
+                                .replace(FOCUS_ARGUMENT, true.toString())
+                        )
+                    }
                 )
             } else {
                 LoginView()
@@ -319,7 +334,6 @@ fun MainNavigation(
         composable(BottomDestination.Explore.route) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToCharacterDetails = navigateToCharacterDetails,
@@ -344,7 +358,7 @@ fun MainNavigation(
             )
         }
 
-        composable(EXPLORE_GENRE_DESTINATION,
+        composable(SEARCH_DESTINATION,
             arguments = listOf(
                 navArgument(MEDIA_TYPE_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
@@ -362,41 +376,27 @@ fun MainNavigation(
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) {
+                navArgument(ON_LIST_ARGUMENT.removeFirstAndLast()) {
+                    type = NavType.StringType //this should be boolean but null is not supported :)
+                    nullable = true
+                },
+                navArgument(FOCUS_ARGUMENT.removeFirstAndLast()) {
                     type = NavType.StringType
                     nullable = true
                 }
             )
         ) { navEntry ->
-            ExploreView(
+            SearchView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                initialMediaType = navEntry.arguments?.getString(MEDIA_TYPE_ARGUMENT.removeFirstAndLast())
-                    ?.let { MediaType.safeValueOf(it) },
                 initialGenre = navEntry.arguments?.getString(GENRE_ARGUMENT.removeFirstAndLast()),
                 initialTag = navEntry.arguments?.getString(TAG_ARGUMENT.removeFirstAndLast()),
-                openSearch = navEntry.arguments?.getString(OPEN_SEARCH_ARGUMENT.removeFirstAndLast()) == "true",
+                initialFocus = navEntry.arguments?.getString(FOCUS_ARGUMENT.removeFirstAndLast()) == "true",
                 navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToCharacterDetails = navigateToCharacterDetails,
                 navigateToStaffDetails = navigateToStaffDetails,
                 navigateToStudioDetails = navigateToStudioDetails,
-                navigateToMediaChart = { type ->
-                    navController.navigate(
-                        MEDIA_CHART_DESTINATION
-                            .replace(MEDIA_TYPE_ARGUMENT, type.name)
-                    )
-                },
-                navigateToAnimeSeason = { year, season ->
-                    navController.navigate(
-                        SEASON_ANIME_DESTINATION
-                            .replace(YEAR_ARGUMENT, year.toString())
-                            .replace(SEASON_ARGUMENT, season)
-                    )
-                },
-                navigateToCalendar = {
-                    navController.navigate(CALENDAR_DESTINATION)
-                }
             )
         }
 
@@ -469,7 +469,7 @@ fun MainNavigation(
                     )
                 },
                 navigateToExplore = { mediaType, genre, tag ->
-                    var dest = EXPLORE_GENRE_DESTINATION
+                    var dest = SEARCH_DESTINATION
                     if (mediaType != null) dest =
                         dest.replace(MEDIA_TYPE_ARGUMENT, mediaType.rawValue)
                     if (genre != null) dest = dest.replace(GENRE_ARGUMENT, genre)

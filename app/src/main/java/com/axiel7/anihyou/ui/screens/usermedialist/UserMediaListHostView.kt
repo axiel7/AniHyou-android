@@ -47,7 +47,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
+import com.axiel7.anihyou.ui.screens.explore.search.MEDIA_TYPE_ARGUMENT
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.profile.USER_ID_ARGUMENT
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
@@ -65,6 +65,7 @@ fun UserMediaListHostView(
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
+    navigateToSearch: ((MediaType) -> Unit)? = null,
     navigateBack: (() -> Unit)? = null,
 ) {
     val viewModel: UserMediaListViewModel = hiltViewModel()
@@ -161,6 +162,14 @@ fun UserMediaListHostView(
             }
         },
         actions = {
+            navigateToSearch?.let {
+                IconButton(onClick = { navigateToSearch(viewModel.mediaType) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.search_24),
+                        contentDescription = stringResource(R.string.search)
+                    )
+                }
+            }
             IconButton(onClick = { viewModel.toggleSortDialog(true) }) {
                 Icon(
                     painter = painterResource(R.drawable.sort_24),
@@ -226,7 +235,8 @@ fun UserMediaListViewPreview() {
         Surface {
             UserMediaListHostView(
                 isCompactScreen = true,
-                navigateToMediaDetails = {}
+                navigateToMediaDetails = {},
+                navigateToSearch = {}
             )
         }
     }

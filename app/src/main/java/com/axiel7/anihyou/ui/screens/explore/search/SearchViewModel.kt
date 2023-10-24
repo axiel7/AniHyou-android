@@ -19,10 +19,6 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.ui.screens.explore.GENRE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_SORT_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.MEDIA_TYPE_ARGUMENT
-import com.axiel7.anihyou.ui.screens.explore.TAG_ARGUMENT
 import com.axiel7.anihyou.utils.StringUtils.removeFirstAndLast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,6 +49,9 @@ class SearchViewModel @Inject constructor(
 
     private val initialTag: String? = savedStateHandle[TAG_ARGUMENT.removeFirstAndLast()]
 
+    private val initialOnList: Boolean? = savedStateHandle
+        .get<String?>(ON_LIST_ARGUMENT.removeFirstAndLast())?.toBooleanStrictOrNull()
+
     override val mutableUiState = MutableStateFlow(
         SearchUiState(
             searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
@@ -61,9 +60,9 @@ class SearchViewModel @Inject constructor(
                 genreIn = initialGenre?.let { listOf(it) } ?: emptyList(),
                 tagIn = initialTag?.let { listOf(it) } ?: emptyList()
             ),
+            onMyList = initialOnList,
             hasNextPage = initialGenre != null
                     || initialTag != null
-                    || initialMediaType != null
                     || initialMediaSort != null
         )
     )
@@ -163,12 +162,12 @@ class SearchViewModel @Inject constructor(
             if (index != -1) {
                 media[index] = selectedItem.copy(
                     mediaListEntry = if (newListEntry == null) null else
-                    SearchMediaQuery.MediaListEntry(
-                        __typename = "SearchMediaQuery.MediaListEntry",
-                        id = newListEntry.id,
-                        mediaId = newListEntry.mediaId,
-                        basicMediaListEntry = newListEntry
-                    )
+                        SearchMediaQuery.MediaListEntry(
+                            __typename = "SearchMediaQuery.MediaListEntry",
+                            id = newListEntry.id,
+                            mediaId = newListEntry.mediaId,
+                            basicMediaListEntry = newListEntry
+                        )
                 )
             }
         }

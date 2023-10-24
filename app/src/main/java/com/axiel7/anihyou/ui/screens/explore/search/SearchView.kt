@@ -3,17 +3,26 @@ package com.axiel7.anihyou.ui.screens.explore.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,11 +34,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SearchType
@@ -38,8 +52,8 @@ import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
-import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.common.TriFilterChip
@@ -58,13 +72,91 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearC
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+const val MEDIA_TYPE_ARGUMENT = "{mediaType}"
+const val MEDIA_SORT_ARGUMENT = "{mediaSort}"
+const val GENRE_ARGUMENT = "{genre}"
+const val TAG_ARGUMENT = "{tag}"
+const val ON_LIST_ARGUMENT = "{onList}"
+const val FOCUS_ARGUMENT = "{focus}"
+const val SEARCH_DESTINATION =
+    "search?mediaType=$MEDIA_TYPE_ARGUMENT?mediaSort=$MEDIA_SORT_ARGUMENT?genre=$GENRE_ARGUMENT" +
+            "?tag=$TAG_ARGUMENT?onList=$ON_LIST_ARGUMENT?focus=$FOCUS_ARGUMENT"
+
 @Composable
 fun SearchView(
+    modifier: Modifier = Modifier,
+    initialGenre: String? = null,
+    initialTag: String? = null,
+    initialFocus: Boolean = false,
+    navigateBack: () -> Unit,
+    navigateToMediaDetails: (Int) -> Unit,
+    navigateToCharacterDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
+) {
+    val viewModel: SearchViewModel = hiltViewModel()
+
+    var query by rememberSaveable { mutableStateOf("") }
+    val performSearch = remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(initialFocus) {
+        if (initialFocus) focusRequester.requestFocus()
+    }
+
+    Surface(
+        tonalElevation = 6.dp
+    ) {
+        Column(
+            modifier = modifier
+                .statusBarsPadding()
+                .fillMaxSize()
+        ) {
+            TextField(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
+                leadingIcon = {
+                    BackIconButton(onClick = navigateBack)
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = { performSearch.value = true }
+                ),
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.outlineVariant,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outlineVariant
+                )
+            )
+            SearchContentView(
+                viewModel = viewModel,
+                query = query,
+                performSearch = performSearch,
+                initialGenre = initialGenre,
+                initialTag = initialTag,
+                navigateToMediaDetails = navigateToMediaDetails,
+                navigateToCharacterDetails = navigateToCharacterDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
+                navigateToStudioDetails = navigateToStudioDetails,
+                navigateToUserDetails = navigateToUserDetails,
+            )
+        }//:Column
+    }//:Surface
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchContentView(
     viewModel: SearchViewModel,
     query: String,
     performSearch: MutableState<Boolean>,
-    initialMediaType: MediaType?,
     initialGenre: String?,
     initialTag: String?,
     navigateToMediaDetails: (Int) -> Unit,
@@ -78,7 +170,6 @@ fun SearchView(
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
-    var searchByGenre by remember { mutableStateOf(initialMediaType != null) }
     var showMoreFilters by rememberSaveable { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
@@ -87,13 +178,9 @@ fun SearchView(
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank() || searchByGenre
-                || initialGenre != null || initialTag != null
-                || uiState.mediaSort != MediaSort.SEARCH_MATCH
-            ) {
+            if (query.isNotBlank()) {
                 listState.scrollToItem(0)
                 viewModel.setQuery(query)
-                searchByGenre = false
             }
             performSearch.value = false
         }
