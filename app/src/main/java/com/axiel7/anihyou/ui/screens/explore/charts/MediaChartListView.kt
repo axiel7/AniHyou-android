@@ -70,17 +70,17 @@ fun MediaChartListView(
                 MediaItemHorizontal(
                     title = item.title?.userPreferred ?: "",
                     imageUrl = item.coverImage?.large,
-                    badgeContent = {
-                        Text(
-                            text = "#${index + 1}",
-                            color = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    },
                     score = item.meanScore ?: 0,
                     format = item.format ?: MediaFormat.UNKNOWN__,
                     year = item.startDate?.year,
                     onClick = {
                         navigateToMediaDetails(item.id)
+                    },
+                    badgeContent = {
+                        Text(
+                            text = "#${index + 1}",
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
                     }
                 )
             }

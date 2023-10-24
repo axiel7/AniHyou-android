@@ -1,7 +1,8 @@
 package com.axiel7.anihyou.ui.composables.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaItemHorizontal(
     title: String,
@@ -39,6 +41,7 @@ fun MediaItemHorizontal(
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
     onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -46,7 +49,7 @@ fun MediaItemHorizontal(
             .fillMaxWidth()
             .height(MEDIA_POSTER_SMALL_HEIGHT.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
         Box(
             modifier = Modifier
@@ -101,11 +104,12 @@ fun MediaItemHorizontal(
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
-    badgeContent: @Composable (RowScope.() -> Unit)? = null,
     score: Int,
     format: MediaFormat,
     year: Int?,
     onClick: () -> Unit,
+    onLongClick: () -> Unit = {},
+    badgeContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
     MediaItemHorizontal(
         title = title,
@@ -126,7 +130,8 @@ fun MediaItemHorizontal(
             )
         },
         badgeContent = badgeContent,
-        onClick = onClick
+        onClick = onClick,
+        onLongClick = onLongClick,
     )
 }
 

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
+import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
@@ -25,6 +26,7 @@ data class SearchUiState(
     val isDoujin: Boolean? = null,
     val isAdult: Boolean? = null,
     val country: CountryOfOrigin? = null,
+    val selectedMediaItem: SearchMediaQuery.Medium? = null,
 
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,

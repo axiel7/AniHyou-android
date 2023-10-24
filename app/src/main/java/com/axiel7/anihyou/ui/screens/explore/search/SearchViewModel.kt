@@ -15,6 +15,7 @@ import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.SearchRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -150,6 +151,27 @@ class SearchViewModel @Inject constructor(
             hasNextPage = true,
             isLoading = true
         )
+    }
+
+    fun selectMediaItem(value: SearchMediaQuery.Medium?) = mutableUiState.update {
+        it.copy(selectedMediaItem = value)
+    }
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedMediaItem?.let { selectedItem ->
+            val index = media.indexOf(selectedItem)
+            if (index != -1) {
+                media[index] = selectedItem.copy(
+                    mediaListEntry = if (newListEntry == null) null else
+                    SearchMediaQuery.MediaListEntry(
+                        __typename = "SearchMediaQuery.MediaListEntry",
+                        id = newListEntry.id,
+                        mediaId = newListEntry.mediaId,
+                        basicMediaListEntry = newListEntry
+                    )
+                )
+            }
+        }
     }
 
     val media = mutableStateListOf<SearchMediaQuery.Medium>()

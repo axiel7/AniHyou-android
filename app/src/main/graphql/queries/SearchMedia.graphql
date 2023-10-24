@@ -11,10 +11,7 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
             startDate_lesser: $startDateLesser, onList: $onList, isLicensed: $isLicensed, isAdult: $isAdult,
             countryOfOrigin: $country
         ) {
-            id
-            title {
-                userPreferred
-            }
+            ...BasicMediaDetails
             meanScore
             format
             coverImage {
@@ -22,6 +19,9 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
             }
             startDate {
                 year
+            }
+            mediaListEntry {
+                ...BasicMediaListEntry
             }
         }
         pageInfo {
