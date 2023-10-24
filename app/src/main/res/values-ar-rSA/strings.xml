@@ -25,7 +25,7 @@
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
     <string name="current">متداول</string>
-    <string name="planning">التخطيط</string>
+    <string name="planning">أرغب مشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
     <string name="paused">متوقف مؤقتاً</string>
@@ -330,4 +330,6 @@
     <string name="china">الصين</string>
     <string name="taiwan">تايوان</string>
     <string name="country">البلد/الدولة</string>
+    <string name="arabic">العربية</string>
+    <string name="brazilian">البرازيلية</string>
 </resources>
