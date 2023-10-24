@@ -19,10 +19,10 @@ import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-const val TRANSLATIONS_DESTINATION = "translations"
-
 private val translations = mapOf(
+    R.string.arabic to "Hussain889, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
     R.string.japanese to "axiel7",
+    R.string.brazilian to "Crono0, Torti, RickyM7, SamOak",
     R.string.russian to "Ronner231, grin3671",
     R.string.spanish to "axiel7",
     R.string.turkish to "hsinankirdar",

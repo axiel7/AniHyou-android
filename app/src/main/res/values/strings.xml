@@ -343,4 +343,6 @@
     <string name="china">China</string>
     <string name="taiwan">Taiwan</string>
     <string name="country">Country</string>
+    <string name="arabic">Arabic</string>
+    <string name="brazilian">Brazilian</string>
 </resources>
