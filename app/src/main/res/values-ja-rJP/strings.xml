@@ -3,7 +3,7 @@
     <string name="home">ホーム</string>
     <string name="anime">アニメ</string>
     <string name="manga">マンガ</string>
-    <string name="explore" comment="as short as possible">検索</string>
+    <string name="explore">検索</string>
     <string name="num_years">%s年</string>
     <string name="num_months">%sヵ月</string>
     <string name="num_weeks">%s週間</string>
@@ -237,7 +237,7 @@
     <string name="score_point_10_decimal">１０小数点（５.５/１０）</string>
     <string name="score_point_10">１０点（５/１０）</string>
     <string name="score_point_5">５点（３/５）</string>
-    <string name="score_point_3" comment="feel free to use an emoji or another smile face representation that is understandable in your language instead of :)">3点スマイリー　( ◠‿◠ )</string>
+    <string name="score_point_3">3点スマイリー　( ◠‿◠ )</string>
     <string name="no_media">メディアなし</string>
     <string name="every_six_hours">６時間毎</string>
     <string name="every_twelve_hours">１２時間毎</string>
@@ -317,7 +317,7 @@
     <string name="staff_role_adr_director">ADR ディレクター</string>
     <string name="hide_filters">フィルターを非表示</string>
     <string name="more_filters">その他のフィルター</string>
-    <string name="is_adult" comment="search filter is adult content">アダルト</string>
+    <string name="is_adult">アダルト</string>
     <string name="japan">日本</string>
     <string name="south_korea">韓国</string>
     <string name="china">中国</string>
