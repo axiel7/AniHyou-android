@@ -120,6 +120,7 @@
     <string name="genre_comedy">Komedie</string>
     <string name="genre_drama">Drama</string>
     <string name="genre_ecchi">Ecchi</string>
+    <string name="genre_fantasy">Fantasy</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horor</string>
     <string name="genre_mahou_shoujo">Mahou Shoujo</string>
@@ -141,4 +142,6 @@
     <string name="russian">Ruština</string>
     <string name="spanish">Španělština</string>
     <string name="turkish">Turecko</string>
+    <string name="arabic">Arabština</string>
+    <string name="brazilian">Brazilština</string>
 </resources>
