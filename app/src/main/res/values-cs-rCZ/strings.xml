@@ -62,6 +62,8 @@
     <string name="role_background">Kontext</string>
     <string name="related">Související</string>
     <string name="relation_adaptation">Adaptace</string>
+    <string name="prequel">Prequel</string>
+    <string name="sequel">Sequel</string>
     <string name="side_story">Vedlejší příběh</string>
     <string name="relation_character">Postava</string>
     <string name="relation_summary">Shrnutí</string>
@@ -111,6 +113,7 @@
     <string name="year">Rok</string>
     <string name="title_language">Jazyk titulku</string>
     <string name="all">Vše</string>
+    <string name="format_image">Image</string>
     <string name="list_status">Stav</string>
     <string name="share">Sdílet</string>
     <string name="search">Vyhledávání</string>
