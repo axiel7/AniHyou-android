@@ -14,4 +14,8 @@ data class MediaChartUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
+
+    companion object {
+        const val PER_PAGE = 25
+    }
 }

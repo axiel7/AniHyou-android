@@ -60,7 +60,8 @@ class MediaChartViewModel @Inject constructor(
             .flatMapLatest { uiState ->
                 mediaRepository.getMediaChartPage(
                     type = uiState.chartType!!,
-                    page = uiState.page
+                    page = uiState.page,
+                    perPage = MediaChartUiState.PER_PAGE
                 )
             }
             .onEach { result ->
@@ -68,9 +69,18 @@ class MediaChartViewModel @Inject constructor(
                     if (result is PagedResult.Success) {
                         if (it.page == 1) mediaChart.clear()
                         mediaChart.addAll(result.list)
+
+                        val hasNextPage = when (it.chartType) {
+                            ChartType.TOP_ANIME, ChartType.TOP_MANGA -> {
+                                // limit top 100
+                                it.page * MediaChartUiState.PER_PAGE < 100
+                            }
+
+                            else -> result.hasNextPage
+                        }
                         it.copy(
                             isLoading = false,
-                            hasNextPage = result.hasNextPage
+                            hasNextPage = hasNextPage
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -40,6 +42,9 @@ fun MediaChartListView(
         rememberTopAppBarState()
     )
 
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+
     DefaultScaffoldWithMediumTopAppBar(
         title = uiState.chartType?.localized().orEmpty(),
         navigationIcon = {
@@ -55,6 +60,7 @@ fun MediaChartListView(
                     top = padding.calculateTopPadding(),
                     end = padding.calculateEndPadding(LocalLayoutDirection.current)
                 ),
+            state = listState,
             contentPadding = PaddingValues(
                 bottom = padding.calculateBottomPadding()
             ),
