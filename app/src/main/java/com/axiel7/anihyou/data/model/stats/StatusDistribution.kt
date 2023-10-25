@@ -56,7 +56,7 @@ enum class StatusDistribution(
         val isDark = isSystemInDarkTheme()
         return when (status) {
             MediaListStatus.CURRENT -> if (isDark) stat_dark_onGreen else stat_light_onGreen
-            MediaListStatus.PLANNING -> MaterialTheme.colorScheme.onSurface
+            MediaListStatus.PLANNING -> if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.inverseOnSurface
             MediaListStatus.COMPLETED -> if (isDark) stat_dark_onBlue else stat_light_onBlue
             MediaListStatus.DROPPED -> if (isDark) stat_dark_onRed else stat_light_onRed
             MediaListStatus.PAUSED -> if (isDark) stat_dark_onYellow else stat_light_onYellow
