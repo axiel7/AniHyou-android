@@ -69,6 +69,8 @@ class EditMediaViewModel @Inject constructor(
                     completedAt = LocalDate.now()
                 )
             }
+        } else {
+            mutableUiState.update { it.copy(status = value) }
         }
     }
 
