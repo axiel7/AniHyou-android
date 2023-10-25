@@ -105,11 +105,13 @@ fun MediaInformationView(
             info = uiState.details?.title?.native,
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
-        InfoItemView(
-            title = stringResource(R.string.synonyms),
-            info = uiState.details?.synonyms?.joinToString("\n"),
-            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
-        )
+        if (!uiState.details?.synonyms.isNullOrEmpty()) {
+            InfoItemView(
+                title = stringResource(R.string.synonyms),
+                info = uiState.details?.synonyms?.joinToString("\n"),
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        }
         if (isAnime) {
             InfoClickableItemView(
                 title = stringResource(R.string.studios),

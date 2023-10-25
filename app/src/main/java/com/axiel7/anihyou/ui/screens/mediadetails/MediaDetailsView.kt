@@ -328,13 +328,16 @@ fun MediaDetailsView(
 
             // Synopsis
             Text(
-                text = uiState.details?.description?.htmlDecoded()?.toAnnotatedString()
-                    ?: buildAnnotatedString {
-                        if (uiState.isLoading)
-                            append(stringResource(R.string.lorem_ipsun))
-                        else
-                            append(stringResource(R.string.no_description))
-                    },
+                text = when {
+                    uiState.isLoading -> buildAnnotatedString {
+                        append(stringResource(R.string.lorem_ipsun))
+                    }
+                    uiState.details?.description.isNullOrBlank() -> buildAnnotatedString {
+                        append(stringResource(R.string.no_description))
+                    }
+                    else -> uiState.details?.description?.htmlDecoded()?.toAnnotatedString()
+                        ?: buildAnnotatedString { append(stringResource(R.string.no_description)) }
+                },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .clickable { isSynopsisExpanded = !isSynopsisExpanded }

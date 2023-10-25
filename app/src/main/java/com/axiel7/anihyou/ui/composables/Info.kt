@@ -66,11 +66,15 @@ fun <T> InfoClickableItemView(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items.forEach { item ->
-                AssistChip(
-                    onClick = { onItemClicked(item) },
-                    label = { Text(text = itemName(item)) }
-                )
+            if (items.isEmpty()) {
+                Text(text = stringResource(R.string.no_information))
+            } else {
+                items.forEach { item ->
+                    AssistChip(
+                        onClick = { onItemClicked(item) },
+                        label = { Text(text = itemName(item)) }
+                    )
+                }
             }
         }
     }
