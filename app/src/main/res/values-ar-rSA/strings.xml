@@ -54,7 +54,7 @@
     <string name="num_episodes">الحلَقات%s</string>
     <string name="num_chapters">الفصول%s</string>
     <string name="finished">منتهي</string>
-    <string name="releasing">الإصدار</string>
+    <string name="releasing">مستمر</string>
     <string name="not_yet_released">لم يصدر بعد</string>
     <string name="cancelled">مُلغى</string>
     <string name="hiatus">متوقف</string>
