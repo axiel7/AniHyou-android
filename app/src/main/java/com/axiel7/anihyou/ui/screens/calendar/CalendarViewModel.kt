@@ -32,17 +32,23 @@ class CalendarViewModel @Inject constructor(
 
     private val now: LocalDateTime = LocalDateTime.now()
 
-    fun setOnMyList(value: Boolean?) = mutableUiState.update { it.copy(onMyList = value) }
+    fun setOnMyList(value: Boolean?) = mutableUiState.update {
+        it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
+    }
 
-    fun setWeekday(value: Int) = mutableUiState.update { it.copy(weekday = value) }
+    fun setWeekday(value: Int) = mutableUiState.update {
+        it.copy(weekday = value, page = 1, hasNextPage = true, isLoading = true)
+    }
 
     val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
 
     init {
         mutableUiState
-            .filter { (it.hasNextPage || it.refresh) && it.page != 0 }
+            .filter { it.hasNextPage && it.weekday != 0 }
             .distinctUntilChanged { old, new ->
-                old.page == new.page && !new.refresh
+                old.page == new.page
+                        && old.weekday == new.weekday
+                        && old.onMyList == new.onMyList
             }
             .flatMapLatest { uiState ->
                 val start = now.thisWeekdayTimestamp(
@@ -63,10 +69,9 @@ class CalendarViewModel @Inject constructor(
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     mutableUiState.update {
-                        if (it.refresh) weeklyAnime.clear()
+                        if (it.page == 1) weeklyAnime.clear()
                         weeklyAnime.addAll(result.list)
                         it.copy(
-                            refresh = false,
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
                         )
@@ -75,19 +80,6 @@ class CalendarViewModel @Inject constructor(
                     mutableUiState.update {
                         result.toUiState(loadingWhen = it.page == 1)
                     }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        mutableUiState
-            .distinctUntilChanged { old, new ->
-                old.weekday == new.weekday
-                        || old.onMyList == new.onMyList
-            }
-            .filter { it.page != 0 }
-            .onEach {
-                mutableUiState.update {
-                    it.copy(refresh = true, page = 1, isLoading = true)
                 }
             }
             .launchIn(viewModelScope)
