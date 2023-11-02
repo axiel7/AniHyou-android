@@ -61,6 +61,8 @@
     <string name="role_background">Pozadie</string>
     <string name="related">Súvisiace</string>
     <string name="relation_adaptation">Adaptácia</string>
+    <string name="prequel">Prequel</string>
+    <string name="sequel">Sequel</string>
     <string name="side_story">Vedľajší príbeh</string>
     <string name="relation_character">Postava</string>
     <string name="relation_summary">Zhrnutie</string>
@@ -140,4 +142,6 @@
     <string name="russian">Ruština</string>
     <string name="spanish">Španielčina</string>
     <string name="turkish">Turečtina</string>
+    <string name="arabic">Arabčina</string>
+    <string name="brazilian">Brazílčina</string>
 </resources>

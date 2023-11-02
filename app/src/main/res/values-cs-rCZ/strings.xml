@@ -62,6 +62,8 @@
     <string name="role_background">Kontext</string>
     <string name="related">Související</string>
     <string name="relation_adaptation">Adaptace</string>
+    <string name="prequel">Prequel</string>
+    <string name="sequel">Sequel</string>
     <string name="side_story">Vedlejší příběh</string>
     <string name="relation_character">Postava</string>
     <string name="relation_summary">Shrnutí</string>
@@ -111,6 +113,7 @@
     <string name="year">Rok</string>
     <string name="title_language">Jazyk titulku</string>
     <string name="all">Vše</string>
+    <string name="format_image">Image</string>
     <string name="list_status">Stav</string>
     <string name="share">Sdílet</string>
     <string name="search">Vyhledávání</string>
@@ -120,6 +123,7 @@
     <string name="genre_comedy">Komedie</string>
     <string name="genre_drama">Drama</string>
     <string name="genre_ecchi">Ecchi</string>
+    <string name="genre_fantasy">Fantasy</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horor</string>
     <string name="genre_mahou_shoujo">Mahou Shoujo</string>
@@ -141,4 +145,6 @@
     <string name="russian">Ruština</string>
     <string name="spanish">Španělština</string>
     <string name="turkish">Turecko</string>
+    <string name="arabic">Arabština</string>
+    <string name="brazilian">Brazilština</string>
 </resources>

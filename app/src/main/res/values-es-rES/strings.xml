@@ -3,7 +3,7 @@
     <string name="home">Inicio</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
-    <string name="explore" comment="as short as possible">Explorar</string>
+    <string name="explore">Explorar</string>
     <string name="num_years">%s años</string>
     <string name="num_months">%s meses</string>
     <string name="num_weeks">%s semanas</string>
@@ -243,7 +243,7 @@
     <string name="score_point_10_decimal">10 Puntos Decimales (5.5/10)</string>
     <string name="score_point_10">10 Puntos (5/10)</string>
     <string name="score_point_5">5 Estrellas (3/5)</string>
-    <string name="score_point_3" comment="feel free to use an emoji or another smile face representation that is understandable in your language instead of :)">Caritas de 3 Puntos :)</string>
+    <string name="score_point_3">Caritas de 3 Puntos :)</string>
     <string name="no_media">Sin contenido</string>
     <string name="every_six_hours">Cada 6 horas</string>
     <string name="every_twelve_hours">Cada 12 horas</string>
@@ -325,10 +325,12 @@
     <string name="staff_role_adr_director">Director de ADR</string>
     <string name="hide_filters">Ocultar filtros</string>
     <string name="more_filters">Más filtros</string>
-    <string name="is_adult" comment="search filter is adult content">Adulto</string>
+    <string name="is_adult">Adulto</string>
     <string name="japan">Japón</string>
     <string name="south_korea">Corea del Sur</string>
     <string name="china">China</string>
     <string name="taiwan">Taiwán</string>
     <string name="country">País</string>
+    <string name="arabic">Árabe</string>
+    <string name="brazilian">Brasileño</string>
 </resources>

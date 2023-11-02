@@ -145,4 +145,6 @@
     <string name="russian">Російською</string>
     <string name="spanish">Іспанською</string>
     <string name="turkish">Турецькою</string>
+    <string name="arabic">Арабською</string>
+    <string name="brazilian">Бразильською</string>
 </resources>

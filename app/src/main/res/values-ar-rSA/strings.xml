@@ -3,7 +3,7 @@
     <string name="home">الصفحة الرئيسية</string>
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
-    <string name="explore" comment="as short as possible">أستكشف</string>
+    <string name="explore">أستكشف</string>
     <string name="num_years">%s سنة</string>
     <string name="num_months">%s شهور</string>
     <string name="num_weeks">%s أسابيع</string>
@@ -25,7 +25,7 @@
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
     <string name="current">متداول</string>
-    <string name="planning">التخطيط</string>
+    <string name="planning">أرغب مشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
     <string name="paused">متوقف مؤقتاً</string>
@@ -54,7 +54,7 @@
     <string name="num_episodes">الحلَقات%s</string>
     <string name="num_chapters">الفصول%s</string>
     <string name="finished">منتهي</string>
-    <string name="releasing">الإصدار</string>
+    <string name="releasing">مستمر</string>
     <string name="not_yet_released">لم يصدر بعد</string>
     <string name="cancelled">مُلغى</string>
     <string name="hiatus">متوقف</string>
@@ -63,7 +63,7 @@
     <string name="favorites">المُفضلات</string>
     <string name="episode_in_time">الحلقة %d في %s</string>
     <string name="airing">يبث</string>
-    <string name="num_episodes_behind">حلقات متأخر عنها %s</string>
+    <string name="num_episodes_behind">حلقات لم أشاهدها بعد %s</string>
     <string name="information">معلومات</string>
     <string name="duration">المدة</string>
     <string name="start_date">تاريخ البث</string>
@@ -243,7 +243,7 @@
     <string name="score_point_10_decimal">10 نقاط عشرية (5.5/10)</string>
     <string name="score_point_10">10 نقاط (5/10)</string>
     <string name="score_point_5">5 نجوم (3/5)</string>
-    <string name="score_point_3" comment="feel free to use an emoji or another smile face representation that is understandable in your language instead of :)">3 نقاط مبتسمة :)</string>
+    <string name="score_point_3">3 نقاط مبتسمة :)</string>
     <string name="no_media">لا وسائط</string>
     <string name="every_six_hours">كل 6 ساعات</string>
     <string name="every_twelve_hours">كل 12 ساعة</string>
@@ -324,10 +324,12 @@
     <string name="staff_role_adr_director">مدير الصوتيات</string>
     <string name="hide_filters">إخفاء الفلاتر</string>
     <string name="more_filters">المزيد من الفلاتر</string>
-    <string name="is_adult" comment="search filter is adult content">للكبار</string>
+    <string name="is_adult">للكبار</string>
     <string name="japan">اليابان</string>
     <string name="south_korea">كوريا الجنوبية</string>
     <string name="china">الصين</string>
     <string name="taiwan">تايوان</string>
     <string name="country">البلد/الدولة</string>
+    <string name="arabic">العربية</string>
+    <string name="brazilian">البرازيلية</string>
 </resources>

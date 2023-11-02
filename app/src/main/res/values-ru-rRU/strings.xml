@@ -3,7 +3,7 @@
     <string name="home">Главная</string>
     <string name="anime">Аниме</string>
     <string name="manga">Манга</string>
-    <string name="explore" comment="as short as possible">Исследовать</string>
+    <string name="explore">Исследовать</string>
     <string name="num_years">%s года</string>
     <string name="num_months">%s месяца</string>
     <string name="num_weeks">%s недели</string>
@@ -243,7 +243,7 @@
     <string name="score_point_10_decimal">10-балльная десятичная система (5,5/10)</string>
     <string name="score_point_10">10 Очков (5/10)</string>
     <string name="score_point_5">5 Звезд (3/5)</string>
-    <string name="score_point_3" comment="feel free to use an emoji or another smile face representation that is understandable in your language instead of :)">3 Очка Смайл :)</string>
+    <string name="score_point_3">3 Очка Смайл :)</string>
     <string name="no_media">Нет медиа</string>
     <string name="every_six_hours">Каждые 6 часов</string>
     <string name="every_twelve_hours">Каждые 12 часов</string>
@@ -324,10 +324,12 @@
     <string name="staff_role_adr_director">Директор дублирования</string>
     <string name="hide_filters">Скрыть фильтры</string>
     <string name="more_filters">Больше фильтров</string>
-    <string name="is_adult" comment="search filter is adult content">Взрослый</string>
+    <string name="is_adult">Взрослый</string>
     <string name="japan">Япония</string>
     <string name="south_korea">Южная Корея</string>
     <string name="china">Китай</string>
     <string name="taiwan">Тайвань</string>
     <string name="country">Страна</string>
+    <string name="arabic">Арабский</string>
+    <string name="brazilian">Бразильский</string>
 </resources>
