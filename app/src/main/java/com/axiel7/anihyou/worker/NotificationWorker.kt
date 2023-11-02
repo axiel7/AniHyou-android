@@ -37,7 +37,6 @@ class NotificationWorker @AssistedInject constructor(
     // AniList API does not have a socket for notifications, so we schedule a work with an interval
     // chosen by the user and check for new notifications
     override suspend fun doWork(): Result {
-        if (isStopped) return Result.success()
 
         // check first the unread count so we can skip early if there aren't unread notifications
         // e.g.: the user read the notifications on web
