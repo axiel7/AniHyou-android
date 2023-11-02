@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.InfoItemView
+import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsUiState
 import com.axiel7.anihyou.utils.DateUtils.formatted
+import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import io.github.fornewid.placeholder.material3.placeholder
 
 @Composable
@@ -40,6 +42,7 @@ fun CharacterInfoView(
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     var showSpoiler by remember { mutableStateOf(false) }
+    val isCurrentLanguageEn = LocalIsLanguageEn.current
 
     Column(
         modifier = modifier
@@ -138,6 +141,12 @@ fun CharacterInfoView(
                 markdown = uiState.character.description,
                 modifier = Modifier.padding(16.dp)
             )
+            if (!isCurrentLanguageEn) {
+                TranslateIconButton(
+                    text = uiState.character.description,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }
     }//: Column
 }

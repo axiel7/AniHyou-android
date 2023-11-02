@@ -22,11 +22,13 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.staff.yearsActiveFormatted
 import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.InfoItemView
+import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsUiState
 import com.axiel7.anihyou.utils.DateUtils.formatted
+import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
 
 @Composable
@@ -36,6 +38,8 @@ fun StaffInfoView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val isCurrentLanguageEn = LocalIsLanguageEn.current
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -135,6 +139,12 @@ fun StaffInfoView(
                 markdown = uiState.details.description,
                 modifier = Modifier.padding(16.dp)
             )
+            if (!isCurrentLanguageEn) {
+                TranslateIconButton(
+                    text = uiState.details.description,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }
     }//: Column
 }

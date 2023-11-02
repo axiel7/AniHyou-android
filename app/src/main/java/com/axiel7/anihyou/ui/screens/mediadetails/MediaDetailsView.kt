@@ -69,6 +69,7 @@ import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.common.ShareIconButton
+import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
@@ -82,9 +83,8 @@ import com.axiel7.anihyou.ui.screens.mediadetails.stats.MediaStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
-import com.axiel7.anihyou.utils.ContextUtils.getCurrentLanguageTag
-import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
@@ -126,7 +126,7 @@ fun MediaDetailsView(
             else R.drawable.expand_more_24
         }
     }
-    val isCurrentLanguageEn = remember { getCurrentLanguageTag()?.startsWith("en") }
+    val isCurrentLanguageEn = LocalIsLanguageEn.current
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     if (sheetState.isVisible && uiState.details != null) {
@@ -351,22 +351,17 @@ fun MediaDetailsView(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (isCurrentLanguageEn == false) {
-                    IconButton(onClick = {
-                        uiState.details?.description?.let {
-                            context.openInGoogleTranslate(it.htmlStripped())
-                        }
-                    }) {
-                        Icon(
-                            painter = painterResource(R.drawable.translate_24),
-                            contentDescription = stringResource(R.string.translate)
-                        )
-                    }
-                } else Spacer(modifier = Modifier.size(48.dp))
+                if (!isCurrentLanguageEn) {
+                    TranslateIconButton(
+                        text = uiState.details?.description?.htmlStripped()
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(48.dp))
+                }
 
                 IconButton(
                     onClick = { isSynopsisExpanded = !isSynopsisExpanded }

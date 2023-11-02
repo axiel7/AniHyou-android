@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
@@ -149,6 +150,25 @@ fun ReplyButton(
             text = stringResource(R.string.reply),
             color = tint,
             fontSize = fontSize,
+        )
+    }
+}
+
+@Composable
+fun TranslateIconButton(
+    text: String?,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    IconButton(
+        onClick = {
+            text?.let { context.openInGoogleTranslate(it) }
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.translate_24),
+            contentDescription = stringResource(R.string.translate)
         )
     }
 }

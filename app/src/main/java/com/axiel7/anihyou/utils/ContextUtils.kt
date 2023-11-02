@@ -17,9 +17,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
-import androidx.core.os.LocaleListCompat
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.utils.LocaleUtils.getCurrentLanguageTag
 
 object ContextUtils {
 
@@ -124,8 +124,6 @@ object ContextUtils {
         is ContextWrapper -> baseContext.getActivity()
         else -> null
     }
-
-    fun getCurrentLanguageTag() = LocaleListCompat.getAdjustedDefault()[0]?.toLanguageTag()
 
     fun Context.openInGoogleTranslate(text: String) {
         try {
