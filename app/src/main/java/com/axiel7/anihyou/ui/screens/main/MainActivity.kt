@@ -37,9 +37,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.axiel7.anihyou.App
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.ui.common.AppColorMode
@@ -52,8 +50,6 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @AndroidEntryPoint
@@ -64,10 +60,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            viewModel.accessToken.collectLatest { App.accessToken = it }
-        }
 
         var deepLink: DeepLink? = null
         when {
@@ -115,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             else theme == Theme.DARK || theme == Theme.BLACK
             val appColor by viewModel.appColor.collectAsStateWithLifecycle()
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(AppColorMode.DEFAULT)
-            val accessToken by viewModel.accessToken.collectAsStateWithLifecycle()
+            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
@@ -143,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     MainView(
                         windowSizeClass = windowSizeClass,
-                        isLoggedIn = accessToken != null,
+                        isLoggedIn = isLoggedIn,
                         lastTabOpened = lastTabOpened,
                         saveLastTab = viewModel::saveLastTab,
                         homeTab = homeTab,

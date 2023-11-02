@@ -31,8 +31,4 @@ class App : Application(), Configuration.Provider, ImageLoaderFactory {
                 }
             }
             .build()
-
-    companion object {
-        var accessToken: String? = null
-    }
 }

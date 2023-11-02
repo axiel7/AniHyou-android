@@ -4,7 +4,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
 import com.apollographql.apollo3.cache.normalized.normalizedCache
 import com.apollographql.apollo3.network.okHttpClient
-import com.axiel7.anihyou.App
+import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.utils.ANILIST_GRAPHQL_URL
 import dagger.Module
 import dagger.Provides
@@ -21,11 +21,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApolloClient(): ApolloClient {
+    fun provideApolloClient(
+        authorizationInterceptor: AuthorizationInterceptor
+    ): ApolloClient {
         val cacheFactory = MemoryCacheFactory(maxSizeBytes = 10 * 1024 * 1024)
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AuthorizationInterceptor())
+            .addInterceptor(authorizationInterceptor)
             .build()
 
         return ApolloClient.Builder()
@@ -35,16 +37,26 @@ object NetworkModule {
             .build()
     }
 
-    private class AuthorizationInterceptor : Interceptor {
+    class AuthorizationInterceptor(
+        private val globalVariables: GlobalVariables,
+    ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder()
                 .apply {
-                    App.accessToken?.let {
+                    globalVariables.accessToken?.let {
                         addHeader("Authorization", "Bearer $it")
                     }
                 }
                 .build()
             return chain.proceed(request)
         }
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthorizationInterceptor(
+        globalVariables: GlobalVariables
+    ): AuthorizationInterceptor {
+        return AuthorizationInterceptor(globalVariables)
     }
 }
