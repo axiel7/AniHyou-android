@@ -1,0 +1,8 @@
+mutation RateReview($reviewId: Int, $rating: ReviewRating) {
+    RateReview(reviewId: $reviewId, rating: $rating) {
+        id
+        rating
+        ratingAmount
+        userRating
+    }
+}

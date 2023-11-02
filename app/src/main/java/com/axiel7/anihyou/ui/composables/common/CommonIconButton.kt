@@ -21,6 +21,7 @@ import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun BackIconButton(
@@ -169,6 +170,34 @@ fun TranslateIconButton(
         Icon(
             painter = painterResource(R.drawable.translate_24),
             contentDescription = stringResource(R.string.translate)
+        )
+    }
+}
+
+@Composable
+fun LikeButton(
+    isLiked: Boolean,
+    modifier: Modifier = Modifier,
+    likeCount: Int = 0,
+    isDislike: Boolean = false,
+    onClick: () -> Unit,
+) {
+    val icon = when {
+        isDislike && isLiked -> R.drawable.thumb_down_filled_24
+        isDislike -> R.drawable.thumb_down_24
+        isLiked -> R.drawable.thumb_up_filled_24
+        else -> R.drawable.thumb_up_24
+    }
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        if (likeCount > 0) {
+            Text(text = likeCount.format())
+        }
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = "like"
         )
     }
 }

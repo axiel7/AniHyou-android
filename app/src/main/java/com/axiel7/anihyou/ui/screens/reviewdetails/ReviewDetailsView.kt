@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -28,9 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.review.userRatingsString
+import com.axiel7.anihyou.type.ReviewRating
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.LikeButton
 import com.axiel7.anihyou.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.webview.HtmlWebView
@@ -92,6 +95,15 @@ fun ReviewDetailsView(
                 )
             }
 
+            TextSubtitleVertical(
+                text = "${uiState.details?.score}/100",
+                subtitle = stringResource(R.string.score),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+                isLoading = uiState.isLoading
+            )
+
             // Ratings
             Row(
                 modifier = Modifier
@@ -100,17 +112,31 @@ fun ReviewDetailsView(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 TextSubtitleVertical(
-                    text = "${uiState.details?.score}/100",
-                    subtitle = stringResource(R.string.score),
-                    isLoading = uiState.isLoading
-                )
-                TextSubtitleVertical(
                     text = uiState.details?.userRatingsString(),
                     subtitle = stringResource(R.string.users_likes),
                     isLoading = uiState.isLoading
                 )
+                val isUpvote = uiState.details?.userRating == ReviewRating.UP_VOTE
+                LikeButton(
+                    isLiked = isUpvote,
+                    onClick = {
+                        viewModel.rateReview(
+                            rating = if (isUpvote) ReviewRating.NO_VOTE else ReviewRating.UP_VOTE
+                        )
+                    }
+                )
+                val isDownvote = uiState.details?.userRating == ReviewRating.DOWN_VOTE
+                LikeButton(
+                    isLiked = isDownvote,
+                    isDislike = true,
+                    onClick = {
+                        viewModel.rateReview(
+                            rating = if (isDownvote) ReviewRating.NO_VOTE else ReviewRating.DOWN_VOTE
+                        )
+                    }
+                )
             }
-        }
+        }//:Column
     }
 }
 
