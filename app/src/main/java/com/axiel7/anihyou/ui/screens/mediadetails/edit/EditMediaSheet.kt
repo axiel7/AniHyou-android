@@ -251,7 +251,7 @@ fun EditMediaSheet(
                     ScoreFormat.POINT_3 -> {
                         SmileyRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
-                            initialRating = uiState.score ?: 0.0,
+                            rating = uiState.score ?: 0.0,
                             onRatingChanged = viewModel::onChangeScore
                         )
                     }

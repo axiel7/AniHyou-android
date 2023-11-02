@@ -202,8 +202,8 @@ fun Int.smileyOnPrimaryColor(): Color {
 }
 
 fun Int.smileyIcon(filled: Boolean) = when (this) {
-    1 -> if (filled) R.drawable.mood_bad_filled_24 else R.drawable.mood_bad_24
-    2 -> if (filled) R.drawable.sentiment_satisfied_filled_24 else R.drawable.sentiment_satisfied_24
-    3 -> if (filled) R.drawable.sentiment_very_satisfied_filled_24 else R.drawable.sentiment_very_satisfied_24
+    1 -> if (filled) R.drawable.sentiment_dissatisfied_filled_24 else R.drawable.sentiment_dissatisfied_24
+    2 -> if (filled) R.drawable.sentiment_neutral_filled_24 else R.drawable.sentiment_neutral_24
+    3 -> if (filled) R.drawable.sentiment_satisfied_filled_24 else R.drawable.sentiment_satisfied_24
     else -> R.drawable.error_24
 }

@@ -14,65 +14,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.smileyIcon
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun SmileyRatingView(
     modifier: Modifier = Modifier,
-    initialRating: Double = 0.0,
+    rating: Double,
     onRatingChanged: (Double) -> Unit,
 ) {
-    var rating by remember { mutableDoubleStateOf(initialRating) }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(
-            onClick = {
-                rating = if (rating == 1.0) 0.0 else 1.0
-                onRatingChanged(rating)
+        for (rateInt in 1..3) {
+            val rate = rateInt.toDouble()
+            IconButton(
+                onClick = {
+                    onRatingChanged(
+                        if (rating == rate) 0.0 else rate
+                    )
+                }
+            ) {
+                Icon(
+                    painter = painterResource(rateInt.smileyIcon(filled = rating == rate)),
+                    contentDescription = "smile$rateInt",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
-        ) {
-            Icon(
-                painter = painterResource(
-                    if (rating == 1.0) R.drawable.mood_bad_filled_24
-                    else R.drawable.mood_bad_24
-                ),
-                contentDescription = "smile1",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-        IconButton(
-            onClick = {
-                rating = if (rating == 2.0) 0.0 else 2.0
-                onRatingChanged(rating)
-            }
-        ) {
-            Icon(
-                painter = painterResource(
-                    if (rating == 2.0) R.drawable.sentiment_satisfied_filled_24
-                    else R.drawable.sentiment_satisfied_24
-                ),
-                contentDescription = "smile2",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-        IconButton(
-            onClick = {
-                rating = if (rating == 3.0) 0.0 else 3.0
-                onRatingChanged(rating)
-            }
-        ) {
-            Icon(
-                painter = painterResource(
-                    if (rating == 3.0) R.drawable.sentiment_very_satisfied_filled_24
-                    else R.drawable.sentiment_very_satisfied_24
-                ),
-                contentDescription = "smile3",
-                tint = MaterialTheme.colorScheme.primary
-            )
         }
     }
 }
@@ -80,10 +49,12 @@ fun SmileyRatingView(
 @Preview
 @Composable
 fun SmileyRatingViewPreview() {
+    var rating by remember { mutableDoubleStateOf(0.0) }
     AniHyouTheme {
         Surface {
             SmileyRatingView(
-                onRatingChanged = {}
+                rating = rating,
+                onRatingChanged = { rating = it }
             )
         }
     }
