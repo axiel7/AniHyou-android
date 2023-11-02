@@ -76,7 +76,7 @@ object ContextUtils {
         Intent(Intent.ACTION_VIEW, uri).apply {
             val defaultBrowser =
                 findBrowserIntentActivities(PackageManager.MATCH_DEFAULT_ONLY).firstOrNull()
-            if (defaultBrowser != null) {
+            if (defaultBrowser != null && defaultBrowser.isDefault) {
                 try {
                     setPackage(defaultBrowser.activityInfo.packageName)
                     startActivity(this)
