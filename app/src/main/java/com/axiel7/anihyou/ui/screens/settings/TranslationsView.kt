@@ -21,6 +21,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 private val translations = mapOf(
     R.string.arabic to "Hussain889, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
+    R.string.indonesian to "Clxf12",
     R.string.japanese to "axiel7",
     R.string.brazilian to "Crono0, Torti, RickyM7, SamOak",
     R.string.russian to "Ronner231, grin3671",
