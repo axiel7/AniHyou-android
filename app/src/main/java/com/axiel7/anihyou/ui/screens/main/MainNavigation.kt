@@ -126,7 +126,7 @@ fun MainNavigation(
                     navController.navigate(
                         NavDestination.UserDetails.putArguments(
                             mapOf(
-                                NavArgument.UserId to userId?.toString(),
+                                NavArgument.UserId to (userId ?: 0).toString(),
                                 NavArgument.UserName to deepLink.id
                             )
                         )

@@ -134,6 +134,9 @@ class ProfileViewModel @Inject constructor(
 
     init {
         combine(userId, userName) { id, name ->
+            if (id != 0) id to name
+            else null to name
+        }.onEach { (id, name) ->
             mutableUiState.update {
                 it.copy(isMyProfile = id == null && name == null)
             }
