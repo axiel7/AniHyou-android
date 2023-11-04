@@ -24,7 +24,7 @@ import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 
 @Composable
 fun CustomListsDialog(
-    lists: LinkedHashMap<String, Boolean>,
+    lists: Map<String, Boolean>,
     isLoading: Boolean,
     onConfirm: (List<String>) -> Unit,
     onDismiss: () -> Unit,

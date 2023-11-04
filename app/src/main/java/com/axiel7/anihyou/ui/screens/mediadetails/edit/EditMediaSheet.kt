@@ -115,9 +115,9 @@ fun EditMediaSheet(
         )
     }
 
-    if (uiState.openCustomListsDialog && uiState.customLists != null) {
+    if (uiState.openCustomListsDialog) {
         CustomListsDialog(
-            lists = uiState.customLists!!,
+            lists = uiState.customLists.orEmpty(),
             isLoading = uiState.isLoading,
             onConfirm = {
                 viewModel.updateCustomLists(it)
