@@ -73,6 +73,9 @@ fun WebView(
     AndroidView(
         factory = { context ->
             (factory?.invoke(context) ?: WebView(context)).apply {
+                // weird workaround for a rare crash of WebView with Compose Navigation animations
+                this.alpha = 0.99f
+
                 onCreated(this)
                 if (!hardwareEnabled) setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
@@ -86,7 +89,9 @@ fun WebView(
         },
         modifier = modifier,
         onRelease = {
+            // this also seems to fix the crash with Navigation
             it.visibility = View.INVISIBLE
+
             onDispose(it)
             it.stopLoading()
             it.destroy()
