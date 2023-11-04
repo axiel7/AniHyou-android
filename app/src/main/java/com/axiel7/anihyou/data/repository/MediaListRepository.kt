@@ -52,17 +52,18 @@ class MediaListRepository @Inject constructor(
         }
 
     fun updateEntry(
-        oldEntry: BasicMediaListEntry?,
+        oldEntry: BasicMediaListEntry? = null,
         mediaId: Int,
-        status: MediaListStatus?,
-        score: Double?,
-        progress: Int?,
-        progressVolumes: Int?,
-        startedAt: FuzzyDate?,
-        completedAt: FuzzyDate?,
-        repeat: Int?,
-        private: Boolean?,
-        notes: String?,
+        status: MediaListStatus? = null,
+        score: Double? = null,
+        progress: Int? = null,
+        progressVolumes: Int? = null,
+        startedAt: FuzzyDate? = null,
+        completedAt: FuzzyDate? = null,
+        repeat: Int? = null,
+        private: Boolean? = null,
+        notes: String? = null,
+        customLists: List<String?>? = null,
     ) = api
         .updateEntryMutation(
             mediaId = mediaId,
@@ -78,10 +79,11 @@ class MediaListRepository @Inject constructor(
             repeat = if (repeat != oldEntry?.repeat) repeat else null,
             private = if (private != oldEntry?.private) private else null,
             notes = if (notes != oldEntry?.notes) notes else null,
+            customLists = customLists,
         )
         .toFlow()
         .asDataResult {
-            it.SaveMediaListEntry?.basicMediaListEntry
+            it.SaveMediaListEntry
         }
 
     fun deleteEntry(id: Int) = api
@@ -89,5 +91,13 @@ class MediaListRepository @Inject constructor(
         .toFlow()
         .asDataResult {
             it.DeleteMediaListEntry
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getMediaListCustomLists(id: Int, userId: Int) = api
+        .mediaListCustomLists(id, userId)
+        .toFlow()
+        .asDataResult {
+            it.MediaList?.customLists as? LinkedHashMap<String, Boolean>
         }
 }

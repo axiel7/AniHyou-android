@@ -13,15 +13,19 @@ import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class EditMediaViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
@@ -32,6 +36,9 @@ class EditMediaViewModel @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
 
     val scoreFormat = defaultPreferencesRepository.scoreFormat
+        .stateInViewModel()
+
+    val userId = defaultPreferencesRepository.userId
         .stateInViewModel()
 
     fun setMediaDetails(value: BasicMediaDetails) =
@@ -166,7 +173,7 @@ class EditMediaViewModel @Inject constructor(
             if (result is DataResult.Success) {
                 it.copy(
                     isLoading = false,
-                    listEntry = result.data ?: it.listEntry,
+                    listEntry = result.data?.basicMediaListEntry ?: it.listEntry,
                     updateSuccess = result.data != null
                 )
             } else {
@@ -181,6 +188,57 @@ class EditMediaViewModel @Inject constructor(
             )
         }
     }.launchIn(viewModelScope)
+
+    @Suppress("UNCHECKED_CAST")
+    fun updateCustomLists(customsList: List<String>) = mediaListRepository
+        .updateEntry(
+            mediaId = uiState.value.mediaDetails!!.id,
+            customLists = customsList
+        ).onEach { result ->
+            mutableUiState.update {
+                if (result is DataResult.Success) {
+                    it.copy(
+                        isLoading = false,
+                        customLists = result.data?.customLists as? LinkedHashMap<String, Boolean>,
+                        openCustomListsDialog = false
+                    )
+                } else {
+                    result.toUiState()
+                }
+            }
+        }.catch {
+            mutableUiState.update { it.copy(isLoading = false) }
+        }.launchIn(viewModelScope)
+
+    fun getCustomLists() {
+        uiState.value.listEntry?.id?.let { entryId ->
+            userId
+                .filterNotNull()
+                .flatMapLatest { userId ->
+                    mediaListRepository.getMediaListCustomLists(entryId, userId)
+                }
+                .onEach { result ->
+                    mutableUiState.update {
+                        if (result is DataResult.Success) {
+                            it.copy(
+                                isLoading = false,
+                                customLists = result.data,
+                                openCustomListsDialog = true
+                            )
+                        } else {
+                            result.toUiState()
+                        }
+                    }
+                }
+                .launchIn(viewModelScope)
+        }
+    }
+
+    fun toggleCustomListsDialog(open: Boolean) {
+        mutableUiState.update {
+            it.copy(openCustomListsDialog = open)
+        }
+    }
 
     fun toggleDeleteDialog(open: Boolean) {
         mutableUiState.update {

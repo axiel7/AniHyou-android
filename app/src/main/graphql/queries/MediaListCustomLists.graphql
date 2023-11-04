@@ -1,0 +1,6 @@
+# the userId is always required otherwise it returns null (wtf)
+query MediaListCustomLists($id: Int, $userId: Int) {
+    MediaList(id: $id, userId: $userId) {
+        customLists
+    }
+}

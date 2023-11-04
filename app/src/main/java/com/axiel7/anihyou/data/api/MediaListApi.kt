@@ -5,6 +5,7 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.DeleteMediaListMutation
+import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
@@ -62,6 +63,7 @@ class MediaListApi @Inject constructor(
         repeat: Int?,
         private: Boolean?,
         notes: String?,
+        customLists: List<String?>?,
     ) = client
         .mutation(
             UpdateEntryMutation(
@@ -75,6 +77,7 @@ class MediaListApi @Inject constructor(
                 repeat = Optional.presentIfNotNull(repeat),
                 private = Optional.presentIfNotNull(private),
                 notes = Optional.presentIfNotNull(notes),
+                customLists = Optional.presentIfNotNull(customLists),
             )
         )
 
@@ -82,6 +85,17 @@ class MediaListApi @Inject constructor(
         .mutation(
             DeleteMediaListMutation(
                 mediaListEntryId = Optional.present(id)
+            )
+        )
+
+    fun mediaListCustomLists(
+        id: Int,
+        userId: Int
+    ) = client
+        .query(
+            MediaListCustomListsQuery(
+                id = Optional.present(id),
+                userId = Optional.present(userId)
             )
         )
 }

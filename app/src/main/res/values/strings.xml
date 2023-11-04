@@ -346,4 +346,6 @@
     <string name="arabic">Arabic</string>
     <string name="brazilian">Brazilian</string>
     <string name="indonesian">Indonesian</string>
+    <string name="custom_lists">Custom Lists</string>
+    <string name="no_custom_lists">No custom lists</string>
 </resources>

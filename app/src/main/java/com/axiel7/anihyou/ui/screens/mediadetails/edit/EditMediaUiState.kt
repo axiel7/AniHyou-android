@@ -20,11 +20,13 @@ data class EditMediaUiState(
     val repeatCount: Int? = null,
     val isPrivate: Boolean? = null,
     val notes: String? = null,
+    val customLists: LinkedHashMap<String, Boolean>? = null,
 
     val openDatePicker: Boolean = false,
     val selectedDateType: Int = -1,
     val updateSuccess: Boolean = false,
     val openDeleteDialog: Boolean = false,
+    val openCustomListsDialog: Boolean = false,
 
     override val error: String? = null,
     override val isLoading: Boolean = false,

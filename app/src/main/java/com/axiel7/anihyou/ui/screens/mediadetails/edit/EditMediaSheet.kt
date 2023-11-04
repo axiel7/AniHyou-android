@@ -58,6 +58,7 @@ import com.axiel7.anihyou.ui.composables.common.TextCheckbox
 import com.axiel7.anihyou.ui.composables.scores.FiveStarRatingView
 import com.axiel7.anihyou.ui.composables.scores.SliderRatingView
 import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.CustomListsDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDatePicker
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaProgressRow
@@ -114,6 +115,17 @@ fun EditMediaSheet(
             onDismiss = {
                 viewModel.toggleDeleteDialog(false)
             }
+        )
+    }
+
+    if (uiState.openCustomListsDialog && uiState.customLists != null) {
+        CustomListsDialog(
+            lists = uiState.customLists!!,
+            isLoading = uiState.isLoading,
+            onConfirm = {
+                viewModel.updateCustomLists(it)
+            },
+            onDismiss = { viewModel.toggleCustomListsDialog(false) }
         )
     }
 
@@ -314,17 +326,33 @@ fun EditMediaSheet(
                 onPlusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.plus(1)) }
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+            // Custom lists
+            TextButton(
+                onClick = {
+                    if (uiState.customLists == null) viewModel.getCustomLists()
+                    else viewModel.toggleCustomListsDialog(true)
+                }
             ) {
-                TextCheckbox(
-                    text = stringResource(R.string.list_private),
-                    checked = uiState.isPrivate ?: false,
-                    onCheckedChange = viewModel::setIsPrivate
+                if (uiState.isLoading) {
+                    SmallCircularProgressIndicator()
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.list_alt_24),
+                        contentDescription = stringResource(R.string.custom_lists)
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.custom_lists),
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
+            
+            TextCheckbox(
+                text = stringResource(R.string.list_private),
+                checked = uiState.isPrivate ?: false,
+                onCheckedChange = viewModel::setIsPrivate,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
             // Notes
             OutlinedTextField(
