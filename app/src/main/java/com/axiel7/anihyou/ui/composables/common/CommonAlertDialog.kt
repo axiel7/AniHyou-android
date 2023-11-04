@@ -12,12 +12,11 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -105,17 +104,15 @@ fun <T : Localizable> DialogWithRadioSelection(
 
 @Composable
 fun <T : Localizable> DialogWithCheckboxSelection(
-    values: Array<T>,
-    defaultValues: Array<T>,
+    values: List<T>,
+    defaultValues: List<T>,
     title: String? = null,
     onConfirm: (List<T>) -> Unit,
     onDismiss: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
-    val selectedValues = remember { mutableStateListOf<T>() }
-
-    LaunchedEffect(defaultValues) {
-        selectedValues.addAll(defaultValues)
+    val selectedValues = remember {
+        defaultValues.toMutableStateList()
     }
 
     AlertDialog(

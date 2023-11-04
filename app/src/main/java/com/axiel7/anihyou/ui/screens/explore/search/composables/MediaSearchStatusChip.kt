@@ -23,8 +23,8 @@ fun MediaSearchStatusChip(
 
     if (openDialog) {
         DialogWithCheckboxSelection(
-            values = MediaStatusLocalizable.entries.toTypedArray(),
-            defaultValues = selectedMediaStatuses.toTypedArray(),
+            values = MediaStatusLocalizable.entries,
+            defaultValues = selectedMediaStatuses,
             title = stringResource(R.string.media_status),
             onConfirm = {
                 openDialog = false

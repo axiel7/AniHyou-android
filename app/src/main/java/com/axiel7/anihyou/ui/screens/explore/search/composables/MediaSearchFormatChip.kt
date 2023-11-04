@@ -27,7 +27,7 @@ fun MediaSearchFormatChip(
         DialogWithCheckboxSelection(
             values = if (mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
             else MediaFormatLocalizable.mangaEntries,
-            defaultValues = selectedMediaFormats.toTypedArray(),
+            defaultValues = selectedMediaFormats,
             title = stringResource(R.string.format),
             onConfirm = {
                 openDialog = false

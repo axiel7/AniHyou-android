@@ -28,7 +28,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -66,7 +65,6 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.utils.DateUtils.toLocalized
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,7 +76,6 @@ fun EditMediaSheet(
     onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val datePickerState = rememberDatePickerState()
 
     val viewModel: EditMediaViewModel = hiltViewModel()
@@ -167,7 +164,7 @@ fun EditMediaSheet(
                     Text(text = stringResource(R.string.cancel))
                 }
 
-                Button(onClick = { scope.launch { viewModel.updateListEntry() } }) {
+                Button(onClick = { viewModel.updateListEntry() }) {
                     if (uiState.isLoading) {
                         SmallCircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary
