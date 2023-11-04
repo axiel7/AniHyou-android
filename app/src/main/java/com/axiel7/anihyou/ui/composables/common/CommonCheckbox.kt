@@ -20,17 +20,19 @@ fun TextCheckbox(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.clickable {
-            onCheckedChange(!checked)
-        },
+        modifier = modifier
+            .clickable { onCheckedChange(!checked) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            modifier = Modifier.padding(start = 8.dp)
         )
-        Text(text = text)
+        Text(
+            text = text,
+            modifier = Modifier
+                .padding(top = 8.dp, end = 8.dp, bottom = 8.dp)
+        )
     }
 }
 
