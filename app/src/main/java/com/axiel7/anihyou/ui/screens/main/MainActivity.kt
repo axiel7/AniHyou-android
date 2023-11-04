@@ -40,7 +40,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.home.HomeTab
@@ -96,18 +95,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         //get necessary preferences while on splashscreen
+        val initialIsLoggedIn = viewModel.isLoggedIn.firstBlocking()
+        val initialTheme = viewModel.theme.firstBlocking()
+        val initialAppColor = viewModel.appColor.firstBlocking()
+        val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val startTab = viewModel.startTab.firstBlocking()
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
         val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
 
         setContent {
-            val theme by viewModel.theme.collectAsStateWithLifecycle()
             val windowSizeClass = calculateWindowSizeClass(this)
-            val darkTheme = if (theme == null || theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+            val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
+            val darkTheme = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
             else theme == Theme.DARK || theme == Theme.BLACK
-            val appColor by viewModel.appColor.collectAsStateWithLifecycle()
-            val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(AppColorMode.DEFAULT)
-            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
+            val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
+            val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
+                initialValue = initialAppColorMode
+            )
+            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
