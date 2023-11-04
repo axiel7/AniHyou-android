@@ -132,6 +132,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun loadNextActivityPage() {
+        if (!uiState.value.isLoadingActivity) loadNextPage()
+    }
+
     init {
         combine(userId, userName) { id, name ->
             if (id != 0) id to name

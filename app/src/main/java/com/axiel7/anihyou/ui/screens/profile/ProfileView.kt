@@ -235,7 +235,7 @@ fun ProfileView(
                             UserActivityView(
                                 activities = viewModel.userActivities,
                                 isLoading = uiState.isLoadingActivity,
-                                loadMore = viewModel::loadNextPage,
+                                loadMore = viewModel::loadNextActivityPage,
                                 toggleLike = viewModel::toggleLikeActivity,
                                 modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                                 navigateToMediaDetails = navigateToMediaDetails,
