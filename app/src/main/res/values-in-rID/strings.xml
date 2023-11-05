@@ -331,4 +331,6 @@
     <string name="arabic">Arab</string>
     <string name="brazilian">Brazil</string>
     <string name="indonesian">Indonesia</string>
+    <string name="custom_lists">Daftar kustom</string>
+    <string name="no_custom_lists">Tidak ada daftar kustom</string>
 </resources>
