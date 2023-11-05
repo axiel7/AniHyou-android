@@ -326,4 +326,6 @@
     <string name="arabic">アラビア語</string>
     <string name="brazilian">ブラジル語</string>
     <string name="indonesian">インドネシア語</string>
+    <string name="custom_lists">カスタムリスト</string>
+    <string name="no_custom_lists">カスタムリストなし</string>
 </resources>

@@ -333,4 +333,6 @@
     <string name="arabic">Арабский</string>
     <string name="brazilian">Бразильский</string>
     <string name="indonesian">Индонезийский</string>
+    <string name="custom_lists">Пользовательские списки</string>
+    <string name="no_custom_lists">Нет пользовательских списков</string>
 </resources>
