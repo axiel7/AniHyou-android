@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Strona główna</string>
+    <string name="winter">Zima</string>
+    <string name="spring">Wiosna</string>
+    <string name="summer">Lato</string>
+    <string name="fall">Jesień</string>
     <string name="profile">Profil</string>
     <string name="next_season">Następny Sezon</string>
     <string name="not_logged_text">Zaloguj się, aby skorzystać z tej funkcji</string>
@@ -11,6 +15,9 @@
     <string name="paused">Wstrzymane</string>
     <string name="repeating">Powtarzanie</string>
     <string name="cancel">Anuluj</string>
+    <string name="sort_score">Ocena</string>
+    <string name="movie">Film</string>
+    <string name="music" comment="media format">Muzyka</string>
     <string name="num_episodes">%s odcinków</string>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
@@ -18,9 +25,18 @@
     <string name="end_date">Data zakończenia</string>
     <string name="producers">Producenci</string>
     <string name="english">Angielski</string>
+    <string name="save">Zapisz</string>
+    <string name="episodes">Odcinków</string>
+    <string name="delete">Usuń</string>
+    <string name="delete_confirmation">Na pewno chcesz usunąć tę pozycję?</string>
     <string name="tags">Tagi</string>
     <string name="show_spoiler">Pokaż Spoiler</string>
     <string name="hide_spoiler">Ukryj Spoiler</string>
+    <string name="anime_manga_and_more">Anime, Manga i więcej</string>
+    <string name="format">Format</string>
+    <string name="top_popular">Najpopularniejsze</string>
+    <string name="role_main">Główna</string>
+    <string name="role_supporting">Wsparcie</string>
     <string name="related">Powiązane</string>
     <string name="recommendations">Polecane</string>
     <string name="settings">Ustawienia</string>
@@ -35,24 +51,36 @@
     <string name="anilist_account_settings">Ustawienia konta AniList</string>
     <string name="logout">Wyloguj się</string>
     <string name="no_information">Brak informacji</string>
+    <string name="score">Ocena</string>
     <string name="total_entries">Łącznie: %s</string>
     <string name="status_distribution">Rozkład statusu</string>
     <string name="rankings">Rankingi</string>
     <string name="reviews">Recenzje</string>
     <string name="users_likes">Użytkownicy lubią</string>
     <string name="no_reviews">Brak recenzji</string>
+    <string name="list_private">Prywatne</string>
     <string name="followers">Obserwujący</string>
     <string name="following">Obserwowani</string>
     <string name="streaming_sites">Strony streamingu</string>
     <string name="external_links">Linki zewnętrzne</string>
+    <string name="on_my_list">Na mojej liście</string>
     <string name="display_adult_content">Wyświetl zawartość dla dorosłych</string>
     <string name="total">Łącznie</string>
     <string name="title_count">Liczba tytułów</string>
     <string name="time_spent">Czas spędzony</string>
     <string name="format_distribution">Rozkład formatu</string>
+    <string name="notes">Notatki</string>
     <string name="notifications">Powiadomienia</string>
     <string name="threads">Wątki</string>
     <string name="no_threads">Brak wątków</string>
+    <string name="airing_on_my_list">Emitowane na mojej liście</string>
+    <string name="upcoming">Nadchodzące</string>
+    <string name="publishing">Publikowane</string>
+    <string name="year">Rok</string>
     <string name="push_notifications">Powiadomienia Push</string>
+    <string name="reply">Odpowiedz</string>
+    <string name="genre_music">Muzyka</string>
+    <string name="from_year">Od roku</string>
+    <string name="to_year">Do roku</string>
     <string name="is_adult">Dla dorosłych</string>
 </resources>
