@@ -17,7 +17,7 @@
     <string name="cancel">Anuluj</string>
     <string name="sort_score">Ocena</string>
     <string name="movie">Film</string>
-    <string name="music" comment="media format">Muzyka</string>
+    <string name="music">Muzyka</string>
     <string name="num_episodes">%s odcinków</string>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
@@ -53,7 +53,6 @@
     <string name="no_information">Brak informacji</string>
     <string name="score">Ocena</string>
     <string name="total_entries">Łącznie: %s</string>
-    <string name="status_distribution">Rozkład statusu</string>
     <string name="rankings">Rankingi</string>
     <string name="reviews">Recenzje</string>
     <string name="users_likes">Użytkownicy lubią</string>
@@ -68,7 +67,6 @@
     <string name="total">Łącznie</string>
     <string name="title_count">Liczba tytułów</string>
     <string name="time_spent">Czas spędzony</string>
-    <string name="format_distribution">Rozkład formatu</string>
     <string name="notes">Notatki</string>
     <string name="notifications">Powiadomienia</string>
     <string name="threads">Wątki</string>
