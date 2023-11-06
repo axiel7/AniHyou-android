@@ -12,6 +12,12 @@ query UserStatsMangaOverview($userId: Int) {
                     chaptersRead
                     meanScore
                 }
+                lengths {
+                    length
+                    count
+                    chaptersRead
+                    meanScore
+                }
                 formats {
                     count
                     chaptersRead

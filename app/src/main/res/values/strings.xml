@@ -351,4 +351,6 @@
     <string name="hours_watched_format">Hours Watched: %s</string>
     <string name="chapters_read_format">Chapters Read: %s</string>
     <string name="mean_score_format">Mean Score: %s</string>
+    <string name="episode_count">Episode Count</string>
+    <string name="chapter_count">Chapter Count</string>
 </resources>

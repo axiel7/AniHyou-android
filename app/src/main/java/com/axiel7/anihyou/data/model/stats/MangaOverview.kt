@@ -46,6 +46,60 @@ fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
         )
     }
 
+fun UserStatsMangaOverviewQuery.Manga.lengthStatsCount() =
+    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
+        StatLocalizableAndColorable(
+            type = LengthDistribution(length = it.length),
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.hours_watched_format,
+                    value = chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
+        )
+    }
+
+fun UserStatsMangaOverviewQuery.Manga.lengthStatsTime() =
+    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
+        StatLocalizableAndColorable(
+            type = LengthDistribution(length = it.length),
+            value = it.chaptersRead.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.hours_watched_format,
+                    value = chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
+        )
+    }
+
+fun UserStatsMangaOverviewQuery.Manga.lengthStatsScore() =
+    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
+        StatLocalizableAndColorable(
+            type = LengthDistribution(length = it.length),
+            value = it.meanScore.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.hours_watched_format,
+                    value = chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
+        )
+    }
+
 fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
     statuses?.filterNotNull()?.filter { it.status != null }?.map {
         StatLocalizableAndColorable(

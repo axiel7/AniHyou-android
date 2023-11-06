@@ -12,6 +12,12 @@ query UserStatsAnimeOverview($userId: Int) {
                     minutesWatched
                     meanScore
                 }
+                lengths {
+                    length
+                    count
+                    minutesWatched
+                    meanScore
+                }
                 formats {
                     count
                     minutesWatched

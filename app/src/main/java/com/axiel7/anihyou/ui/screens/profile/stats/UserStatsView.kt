@@ -62,7 +62,8 @@ fun UserStatsView(
                 OverviewUserStatsView(
                     uiState = uiState,
                     setMediaType = viewModel::setMediaType,
-                    setScoreCountType = viewModel::setScoreCountType
+                    setScoreType = viewModel::setScoreType,
+                    setLengthType = viewModel::setLengthType,
                 )
             }
 

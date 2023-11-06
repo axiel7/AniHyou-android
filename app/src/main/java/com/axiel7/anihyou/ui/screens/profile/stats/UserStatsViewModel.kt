@@ -2,6 +2,8 @@ package com.axiel7.anihyou.ui.screens.profile.stats
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.stats.LengthDistribution
+import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -32,8 +34,11 @@ class UserStatsViewModel @Inject constructor(
 
     fun setMediaType(value: MediaType) = mutableUiState.update { it.copy(mediaType = value) }
 
-    fun setScoreCountType(value: ScoreStatCountType) =
-        mutableUiState.update { it.copy(scoreCountType = value) }
+    fun setScoreType(value: ScoreDistribution.Type) =
+        mutableUiState.update { it.copy(scoreType = value) }
+
+    fun setLengthType(value: LengthDistribution.Type) =
+        mutableUiState.update { it.copy(lengthType = value) }
 
     init {
         // anime stats
