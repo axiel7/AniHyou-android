@@ -160,7 +160,9 @@
     <string name="no_information">Bilgi yok</string>
     <string name="score">Puan</string>
     <string name="total_entries">Toplam: %s</string>
+    <string name="status_distribution">Durum Dağılımı</string>
     <string name="rankings">Sıralama</string>
+    <string name="score_distribution">Puan Dağılımı</string>
     <string name="no_description">Açıklama yok</string>
     <string name="reviews">Değerlendirmeler</string>
     <string name="loading">Yükleniyor</string>
@@ -196,6 +198,7 @@
     <string name="standard_deviation">Standart sapma</string>
     <string name="title_count">Başlık sayısı</string>
     <string name="time_spent">Harcanan süre</string>
+    <string name="format_distribution">Tür Dağılımı</string>
     <string name="notes">Notlar</string>
     <string name="calendar">Yayım Takvimi</string>
     <string name="monday">Pazartesi</string>
