@@ -160,9 +160,7 @@
     <string name="no_information">Tidak ada informasi</string>
     <string name="score">Skor</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Status distribusi</string>
     <string name="rankings">Peringkat</string>
-    <string name="score_distribution">Skor distribusi</string>
     <string name="no_description">Tanpa keterangan</string>
     <string name="reviews">Ulasan</string>
     <string name="loading">Memuat</string>
@@ -198,7 +196,6 @@
     <string name="standard_deviation">Standar deviasi</string>
     <string name="title_count">Jumlah judul</string>
     <string name="time_spent">Waktu dihabiskan</string>
-    <string name="format_distribution">Distribusi format</string>
     <string name="notes">Catatan</string>
     <string name="calendar">Kalender</string>
     <string name="monday">Senin</string>
