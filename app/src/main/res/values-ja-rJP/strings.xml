@@ -158,7 +158,9 @@
     <string name="no_information">情報なし</string>
     <string name="score">スコア</string>
     <string name="total_entries">合計：%s</string>
+    <string name="status_distribution">ステータスの内訳</string>
     <string name="rankings">ランキング</string>
+    <string name="score_distribution">スコアの内訳</string>
     <string name="no_description">説明なし</string>
     <string name="reviews">レビュー</string>
     <string name="loading">読み込み中</string>
@@ -192,6 +194,7 @@
     <string name="days_planned">視聴予定時間</string>
     <string name="standard_deviation">標準偏差</string>
     <string name="title_count">タイトル数</string>
+    <string name="format_distribution">形式の内訳</string>
     <string name="notes">メモ</string>
     <string name="calendar">カレンダー</string>
     <string name="monday">月曜日</string>
@@ -325,4 +328,6 @@
     <string name="indonesian">インドネシア語</string>
     <string name="custom_lists">カスタムリスト</string>
     <string name="no_custom_lists">カスタムリストなし</string>
+    <string name="country_distribution">国の内訳</string>
+    <string name="release_year">発売年</string>
 </resources>
