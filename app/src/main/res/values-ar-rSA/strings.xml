@@ -160,9 +160,7 @@
     <string name="no_information">لا توجد معلومات</string>
     <string name="score">التقييم</string>
     <string name="total_entries">المجموع: %s</string>
-    <string name="status_distribution">توزيع الحالات</string>
     <string name="rankings">المتصدرون</string>
-    <string name="score_distribution">توزيع النتيجة</string>
     <string name="no_description">لا يوجد وصف</string>
     <string name="reviews">المراجعات</string>
     <string name="loading">تحميل</string>
@@ -198,7 +196,6 @@
     <string name="standard_deviation">الإنحراف المعياري</string>
     <string name="title_count">عدد العناوين</string>
     <string name="time_spent">الوقت المستغرق</string>
-    <string name="format_distribution">صيغة التوزيع</string>
     <string name="notes">ملاحظات</string>
     <string name="calendar">التقويم</string>
     <string name="monday">الأثنين</string>
