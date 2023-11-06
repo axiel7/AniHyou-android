@@ -160,9 +160,7 @@
     <string name="no_information">Sin información</string>
     <string name="score">Puntuación</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Distribución de estado</string>
     <string name="rankings">Clasificaciones</string>
-    <string name="score_distribution">Distribución de puntuación</string>
     <string name="no_description">Sin descripción</string>
     <string name="reviews">Reseñas</string>
     <string name="loading">Cargando</string>
@@ -198,7 +196,6 @@
     <string name="standard_deviation">Desviación estándar</string>
     <string name="title_count">Número de títulos</string>
     <string name="time_spent">Tiempo dedicado</string>
-    <string name="format_distribution">Distribución de formatos</string>
     <string name="notes">Notas</string>
     <string name="calendar">Calendario</string>
     <string name="monday">Lunes</string>
