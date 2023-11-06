@@ -1,8 +1,7 @@
 package com.axiel7.anihyou.ui.screens.profile.stats
 
-import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
-import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.data.model.stats.LengthDistribution
+import com.axiel7.anihyou.data.model.stats.OverviewStats
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.UiState
@@ -13,8 +12,8 @@ data class UserStatsUiState(
     val mediaType: MediaType = MediaType.ANIME,
     val scoreType: ScoreDistribution.Type = ScoreDistribution.Type.TITLES,
     val lengthType: LengthDistribution.Type = LengthDistribution.Type.TITLES,
-    val animeOverview: UserStatsAnimeOverviewQuery.Anime? = null,
-    val mangaOverview: UserStatsMangaOverviewQuery.Manga? = null,
+    val animeOverview: OverviewStats? = null,
+    val mangaOverview: OverviewStats? = null,
     override val error: String? = null,
     override val isLoading: Boolean = true,
 ) : UiState<UserStatsUiState> {

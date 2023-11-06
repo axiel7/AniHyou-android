@@ -16,16 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.LengthDistribution
+import com.axiel7.anihyou.data.model.stats.OverviewStats
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
-import com.axiel7.anihyou.data.model.stats.countryDistribution
-import com.axiel7.anihyou.data.model.stats.formatDistribution
-import com.axiel7.anihyou.data.model.stats.lengthStatsCount
-import com.axiel7.anihyou.data.model.stats.lengthStatsScore
-import com.axiel7.anihyou.data.model.stats.lengthStatsTime
-import com.axiel7.anihyou.data.model.stats.planned
-import com.axiel7.anihyou.data.model.stats.scoreStatsCount
-import com.axiel7.anihyou.data.model.stats.scoreStatsTime
-import com.axiel7.anihyou.data.model.stats.statusDistribution
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
@@ -33,17 +25,20 @@ import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun OverviewUserStatsView(
-    uiState: UserStatsUiState,
+    stats: OverviewStats?,
+    isLoading: Boolean,
+    mediaType: MediaType,
     setMediaType: (MediaType) -> Unit,
+    scoreType: ScoreDistribution.Type,
     setScoreType: (ScoreDistribution.Type) -> Unit,
+    lengthType: LengthDistribution.Type,
     setLengthType: (LengthDistribution.Type) -> Unit,
 ) {
-    val isAnime = uiState.mediaType == MediaType.ANIME
+    val isAnime = mediaType == MediaType.ANIME
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -54,7 +49,7 @@ fun OverviewUserStatsView(
         ) {
             MediaType.knownEntries.forEach {
                 FilterSelectionChip(
-                    selected = uiState.mediaType == it,
+                    selected = mediaType == it,
                     text = it.localized(),
                     onClick = { setMediaType(it) },
                     modifier = Modifier.padding(end = 8.dp)
@@ -68,28 +63,24 @@ fun OverviewUserStatsView(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             TextSubtitleVertical(
-                text = if (isAnime) uiState.animeOverview?.count?.format()
-                else uiState.mangaOverview?.count?.format(),
+                text = stats?.count?.format(),
                 subtitle = stringResource(R.string.total),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
             TextSubtitleVertical(
-                text = if (isAnime) uiState.animeOverview?.episodesWatched?.format()
-                else uiState.mangaOverview?.chaptersRead?.format(),
-                subtitle = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.episodes_watched)
+                text = stats?.episodeOrChapterCount?.format(),
+                subtitle = if (isAnime) stringResource(R.string.episodes_watched)
                 else stringResource(R.string.chapters_read),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
             TextSubtitleVertical(
-                text = if (isAnime)
-                    uiState.animeOverview?.minutesWatched?.toLong()?.minutesToDays()?.format()
-                else uiState.mangaOverview?.volumesRead?.format(),
-                subtitle = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.days_watched)
+                text = stats?.daysOrVolumes?.format(),
+                subtitle = if (isAnime) stringResource(R.string.days_watched)
                 else stringResource(R.string.volumes_read),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
         }//: Row
 
@@ -99,28 +90,23 @@ fun OverviewUserStatsView(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             TextSubtitleVertical(
-                text = if (isAnime)
-                    uiState.animeOverview?.planned()?.minutesWatched?.toLong()?.minutesToDays()
-                        ?.format()
-                else uiState.mangaOverview?.planned()?.chaptersRead?.toLong()?.format(),
-                subtitle = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.days_planned)
+                text = stats?.plannedCount?.format(),
+                subtitle = if (isAnime) stringResource(R.string.days_planned)
                 else stringResource(R.string.chapters_planned),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
             TextSubtitleVertical(
-                text = if (isAnime) uiState.animeOverview?.meanScore?.format()
-                else uiState.mangaOverview?.meanScore?.format(),
+                text = stats?.meanScore?.format(),
                 subtitle = stringResource(R.string.mean_score),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
             TextSubtitleVertical(
-                text = if (isAnime) uiState.animeOverview?.standardDeviation?.format()
-                else uiState.mangaOverview?.standardDeviation?.format(),
+                text = stats?.standardDeviation?.format(),
                 subtitle = stringResource(R.string.standard_deviation),
                 modifier = Modifier.weight(1f),
-                isLoading = uiState.isLoading
+                isLoading = isLoading
             )
         }//: Row
 
@@ -133,7 +119,7 @@ fun OverviewUserStatsView(
         ) {
             ScoreDistribution.Type.entries.forEach {
                 FilterSelectionChip(
-                    selected = uiState.scoreType == it,
+                    selected = scoreType == it,
                     text = it.localized(),
                     onClick = { setScoreType(it) },
                     modifier = Modifier.padding(end = 8.dp)
@@ -141,23 +127,12 @@ fun OverviewUserStatsView(
             }
         }
         VerticalStatsBar(
-            stats = if (isAnime) {
-                when (uiState.scoreType) {
-                    ScoreDistribution.Type.TITLES -> uiState.animeOverview?.scoreStatsCount()
-                        .orEmpty()
-
-                    ScoreDistribution.Type.TIME -> uiState.animeOverview?.scoreStatsTime().orEmpty()
-                }
-            } else {
-                when (uiState.scoreType) {
-                    ScoreDistribution.Type.TITLES -> uiState.mangaOverview?.scoreStatsCount()
-                        .orEmpty()
-
-                    ScoreDistribution.Type.TIME -> uiState.mangaOverview?.scoreStatsTime().orEmpty()
-                }
+            stats = when (scoreType) {
+                ScoreDistribution.Type.TITLES -> stats?.scoreCount.orEmpty()
+                ScoreDistribution.Type.TIME -> stats?.scoreTime.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
-            isLoading = uiState.isLoading
+            isLoading = isLoading
         )
 
         // Episode/Chapter count
@@ -172,7 +147,7 @@ fun OverviewUserStatsView(
         ) {
             LengthDistribution.Type.entries.forEach {
                 FilterSelectionChip(
-                    selected = uiState.lengthType == it,
+                    selected = lengthType == it,
                     text = it.localized(),
                     onClick = { setLengthType(it) },
                     modifier = Modifier.padding(end = 8.dp)
@@ -180,61 +155,40 @@ fun OverviewUserStatsView(
             }
         }
         VerticalStatsBar(
-            stats = if (isAnime) {
-                when (uiState.lengthType) {
-                    LengthDistribution.Type.TITLES -> uiState.animeOverview?.lengthStatsCount()
-                        .orEmpty()
-
-                    LengthDistribution.Type.TIME -> uiState.animeOverview?.lengthStatsTime()
-                        .orEmpty()
-
-                    LengthDistribution.Type.SCORE -> uiState.animeOverview?.lengthStatsScore()
-                        .orEmpty()
-                }
-            } else {
-                when (uiState.lengthType) {
-                    LengthDistribution.Type.TITLES -> uiState.mangaOverview?.lengthStatsCount()
-                        .orEmpty()
-
-                    LengthDistribution.Type.TIME -> uiState.mangaOverview?.lengthStatsTime()
-                        .orEmpty()
-
-                    LengthDistribution.Type.SCORE -> uiState.mangaOverview?.lengthStatsScore()
-                        .orEmpty()
-                }
+            stats = when (lengthType) {
+                LengthDistribution.Type.TITLES -> stats?.lengthCount.orEmpty()
+                LengthDistribution.Type.TIME -> stats?.lengthTime.orEmpty()
+                LengthDistribution.Type.SCORE -> stats?.lengthScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
-            isLoading = uiState.isLoading
+            isLoading = isLoading
         )
 
         // Status distribution
         InfoTitle(text = stringResource(R.string.status_distribution))
         HorizontalStatsBar(
-            stats = if (isAnime) uiState.animeOverview?.statusDistribution().orEmpty()
-            else uiState.mangaOverview?.statusDistribution().orEmpty(),
+            stats = stats?.statusDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = uiState.isLoading
+            isLoading = isLoading
         )
 
         // Format distribution
         InfoTitle(text = stringResource(R.string.format_distribution))
         HorizontalStatsBar(
-            stats = if (isAnime) uiState.animeOverview?.formatDistribution().orEmpty()
-            else uiState.mangaOverview?.formatDistribution().orEmpty(),
+            stats = stats?.formatDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = uiState.isLoading
+            isLoading = isLoading
         )
 
         // Country distribution
         InfoTitle(text = stringResource(R.string.country_distribution))
         HorizontalStatsBar(
-            stats = if (isAnime) uiState.animeOverview?.countryDistribution().orEmpty()
-            else uiState.mangaOverview?.countryDistribution().orEmpty(),
+            stats = stats?.countryDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = uiState.isLoading
+            isLoading = isLoading
         )
     }//: Column
 }
@@ -245,9 +199,13 @@ fun OverviewUserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             OverviewUserStatsView(
-                uiState = UserStatsUiState(),
+                stats = null,
+                isLoading = true,
+                mediaType = MediaType.ANIME,
                 setMediaType = {},
+                scoreType = ScoreDistribution.Type.TITLES,
                 setScoreType = {},
+                lengthType = LengthDistribution.Type.TITLES,
                 setLengthType = {},
             )
         }

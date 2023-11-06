@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.stats.LengthDistribution
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.toOverviewStats
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -57,7 +58,7 @@ class UserStatsViewModel @Inject constructor(
                 mutableUiState.update {
                     if (result is DataResult.Success) {
                         it.copy(
-                            animeOverview = result.data,
+                            animeOverview = result.data?.toOverviewStats(),
                             isLoading = false
                         )
                     } else {
@@ -83,7 +84,7 @@ class UserStatsViewModel @Inject constructor(
                 mutableUiState.update {
                     if (result is DataResult.Success) {
                         it.copy(
-                            mangaOverview = result.data,
+                            mangaOverview = result.data?.toOverviewStats(),
                             isLoading = false
                         )
                     } else {

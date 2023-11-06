@@ -4,13 +4,32 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
 import kotlin.math.roundToInt
 
-fun UserStatsMangaOverviewQuery.Manga.planned() =
+fun UserStatsMangaOverviewQuery.Manga.toOverviewStats() =
+    OverviewStats(
+        count = count,
+        episodeOrChapterCount = chaptersRead,
+        daysOrVolumes = volumesRead.minutesToDays(),
+        plannedCount = planned()?.chaptersRead ?: 0,
+        meanScore = meanScore,
+        standardDeviation = standardDeviation,
+        scoreCount = scoreStatsCount().orEmpty(),
+        scoreTime = scoreStatsTime().orEmpty(),
+        lengthCount = lengthStatsCount().orEmpty(),
+        lengthTime = lengthStatsTime().orEmpty(),
+        lengthScore = lengthStatsScore().orEmpty(),
+        statusDistribution = statusDistribution().orEmpty(),
+        formatDistribution = formatDistribution().orEmpty(),
+        countryDistribution = countryDistribution().orEmpty(),
+    )
+
+private fun UserStatsMangaOverviewQuery.Manga.planned() =
     statuses?.find { it?.status == MediaListStatus.PLANNING }
 
-fun UserStatsMangaOverviewQuery.Manga.scoreStatsCount() =
+private fun UserStatsMangaOverviewQuery.Manga.scoreStatsCount() =
     scores?.filterNotNull()?.map {
         StatLocalizableAndColorable(
             type = ScoreDistribution(score = it.meanScore.roundToInt()),
@@ -28,7 +47,7 @@ fun UserStatsMangaOverviewQuery.Manga.scoreStatsCount() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
+private fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
     scores?.filterNotNull()?.map {
         StatLocalizableAndColorable(
             type = ScoreDistribution(score = it.meanScore.roundToInt()),
@@ -46,7 +65,7 @@ fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.lengthStatsCount() =
+private fun UserStatsMangaOverviewQuery.Manga.lengthStatsCount() =
     lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
         StatLocalizableAndColorable(
             type = LengthDistribution(length = it.length),
@@ -64,7 +83,7 @@ fun UserStatsMangaOverviewQuery.Manga.lengthStatsCount() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.lengthStatsTime() =
+private fun UserStatsMangaOverviewQuery.Manga.lengthStatsTime() =
     lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
         StatLocalizableAndColorable(
             type = LengthDistribution(length = it.length),
@@ -82,7 +101,7 @@ fun UserStatsMangaOverviewQuery.Manga.lengthStatsTime() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.lengthStatsScore() =
+private fun UserStatsMangaOverviewQuery.Manga.lengthStatsScore() =
     lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
         StatLocalizableAndColorable(
             type = LengthDistribution(length = it.length),
@@ -100,7 +119,7 @@ fun UserStatsMangaOverviewQuery.Manga.lengthStatsScore() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
+private fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
     statuses?.filterNotNull()?.filter { it.status != null }?.map {
         StatLocalizableAndColorable(
             type = StatusDistribution.valueOf(
@@ -121,7 +140,7 @@ fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
+private fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
     formats?.filterNotNull()?.filter { it.format != null }?.map {
         StatLocalizableAndColorable(
             type = FormatDistribution.valueOf(it.format!!.rawValue),
@@ -139,7 +158,7 @@ fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
         )
     }
 
-fun UserStatsMangaOverviewQuery.Manga.countryDistribution() =
+private fun UserStatsMangaOverviewQuery.Manga.countryDistribution() =
     countries?.filterNotNull()?.filter { it.country != null }?.map {
         StatLocalizableAndColorable(
             type = it.country!!,
