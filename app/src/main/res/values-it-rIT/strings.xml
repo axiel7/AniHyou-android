@@ -160,9 +160,7 @@
     <string name="no_information">Nessuna informazione</string>
     <string name="score">Punteggio</string>
     <string name="total_entries">Totale: %s</string>
-    <string name="status_distribution">Stato distribuzione</string>
     <string name="rankings">Classifiche</string>
-    <string name="score_distribution">Distribuzione del punteggio</string>
     <string name="no_description">Nessuna descrizione</string>
     <string name="close">Chiudi</string>
     <string name="chapters_read">Capitoli letti</string>
