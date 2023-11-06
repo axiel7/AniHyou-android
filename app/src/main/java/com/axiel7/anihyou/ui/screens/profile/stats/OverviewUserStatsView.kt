@@ -17,6 +17,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.LengthDistribution
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.countryDistribution
 import com.axiel7.anihyou.data.model.stats.formatDistribution
 import com.axiel7.anihyou.data.model.stats.lengthStatsCount
 import com.axiel7.anihyou.data.model.stats.lengthStatsScore
@@ -221,6 +222,16 @@ fun OverviewUserStatsView(
         HorizontalStatsBar(
             stats = if (isAnime) uiState.animeOverview?.formatDistribution().orEmpty()
             else uiState.mangaOverview?.formatDistribution().orEmpty(),
+            verticalPadding = 8.dp,
+            showTotal = false,
+            isLoading = uiState.isLoading
+        )
+
+        // Country distribution
+        InfoTitle(text = stringResource(R.string.country_distribution))
+        HorizontalStatsBar(
+            stats = if (isAnime) uiState.animeOverview?.countryDistribution().orEmpty()
+            else uiState.mangaOverview?.countryDistribution().orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
             isLoading = uiState.isLoading

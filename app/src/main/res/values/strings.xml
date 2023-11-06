@@ -162,9 +162,9 @@
     <string name="no_information">No information</string>
     <string name="score">Score</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Status distribution</string>
+    <string name="status_distribution">Status Distribution</string>
     <string name="rankings">Rankings</string>
-    <string name="score_distribution">Score distribution</string>
+    <string name="score_distribution">Score Distribution</string>
     <string name="no_description">No description</string>
     <string name="reviews">Reviews</string>
     <string name="loading">Loading</string>
@@ -200,7 +200,7 @@
     <string name="standard_deviation">Standard deviation</string>
     <string name="title_count">Title count</string>
     <string name="time_spent">Time spent</string>
-    <string name="format_distribution">Format distribution</string>
+    <string name="format_distribution">Format Distribution</string>
     <string name="notes">Notes</string>
     <string name="calendar">Calendar</string>
     <string name="monday">Monday</string>
@@ -353,4 +353,5 @@
     <string name="mean_score_format">Mean Score: %s</string>
     <string name="episode_count">Episode Count</string>
     <string name="chapter_count">Chapter Count</string>
+    <string name="country_distribution">Country Distribution</string>
 </resources>

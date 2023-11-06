@@ -139,4 +139,22 @@ fun UserStatsAnimeOverviewQuery.Anime.formatDistribution() =
         )
     }
 
+fun UserStatsAnimeOverviewQuery.Anime.countryDistribution() =
+    countries?.filterNotNull()?.filter { it.country != null }?.map {
+        StatLocalizableAndColorable(
+            type = it.country!!,
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.hours_watched_format,
+                    value = (it.minutesWatched / 60).format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
+        )
+    }
+
 

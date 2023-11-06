@@ -139,4 +139,20 @@ fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
         )
     }
 
-
+fun UserStatsMangaOverviewQuery.Manga.countryDistribution() =
+    countries?.filterNotNull()?.filter { it.country != null }?.map {
+        StatLocalizableAndColorable(
+            type = it.country!!,
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.chapters_read_format,
+                    value = chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
+        )
+    }
