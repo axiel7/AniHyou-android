@@ -4,6 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ChipBorder
+import androidx.compose.material3.ChipColors
+import androidx.compose.material3.ChipElevation
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -17,11 +21,14 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,6 +80,51 @@ fun TriFilterChip(
             }
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AssistChipWithTooltip(
+    label: String,
+    modifier: Modifier = Modifier,
+    tooltipContent: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    enabled: Boolean = true,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    shape: Shape = AssistChipDefaults.shape,
+    colors: ChipColors = AssistChipDefaults.assistChipColors(),
+    elevation: ChipElevation? = AssistChipDefaults.assistChipElevation(),
+    border: ChipBorder? = AssistChipDefaults.assistChipBorder(),
+) {
+    val scope = rememberCoroutineScope()
+    val tooltipState = rememberTooltipState(isPersistent = true)
+
+    val showTooltip: () -> Unit = {
+        if (tooltipContent != null) scope.launch { tooltipState.show() }
+    }
+
+    TooltipBox(
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip = {
+            RichTooltip(text = tooltipContent ?: {})
+        },
+        state = tooltipState,
+        modifier = modifier,
+        enableUserInput = tooltipContent != null
+    ) {
+        AssistChip(
+            onClick = onClick ?: showTooltip,
+            label = { Text(text = label) },
+            enabled = enabled,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            shape = shape,
+            colors = colors,
+            elevation = elevation,
+            border = border,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

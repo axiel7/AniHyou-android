@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.data.model.stats
 
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.utils.NumberUtils.format
 import kotlin.math.roundToInt
 
 fun UserStatsMangaOverviewQuery.Manga.planned() =
@@ -12,7 +14,17 @@ fun UserStatsMangaOverviewQuery.Manga.scoreStatsCount() =
     scores?.filterNotNull()?.map {
         StatLocalizableAndColorable(
             type = ScoreDistribution(score = it.meanScore.roundToInt()),
-            value = it.count.toFloat()
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.chapters_read_format,
+                    value = it.chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
         )
     }
 
@@ -20,7 +32,17 @@ fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
     scores?.filterNotNull()?.map {
         StatLocalizableAndColorable(
             type = ScoreDistribution(score = it.meanScore.roundToInt()),
-            value = it.chaptersRead.toFloat()
+            value = it.chaptersRead.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.chapters_read_format,
+                    value = it.chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
         )
     }
 
@@ -31,7 +53,17 @@ fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
                 rawValue = it.status?.rawValue,
                 mediaType = MediaType.MANGA
             ) ?: StatusDistribution.READING,
-            value = it.count.toFloat()
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.chapters_read_format,
+                    value = it.chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
         )
     }
 
@@ -39,7 +71,17 @@ fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
     formats?.filterNotNull()?.filter { it.format != null }?.map {
         StatLocalizableAndColorable(
             type = FormatDistribution.valueOf(it.format!!.rawValue),
-            value = it.count.toFloat()
+            value = it.count.toFloat(),
+            details = listOf(
+                Stat.Detail(
+                    name = R.string.chapters_read_format,
+                    value = it.chaptersRead.format()
+                ),
+                Stat.Detail(
+                    name = R.string.mean_score_format,
+                    value = it.meanScore.format()
+                )
+            )
         )
     }
 

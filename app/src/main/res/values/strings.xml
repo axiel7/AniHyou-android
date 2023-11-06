@@ -348,4 +348,7 @@
     <string name="indonesian">Indonesian</string>
     <string name="custom_lists">Custom Lists</string>
     <string name="no_custom_lists">No custom lists</string>
+    <string name="hours_watched_format">Hours Watched: %s</string>
+    <string name="chapters_read_format">Chapters Read: %s</string>
+    <string name="mean_score_format">Mean Score: %s</string>
 </resources>
