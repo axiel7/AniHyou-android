@@ -160,9 +160,7 @@
     <string name="no_information">Нет информации</string>
     <string name="score">Оценка</string>
     <string name="total_entries">Всего: %s</string>
-    <string name="status_distribution">Статус распределение</string>
     <string name="rankings">Рейтинги</string>
-    <string name="score_distribution">Очки распределение</string>
     <string name="no_description">Нет описания</string>
     <string name="reviews">Отзывы</string>
     <string name="loading">Загрузка</string>
@@ -198,7 +196,6 @@
     <string name="standard_deviation">Стандартное отклонение</string>
     <string name="title_count">Количество названий</string>
     <string name="time_spent">Потрачено времени</string>
-    <string name="format_distribution">Распределение форматов</string>
     <string name="notes">Примечания</string>
     <string name="calendar">Календарь</string>
     <string name="monday">Понедельник</string>
