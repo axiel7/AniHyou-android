@@ -24,6 +24,12 @@ fun UserStatsMangaOverviewQuery.Manga.toOverviewStats() =
         statusDistribution = statusDistribution().orEmpty(),
         formatDistribution = formatDistribution().orEmpty(),
         countryDistribution = countryDistribution().orEmpty(),
+        releaseYearCount = releaseYearCount().orEmpty(),
+        releaseYearTime = releaseYearTime().orEmpty(),
+        releaseYearScore = releaseYearScore().orEmpty(),
+        startYearCount = startYearCount().orEmpty(),
+        startYearTime = startYearTime().orEmpty(),
+        startYearScore = startYearScore().orEmpty(),
     )
 
 private fun UserStatsMangaOverviewQuery.Manga.planned() =
@@ -175,3 +181,129 @@ private fun UserStatsMangaOverviewQuery.Manga.countryDistribution() =
             )
         )
     }
+
+private fun UserStatsMangaOverviewQuery.Manga.releaseYearCount() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.count.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsMangaOverviewQuery.Manga.releaseYearTime() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.chaptersRead.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsMangaOverviewQuery.Manga.releaseYearScore() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.meanScore.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsMangaOverviewQuery.Manga.startYearCount() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.count.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsMangaOverviewQuery.Manga.startYearTime() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.chaptersRead.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsMangaOverviewQuery.Manga.startYearScore() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.meanScore.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.chapters_read_format,
+                        value = chaptersRead.format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }

@@ -70,6 +70,10 @@ fun UserStatsView(
                     setScoreType = viewModel::setScoreType,
                     lengthType = uiState.lengthType,
                     setLengthType = viewModel::setLengthType,
+                    releaseYearType = uiState.releaseYearType,
+                    setReleaseYearType = viewModel::setReleaseYearType,
+                    startYearType = uiState.startYearType,
+                    setStartYearType = viewModel::setStartYearType,
                 )
             }
 

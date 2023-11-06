@@ -18,6 +18,7 @@ import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.LengthDistribution
 import com.axiel7.anihyou.data.model.stats.OverviewStats
 import com.axiel7.anihyou.data.model.stats.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.YearDistribution
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
@@ -37,6 +38,10 @@ fun OverviewUserStatsView(
     setScoreType: (ScoreDistribution.Type) -> Unit,
     lengthType: LengthDistribution.Type,
     setLengthType: (LengthDistribution.Type) -> Unit,
+    releaseYearType: YearDistribution.Type,
+    setReleaseYearType: (YearDistribution.Type) -> Unit,
+    startYearType: YearDistribution.Type,
+    setStartYearType: (YearDistribution.Type) -> Unit,
 ) {
     val isAnime = mediaType == MediaType.ANIME
     Column(
@@ -190,6 +195,62 @@ fun OverviewUserStatsView(
             showTotal = false,
             isLoading = isLoading
         )
+
+        // Release year
+        InfoTitle(text = stringResource(R.string.release_year))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+        ) {
+            YearDistribution.Type.entries.forEach {
+                FilterSelectionChip(
+                    selected = releaseYearType == it,
+                    text = it.localized(),
+                    onClick = { setReleaseYearType(it) },
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+            }
+        }
+        VerticalStatsBar(
+            stats = when (releaseYearType) {
+                YearDistribution.Type.TITLES -> stats?.releaseYearCount.orEmpty()
+                YearDistribution.Type.TIME -> stats?.releaseYearTime.orEmpty()
+                YearDistribution.Type.SCORE -> stats?.releaseYearScore.orEmpty()
+            },
+            modifier = Modifier.padding(8.dp),
+            isLoading = isLoading
+        )
+
+        // Watch/Read year
+        InfoTitle(
+            text = stringResource(if (isAnime) R.string.watch_year else R.string.read_year)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+        ) {
+            YearDistribution.Type.entries.forEach {
+                FilterSelectionChip(
+                    selected = startYearType == it,
+                    text = it.localized(),
+                    onClick = { setStartYearType(it) },
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+            }
+        }
+        VerticalStatsBar(
+            stats = when (startYearType) {
+                YearDistribution.Type.TITLES -> stats?.startYearCount.orEmpty()
+                YearDistribution.Type.TIME -> stats?.startYearTime.orEmpty()
+                YearDistribution.Type.SCORE -> stats?.startYearScore.orEmpty()
+            },
+            modifier = Modifier.padding(8.dp),
+            isLoading = isLoading
+        )
     }//: Column
 }
 
@@ -207,6 +268,10 @@ fun OverviewUserStatsViewPreview() {
                 setScoreType = {},
                 lengthType = LengthDistribution.Type.TITLES,
                 setLengthType = {},
+                releaseYearType = YearDistribution.Type.TITLES,
+                setReleaseYearType = {},
+                startYearType = YearDistribution.Type.TITLES,
+                setStartYearType = {},
             )
         }
     }

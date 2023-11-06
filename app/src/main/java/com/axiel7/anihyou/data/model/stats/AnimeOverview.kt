@@ -24,6 +24,12 @@ fun UserStatsAnimeOverviewQuery.Anime.toOverviewStats() =
         statusDistribution = statusDistribution().orEmpty(),
         formatDistribution = formatDistribution().orEmpty(),
         countryDistribution = countryDistribution().orEmpty(),
+        releaseYearCount = releaseYearCount().orEmpty(),
+        releaseYearTime = releaseYearTime().orEmpty(),
+        releaseYearScore = releaseYearScore().orEmpty(),
+        startYearCount = startYearCount().orEmpty(),
+        startYearTime = startYearTime().orEmpty(),
+        startYearScore = startYearScore().orEmpty(),
     )
 
 private fun UserStatsAnimeOverviewQuery.Anime.planned() =
@@ -51,7 +57,7 @@ private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsTime() =
     scores?.filterNotNull()?.map {
         StatLocalizableAndColorable(
             type = ScoreDistribution(score = it.meanScore.roundToInt()),
-            value = it.minutesWatched.toFloat(),
+            value = it.minutesWatched / 60f,
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
@@ -66,58 +72,64 @@ private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsTime() =
     }
 
 private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsCount() =
-    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
-        StatLocalizableAndColorable(
-            type = LengthDistribution(length = it.length),
-            value = it.count.toFloat(),
-            details = listOf(
-                Stat.Detail(
-                    name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
-                ),
-                Stat.Detail(
-                    name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+    lengths?.filterNotNull()
+        ?.sortedBy { LengthDistribution.lengthComparator(it.length) }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = LengthDistribution(length = it.length),
+                value = it.count.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
                 )
             )
-        )
-    }
+        }
 
 private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsTime() =
-    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
-        StatLocalizableAndColorable(
-            type = LengthDistribution(length = it.length),
-            value = it.minutesWatched.toFloat(),
-            details = listOf(
-                Stat.Detail(
-                    name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
-                ),
-                Stat.Detail(
-                    name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+    lengths?.filterNotNull()
+        ?.sortedBy { LengthDistribution.lengthComparator(it.length) }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = LengthDistribution(length = it.length),
+                value = it.minutesWatched / 60f,
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
                 )
             )
-        )
-    }
+        }
 
 private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsScore() =
-    lengths?.filterNotNull()?.sortedBy { LengthDistribution.lengthComparator(it.length) }?.map {
-        StatLocalizableAndColorable(
-            type = LengthDistribution(length = it.length),
-            value = it.meanScore.toFloat(),
-            details = listOf(
-                Stat.Detail(
-                    name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
-                ),
-                Stat.Detail(
-                    name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+    lengths?.filterNotNull()
+        ?.sortedBy { LengthDistribution.lengthComparator(it.length) }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = LengthDistribution(length = it.length),
+                value = it.meanScore.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
                 )
             )
-        )
-    }
+        }
 
 private fun UserStatsAnimeOverviewQuery.Anime.statusDistribution() =
     statuses?.filterNotNull()?.filter { it.status != null }?.map {
@@ -176,4 +188,128 @@ private fun UserStatsAnimeOverviewQuery.Anime.countryDistribution() =
         )
     }
 
+private fun UserStatsAnimeOverviewQuery.Anime.releaseYearCount() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.count.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
 
+private fun UserStatsAnimeOverviewQuery.Anime.releaseYearTime() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.minutesWatched / 60f,
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsAnimeOverviewQuery.Anime.releaseYearScore() =
+    releaseYears?.filterNotNull()
+        ?.filter { it.releaseYear != null }
+        ?.sortedByDescending { it.releaseYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.releaseYear!!),
+                value = it.meanScore.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsAnimeOverviewQuery.Anime.startYearCount() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.count.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsAnimeOverviewQuery.Anime.startYearTime() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.minutesWatched.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }
+
+private fun UserStatsAnimeOverviewQuery.Anime.startYearScore() =
+    startYears?.filterNotNull()
+        ?.filter { it.startYear != null }
+        ?.sortedByDescending { it.startYear }
+        ?.map {
+            StatLocalizableAndColorable(
+                type = YearDistribution(it.startYear!!),
+                value = it.meanScore.toFloat(),
+                details = listOf(
+                    Stat.Detail(
+                        name = R.string.hours_watched_format,
+                        value = (it.minutesWatched / 60).format()
+                    ),
+                    Stat.Detail(
+                        name = R.string.mean_score_format,
+                        value = it.meanScore.format()
+                    )
+                )
+            )
+        }

@@ -17,4 +17,10 @@ data class OverviewStats(
     val statusDistribution: List<StatLocalizableAndColorable<StatusDistribution>>,
     val formatDistribution: List<StatLocalizableAndColorable<FormatDistribution>>,
     val countryDistribution: List<StatLocalizableAndColorable<CountryOfOrigin>>,
+    val releaseYearCount: List<StatLocalizableAndColorable<YearDistribution>>,
+    val releaseYearTime: List<StatLocalizableAndColorable<YearDistribution>>,
+    val releaseYearScore: List<StatLocalizableAndColorable<YearDistribution>>,
+    val startYearCount: List<StatLocalizableAndColorable<YearDistribution>>,
+    val startYearTime: List<StatLocalizableAndColorable<YearDistribution>>,
+    val startYearScore: List<StatLocalizableAndColorable<YearDistribution>>,
 )

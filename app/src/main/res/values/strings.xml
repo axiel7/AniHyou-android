@@ -354,4 +354,7 @@
     <string name="episode_count">Episode Count</string>
     <string name="chapter_count">Chapter Count</string>
     <string name="country_distribution">Country Distribution</string>
+    <string name="release_year">Release Year</string>
+    <string name="watch_year">Watch Year</string>
+    <string name="read_year">Read Year</string>
 </resources>
