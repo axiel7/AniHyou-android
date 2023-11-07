@@ -141,11 +141,4 @@
     <string name="reading">Читаю</string>
     <string name="synonyms">Інші назви</string>
     <string name="translations">Перекладачі</string>
-    <string name="japanese">Японська</string>
-    <string name="russian">Російською</string>
-    <string name="spanish">Іспанською</string>
-    <string name="turkish">Турецькою</string>
-    <string name="arabic">Арабською</string>
-    <string name="brazilian">Бразильською</string>
-    <string name="indonesian">Індонезійська</string>
 </resources>
