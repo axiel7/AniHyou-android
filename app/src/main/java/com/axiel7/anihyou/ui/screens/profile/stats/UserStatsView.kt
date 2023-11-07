@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
+import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -60,7 +61,7 @@ fun UserStatsView(
 
         when (uiState.type) {
             UserStatType.OVERVIEW -> {
-                OverviewUserStatsView(
+                OverviewStatsView(
                     stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeOverview
                     else uiState.mangaOverview,
                     isLoading = uiState.isLoading,

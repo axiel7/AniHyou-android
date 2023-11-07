@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.profile.stats
+package com.axiel7.anihyou.ui.screens.profile.stats.overview
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
-fun OverviewUserStatsView(
+fun OverviewStatsView(
     stats: OverviewStats?,
     isLoading: Boolean,
     mediaType: MediaType,
@@ -259,7 +259,7 @@ fun OverviewUserStatsView(
 fun OverviewUserStatsViewPreview() {
     AniHyouTheme {
         Surface {
-            OverviewUserStatsView(
+            OverviewStatsView(
                 stats = null,
                 isLoading = true,
                 mediaType = MediaType.ANIME,
