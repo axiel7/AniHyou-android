@@ -1,7 +1,11 @@
 package com.axiel7.anihyou.ui.screens.profile.stats.genres
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -36,8 +40,10 @@ fun GenresStatsView(
     navigateToExplore: (genre: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     LazyColumn(
         modifier = modifier,
+        contentPadding = PaddingValues(bottom = bottomBarPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {

@@ -43,9 +43,7 @@ fun UserStatsView(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
@@ -83,6 +81,7 @@ fun UserStatsView(
                     modifier = Modifier
                         .nestedScroll(nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
+                        .navigationBarsPadding()
                 )
             }
 
