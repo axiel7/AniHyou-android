@@ -184,7 +184,6 @@
     <string name="list_style">Стиль списка</string>
     <string name="on_my_list">В моем списке</string>
     <string name="refresh">Обновить</string>
-    <string name="episode_airing_on">Эп %d выйдет через %s</string>
     <string name="display_adult_content">Отображать контент для взрослых</string>
     <string name="overview">Общие сведения</string>
     <string name="voice_actors">Актеры озвучивания</string>

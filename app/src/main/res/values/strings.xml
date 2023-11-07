@@ -186,7 +186,6 @@
     <string name="list_style">List style</string>
     <string name="on_my_list">On my list</string>
     <string name="refresh">Refresh</string>
-    <string name="episode_airing_on">Ep %d airing on %s</string>
     <string name="display_adult_content">Display adult content</string>
     <string name="overview">Overview</string>
     <string name="voice_actors">Voice actors</string>
@@ -210,7 +209,7 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
-    <string name="episode_airing_at">Ep %s airing at %s</string>
+    <string name="episode_airing_at">Ep %d airing at %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifications</string>
     <string name="threads">Threads</string>
