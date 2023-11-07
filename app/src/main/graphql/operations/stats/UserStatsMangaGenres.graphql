@@ -1,8 +1,8 @@
-query UserStatsMangaGenres($userId: Int) {
+query UserStatsMangaGenres($userId: Int, $sort: [UserStatisticsSort]) {
     User(id: $userId) {
         statistics {
             manga {
-                genres(sort: COUNT_DESC) {
+                genres(sort: $sort) {
                     ...GenreStat
                 }
             }

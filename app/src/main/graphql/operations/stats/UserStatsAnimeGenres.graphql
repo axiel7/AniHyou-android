@@ -1,8 +1,8 @@
-query UserStatsAnimeGenres($userId: Int) {
+query UserStatsAnimeGenres($userId: Int, $sort: [UserStatisticsSort]) {
     User(id: $userId) {
         statistics {
             anime {
-                genres(sort: COUNT_DESC) {
+                genres(sort: $sort) {
                     ...GenreStat
                 }
             }

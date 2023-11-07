@@ -64,6 +64,16 @@ fun GenresStatsView(
                 onValueChanged = setGenresType,
             )
         }
+        if (isLoading) {
+            items(
+                count = 3,
+                contentType = { it }
+            ) {
+                PositionalStatItemViewPlaceholder(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+        }
         itemsIndexed(
             items = stats.orEmpty(),
             key = { index, stat -> stat.genre ?: index },
@@ -81,13 +91,6 @@ fun GenresStatsView(
                     stat.genre?.let(navigateToExplore)
                 }
             )
-        }
-        if (isLoading) {
-            items(3) {
-                PositionalStatItemViewPlaceholder(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
         }
     }//:LazyColumn
 }

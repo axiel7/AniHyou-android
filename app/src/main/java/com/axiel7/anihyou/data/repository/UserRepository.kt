@@ -10,6 +10,7 @@ import com.axiel7.anihyou.type.MediaListOptionsInput
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
+import com.axiel7.anihyou.type.UserStatisticsSort
 import com.axiel7.anihyou.type.UserTitleLanguage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -125,17 +126,18 @@ class UserRepository @Inject constructor(
 
     fun getGenresStats(
         userId: Int,
-        mediaType: MediaType
+        mediaType: MediaType,
+        sort: UserStatisticsSort,
     ) = when (mediaType) {
         MediaType.ANIME -> api
-            .userStatsAnimeGenresQuery(userId)
+            .userStatsAnimeGenresQuery(userId, listOf(sort))
             .watch()
             .asDataResult { data ->
                 data.User?.statistics?.anime?.genres?.filterNotNull()?.map { it.genreStat }
             }
 
         MediaType.MANGA -> api
-            .userStatsMangaGenresQuery(userId)
+            .userStatsMangaGenresQuery(userId, listOf(sort))
             .watch()
             .asDataResult { data ->
                 data.User?.statistics?.manga?.genres?.filterNotNull()?.map { it.genreStat }

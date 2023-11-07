@@ -20,6 +20,7 @@ import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
+import com.axiel7.anihyou.type.UserStatisticsSort
 import com.axiel7.anihyou.type.UserTitleLanguage
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -115,17 +116,25 @@ class UserApi @Inject constructor(
             )
         )
 
-    fun userStatsAnimeGenresQuery(userId: Int) = client
+    fun userStatsAnimeGenresQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
         .query(
             UserStatsAnimeGenresQuery(
-                userId = Optional.present(userId)
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
             )
         )
 
-    fun userStatsMangaGenresQuery(userId: Int) = client
+    fun userStatsMangaGenresQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
         .query(
             UserStatsMangaGenresQuery(
-                userId = Optional.present(userId)
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
             )
         )
 

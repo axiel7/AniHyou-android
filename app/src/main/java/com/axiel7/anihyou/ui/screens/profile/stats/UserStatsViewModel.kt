@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.profile.stats
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.data.model.stats.genres.sortedBy
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -47,32 +45,20 @@ class UserStatsViewModel @Inject constructor(
     fun setStartYearType(value: StatDistributionType) =
         mutableUiState.update { it.copy(startYearType = value) }
 
-    fun setGenresType(value: StatDistributionType) = viewModelScope.launch {
-        mutableUiState.update { uiState ->
-            uiState.copy(
-                genresType = value,
-                animeGenres = if (uiState.mediaType == MediaType.ANIME)
-                    uiState.animeGenres?.sortedBy(type = value, mediaType = uiState.mediaType)
-                else uiState.animeGenres,
-                mangaGenres = if (uiState.mediaType == MediaType.MANGA)
-                    uiState.mangaGenres?.sortedBy(type = value, mediaType = uiState.mediaType)
-                else uiState.mangaGenres
-            )
-        }
-    }
+    fun setGenresType(value: StatDistributionType) =
+        mutableUiState.update { it.copy(genresType = value) }
 
     init {
-        val baseUiFlow = mutableUiState
-            .filter { it.userId != null }
+        // overview
+        mutableUiState
+            .filter {
+                it.type == UserStatType.OVERVIEW
+                        && it.userId != null
+            }
             .distinctUntilChanged { old, new ->
-                old.type == new.type
-                        && old.mediaType == new.mediaType
+                old.mediaType == new.mediaType
                         && old.userId == new.userId
             }
-
-        // overview
-        baseUiFlow
-            .filter { it.type == UserStatType.OVERVIEW }
             .flatMapLatest { uiState ->
                 userRepository.getOverviewStats(
                     userId = uiState.userId!!,
@@ -105,12 +91,21 @@ class UserStatsViewModel @Inject constructor(
             .launchIn(viewModelScope)
 
         // genres
-        baseUiFlow
-            .filter { it.type == UserStatType.GENRES }
+        mutableUiState
+            .filter {
+                it.type == UserStatType.GENRES
+                        && it.userId != null
+            }
+            .distinctUntilChanged { old, new ->
+                old.genresType == new.genresType
+                        && old.mediaType == new.mediaType
+                        && old.userId == new.userId
+            }
             .flatMapLatest { uiState ->
                 userRepository.getGenresStats(
                     userId = uiState.userId!!,
-                    mediaType = uiState.mediaType
+                    mediaType = uiState.mediaType,
+                    sort = uiState.genresType.userStatisticsSort(ascending = false)
                 )
             }
             .onEach { result ->
