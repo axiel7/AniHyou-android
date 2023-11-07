@@ -181,7 +181,6 @@
     <string name="list_style">Estilo da lista</string>
     <string name="on_my_list">Na minha lista</string>
     <string name="refresh">Atualizar</string>
-    <string name="episode_airing_on">Ep %d estreia em %s</string>
     <string name="display_adult_content">Exibir conteúdo adulto</string>
     <string name="overview">Visão geral</string>
     <string name="voice_actors">Atores de voz</string>
@@ -204,7 +203,6 @@
     <string name="friday">Sexta-Feira</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
-    <string name="episode_airing_at">Ep %s estreia às %s</string>
     <string name="filter">Filtro</string>
     <string name="notifications">Notificações</string>
     <string name="threads">Tópicos</string>
@@ -260,16 +258,9 @@
     <string name="reading">Lendo</string>
     <string name="synonyms">Sinônimos</string>
     <string name="translations">Traduções</string>
-    <string name="japanese">Japonês</string>
-    <string name="russian">Russo</string>
-    <string name="spanish">Espanhol</string>
-    <string name="turkish">Turco</string>
     <string name="from_year">Do ano</string>
     <string name="to_year">Até o ano</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[Produtores A&R]]></string>
     <string name="hide_filters">Ocultar filtros</string>
     <string name="more_filters">Mais filtros</string>
-    <string name="arabic">Árabe</string>
-    <string name="brazilian">Português (Brasil)</string>
-    <string name="indonesian">Indonésio</string>
 </resources>
