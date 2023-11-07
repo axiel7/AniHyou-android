@@ -25,7 +25,7 @@
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
     <string name="current">متداول</string>
-    <string name="planning">أرغب مشاهدة</string>
+    <string name="planning">أرغب بمشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
     <string name="paused">متوقف مؤقتاً</string>
@@ -276,7 +276,7 @@
     <string name="publish">انشر</string>
     <string name="reply">رد</string>
     <string name="locked">مقفل</string>
-    <string name="donator">المتبرع</string>
+    <string name="donator">داعم</string>
     <string name="google_translate_not_installed">لم يتم تثبيت ترجمة جوجل</string>
     <string name="no_app_found_for_this_action">لم يتم العثور على تطبيق لهذا الإجراء</string>
     <string name="list_status">الحالة</string>
@@ -296,7 +296,7 @@
     <string name="genre_fantasy">الخيال</string>
     <string name="genre_hentai">هنتاي</string>
     <string name="genre_horror">رعب</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">فتيات بقوة سحرية</string>
     <string name="genre_mecha">ميكا</string>
     <string name="genre_music">موسيقى</string>
     <string name="genre_mystery">غموض</string>
