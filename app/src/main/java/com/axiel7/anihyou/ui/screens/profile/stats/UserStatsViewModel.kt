@@ -48,6 +48,9 @@ class UserStatsViewModel @Inject constructor(
     fun setGenresType(value: StatDistributionType) =
         mutableUiState.update { it.copy(genresType = value) }
 
+    fun setTagsType(value: StatDistributionType) =
+        mutableUiState.update { it.copy(tagsType = value) }
+
     init {
         // overview
         mutableUiState
@@ -121,6 +124,49 @@ class UserStatsViewModel @Inject constructor(
                             MediaType.MANGA ->
                                 it.copy(
                                     mangaGenres = result.data,
+                                    isLoading = false
+                                )
+
+                            else -> it.copy(isLoading = false)
+                        }
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // tags
+        mutableUiState
+            .filter {
+                it.type == UserStatType.TAGS
+                        && it.userId != null
+            }
+            .distinctUntilChanged { old, new ->
+                old.tagsType == new.tagsType
+                        && old.mediaType == new.mediaType
+                        && old.userId == new.userId
+            }
+            .flatMapLatest { uiState ->
+                userRepository.getTagsStats(
+                    userId = uiState.userId!!,
+                    mediaType = uiState.mediaType,
+                    sort = uiState.tagsType.userStatisticsSort(ascending = false)
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        when (it.mediaType) {
+                            MediaType.ANIME ->
+                                it.copy(
+                                    animeTags = result.data,
+                                    isLoading = false
+                                )
+
+                            MediaType.MANGA ->
+                                it.copy(
+                                    mangaTags = result.data,
                                     isLoading = false
                                 )
 

@@ -1,0 +1,11 @@
+query UserStatsMangaTags($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            manga {
+                tags(sort: $sort) {
+                    ...TagStat
+                }
+            }
+        }
+    }
+}

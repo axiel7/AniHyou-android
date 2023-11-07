@@ -1,0 +1,22 @@
+query UserStatsAnimeTags($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            anime {
+                tags(sort: $sort) {
+                    ...TagStat
+                }
+            }
+        }
+    }
+}
+
+fragment TagStat on UserTagStatistic {
+    tag {
+        id
+        name
+    }
+    count
+    meanScore
+    minutesWatched
+    chaptersRead
+}

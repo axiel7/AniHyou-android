@@ -26,6 +26,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.screens.profile.stats.genres.GenresStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
+import com.axiel7.anihyou.ui.screens.profile.stats.tags.TagsStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -101,7 +102,22 @@ fun UserStatsView(
                 )
             }
 
-            UserStatType.TAGS -> ComingSoonText()
+            UserStatType.TAGS -> {
+                TagsStatsView(
+                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeTags
+                    else uiState.mangaTags,
+                    isLoading = uiState.isLoading,
+                    mediaType = uiState.mediaType,
+                    setMediaType = viewModel::setMediaType,
+                    tagsType = uiState.tagsType,
+                    setTagsType = viewModel::setTagsType,
+                    navigateToExplore = { tag ->
+                        navigateToGenreTag(uiState.mediaType, null, tag)
+                    },
+                    modifier = Modifier.nestedScroll(nestedScrollConnection)
+                )
+            }
+
             UserStatType.STAFF -> ComingSoonText()
             UserStatType.VOICE_ACTORS -> ComingSoonText()
             UserStatType.STUDIOS -> ComingSoonText()

@@ -146,6 +146,27 @@ class UserRepository @Inject constructor(
         else -> emptyFlow()
     }
 
+    fun getTagsStats(
+        userId: Int,
+        mediaType: MediaType,
+        sort: UserStatisticsSort,
+    ) = when (mediaType) {
+        MediaType.ANIME -> api
+            .userStatsAnimeTagsQuery(userId, listOf(sort))
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.anime?.tags?.filterNotNull()?.map { it.tagStat }
+            }
+
+        MediaType.MANGA -> api
+            .userStatsMangaTagsQuery(userId, listOf(sort))
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.manga?.tags?.filterNotNull()?.map { it.tagStat }
+            }
+
+        else -> emptyFlow()
+    }
 
     fun getFollowers(
         userId: Int,
