@@ -22,8 +22,9 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import java.util.Locale
 
 private val translations = mapOf(
-    "ar-SA" to "Hussain889, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
+    "ar-SA" to "Hussain889, Hussain69o, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
     "in-ID" to "Clxf12",
+    "it-IT" to "maicol07, DomeF",
     "ja-JP" to "axiel7",
     "pt-BR" to "Crono0, Torti, RickyM7, SamOak",
     "ru-RU" to "Ronner231, grin3671",
