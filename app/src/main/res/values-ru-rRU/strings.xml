@@ -184,7 +184,6 @@
     <string name="list_style">Стиль списка</string>
     <string name="on_my_list">В моем списке</string>
     <string name="refresh">Обновить</string>
-    <string name="episode_airing_on">Эп %d выйдет через %s</string>
     <string name="display_adult_content">Отображать контент для взрослых</string>
     <string name="overview">Общие сведения</string>
     <string name="voice_actors">Актеры озвучивания</string>
@@ -208,7 +207,6 @@
     <string name="friday">Пятница</string>
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
-    <string name="episode_airing_at">Эп %s выйдет в %s</string>
     <string name="filter">Фильтр</string>
     <string name="notifications">Уведомления</string>
     <string name="threads">Темы</string>
@@ -314,10 +312,6 @@
     <string name="reading">Читает</string>
     <string name="synonyms">Синонимы</string>
     <string name="translations">Переводы</string>
-    <string name="japanese">Японский</string>
-    <string name="russian">Русский</string>
-    <string name="spanish">Испанский</string>
-    <string name="turkish">Турецкий</string>
     <string name="from_year">За год</string>
     <string name="to_year">В год</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[А&Р Продюсер]]></string>
@@ -330,9 +324,15 @@
     <string name="china">Китай</string>
     <string name="taiwan">Тайвань</string>
     <string name="country">Страна</string>
-    <string name="arabic">Арабский</string>
-    <string name="brazilian">Бразильский</string>
-    <string name="indonesian">Индонезийский</string>
     <string name="custom_lists">Пользовательские списки</string>
     <string name="no_custom_lists">Нет пользовательских списков</string>
+    <string name="hours_watched_format">Просмотрено часов: %s</string>
+    <string name="chapters_read_format">Прочитано глав: %s</string>
+    <string name="mean_score_format">Средний счет: %s</string>
+    <string name="episode_count">Число эпизодов</string>
+    <string name="chapter_count">Число глав</string>
+    <string name="country_distribution">Распределение по странам</string>
+    <string name="release_year">Год выпуска</string>
+    <string name="watch_year">Год просмотра</string>
+    <string name="read_year">Год чтения</string>
 </resources>
