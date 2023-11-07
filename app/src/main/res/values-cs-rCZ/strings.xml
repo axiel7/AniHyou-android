@@ -141,11 +141,4 @@
     <string name="reading">Čteno</string>
     <string name="synonyms">Synonyma</string>
     <string name="translations">Překladatelé</string>
-    <string name="japanese">Japonština</string>
-    <string name="russian">Ruština</string>
-    <string name="spanish">Španělština</string>
-    <string name="turkish">Turecko</string>
-    <string name="arabic">Arabština</string>
-    <string name="brazilian">Brazilština</string>
-    <string name="indonesian">Indonésky</string>
 </resources>
