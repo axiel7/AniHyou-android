@@ -1,9 +1,7 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 
@@ -18,15 +16,4 @@ data class YearDistribution(
 
     @Composable
     override fun localized() = year.toString()
-
-    enum class Type : Localizable {
-        TITLES, TIME, SCORE;
-
-        @Composable
-        override fun localized() = when (this) {
-            TITLES -> stringResource(R.string.title_count)
-            TIME -> stringResource(R.string.time_spent)
-            SCORE -> stringResource(R.string.mean_score)
-        }
-    }
 }

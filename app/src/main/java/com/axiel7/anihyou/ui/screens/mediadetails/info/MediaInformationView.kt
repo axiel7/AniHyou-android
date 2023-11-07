@@ -52,7 +52,7 @@ import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
 @Composable
 fun MediaInformationView(
     uiState: MediaDetailsUiState,
-    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
 ) {
     val context = LocalContext.current
@@ -157,11 +157,9 @@ fun MediaInformationView(
                             description = tag.description,
                             rank = tag.rank,
                             onClick = {
-                                navigateToExplore(
-                                    uiState.details.basicMediaDetails.type,
-                                    null,
-                                    tag.name
-                                )
+                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                    navigateToGenreTag(mediaType, null, tag.name)
+                                }
                             }
                         )
                     } else {
@@ -171,11 +169,9 @@ fun MediaInformationView(
                             rank = tag.rank,
                             visible = showSpoiler,
                             onClick = {
-                                navigateToExplore(
-                                    uiState.details.basicMediaDetails.type,
-                                    null,
-                                    tag.name
-                                )
+                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                    navigateToGenreTag(mediaType, null, tag.name)
+                                }
                             }
                         )
                     }
@@ -267,7 +263,7 @@ fun MediaInformationViewPreview() {
         Surface {
             MediaInformationView(
                 uiState = MediaDetailsUiState(),
-                navigateToExplore = { _, _, _ -> },
+                navigateToGenreTag = { _, _, _ -> },
                 navigateToStudioDetails = {}
             )
         }

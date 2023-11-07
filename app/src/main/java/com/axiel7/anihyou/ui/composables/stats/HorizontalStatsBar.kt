@@ -24,7 +24,7 @@ import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
-import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.ui.composables.Rectangle
 import com.axiel7.anihyou.ui.composables.common.AssistChipWithTooltip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder

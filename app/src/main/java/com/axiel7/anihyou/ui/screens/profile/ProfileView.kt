@@ -74,6 +74,7 @@ fun ProfileView(
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
     navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
@@ -248,7 +249,8 @@ fun ProfileView(
                         ProfileInfoType.STATS ->
                             UserStatsView(
                                 userId = uiState.userInfo!!.id,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                                nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
+                                navigateToGenreTag = navigateToGenreTag,
                             )
 
                         ProfileInfoType.FAVORITES ->
@@ -287,7 +289,8 @@ fun ProfileViewPreview() {
                 navigateToStudioDetails = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},
-                navigateToUserMediaList = { _, _, _ -> }
+                navigateToUserMediaList = { _, _, _ -> },
+                navigateToGenreTag = { _, _, _ -> },
             )
         }
     }

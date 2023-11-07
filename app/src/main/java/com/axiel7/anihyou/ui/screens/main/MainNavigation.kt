@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.axiel7.anihyou.data.model.DeepLink
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.common.DestArgument.Companion.getBoolean
@@ -111,6 +112,17 @@ fun MainNavigation(
         navController.navigate(
             NavDestination.FullscreenImage
                 .putArguments(mapOf(NavArgument.Url to encodedUrl))
+        )
+    }
+    val navigateToGenreTag: (MediaType, String?, String?) -> Unit = { mediaType, genre, tag ->
+        navController.navigate(
+            NavDestination.Search.putArguments(
+                mapOf(
+                    NavArgument.MediaType to mediaType.rawValue,
+                    NavArgument.Genre to genre,
+                    NavArgument.Tag to tag
+                )
+            )
         )
     }
 
@@ -285,7 +297,8 @@ fun MainNavigation(
                     navigateToStudioDetails = navigateToStudioDetails,
                     navigateToUserDetails = navigateToUserDetails,
                     navigateToActivityDetails = navigateToActivityDetails,
-                    navigateToUserMediaList = null
+                    navigateToUserMediaList = null,
+                    navigateToGenreTag = navigateToGenreTag,
                 )
             } else {
                 LoginView()
@@ -408,17 +421,7 @@ fun MainNavigation(
                         )
                     )
                 },
-                navigateToExplore = { mediaType, genre, tag ->
-                    navController.navigate(
-                        NavDestination.Search.putArguments(
-                            mapOf(
-                                NavArgument.MediaType to mediaType?.rawValue,
-                                NavArgument.Genre to genre,
-                                NavArgument.Tag to tag
-                            )
-                        )
-                    )
-                }
+                navigateToGenreTag = navigateToGenreTag,
             )
         }
 
@@ -473,6 +476,7 @@ fun MainNavigation(
                         )
                     )
                 },
+                navigateToGenreTag = navigateToGenreTag,
                 navigateBack = navigateBack,
             )
         }

@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
-import com.axiel7.anihyou.data.model.stats.ScoreDistribution.Companion.asStat
-import com.axiel7.anihyou.data.model.stats.StatusDistribution.Companion.asStat
+import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution.Companion.asStat
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry

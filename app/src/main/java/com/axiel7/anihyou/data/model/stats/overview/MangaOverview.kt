@@ -1,7 +1,9 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
+import com.axiel7.anihyou.data.model.stats.Stat
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DateUtils.minutesToDays

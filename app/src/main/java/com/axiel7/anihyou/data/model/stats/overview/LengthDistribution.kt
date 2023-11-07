@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,17 +18,6 @@ data class LengthDistribution(
 
     @Composable
     override fun localized() = length ?: stringResource(R.string.unknown)
-
-    enum class Type : Localizable {
-        TITLES, TIME, SCORE;
-
-        @Composable
-        override fun localized() = when (this) {
-            TITLES -> stringResource(R.string.title_count)
-            TIME -> stringResource(R.string.time_spent)
-            SCORE -> stringResource(R.string.mean_score)
-        }
-    }
 
     companion object {
         val lengthComparator: (length: String?) -> Int = {

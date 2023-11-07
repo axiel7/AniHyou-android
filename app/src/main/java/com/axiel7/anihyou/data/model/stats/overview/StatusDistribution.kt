@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +8,7 @@ import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.theme.stat_dark_blue
@@ -88,7 +89,7 @@ enum class StatusDistribution(
             } else entries.find { it.status.rawValue == rawValue }
 
         fun MediaStatsQuery.StatusDistribution.asStat(): StatLocalizableAndColorable<StatusDistribution>? {
-            val status = StatusDistribution.valueOf(status?.rawValue)
+            val status = valueOf(status?.rawValue)
             return if (status != null) {
                 StatLocalizableAndColorable(
                     type = status,

@@ -1,11 +1,9 @@
 package com.axiel7.anihyou.ui.screens.profile.stats.overview
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,16 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.data.model.stats.LengthDistribution
-import com.axiel7.anihyou.data.model.stats.OverviewStats
-import com.axiel7.anihyou.data.model.stats.ScoreDistribution
-import com.axiel7.anihyou.data.model.stats.YearDistribution
+import com.axiel7.anihyou.data.model.stats.StatDistributionType
+import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
+import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
@@ -34,17 +31,19 @@ fun OverviewStatsView(
     isLoading: Boolean,
     mediaType: MediaType,
     setMediaType: (MediaType) -> Unit,
-    scoreType: ScoreDistribution.Type,
-    setScoreType: (ScoreDistribution.Type) -> Unit,
-    lengthType: LengthDistribution.Type,
-    setLengthType: (LengthDistribution.Type) -> Unit,
-    releaseYearType: YearDistribution.Type,
-    setReleaseYearType: (YearDistribution.Type) -> Unit,
-    startYearType: YearDistribution.Type,
-    setStartYearType: (YearDistribution.Type) -> Unit,
+    scoreType: StatDistributionType,
+    setScoreType: (StatDistributionType) -> Unit,
+    lengthType: StatDistributionType,
+    setLengthType: (StatDistributionType) -> Unit,
+    releaseYearType: StatDistributionType,
+    setReleaseYearType: (StatDistributionType) -> Unit,
+    startYearType: StatDistributionType,
+    setStartYearType: (StatDistributionType) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isAnime = mediaType == MediaType.ANIME
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -122,7 +121,10 @@ fun OverviewStatsView(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            ScoreDistribution.Type.entries.forEach {
+            arrayOf(
+                StatDistributionType.TITLES,
+                StatDistributionType.TIME
+            ).forEach {
                 FilterSelectionChip(
                     selected = scoreType == it,
                     text = it.localized(),
@@ -133,8 +135,9 @@ fun OverviewStatsView(
         }
         VerticalStatsBar(
             stats = when (scoreType) {
-                ScoreDistribution.Type.TITLES -> stats?.scoreCount.orEmpty()
-                ScoreDistribution.Type.TIME -> stats?.scoreTime.orEmpty()
+                StatDistributionType.TITLES -> stats?.scoreCount.orEmpty()
+                StatDistributionType.TIME -> stats?.scoreTime.orEmpty()
+                else -> emptyList()
             },
             modifier = Modifier.padding(8.dp),
             isLoading = isLoading
@@ -144,26 +147,15 @@ fun OverviewStatsView(
         InfoTitle(
             text = stringResource(if (isAnime) R.string.episode_count else R.string.chapter_count)
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        ) {
-            LengthDistribution.Type.entries.forEach {
-                FilterSelectionChip(
-                    selected = lengthType == it,
-                    text = it.localized(),
-                    onClick = { setLengthType(it) },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }
+        DistributionTypeChips(
+            value = lengthType,
+            onValueChanged = setLengthType,
+        )
         VerticalStatsBar(
             stats = when (lengthType) {
-                LengthDistribution.Type.TITLES -> stats?.lengthCount.orEmpty()
-                LengthDistribution.Type.TIME -> stats?.lengthTime.orEmpty()
-                LengthDistribution.Type.SCORE -> stats?.lengthScore.orEmpty()
+                StatDistributionType.TITLES -> stats?.lengthCount.orEmpty()
+                StatDistributionType.TIME -> stats?.lengthTime.orEmpty()
+                StatDistributionType.SCORE -> stats?.lengthScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
             isLoading = isLoading
@@ -198,26 +190,15 @@ fun OverviewStatsView(
 
         // Release year
         InfoTitle(text = stringResource(R.string.release_year))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        ) {
-            YearDistribution.Type.entries.forEach {
-                FilterSelectionChip(
-                    selected = releaseYearType == it,
-                    text = it.localized(),
-                    onClick = { setReleaseYearType(it) },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }
+        DistributionTypeChips(
+            value = releaseYearType,
+            onValueChanged = setReleaseYearType,
+        )
         VerticalStatsBar(
             stats = when (releaseYearType) {
-                YearDistribution.Type.TITLES -> stats?.releaseYearCount.orEmpty()
-                YearDistribution.Type.TIME -> stats?.releaseYearTime.orEmpty()
-                YearDistribution.Type.SCORE -> stats?.releaseYearScore.orEmpty()
+                StatDistributionType.TITLES -> stats?.releaseYearCount.orEmpty()
+                StatDistributionType.TIME -> stats?.releaseYearTime.orEmpty()
+                StatDistributionType.SCORE -> stats?.releaseYearScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
             isLoading = isLoading
@@ -227,26 +208,15 @@ fun OverviewStatsView(
         InfoTitle(
             text = stringResource(if (isAnime) R.string.watch_year else R.string.read_year)
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        ) {
-            YearDistribution.Type.entries.forEach {
-                FilterSelectionChip(
-                    selected = startYearType == it,
-                    text = it.localized(),
-                    onClick = { setStartYearType(it) },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }
+        DistributionTypeChips(
+            value = startYearType,
+            onValueChanged = setStartYearType,
+        )
         VerticalStatsBar(
             stats = when (startYearType) {
-                YearDistribution.Type.TITLES -> stats?.startYearCount.orEmpty()
-                YearDistribution.Type.TIME -> stats?.startYearTime.orEmpty()
-                YearDistribution.Type.SCORE -> stats?.startYearScore.orEmpty()
+                StatDistributionType.TITLES -> stats?.startYearCount.orEmpty()
+                StatDistributionType.TIME -> stats?.startYearTime.orEmpty()
+                StatDistributionType.SCORE -> stats?.startYearScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
             isLoading = isLoading
@@ -264,13 +234,13 @@ fun OverviewUserStatsViewPreview() {
                 isLoading = true,
                 mediaType = MediaType.ANIME,
                 setMediaType = {},
-                scoreType = ScoreDistribution.Type.TITLES,
+                scoreType = StatDistributionType.TITLES,
                 setScoreType = {},
-                lengthType = LengthDistribution.Type.TITLES,
+                lengthType = StatDistributionType.TITLES,
                 setLengthType = {},
-                releaseYearType = YearDistribution.Type.TITLES,
+                releaseYearType = StatDistributionType.TITLES,
                 setReleaseYearType = {},
-                startYearType = YearDistribution.Type.TITLES,
+                startYearType = StatDistributionType.TITLES,
                 setStartYearType = {},
             )
         }

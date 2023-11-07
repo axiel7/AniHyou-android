@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

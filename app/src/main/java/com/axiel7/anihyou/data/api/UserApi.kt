@@ -11,7 +11,9 @@ import com.axiel7.anihyou.UpdateUserMutation
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.UserBasicInfoQuery
 import com.axiel7.anihyou.UserOptionsQuery
+import com.axiel7.anihyou.UserStatsAnimeGenresQuery
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
+import com.axiel7.anihyou.UserStatsMangaGenresQuery
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.ViewerQuery
 import com.axiel7.anihyou.type.ActivitySort
@@ -109,6 +111,20 @@ class UserApi @Inject constructor(
     fun userStatsMangaOverviewQuery(userId: Int) = client
         .query(
             UserStatsMangaOverviewQuery(
+                userId = Optional.present(userId)
+            )
+        )
+
+    fun userStatsAnimeGenresQuery(userId: Int) = client
+        .query(
+            UserStatsAnimeGenresQuery(
+                userId = Optional.present(userId)
+            )
+        )
+
+    fun userStatsMangaGenresQuery(userId: Int) = client
+        .query(
+            UserStatsMangaGenresQuery(
                 userId = Optional.present(userId)
             )
         )

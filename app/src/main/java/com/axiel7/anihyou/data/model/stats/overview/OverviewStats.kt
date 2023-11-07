@@ -1,6 +1,7 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 
 data class OverviewStats(
     val count: Int,

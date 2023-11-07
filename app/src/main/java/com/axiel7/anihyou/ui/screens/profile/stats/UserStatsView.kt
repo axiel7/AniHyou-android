@@ -14,6 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,13 +24,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
+import com.axiel7.anihyou.ui.screens.profile.stats.genres.GenresStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun UserStatsView(
     userId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    nestedScrollConnection: NestedScrollConnection,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
 ) {
     val viewModel: UserStatsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -38,7 +44,6 @@ fun UserStatsView(
 
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .navigationBarsPadding()
     ) {
@@ -75,10 +80,28 @@ fun UserStatsView(
                     setReleaseYearType = viewModel::setReleaseYearType,
                     startYearType = uiState.startYearType,
                     setStartYearType = viewModel::setStartYearType,
+                    modifier = Modifier
+                        .nestedScroll(nestedScrollConnection)
+                        .verticalScroll(rememberScrollState())
                 )
             }
 
-            UserStatType.GENRES -> ComingSoonText()
+            UserStatType.GENRES -> {
+                GenresStatsView(
+                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeGenres
+                    else uiState.mangaGenres,
+                    isLoading = uiState.isLoading,
+                    mediaType = uiState.mediaType,
+                    setMediaType = viewModel::setMediaType,
+                    genresType = uiState.genresType,
+                    setGenresType = viewModel::setGenresType,
+                    navigateToExplore = { genre ->
+                        navigateToGenreTag(uiState.mediaType, genre, null)
+                    },
+                    modifier = Modifier.nestedScroll(nestedScrollConnection)
+                )
+            }
+
             UserStatType.TAGS -> ComingSoonText()
             UserStatType.STAFF -> ComingSoonText()
             UserStatType.VOICE_ACTORS -> ComingSoonText()
@@ -102,7 +125,9 @@ fun UserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             UserStatsView(
-                userId = 1
+                userId = 1,
+                navigateToGenreTag = { _, _, _ -> },
+                nestedScrollConnection = rememberNestedScrollInteropConnection()
             )
         }
     }

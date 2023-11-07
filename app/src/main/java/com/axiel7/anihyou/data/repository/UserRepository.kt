@@ -4,12 +4,15 @@ import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.UserApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
+import com.axiel7.anihyou.data.model.stats.overview.toOverviewStats
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -99,19 +102,48 @@ class UserRepository @Inject constructor(
             it.Page?.activities?.filterNotNull().orEmpty()
         }
 
-    fun getOverviewAnimeStats(userId: Int) = api
-        .userStatsAnimeOverviewQuery(userId)
-        .watch()
-        .asDataResult {
-            it.User?.statistics?.anime
-        }
+    fun getOverviewStats(
+        userId: Int,
+        mediaType: MediaType,
+    ) = when (mediaType) {
+        MediaType.ANIME -> api
+            .userStatsAnimeOverviewQuery(userId)
+            .watch()
+            .asDataResult {
+                it.User?.statistics?.anime?.toOverviewStats()
+            }
 
-    fun getOverviewMangaStats(userId: Int) = api
-        .userStatsMangaOverviewQuery(userId)
-        .watch()
-        .asDataResult {
-            it.User?.statistics?.manga
-        }
+        MediaType.MANGA -> api
+            .userStatsMangaOverviewQuery(userId)
+            .watch()
+            .asDataResult {
+                it.User?.statistics?.manga?.toOverviewStats()
+            }
+
+        else -> emptyFlow()
+    }
+
+    fun getGenresStats(
+        userId: Int,
+        mediaType: MediaType
+    ) = when (mediaType) {
+        MediaType.ANIME -> api
+            .userStatsAnimeGenresQuery(userId)
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.anime?.genres?.filterNotNull()?.map { it.genreStat }
+            }
+
+        MediaType.MANGA -> api
+            .userStatsMangaGenresQuery(userId)
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.manga?.genres?.filterNotNull()?.map { it.genreStat }
+            }
+
+        else -> emptyFlow()
+    }
+
 
     fun getFollowers(
         userId: Int,
