@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -49,13 +50,14 @@ class UserStatsViewModel @Inject constructor(
         mutableUiState.update { it.copy(startYearType = value) }
 
     init {
-        // anime stats
+        // anime overview
         mutableUiState
             .filter {
                 it.mediaType == MediaType.ANIME
                         && it.type == UserStatType.OVERVIEW
                         && it.userId != null
             }
+            .distinctUntilChangedBy { it.userId }
             .flatMapLatest { uiState ->
                 if (uiState.userId != null)
                     userRepository.getOverviewAnimeStats(uiState.userId)
@@ -75,13 +77,14 @@ class UserStatsViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        // manga stats
+        // manga overview
         mutableUiState
             .filter {
                 it.mediaType == MediaType.MANGA
                         && it.type == UserStatType.OVERVIEW
                         && it.userId != null
             }
+            .distinctUntilChangedBy { it.userId }
             .flatMapLatest { uiState ->
                 if (uiState.userId != null)
                     userRepository.getOverviewMangaStats(uiState.userId)
