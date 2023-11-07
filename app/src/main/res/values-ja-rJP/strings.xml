@@ -182,7 +182,6 @@
     <string name="list_style">リストスタイル</string>
     <string name="on_my_list">自分のリストに</string>
     <string name="refresh">更新する</string>
-    <string name="episode_airing_on">第%d話は%sで配信中</string>
     <string name="display_adult_content">アダルトコンテンツを表示</string>
     <string name="overview">概要</string>
     <string name="voice_actors">声優</string>
@@ -204,7 +203,6 @@
     <string name="friday">金曜日</string>
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
-    <string name="episode_airing_at">第%s話は%sに配信中</string>
     <string name="filter">検索</string>
     <string name="notifications">通知</string>
     <string name="threads">スレッド</string>
@@ -307,10 +305,6 @@
     <string name="reading">読んでいます</string>
     <string name="synonyms">同義語</string>
     <string name="translations">翻訳</string>
-    <string name="japanese">日本語</string>
-    <string name="russian">ロシア語</string>
-    <string name="spanish">スペイン語</string>
-    <string name="turkish">トルコ語</string>
     <string name="from_year">年から</string>
     <string name="to_year">年まで</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[A&R プロデューサー]]></string>
@@ -323,9 +317,6 @@
     <string name="china">中国</string>
     <string name="taiwan">台湾</string>
     <string name="country">国</string>
-    <string name="arabic">アラビア語</string>
-    <string name="brazilian">ブラジル語</string>
-    <string name="indonesian">インドネシア語</string>
     <string name="custom_lists">カスタムリスト</string>
     <string name="no_custom_lists">カスタムリストなし</string>
     <string name="country_distribution">国の内訳</string>
