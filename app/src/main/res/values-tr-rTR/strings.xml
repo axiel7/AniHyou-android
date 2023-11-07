@@ -184,7 +184,6 @@
     <string name="list_style">Liste stili</string>
     <string name="on_my_list">Listemde</string>
     <string name="refresh">Yenile</string>
-    <string name="episode_airing_on">%d. Bölüm, %s sonra yayınlanacak</string>
     <string name="display_adult_content">Yetişkin içeriği göster</string>
     <string name="overview">Genel Bakış</string>
     <string name="voice_actors">Seslendirenler</string>
@@ -208,7 +207,6 @@
     <string name="friday">Cuma</string>
     <string name="saturday">Cumartesi</string>
     <string name="sunday">Pazar</string>
-    <string name="episode_airing_at">%s. Bölüm, %s sonra yayınlanacak</string>
     <string name="filter">Filtrele</string>
     <string name="notifications">Bildirimler</string>
     <string name="threads">Konular</string>
@@ -314,10 +312,6 @@
     <string name="reading">Okunuyor</string>
     <string name="synonyms">Eş anlamlılar</string>
     <string name="translations">Çeviriler</string>
-    <string name="japanese">Japonca</string>
-    <string name="russian">Rusça</string>
-    <string name="spanish">İspanyolca</string>
-    <string name="turkish">Türkçe</string>
     <string name="from_year">Şu yıldan</string>
     <string name="to_year">Şu yıla</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[Ekip & Rol Yapımcısı]]></string>
@@ -330,9 +324,15 @@
     <string name="china">Çin</string>
     <string name="taiwan">Tayvan</string>
     <string name="country">Ülke</string>
-    <string name="arabic">Arapça</string>
-    <string name="brazilian">Portekizce</string>
-    <string name="indonesian">Endonezce</string>
     <string name="custom_lists">Özel Listeler</string>
     <string name="no_custom_lists">Özel liste yok</string>
+    <string name="hours_watched_format">İzlenen Saat: %s</string>
+    <string name="chapters_read_format">Okunan Bölüm: %s</string>
+    <string name="mean_score_format">Ortalama Puan: %s</string>
+    <string name="episode_count">Bölüm Sayısı</string>
+    <string name="chapter_count">Bölüm Sayısı</string>
+    <string name="country_distribution">Ülke Dağılımı</string>
+    <string name="release_year">Yayın Yılı</string>
+    <string name="watch_year">İzleme Yılı</string>
+    <string name="read_year">Okuma Yılı</string>
 </resources>
