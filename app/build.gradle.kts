@@ -27,7 +27,9 @@ android {
         archivesName.set("anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations.addAll(listOf("en", "ja-rJP", "ru-rRU", "es-rES", "tr-rTR", "pt-rBR", "ar-rSA", "in-rID"))
+        resourceConfigurations.addAll(
+            listOf("en", "ja-rJP", "ru-rRU", "es-rES", "tr-rTR", "pt-rBR", "ar-rSA", "in-rID", "it-rIT")
+        )
         vectorDrawables {
             useSupportLibrary = true
         }
