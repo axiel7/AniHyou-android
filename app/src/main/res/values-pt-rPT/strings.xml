@@ -141,11 +141,4 @@
     <string name="reading">Lendo</string>
     <string name="synonyms">Sinónimos</string>
     <string name="translations">Traduções</string>
-    <string name="japanese">Japonês</string>
-    <string name="russian">Russo</string>
-    <string name="spanish">Espanhol</string>
-    <string name="turkish">Turco</string>
-    <string name="arabic">Árabe</string>
-    <string name="brazilian">Brasileiro</string>
-    <string name="indonesian">Indonésio</string>
 </resources>
