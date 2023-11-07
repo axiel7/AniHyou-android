@@ -184,7 +184,6 @@
     <string name="list_style">Estilo de lista</string>
     <string name="on_my_list">En mi lista</string>
     <string name="refresh">Actualizar</string>
-    <string name="episode_airing_on">Ep %d se emite en %s</string>
     <string name="display_adult_content">Mostrar contenido para adultos</string>
     <string name="overview">Visión general</string>
     <string name="voice_actors">Actores de voz</string>
@@ -208,7 +207,6 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
-    <string name="episode_airing_at">Ep %s se emite a las %s</string>
     <string name="filter">Filtrar</string>
     <string name="notifications">Notificaciones</string>
     <string name="threads">Discusiones</string>
@@ -315,10 +313,6 @@
     <string name="reading">Leyendo</string>
     <string name="synonyms">Sinónimos</string>
     <string name="translations">Traducciones</string>
-    <string name="japanese">Japonés</string>
-    <string name="russian">Ruso</string>
-    <string name="spanish">Español</string>
-    <string name="turkish">Turco</string>
     <string name="from_year">Desde el año</string>
     <string name="to_year">Hasta el año</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[Productor A&R]]></string>
@@ -331,16 +325,13 @@
     <string name="china">China</string>
     <string name="taiwan">Taiwán</string>
     <string name="country">País</string>
-    <string name="arabic">Árabe</string>
-    <string name="brazilian">Brasileño</string>
-    <string name="indonesian">Indonesio</string>
     <string name="custom_lists">Listas Personalizadas</string>
     <string name="no_custom_lists">Sin listas personalizadas</string>
     <string name="hours_watched_format">Horas Vistas: %s</string>
     <string name="chapters_read_format">Capítulos Leídos: %s</string>
     <string name="mean_score_format">Puntuación Media: %s</string>
-    <string name="episode_count" comment="stats by anime episode count">Recuento de Episodios</string>
-    <string name="chapter_count" comment="stats by manga chapter count">Recuento de Capítulos</string>
+    <string name="episode_count">Recuento de Episodios</string>
+    <string name="chapter_count">Recuento de Capítulos</string>
     <string name="country_distribution">Distribución por Países</string>
     <string name="release_year">Año de Lanzamiento</string>
     <string name="watch_year">Año de Visualización</string>
