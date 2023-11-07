@@ -141,11 +141,4 @@
     <string name="reading">Am Lesen</string>
     <string name="synonyms">Synonyme</string>
     <string name="translations">Übersetzungen</string>
-    <string name="japanese">Japanisch</string>
-    <string name="russian">Russisch</string>
-    <string name="spanish">Spanisch</string>
-    <string name="turkish">Türkisch</string>
-    <string name="arabic">Arabisch</string>
-    <string name="brazilian">Brasilianisch</string>
-    <string name="indonesian">Indonesischen</string>
 </resources>

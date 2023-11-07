@@ -313,10 +313,6 @@
     <string name="reading">Membaca</string>
     <string name="synonyms">Kesamaan</string>
     <string name="translations">Penerjemahan</string>
-    <string name="japanese">Jepang</string>
-    <string name="russian">Rusia</string>
-    <string name="spanish">Spanyol</string>
-    <string name="turkish">Turki</string>
     <string name="from_year">Dari tahun</string>
     <string name="to_year">Ke tahun</string>
     <string name="hide_filters">Sembunyikan filter</string>
@@ -327,9 +323,6 @@
     <string name="china">Cina</string>
     <string name="taiwan">Taiwan</string>
     <string name="country">Negara</string>
-    <string name="arabic">Arab</string>
-    <string name="brazilian">Brazil</string>
-    <string name="indonesian">Indonesia</string>
     <string name="custom_lists">Daftar kustom</string>
     <string name="no_custom_lists">Tidak ada daftar kustom</string>
 </resources>

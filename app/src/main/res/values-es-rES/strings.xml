@@ -314,10 +314,6 @@
     <string name="reading">Leyendo</string>
     <string name="synonyms">Sinónimos</string>
     <string name="translations">Traducciones</string>
-    <string name="japanese">Japonés</string>
-    <string name="russian">Ruso</string>
-    <string name="spanish">Español</string>
-    <string name="turkish">Turco</string>
     <string name="from_year">Desde el año</string>
     <string name="to_year">Hasta el año</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[Productor A&R]]></string>
@@ -330,9 +326,6 @@
     <string name="china">China</string>
     <string name="taiwan">Taiwán</string>
     <string name="country">País</string>
-    <string name="arabic">Árabe</string>
-    <string name="brazilian">Brasileño</string>
-    <string name="indonesian">Indonesio</string>
     <string name="custom_lists">Listas Personalizadas</string>
     <string name="no_custom_lists">Sin listas personalizadas</string>
 </resources>

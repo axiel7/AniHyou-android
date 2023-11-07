@@ -313,10 +313,6 @@
     <string name="reading">Okunuyor</string>
     <string name="synonyms">Eş anlamlılar</string>
     <string name="translations">Çeviriler</string>
-    <string name="japanese">Japonca</string>
-    <string name="russian">Rusça</string>
-    <string name="spanish">İspanyolca</string>
-    <string name="turkish">Türkçe</string>
     <string name="from_year">Şu yıldan</string>
     <string name="to_year">Şu yıla</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[Ekip & Rol Yapımcısı]]></string>
@@ -329,9 +325,6 @@
     <string name="china">Çin</string>
     <string name="taiwan">Tayvan</string>
     <string name="country">Ülke</string>
-    <string name="arabic">Arapça</string>
-    <string name="brazilian">Portekizce</string>
-    <string name="indonesian">Endonezce</string>
     <string name="custom_lists">Özel Listeler</string>
     <string name="no_custom_lists">Özel liste yok</string>
 </resources>

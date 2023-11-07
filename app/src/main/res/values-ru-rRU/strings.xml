@@ -313,10 +313,6 @@
     <string name="reading">Читает</string>
     <string name="synonyms">Синонимы</string>
     <string name="translations">Переводы</string>
-    <string name="japanese">Японский</string>
-    <string name="russian">Русский</string>
-    <string name="spanish">Испанский</string>
-    <string name="turkish">Турецкий</string>
     <string name="from_year">За год</string>
     <string name="to_year">В год</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[А&Р Продюсер]]></string>
@@ -329,9 +325,6 @@
     <string name="china">Китай</string>
     <string name="taiwan">Тайвань</string>
     <string name="country">Страна</string>
-    <string name="arabic">Арабский</string>
-    <string name="brazilian">Бразильский</string>
-    <string name="indonesian">Индонезийский</string>
     <string name="custom_lists">Пользовательские списки</string>
     <string name="no_custom_lists">Нет пользовательских списков</string>
 </resources>

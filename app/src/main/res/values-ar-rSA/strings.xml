@@ -313,10 +313,6 @@
     <string name="reading">أقرأُه</string>
     <string name="synonyms">يسمى أيضًا</string>
     <string name="translations">المترجمون</string>
-    <string name="japanese">اليابانية</string>
-    <string name="russian">الروسية</string>
-    <string name="spanish">الإسبانية</string>
-    <string name="turkish">التركية</string>
     <string name="from_year">من عام</string>
     <string name="to_year">إلى العام</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[منتج موسيقي]]></string>
@@ -329,7 +325,4 @@
     <string name="china">الصين</string>
     <string name="taiwan">تايوان</string>
     <string name="country">البلد/الدولة</string>
-    <string name="arabic">العربية</string>
-    <string name="brazilian">البرازيلية</string>
-    <string name="indonesian">الإندونيسية</string>
 </resources>

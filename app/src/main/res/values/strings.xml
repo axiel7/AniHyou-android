@@ -326,10 +326,6 @@
     <string name="reading">Reading</string>
     <string name="synonyms">Synonyms</string>
     <string name="translations">Translations</string>
-    <string name="japanese">Japanese</string>
-    <string name="russian">Russian</string>
-    <string name="spanish">Spanish</string>
-    <string name="turkish">Turkish</string>
     <string name="from_year">From year</string>
     <string name="to_year">To year</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[A&R Producer]]></string>
@@ -342,9 +338,6 @@
     <string name="china">China</string>
     <string name="taiwan">Taiwan</string>
     <string name="country">Country</string>
-    <string name="arabic">Arabic</string>
-    <string name="brazilian">Brazilian</string>
-    <string name="indonesian">Indonesian</string>
     <string name="custom_lists">Custom Lists</string>
     <string name="no_custom_lists">No custom lists</string>
     <string name="hours_watched_format">Hours Watched: %s</string>

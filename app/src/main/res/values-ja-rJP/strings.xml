@@ -306,10 +306,6 @@
     <string name="reading">読んでいます</string>
     <string name="synonyms">同義語</string>
     <string name="translations">翻訳</string>
-    <string name="japanese">日本語</string>
-    <string name="russian">ロシア語</string>
-    <string name="spanish">スペイン語</string>
-    <string name="turkish">トルコ語</string>
     <string name="from_year">年から</string>
     <string name="to_year">年まで</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[A&R プロデューサー]]></string>
@@ -322,9 +318,6 @@
     <string name="china">中国</string>
     <string name="taiwan">台湾</string>
     <string name="country">国</string>
-    <string name="arabic">アラビア語</string>
-    <string name="brazilian">ブラジル語</string>
-    <string name="indonesian">インドネシア語</string>
     <string name="custom_lists">カスタムリスト</string>
     <string name="no_custom_lists">カスタムリストなし</string>
 </resources>

@@ -176,12 +176,5 @@
     <string name="reading">En cours</string>
     <string name="synonyms">Synonymes</string>
     <string name="translations">Traductions</string>
-    <string name="japanese">Japonais</string>
-    <string name="russian">Russe</string>
-    <string name="spanish">Espagnol</string>
-    <string name="turkish">Turque</string>
     <string name="hide_filters">Masquer les filtres</string>
-    <string name="arabic">Arabe</string>
-    <string name="brazilian">Brésilien</string>
-    <string name="indonesian">Indonésien</string>
 </resources>
