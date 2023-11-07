@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.profile.stats
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
+import com.axiel7.anihyou.data.model.stats.genres.sortedBy
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -48,38 +49,15 @@ class UserStatsViewModel @Inject constructor(
 
     fun setGenresType(value: StatDistributionType) = viewModelScope.launch {
         mutableUiState.update { uiState ->
-            when (value) {
-                StatDistributionType.TITLES ->
-                    uiState.copy(
-                        genresType = value,
-                        animeGenres = if (uiState.mediaType == MediaType.ANIME)
-                            uiState.animeGenres?.sortedByDescending { it.count }
-                        else uiState.animeGenres,
-                        mangaGenres = if (uiState.mediaType == MediaType.MANGA)
-                            uiState.mangaGenres?.sortedByDescending { it.count }
-                        else uiState.mangaGenres
-                    )
-
-                StatDistributionType.TIME -> uiState.copy(
-                    genresType = value,
-                    animeGenres = if (uiState.mediaType == MediaType.ANIME)
-                        uiState.animeGenres?.sortedByDescending { it.minutesWatched }
-                    else uiState.animeGenres,
-                    mangaGenres = if (uiState.mediaType == MediaType.MANGA)
-                        uiState.mangaGenres?.sortedByDescending { it.chaptersRead }
-                    else uiState.mangaGenres
-                )
-
-                StatDistributionType.SCORE -> uiState.copy(
-                    genresType = value,
-                    animeGenres = if (uiState.mediaType == MediaType.ANIME)
-                        uiState.animeGenres?.sortedByDescending { it.meanScore }
-                    else uiState.animeGenres,
-                    mangaGenres = if (uiState.mediaType == MediaType.MANGA)
-                        uiState.mangaGenres?.sortedByDescending { it.meanScore }
-                    else uiState.mangaGenres
-                )
-            }
+            uiState.copy(
+                genresType = value,
+                animeGenres = if (uiState.mediaType == MediaType.ANIME)
+                    uiState.animeGenres?.sortedBy(type = value, mediaType = uiState.mediaType)
+                else uiState.animeGenres,
+                mangaGenres = if (uiState.mediaType == MediaType.MANGA)
+                    uiState.mangaGenres?.sortedBy(type = value, mediaType = uiState.mediaType)
+                else uiState.mangaGenres
+            )
         }
     }
 
