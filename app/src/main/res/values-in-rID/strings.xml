@@ -184,7 +184,6 @@
     <string name="list_style">Tampilan daftar</string>
     <string name="on_my_list">Di daftar anime saya</string>
     <string name="refresh">Memperbarui</string>
-    <string name="episode_airing_on">Ep %d ditayangkan pada %s</string>
     <string name="display_adult_content">Tampilkan konten dewasa</string>
     <string name="overview">Pratinjau</string>
     <string name="voice_actors">Pengisi suara</string>
@@ -208,7 +207,6 @@
     <string name="friday">Jumat</string>
     <string name="saturday">Sabtu</string>
     <string name="sunday">Minggu</string>
-    <string name="episode_airing_at">Ep %s ditayangkan pada %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifikasi</string>
     <string name="threads">Bahasan</string>
@@ -314,10 +312,6 @@
     <string name="reading">Membaca</string>
     <string name="synonyms">Kesamaan</string>
     <string name="translations">Penerjemahan</string>
-    <string name="japanese">Jepang</string>
-    <string name="russian">Rusia</string>
-    <string name="spanish">Spanyol</string>
-    <string name="turkish">Turki</string>
     <string name="from_year">Dari tahun</string>
     <string name="to_year">Ke tahun</string>
     <string name="hide_filters">Sembunyikan filter</string>
@@ -328,9 +322,15 @@
     <string name="china">Cina</string>
     <string name="taiwan">Taiwan</string>
     <string name="country">Negara</string>
-    <string name="arabic">Arab</string>
-    <string name="brazilian">Brazil</string>
-    <string name="indonesian">Indonesia</string>
     <string name="custom_lists">Daftar kustom</string>
     <string name="no_custom_lists">Tidak ada daftar kustom</string>
+    <string name="hours_watched_format">Jam Menonton: %s</string>
+    <string name="chapters_read_format">Chapter Dibaca: %s</string>
+    <string name="mean_score_format">Skor Rata-rata: %s</string>
+    <string name="episode_count">Jumlah Episode</string>
+    <string name="chapter_count">Jumlah Chapter</string>
+    <string name="country_distribution">Negara Distribusi</string>
+    <string name="release_year">Tahun Rilis</string>
+    <string name="watch_year">Tahun Menonton</string>
+    <string name="read_year">Tahun Membaca</string>
 </resources>
