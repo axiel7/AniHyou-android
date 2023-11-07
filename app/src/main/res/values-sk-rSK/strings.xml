@@ -138,11 +138,4 @@
     <string name="reading">Čítanie</string>
     <string name="synonyms">Synonymá</string>
     <string name="translations">Prekladatelia</string>
-    <string name="japanese">Japončina</string>
-    <string name="russian">Ruština</string>
-    <string name="spanish">Španielčina</string>
-    <string name="turkish">Turečtina</string>
-    <string name="arabic">Arabčina</string>
-    <string name="brazilian">Brazílčina</string>
-    <string name="indonesian">Indonézština</string>
 </resources>
