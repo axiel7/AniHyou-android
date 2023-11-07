@@ -26,6 +26,7 @@ const val ANILIST_ACCOUNT_SETTINGS_URL = "https://anilist.co/settings/account"
 const val GITHUB_REPO_URL = "https://github.com/axiel7/AniHyou-android"
 const val GITHUB_PROFILE_URL = "https://github.com/axiel7"
 const val DISCORD_SERVER_URL = "https://discord.gg/CTv3WdfxHh"
+const val CROWDIN_URL = "https://crowdin.com/project/anihyou"
 
 const val UNKNOWN_CHAR = "─"
 
