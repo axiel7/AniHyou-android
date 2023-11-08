@@ -20,7 +20,7 @@
     <string name="fall">Sonbahar</string>
     <string name="profile">Profil</string>
     <string name="trending_now">Şu An Popüler</string>
-    <string name="next_season">Sonraki Sezon</string>
+    <string name="next_season">Gelecek Sezon</string>
     <string name="trending_manga">Popüler Manga</string>
     <string name="not_logged_text">Bu özelliği kullanmak için lütfen oturum açın</string>
     <string name="login">Oturum aç</string>
@@ -199,7 +199,7 @@
     <string name="time_spent">Harcanan süre</string>
     <string name="format_distribution">Tür Dağılımı</string>
     <string name="notes">Notlar</string>
-    <string name="calendar">Yayım Takvimi</string>
+    <string name="calendar">Yayın Takvimi</string>
     <string name="monday">Pazartesi</string>
     <string name="tuesday">Salı</string>
     <string name="wednesday">Çarşamba</string>
@@ -207,6 +207,7 @@
     <string name="friday">Cuma</string>
     <string name="saturday">Cumartesi</string>
     <string name="sunday">Pazar</string>
+    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">%d. Bölüm, %s sonra yayınlanacak</string>
     <string name="filter">Filtrele</string>
     <string name="notifications">Bildirimler</string>
     <string name="threads">Konular</string>
