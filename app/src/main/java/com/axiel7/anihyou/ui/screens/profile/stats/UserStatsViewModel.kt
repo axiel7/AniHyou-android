@@ -54,6 +54,12 @@ class UserStatsViewModel @Inject constructor(
     fun setStaffType(value: StatDistributionType) =
         mutableUiState.update { it.copy(staffType = value) }
 
+    fun setVoiceActorsType(value: StatDistributionType) =
+        mutableUiState.update { it.copy(voiceActorsType = value) }
+
+    fun setStudiosType(value: StatDistributionType) =
+        mutableUiState.update { it.copy(studiosType = value) }
+
     init {
         // overview
         mutableUiState
@@ -218,6 +224,66 @@ class UserStatsViewModel @Inject constructor(
 
                             else -> it.copy(isLoading = false)
                         }
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // voice actors
+        mutableUiState
+            .filter {
+                it.type == UserStatType.VOICE_ACTORS
+                        && it.userId != null
+            }
+            .distinctUntilChanged { old, new ->
+                old.voiceActorsType == new.voiceActorsType
+                        && old.userId == new.userId
+            }
+            .flatMapLatest { uiState ->
+                userRepository.getVoiceActorsStats(
+                    userId = uiState.userId!!,
+                    sort = uiState.voiceActorsType.userStatisticsSort(ascending = false)
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            voiceActors = result.data,
+                            isLoading = false
+                        )
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // studios
+        mutableUiState
+            .filter {
+                it.type == UserStatType.STUDIOS
+                        && it.userId != null
+            }
+            .distinctUntilChanged { old, new ->
+                old.studiosType == new.studiosType
+                        && old.userId == new.userId
+            }
+            .flatMapLatest { uiState ->
+                userRepository.getStudiosStats(
+                    userId = uiState.userId!!,
+                    sort = uiState.studiosType.userStatisticsSort(ascending = false)
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            studios = result.data,
+                            isLoading = false
+                        )
                     } else {
                         result.toUiState()
                     }

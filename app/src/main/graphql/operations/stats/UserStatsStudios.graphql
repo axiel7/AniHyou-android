@@ -1,0 +1,22 @@
+query UserStatsStudios($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            anime {
+                studios(sort: $sort) {
+                    ...StudioStat
+                }
+            }
+        }
+    }
+}
+
+fragment StudioStat on UserStudioStatistic {
+    studio {
+        id
+        name
+    }
+    count
+    meanScore
+    minutesWatched
+    chaptersRead
+}

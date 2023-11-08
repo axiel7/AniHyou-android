@@ -19,6 +19,8 @@ import com.axiel7.anihyou.UserStatsMangaGenresQuery
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.UserStatsMangaStaffQuery
 import com.axiel7.anihyou.UserStatsMangaTagsQuery
+import com.axiel7.anihyou.UserStatsStudiosQuery
+import com.axiel7.anihyou.UserStatsVoiceActorsQuery
 import com.axiel7.anihyou.ViewerQuery
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
@@ -181,6 +183,28 @@ class UserApi @Inject constructor(
     ) = client
         .query(
             UserStatsMangaStaffQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsVoiceActorsQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsVoiceActorsQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsStudiosQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsStudiosQuery(
                 userId = Optional.present(userId),
                 sort = Optional.presentIfNotNull(sort),
             )

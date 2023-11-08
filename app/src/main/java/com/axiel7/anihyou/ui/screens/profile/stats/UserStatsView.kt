@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +25,9 @@ import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.screens.profile.stats.genres.GenresStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.staff.StaffStatsView
+import com.axiel7.anihyou.ui.screens.profile.stats.studios.StudiosStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.tags.TagsStatsView
+import com.axiel7.anihyou.ui.screens.profile.stats.voiceactors.VoiceActorsStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -37,6 +37,7 @@ fun UserStatsView(
     nestedScrollConnection: NestedScrollConnection,
     navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
     navigateToStaffDetails: (Int) -> Unit,
+    navigateToStudioDetails: (Int) -> Unit,
 ) {
     val viewModel: UserStatsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -134,19 +135,27 @@ fun UserStatsView(
                 )
             }
 
-            UserStatType.VOICE_ACTORS -> ComingSoonText()
-            UserStatType.STUDIOS -> ComingSoonText()
+            UserStatType.VOICE_ACTORS -> {
+                VoiceActorsStatsView(
+                    stats = uiState.voiceActors,
+                    isLoading = uiState.isLoading,
+                    voiceActorsType = uiState.voiceActorsType,
+                    setVoiceActorsType = viewModel::setVoiceActorsType,
+                    navigateToStaffDetails = navigateToStaffDetails,
+                )
+            }
+
+            UserStatType.STUDIOS -> {
+                StudiosStatsView(
+                    stats = uiState.studios,
+                    isLoading = uiState.isLoading,
+                    studiosType = uiState.studiosType,
+                    setStudiosType = viewModel::setStudiosType,
+                    navigateToStudioDetails = navigateToStudioDetails
+                )
+            }
         }
     }//: Column
-}
-
-@Composable
-fun ComingSoonText() {
-    Text(
-        text = "Coming Soon",
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
 }
 
 @Preview
@@ -158,6 +167,7 @@ fun UserStatsViewPreview() {
                 userId = 1,
                 navigateToGenreTag = { _, _, _ -> },
                 navigateToStaffDetails = {},
+                navigateToStudioDetails = {},
                 nestedScrollConnection = rememberNestedScrollInteropConnection(),
             )
         }

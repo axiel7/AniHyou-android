@@ -190,6 +190,26 @@ class UserRepository @Inject constructor(
         else -> emptyFlow()
     }
 
+    fun getVoiceActorsStats(
+        userId: Int,
+        sort: UserStatisticsSort
+    ) = api
+        .userStatsVoiceActorsQuery(userId, listOf(sort))
+        .watch()
+        .asDataResult { data ->
+            data.User?.statistics?.anime?.voiceActors?.filterNotNull()?.map { it.voiceActorStat }
+        }
+
+    fun getStudiosStats(
+        userId: Int,
+        sort: UserStatisticsSort
+    ) = api
+        .userStatsStudiosQuery(userId, listOf(sort))
+        .watch()
+        .asDataResult { data ->
+            data.User?.statistics?.anime?.studios?.filterNotNull()?.map { it.studioStat }
+        }
+
     fun getFollowers(
         userId: Int,
         page: Int,
