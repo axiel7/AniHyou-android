@@ -1,0 +1,11 @@
+query UserStatsMangaGenres($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            manga {
+                genres(sort: $sort) {
+                    ...GenreStat
+                }
+            }
+        }
+    }
+}

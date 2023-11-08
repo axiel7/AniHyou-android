@@ -6,9 +6,9 @@ import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
-import com.axiel7.anihyou.data.model.stats.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.Stat
-import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.ui.common.state.UiState
 
 data class MediaDetailsUiState(

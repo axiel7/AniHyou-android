@@ -11,13 +11,22 @@ import com.axiel7.anihyou.UpdateUserMutation
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.UserBasicInfoQuery
 import com.axiel7.anihyou.UserOptionsQuery
+import com.axiel7.anihyou.UserStatsAnimeGenresQuery
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
+import com.axiel7.anihyou.UserStatsAnimeStaffQuery
+import com.axiel7.anihyou.UserStatsAnimeTagsQuery
+import com.axiel7.anihyou.UserStatsMangaGenresQuery
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
+import com.axiel7.anihyou.UserStatsMangaStaffQuery
+import com.axiel7.anihyou.UserStatsMangaTagsQuery
+import com.axiel7.anihyou.UserStatsStudiosQuery
+import com.axiel7.anihyou.UserStatsVoiceActorsQuery
 import com.axiel7.anihyou.ViewerQuery
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
+import com.axiel7.anihyou.type.UserStatisticsSort
 import com.axiel7.anihyou.type.UserTitleLanguage
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -110,6 +119,94 @@ class UserApi @Inject constructor(
         .query(
             UserStatsMangaOverviewQuery(
                 userId = Optional.present(userId)
+            )
+        )
+
+    fun userStatsAnimeGenresQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsAnimeGenresQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsMangaGenresQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsMangaGenresQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsAnimeTagsQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsAnimeTagsQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsMangaTagsQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsMangaTagsQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsAnimeStaffQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsAnimeStaffQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsMangaStaffQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsMangaStaffQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsVoiceActorsQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsVoiceActorsQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsStudiosQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsStudiosQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
             )
         )
 

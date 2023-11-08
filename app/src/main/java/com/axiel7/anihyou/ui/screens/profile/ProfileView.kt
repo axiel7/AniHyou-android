@@ -74,6 +74,7 @@ fun ProfileView(
     navigateToUserDetails: (Int) -> Unit,
     navigateToActivityDetails: (Int) -> Unit,
     navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
     navigateBack: () -> Unit = {},
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
@@ -165,7 +166,7 @@ fun ProfileView(
                             fontSize = 14.sp
                         )
                     }
-                }
+                }//:Column
 
                 if (uiState.isMyProfile == true) {
                     OutlinedIconButton(
@@ -199,76 +200,74 @@ fun ProfileView(
             }//: Row
 
             if (uiState.userInfo != null) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SegmentedButtons(
-                        items = ProfileInfoType.tabRows,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        selectedIndex = selectedTabIndex,
-                        onItemSelection = {
-                            selectedTabIndex = it
-                        }
-                    )
-                    when (ProfileInfoType.tabRows[selectedTabIndex].value) {
-                        ProfileInfoType.ABOUT ->
-                            UserAboutView(
-                                aboutHtml = uiState.userInfo?.about,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                                isLoading = uiState.isLoading,
-                                navigateToUserMediaList = if (navigateToUserMediaList != null) {
-                                    { mediaType ->
-                                        navigateToUserMediaList(
-                                            mediaType,
-                                            uiState.userInfo!!.id,
-                                            uiState.userInfo!!.mediaListOptions!!.scoreFormat!!
-                                        )
-                                    }
-                                } else null,
-                            )
-
-                        ProfileInfoType.ACTIVITY -> {
-                            LaunchedEffect(uiState.page) {
-                                if (uiState.page == 0) viewModel.loadNextPage()
-                            }
-                            UserActivityView(
-                                activities = viewModel.userActivities,
-                                isLoading = uiState.isLoadingActivity,
-                                loadMore = viewModel::loadNextActivityPage,
-                                toggleLike = viewModel::toggleLikeActivity,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                                navigateToMediaDetails = navigateToMediaDetails,
-                                navigateToUserDetails = navigateToUserDetails,
-                                navigateToActivityDetails = navigateToActivityDetails,
-                                navigateToFullscreenImage = navigateToFullscreenImage,
-                            )
-                        }
-
-                        ProfileInfoType.STATS ->
-                            UserStatsView(
-                                userId = uiState.userInfo!!.id,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                            )
-
-                        ProfileInfoType.FAVORITES ->
-                            UserFavoritesView(
-                                userId = uiState.userInfo!!.id,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                                navigateToMediaDetails = navigateToMediaDetails,
-                                navigateToCharacterDetails = navigateToCharacterDetails,
-                                navigateToStaffDetails = navigateToStaffDetails,
-                                navigateToStudioDetails = navigateToStudioDetails,
-                            )
-
-                        ProfileInfoType.SOCIAL ->
-                            UserSocialView(
-                                userId = uiState.userInfo!!.id,
-                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                                navigateToUserDetails = navigateToUserDetails
-                            )
+                SegmentedButtons(
+                    items = ProfileInfoType.tabRows,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    selectedIndex = selectedTabIndex,
+                    onItemSelection = {
+                        selectedTabIndex = it
                     }
-                }//: Column
+                )
+                when (ProfileInfoType.tabRows[selectedTabIndex].value) {
+                    ProfileInfoType.ABOUT ->
+                        UserAboutView(
+                            aboutHtml = uiState.userInfo?.about,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            isLoading = uiState.isLoading,
+                            navigateToUserMediaList = if (navigateToUserMediaList != null) {
+                                { mediaType ->
+                                    navigateToUserMediaList(
+                                        mediaType,
+                                        uiState.userInfo!!.id,
+                                        uiState.userInfo!!.mediaListOptions!!.scoreFormat!!
+                                    )
+                                }
+                            } else null,
+                        )
+
+                    ProfileInfoType.ACTIVITY -> {
+                        LaunchedEffect(uiState.page) {
+                            if (uiState.page == 0) viewModel.loadNextPage()
+                        }
+                        UserActivityView(
+                            activities = viewModel.userActivities,
+                            isLoading = uiState.isLoadingActivity,
+                            loadMore = viewModel::loadNextActivityPage,
+                            toggleLike = viewModel::toggleLikeActivity,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToUserDetails = navigateToUserDetails,
+                            navigateToActivityDetails = navigateToActivityDetails,
+                            navigateToFullscreenImage = navigateToFullscreenImage,
+                        )
+                    }
+
+                    ProfileInfoType.STATS ->
+                        UserStatsView(
+                            userId = uiState.userInfo!!.id,
+                            nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
+                            navigateToGenreTag = navigateToGenreTag,
+                            navigateToStaffDetails = navigateToStaffDetails,
+                            navigateToStudioDetails = navigateToStudioDetails,
+                        )
+
+                    ProfileInfoType.FAVORITES ->
+                        UserFavoritesView(
+                            userId = uiState.userInfo!!.id,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToMediaDetails = navigateToMediaDetails,
+                            navigateToCharacterDetails = navigateToCharacterDetails,
+                            navigateToStaffDetails = navigateToStaffDetails,
+                            navigateToStudioDetails = navigateToStudioDetails,
+                        )
+
+                    ProfileInfoType.SOCIAL ->
+                        UserSocialView(
+                            userId = uiState.userInfo!!.id,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            navigateToUserDetails = navigateToUserDetails
+                        )
+                }
             }
         }//: Column
     }//: Scaffold
@@ -287,7 +286,8 @@ fun ProfileViewPreview() {
                 navigateToStudioDetails = {},
                 navigateToUserDetails = {},
                 navigateToActivityDetails = {},
-                navigateToUserMediaList = { _, _, _ -> }
+                navigateToUserMediaList = { _, _, _ -> },
+                navigateToGenreTag = { _, _, _ -> },
             )
         }
     }

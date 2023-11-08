@@ -1,0 +1,19 @@
+query UserStatsAnimeGenres($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            anime {
+                genres(sort: $sort) {
+                    ...GenreStat
+                }
+            }
+        }
+    }
+}
+
+fragment GenreStat on UserGenreStatistic {
+    genre
+    count
+    meanScore
+    minutesWatched
+    chaptersRead
+}

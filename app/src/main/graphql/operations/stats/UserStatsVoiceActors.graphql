@@ -1,0 +1,27 @@
+query UserStatsVoiceActors($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            anime {
+                voiceActors(sort: $sort) {
+                    ...VoiceActorStat
+                }
+            }
+        }
+    }
+}
+
+fragment VoiceActorStat on UserVoiceActorStatistic {
+    voiceActor {
+        id
+        name {
+            userPreferred
+        }
+        image {
+            medium
+        }
+    }
+    count
+    meanScore
+    minutesWatched
+    chaptersRead
+}

@@ -162,9 +162,9 @@
     <string name="no_information">No information</string>
     <string name="score">Score</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Status distribution</string>
+    <string name="status_distribution">Status Distribution</string>
     <string name="rankings">Rankings</string>
-    <string name="score_distribution">Score distribution</string>
+    <string name="score_distribution">Score Distribution</string>
     <string name="no_description">No description</string>
     <string name="reviews">Reviews</string>
     <string name="loading">Loading</string>
@@ -186,7 +186,6 @@
     <string name="list_style">List style</string>
     <string name="on_my_list">On my list</string>
     <string name="refresh">Refresh</string>
-    <string name="episode_airing_on">Ep %d airing on %s</string>
     <string name="display_adult_content">Display adult content</string>
     <string name="overview">Overview</string>
     <string name="voice_actors">Voice actors</string>
@@ -200,7 +199,7 @@
     <string name="standard_deviation">Standard deviation</string>
     <string name="title_count">Title count</string>
     <string name="time_spent">Time spent</string>
-    <string name="format_distribution">Format distribution</string>
+    <string name="format_distribution">Format Distribution</string>
     <string name="notes">Notes</string>
     <string name="calendar">Calendar</string>
     <string name="monday">Monday</string>
@@ -210,7 +209,7 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
-    <string name="episode_airing_at">Ep %s airing at %s</string>
+    <string name="episode_airing_at">Ep %d airing at %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifications</string>
     <string name="threads">Threads</string>
@@ -327,10 +326,6 @@
     <string name="reading">Reading</string>
     <string name="synonyms">Synonyms</string>
     <string name="translations">Translations</string>
-    <string name="japanese">Japanese</string>
-    <string name="russian">Russian</string>
-    <string name="spanish">Spanish</string>
-    <string name="turkish">Turkish</string>
     <string name="from_year">From year</string>
     <string name="to_year">To year</string>
     <string name="staff_role_a_and_r_producer"><![CDATA[A&R Producer]]></string>
@@ -343,9 +338,15 @@
     <string name="china">China</string>
     <string name="taiwan">Taiwan</string>
     <string name="country">Country</string>
-    <string name="arabic">Arabic</string>
-    <string name="brazilian">Brazilian</string>
-    <string name="indonesian">Indonesian</string>
     <string name="custom_lists">Custom Lists</string>
     <string name="no_custom_lists">No custom lists</string>
+    <string name="hours_watched_format">Hours Watched: %s</string>
+    <string name="chapters_read_format">Chapters Read: %s</string>
+    <string name="mean_score_format">Mean Score: %s</string>
+    <string name="episode_count">Episode Count</string>
+    <string name="chapter_count">Chapter Count</string>
+    <string name="country_distribution">Country Distribution</string>
+    <string name="release_year">Release Year</string>
+    <string name="watch_year">Watch Year</string>
+    <string name="read_year">Read Year</string>
 </resources>

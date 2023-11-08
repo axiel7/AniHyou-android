@@ -1,44 +1,50 @@
-query UserStatsAnimeOverview($userId: Int) {
+query UserStatsMangaOverview($userId: Int) {
     User(id: $userId) {
         statistics {
-            anime {
+            manga {
                 count
-                episodesWatched
-                minutesWatched
+                chaptersRead
+                volumesRead
                 meanScore
                 standardDeviation
                 scores(sort: MEAN_SCORE) {
                     count
-                    minutesWatched
+                    chaptersRead
+                    meanScore
+                }
+                lengths {
+                    length
+                    count
+                    chaptersRead
                     meanScore
                 }
                 formats {
                     count
-                    minutesWatched
+                    chaptersRead
                     meanScore
                     format
                 }
                 statuses {
                     count
-                    minutesWatched
+                    chaptersRead
                     meanScore
                     status
                 }
                 countries {
                     count
-                    minutesWatched
+                    chaptersRead
                     meanScore
                     country
                 }
                 releaseYears {
                     count
-                    minutesWatched
+                    chaptersRead
                     meanScore
                     releaseYear
                 }
                 startYears {
                     count
-                    minutesWatched
+                    chaptersRead
                     meanScore
                     startYear
                 }

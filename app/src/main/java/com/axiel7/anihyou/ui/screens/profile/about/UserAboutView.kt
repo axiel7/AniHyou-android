@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.profile.about
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,11 +10,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,21 +36,32 @@ fun UserAboutView(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         if (navigateToUserMediaList != null) {
-            Row(
+            Column(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 FilledTonalButton(
                     onClick = { navigateToUserMediaList(MediaType.ANIME) }
                 ) {
+                    Icon(
+                        painter = painterResource(R.drawable.live_tv_24),
+                        contentDescription = stringResource(R.string.anime),
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
                     Text(text = stringResource(R.string.view_anime_list))
                 }
 
                 FilledTonalButton(
                     onClick = { navigateToUserMediaList(MediaType.MANGA) }
                 ) {
+                    Icon(
+                        painter = painterResource(R.drawable.book_24),
+                        contentDescription = stringResource(R.string.manga),
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
                     Text(text = stringResource(R.string.view_manga_list))
                 }
             }

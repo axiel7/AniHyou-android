@@ -9,8 +9,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.R
@@ -18,15 +20,19 @@ import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.CROWDIN_URL
+import com.axiel7.anihyou.utils.ContextUtils.openActionView
+import java.util.Locale
 
 private val translations = mapOf(
-    R.string.arabic to "Hussain889, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
-    R.string.indonesian to "Clxf12",
-    R.string.japanese to "axiel7",
-    R.string.brazilian to "Crono0, Torti, RickyM7, SamOak",
-    R.string.russian to "Ronner231, grin3671",
-    R.string.spanish to "axiel7",
-    R.string.turkish to "hsinankirdar",
+    "ar-SA" to "Hussain889, Hussain69o, WhiteCanvas, sakugaky, Comikazie, mlvin, bobteen1",
+    "in-ID" to "Clxf12",
+    "it-IT" to "maicol07, DomeF",
+    "ja-JP" to "axiel7",
+    "pt-BR" to "Crono0, Torti, RickyM7, SamOak",
+    "ru-RU" to "Ronner231, grin3671",
+    "es-ES" to "axiel7",
+    "tr-TR" to "hsinankirdar",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +40,7 @@ private val translations = mapOf(
 fun TranslationsView(
     navigateBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = rememberTopAppBarState()
     )
@@ -50,9 +57,17 @@ fun TranslationsView(
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
         ) {
+            PlainPreference(
+                title = "Crowdin",
+                icon = R.drawable.language_24,
+                onClick = {
+                    context.openActionView(CROWDIN_URL)
+                }
+            )
             translations.forEach { (lang, users) ->
+                val displayName = remember { Locale.forLanguageTag(lang).displayName }
                 PlainPreference(
-                    title = stringResource(lang),
+                    title = displayName,
                     subtitle = users,
                     onClick = {}
                 )

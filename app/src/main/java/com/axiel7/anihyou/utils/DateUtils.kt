@@ -184,7 +184,7 @@ object DateUtils {
         } else stringResource(R.string.minutes_abbreviation, this)
     }
 
-    fun Long.minutesToDays() = this / 1440
+    fun Int.minutesToDays() = this / 1440
 
     fun Long.timestampToDateString(
         format: String = "EE, d MMM"

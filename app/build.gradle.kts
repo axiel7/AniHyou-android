@@ -22,12 +22,14 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 33
-        versionName = "1.2.0"
+        versionCode = 40
+        versionName = "1.2.1"
         archivesName.set("anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations.addAll(listOf("en", "ja-rJP", "ru-rRU", "es-rES", "tr-rTR", "pt-rBR", "ar-rSA", "in-rID"))
+        resourceConfigurations.addAll(
+            listOf("en", "ja-rJP", "ru-rRU", "es-rES", "tr-rTR", "pt-rBR", "ar-rSA", "in-rID", "it-rIT")
+        )
         vectorDrawables {
             useSupportLibrary = true
         }

@@ -104,7 +104,7 @@ fun MediaDetailsView(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
     navigateToThreadDetails: (Int) -> Unit,
-    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: MediaDetailsViewModel = hiltViewModel()
@@ -396,11 +396,9 @@ fun MediaDetailsView(
                 uiState.details?.genres?.filterNotNull()?.forEach { genre ->
                     AssistChip(
                         onClick = {
-                            navigateToExplore(
-                                uiState.details?.basicMediaDetails?.type,
-                                genre,
-                                null
-                            )
+                            uiState.details?.basicMediaDetails?.type?.let { mediaType ->
+                                navigateToGenreTag(mediaType, genre, null)
+                            }
                         },
                         label = { Text(text = genre.genreTagLocalized()) },
                         modifier = Modifier.padding(start = 8.dp)
@@ -418,7 +416,7 @@ fun MediaDetailsView(
                 navigateToStaffDetails = navigateToStaffDetails,
                 navigateToReviewDetails = navigateToReviewDetails,
                 navigateToThreadDetails = navigateToThreadDetails,
-                navigateToExplore = navigateToExplore,
+                navigateToGenreTag = navigateToGenreTag,
             )
         }//: Column
     }//: Scaffold
@@ -434,7 +432,7 @@ fun MediaInfoTabs(
     navigateToStaffDetails: (Int) -> Unit,
     navigateToReviewDetails: (Int) -> Unit,
     navigateToThreadDetails: (Int) -> Unit,
-    navigateToExplore: (mediaType: MediaType?, genre: String?, tag: String?) -> Unit,
+    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     Column(
@@ -455,7 +453,7 @@ fun MediaInfoTabs(
             MediaDetailsType.INFO ->
                 MediaInformationView(
                     uiState = uiState,
-                    navigateToExplore = navigateToExplore,
+                    navigateToGenreTag = navigateToGenreTag,
                     navigateToStudioDetails = navigateToStudioDetails
                 )
 
@@ -514,7 +512,7 @@ fun MediaDetailsViewPreview() {
             navigateToStaffDetails = {},
             navigateToReviewDetails = {},
             navigateToThreadDetails = {},
-            navigateToExplore = { _, _, _ -> }
+            navigateToGenreTag = { _, _, _ -> }
         )
     }
 }

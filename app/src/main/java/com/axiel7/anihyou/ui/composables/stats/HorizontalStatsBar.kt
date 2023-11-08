@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,8 +24,9 @@ import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
-import com.axiel7.anihyou.data.model.stats.StatusDistribution
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.ui.composables.Rectangle
+import com.axiel7.anihyou.ui.composables.common.AssistChipWithTooltip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
@@ -43,7 +43,9 @@ fun <T> HorizontalStatsBar(
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
-    Column(modifier = Modifier.padding(vertical = verticalPadding)) {
+    Column(
+        modifier = Modifier.padding(vertical = verticalPadding)
+    ) {
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
@@ -59,15 +61,23 @@ fun <T> HorizontalStatsBar(
                             .defaultPlaceholder(visible = true)
                     )
                 }
-            } else stats.forEach {
-                AssistChip(
-                    onClick = { },
-                    label = { Text(text = it.type.localized()) },
-                    leadingIcon = { Text(text = it.value.toInt().format()) },
+            } else stats.forEach { stat ->
+                AssistChipWithTooltip(
+                    label = stat.type.localized(),
+                    tooltipContent = if (stat.details != null) {
+                        {
+                            Column {
+                                stat.details?.forEach {
+                                    Text(text = it.text())
+                                }
+                            }
+                        }
+                    } else null,
+                    leadingIcon = { Text(text = stat.value.toInt().format()) },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = it.type.primaryColor(),
-                        labelColor = it.type.onPrimaryColor(),
-                        leadingIconContentColor = it.type.onPrimaryColor()
+                        containerColor = stat.type.primaryColor(),
+                        labelColor = stat.type.onPrimaryColor(),
+                        leadingIconContentColor = stat.type.onPrimaryColor()
                     ),
                     border = null
                 )

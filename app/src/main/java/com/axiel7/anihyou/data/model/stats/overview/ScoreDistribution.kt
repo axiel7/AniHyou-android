@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.data.model.stats
+package com.axiel7.anihyou.data.model.stats.overview
 
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
@@ -6,6 +6,7 @@ import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.base.Colorable
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.point100PrimaryColor
+import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 data class ScoreDistribution(
