@@ -168,6 +168,28 @@ class UserRepository @Inject constructor(
         else -> emptyFlow()
     }
 
+    fun getStaffStats(
+        userId: Int,
+        mediaType: MediaType,
+        sort: UserStatisticsSort,
+    ) = when (mediaType) {
+        MediaType.ANIME -> api
+            .userStatsAnimeStaffQuery(userId, listOf(sort))
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.anime?.staff?.filterNotNull()?.map { it.staffStat }
+            }
+
+        MediaType.MANGA -> api
+            .userStatsMangaStaffQuery(userId, listOf(sort))
+            .watch()
+            .asDataResult { data ->
+                data.User?.statistics?.manga?.staff?.filterNotNull()?.map { it.staffStat }
+            }
+
+        else -> emptyFlow()
+    }
+
     fun getFollowers(
         userId: Int,
         page: Int,

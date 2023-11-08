@@ -51,6 +51,9 @@ class UserStatsViewModel @Inject constructor(
     fun setTagsType(value: StatDistributionType) =
         mutableUiState.update { it.copy(tagsType = value) }
 
+    fun setStaffType(value: StatDistributionType) =
+        mutableUiState.update { it.copy(staffType = value) }
+
     init {
         // overview
         mutableUiState
@@ -167,6 +170,49 @@ class UserStatsViewModel @Inject constructor(
                             MediaType.MANGA ->
                                 it.copy(
                                     mangaTags = result.data,
+                                    isLoading = false
+                                )
+
+                            else -> it.copy(isLoading = false)
+                        }
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // staff
+        mutableUiState
+            .filter {
+                it.type == UserStatType.STAFF
+                        && it.userId != null
+            }
+            .distinctUntilChanged { old, new ->
+                old.staffType == new.staffType
+                        && old.mediaType == new.mediaType
+                        && old.userId == new.userId
+            }
+            .flatMapLatest { uiState ->
+                userRepository.getStaffStats(
+                    userId = uiState.userId!!,
+                    mediaType = uiState.mediaType,
+                    sort = uiState.staffType.userStatisticsSort(ascending = false)
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        when (it.mediaType) {
+                            MediaType.ANIME ->
+                                it.copy(
+                                    animeStaff = result.data,
+                                    isLoading = false
+                                )
+
+                            MediaType.MANGA ->
+                                it.copy(
+                                    mangaStaff = result.data,
                                     isLoading = false
                                 )
 

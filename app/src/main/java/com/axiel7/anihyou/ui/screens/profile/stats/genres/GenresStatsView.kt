@@ -1,10 +1,8 @@
 package com.axiel7.anihyou.ui.screens.profile.stats.genres
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,13 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.fragment.GenreStat
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
-import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
+import com.axiel7.anihyou.ui.screens.profile.stats.composables.MediaTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemView
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -47,20 +44,10 @@ fun GenresStatsView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                MediaType.knownEntries.forEach {
-                    FilterSelectionChip(
-                        selected = mediaType == it,
-                        text = it.localized(),
-                        onClick = { setMediaType(it) },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-            }
+            MediaTypeChips(
+                value = mediaType,
+                onValueChanged = setMediaType,
+            )
 
             InfoTitle(
                 text = stringResource(R.string.genres)

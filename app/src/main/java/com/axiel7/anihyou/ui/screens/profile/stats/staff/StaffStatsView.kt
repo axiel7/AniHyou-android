@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.profile.stats.tags
+package com.axiel7.anihyou.ui.screens.profile.stats.staff
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.fragment.TagStat
+import com.axiel7.anihyou.fragment.StaffStat
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
@@ -26,14 +26,14 @@ import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatIte
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
-fun TagsStatsView(
-    stats: List<TagStat>?,
+fun StaffStatsView(
+    stats: List<StaffStat>?,
     isLoading: Boolean,
     mediaType: MediaType,
     setMediaType: (MediaType) -> Unit,
-    tagsType: StatDistributionType,
-    setTagsType: (StatDistributionType) -> Unit,
-    navigateToExplore: (tag: String) -> Unit,
+    staffType: StatDistributionType,
+    setStaffType: (StatDistributionType) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -45,15 +45,15 @@ fun TagsStatsView(
         item {
             MediaTypeChips(
                 value = mediaType,
-                onValueChanged = setMediaType,
+                onValueChanged = setMediaType
             )
 
             InfoTitle(
-                text = stringResource(R.string.tags)
+                text = stringResource(R.string.staff)
             )
             DistributionTypeChips(
-                value = tagsType,
-                onValueChanged = setTagsType,
+                value = staffType,
+                onValueChanged = setStaffType,
             )
         }
         if (isLoading) {
@@ -68,19 +68,20 @@ fun TagsStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.tag?.id ?: index },
+            key = { index, stat -> stat.staff?.id ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(
-                name = stat.tag?.name ?: stringResource(R.string.unknown),
+                name = stat.staff?.name?.userPreferred ?: stringResource(R.string.unknown),
                 position = index + 1,
                 count = stat.count,
                 meanScore = stat.meanScore,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 minutesWatched = stat.minutesWatched,
                 chaptersRead = stat.chaptersRead,
+                imageUrl = stat.staff?.image?.medium,
                 onClick = {
-                    stat.tag?.name?.let(navigateToExplore)
+                    stat.staff?.id?.let(navigateToStaffDetails)
                 }
             )
         }
@@ -92,14 +93,14 @@ fun TagsStatsView(
 fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
-            TagsStatsView(
+            StaffStatsView(
                 stats = null,
                 isLoading = true,
                 mediaType = MediaType.ANIME,
                 setMediaType = {},
-                tagsType = StatDistributionType.TITLES,
-                setTagsType = {},
-                navigateToExplore = {},
+                staffType = StatDistributionType.TITLES,
+                setStaffType = {},
+                navigateToStaffDetails = {},
             )
         }
     }

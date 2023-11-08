@@ -13,9 +13,11 @@ import com.axiel7.anihyou.UserBasicInfoQuery
 import com.axiel7.anihyou.UserOptionsQuery
 import com.axiel7.anihyou.UserStatsAnimeGenresQuery
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
+import com.axiel7.anihyou.UserStatsAnimeStaffQuery
 import com.axiel7.anihyou.UserStatsAnimeTagsQuery
 import com.axiel7.anihyou.UserStatsMangaGenresQuery
 import com.axiel7.anihyou.UserStatsMangaOverviewQuery
+import com.axiel7.anihyou.UserStatsMangaStaffQuery
 import com.axiel7.anihyou.UserStatsMangaTagsQuery
 import com.axiel7.anihyou.ViewerQuery
 import com.axiel7.anihyou.type.ActivitySort
@@ -157,6 +159,28 @@ class UserApi @Inject constructor(
     ) = client
         .query(
             UserStatsMangaTagsQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsAnimeStaffQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsAnimeStaffQuery(
+                userId = Optional.present(userId),
+                sort = Optional.presentIfNotNull(sort),
+            )
+        )
+
+    fun userStatsMangaStaffQuery(
+        userId: Int,
+        sort: List<UserStatisticsSort>?
+    ) = client
+        .query(
+            UserStatsMangaStaffQuery(
                 userId = Optional.present(userId),
                 sort = Optional.presentIfNotNull(sort),
             )

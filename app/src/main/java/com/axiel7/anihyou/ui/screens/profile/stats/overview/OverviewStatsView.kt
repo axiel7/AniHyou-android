@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.type.MediaType
@@ -22,6 +21,7 @@ import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
+import com.axiel7.anihyou.ui.screens.profile.stats.composables.MediaTypeChips
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
@@ -46,20 +46,10 @@ fun OverviewStatsView(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            MediaType.knownEntries.forEach {
-                FilterSelectionChip(
-                    selected = mediaType == it,
-                    text = it.localized(),
-                    onClick = { setMediaType(it) },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }
+        MediaTypeChips(
+            value = mediaType,
+            onValueChanged = setMediaType
+        )
 
         Row(
             modifier = Modifier

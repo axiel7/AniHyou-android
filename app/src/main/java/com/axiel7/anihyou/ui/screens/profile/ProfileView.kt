@@ -247,6 +247,7 @@ fun ProfileView(
                             userId = uiState.userInfo!!.id,
                             nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
                             navigateToGenreTag = navigateToGenreTag,
+                            navigateToStaffDetails = navigateToStaffDetails,
                         )
 
                     ProfileInfoType.FAVORITES ->

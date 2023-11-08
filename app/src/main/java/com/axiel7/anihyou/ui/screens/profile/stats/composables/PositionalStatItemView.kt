@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
-import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
@@ -52,12 +51,21 @@ fun PositionalStatItemView(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            if (imageUrl != null) {
+                PersonImage(
+                    url = imageUrl,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(50.dp)
+                )
+            }
             Text(
                 text = name,
                 fontWeight = FontWeight.Medium
             )
+            Spacer(modifier = Modifier.weight(1f))
             Box(
                 modifier = Modifier
                     .background(
@@ -80,12 +88,6 @@ fun PositionalStatItemView(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (imageUrl != null) {
-                PersonImage(
-                    url = imageUrl,
-                    modifier = Modifier.size(PERSON_IMAGE_SIZE_SMALL.dp)
-                )
-            }
             TextSubtitleVertical(
                 text = count.format(),
                 subtitle = stringResource(R.string.title_count)

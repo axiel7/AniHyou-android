@@ -1,0 +1,27 @@
+query UserStatsAnimeStaff($userId: Int, $sort: [UserStatisticsSort]) {
+    User(id: $userId) {
+        statistics {
+            anime {
+                staff(sort: $sort) {
+                    ...StaffStat
+                }
+            }
+        }
+    }
+}
+
+fragment StaffStat on UserStaffStatistic {
+    staff {
+        id
+        name {
+            userPreferred
+        }
+        image {
+            medium
+        }
+    }
+    count
+    meanScore
+    minutesWatched
+    chaptersRead
+}

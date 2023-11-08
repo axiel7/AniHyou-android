@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.profile.stats
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.fragment.GenreStat
+import com.axiel7.anihyou.fragment.StaffStat
 import com.axiel7.anihyou.fragment.TagStat
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.UiState
@@ -23,6 +24,9 @@ data class UserStatsUiState(
     val tagsType: StatDistributionType = StatDistributionType.TITLES,
     val animeTags: List<TagStat>? = null,
     val mangaTags: List<TagStat>? = null,
+    val staffType: StatDistributionType = StatDistributionType.TITLES,
+    val animeStaff: List<StaffStat>? = null,
+    val mangaStaff: List<StaffStat>? = null,
     override val error: String? = null,
     override val isLoading: Boolean = true,
 ) : UiState<UserStatsUiState> {

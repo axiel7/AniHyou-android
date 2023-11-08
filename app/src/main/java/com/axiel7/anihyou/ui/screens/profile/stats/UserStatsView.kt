@@ -26,6 +26,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.screens.profile.stats.genres.GenresStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
+import com.axiel7.anihyou.ui.screens.profile.stats.staff.StaffStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.tags.TagsStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
@@ -35,6 +36,7 @@ fun UserStatsView(
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
     navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
 ) {
     val viewModel: UserStatsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -118,7 +120,20 @@ fun UserStatsView(
                 )
             }
 
-            UserStatType.STAFF -> ComingSoonText()
+            UserStatType.STAFF -> {
+                StaffStatsView(
+                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeStaff
+                    else uiState.mangaStaff,
+                    isLoading = uiState.isLoading,
+                    mediaType = uiState.mediaType,
+                    setMediaType = viewModel::setMediaType,
+                    staffType = uiState.staffType,
+                    setStaffType = viewModel::setStaffType,
+                    navigateToStaffDetails = navigateToStaffDetails,
+                    modifier = Modifier.nestedScroll(nestedScrollConnection)
+                )
+            }
+
             UserStatType.VOICE_ACTORS -> ComingSoonText()
             UserStatType.STUDIOS -> ComingSoonText()
         }
@@ -142,7 +157,8 @@ fun UserStatsViewPreview() {
             UserStatsView(
                 userId = 1,
                 navigateToGenreTag = { _, _, _ -> },
-                nestedScrollConnection = rememberNestedScrollInteropConnection()
+                navigateToStaffDetails = {},
+                nestedScrollConnection = rememberNestedScrollInteropConnection(),
             )
         }
     }
