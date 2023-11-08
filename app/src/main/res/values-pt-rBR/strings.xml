@@ -159,9 +159,7 @@
     <string name="no_information">Sem informação</string>
     <string name="score">Nota</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Distribuição do status</string>
     <string name="rankings">Classificações</string>
-    <string name="score_distribution">Distribuição da pontuação</string>
     <string name="no_description">Sem descrição</string>
     <string name="reviews">Resenhas</string>
     <string name="loading">Carregando</string>
@@ -196,7 +194,6 @@
     <string name="standard_deviation">Desvio padrão</string>
     <string name="title_count">Contagem de títulos</string>
     <string name="time_spent">Tempo gasto</string>
-    <string name="format_distribution">Distribuição de formatos</string>
     <string name="notes">Notas</string>
     <string name="calendar">Calendário</string>
     <string name="monday">Segunda-Feira</string>
@@ -206,7 +203,6 @@
     <string name="friday">Sexta-Feira</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
-    <string name="episode_airing_at">Ep %s estreia às %s</string>
     <string name="filter">Filtro</string>
     <string name="notifications">Notificações</string>
     <string name="threads">Tópicos</string>

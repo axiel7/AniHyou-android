@@ -203,7 +203,6 @@
     <string name="friday">金曜日</string>
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
-    <string name="episode_airing_at">第%s話は%sに配信中</string>
     <string name="filter">検索</string>
     <string name="notifications">通知</string>
     <string name="threads">スレッド</string>
@@ -320,4 +319,6 @@
     <string name="country">国</string>
     <string name="custom_lists">カスタムリスト</string>
     <string name="no_custom_lists">カスタムリストなし</string>
+    <string name="country_distribution">国の内訳</string>
+    <string name="release_year">発売年</string>
 </resources>

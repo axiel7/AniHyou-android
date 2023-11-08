@@ -160,9 +160,9 @@
     <string name="no_information">Tidak ada informasi</string>
     <string name="score">Skor</string>
     <string name="total_entries">Total: %s</string>
-    <string name="status_distribution">Status distribusi</string>
+    <string name="status_distribution">Status Distribusi</string>
     <string name="rankings">Peringkat</string>
-    <string name="score_distribution">Skor distribusi</string>
+    <string name="score_distribution">Skor Distribusi</string>
     <string name="no_description">Tanpa keterangan</string>
     <string name="reviews">Ulasan</string>
     <string name="loading">Memuat</string>
@@ -197,7 +197,7 @@
     <string name="standard_deviation">Standar deviasi</string>
     <string name="title_count">Jumlah judul</string>
     <string name="time_spent">Waktu dihabiskan</string>
-    <string name="format_distribution">Distribusi format</string>
+    <string name="format_distribution">Distribusi Format</string>
     <string name="notes">Catatan</string>
     <string name="calendar">Kalender</string>
     <string name="monday">Senin</string>
@@ -207,7 +207,7 @@
     <string name="friday">Jumat</string>
     <string name="saturday">Sabtu</string>
     <string name="sunday">Minggu</string>
-    <string name="episode_airing_at">Ep %s ditayangkan pada %s</string>
+    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">Ep %d ditayangkan pada %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifikasi</string>
     <string name="threads">Bahasan</string>
@@ -325,4 +325,13 @@
     <string name="country">Negara</string>
     <string name="custom_lists">Daftar kustom</string>
     <string name="no_custom_lists">Tidak ada daftar kustom</string>
+    <string name="hours_watched_format">Jam Menonton: %s</string>
+    <string name="chapters_read_format">Chapter Dibaca: %s</string>
+    <string name="mean_score_format">Skor Rata-rata: %s</string>
+    <string name="episode_count">Jumlah Episode</string>
+    <string name="chapter_count">Jumlah Chapter</string>
+    <string name="country_distribution">Negara Distribusi</string>
+    <string name="release_year">Tahun Rilis</string>
+    <string name="watch_year">Tahun Menonton</string>
+    <string name="read_year">Tahun Membaca</string>
 </resources>

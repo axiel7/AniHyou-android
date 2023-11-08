@@ -207,7 +207,7 @@
     <string name="friday">Пятница</string>
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
-    <string name="episode_airing_at">Эп %s выйдет в %s</string>
+    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">Эп %d выйдет в %s</string>
     <string name="filter">Фильтр</string>
     <string name="notifications">Уведомления</string>
     <string name="threads">Темы</string>
@@ -327,4 +327,13 @@
     <string name="country">Страна</string>
     <string name="custom_lists">Пользовательские списки</string>
     <string name="no_custom_lists">Нет пользовательских списков</string>
+    <string name="hours_watched_format">Просмотрено часов: %s</string>
+    <string name="chapters_read_format">Прочитано глав: %s</string>
+    <string name="mean_score_format">Средний счет: %s</string>
+    <string name="episode_count">Число эпизодов</string>
+    <string name="chapter_count">Число глав</string>
+    <string name="country_distribution">Распределение по странам</string>
+    <string name="release_year">Год выпуска</string>
+    <string name="watch_year">Год просмотра</string>
+    <string name="read_year">Год чтения</string>
 </resources>

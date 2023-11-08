@@ -20,7 +20,7 @@
     <string name="fall">Sonbahar</string>
     <string name="profile">Profil</string>
     <string name="trending_now">Şu An Popüler</string>
-    <string name="next_season">Sonraki Sezon</string>
+    <string name="next_season">Gelecek Sezon</string>
     <string name="trending_manga">Popüler Manga</string>
     <string name="not_logged_text">Bu özelliği kullanmak için lütfen oturum açın</string>
     <string name="login">Oturum aç</string>
@@ -160,9 +160,9 @@
     <string name="no_information">Bilgi yok</string>
     <string name="score">Puan</string>
     <string name="total_entries">Toplam: %s</string>
-    <string name="status_distribution">Durum dağılımı</string>
+    <string name="status_distribution">Durum Dağılımı</string>
     <string name="rankings">Sıralama</string>
-    <string name="score_distribution">Puan dağılımı</string>
+    <string name="score_distribution">Puan Dağılımı</string>
     <string name="no_description">Açıklama yok</string>
     <string name="reviews">Değerlendirmeler</string>
     <string name="loading">Yükleniyor</string>
@@ -197,9 +197,9 @@
     <string name="standard_deviation">Standart sapma</string>
     <string name="title_count">Başlık sayısı</string>
     <string name="time_spent">Harcanan süre</string>
-    <string name="format_distribution">Tür dağılımı</string>
+    <string name="format_distribution">Tür Dağılımı</string>
     <string name="notes">Notlar</string>
-    <string name="calendar">Yayım Takvimi</string>
+    <string name="calendar">Yayın Takvimi</string>
     <string name="monday">Pazartesi</string>
     <string name="tuesday">Salı</string>
     <string name="wednesday">Çarşamba</string>
@@ -207,7 +207,7 @@
     <string name="friday">Cuma</string>
     <string name="saturday">Cumartesi</string>
     <string name="sunday">Pazar</string>
-    <string name="episode_airing_at">%s. Bölüm, %s sonra yayınlanacak</string>
+    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">%d. Bölüm, %s sonra yayınlanacak</string>
     <string name="filter">Filtrele</string>
     <string name="notifications">Bildirimler</string>
     <string name="threads">Konular</string>
@@ -327,4 +327,13 @@
     <string name="country">Ülke</string>
     <string name="custom_lists">Özel Listeler</string>
     <string name="no_custom_lists">Özel liste yok</string>
+    <string name="hours_watched_format">İzlenen Saat: %s</string>
+    <string name="chapters_read_format">Okunan Bölüm: %s</string>
+    <string name="mean_score_format">Ortalama Puan: %s</string>
+    <string name="episode_count">Bölüm Sayısı</string>
+    <string name="chapter_count">Bölüm Sayısı</string>
+    <string name="country_distribution">Ülke Dağılımı</string>
+    <string name="release_year">Yayın Yılı</string>
+    <string name="watch_year">İzleme Yılı</string>
+    <string name="read_year">Okuma Yılı</string>
 </resources>

@@ -25,7 +25,7 @@
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
     <string name="current">متداول</string>
-    <string name="planning">أرغب مشاهدة</string>
+    <string name="planning">أرغب بمشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
     <string name="paused">متوقف مؤقتاً</string>
@@ -42,12 +42,12 @@
     <string name="add">إضافة</string>
     <string name="edit">تعديل</string>
     <string name="copied">تم النسخ</string>
-    <string name="tv">تلفزيوني</string>
+    <string name="tv">مسلسل</string>
     <string name="tv_short">مسلسل قصير</string>
     <string name="movie">فيلم</string>
     <string name="special">حلقة خاصة</string>
-    <string name="ova">OVA</string>
-    <string name="ona">ONA</string>
+    <string name="ova">أوفا</string>
+    <string name="ona">أونا</string>
     <string name="music">موسيقى</string>
     <string name="novel">رواية</string>
     <string name="one_shot">ون شوت</string>
@@ -61,7 +61,7 @@
     <string name="average_score">متوسط النتيجة</string>
     <string name="popularity">الشعبية</string>
     <string name="favorites">المُفضلات</string>
-    <string name="episode_in_time">الحلقة %d في %s</string>
+    <string name="episode_in_time">الحلقة %d بعد %s</string>
     <string name="airing">يبث</string>
     <string name="num_episodes_behind">حلقات لم أشاهدها بعد %s</string>
     <string name="information">معلومات</string>
@@ -160,9 +160,9 @@
     <string name="no_information">لا توجد معلومات</string>
     <string name="score">التقييم</string>
     <string name="total_entries">المجموع: %s</string>
-    <string name="status_distribution">توزيع الحالات</string>
+    <string name="status_distribution">توزيع الحالة</string>
     <string name="rankings">المتصدرون</string>
-    <string name="score_distribution">توزيع النتيجة</string>
+    <string name="score_distribution">توزيع النقاط</string>
     <string name="no_description">لا يوجد وصف</string>
     <string name="reviews">المراجعات</string>
     <string name="loading">تحميل</string>
@@ -197,7 +197,7 @@
     <string name="standard_deviation">الإنحراف المعياري</string>
     <string name="title_count">عدد العناوين</string>
     <string name="time_spent">الوقت المستغرق</string>
-    <string name="format_distribution">صيغة التوزيع</string>
+    <string name="format_distribution">تنسيق التوزيع</string>
     <string name="notes">ملاحظات</string>
     <string name="calendar">التقويم</string>
     <string name="monday">الأثنين</string>
@@ -207,7 +207,6 @@
     <string name="friday">الجمعة</string>
     <string name="saturday">السبت</string>
     <string name="sunday">الأحد</string>
-    <string name="episode_airing_at">الحلقة %s تُبث في %s</string>
     <string name="filter">فلتر</string>
     <string name="notifications">الإشعارات</string>
     <string name="threads">المواضيع</string>
@@ -257,7 +256,7 @@
     <string name="discover">إكتشف</string>
     <string name="default_home_tab">القسم الإفتارضي</string>
     <string name="text_status">حالة النص</string>
-    <string name="list_progress">التقدم في القائمة</string>
+    <string name="list_progress">تقدم القائمة</string>
     <string name="all">الكل</string>
     <string name="global_feed">عالمي</string>
     <string name="format_bold">عريض</string>
@@ -278,7 +277,7 @@
     <string name="publish">انشر</string>
     <string name="reply">رد</string>
     <string name="locked">مقفل</string>
-    <string name="donator">المتبرع</string>
+    <string name="donator">داعم</string>
     <string name="google_translate_not_installed">لم يتم تثبيت ترجمة جوجل</string>
     <string name="no_app_found_for_this_action">لم يتم العثور على تطبيق لهذا الإجراء</string>
     <string name="list_status">الحالة</string>
@@ -298,7 +297,7 @@
     <string name="genre_fantasy">الخيال</string>
     <string name="genre_hentai">هنتاي</string>
     <string name="genre_horror">رعب</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">فتيات بقوة سحرية</string>
     <string name="genre_mecha">ميكا</string>
     <string name="genre_music">موسيقى</string>
     <string name="genre_mystery">غموض</string>
@@ -325,4 +324,15 @@
     <string name="china">الصين</string>
     <string name="taiwan">تايوان</string>
     <string name="country">البلد/الدولة</string>
+    <string name="custom_lists">قائمة مخصصة</string>
+    <string name="no_custom_lists">لا توجد قائمة مخصصة</string>
+    <string name="hours_watched_format">ساعات المشاهدة %s</string>
+    <string name="chapters_read_format">الفصول المقروءة: %s</string>
+    <string name="mean_score_format">متوسط النقاط: %s</string>
+    <string name="episode_count">عدد الحلقات</string>
+    <string name="chapter_count">عدد الفصول</string>
+    <string name="country_distribution">توزيع البلدان</string>
+    <string name="release_year">سنة الإصدار</string>
+    <string name="watch_year">سنة المشاهدة</string>
+    <string name="read_year">سنة القراءة</string>
 </resources>
