@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,9 +31,11 @@ import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.common.ShareIconButton
+import com.axiel7.anihyou.ui.screens.characterdetails.composables.CharacterVoiceActorsSheet
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.coroutines.launch
 
 private enum class CharacterInfoType {
     INFO, MEDIA;
@@ -49,8 +53,10 @@ private enum class CharacterInfoType {
 fun CharacterDetailsView(
     navigateBack: () -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
+    navigateToStaffDetails: (Int) -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: CharacterDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -58,6 +64,18 @@ fun CharacterDetailsView(
         rememberTopAppBarState()
     )
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    val sheetState = rememberModalBottomSheetState()
+
+    if (sheetState.isVisible) {
+        CharacterVoiceActorsSheet(
+            voiceActors = viewModel.selectedMediaVoiceActors.orEmpty(),
+            sheetState = sheetState,
+            navigateToStaffDetails = navigateToStaffDetails,
+            onDismiss = {
+                scope.launch { sheetState.hide() }
+            }
+        )
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
@@ -114,7 +132,13 @@ fun CharacterDetailsView(
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        navigateToMediaDetails = navigateToMediaDetails
+                        navigateToMediaDetails = navigateToMediaDetails,
+                        showVoiceActorsSheet = {
+                            scope.launch {
+                                viewModel.onShowVoiceActorsSheet(it)
+                                sheetState.show()
+                            }
+                        }
                     )
                 }
             }
@@ -130,6 +154,7 @@ fun CharacterDetailsViewPreview() {
             CharacterDetailsView(
                 navigateBack = {},
                 navigateToMediaDetails = {},
+                navigateToStaffDetails = {},
                 navigateToFullscreenImage = {}
             )
         }

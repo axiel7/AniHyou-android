@@ -488,6 +488,7 @@ fun MainNavigation(
             CharacterDetailsView(
                 navigateBack = navigateBack,
                 navigateToMediaDetails = navigateToMediaDetails,
+                navigateToStaffDetails = navigateToStaffDetails,
                 navigateToFullscreenImage = navigateToFullscreenImage,
             )
         }

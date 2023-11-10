@@ -18,6 +18,9 @@ query CharacterMedia($characterId: Int, $page: Int, $perPage: Int) {
                     name {
                         userPreferred
                     }
+                    image {
+                        medium
+                    }
                     languageV2
                 }
             }

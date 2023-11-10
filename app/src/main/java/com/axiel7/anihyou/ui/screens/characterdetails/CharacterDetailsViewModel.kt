@@ -56,6 +56,12 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     val media = mutableStateListOf<CharacterMediaQuery.Edge>()
+    var selectedMediaVoiceActors: List<CharacterMediaQuery.VoiceActor>? = null
+        private set
+
+    fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) {
+        selectedMediaVoiceActors = item.voiceActors?.filterNotNull()
+    }
 
     init {
         characterId
