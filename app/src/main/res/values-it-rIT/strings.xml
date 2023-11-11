@@ -63,7 +63,6 @@
     <string name="favorites">Preferiti</string>
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">In onda</string>
-    <string name="num_episodes_behind">%s episodi alle spalle</string>
     <string name="information">Informazioni</string>
     <string name="duration">Durata</string>
     <string name="start_date">Data d\'inizio</string>
