@@ -84,11 +84,10 @@ class EditMediaViewModel @Inject constructor(
     fun onChangeProgress(value: Int?) {
         if (canChangeProgressTo(value, uiState.value.mediaDetails?.duration())) {
             mutableUiState.update {
-                it.copy(
-                    progress = value,
-                    status = if (it.status == MediaListStatus.PLANNING) MediaListStatus.CURRENT
-                    else it.status
-                )
+                if (it.status == null || it.status == MediaListStatus.PLANNING) {
+                    onChangeStatus(MediaListStatus.CURRENT)
+                }
+                it.copy(progress = value)
             }
         }
     }
@@ -96,11 +95,10 @@ class EditMediaViewModel @Inject constructor(
     fun onChangeVolumeProgress(value: Int?) {
         if (canChangeProgressTo(value, uiState.value.mediaDetails?.volumes)) {
             mutableUiState.update {
-                it.copy(
-                    volumeProgress = value,
-                    status = if (it.status == MediaListStatus.PLANNING) MediaListStatus.CURRENT
-                    else it.status
-                )
+                if (it.status == null || it.status == MediaListStatus.PLANNING) {
+                    onChangeStatus(MediaListStatus.CURRENT)
+                }
+                it.copy(volumeProgress = value)
             }
         }
     }
