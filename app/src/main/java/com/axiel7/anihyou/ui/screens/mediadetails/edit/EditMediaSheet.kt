@@ -207,7 +207,7 @@ fun EditMediaSheet(
                 totalProgress = mediaDetails.duration(),
                 onValueChange = { viewModel.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { viewModel.onChangeProgress(uiState.progress?.minus(1)) },
-                onPlusClick = { viewModel.onChangeProgress(uiState.progress?.plus(1)) }
+                onPlusClick = { viewModel.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
             )
 
             if (mediaDetails.isManga()) {
@@ -224,7 +224,7 @@ fun EditMediaSheet(
                     },
                     onPlusClick = {
                         viewModel.onChangeVolumeProgress(
-                            uiState.volumeProgress?.plus(1)
+                            uiState.volumeProgress?.plus(1) ?: 1
                         )
                     }
                 )
