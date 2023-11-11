@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution.Companion.asStat
@@ -62,8 +63,17 @@ class MediaDetailsViewModel @Inject constructor(
             mutableUiState.update { uiState ->
                 uiState.copy(
                     details = uiState.details?.copy(
-                        mediaListEntry = if (newListEntry != null)
+                        mediaListEntry = if (newListEntry != null) {
                             uiState.details.mediaListEntry?.copy(basicMediaListEntry = newListEntry)
+                                ?: MediaDetailsQuery.MediaListEntry(
+                                    __typename = "MediaDetailsQuery.MediaListEntry",
+                                    startedAt = null,
+                                    completedAt = null,
+                                    id = newListEntry.id,
+                                    mediaId = uiState.details.id,
+                                    basicMediaListEntry = newListEntry,
+                                )
+                        }
                         else null
                     )
                 )
