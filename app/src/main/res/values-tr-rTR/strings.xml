@@ -207,7 +207,7 @@
     <string name="friday">Cuma</string>
     <string name="saturday">Cumartesi</string>
     <string name="sunday">Pazar</string>
-    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">%d. Bölüm, %s sonra yayınlanacak</string>
+    <string name="episode_airing_at">%d. Bölüm, %s sonra yayınlanacak</string>
     <string name="filter">Filtrele</string>
     <string name="notifications">Bildirimler</string>
     <string name="threads">Konular</string>
