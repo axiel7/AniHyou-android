@@ -161,13 +161,14 @@ class SearchViewModel @Inject constructor(
             val index = media.indexOf(selectedItem)
             if (index != -1) {
                 media[index] = selectedItem.copy(
-                    mediaListEntry = if (newListEntry == null) null else
+                    mediaListEntry = newListEntry?.let {
                         SearchMediaQuery.MediaListEntry(
                             __typename = "SearchMediaQuery.MediaListEntry",
                             id = newListEntry.id,
                             mediaId = newListEntry.mediaId,
                             basicMediaListEntry = newListEntry
                         )
+                    }
                 )
             }
         }
