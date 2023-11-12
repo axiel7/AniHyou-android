@@ -207,7 +207,7 @@
     <string name="friday">Jumat</string>
     <string name="saturday">Sabtu</string>
     <string name="sunday">Minggu</string>
-    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">Ep %d ditayangkan pada %s</string>
+    <string name="episode_airing_at">Ep %d ditayangkan pada %s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifikasi</string>
     <string name="threads">Bahasan</string>
