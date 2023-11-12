@@ -1,10 +1,7 @@
 query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType, $status: MediaStatus) {
     Page(page: $page, perPage: $perPage) {
         media(sort: $sort, type: $type, status: $status) {
-            id
-            title {
-                userPreferred
-            }
+            ...BasicMediaDetails
             format
             startDate {
                 year
@@ -13,6 +10,9 @@ query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType
                 large
             }
             meanScore
+            mediaListEntry {
+                ...BasicMediaListEntry
+            }
         }
         pageInfo {
             ...CommonPage

@@ -7,6 +7,7 @@ import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,29 @@ class MediaChartViewModel @Inject constructor(
     override val mutableUiState = MutableStateFlow(MediaChartUiState())
     override val uiState = mutableUiState.asStateFlow()
 
+    fun selectItem(value: MediaChartQuery.Medium?) = mutableUiState.update {
+        it.copy(selectedItem = value)
+    }
+
     val mediaChart = mutableStateListOf<MediaChartQuery.Medium>()
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedItem?.let { selectedItem ->
+            val index = mediaChart.indexOf(selectedItem)
+            if (index != -1) {
+                mediaChart[index] = selectedItem.copy(
+                    mediaListEntry = newListEntry?.let {
+                        MediaChartQuery.MediaListEntry(
+                            __typename = "MediaChartQuery.MediaListEntry",
+                            id = newListEntry.id,
+                            mediaId = newListEntry.mediaId,
+                            basicMediaListEntry = newListEntry
+                        )
+                    }
+                )
+            }
+        }
+    }
 
     init {
         initialType

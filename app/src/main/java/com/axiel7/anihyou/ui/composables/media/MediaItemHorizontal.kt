@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,10 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -40,6 +43,7 @@ fun MediaItemHorizontal(
     subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -56,8 +60,7 @@ fun MediaItemHorizontal(
                 .size(
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
                     height = MEDIA_POSTER_SMALL_HEIGHT.dp
-                ),
-            contentAlignment = Alignment.BottomStart
+                )
         ) {
             MediaPoster(
                 url = imageUrl,
@@ -71,11 +74,23 @@ fun MediaItemHorizontal(
             if (badgeContent != null) {
                 Row(
                     modifier = Modifier
+                        .align(Alignment.BottomStart)
                         .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     content = badgeContent
+                )
+            }
+            if (topBadgeContent != null) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .clip(RoundedCornerShape(topStart = 8.dp, bottomEnd = 16.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = topBadgeContent
                 )
             }
         }
@@ -110,6 +125,7 @@ fun MediaItemHorizontal(
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
     MediaItemHorizontal(
         title = title,
@@ -130,6 +146,7 @@ fun MediaItemHorizontal(
             )
         },
         badgeContent = badgeContent,
+        topBadgeContent = topBadgeContent,
         onClick = onClick,
         onLongClick = onLongClick,
     )
@@ -186,7 +203,15 @@ fun MediaItemHorizontalPreview() {
                 MediaItemHorizontal(
                     title = "This is a very large anime title that should serve as a preview example",
                     imageUrl = null,
-                    badgeContent = { Text(text = "#1") },
+                    badgeContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.check_circle_24),
+                            contentDescription = ""
+                        )
+                    },
+                    topBadgeContent = {
+                        Text(text = "#1")
+                    },
                     score = 76,
                     format = MediaFormat.TV,
                     year = 2014,

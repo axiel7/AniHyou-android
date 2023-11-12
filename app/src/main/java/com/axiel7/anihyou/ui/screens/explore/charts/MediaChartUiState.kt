@@ -1,10 +1,12 @@
 package com.axiel7.anihyou.ui.screens.explore.charts
 
+import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class MediaChartUiState(
     val chartType: ChartType? = null,
+    val selectedItem: MediaChartQuery.Medium? = null,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,
