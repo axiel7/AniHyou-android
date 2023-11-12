@@ -190,11 +190,11 @@ fun SearchContentView(
         }
     }
 
-    if (editSheetState.isVisible && uiState.selectedMediaItem?.mediaListEntry != null) {
+    if (editSheetState.isVisible && uiState.selectedMediaItem != null) {
         EditMediaSheet(
             sheetState = editSheetState,
             mediaDetails = uiState.selectedMediaItem!!.basicMediaDetails,
-            listEntry = uiState.selectedMediaItem!!.mediaListEntry!!.basicMediaListEntry,
+            listEntry = uiState.selectedMediaItem?.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
                     viewModel.onUpdateListEntry(updatedListEntry)
