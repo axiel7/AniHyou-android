@@ -28,5 +28,5 @@ If applicable, add screenshots to help explain your problem.
  - Android version: 
  - App version: 
 
-**Additional context**
+**Additional context (optional)**
 Add any other context about the problem here.
