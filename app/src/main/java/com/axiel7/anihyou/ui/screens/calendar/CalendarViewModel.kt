@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.thisWeekdayTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +41,31 @@ class CalendarViewModel @Inject constructor(
         it.copy(weekday = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    fun selectItem(value: AiringAnimesQuery.AiringSchedule?) = mutableUiState.update {
+        it.copy(selectedItem = value)
+    }
+
     val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedItem?.let { selectedItem ->
+            val index = weeklyAnime.indexOf(selectedItem)
+            if (index != -1) {
+                weeklyAnime[index] = selectedItem.copy(
+                    media = selectedItem.media?.copy(
+                        mediaListEntry = newListEntry?.let {
+                            AiringAnimesQuery.MediaListEntry(
+                                __typename = "AiringAnimesQuery.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    ),
+                )
+            }
+        }
+    }
 
     init {
         mutableUiState

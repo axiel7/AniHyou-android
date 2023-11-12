@@ -4,15 +4,13 @@ query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGrea
             id
             mediaId
             media {
-                title {
-                    userPreferred
-                }
+                ...BasicMediaDetails
                 coverImage {
                     large
                 }
                 meanScore
                 mediaListEntry {
-                    status
+                    ...BasicMediaListEntry
                 }
             }
             episode

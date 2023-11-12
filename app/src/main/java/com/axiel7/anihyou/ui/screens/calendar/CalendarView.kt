@@ -13,21 +13,28 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
@@ -44,9 +53,11 @@ import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -71,6 +82,7 @@ fun CalendarView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    val editSheetState = rememberModalBottomSheetState()
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
@@ -100,6 +112,7 @@ fun CalendarView(
             CalendarDayView(
                 weekday = calendarTabs[it].value.value,
                 onMyList = onMyList,
+                editSheetState = editSheetState,
                 navigateToMediaDetails = navigateToMediaDetails,
                 modifier = Modifier
                     .fillMaxHeight()
@@ -113,14 +126,18 @@ fun CalendarView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarDayView(
     weekday: Int,
     onMyList: Boolean?,
+    editSheetState: SheetState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
     val viewModel: CalendarViewModel = hiltViewModel(key = weekday.toString())
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -133,8 +150,20 @@ fun CalendarDayView(
     }
 
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3) {
-        viewModel.loadNextPage()
+    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+
+    if (editSheetState.isVisible && uiState.selectedItem?.media != null) {
+        EditMediaSheet(
+            sheetState = editSheetState,
+            mediaDetails = uiState.selectedItem!!.media!!.basicMediaDetails,
+            listEntry = uiState.selectedItem?.media?.mediaListEntry?.basicMediaListEntry,
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    viewModel.onUpdateListEntry(updatedListEntry)
+                    editSheetState.hide()
+                }
+            }
+        )
     }
 
     LazyVerticalGrid(
@@ -151,7 +180,7 @@ fun CalendarDayView(
             contentType = { it }
         ) { item ->
             MediaItemVertical(
-                title = item.media?.title?.userPreferred ?: "",
+                title = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.media?.coverImage?.large,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
@@ -166,9 +195,24 @@ fun CalendarDayView(
                         lineHeight = 17.sp
                     )
                 },
+                badgeContent = item.media?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                    {
+                        Icon(
+                            painter = painterResource(status.icon()),
+                            contentDescription = status.localized()
+                        )
+                    }
+                },
                 minLines = 1,
                 onClick = {
                     navigateToMediaDetails(item.mediaId)
+                },
+                onLongClick = {
+                    scope.launch {
+                        viewModel.selectItem(item)
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        editSheetState.show()
+                    }
                 }
             )
         }
