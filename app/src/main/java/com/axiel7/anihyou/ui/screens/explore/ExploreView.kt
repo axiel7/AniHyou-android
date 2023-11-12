@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.explore
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -255,6 +254,16 @@ fun ExploreView(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                 IconCard(
+                    title = stringResource(R.string.top_movies),
+                    icon = R.drawable.movie_24,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        navigateToMediaChart(ChartType.TOP_MOVIES)
+                    }
+                )
+                IconCard(
                     title = stringResource(R.string.calendar),
                     icon = R.drawable.calendar_month_24,
                     modifier = Modifier
@@ -263,11 +272,6 @@ fun ExploreView(
                     onClick = {
                         navigateToCalendar()
                     }
-                )
-                Spacer(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 8.dp)
                 )
             }
 

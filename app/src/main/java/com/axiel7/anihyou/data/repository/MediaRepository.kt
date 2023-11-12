@@ -90,6 +90,7 @@ class MediaRepository @Inject constructor(
             type = type.mediaType,
             sort = listOf(type.mediaSort),
             status = type.mediaStatus,
+            format = type.mediaFormat,
             page = page,
             perPage = perPage
         )

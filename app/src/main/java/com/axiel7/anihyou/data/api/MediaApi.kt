@@ -200,8 +200,9 @@ class MediaApi @Inject constructor(
 
     fun mediaChartQuery(
         type: MediaType,
-        sort: List<MediaSort> = listOf(MediaSort.ID),
-        status: MediaStatus? = null,
+        sort: List<MediaSort>,
+        status: MediaStatus?,
+        format: MediaFormat?,
         page: Int,
         perPage: Int,
     ) = client
@@ -211,7 +212,8 @@ class MediaApi @Inject constructor(
                 perPage = Optional.present(perPage),
                 sort = Optional.present(sort),
                 type = Optional.present(type),
-                status = Optional.presentIfNotNull(status)
+                status = Optional.presentIfNotNull(status),
+                format = Optional.presentIfNotNull(format),
             )
         )
 
