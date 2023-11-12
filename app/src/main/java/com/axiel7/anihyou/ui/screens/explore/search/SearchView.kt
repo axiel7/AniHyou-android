@@ -168,10 +168,8 @@ fun SearchContentView(
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
-            if (query.isNotBlank()) {
-                listState.scrollToItem(0)
-                viewModel.setQuery(query)
-            }
+            listState.scrollToItem(0)
+            viewModel.setQuery(query)
             performSearch.value = false
         }
     }

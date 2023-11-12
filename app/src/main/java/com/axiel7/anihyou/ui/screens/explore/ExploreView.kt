@@ -112,7 +112,12 @@ fun ExploreView(
                     },
                     trailingIcon = {
                         if (isSearchActive && query.isNotEmpty()) {
-                            IconButton(onClick = { query = "" }) {
+                            IconButton(
+                                onClick = {
+                                    query = ""
+                                    performSearch.value = true
+                                }
+                            ) {
                                 Icon(
                                     painter = painterResource(R.drawable.close_24),
                                     contentDescription = stringResource(R.string.delete)
