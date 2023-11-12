@@ -55,21 +55,18 @@ fun MediaItemHorizontal(
             .clip(RoundedCornerShape(8.dp))
             .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
+        val posterSizeModifier = Modifier
+            .size(
+                width = MEDIA_POSTER_SMALL_WIDTH.dp,
+                height = MEDIA_POSTER_SMALL_HEIGHT.dp
+            )
         Box(
-            modifier = Modifier
-                .size(
-                    width = MEDIA_POSTER_SMALL_WIDTH.dp,
-                    height = MEDIA_POSTER_SMALL_HEIGHT.dp
-                )
+            modifier = posterSizeModifier
         ) {
             MediaPoster(
                 url = imageUrl,
                 showShadow = false,
-                modifier = Modifier
-                    .size(
-                        width = MEDIA_POSTER_SMALL_WIDTH.dp,
-                        height = MEDIA_POSTER_SMALL_HEIGHT.dp
-                    )
+                modifier = posterSizeModifier
             )
             if (badgeContent != null) {
                 Row(

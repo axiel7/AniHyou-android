@@ -7,6 +7,7 @@ import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -42,7 +43,29 @@ class SeasonAnimeViewModel @Inject constructor(
         it.copy(season = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    fun selectItem(value: SeasonalAnimeQuery.Medium?) = mutableUiState.update {
+        it.copy(selectedItem = value)
+    }
+
     val animeSeasonal = mutableStateListOf<SeasonalAnimeQuery.Medium>()
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedItem?.let { selectedItem ->
+            val index = animeSeasonal.indexOf(selectedItem)
+            if (index != -1) {
+                animeSeasonal[index] = selectedItem.copy(
+                    mediaListEntry = newListEntry?.let {
+                        SeasonalAnimeQuery.MediaListEntry(
+                            __typename = "SeasonalAnimeQuery.MediaListEntry",
+                            id = newListEntry.id,
+                            mediaId = newListEntry.mediaId,
+                            basicMediaListEntry = newListEntry
+                        )
+                    }
+                )
+            }
+        }
+    }
 
     init {
         combine(

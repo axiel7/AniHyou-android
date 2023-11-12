@@ -25,7 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -41,6 +45,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.screens.explore.season.composables.SeasonChartFilterSheet
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -56,8 +61,12 @@ fun SeasonAnimeView(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
+    val haptic = LocalHapticFeedback.current
+    val editSheetState = rememberModalBottomSheetState()
+
     val listState = rememberLazyGridState()
     listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
@@ -69,6 +78,20 @@ fun SeasonAnimeView(
             onConfirm = {
                 viewModel.setSeason(it)
                 scope.launch { sheetState.hide() }
+            }
+        )
+    }
+
+    if (editSheetState.isVisible && uiState.selectedItem != null) {
+        EditMediaSheet(
+            sheetState = editSheetState,
+            mediaDetails = uiState.selectedItem!!.basicMediaDetails,
+            listEntry = uiState.selectedItem?.mediaListEntry?.basicMediaListEntry,
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    viewModel.onUpdateListEntry(updatedListEntry)
+                    editSheetState.hide()
+                }
             }
         )
     }
@@ -108,15 +131,30 @@ fun SeasonAnimeView(
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
-                    title = item.title?.userPreferred ?: "",
+                    title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
                     modifier = Modifier.wrapContentWidth(),
                     subtitle = {
                         SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
                     },
+                    badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                        {
+                            Icon(
+                                painter = painterResource(status.icon()),
+                                contentDescription = status.localized()
+                            )
+                        }
+                    },
                     minLines = 2,
                     onClick = {
                         navigateToMediaDetails(item.id)
+                    },
+                    onLongClick = {
+                        scope.launch {
+                            viewModel.selectItem(item)
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            editSheetState.show()
+                        }
                     }
                 )
             }

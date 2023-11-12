@@ -43,7 +43,7 @@ fun SeasonAnimeContent(
             contentType = { it }
         ) { item ->
             MediaItemVertical(
-                title = item.title?.userPreferred ?: "",
+                title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
                 modifier = Modifier.padding(start = 8.dp),
                 subtitle = {
