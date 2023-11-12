@@ -320,7 +320,7 @@ fun EditMediaSheet(
                 totalProgress = null,
                 onValueChange = { viewModel.onChangeRepeatCount(it.toIntOrNull()) },
                 onMinusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
-                onPlusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.plus(1)) }
+                onPlusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.plus(1) ?: 1) }
             )
 
             // Custom lists
