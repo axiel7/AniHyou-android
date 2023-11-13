@@ -1,13 +1,19 @@
 package com.axiel7.anihyou.ui.screens.home.discover.content
 
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.fragment.BasicMediaDetails
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
@@ -22,6 +28,7 @@ fun AiringContent(
     airingAnime: List<AiringAnimesQuery.AiringSchedule>,
     airingAnimeOnMyList: List<AiringOnMyListQuery.Medium>,
     isLoading: Boolean,
+    onLongClickItem: (BasicMediaDetails, BasicMediaListEntry?) -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit
 ) {
@@ -38,16 +45,30 @@ fun AiringContent(
                 contentType = { it }
             ) { item ->
                 AiringAnimeHorizontalItem(
-                    title = item.title?.userPreferred ?: "",
+                    title = item.basicMediaDetails.title?.userPreferred ?: "",
                     subtitle = stringResource(
                         R.string.airing_in,
                         item.nextAiringEpisode?.timeUntilAiring?.toLong()
                             ?.secondsToLegibleText() ?: UNKNOWN_CHAR
                     ),
                     imageUrl = item.coverImage?.large,
-                    score = if (item.meanScore != null) "${item.meanScore}%" else null,
+                    score = item.meanScore?.let { "$it%" },
+                    badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                        {
+                            Icon(
+                                painter = painterResource(status.icon()),
+                                contentDescription = status.localized()
+                            )
+                        }
+                    },
                     onClick = {
                         navigateToMediaDetails(item.id)
+                    },
+                    onLongClick = {
+                        onLongClickItem(
+                            item.basicMediaDetails,
+                            item.mediaListEntry?.basicMediaListEntry
+                        )
                     }
                 )
             }
@@ -72,9 +93,25 @@ fun AiringContent(
                         item.timeUntilAiring.toLong().secondsToLegibleText()
                     ),
                     imageUrl = item.media?.coverImage?.large,
-                    score = if (item.media?.meanScore != null) "${item.media.meanScore}%" else null,
+                    score = item.media?.meanScore?.let { "$it%" },
+                    badgeContent = item.media?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                        {
+                            Icon(
+                                painter = painterResource(status.icon()),
+                                contentDescription = status.localized()
+                            )
+                        }
+                    },
                     onClick = {
                         navigateToMediaDetails(item.media!!.id)
+                    },
+                    onLongClick = {
+                        if (item.media != null) {
+                            onLongClickItem(
+                                item.media.basicMediaDetails,
+                                item.media.mediaListEntry?.basicMediaListEntry
+                            )
+                        }
                     }
                 )
             }

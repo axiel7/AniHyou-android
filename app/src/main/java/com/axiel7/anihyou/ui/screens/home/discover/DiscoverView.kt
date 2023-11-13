@@ -4,10 +4,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,7 +23,9 @@ import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.home.discover.content.AiringContent
 import com.axiel7.anihyou.ui.screens.home.discover.content.SeasonAnimeContent
 import com.axiel7.anihyou.ui.screens.home.discover.content.TrendingMediaContent
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.coroutines.launch
 
 enum class DiscoverInfo {
     AIRING,
@@ -28,6 +35,7 @@ enum class DiscoverInfo {
     TRENDING_MANGA,
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverView(
     modifier: Modifier = Modifier,
@@ -41,10 +49,32 @@ fun DiscoverView(
     val airingOnMyList by viewModel.airingOnMyList.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 0, onLoadMore = viewModel::addNextInfo)
 
-    listState.OnBottomReached(buffer = 0) {
-        viewModel.addNextInfo()
+    val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
+    val editSheetState = rememberModalBottomSheetState()
+
+    suspend fun showEditSheet() {
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        editSheetState.show()
     }
+
+    if (editSheetState.isVisible && viewModel.selectedMediaDetails != null) {
+        EditMediaSheet(
+            sheetState = editSheetState,
+            mediaDetails = viewModel.selectedMediaDetails!!,
+            listEntry = viewModel.selectedMediaListEntry,
+            onDismiss = { updatedListEntry ->
+                scope.launch {
+                    //TODO: update corresponding list item
+                    //viewModel.onUpdateListEntry(updatedListEntry)
+                    editSheetState.hide()
+                }
+            }
+        )
+    }
+
     LazyColumn(
         modifier = modifier,
         state = listState,
@@ -62,6 +92,12 @@ fun DiscoverView(
                         airingAnime = viewModel.airingAnime,
                         airingAnimeOnMyList = viewModel.airingAnimeOnMyList,
                         isLoading = viewModel.isLoadingAiring,
+                        onLongClickItem = { details, listEntry ->
+                            scope.launch {
+                                viewModel.selectItem(details, listEntry)
+                                showEditSheet()
+                            }
+                        },
                         navigateToCalendar = navigateToCalendar,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
@@ -76,6 +112,15 @@ fun DiscoverView(
                         seasonAnime = viewModel.thisSeasonAnime,
                         isLoading = viewModel.isLoadingThisSeason,
                         isNextSeason = false,
+                        onLongClickItem = {
+                            scope.launch {
+                                viewModel.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheet()
+                            }
+                        },
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
@@ -89,6 +134,15 @@ fun DiscoverView(
                         mediaType = MediaType.ANIME,
                         trendingMedia = viewModel.trendingAnime,
                         isLoading = viewModel.isLoadingTrendingAnime,
+                        onLongClickItem = {
+                            scope.launch {
+                                viewModel.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheet()
+                            }
+                        },
                         navigateToExplore = navigateToExplore,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
@@ -103,6 +157,15 @@ fun DiscoverView(
                         seasonAnime = viewModel.nextSeasonAnime,
                         isLoading = viewModel.isLoadingNextSeason,
                         isNextSeason = true,
+                        onLongClickItem = {
+                            scope.launch {
+                                viewModel.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheet()
+                            }
+                        },
                         navigateToAnimeSeason = navigateToAnimeSeason,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )
@@ -116,6 +179,15 @@ fun DiscoverView(
                         mediaType = MediaType.MANGA,
                         trendingMedia = viewModel.trendingManga,
                         isLoading = viewModel.isLoadingTrendingManga,
+                        onLongClickItem = {
+                            scope.launch {
+                                viewModel.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheet()
+                            }
+                        },
                         navigateToExplore = navigateToExplore,
                         navigateToMediaDetails = navigateToMediaDetails,
                     )

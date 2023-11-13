@@ -1,49 +1,76 @@
 package com.axiel7.anihyou.ui.composables.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AiringAnimeHorizontalItem(
     title: String,
     subtitle: String,
     imageUrl: String?,
     score: String? = null,
-    onClick: () -> Unit
+    badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .sizeIn(maxWidth = 300.dp, minWidth = 250.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
-        MediaPoster(
-            url = imageUrl,
-            modifier = Modifier.size(
+        val posterSizeModifier = Modifier
+            .size(
                 width = MEDIA_POSTER_SMALL_WIDTH.dp,
                 height = MEDIA_POSTER_SMALL_HEIGHT.dp
             )
-        )
+        Box(
+            modifier = posterSizeModifier
+        ) {
+            MediaPoster(
+                url = imageUrl,
+                showShadow = false,
+                modifier = posterSizeModifier
+            )
+            if (badgeContent != null) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = badgeContent
+                )
+            }
+        }
 
         Column(
             modifier = Modifier.padding(start = 16.dp)
@@ -121,6 +148,12 @@ fun AiringAnimeHorizontalItemPreview() {
                 subtitle = "Airing in 12 min",
                 imageUrl = null,
                 score = "79%",
+                badgeContent = {
+                    Icon(
+                        painter = painterResource(R.drawable.check_circle_24),
+                        contentDescription = ""
+                    )
+                },
                 onClick = { }
             )
         }

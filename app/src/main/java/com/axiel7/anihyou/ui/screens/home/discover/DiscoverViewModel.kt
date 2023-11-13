@@ -13,6 +13,8 @@ import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
+import com.axiel7.anihyou.fragment.BasicMediaDetails
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
@@ -159,5 +161,15 @@ class DiscoverViewModel @Inject constructor(
                 isLoadingTrendingManga = result is PagedResult.Loading
             }.launchIn(viewModelScope)
         }
+    }
+
+    var selectedMediaDetails: BasicMediaDetails? = null
+        private set
+    var selectedMediaListEntry: BasicMediaListEntry? = null
+        private set
+
+    fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
+        selectedMediaDetails = details
+        selectedMediaListEntry = listEntry
     }
 }
