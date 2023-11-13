@@ -33,7 +33,7 @@ fun SliderRatingView(
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double) -> Unit,
 ) {
-    var ratingString by remember { mutableStateOf(initialRating.toString()) }
+    var ratingString by remember(initialRating) { mutableStateOf(initialRating.toString()) }
 
     Column(
         modifier = modifier,
