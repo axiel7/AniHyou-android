@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -33,6 +35,7 @@ fun CharacterMediaView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToMediaDetails: (Int) -> Unit,
     showVoiceActorsSheet: (CharacterMediaQuery.Edge) -> Unit,
+    showEditSheet: (CharacterMediaQuery.Edge) -> Unit,
 ) {
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
@@ -49,11 +52,11 @@ fun CharacterMediaView(
             contentType = { it }
         ) { item ->
             MediaItemHorizontal(
-                title = item.node?.title?.userPreferred ?: "",
+                title = item.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.node?.coverImage?.large,
                 subtitle1 = {
                     Text(
-                        text = item.characterRole?.localized() ?: "",
+                        text = item.characterRole?.localized().orEmpty(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 15.sp
                     )
@@ -70,8 +73,19 @@ fun CharacterMediaView(
                         }
                     }
                 },
+                badgeContent = item.node?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                    {
+                        Icon(
+                            painter = painterResource(status.icon()),
+                            contentDescription = status.localized()
+                        )
+                    }
+                },
                 onClick = {
                     navigateToMediaDetails(item.node?.id!!)
+                },
+                onLongClick = {
+                    showEditSheet(item)
                 }
             )
         }

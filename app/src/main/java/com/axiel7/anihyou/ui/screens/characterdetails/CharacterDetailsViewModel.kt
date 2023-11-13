@@ -8,6 +8,7 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,11 +57,33 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     val media = mutableStateListOf<CharacterMediaQuery.Edge>()
-    var selectedMediaVoiceActors: List<CharacterMediaQuery.VoiceActor>? = null
-        private set
 
-    fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) {
-        selectedMediaVoiceActors = item.voiceActors?.filterNotNull()
+    fun selectMediaItem(value: CharacterMediaQuery.Edge?) = mutableUiState.update {
+        it.copy(selectedMediaItem = value)
+    }
+
+    fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) = mutableUiState.update {
+        it.copy(selectedMediaVoiceActors = item.voiceActors?.filterNotNull())
+    }
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedMediaItem?.let { selectedItem ->
+            val index = media.indexOf(selectedItem)
+            if (index != -1) {
+                media[index] = selectedItem.copy(
+                    node = selectedItem.node?.copy(
+                        mediaListEntry = newListEntry?.let {
+                            CharacterMediaQuery.MediaListEntry(
+                                __typename = "CharacterMediaQuery.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    )
+                )
+            }
+        }
     }
 
     init {

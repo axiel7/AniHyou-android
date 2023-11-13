@@ -1,11 +1,14 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
 import com.axiel7.anihyou.CharacterDetailsQuery
+import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 data class CharacterDetailsUiState(
     val character: CharacterDetailsQuery.Character? = null,
     val isLoadingMedia: Boolean = true,
+    val selectedMediaItem: CharacterMediaQuery.Edge? = null,
+    val selectedMediaVoiceActors: List<CharacterMediaQuery.VoiceActor>? = null,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,
