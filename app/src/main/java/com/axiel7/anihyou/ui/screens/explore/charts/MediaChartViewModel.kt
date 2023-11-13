@@ -94,9 +94,9 @@ class MediaChartViewModel @Inject constructor(
                         mediaChart.addAll(result.list)
 
                         val hasNextPage = when (it.chartType) {
-                            ChartType.TOP_ANIME, ChartType.TOP_MANGA -> {
+                            ChartType.TOP_ANIME, ChartType.TOP_MANGA, ChartType.TOP_MOVIES -> {
                                 // limit top 100
-                                it.page * MediaChartUiState.PER_PAGE < 100
+                                it.page * MediaChartUiState.PER_PAGE < 100 && result.hasNextPage
                             }
 
                             else -> result.hasNextPage
