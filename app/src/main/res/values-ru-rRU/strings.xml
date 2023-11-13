@@ -336,4 +336,5 @@
     <string name="release_year">Год выпуска</string>
     <string name="watch_year">Год просмотра</string>
     <string name="read_year">Год чтения</string>
+    <string name="top_movies">Топ фильмы</string>
 </resources>
