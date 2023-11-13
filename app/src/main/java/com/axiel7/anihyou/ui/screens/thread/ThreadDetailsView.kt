@@ -91,7 +91,6 @@ fun ThreadDetailsView(
             }
             items(
                 items = viewModel.threadComments,
-                key = { it.id },
                 contentType = { it }
             ) { item ->
                 ThreadCommentView(

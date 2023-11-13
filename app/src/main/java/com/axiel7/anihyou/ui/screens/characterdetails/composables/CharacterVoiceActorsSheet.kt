@@ -33,7 +33,6 @@ fun CharacterVoiceActorsSheet(
         ) {
             items(
                 items = voiceActors,
-                key = { it.id },
                 contentType = { it }
             ) {
                 PersonItemHorizontal(

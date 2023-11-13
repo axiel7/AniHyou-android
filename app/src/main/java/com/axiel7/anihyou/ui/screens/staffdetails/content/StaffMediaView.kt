@@ -60,7 +60,6 @@ fun StaffMediaView(
         }
         items(
             items = staffMedia,
-            key = { it.second.value.id!! },
             contentType = { it.second }
         ) { item ->
             MediaItemHorizontal(

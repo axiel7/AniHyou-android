@@ -176,7 +176,6 @@ fun CalendarDayView(
     ) {
         items(
             items = viewModel.weeklyAnime,
-            key = { it.id },
             contentType = { it }
         ) { item ->
             MediaItemVertical(

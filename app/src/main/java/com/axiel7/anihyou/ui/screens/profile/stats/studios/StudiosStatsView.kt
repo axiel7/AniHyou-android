@@ -59,7 +59,6 @@ fun StudiosStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.studio?.id ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(

@@ -68,7 +68,6 @@ fun TagsStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.tag?.id ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(

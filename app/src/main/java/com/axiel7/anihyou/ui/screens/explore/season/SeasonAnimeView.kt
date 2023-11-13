@@ -127,7 +127,6 @@ fun SeasonAnimeView(
         ) {
             items(
                 items = viewModel.animeSeasonal,
-                key = { it.id },
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(

@@ -69,7 +69,6 @@ fun GenresStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.genre ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(

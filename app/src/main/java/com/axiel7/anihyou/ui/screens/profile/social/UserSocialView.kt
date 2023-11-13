@@ -73,7 +73,6 @@ fun UserSocialView(
                 UserSocialType.FOLLOWERS -> {
                     items(
                         items = viewModel.followers,
-                        key = { it.userFollow.id },
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
@@ -94,7 +93,6 @@ fun UserSocialView(
                 UserSocialType.FOLLOWING -> {
                     items(
                         items = viewModel.following,
-                        key = { it.userFollow.id },
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(

@@ -316,7 +316,6 @@ fun SearchContentView(
                 }
                 items(
                     items = viewModel.media,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     MediaItemHorizontal(
@@ -355,7 +354,6 @@ fun SearchContentView(
                 }
                 items(
                     items = viewModel.characters,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -377,7 +375,6 @@ fun SearchContentView(
                 }
                 items(
                     items = viewModel.staff,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -404,7 +401,6 @@ fun SearchContentView(
                 }
                 items(
                     items = viewModel.studios,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     Text(
@@ -425,7 +421,6 @@ fun SearchContentView(
                 }
                 items(
                     items = viewModel.users,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(

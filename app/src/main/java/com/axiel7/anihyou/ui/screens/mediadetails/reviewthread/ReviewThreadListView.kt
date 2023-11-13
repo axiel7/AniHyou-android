@@ -65,7 +65,6 @@ fun ReviewThreadListView(
             ) {
                 items(
                     items = mediaThreads,
-                    key = { it.basicThreadDetails.id },
                     contentType = { it }
                 ) { item ->
                     PostItem(
@@ -126,7 +125,6 @@ fun ReviewThreadListView(
             ) {
                 items(
                     items = mediaReviews,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     PostItem(

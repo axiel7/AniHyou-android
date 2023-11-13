@@ -161,7 +161,7 @@ private fun LazyListGrid(
         }
         items(
             items = mediaList,
-            //key = { it.basicMediaListEntry.id },
+            key = { it.basicMediaListEntry.id },
             contentType = { it.basicMediaListEntry }
         ) { item ->
             GridUserMediaListItem(

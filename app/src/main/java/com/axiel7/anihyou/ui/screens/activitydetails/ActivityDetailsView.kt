@@ -105,7 +105,6 @@ fun ActivityDetailsView(
             }
             items(
                 items = viewModel.replies,
-                key = { it.id },
                 contentType = { it }
             ) { item ->
                 ActivityTextView(

@@ -95,7 +95,6 @@ fun MediaChartListView(
         ) {
             itemsIndexed(
                 items = viewModel.mediaChart,
-                key = { _, item -> item.id },
                 contentType = { _, item -> item }
             ) { index, item ->
                 MediaItemHorizontal(

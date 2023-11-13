@@ -68,7 +68,6 @@ fun StaffStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.staff?.id ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(

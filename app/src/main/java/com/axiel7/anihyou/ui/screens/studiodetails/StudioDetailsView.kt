@@ -86,7 +86,6 @@ fun StudioDetailsView(
         ) {
             items(
                 items = viewModel.studioMedia,
-                key = { it.id },
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(

@@ -38,7 +38,6 @@ fun StaffCharacterView(
     ) {
         items(
             items = staffCharacters,
-            key = { it.id!! },
             contentType = { it }
         ) { item ->
             item.characters?.forEach { character ->

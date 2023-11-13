@@ -48,7 +48,6 @@ fun CharacterMediaView(
     ) {
         items(
             items = media,
-            //key = { it.id!! },
             contentType = { it }
         ) { item ->
             MediaItemHorizontal(

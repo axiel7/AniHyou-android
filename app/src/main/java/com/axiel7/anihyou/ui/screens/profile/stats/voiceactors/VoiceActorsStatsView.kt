@@ -59,7 +59,6 @@ fun VoiceActorsStatsView(
         }
         itemsIndexed(
             items = stats.orEmpty(),
-            key = { index, stat -> stat.voiceActor?.id ?: index },
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(

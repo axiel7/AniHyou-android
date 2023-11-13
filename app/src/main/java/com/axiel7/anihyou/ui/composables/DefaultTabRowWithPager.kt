@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun <T> DefaultTabRowWithPager(
+fun <T : Any> DefaultTabRowWithPager(
     tabs: Array<TabRowItem<T>>,
     modifier: Modifier = Modifier,
     initialPage: Int = 0,
@@ -88,7 +88,7 @@ fun <T> DefaultTabRowWithPager(
 
         HorizontalPager(
             state = state,
-            key = { tabs[it].value!! }
+            key = { tabs[it].value }
         ) { page ->
             if (page !in ((state.currentPage - 1)..(state.currentPage + 1))) {
                 // To make sure only one offscreen page is being composed
