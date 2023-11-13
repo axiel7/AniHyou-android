@@ -334,4 +334,5 @@
     <string name="release_year">Anno di uscita</string>
     <string name="watch_year">Anno di visione</string>
     <string name="read_year">Anno lettura</string>
+    <string name="top_movies">Top Film</string>
 </resources>
