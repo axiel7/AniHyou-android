@@ -110,7 +110,7 @@ fun MediaStatsView(
         InfoTitle(text = stringResource(R.string.score_distribution))
         VerticalStatsBar(
             stats = uiState.mediaScoreDistribution,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(8.dp),
             isLoading = isLoading
         )
     }
