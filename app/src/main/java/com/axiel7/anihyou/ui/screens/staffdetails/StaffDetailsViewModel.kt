@@ -4,11 +4,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.StaffCharacterQuery
+import com.axiel7.anihyou.StaffMediaQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StaffRepository
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,6 +69,35 @@ class StaffDetailsViewModel @Inject constructor(
     fun loadNextPageMedia() {
         if (mutableUiState.value.hasNextPageMedia)
             mutableUiState.update { it.copy(pageMedia = it.pageMedia + 1) }
+    }
+
+    fun selectMediaItem(value: Pair<Int, StaffMediaGrouped>?) = mutableUiState.update {
+        it.copy(selectedMediaItem = value)
+    }
+
+    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedMediaItem?.let { selectedItem ->
+            val index = media.indexOfFirst { it.first == selectedItem.first }
+            if (index != -1) {
+                media[index] = selectedItem.copy(
+                    first = selectedItem.first,
+                    second = selectedItem.second.copy(
+                        value = selectedItem.second.value.copy(
+                            node = selectedItem.second.value.node?.copy(
+                                mediaListEntry = newListEntry?.let {
+                                    StaffMediaQuery.MediaListEntry(
+                                        __typename = "StaffMediaQuery.MediaListEntry",
+                                        id = newListEntry.id,
+                                        mediaId = newListEntry.mediaId,
+                                        basicMediaListEntry = newListEntry
+                                    )
+                                }
+                            )
+                        )
+                    )
+                )
+            }
+        }
     }
 
     val characters = mutableStateListOf<StaffCharacterQuery.Edge>()

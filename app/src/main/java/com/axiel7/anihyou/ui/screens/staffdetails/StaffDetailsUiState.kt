@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.staffdetails
 
 import com.axiel7.anihyou.StaffDetailsQuery
+import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.common.state.UiState
 
 data class StaffDetailsUiState(
@@ -9,6 +10,7 @@ data class StaffDetailsUiState(
     val pageMedia: Int = 0,
     val hasNextPageMedia: Boolean = true,
     val isLoadingMedia: Boolean = true,
+    val selectedMediaItem: Pair<Int, StaffMediaGrouped>? = null,
     val pageCharacters: Int = 0,
     val hasNextPageCharacters: Boolean = true,
     val isLoadingCharacters: Boolean = true,

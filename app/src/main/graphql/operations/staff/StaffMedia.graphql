@@ -4,12 +4,12 @@ query StaffMedia($staffId: Int, $onList: Boolean, $page: Int, $perPage: Int) {
             edges {
                 id
                 node {
-                    id
-                    title {
-                        userPreferred
-                    }
+                    ...BasicMediaDetails
                     coverImage {
                         large
+                    }
+                    mediaListEntry {
+                        ...BasicMediaListEntry
                     }
                 }
                 staffRole

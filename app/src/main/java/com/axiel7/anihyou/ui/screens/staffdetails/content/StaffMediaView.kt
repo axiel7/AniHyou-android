@@ -8,15 +8,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -32,10 +36,12 @@ fun StaffMediaView(
     setMediaOnMyList: (Boolean?) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
+    showEditSheet: (Pair<Int, StaffMediaGrouped>) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
@@ -58,7 +64,7 @@ fun StaffMediaView(
             contentType = { it.second }
         ) { item ->
             MediaItemHorizontal(
-                title = item.second.value.node?.title?.userPreferred.orEmpty(),
+                title = item.second.value.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.second.value.node?.coverImage?.large,
                 subtitle1 = {
                     Text(
@@ -67,8 +73,20 @@ fun StaffMediaView(
                         fontSize = 15.sp
                     )
                 },
+                badgeContent = item.second.value.node?.mediaListEntry?.basicMediaListEntry
+                    ?.status?.let { status ->
+                        {
+                            Icon(
+                                painter = painterResource(status.icon()),
+                                contentDescription = status.localized()
+                            )
+                        }
+                    },
                 onClick = {
                     navigateToMediaDetails(item.first)
+                },
+                onLongClick = {
+                    showEditSheet(item)
                 }
             )
         }
