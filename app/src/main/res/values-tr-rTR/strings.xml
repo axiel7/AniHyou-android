@@ -336,4 +336,5 @@
     <string name="release_year">Yayın Yılı</string>
     <string name="watch_year">İzleme Yılı</string>
     <string name="read_year">Okuma Yılı</string>
+    <string name="top_movies">En İyi Filmler</string>
 </resources>
