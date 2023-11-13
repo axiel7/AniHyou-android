@@ -4,17 +4,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
@@ -55,16 +58,26 @@ fun MediaRelationsView(
                     contentType = { it }
                 ) { item ->
                     MediaItemVertical(
-                        title = item.mediaRelated.node?.title?.userPreferred ?: "",
+                        title = item.mediaRelated.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             Text(
-                                text = item.mediaRelated.relationType?.localized() ?: "",
+                                text = item.mediaRelated.relationType?.localized().orEmpty(),
                                 color = MaterialTheme.colorScheme.outline,
                                 fontSize = 15.sp,
                             )
                         },
+                        badgeContent = item.mediaRelated.node?.mediaListEntry?.basicMediaListEntry
+                            ?.status?.let { status ->
+                                {
+                                    Icon(
+                                        painter = painterResource(status.icon()),
+                                        contentDescription = status.localized()
+                                    )
+                                }
+                            },
+                        minLines = 2,
                         onClick = {
                             navigateToDetails(item.mediaRelated.node?.id ?: 0)
                         }
@@ -89,8 +102,8 @@ fun MediaRelationsView(
                 ) {
                     val item = mediaRecommendations[it]
                     MediaItemVertical(
-                        title = item.mediaRecommended.mediaRecommendation?.title?.userPreferred
-                            ?: "",
+                        title = item.mediaRecommended.mediaRecommendation?.basicMediaDetails
+                            ?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
                         modifier = Modifier.padding(start = 8.dp),
                         subtitle = {
@@ -101,6 +114,16 @@ fun MediaRelationsView(
                                 fontSize = 14.sp
                             )
                         },
+                        badgeContent = item.mediaRecommended.mediaRecommendation?.mediaListEntry
+                            ?.basicMediaListEntry?.status?.let { status ->
+                                {
+                                    Icon(
+                                        painter = painterResource(status.icon()),
+                                        contentDescription = status.localized()
+                                    )
+                                }
+                            },
+                        minLines = 2,
                         onClick = {
                             navigateToDetails(item.mediaRecommended.mediaRecommendation?.id!!)
                         }

@@ -16,12 +16,12 @@ query MediaRelationsAndRecommendations($mediaId: Int) {
 fragment MediaRelated on MediaEdge {
     relationType(version: 2)
     node {
-        id
-        title {
-            userPreferred
-        }
+        ...BasicMediaDetails
         coverImage {
             large
+        }
+        mediaListEntry {
+            ...BasicMediaListEntry
         }
     }
 }
@@ -29,12 +29,12 @@ fragment MediaRelated on MediaEdge {
 fragment MediaRecommended on Recommendation {
     rating
     mediaRecommendation {
-        id
-        title {
-            userPreferred
-        }
+        ...BasicMediaDetails
         coverImage {
             large
+        }
+        mediaListEntry {
+            ...BasicMediaListEntry
         }
     }
 }
