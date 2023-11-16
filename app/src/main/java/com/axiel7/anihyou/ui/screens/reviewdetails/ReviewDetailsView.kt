@@ -47,6 +47,7 @@ fun ReviewDetailsView(
 ) {
     val viewModel: ReviewDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val reviewId by viewModel.reviewId.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -56,7 +57,7 @@ fun ReviewDetailsView(
         title = uiState.details?.user?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-            OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + viewModel.reviewId)
+            OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + reviewId)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->

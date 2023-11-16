@@ -43,6 +43,7 @@ fun ThreadDetailsView(
 ) {
     val viewModel: ThreadDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val threadId by viewModel.threadId.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
@@ -54,7 +55,7 @@ fun ThreadDetailsView(
         title = "",
         navigationIcon = { BackIconButton(onClick = navigateBack) },
         actions = {
-            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + viewModel.threadId)
+            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + threadId)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
