@@ -8,13 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,15 +27,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
-import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
-import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFeedItem
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityTypeChip
 import com.axiel7.anihyou.ui.screens.profile.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
@@ -42,17 +45,23 @@ fun ActivityFeedView(
     val viewModel: ActivityFeedViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = uiState.isLoading,
-        onRefresh = viewModel::refreshList
-    )
+    val pullRefreshState = rememberPullToRefreshState()
+    if (pullRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            viewModel.refreshList()
+        }
+    }
+    LaunchedEffect(uiState.isLoading) {
+        if (!uiState.isLoading) pullRefreshState.endRefresh()
+    }
+
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
 
     Box(
         modifier = Modifier
             .clipToBounds()
-            .pullRefresh(pullRefreshState)
+            .nestedScroll(pullRefreshState.nestedScrollConnection)
             .fillMaxSize()
     ) {
         LazyColumn(
@@ -137,12 +146,9 @@ fun ActivityFeedView(
                 }
             }
         }//:LazyColumn
-        PullRefreshIndicator(
-            refreshing = uiState.isLoading,
+        PullToRefreshContainer(
             state = pullRefreshState,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.TopCenter)
         )
     }//:Box
 }

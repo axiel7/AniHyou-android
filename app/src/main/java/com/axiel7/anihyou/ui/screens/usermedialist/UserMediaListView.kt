@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,11 +12,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -32,15 +34,13 @@ import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.ui.composables.pullrefresh.PullRefreshIndicator
-import com.axiel7.anihyou.ui.composables.pullrefresh.pullRefresh
-import com.axiel7.anihyou.ui.composables.pullrefresh.rememberPullRefreshState
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
 import kotlinx.coroutines.flow.StateFlow
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListView(
     mediaList: List<UserMediaListQuery.MediaList>,
@@ -61,15 +61,19 @@ fun UserMediaListView(
     onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
     onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = onRefresh
-    )
+    val pullRefreshState = rememberPullToRefreshState()
+    if (pullRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            onRefresh()
+        }
+    }
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) pullRefreshState.endRefresh()
+    }
 
     Box(
         modifier = Modifier
-            .clipToBounds()
-            .pullRefresh(pullRefreshState)
+            .nestedScroll(pullRefreshState.nestedScrollConnection)
             .fillMaxSize()
     ) {
         val listModifier = Modifier
@@ -119,12 +123,9 @@ fun UserMediaListView(
                 onClickNotes = onClickNotes,
             )
         }
-        PullRefreshIndicator(
-            refreshing = isLoading,
+        PullToRefreshContainer(
             state = pullRefreshState,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.TopCenter)
         )
     }//: Box
 }
