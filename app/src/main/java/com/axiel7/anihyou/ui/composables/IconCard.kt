@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IconCard(
     title: String,

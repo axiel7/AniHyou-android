@@ -2,10 +2,10 @@ package com.axiel7.anihyou.ui.composables.common
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.ChipBorder
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ChipElevation
 import androidx.compose.material3.ElevatedAssistChip
@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterSelectionChip(
     selected: Boolean,
@@ -51,7 +50,6 @@ fun FilterSelectionChip(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TriFilterChip(
     text: String,
@@ -95,7 +93,7 @@ fun AssistChipWithTooltip(
     shape: Shape = AssistChipDefaults.shape,
     colors: ChipColors = AssistChipDefaults.assistChipColors(),
     elevation: ChipElevation? = AssistChipDefaults.assistChipElevation(),
-    border: ChipBorder? = AssistChipDefaults.assistChipBorder(),
+    border: BorderStroke? = AssistChipDefaults.assistChipBorder(enabled),
 ) {
     val scope = rememberCoroutineScope()
     val tooltipState = rememberTooltipState(isPersistent = true)
@@ -186,7 +184,6 @@ fun SpoilerTagChip(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputChipError(
     selected: Boolean = false,
