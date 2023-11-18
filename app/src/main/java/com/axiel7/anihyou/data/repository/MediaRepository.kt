@@ -25,6 +25,7 @@ class MediaRepository @Inject constructor(
         airingAtLesser: Long? = null,
         sort: List<AiringSort> = listOf(AiringSort.TIME),
         onMyList: Boolean? = null,
+        displayAdult: Boolean = false,
         page: Int,
         perPage: Int = 25,
     ) = api
@@ -39,9 +40,9 @@ class MediaRepository @Inject constructor(
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
             when (onMyList) {
-                true -> list.filter { it.media?.mediaListEntry != null }
-                false -> list.filter { it.media?.mediaListEntry == null }
-                null -> list
+                true -> list.filter { it.media?.mediaListEntry != null && it.media.isAdult == displayAdult }
+                false -> list.filter { it.media?.mediaListEntry == null && it.media?.isAdult == displayAdult }
+                null -> list.filter { it.media?.isAdult == displayAdult }
             }
         }
 

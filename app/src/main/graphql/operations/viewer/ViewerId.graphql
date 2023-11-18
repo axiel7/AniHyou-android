@@ -5,6 +5,7 @@ query ViewerId {
             profileColor
             staffNameLanguage
             titleLanguage
+            displayAdultContent
         }
         mediaListOptions {
             scoreFormat

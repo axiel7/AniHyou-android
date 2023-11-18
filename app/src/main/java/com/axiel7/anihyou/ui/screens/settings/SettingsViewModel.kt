@@ -122,8 +122,8 @@ class SettingsViewModel @Inject constructor(
         workManager.scheduleNotificationWork(interval)
     }
 
-
     fun setDisplayAdultContent(value: Boolean) = viewModelScope.launch {
+        defaultPreferencesRepository.setDisplayAdult(value)
         updateUser(displayAdultContent = value).collect()
     }
 

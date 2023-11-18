@@ -44,6 +44,7 @@ class DefaultPreferencesRepository @Inject constructor(
     suspend fun saveViewerInfo(viewer: ViewerIdQuery.Viewer) {
         dataStore.edit {
             it[USER_ID_KEY] = viewer.id
+            it[DISPLAY_ADULT_KEY] = viewer.options?.displayAdultContent == true
             it[PROFILE_COLOR_KEY] = viewer.options?.profileColor ?: "#526CFD"
             it[SCORE_FORMAT_KEY] =
                 viewer.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
@@ -54,10 +55,16 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.edit {
             it.remove(ACCESS_TOKEN_KEY)
             it.remove(USER_ID_KEY)
+            it.remove(DISPLAY_ADULT_KEY)
             it.remove(PROFILE_COLOR_KEY)
             it.remove(SCORE_FORMAT_KEY)
             it.remove(NOTIFICATIONS_ENABLED_KEY)
         }
+    }
+
+    val displayAdult = dataStore.getValue(DISPLAY_ADULT_KEY)
+    suspend fun setDisplayAdult(value: Boolean) {
+        dataStore.setValue(DISPLAY_ADULT_KEY, value)
     }
 
     // profile info
@@ -178,6 +185,7 @@ class DefaultPreferencesRepository @Inject constructor(
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
 
+        private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
 

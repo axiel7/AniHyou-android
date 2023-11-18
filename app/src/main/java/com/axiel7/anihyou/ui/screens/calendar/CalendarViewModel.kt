@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -12,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -25,8 +27,11 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<CalendarUiState>() {
+
+    private val displayAdult = defaultPreferencesRepository.displayAdult
 
     override val mutableUiState = MutableStateFlow(CalendarUiState())
     override val uiState = mutableUiState.asStateFlow()
@@ -75,7 +80,8 @@ class CalendarViewModel @Inject constructor(
                         && old.weekday == new.weekday
                         && old.onMyList == new.onMyList
             }
-            .flatMapLatest { uiState ->
+            .combine(displayAdult, ::Pair)
+            .flatMapLatest { (uiState, displayAdult) ->
                 val start = now.thisWeekdayTimestamp(
                     dayOfWeek = DayOfWeek.of(uiState.weekday),
                     isEndOfDay = false
@@ -88,6 +94,7 @@ class CalendarViewModel @Inject constructor(
                     airingAtGreater = start,
                     airingAtLesser = end,
                     onMyList = uiState.onMyList,
+                    displayAdult = displayAdult == true,
                     page = uiState.page
                 )
             }

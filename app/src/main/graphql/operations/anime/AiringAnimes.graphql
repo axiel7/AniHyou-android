@@ -12,6 +12,7 @@ query AiringAnimes($page: Int, $perPage: Int, $sort: [AiringSort], $airingAtGrea
                 mediaListEntry {
                     ...BasicMediaListEntry
                 }
+                isAdult
             }
             episode
             timeUntilAiring
