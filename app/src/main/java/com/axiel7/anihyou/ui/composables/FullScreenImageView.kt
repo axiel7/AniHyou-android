@@ -74,7 +74,7 @@ fun FullScreenImageView(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            FilledTonalIconButton(onClick = { context.openShareSheet(imageUrl ?: "") }) {
+            FilledTonalIconButton(onClick = { context.openShareSheet(imageUrl.orEmpty()) }) {
                 Icon(
                     painter = painterResource(R.drawable.share_24),
                     contentDescription = stringResource(R.string.share)

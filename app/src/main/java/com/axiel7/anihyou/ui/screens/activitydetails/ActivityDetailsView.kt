@@ -83,7 +83,7 @@ fun ActivityDetailsView(
             item {
                 if (uiState.details != null) {
                     ActivityTextView(
-                        text = uiState.details?.text ?: "",
+                        text = uiState.details?.text.orEmpty(),
                         username = uiState.details?.username,
                         avatarUrl = uiState.details?.avatarUrl,
                         createdAt = uiState.details?.createdAt ?: 0,
@@ -108,7 +108,7 @@ fun ActivityDetailsView(
                 contentType = { it }
             ) { item ->
                 ActivityTextView(
-                    text = item.text ?: "",
+                    text = item.text.orEmpty(),
                     username = item.user?.name,
                     avatarUrl = item.user?.avatar?.medium,
                     createdAt = item.createdAt,

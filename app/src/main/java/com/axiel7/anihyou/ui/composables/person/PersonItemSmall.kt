@@ -40,7 +40,7 @@ fun PersonItemSmall(
             modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
         )
         Text(
-            text = username ?: "",
+            text = username.orEmpty(),
             modifier = Modifier.padding(horizontal = 8.dp),
             fontSize = fontSize,
             fontWeight = fontWeight

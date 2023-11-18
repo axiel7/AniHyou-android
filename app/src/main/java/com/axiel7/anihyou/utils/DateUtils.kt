@@ -42,7 +42,7 @@ object DateUtils {
     fun LocalDate?.toLocalized(
         style: FormatStyle = FormatStyle.MEDIUM
     ): String = try {
-        this?.format(DateTimeFormatter.ofLocalizedDate(style)) ?: ""
+        this?.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
     } catch (e: DateTimeException) {
         ""
     }
@@ -50,7 +50,7 @@ object DateUtils {
     fun LocalDateTime?.toLocalized(
         style: FormatStyle = FormatStyle.MEDIUM
     ): String = try {
-        this?.format(DateTimeFormatter.ofLocalizedDate(style)) ?: ""
+        this?.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
     } catch (e: DateTimeException) {
         ""
     }

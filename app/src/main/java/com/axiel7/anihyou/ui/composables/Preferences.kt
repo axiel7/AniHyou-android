@@ -214,7 +214,7 @@ fun <T> ListPreference(
 
             if (preferenceValue != null) {
                 Text(
-                    text = entriesValues[preferenceValue]?.let { stringResource(it) } ?: "",
+                    text = entriesValues[preferenceValue]?.let { stringResource(it) }.orEmpty(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp
                 )

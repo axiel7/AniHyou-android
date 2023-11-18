@@ -62,7 +62,7 @@ fun MediaCharacterStaffView(
                         contentType = { it }
                     ) { item ->
                         PersonItemHorizontal(
-                            title = item.mediaStaff.node?.name?.userPreferred ?: "",
+                            title = item.mediaStaff.node?.name?.userPreferred.orEmpty(),
                             imageUrl = item.mediaStaff.node?.image?.medium,
                             subtitle = item.mediaStaff.role,
                             onClick = {
@@ -92,7 +92,7 @@ fun MediaCharacterStaffView(
                     }
                     items(mediaCharacters) { item ->
                         PersonItemHorizontal(
-                            title = item.mediaCharacter.node?.name?.userPreferred ?: "",
+                            title = item.mediaCharacter.node?.name?.userPreferred.orEmpty(),
                             imageUrl = item.mediaCharacter.node?.image?.medium,
                             subtitle = item.mediaCharacter.role?.localized(),
                             onClick = {

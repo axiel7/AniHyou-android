@@ -45,7 +45,7 @@ fun DefaultMarkdownText(
         )
     }
     MarkdownText(
-        markdown = markdown?.formatCompatibleMarkdown() ?: "",
+        markdown = markdown?.formatCompatibleMarkdown().orEmpty(),
         modifier = modifier,
         fontSize = fontSize,
         lineHeight = lineHeight,

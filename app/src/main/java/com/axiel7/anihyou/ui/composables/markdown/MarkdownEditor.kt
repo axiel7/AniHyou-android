@@ -51,7 +51,7 @@ fun MarkdownEditor(
     initialText: String? = null,
 ) {
     val focusRequester = remember { FocusRequester() }
-    var textFieldValue by remember { mutableStateOf(TextFieldValue(text = initialText ?: "")) }
+    var textFieldValue by remember { mutableStateOf(TextFieldValue(text = initialText.orEmpty())) }
     var showPasteDialog by remember { mutableStateOf(false) }
     var lastFormat by remember { mutableStateOf<MarkdownFormat?>(null) }
 

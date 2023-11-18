@@ -18,9 +18,9 @@ data class GenericNotification(
             val tempList = mutableListOf<GenericNotification>()
             this.forEach { aniListNotification ->
                 aniListNotification.onAiringNotification?.let { noti ->
-                    val episodeString = noti.contexts?.get(0) ?: ""
-                    val ofString = noti.contexts?.get(1) ?: ""
-                    val airedString = noti.contexts?.get(2) ?: ""
+                    val episodeString = noti.contexts?.get(0).orEmpty()
+                    val ofString = noti.contexts?.get(1).orEmpty()
+                    val airedString = noti.contexts?.get(2).orEmpty()
                     val text =
                         "$episodeString${noti.episode}$ofString${noti.media?.title?.userPreferred}$airedString"
                     tempList.add(

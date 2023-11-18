@@ -45,7 +45,7 @@ fun AiringContent(
                 contentType = { it }
             ) { item ->
                 AiringAnimeHorizontalItem(
-                    title = item.basicMediaDetails.title?.userPreferred ?: "",
+                    title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                     subtitle = stringResource(
                         R.string.airing_in,
                         item.nextAiringEpisode?.timeUntilAiring?.toLong()

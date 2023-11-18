@@ -84,7 +84,7 @@ fun CompactUserMediaListItem(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                    text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     lineHeight = 19.sp,

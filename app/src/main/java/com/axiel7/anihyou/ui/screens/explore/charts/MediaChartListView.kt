@@ -98,7 +98,7 @@ fun MediaChartListView(
                 contentType = { _, item -> item }
             ) { index, item ->
                 MediaItemHorizontal(
-                    title = item.basicMediaDetails.title?.userPreferred ?: "",
+                    title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
                     score = item.meanScore ?: 0,
                     format = item.format ?: MediaFormat.UNKNOWN__,

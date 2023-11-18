@@ -92,7 +92,7 @@ fun ReviewDetailsView(
                 )
             } else {
                 HtmlWebView(
-                    html = uiState.details?.body ?: ""
+                    html = uiState.details?.body.orEmpty()
                 )
             }
 

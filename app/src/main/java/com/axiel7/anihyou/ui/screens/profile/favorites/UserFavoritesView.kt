@@ -87,7 +87,7 @@ fun UserFavoritesView(
                         contentType = { it }
                     ) { item ->
                         MediaItemVertical(
-                            title = item.title?.userPreferred ?: "",
+                            title = item.title?.userPreferred.orEmpty(),
                             imageUrl = item.coverImage?.large,
                             modifier = Modifier.wrapContentWidth(),
                             onClick = {
@@ -109,7 +109,7 @@ fun UserFavoritesView(
                         contentType = { it }
                     ) { item ->
                         MediaItemVertical(
-                            title = item.title?.userPreferred ?: "",
+                            title = item.title?.userPreferred.orEmpty(),
                             imageUrl = item.coverImage?.large,
                             modifier = Modifier.wrapContentWidth(),
                             onClick = {
@@ -131,7 +131,7 @@ fun UserFavoritesView(
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
-                            title = item.name?.userPreferred ?: "",
+                            title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             onClick = {
                                 navigateToCharacterDetails(item.id)
@@ -152,7 +152,7 @@ fun UserFavoritesView(
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
-                            title = item.name?.userPreferred ?: "",
+                            title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             onClick = {
                                 navigateToStaffDetails(item.id)

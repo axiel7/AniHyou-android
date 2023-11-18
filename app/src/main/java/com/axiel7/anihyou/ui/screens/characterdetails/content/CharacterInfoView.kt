@@ -88,7 +88,7 @@ fun CharacterInfoView(
 
                 if (uiState.alternativeNames?.isNotBlank() == true) {
                     Text(
-                        text = uiState.alternativeNames ?: "",
+                        text = uiState.alternativeNames.orEmpty(),
                         modifier = Modifier
                             .padding(8.dp)
                             .defaultPlaceholder(visible = uiState.isLoading),
@@ -97,7 +97,7 @@ fun CharacterInfoView(
 
                 if (uiState.alternativeNamesSpoiler?.isNotBlank() == true) {
                     Text(
-                        text = uiState.alternativeNamesSpoiler ?: "",
+                        text = uiState.alternativeNamesSpoiler.orEmpty(),
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                             .placeholder(visible = !showSpoiler)

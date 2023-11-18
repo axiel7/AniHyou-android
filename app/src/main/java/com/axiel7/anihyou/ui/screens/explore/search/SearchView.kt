@@ -319,7 +319,7 @@ fun SearchContentView(
                     contentType = { it }
                 ) { item ->
                     MediaItemHorizontal(
-                        title = item.basicMediaDetails.title?.userPreferred ?: "",
+                        title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                         imageUrl = item.coverImage?.large,
                         score = item.meanScore ?: 0,
                         format = item.format ?: MediaFormat.UNKNOWN__,
@@ -357,7 +357,7 @@ fun SearchContentView(
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
-                        title = item.name?.userPreferred ?: "",
+                        title = item.name?.userPreferred.orEmpty(),
                         modifier = Modifier.fillMaxWidth(),
                         imageUrl = item.image?.medium,
                         onClick = {
@@ -378,7 +378,7 @@ fun SearchContentView(
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
-                        title = item.name?.userPreferred ?: "",
+                        title = item.name?.userPreferred.orEmpty(),
                         modifier = Modifier.fillMaxWidth(),
                         imageUrl = item.image?.medium,
                         onClick = {

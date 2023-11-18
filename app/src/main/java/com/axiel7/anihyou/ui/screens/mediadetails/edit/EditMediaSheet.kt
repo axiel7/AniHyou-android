@@ -353,7 +353,7 @@ fun EditMediaSheet(
 
             // Notes
             OutlinedTextField(
-                value = uiState.notes ?: "",
+                value = uiState.notes.orEmpty(),
                 onValueChange = viewModel::setNotes,
                 modifier = Modifier.padding(horizontal = 16.dp),
                 label = { Text(text = stringResource(R.string.notes)) },

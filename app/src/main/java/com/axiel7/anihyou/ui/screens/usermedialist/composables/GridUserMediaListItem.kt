@@ -82,7 +82,7 @@ fun GridUserMediaListItem(
             }//:Box
 
             Text(
-                text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,

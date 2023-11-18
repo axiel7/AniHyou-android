@@ -161,7 +161,7 @@ fun MediaDetailsView(
                             }
                         )
                     }
-                    ShareIconButton(url = uiState.details?.siteUrl ?: "")
+                    ShareIconButton(url = uiState.details?.siteUrl.orEmpty())
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,

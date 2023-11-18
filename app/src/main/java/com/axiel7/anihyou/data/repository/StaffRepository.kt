@@ -36,7 +36,7 @@ class StaffRepository @Inject constructor(
             media.groupBy { it.node?.id ?: 0 }.forEach { (mediaId, value) ->
                 mediaGroupMap[mediaId] = StaffMediaGrouped(
                     value = value[0],
-                    staffRoles = value.map { it.staffRole ?: "" }
+                    staffRoles = value.map { it.staffRole.orEmpty() }
                 )
             }
             mediaGroupMap.toList()

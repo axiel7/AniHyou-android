@@ -208,7 +208,7 @@ fun MediaInformationView(
                             }
                         )
                         Text(
-                            text = item?.title ?: "",
+                            text = item?.title.orEmpty(),
                             modifier = Modifier
                                 .width(VIDEO_SMALL_WIDTH.dp)
                                 .padding(horizontal = 8.dp, vertical = 4.dp),

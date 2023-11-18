@@ -88,7 +88,7 @@ fun StandardUserMediaListItem(
             ) {
                 Column {
                     Text(
-                        text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                        text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                         modifier = Modifier
                             .padding(bottom = 8.dp),
                         color = MaterialTheme.colorScheme.onSurface,

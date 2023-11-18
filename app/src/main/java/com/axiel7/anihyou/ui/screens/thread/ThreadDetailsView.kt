@@ -96,8 +96,8 @@ fun ThreadDetailsView(
             ) { item ->
                 ThreadCommentView(
                     id = item.id,
-                    body = item.comment ?: "",
-                    username = item.user?.name ?: "",
+                    body = item.comment.orEmpty(),
+                    username = item.user?.name.orEmpty(),
                     avatarUrl = item.user?.avatar?.medium,
                     likeCount = item.likeCount,
                     isLiked = item.isLiked == true,

@@ -63,7 +63,7 @@ fun MinimalUserMediaListItem(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = item.media?.basicMediaDetails?.title?.userPreferred ?: "",
+                    text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                     modifier = Modifier.padding(end = 4.dp, bottom = 4.dp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 15.sp,

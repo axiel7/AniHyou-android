@@ -89,7 +89,7 @@ class AiringWidget : GlanceAppWidget() {
                                         ))
                                 ) {
                                     Text(
-                                        text = item.media?.title?.userPreferred ?: "",
+                                        text = item.media?.title?.userPreferred.orEmpty(),
                                         style = TextStyle(
                                             color = GlanceTheme.colors.onSurfaceVariant
                                         ),

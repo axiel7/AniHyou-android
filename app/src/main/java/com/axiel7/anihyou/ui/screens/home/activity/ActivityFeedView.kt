@@ -127,7 +127,7 @@ fun ActivityFeedView(
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
                         createdAt = it.createdAt,
-                        text = it.text ?: "",
+                        text = it.text.orEmpty(),
                         replyCount = it.replyCount,
                         likeCount = it.likeCount,
                         isLiked = it.isLiked,

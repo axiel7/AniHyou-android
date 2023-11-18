@@ -77,7 +77,7 @@ fun UserActivityView(
             item.onTextActivity?.textActivityFragment?.let { activity ->
                 ActivityItem(
                     type = ActivityType.TEXT,
-                    text = activity.text ?: "",
+                    text = activity.text.orEmpty(),
                     createdAt = activity.createdAt,
                     replyCount = activity.replyCount,
                     likeCount = activity.likeCount,
@@ -104,7 +104,7 @@ fun UserActivityView(
             item.onMessageActivity?.messageActivityFragment?.let { activity ->
                 ActivityItem(
                     type = ActivityType.MESSAGE,
-                    text = activity.message ?: "",
+                    text = activity.message.orEmpty(),
                     createdAt = activity.createdAt,
                     replyCount = activity.replyCount,
                     likeCount = activity.likeCount,

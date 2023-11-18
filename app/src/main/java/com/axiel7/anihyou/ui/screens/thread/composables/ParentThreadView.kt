@@ -41,13 +41,13 @@ fun ParentThreadView(
             .fillMaxWidth()
     ) {
         Text(
-            text = thread.title ?: "",
+            text = thread.title.orEmpty(),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 24.sp
         )
         Text(
-            text = thread.createdAt.toLong().timestampToDateString(format = "MMM d, YYYY") ?: "",
+            text = thread.createdAt.toLong().timestampToDateString(format = "MMM d, YYYY").orEmpty(),
             color = MaterialTheme.colorScheme.outline,
             fontSize = 15.sp
         )

@@ -68,8 +68,8 @@ fun ReviewThreadListView(
                     contentType = { it }
                 ) { item ->
                     PostItem(
-                        title = item.basicThreadDetails.title ?: "",
-                        author = item.basicThreadDetails.user?.name ?: "",
+                        title = item.basicThreadDetails.title.orEmpty(),
+                        author = item.basicThreadDetails.user?.name.orEmpty(),
                         subtitle = {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -128,8 +128,8 @@ fun ReviewThreadListView(
                     contentType = { it }
                 ) { item ->
                     PostItem(
-                        title = item.summary ?: "",
-                        author = item.user?.name ?: "",
+                        title = item.summary.orEmpty(),
+                        author = item.user?.name.orEmpty(),
                         subtitle = {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)

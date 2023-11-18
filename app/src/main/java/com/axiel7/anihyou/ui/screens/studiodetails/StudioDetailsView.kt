@@ -89,12 +89,12 @@ fun StudioDetailsView(
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
-                    title = item.title?.userPreferred ?: "",
+                    title = item.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
                     modifier = Modifier.wrapContentWidth(),
                     subtitle = {
                         Text(
-                            text = item.startDate?.year?.toString() ?: "TBA",
+                            text = item.startDate?.year?.toString() ?: stringResource(R.string.unknown),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.outline
                         )
