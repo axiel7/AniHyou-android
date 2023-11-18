@@ -17,6 +17,7 @@
     <string name="profile">Profil</string>
     <string name="not_logged_text">Veuillez vous connecter pour utiliser cette fonctionnalité</string>
     <string name="login">Se connecter</string>
+    <string name="current">En Cours</string>
     <string name="completed">Complété</string>
     <string name="dropped">Annulé</string>
     <string name="ok">OK</string>
@@ -37,6 +38,7 @@
     <string name="one_shot">One Shot</string>
     <string name="finished">Terminé</string>
     <string name="cancelled">Annulé</string>
+    <string name="hiatus">En pause</string>
     <string name="popularity">Popularité</string>
     <string name="favorites">Favoris</string>
     <string name="airing">Diffusion en cours</string>
