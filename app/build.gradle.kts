@@ -22,7 +22,7 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 43
+        versionCode = 44
         versionName = "1.2.2"
         archivesName.set("anihyou-$versionName")
 
@@ -114,7 +114,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    val materialVersion = "1.2.0-alpha11"
+    val materialVersion = "1.2.0-SNAPSHOT"
     implementation("androidx.compose.material3:material3:$materialVersion")
     implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
 
