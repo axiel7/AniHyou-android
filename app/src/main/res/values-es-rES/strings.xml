@@ -207,7 +207,7 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
-    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">Ep %d se emite a las %s</string>
+    <string name="episode_airing_at">Ep %d se emite a las %s</string>
     <string name="filter">Filtrar</string>
     <string name="notifications">Notificaciones</string>
     <string name="threads">Discusiones</string>
@@ -337,4 +337,5 @@
     <string name="release_year">Año de Lanzamiento</string>
     <string name="watch_year">Año de Visualización</string>
     <string name="read_year">Año de Lectura</string>
+    <string name="top_movies">Top Películas</string>
 </resources>

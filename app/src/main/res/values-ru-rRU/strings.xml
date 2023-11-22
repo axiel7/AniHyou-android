@@ -207,7 +207,7 @@
     <string name="friday">Пятница</string>
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
-    <string name="episode_airing_at" comment="Specific time.&#10;Ep 2 airing at 12:00">Эп %d выйдет в %s</string>
+    <string name="episode_airing_at">Эп %d выйдет в %s</string>
     <string name="filter">Фильтр</string>
     <string name="notifications">Уведомления</string>
     <string name="threads">Темы</string>
@@ -336,4 +336,5 @@
     <string name="release_year">Год выпуска</string>
     <string name="watch_year">Год просмотра</string>
     <string name="read_year">Год чтения</string>
+    <string name="top_movies">Топ фильмы</string>
 </resources>
