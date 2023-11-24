@@ -106,11 +106,15 @@ class UserMediaListViewModel @Inject constructor(
                 if (result is DataResult.Success && result.data != null) {
                     val foundIndex = media.indexOfFirst { it.basicMediaListEntry.id == entryId }
                     if (foundIndex != -1) {
-                        media[foundIndex] = media[foundIndex].copy(
-                            basicMediaListEntry = media[foundIndex].basicMediaListEntry.copy(
-                                progress = progress
+                        if (result.data.status != media[foundIndex].basicMediaListEntry.status) {
+                            media.removeAt(foundIndex)
+                        } else {
+                            media[foundIndex] = media[foundIndex].copy(
+                                basicMediaListEntry = media[foundIndex].basicMediaListEntry.copy(
+                                    progress = progress
+                                )
                             )
-                        )
+                        }
                     }
                 }
                 result.toUiState()

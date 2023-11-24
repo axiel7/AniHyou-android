@@ -3,5 +3,6 @@ mutation UpdateEntryProgress($saveMediaListEntryId: Int, $progress: Int) {
         id
         mediaId
         progress
+        status
     }
 }
