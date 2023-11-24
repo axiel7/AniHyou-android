@@ -38,7 +38,8 @@ android {
                 "ar-rSA",
                 "in-rID",
                 "it-rIT",
-                "uk-rUA"
+                "uk-rUA",
+                "pl-rPL",
             )
         )
         vectorDrawables {
