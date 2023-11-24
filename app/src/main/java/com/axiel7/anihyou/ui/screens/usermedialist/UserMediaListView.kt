@@ -162,7 +162,6 @@ private fun LazyListGrid(
         }
         items(
             items = mediaList,
-            key = { it.basicMediaListEntry.id },
             contentType = { it.basicMediaListEntry }
         ) { item ->
             GridUserMediaListItem(
@@ -210,7 +209,6 @@ private fun LazyListTablet(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     StandardUserMediaListItem(
@@ -238,7 +236,6 @@ private fun LazyListTablet(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     CompactUserMediaListItem(
@@ -266,7 +263,6 @@ private fun LazyListTablet(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     MinimalUserMediaListItem(
@@ -324,7 +320,6 @@ private fun LazyListPhone(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     StandardUserMediaListItem(
@@ -352,7 +347,6 @@ private fun LazyListPhone(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     CompactUserMediaListItem(
@@ -380,7 +374,6 @@ private fun LazyListPhone(
                 }
                 items(
                     items = mediaList,
-                    key = { it.basicMediaListEntry.id },
                     contentType = { it.basicMediaListEntry }
                 ) { item ->
                     MinimalUserMediaListItem(
