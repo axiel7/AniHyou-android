@@ -4,6 +4,7 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Eksploruj</string>
+    <string name="hour_abbreviation">%s godz</string>
     <string name="unknown">Nieznane</string>
     <string name="airing_soon">Emisja wkrótce</string>
     <string name="mean_score">Wynik</string>
@@ -52,6 +53,8 @@
     <string name="average_score">Średni wynik</string>
     <string name="popularity">Popularność</string>
     <string name="favorites">Ulubionych</string>
+    <string name="episode_in_time">Odc. %d za %s</string>
+    <string name="airing">Emitowanie</string>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
     <string name="start_date">Data rozpoczęcia</string>
@@ -165,6 +168,7 @@
     <string name="overview">Podgląd</string>
     <string name="voice_actors">Aktorzy głosowi</string>
     <string name="total">Łącznie</string>
+    <string name="chapters_read">Rozdziałów przeczytanych</string>
     <string name="episodes_watched">Obejrzane odcinki</string>
     <string name="volumes_read">Przeczytane tomy</string>
     <string name="days_planned">Planowane dni</string>
@@ -186,6 +190,7 @@
     <string name="threads">Wątki</string>
     <string name="no_threads">Brak wątków</string>
     <string name="notifications_all">Wszystkie</string>
+    <string name="notifications_airing">Emitowanie</string>
     <string name="activity">Aktywność</string>
     <string name="forum">Forum</string>
     <string name="airing_on_my_list">Emitowane na mojej liście</string>
@@ -212,11 +217,14 @@
     <string name="color">Kolor</string>
     <string name="discover">Odkryj</string>
     <string name="all">Wszystkie</string>
+    <string name="format_bold">Pogrubienie</string>
+    <string name="format_italic">Kursywa</string>
     <string name="format_strikethrough">Przekreślenie</string>
     <string name="format_spoiler">Spoiler</string>
     <string name="format_link">Odnośnik</string>
     <string name="format_image">Zdjęcie</string>
     <string name="format_video">Film</string>
+    <string name="format_heading">Nagłówek</string>
     <string name="format_centered">Wyśrodkuj</string>
     <string name="format_quote">Cytat</string>
     <string name="format_code">Kod</string>
@@ -232,7 +240,7 @@
     <string name="action_back">Cofnij</string>
     <string name="share">Udostępnij</string>
     <string name="comments">Komentarze</string>
-    <string name="see_all">Zobacz Wszystkie</string>
+    <string name="see_all" comment="as short as possible" maxLength="17">Zobacz Wszystkie</string>
     <string name="search">Szukaj</string>
     <string name="expand">Rozwiń</string>
     <string name="copy">Kopiuj</string>
@@ -241,10 +249,14 @@
     <string name="genre_adventure">Przygoda</string>
     <string name="genre_comedy">Komedie</string>
     <string name="genre_drama">Dramat</string>
+    <string name="genre_ecchi">Ecchi</string>
     <string name="genre_fantasy">Fantastyka</string>
+    <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Muzyka</string>
+    <string name="genre_mystery">Tajemnica</string>
     <string name="genre_pyshological">Psychologiczny</string>
     <string name="genre_romance">Romans</string>
     <string name="genre_scifi">Sci-Fi</string>
