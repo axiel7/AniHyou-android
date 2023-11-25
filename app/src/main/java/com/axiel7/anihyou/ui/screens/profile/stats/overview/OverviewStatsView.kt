@@ -12,9 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.point100PrimaryColor
+import com.axiel7.anihyou.data.model.point10PrimaryColor
+import com.axiel7.anihyou.data.model.point5PrimaryColor
+import com.axiel7.anihyou.data.model.smileyPrimaryColor
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
@@ -130,6 +135,14 @@ fun OverviewStatsView(
                 else -> emptyList()
             },
             modifier = Modifier.padding(8.dp),
+            mapColorTo = {
+                when (stats?.scoreFormat) {
+                    ScoreFormat.POINT_3 -> it.score.smileyPrimaryColor()
+                    ScoreFormat.POINT_5 -> it.score.point5PrimaryColor()
+                    ScoreFormat.POINT_10 -> it.score.point10PrimaryColor()
+                    else -> it.score.point100PrimaryColor()
+                }
+            },
             isLoading = isLoading
         )
 

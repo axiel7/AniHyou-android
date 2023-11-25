@@ -6,17 +6,18 @@ import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
-import kotlin.math.roundToInt
 
-fun UserStatsAnimeOverviewQuery.Anime.toOverviewStats() =
+fun UserStatsAnimeOverviewQuery.Anime.toOverviewStats(scoreFormat: ScoreFormat) =
     OverviewStats(
         count = count,
         episodeOrChapterCount = episodesWatched,
         daysOrVolumes = minutesWatched.minutesToDays(),
         plannedCount = planned()?.minutesWatched?.minutesToDays() ?: 0,
         meanScore = meanScore,
+        scoreFormat = scoreFormat,
         standardDeviation = standardDeviation,
         scoreCount = scoreStatsCount().orEmpty(),
         scoreTime = scoreStatsTime().orEmpty(),
@@ -38,9 +39,9 @@ private fun UserStatsAnimeOverviewQuery.Anime.planned() =
     statuses?.find { it?.status == MediaListStatus.PLANNING }
 
 private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsCount() =
-    scores?.filterNotNull()?.map {
+    scores?.filterNotNull()?.filter { it.score != null }?.map {
         StatLocalizableAndColorable(
-            type = ScoreDistribution(score = it.meanScore.roundToInt()),
+            type = ScoreDistribution(score = it.score!!),
             value = it.count.toFloat(),
             details = listOf(
                 Stat.Detail(
@@ -56,9 +57,9 @@ private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsCount() =
     }
 
 private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsTime() =
-    scores?.filterNotNull()?.map {
+    scores?.filterNotNull()?.filter { it.score != null }?.map {
         StatLocalizableAndColorable(
-            type = ScoreDistribution(score = it.meanScore.roundToInt()),
+            type = ScoreDistribution(score = it.score!!),
             value = it.minutesWatched / 60f,
             details = listOf(
                 Stat.Detail(

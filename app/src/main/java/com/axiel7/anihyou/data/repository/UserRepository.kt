@@ -111,14 +111,18 @@ class UserRepository @Inject constructor(
             .userStatsAnimeOverviewQuery(userId)
             .watch()
             .asDataResult {
-                it.User?.statistics?.anime?.toOverviewStats()
+                it.User?.statistics?.anime?.toOverviewStats(
+                    scoreFormat = it.User.mediaListOptions?.scoreFormat ?: ScoreFormat.UNKNOWN__
+                )
             }
 
         MediaType.MANGA -> api
             .userStatsMangaOverviewQuery(userId)
             .watch()
             .asDataResult {
-                it.User?.statistics?.manga?.toOverviewStats()
+                it.User?.statistics?.manga?.toOverviewStats(
+                    scoreFormat = it.User.mediaListOptions?.scoreFormat ?: ScoreFormat.UNKNOWN__
+                )
             }
 
         else -> emptyFlow()

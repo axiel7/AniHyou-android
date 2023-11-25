@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.model.stats.overview
 
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
+import com.axiel7.anihyou.type.ScoreFormat
 
 data class OverviewStats(
     val count: Int,
@@ -9,6 +10,7 @@ data class OverviewStats(
     val daysOrVolumes: Int,
     val plannedCount: Int,
     val meanScore: Double,
+    val scoreFormat: ScoreFormat,
     val standardDeviation: Double,
     val scoreCount: List<StatLocalizableAndColorable<ScoreDistribution>>,
     val scoreTime: List<StatLocalizableAndColorable<ScoreDistribution>>,

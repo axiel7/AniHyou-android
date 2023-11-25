@@ -1,5 +1,8 @@
 query UserStatsMangaOverview($userId: Int) {
     User(id: $userId) {
+        mediaListOptions {
+            scoreFormat
+        }
         statistics {
             manga {
                 count
@@ -11,6 +14,7 @@ query UserStatsMangaOverview($userId: Int) {
                     count
                     chaptersRead
                     meanScore
+                    score
                 }
                 lengths {
                     length

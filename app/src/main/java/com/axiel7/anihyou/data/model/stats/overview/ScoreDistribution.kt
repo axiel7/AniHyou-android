@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.data.model.stats.overview
 
-import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.data.model.base.Colorable
@@ -10,8 +9,9 @@ import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 data class ScoreDistribution(
-    @IntRange(0, 100) val score: Int
+    val score: Int
 ) : Localizable, Colorable {
+
     @Composable
     override fun primaryColor() = score.point100PrimaryColor()
 

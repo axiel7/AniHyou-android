@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,7 @@ const val MAX_VERTICAL_STAT_HEIGHT = 124
 fun <T> VerticalStatsBar(
     stats: List<Stat<T>>,
     modifier: Modifier = Modifier,
+    mapColorTo: @Composable (T) -> Color = { it.primaryColor() },
     isLoading: Boolean = false,
 ) where T : Localizable, T : Colorable {
     val maxValue = remember(stats) { stats.maxOfOrNull { it.value } ?: 0f }
@@ -94,7 +96,7 @@ fun <T> VerticalStatsBar(
                     RoundedRectangle(
                         width = 25.dp,
                         height = (stat.value / maxValue * MAX_VERTICAL_STAT_HEIGHT).dp,
-                        color = stat.type.primaryColor(),
+                        color = mapColorTo(stat.type),
                         cornerRadius = CornerRadius(x = 16f, y = 16f),
                         modifier = Modifier.clickable {
                             if (stat.details != null) scope.launch { tooltipState.show() }

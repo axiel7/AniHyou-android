@@ -1,5 +1,8 @@
 query UserStatsAnimeOverview($userId: Int) {
     User(id: $userId) {
+        mediaListOptions {
+            scoreFormat
+        }
         statistics {
             anime {
                 count
@@ -11,6 +14,7 @@ query UserStatsAnimeOverview($userId: Int) {
                     count
                     minutesWatched
                     meanScore
+                    score
                 }
                 lengths {
                     length
