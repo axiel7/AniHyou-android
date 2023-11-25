@@ -5,7 +5,6 @@ import com.axiel7.anihyou.UserStatsMangaOverviewQuery
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
@@ -133,8 +132,7 @@ private fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
         StatLocalizableAndColorable(
             type = StatusDistribution.valueOf(
                 rawValue = it.status?.rawValue,
-                mediaType = MediaType.MANGA
-            ) ?: StatusDistribution.READING,
+            ) ?: StatusDistribution.CURRENT,
             value = it.count.toFloat(),
             details = listOf(
                 Stat.Detail(

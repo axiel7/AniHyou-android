@@ -10,7 +10,6 @@ import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.theme.stat_dark_blue
 import com.axiel7.anihyou.ui.theme.stat_dark_green
 import com.axiel7.anihyou.ui.theme.stat_dark_onBlue
@@ -31,8 +30,7 @@ import com.axiel7.anihyou.ui.theme.stat_light_yellow
 enum class StatusDistribution(
     val status: MediaListStatus,
 ) : Localizable, Colorable {
-    WATCHING(MediaListStatus.CURRENT),
-    READING(MediaListStatus.CURRENT),
+    CURRENT(MediaListStatus.CURRENT),
     COMPLETED(MediaListStatus.COMPLETED),
     PAUSED(MediaListStatus.PAUSED),
     DROPPED(MediaListStatus.DROPPED),
@@ -67,26 +65,10 @@ enum class StatusDistribution(
     }
 
     @Composable
-    override fun localized() = status.localized(
-        mediaType = when (this) {
-            WATCHING -> MediaType.ANIME
-            READING -> MediaType.MANGA
-            else -> MediaType.UNKNOWN__
-        }
-    )
+    override fun localized() = status.localized()
 
     companion object {
-        fun valueOf(
-            rawValue: String?,
-            mediaType: MediaType = MediaType.UNKNOWN__
-        ) =
-            if (rawValue == MediaListStatus.CURRENT.rawValue) {
-                when (mediaType) {
-                    MediaType.ANIME -> WATCHING
-                    MediaType.MANGA -> READING
-                    MediaType.UNKNOWN__ -> null
-                }
-            } else entries.find { it.status.rawValue == rawValue }
+        fun valueOf(rawValue: String?) = entries.find { it.status.rawValue == rawValue }
 
         fun MediaStatsQuery.StatusDistribution.asStat(): StatLocalizableAndColorable<StatusDistribution>? {
             val status = valueOf(status?.rawValue)

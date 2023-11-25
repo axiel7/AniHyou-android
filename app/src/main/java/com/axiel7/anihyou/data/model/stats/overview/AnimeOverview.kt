@@ -5,7 +5,6 @@ import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
@@ -137,10 +136,8 @@ private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsScore() =
 private fun UserStatsAnimeOverviewQuery.Anime.statusDistribution() =
     statuses?.filterNotNull()?.filter { it.status != null }?.map {
         StatLocalizableAndColorable(
-            type = StatusDistribution.valueOf(
-                rawValue = it.status?.rawValue,
-                mediaType = MediaType.ANIME
-            ) ?: StatusDistribution.WATCHING,
+            type = StatusDistribution.valueOf(rawValue = it.status?.rawValue)
+                ?: StatusDistribution.CURRENT,
             value = it.count.toFloat(),
             details = listOf(
                 Stat.Detail(
