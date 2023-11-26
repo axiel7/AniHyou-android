@@ -65,7 +65,7 @@ fun DiscoverView(
             sheetState = editSheetState,
             mediaDetails = viewModel.selectedMediaDetails!!,
             listEntry = viewModel.selectedMediaListEntry,
-            onDismiss = { updatedListEntry ->
+            onDismiss = { _ ->
                 scope.launch {
                     //TODO: update corresponding list item
                     //viewModel.onUpdateListEntry(updatedListEntry)
