@@ -1,5 +1,3 @@
-import java.net.URI
-
 pluginManagement {
     repositories {
         google()
@@ -12,8 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = URI.create("https://jitpack.io") }
-        maven { url = URI.create("https://androidx.dev/snapshots/builds/11131825/artifacts/repository") }
+        maven { setUrl("https://jitpack.io") }
+        maven { setUrl("https://androidx.dev/snapshots/builds/11131825/artifacts/repository") }
     }
 }
 
