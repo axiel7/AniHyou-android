@@ -1,0 +1,4 @@
+AniHyou adalah aplikasi yang sempurna untuk melacak dan menemukan Anime & Manga!.
+Anda dapat membuat daftar untuk mengatur serial Anda, melihat peringkat pengguna, ulasan, dan situs streaming resmi.
+
+AniHyou menggunakan AniList untuk menyediakan kontennya, Anda memerlukan akun AniList untuk menggunakan semua fiturnya.

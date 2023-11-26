@@ -1,0 +1,6 @@
+- Added all the stats in profile
+- Added list status indicator on most screens
+- You can now long press to edit on most screens as well
+- Top Movies
+- Italian translation (@maicol07)
+- And of course bug fixes and performance improvements

@@ -1,6 +1,0 @@
-- Favorite anime, manga, characters, staff and studios
-- Notifications: added initial support. (No push notifications, no thread/activity view)
-- Media threads: added initial support
-- Follow/unfollow users
-- View other users media list
-- Calendar/Airing: added on my list filter

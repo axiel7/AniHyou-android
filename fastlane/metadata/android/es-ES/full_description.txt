@@ -1,0 +1,4 @@
+AniHyou es tu aplicación perfecta para seguir y descubrir Anime y Manga!
+Puedes crear listas para organizar tus series, ver valoraciones de los usuarios, opiniones y sitios oficiales de streaming.
+
+AniHyou utiliza AniList para proporcionar su contenido, se necesita una cuenta de AniList para utilizar todas las funciones.
