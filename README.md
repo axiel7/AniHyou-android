@@ -19,15 +19,6 @@ Get early beta versions and follow the development on the official Discord serve
 ## Coming features
 - [See project](https://github.com/users/axiel7/projects/2/views/1)
 
-# Building
-Put the following content on your local.properties file:
-
-```properties
-CLIENT_ID=1234 # your AniList API client ID here
-```
-
-To get a Client ID, go to the [Developer section](https://anilist.co/settings/developer) and create a new client with the *Redirect URL* set to `anihyou://auth-response`
-
 # Libraries used
 * [AniList GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
 * [Apollo Kotlin](https://github.com/apollographql/apollo-kotlin)
