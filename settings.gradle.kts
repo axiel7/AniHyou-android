@@ -11,7 +11,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { setUrl("https://jitpack.io") }
-        maven { setUrl("https://androidx.dev/snapshots/builds/11131825/artifacts/repository") }
     }
 }
 
