@@ -38,7 +38,9 @@ fun CharacterMediaView(
     showEditSheet: (CharacterMediaQuery.Edge) -> Unit,
 ) {
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+    if (!isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),

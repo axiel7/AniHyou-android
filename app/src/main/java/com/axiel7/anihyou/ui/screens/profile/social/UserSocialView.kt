@@ -42,7 +42,9 @@ fun UserSocialView(
     }
 
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth()

@@ -304,7 +304,9 @@ private fun LazyListPhone(
     onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
 ) {
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+    if (!isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+    }
 
     LazyColumn(
         modifier = modifier,

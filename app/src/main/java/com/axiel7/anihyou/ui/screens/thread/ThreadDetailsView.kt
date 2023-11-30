@@ -49,7 +49,9 @@ fun ThreadDetailsView(
         rememberTopAppBarState()
     )
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",

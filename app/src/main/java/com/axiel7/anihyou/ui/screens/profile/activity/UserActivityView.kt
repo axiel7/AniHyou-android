@@ -31,7 +31,9 @@ fun UserActivityView(
     navigateToFullscreenImage: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+    if (!isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),

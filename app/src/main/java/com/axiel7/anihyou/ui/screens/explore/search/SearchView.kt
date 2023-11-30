@@ -174,7 +174,9 @@ fun SearchContentView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    }
 
     var showMoreFilters by rememberSaveable { mutableStateOf(false) }
 

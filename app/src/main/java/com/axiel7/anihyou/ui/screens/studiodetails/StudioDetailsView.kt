@@ -53,7 +53,9 @@ fun StudioDetailsView(
         rememberTopAppBarState()
     )
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = uiState.details?.name ?: stringResource(R.string.loading),
