@@ -18,7 +18,7 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 44
+        versionCode = 45
         versionName = "1.2.2"
         archivesName.set("anihyou-$versionName")
 
@@ -92,7 +92,7 @@ android {
         shaders = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.5"
     }
     packaging {
         resources {
