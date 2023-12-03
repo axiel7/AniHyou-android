@@ -240,7 +240,7 @@
     <string name="action_back">Cofnij</string>
     <string name="share">Udostępnij</string>
     <string name="comments">Komentarze</string>
-    <string name="see_all" comment="as short as possible" maxLength="17">Zobacz Wszystkie</string>
+    <string name="see_all">Zobacz Wszystkie</string>
     <string name="search">Szukaj</string>
     <string name="expand">Rozwiń</string>
     <string name="copy">Kopiuj</string>
