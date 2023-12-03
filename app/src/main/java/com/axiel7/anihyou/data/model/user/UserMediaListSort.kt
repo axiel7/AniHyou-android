@@ -7,26 +7,38 @@ import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.MediaListSort
 
 enum class UserMediaListSort(
-    val value: MediaListSort
+    val asc: MediaListSort,
+    val desc: MediaListSort,
 ) : Localizable {
-    SCORE_DESC(MediaListSort.SCORE_DESC) {
-        @Composable
-        override fun localized() = stringResource(R.string.sort_score)
-    },
-    UPDATED_DESC(MediaListSort.UPDATED_TIME_DESC) {
-        @Composable
-        override fun localized() = stringResource(R.string.sort_updated)
-    },
-    ADDED_DESC(MediaListSort.ADDED_TIME_DESC) {
-        @Composable
-        override fun localized() = stringResource(R.string.sort_added)
-    };
+    SCORE(
+        asc = MediaListSort.SCORE,
+        desc = MediaListSort.SCORE_DESC
+    ),
+    UPDATED(
+        asc = MediaListSort.UPDATED_TIME,
+        desc = MediaListSort.UPDATED_TIME_DESC
+    ),
+    ADDED(
+        asc = MediaListSort.ADDED_TIME,
+        desc = MediaListSort.ADDED_TIME_DESC
+    ),
+    ;
+
+    @Composable
+    override fun localized() = when (this) {
+        SCORE -> stringResource(R.string.sort_score)
+        UPDATED -> stringResource(R.string.sort_updated)
+        ADDED -> stringResource(R.string.sort_added)
+    }
 
     companion object {
         fun valueOf(rawValue: String?): UserMediaListSort? =
-            entries.find { it.value.rawValue == rawValue }
+            entries.find {
+                it.asc.rawValue == rawValue
+                        || it.desc.rawValue == rawValue
+            }
 
         fun valueOf(value: MediaListSort?): UserMediaListSort? =
-            entries.find { it.value == value }
+            entries.find { it.asc == value || it.desc == value }
     }
 }

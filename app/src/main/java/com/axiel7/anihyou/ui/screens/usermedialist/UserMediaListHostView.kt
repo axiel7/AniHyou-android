@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -42,14 +45,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.data.model.user.UserMediaListSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
-import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.SortMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
@@ -86,20 +88,6 @@ fun UserMediaListHostView(
         NotesDialog(
             note = viewModel.selectedItem?.basicMediaListEntry?.notes.orEmpty(),
             onDismiss = { viewModel.toggleNotesDialog(false) }
-        )
-    }
-
-    if (uiState.openSortDialog) {
-        DialogWithRadioSelection(
-            values = UserMediaListSort.entries.toTypedArray(),
-            defaultValue = UserMediaListSort.valueOf(uiState.sort),
-            title = stringResource(R.string.sort),
-            isDeselectable = false,
-            onConfirm = {
-                viewModel.toggleSortDialog(false)
-                viewModel.setSort(it!!.value)
-            },
-            onDismiss = { viewModel.toggleSortDialog(false) }
         )
     }
 
@@ -165,10 +153,22 @@ fun UserMediaListHostView(
                     )
                 }
             }
-            IconButton(onClick = { viewModel.toggleSortDialog(true) }) {
-                Icon(
-                    painter = painterResource(R.drawable.sort_24),
-                    contentDescription = stringResource(R.string.sort)
+            Box(
+                modifier = Modifier.wrapContentSize(Alignment.TopStart)
+            ) {
+                IconButton(onClick = { viewModel.toggleSortMenu(true) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.sort_24),
+                        contentDescription = stringResource(R.string.sort)
+                    )
+                }
+                SortMenu(
+                    expanded = uiState.sortMenuExpanded,
+                    sort = uiState.sort,
+                    onDismiss = {
+                        viewModel.toggleSortMenu(false)
+                        viewModel.setSort(it)
+                    }
                 )
             }
         },

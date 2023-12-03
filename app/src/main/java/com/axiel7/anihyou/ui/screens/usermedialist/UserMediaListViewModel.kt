@@ -81,7 +81,7 @@ class UserMediaListViewModel @Inject constructor(
             defaultPreferencesRepository.setMangaListSort(value)
     }
 
-    fun toggleSortDialog(open: Boolean) = mutableUiState.update { it.copy(openSortDialog = open) }
+    fun toggleSortMenu(open: Boolean) = mutableUiState.update { it.copy(sortMenuExpanded = open) }
 
     fun toggleNotesDialog(open: Boolean) = mutableUiState.update { it.copy(openNotesDialog = open) }
 

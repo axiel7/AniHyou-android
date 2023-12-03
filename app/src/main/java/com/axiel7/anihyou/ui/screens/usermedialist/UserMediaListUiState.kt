@@ -12,7 +12,7 @@ data class UserMediaListUiState(
     val listStyle: ListStyle = ListStyle.STANDARD,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,
     val fetchFromNetwork: Boolean = false,
-    val openSortDialog: Boolean = false,
+    val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
