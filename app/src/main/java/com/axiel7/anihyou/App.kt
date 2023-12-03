@@ -17,9 +17,8 @@ class App : Application(), Configuration.Provider, ImageLoaderFactory {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder().setWorkerFactory(workerFactory).build()
-    }
+    override val workManagerConfiguration
+        get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 
     override fun newImageLoader() =
         ImageLoader.Builder(applicationContext)
