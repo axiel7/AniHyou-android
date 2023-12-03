@@ -16,6 +16,7 @@ import com.axiel7.anihyou.di.DataStoreModule.setValue
 import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.home.HomeTab
@@ -47,7 +48,9 @@ class DefaultPreferencesRepository @Inject constructor(
             it[DISPLAY_ADULT_KEY] = viewer.options?.displayAdultContent == true
             it[PROFILE_COLOR_KEY] = viewer.options?.profileColor ?: "#526CFD"
             it[SCORE_FORMAT_KEY] =
-                viewer.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
+                viewer.mediaListOptions?.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
+            it[TITLE_LANGUAGE_KEY] =
+                viewer.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
         }
     }
 
@@ -58,6 +61,7 @@ class DefaultPreferencesRepository @Inject constructor(
             it.remove(DISPLAY_ADULT_KEY)
             it.remove(PROFILE_COLOR_KEY)
             it.remove(SCORE_FORMAT_KEY)
+            it.remove(TITLE_LANGUAGE_KEY)
             it.remove(NOTIFICATIONS_ENABLED_KEY)
         }
     }
@@ -84,11 +88,18 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(SCORE_FORMAT_KEY, value.name)
     }
 
+    val titleLanguage = dataStore.getValue(TITLE_LANGUAGE_KEY).map {
+        if (it != null) UserTitleLanguage.safeValueOf(it) else null
+    }
+
     suspend fun saveProfileInfo(userInfo: UserInfo) {
         dataStore.edit {
             val profileColor = userInfo.hexColor()
             it[PROFILE_COLOR_KEY] = profileColor
-            it[SCORE_FORMAT_KEY] = userInfo.mediaListOptions?.scoreFormat?.name ?: "POINT_10"
+            it[SCORE_FORMAT_KEY] =
+                userInfo.mediaListOptions?.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
+            it[TITLE_LANGUAGE_KEY] =
+                userInfo.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
             if (it[APP_COLOR_MODE_KEY] == AppColorMode.PROFILE.name) {
                 it[APP_COLOR_KEY] = profileColor
             }
@@ -185,6 +196,7 @@ class DefaultPreferencesRepository @Inject constructor(
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
 
+        private val TITLE_LANGUAGE_KEY = stringPreferencesKey("title_language")
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")

@@ -15,6 +15,7 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +62,8 @@ class UserMediaListViewModel @Inject constructor(
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
 
+    private val titleLanguage = defaultPreferencesRepository.titleLanguage
+
     override val mutableUiState = MutableStateFlow(
         UserMediaListUiState(
             scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
@@ -75,10 +78,30 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     fun setSort(value: MediaListSort) = viewModelScope.launch {
-        if (mediaType.value == MediaType.ANIME)
-            defaultPreferencesRepository.setAnimeListSort(value)
-        else if (mediaType.value == MediaType.MANGA)
-            defaultPreferencesRepository.setMangaListSort(value)
+        var sort = value
+        if (sort == MediaListSort.MEDIA_TITLE_ROMAJI
+            || sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
+        ) {
+            val isDesc = sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
+            sort = when (titleLanguage.first()) {
+                UserTitleLanguage.ENGLISH,
+                UserTitleLanguage.ENGLISH_STYLISED ->
+                    if (isDesc) MediaListSort.MEDIA_TITLE_ENGLISH_DESC
+                    else MediaListSort.MEDIA_TITLE_ENGLISH
+
+                UserTitleLanguage.NATIVE,
+                UserTitleLanguage.NATIVE_STYLISED ->
+                    if (isDesc) MediaListSort.MEDIA_TITLE_NATIVE_DESC
+                    else MediaListSort.MEDIA_TITLE_NATIVE
+
+                else -> value
+            }
+        }
+        if (mediaType.value == MediaType.ANIME) {
+            defaultPreferencesRepository.setAnimeListSort(sort)
+        } else if (mediaType.value == MediaType.MANGA) {
+            defaultPreferencesRepository.setMangaListSort(sort)
+        }
     }
 
     fun toggleSortMenu(open: Boolean) = mutableUiState.update { it.copy(sortMenuExpanded = open) }
