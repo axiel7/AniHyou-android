@@ -105,7 +105,7 @@ fun MediaRelationsView(
                         title = item.mediaRecommended.mediaRecommendation?.basicMediaDetails
                             ?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
-                        modifier = Modifier.padding(start = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             TextIconHorizontal(
                                 text = item.mediaRecommended.rating.toStringOrZero(),
