@@ -154,7 +154,9 @@ class UserMediaListViewModel @Inject constructor(
 
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         if (selectedItem != null && selectedItem?.basicMediaListEntry != newListEntry) {
-            if (newListEntry != null) {
+            if (newListEntry != null
+                && newListEntry.status == selectedItem?.basicMediaListEntry?.status
+            ) {
                 val index = media.indexOf(selectedItem)
                 if (index != -1) {
                     media[index] = selectedItem!!.copy(basicMediaListEntry = newListEntry)
