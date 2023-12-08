@@ -322,4 +322,5 @@
     <string name="country_distribution">国の内訳</string>
     <string name="release_year">発売年</string>
     <string name="top_movies">映画のトップ</string>
+    <string name="progress">進歩</string>
 </resources>

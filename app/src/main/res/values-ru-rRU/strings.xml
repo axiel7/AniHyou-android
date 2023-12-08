@@ -337,4 +337,5 @@
     <string name="watch_year">Год просмотра</string>
     <string name="read_year">Год чтения</string>
     <string name="top_movies">Топ фильмы</string>
+    <string name="progress">Прогресс</string>
 </resources>
