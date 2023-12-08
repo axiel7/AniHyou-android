@@ -208,7 +208,7 @@
     <string name="saturday">Sabato</string>
     <string name="sunday">Domenica</string>
     <string name="episode_airing_at">Ep %d in onda alle %s</string>
-    <string name="filter">﻿Filtra</string>
+    <string name="filter">Filtra</string>
     <string name="notifications">Notifiche</string>
     <string name="threads">Discussioni</string>
     <string name="no_threads">Nessuna discussione</string>

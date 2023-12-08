@@ -55,7 +55,7 @@ object DateUtils {
         ""
     }
 
-    fun LocalDateTime.toCalendar(): GregorianCalendar =
+    private fun LocalDateTime.toCalendar(): GregorianCalendar =
         GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
     val currentYear = Calendar.getInstance()[Calendar.YEAR]

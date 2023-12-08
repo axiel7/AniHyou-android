@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.screens.explore.search.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaSearchYearChip(
     startYear: Int?,
