@@ -149,7 +149,7 @@ dependencies {
 
     implementation("com.github.axiel7:compose-markdown:5c1c0662a0")
 
-    val hiltVersion = "2.48.1"
+    val hiltVersion = "2.49"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
     kapt("androidx.hilt:hilt-compiler:1.1.0")
