@@ -91,6 +91,9 @@ android {
         renderScript = false
         shaders = false
     }
+    androidResources {
+        aaptOptions.cruncherEnabled = false
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.6"
     }
