@@ -325,6 +325,16 @@
     <string name="taiwan">Taiwan</string>
     <string name="country">País</string>
     <string name="custom_lists">Listas Personalizadas</string>
-    <string name="no_custom_lists">Sem listas pers</string>
+    <string name="no_custom_lists">Sem listas personalizadas</string>
+    <string name="hours_watched_format">Horas Assistidas: %s</string>
+    <string name="chapters_read_format">Capítulos Lidos: %s</string>
+    <string name="mean_score_format">Nota Média: %s</string>
+    <string name="episode_count">Número de Episódios</string>
+    <string name="chapter_count">Número de Capítulos</string>
+    <string name="country_distribution">Distribuição de Países</string>
+    <string name="release_year">Ano de Lançamento</string>
+    <string name="watch_year">Assistidos cada ano</string>
+    <string name="read_year">Lidos cada ano</string>
+    <string name="top_movies">Principais Filmes</string>
     <string name="progress">Progresso</string>
 </resources>
