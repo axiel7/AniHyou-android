@@ -3210,6 +3210,16 @@ enum ModRole {
   A retired moderator
   """
   RETIRED
+
+  """
+  A character data moderator
+  """
+  CHARACTER_DATA
+
+  """
+  A staff data moderator
+  """
+  STAFF_DATA
 }
 
 """
