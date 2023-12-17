@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -41,26 +40,6 @@ import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-
-enum class HomeTab(val index: Int) : Localizable {
-    DISCOVER(0),
-    ACTIVITY_FEED(1);
-
-    @Composable
-    override fun localized() = stringResource(stringRes)
-
-    val stringRes
-        get() = when (this) {
-            DISCOVER -> R.string.discover
-            ACTIVITY_FEED -> R.string.activity
-        }
-
-    companion object {
-        val entriesLocalized = entries.associateWith { it.stringRes }
-
-        fun valueOf(index: Int) = entries.find { it.index == index }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
