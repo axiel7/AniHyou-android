@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -36,6 +34,7 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.ui.composables.IconButtonWithBadge
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
@@ -82,7 +81,8 @@ fun HomeView(
         },
         actions = {
             val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
-            BadgedBox(
+            IconButtonWithBadge(
+                icon = R.drawable.notifications_24,
                 badge = {
                     if (unreadNotificationCount > 0) {
                         Badge {
@@ -90,14 +90,8 @@ fun HomeView(
                         }
                     }
                 },
-            ) {
-                IconButton(onClick = { navigateToNotifications(unreadNotificationCount) }) {
-                    Icon(
-                        painter = painterResource(R.drawable.notifications_24),
-                        contentDescription = stringResource(R.string.notifications)
-                    )
-                }
-            }
+                onClick = { navigateToNotifications(unreadNotificationCount) }
+            )
         },
         scrollBehavior = topAppBarScrollBehavior,
         contentWindowInsets = WindowInsets.systemBars
