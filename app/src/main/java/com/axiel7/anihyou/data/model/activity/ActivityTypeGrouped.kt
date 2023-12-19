@@ -8,7 +8,7 @@ import com.axiel7.anihyou.type.ActivityType
 
 enum class ActivityTypeGrouped(val value: List<ActivityType>) : Localizable {
     ALL(
-        emptyList()
+        ActivityType.knownEntries
     ),
     TEXT(
         listOf(

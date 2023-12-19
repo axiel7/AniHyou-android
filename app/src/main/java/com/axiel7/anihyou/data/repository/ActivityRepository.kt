@@ -22,7 +22,7 @@ class ActivityRepository @Inject constructor(
     ) = api
         .activityFeedQuery(
             isFollowing = isFollowing,
-            typeIn = if (type == ActivityTypeGrouped.ALL) null else type.value,
+            typeIn = type.value,
             fetchFromNetwork = fetchFromNetwork,
             page = page,
             perPage = perPage
