@@ -15,17 +15,19 @@ import javax.inject.Inject
 @HiltViewModel
 class PublishCommentViewModel @Inject constructor(
     private val threadRepository: ThreadRepository
-) : UiStateViewModel<PublishCommentUiState>() {
+) : UiStateViewModel<PublishCommentUiState>(), PublishCommentEvent {
 
     override val mutableUiState = MutableStateFlow(PublishCommentUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setWasPublished(value: Boolean) = mutableUiState.update { it.copy(wasPublished = value) }
+    override fun setWasPublished(value: Boolean) {
+        mutableUiState.update { it.copy(wasPublished = value) }
+    }
 
-    fun publishThreadComment(
+    override fun publishThreadComment(
         threadId: Int?,
         parentCommentId: Int?,
-        id: Int? = null,
+        id: Int?,
         text: String
     ) {
         threadRepository.updateThreadComment(

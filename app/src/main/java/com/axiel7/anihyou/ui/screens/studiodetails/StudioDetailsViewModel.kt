@@ -8,7 +8,7 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StudioRepository
 import com.axiel7.anihyou.fragment.CommonStudioMedia
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,16 +30,14 @@ class StudioDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     studioRepository: StudioRepository,
     private val favoriteRepository: FavoriteRepository,
-) : PagedUiStateViewModel<StudioDetailsUiState>() {
+) : PagedUiStateViewModel<StudioDetailsUiState>(), StudioDetailsEvent {
 
     val studioId = savedStateHandle.getStateFlow<Int?>(NavArgument.StudioId.name, null)
 
     override val mutableUiState = MutableStateFlow(StudioDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    val studioMedia = mutableStateListOf<CommonStudioMedia.Node>()
-
-    fun toggleFavorite() {
+    override fun toggleFavorite() {
         studioId.value?.let { studioId ->
             favoriteRepository.toggleFavorite(studioId = studioId)
                 .onEach { result ->
@@ -54,6 +52,8 @@ class StudioDetailsViewModel @Inject constructor(
                 .launchIn(viewModelScope)
         }
     }
+
+    val studioMedia = mutableStateListOf<CommonStudioMedia.Node>()
 
     init {
         // studio details

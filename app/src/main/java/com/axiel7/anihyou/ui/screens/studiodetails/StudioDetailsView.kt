@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.fragment.CommonStudioMedia
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
@@ -40,32 +42,46 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudioDetailsView(
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: StudioDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    StudioDetailsContent(
+        media = viewModel.studioMedia,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun StudioDetailsContent(
+    media: List<CommonStudioMedia.Node>,
+    uiState: StudioDetailsUiState,
+    event: StudioDetailsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = uiState.details?.name ?: stringResource(R.string.loading),
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             FavoriteIconButton(
                 isFavorite = uiState.details?.isFavourite ?: false,
                 favoritesCount = uiState.details?.favourites ?: 0,
                 onClick = {
-                    viewModel.toggleFavorite()
+                    event?.toggleFavorite()
                 }
             )
         },
@@ -87,7 +103,7 @@ fun StudioDetailsView(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             items(
-                items = viewModel.studioMedia,
+                items = media,
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
@@ -103,7 +119,7 @@ fun StudioDetailsView(
                     },
                     minLines = 2,
                     onClick = {
-                        navigateToMediaDetails(item.id)
+                        navActionManager.toMediaDetails(item.id)
                     }
                 )
             }
@@ -111,7 +127,7 @@ fun StudioDetailsView(
                 items(13) {
                     MediaItemVerticalPlaceholder()
                 }
-            } else if (viewModel.studioMedia.isEmpty()) {
+            } else if (media.isEmpty()) {
                 item(
                     span = { GridItemSpan(maxLineSpan) }
                 ) {
@@ -130,9 +146,11 @@ fun StudioDetailsView(
 fun StudioDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            StudioDetailsView(
-                navigateBack = {},
-                navigateToMediaDetails = {}
+            StudioDetailsContent(
+                media = emptyList(),
+                uiState = StudioDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

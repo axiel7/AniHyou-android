@@ -23,15 +23,17 @@ import javax.inject.Inject
 @HiltViewModel
 class UserSocialViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : PagedUiStateViewModel<UserSocialUiState>() {
+) : PagedUiStateViewModel<UserSocialUiState>(), UserSocialEvent {
 
     override val mutableUiState = MutableStateFlow(UserSocialUiState())
     override val uiState = mutableUiState.asStateFlow()
 
     fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 
-    fun setType(value: UserSocialType) = mutableUiState.update {
-        it.copy(type = value, page = 1, hasNextPage = true)
+    override fun setType(value: UserSocialType) {
+        mutableUiState.update {
+            it.copy(type = value, page = 1, hasNextPage = true)
+        }
     }
 
     val followers = mutableStateListOf<FollowersQuery.Follower>()

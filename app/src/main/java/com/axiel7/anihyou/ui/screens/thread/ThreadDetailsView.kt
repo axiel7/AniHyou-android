@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.data.model.thread.ChildComment
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.OpenInBrowserIconButton
@@ -32,32 +34,44 @@ import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceho
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_THREAD_URL
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadDetailsView(
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToPublishThreadComment: (Int?, String?) -> Unit,
-    navigateToPublishCommentReply: (parentCommentId: Int, Int?, String?) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
-    navigateBack: () -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: ThreadDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val threadId by viewModel.threadId.collectAsStateWithLifecycle()
 
+    ThreadDetailsContent(
+        comments = viewModel.threadComments,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ThreadDetailsContent(
+    comments: List<ChildComment>,
+    uiState: ThreadDetailsUiState,
+    event: ThreadDetailsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
-            OpenInBrowserIconButton(url = ANILIST_THREAD_URL + threadId)
+            OpenInBrowserIconButton(
+                url = ANILIST_THREAD_URL + uiState.details?.basicThreadDetails?.id
+            )
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -78,14 +92,18 @@ fun ThreadDetailsView(
             ) {
                 if (uiState.details != null) {
                     ParentThreadView(
-                        thread = uiState.details!!.basicThreadDetails,
+                        thread = uiState.details.basicThreadDetails,
                         isLiked = uiState.isLiked,
-                        onClickLike = { viewModel.toggleLikeThread() },
+                        onClickLike = { event?.toggleLikeThread() },
                         onClickReply = {
-                            navigateToPublishThreadComment(null, null)
+                            navActionManager.toPublishThreadComment(
+                                threadId = uiState.details.basicThreadDetails.id,
+                                commentId = null,
+                                text = null
+                            )
                         },
-                        navigateToUserDetails = navigateToUserDetails,
-                        navigateToFullscreenImage = navigateToFullscreenImage,
+                        navigateToUserDetails = navActionManager::toUserDetails,
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage,
                     )
                 } else {
                     ParentThreadViewPlaceholder()
@@ -93,7 +111,7 @@ fun ThreadDetailsView(
                 HorizontalDivider()
             }
             items(
-                items = viewModel.threadComments,
+                items = comments,
                 contentType = { it }
             ) { item ->
                 ThreadCommentView(
@@ -106,12 +124,12 @@ fun ThreadDetailsView(
                     isLocked = item.isLocked,
                     createdAt = item.createdAt,
                     childComments = item.childComments,
-                    toggleLike = { viewModel.toggleLikeComment(item.id) },
+                    toggleLike = { event?.toggleLikeComment(item.id) ?: false },
                     navigateToUserDetails = {
-                        navigateToUserDetails(item.user!!.id)
+                        navActionManager.toUserDetails(item.user!!.id)
                     },
-                    navigateToPublishReply = navigateToPublishCommentReply,
-                    navigateToFullscreenImage = navigateToFullscreenImage
+                    navigateToPublishReply = navActionManager::toPublishCommentReply,
+                    navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
             }
@@ -130,12 +148,11 @@ fun ThreadDetailsView(
 fun ThreadDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            ThreadDetailsView(
-                navigateToUserDetails = {},
-                navigateToPublishThreadComment = { _, _ -> },
-                navigateToPublishCommentReply = { _, _, _ -> },
-                navigateToFullscreenImage = {},
-                navigateBack = {}
+            ThreadDetailsContent(
+                comments = emptyList(),
+                uiState = ThreadDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

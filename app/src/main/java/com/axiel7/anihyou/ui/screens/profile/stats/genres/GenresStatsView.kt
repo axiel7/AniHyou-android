@@ -16,10 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.fragment.GenreStat
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsEvent
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.MediaTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemView
@@ -28,16 +29,16 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun GenresStatsView(
-    stats: List<GenreStat>?,
-    isLoading: Boolean,
-    mediaType: MediaType,
-    setMediaType: (MediaType) -> Unit,
-    genresType: StatDistributionType,
-    setGenresType: (StatDistributionType) -> Unit,
-    navigateToExplore: (genre: String) -> Unit,
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
+    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
+    val stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeGenres
+    else uiState.mangaGenres
+
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(bottom = bottomBarPadding),
@@ -45,19 +46,19 @@ fun GenresStatsView(
     ) {
         item {
             MediaTypeChips(
-                value = mediaType,
-                onValueChanged = setMediaType,
+                value = uiState.mediaType,
+                onValueChanged = { event?.setMediaType(it) },
             )
 
             InfoTitle(
                 text = stringResource(R.string.genres)
             )
             DistributionTypeChips(
-                value = genresType,
-                onValueChanged = setGenresType,
+                value = uiState.genresType,
+                onValueChanged = { event?.setGenresType(it) },
             )
         }
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(
                 count = 3,
                 contentType = { it }
@@ -80,7 +81,7 @@ fun GenresStatsView(
                 minutesWatched = stat.minutesWatched,
                 chaptersRead = stat.chaptersRead,
                 onClick = {
-                    stat.genre?.let(navigateToExplore)
+                    navActionManager.toGenreTag(uiState.mediaType, stat.genre, null)
                 }
             )
         }
@@ -93,13 +94,9 @@ fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             GenresStatsView(
-                stats = null,
-                isLoading = true,
-                mediaType = MediaType.ANIME,
-                setMediaType = {},
-                genresType = StatDistributionType.TITLES,
-                setGenresType = {},
-                navigateToExplore = {},
+                uiState = UserStatsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

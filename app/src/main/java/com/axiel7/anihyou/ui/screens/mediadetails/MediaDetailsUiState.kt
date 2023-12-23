@@ -12,6 +12,8 @@ import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.ui.common.state.UiState
 
 data class MediaDetailsUiState(
+    val isLoggedIn: Boolean = false,
+    
     val details: MediaDetailsQuery.Media? = null,
     val charactersAndStaff: MediaCharactersAndStaff? = null,
     val relationsAndRecommendations: MediaRelationsAndRecommendations? = null,

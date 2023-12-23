@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.user.hexColor
-import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -61,25 +61,32 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
     modifier: Modifier = Modifier,
-    navigateToSettings: () -> Unit = {},
-    navigateToFullscreenImage: (String) -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToUserMediaList: ((MediaType, Int, ScoreFormat) -> Unit)?,
-    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
-    navigateBack: () -> Unit = {},
+    navActionManager: NavActionManager,
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    ProfileContent(
+        userActivities = viewModel.userActivities,
+        uiState = uiState,
+        event = viewModel,
+        modifier = modifier,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProfileContent(
+    userActivities: List<UserActivityQuery.Activity>,
+    uiState: ProfileUiState,
+    event: ProfileEvent?,
+    modifier: Modifier = Modifier,
+    navActionManager: NavActionManager,
+) {
     val scope = rememberCoroutineScope()
 
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -93,7 +100,9 @@ fun ProfileView(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    if (uiState.isMyProfile == false) BackIconButton(onClick = navigateBack)
+                    if (uiState.isMyProfile == false) {
+                        BackIconButton(onClick = navActionManager::goBack)
+                    }
                 },
                 actions = {
                     ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
@@ -114,7 +123,7 @@ fun ProfileView(
                 TopBannerView(
                     imageUrl = uiState.userInfo?.bannerImage,
                     modifier = Modifier.clickable {
-                        uiState.userInfo?.bannerImage?.let { navigateToFullscreenImage(it) }
+                        uiState.userInfo?.bannerImage?.let(navActionManager::toFullscreenImage)
                     },
                     fallbackColor = colorFromHex(uiState.userInfo?.hexColor()),
                     height = padding.calculateTopPadding() + 100.dp
@@ -125,7 +134,7 @@ fun ProfileView(
                         .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         .size(PERSON_IMAGE_SIZE_SMALL.dp)
                         .clickable {
-                            uiState.userInfo?.avatar?.large?.let(navigateToFullscreenImage)
+                            uiState.userInfo?.avatar?.large?.let(navActionManager::toFullscreenImage)
                         },
                     showShadow = true
                 )
@@ -152,7 +161,7 @@ fun ProfileView(
                     uiState.userInfo?.donatorTier?.let { donatorTier ->
                         if (donatorTier > 1) {
                             Text(
-                                text = uiState.userInfo?.donatorBadge
+                                text = uiState.userInfo.donatorBadge
                                     ?: stringResource(R.string.donator),
                                 color = MaterialTheme.colorScheme.primary,
                                 fontSize = 14.sp
@@ -170,7 +179,7 @@ fun ProfileView(
 
                 if (uiState.isMyProfile == true) {
                     OutlinedIconButton(
-                        onClick = navigateToSettings,
+                        onClick = navActionManager::toSettings,
                         modifier = Modifier.padding(horizontal = 16.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                     ) {
@@ -183,14 +192,14 @@ fun ProfileView(
                 } else if (uiState.isMyProfile == false) {
                     if (uiState.userInfo?.isFollowing == true) {
                         OutlinedButton(
-                            onClick = { scope.launch { viewModel.toggleFollow() } },
+                            onClick = { scope.launch { event?.toggleFollow() } },
                             modifier = Modifier.padding(horizontal = 16.dp),
                         ) {
                             Text(text = stringResource(R.string.following))
                         }
                     } else if (uiState.userInfo?.isFollowing == false) {
                         Button(
-                            onClick = { scope.launch { viewModel.toggleFollow() } },
+                            onClick = { scope.launch { event?.toggleFollow() } },
                             modifier = Modifier.padding(horizontal = 16.dp),
                         ) {
                             Text(text = stringResource(R.string.follow))
@@ -211,15 +220,15 @@ fun ProfileView(
                 when (ProfileInfoType.tabRows[selectedTabIndex].value) {
                     ProfileInfoType.ABOUT ->
                         UserAboutView(
-                            aboutHtml = uiState.userInfo?.about,
+                            aboutHtml = uiState.userInfo.about,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             isLoading = uiState.isLoading,
-                            navigateToUserMediaList = if (navigateToUserMediaList != null) {
+                            navigateToUserMediaList = if (uiState.isMyProfile == false) {
                                 { mediaType ->
-                                    navigateToUserMediaList(
+                                    navActionManager.toUserMediaList(
                                         mediaType,
-                                        uiState.userInfo!!.id,
-                                        uiState.userInfo!!.mediaListOptions!!.scoreFormat!!
+                                        uiState.userInfo.id,
+                                        uiState.userInfo.mediaListOptions!!.scoreFormat!!
                                     )
                                 }
                             } else null,
@@ -227,45 +236,36 @@ fun ProfileView(
 
                     ProfileInfoType.ACTIVITY -> {
                         LaunchedEffect(uiState.page) {
-                            if (uiState.page == 0) viewModel.loadNextPage()
+                            if (uiState.page == 0) event?.onLoadMore()
                         }
                         UserActivityView(
-                            activities = viewModel.userActivities,
-                            isLoading = uiState.isLoadingActivity,
-                            loadMore = viewModel::loadNextActivityPage,
-                            toggleLike = viewModel::toggleLikeActivity,
+                            activities = userActivities,
+                            uiState = uiState,
+                            event = event,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navigateToMediaDetails = navigateToMediaDetails,
-                            navigateToUserDetails = navigateToUserDetails,
-                            navigateToActivityDetails = navigateToActivityDetails,
-                            navigateToFullscreenImage = navigateToFullscreenImage,
+                            navActionManager = navActionManager,
                         )
                     }
 
                     ProfileInfoType.STATS ->
                         UserStatsView(
-                            userId = uiState.userInfo!!.id,
+                            userId = uiState.userInfo.id,
                             nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
-                            navigateToGenreTag = navigateToGenreTag,
-                            navigateToStaffDetails = navigateToStaffDetails,
-                            navigateToStudioDetails = navigateToStudioDetails,
+                            navActionManager = navActionManager,
                         )
 
                     ProfileInfoType.FAVORITES ->
                         UserFavoritesView(
-                            userId = uiState.userInfo!!.id,
+                            userId = uiState.userInfo.id,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navigateToMediaDetails = navigateToMediaDetails,
-                            navigateToCharacterDetails = navigateToCharacterDetails,
-                            navigateToStaffDetails = navigateToStaffDetails,
-                            navigateToStudioDetails = navigateToStudioDetails,
+                            navActionManager = navActionManager,
                         )
 
                     ProfileInfoType.SOCIAL ->
                         UserSocialView(
-                            userId = uiState.userInfo!!.id,
+                            userId = uiState.userInfo.id,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navigateToUserDetails = navigateToUserDetails
+                            navActionManager = navActionManager,
                         )
                 }
             }
@@ -278,16 +278,11 @@ fun ProfileView(
 fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
-            ProfileView(
-                navigateToFullscreenImage = {},
-                navigateToMediaDetails = {},
-                navigateToCharacterDetails = {},
-                navigateToStaffDetails = {},
-                navigateToStudioDetails = {},
-                navigateToUserDetails = {},
-                navigateToActivityDetails = {},
-                navigateToUserMediaList = { _, _, _ -> },
-                navigateToGenreTag = { _, _, _ -> },
+            ProfileContent(
+                userActivities = emptyList(),
+                uiState = ProfileUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

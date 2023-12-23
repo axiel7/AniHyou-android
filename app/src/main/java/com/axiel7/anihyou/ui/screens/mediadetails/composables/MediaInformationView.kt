@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.mediadetails.info
+package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column

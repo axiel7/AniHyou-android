@@ -21,6 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.FollowersQuery
+import com.axiel7.anihyou.FollowingsQuery
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
@@ -32,7 +35,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 fun UserSocialView(
     userId: Int,
     modifier: Modifier = Modifier,
-    navigateToUserDetails: (Int) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: UserSocialViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,9 +44,28 @@ fun UserSocialView(
         viewModel.setUserId(userId)
     }
 
+    UserSocialContent(
+        followers = viewModel.followers,
+        following = viewModel.following,
+        uiState = uiState,
+        event = viewModel,
+        modifier = modifier,
+        navActionManager = navActionManager,
+    )
+}
+
+@Composable
+private fun UserSocialContent(
+    followers: List<FollowersQuery.Follower>,
+    following: List<FollowingsQuery.Following>,
+    uiState: UserSocialUiState,
+    event: UserSocialEvent?,
+    modifier: Modifier = Modifier,
+    navActionManager: NavActionManager,
+) {
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     Column(
@@ -58,7 +80,7 @@ fun UserSocialView(
                 FilterSelectionChip(
                     selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.setType(it) },
+                    onClick = { event?.setType(it) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
             }
@@ -74,14 +96,14 @@ fun UserSocialView(
             when (uiState.type) {
                 UserSocialType.FOLLOWERS -> {
                     items(
-                        items = viewModel.followers,
+                        items = followers,
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
                             title = item.userFollow.name,
                             imageUrl = item.userFollow.avatar?.large,
                             onClick = {
-                                navigateToUserDetails(item.userFollow.id)
+                                navActionManager.toUserDetails(item.userFollow.id)
                             }
                         )
                     }
@@ -94,14 +116,14 @@ fun UserSocialView(
 
                 UserSocialType.FOLLOWING -> {
                     items(
-                        items = viewModel.following,
+                        items = following,
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
                             title = item.userFollow.name,
                             imageUrl = item.userFollow.avatar?.large,
                             onClick = {
-                                navigateToUserDetails(item.userFollow.id)
+                                navActionManager.toUserDetails(item.userFollow.id)
                             }
                         )
                     }
@@ -121,9 +143,12 @@ fun UserSocialView(
 fun UserSocialViewPreview() {
     AniHyouTheme {
         Surface {
-            UserSocialView(
-                userId = 1,
-                navigateToUserDetails = {}
+            UserSocialContent(
+                followers = emptyList(),
+                following = emptyList(),
+                uiState = UserSocialUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

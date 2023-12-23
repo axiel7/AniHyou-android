@@ -26,23 +26,40 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.fragment.ActivityReplyFragment
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsView(
-    navigateBack: () -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToPublishActivityReply: (Int?, String?) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: ActivityDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val activityId by viewModel.activityId.collectAsStateWithLifecycle()
 
+    ActivityDetailsContent(
+        activityId = activityId ?: 0,
+        replies = viewModel.replies,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ActivityDetailsContent(
+    activityId: Int,
+    replies: List<ActivityReplyFragment>,
+    uiState: ActivityDetailsUiState,
+    event: ActivityDetailsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -66,11 +83,11 @@ fun ActivityDetailsView(
                         contentDescription = stringResource(R.string.reply)
                     )
                 },
-                onClick = { navigateToPublishActivityReply(null, null) },
+                onClick = { navActionManager.toPublishActivityReply(activityId, null, null) },
                 expanded = expandedFab
             )
         },
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         LazyColumn(
@@ -83,20 +100,20 @@ fun ActivityDetailsView(
             item {
                 if (uiState.details != null) {
                     ActivityTextView(
-                        text = uiState.details?.text.orEmpty(),
-                        username = uiState.details?.username,
-                        avatarUrl = uiState.details?.avatarUrl,
-                        createdAt = uiState.details?.createdAt ?: 0,
-                        replyCount = uiState.details?.replyCount,
-                        likeCount = uiState.details?.likeCount ?: 0,
-                        isLiked = uiState.details?.isLiked,
+                        text = uiState.details.text.orEmpty(),
+                        username = uiState.details.username,
+                        avatarUrl = uiState.details.avatarUrl,
+                        createdAt = uiState.details.createdAt,
+                        replyCount = uiState.details.replyCount,
+                        likeCount = uiState.details.likeCount,
+                        isLiked = uiState.details.isLiked,
                         onClickUser = {
-                            uiState.details?.userId?.let(navigateToUserDetails)
+                            uiState.details.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            viewModel.toggleLikeActivity()
+                            event?.toggleLikeActivity()
                         },
-                        navigateToFullscreenImage = navigateToFullscreenImage
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
                 } else {
                     ActivityTextViewPlaceholder()
@@ -104,7 +121,7 @@ fun ActivityDetailsView(
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
             items(
-                items = viewModel.replies,
+                items = replies,
                 contentType = { it }
             ) { item ->
                 ActivityTextView(
@@ -116,12 +133,12 @@ fun ActivityDetailsView(
                     likeCount = item.likeCount,
                     isLiked = item.isLiked,
                     onClickUser = {
-                        item.userId?.let(navigateToUserDetails)
+                        item.userId?.let(navActionManager::toUserDetails)
                     },
                     onClickLike = {
-                        viewModel.toggleLikeReply(item.id)
+                        event?.toggleLikeReply(item.id)
                     },
-                    navigateToFullscreenImage = navigateToFullscreenImage
+                    navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
             }
         }
@@ -133,11 +150,12 @@ fun ActivityDetailsView(
 fun ActivityDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            ActivityDetailsView(
-                navigateBack = {},
-                navigateToUserDetails = {},
-                navigateToPublishActivityReply = { _, _ -> },
-                navigateToFullscreenImage = {},
+            ActivityDetailsContent(
+                activityId = 1,
+                replies = emptyList(),
+                uiState = ActivityDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

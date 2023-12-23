@@ -15,10 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.fragment.TagStat
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsEvent
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.MediaTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemView
@@ -27,16 +28,16 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun TagsStatsView(
-    stats: List<TagStat>?,
-    isLoading: Boolean,
-    mediaType: MediaType,
-    setMediaType: (MediaType) -> Unit,
-    tagsType: StatDistributionType,
-    setTagsType: (StatDistributionType) -> Unit,
-    navigateToExplore: (tag: String) -> Unit,
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
+    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
+    val stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeTags
+    else uiState.mangaTags
+
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(bottom = bottomBarPadding),
@@ -44,19 +45,19 @@ fun TagsStatsView(
     ) {
         item {
             MediaTypeChips(
-                value = mediaType,
-                onValueChanged = setMediaType,
+                value = uiState.mediaType,
+                onValueChanged = { event?.setMediaType(it) },
             )
 
             InfoTitle(
                 text = stringResource(R.string.tags)
             )
             DistributionTypeChips(
-                value = tagsType,
-                onValueChanged = setTagsType,
+                value = uiState.tagsType,
+                onValueChanged = { event?.setTagsType(it) },
             )
         }
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(
                 count = 3,
                 contentType = { it }
@@ -79,7 +80,7 @@ fun TagsStatsView(
                 minutesWatched = stat.minutesWatched,
                 chaptersRead = stat.chaptersRead,
                 onClick = {
-                    stat.tag?.name?.let(navigateToExplore)
+                    navActionManager.toGenreTag(uiState.mediaType, null, stat.tag?.name)
                 }
             )
         }
@@ -92,13 +93,9 @@ fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             TagsStatsView(
-                stats = null,
-                isLoading = true,
-                mediaType = MediaType.ANIME,
-                setMediaType = {},
-                tagsType = StatDistributionType.TITLES,
-                setTagsType = {},
-                navigateToExplore = {},
+                uiState = UserStatsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

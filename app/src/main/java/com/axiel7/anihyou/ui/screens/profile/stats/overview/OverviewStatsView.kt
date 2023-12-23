@@ -17,7 +17,6 @@ import com.axiel7.anihyou.data.model.point10PrimaryColor
 import com.axiel7.anihyou.data.model.point5PrimaryColor
 import com.axiel7.anihyou.data.model.smileyPrimaryColor
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.InfoTitle
@@ -25,6 +24,8 @@ import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsEvent
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.MediaTypeChips
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -32,28 +33,19 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun OverviewStatsView(
-    stats: OverviewStats?,
-    isLoading: Boolean,
-    mediaType: MediaType,
-    setMediaType: (MediaType) -> Unit,
-    scoreType: StatDistributionType,
-    setScoreType: (StatDistributionType) -> Unit,
-    lengthType: StatDistributionType,
-    setLengthType: (StatDistributionType) -> Unit,
-    releaseYearType: StatDistributionType,
-    setReleaseYearType: (StatDistributionType) -> Unit,
-    startYearType: StatDistributionType,
-    setStartYearType: (StatDistributionType) -> Unit,
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
     modifier: Modifier = Modifier,
 ) {
-    val isAnime = mediaType == MediaType.ANIME
+    val isAnime = uiState.mediaType == MediaType.ANIME
+    val stats = if (isAnime) uiState.animeOverview else uiState.mangaOverview
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MediaTypeChips(
-            value = mediaType,
-            onValueChanged = setMediaType
+            value = uiState.mediaType,
+            onValueChanged = { event?.setMediaType(it) }
         )
 
         Row(
@@ -65,21 +57,21 @@ fun OverviewStatsView(
                 text = stats?.count?.format(),
                 subtitle = stringResource(R.string.total),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
             TextSubtitleVertical(
                 text = stats?.episodeOrChapterCount?.format(),
                 subtitle = if (isAnime) stringResource(R.string.episodes_watched)
                 else stringResource(R.string.chapters_read),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
             TextSubtitleVertical(
                 text = stats?.daysOrVolumes?.format(),
                 subtitle = if (isAnime) stringResource(R.string.days_watched)
                 else stringResource(R.string.volumes_read),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
         }//: Row
 
@@ -93,19 +85,19 @@ fun OverviewStatsView(
                 subtitle = if (isAnime) stringResource(R.string.days_planned)
                 else stringResource(R.string.chapters_planned),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
             TextSubtitleVertical(
                 text = stats?.meanScore?.format(),
                 subtitle = stringResource(R.string.mean_score),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
             TextSubtitleVertical(
                 text = stats?.standardDeviation?.format(),
                 subtitle = stringResource(R.string.standard_deviation),
                 modifier = Modifier.weight(1f),
-                isLoading = isLoading
+                isLoading = uiState.isLoading
             )
         }//: Row
 
@@ -121,15 +113,15 @@ fun OverviewStatsView(
                 StatDistributionType.TIME
             ).forEach {
                 FilterSelectionChip(
-                    selected = scoreType == it,
+                    selected = uiState.scoreType == it,
                     text = it.localized(),
-                    onClick = { setScoreType(it) },
+                    onClick = { event?.setScoreType(it) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
             }
         }
         VerticalStatsBar(
-            stats = when (scoreType) {
+            stats = when (uiState.scoreType) {
                 StatDistributionType.TITLES -> stats?.scoreCount.orEmpty()
                 StatDistributionType.TIME -> stats?.scoreTime.orEmpty()
                 else -> emptyList()
@@ -143,7 +135,7 @@ fun OverviewStatsView(
                     else -> it.score.point100PrimaryColor()
                 }
             },
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Episode/Chapter count
@@ -151,17 +143,17 @@ fun OverviewStatsView(
             text = stringResource(if (isAnime) R.string.episode_count else R.string.chapter_count)
         )
         DistributionTypeChips(
-            value = lengthType,
-            onValueChanged = setLengthType,
+            value = uiState.lengthType,
+            onValueChanged = { event?.setLengthType(it) },
         )
         VerticalStatsBar(
-            stats = when (lengthType) {
+            stats = when (uiState.lengthType) {
                 StatDistributionType.TITLES -> stats?.lengthCount.orEmpty()
                 StatDistributionType.TIME -> stats?.lengthTime.orEmpty()
                 StatDistributionType.SCORE -> stats?.lengthScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Status distribution
@@ -170,7 +162,7 @@ fun OverviewStatsView(
             stats = stats?.statusDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Format distribution
@@ -179,7 +171,7 @@ fun OverviewStatsView(
             stats = stats?.formatDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Country distribution
@@ -188,23 +180,23 @@ fun OverviewStatsView(
             stats = stats?.countryDistribution.orEmpty(),
             verticalPadding = 8.dp,
             showTotal = false,
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Release year
         InfoTitle(text = stringResource(R.string.release_year))
         DistributionTypeChips(
-            value = releaseYearType,
-            onValueChanged = setReleaseYearType,
+            value = uiState.releaseYearType,
+            onValueChanged = { event?.setReleaseYearType(it) },
         )
         VerticalStatsBar(
-            stats = when (releaseYearType) {
+            stats = when (uiState.releaseYearType) {
                 StatDistributionType.TITLES -> stats?.releaseYearCount.orEmpty()
                 StatDistributionType.TIME -> stats?.releaseYearTime.orEmpty()
                 StatDistributionType.SCORE -> stats?.releaseYearScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
 
         // Watch/Read year
@@ -212,17 +204,17 @@ fun OverviewStatsView(
             text = stringResource(if (isAnime) R.string.watch_year else R.string.read_year)
         )
         DistributionTypeChips(
-            value = startYearType,
-            onValueChanged = setStartYearType,
+            value = uiState.startYearType,
+            onValueChanged = { event?.setStartYearType(it) },
         )
         VerticalStatsBar(
-            stats = when (startYearType) {
+            stats = when (uiState.startYearType) {
                 StatDistributionType.TITLES -> stats?.startYearCount.orEmpty()
                 StatDistributionType.TIME -> stats?.startYearTime.orEmpty()
                 StatDistributionType.SCORE -> stats?.startYearScore.orEmpty()
             },
             modifier = Modifier.padding(8.dp),
-            isLoading = isLoading
+            isLoading = uiState.isLoading
         )
     }//: Column
 }
@@ -233,18 +225,8 @@ fun OverviewUserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             OverviewStatsView(
-                stats = null,
-                isLoading = true,
-                mediaType = MediaType.ANIME,
-                setMediaType = {},
-                scoreType = StatDistributionType.TITLES,
-                setScoreType = {},
-                lengthType = StatDistributionType.TITLES,
-                setLengthType = {},
-                releaseYearType = StatDistributionType.TITLES,
-                setReleaseYearType = {},
-                startYearType = StatDistributionType.TITLES,
-                setStartYearType = {},
+                uiState = UserStatsUiState(),
+                event = null,
             )
         }
     }

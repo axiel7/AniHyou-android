@@ -25,6 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.UserFavoritesAnimeQuery
+import com.axiel7.anihyou.UserFavoritesCharacterQuery
+import com.axiel7.anihyou.UserFavoritesMangaQuery
+import com.axiel7.anihyou.UserFavoritesStaffQuery
+import com.axiel7.anihyou.UserFavoritesStudioQuery
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -39,10 +45,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 fun UserFavoritesView(
     userId: Int,
     modifier: Modifier = Modifier,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: UserFavoritesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,9 +54,34 @@ fun UserFavoritesView(
         viewModel.setUserId(userId)
     }
 
+    UserFavoritesContent(
+        anime = viewModel.anime,
+        manga = viewModel.manga,
+        characters = viewModel.characters,
+        staff = viewModel.staff,
+        studios = viewModel.studios,
+        uiState = uiState,
+        event = viewModel,
+        modifier = modifier,
+        navActionManager = navActionManager,
+    )
+}
+
+@Composable
+private fun UserFavoritesContent(
+    anime: List<UserFavoritesAnimeQuery.Node>,
+    manga: List<UserFavoritesMangaQuery.Node>,
+    characters: List<UserFavoritesCharacterQuery.Node>,
+    staff: List<UserFavoritesStaffQuery.Node>,
+    studios: List<UserFavoritesStudioQuery.Node>,
+    uiState: UserFavoritesUiState,
+    event: UserFavoritesEvent?,
+    modifier: Modifier = Modifier,
+    navActionManager: NavActionManager,
+) {
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     Column(
@@ -68,7 +96,7 @@ fun UserFavoritesView(
                 FilterSelectionChip(
                     selected = uiState.type == it,
                     text = it.localized(),
-                    onClick = { viewModel.setType(it) },
+                    onClick = { event?.setType(it) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
             }
@@ -84,7 +112,7 @@ fun UserFavoritesView(
             when (uiState.type) {
                 FavoritesType.ANIME -> {
                     items(
-                        items = viewModel.anime,
+                        items = anime,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -93,7 +121,7 @@ fun UserFavoritesView(
                             imageUrl = item.coverImage?.large,
                             modifier = Modifier.wrapContentWidth(),
                             onClick = {
-                                navigateToMediaDetails(item.id)
+                                navActionManager.toMediaDetails(item.id)
                             }
                         )
                     }
@@ -106,7 +134,7 @@ fun UserFavoritesView(
 
                 FavoritesType.MANGA -> {
                     items(
-                        items = viewModel.manga,
+                        items = manga,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -115,7 +143,7 @@ fun UserFavoritesView(
                             imageUrl = item.coverImage?.large,
                             modifier = Modifier.wrapContentWidth(),
                             onClick = {
-                                navigateToMediaDetails(item.id)
+                                navActionManager.toMediaDetails(item.id)
                             }
                         )
                     }
@@ -128,7 +156,7 @@ fun UserFavoritesView(
 
                 FavoritesType.CHARACTERS -> {
                     items(
-                        items = viewModel.characters,
+                        items = characters,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -136,7 +164,7 @@ fun UserFavoritesView(
                             title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             onClick = {
-                                navigateToCharacterDetails(item.id)
+                                navActionManager.toCharacterDetails(item.id)
                             }
                         )
                     }
@@ -149,7 +177,7 @@ fun UserFavoritesView(
 
                 FavoritesType.STAFF -> {
                     items(
-                        items = viewModel.staff,
+                        items = staff,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -157,7 +185,7 @@ fun UserFavoritesView(
                             title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             onClick = {
-                                navigateToStaffDetails(item.id)
+                                navActionManager.toStaffDetails(item.id)
                             }
                         )
                     }
@@ -170,13 +198,13 @@ fun UserFavoritesView(
 
                 FavoritesType.STUDIOS -> {
                     items(
-                        items = viewModel.studios,
+                        items = studios,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
                         Card(
                             modifier = Modifier.padding(horizontal = 4.dp),
-                            onClick = { navigateToStudioDetails(item.id) }
+                            onClick = { navActionManager.toStudioDetails(item.id) }
                         ) {
                             Text(
                                 text = item.name,
@@ -216,12 +244,15 @@ fun UserFavoritesView(
 fun UserFavoritesViewPreview() {
     AniHyouTheme {
         Surface {
-            UserFavoritesView(
-                userId = 1,
-                navigateToMediaDetails = {},
-                navigateToCharacterDetails = {},
-                navigateToStaffDetails = {},
-                navigateToStudioDetails = {}
+            UserFavoritesContent(
+                anime = emptyList(),
+                manga = emptyList(),
+                characters = emptyList(),
+                staff = emptyList(),
+                studios = emptyList(),
+                uiState = UserFavoritesUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

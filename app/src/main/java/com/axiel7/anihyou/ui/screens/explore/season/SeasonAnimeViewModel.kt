@@ -9,7 +9,7 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSeason
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class SeasonAnimeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mediaRepository: MediaRepository,
-) : PagedUiStateViewModel<SeasonAnimeUiState>() {
+) : PagedUiStateViewModel<SeasonAnimeUiState>(), SeasonAnimeEvent {
 
     private val initialYear = savedStateHandle.getStateFlow<Int?>(NavArgument.Year.name, null)
     private val initialSeason =
@@ -39,17 +39,19 @@ class SeasonAnimeViewModel @Inject constructor(
     override val mutableUiState = MutableStateFlow(SeasonAnimeUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setSeason(value: AnimeSeason) = mutableUiState.update {
-        it.copy(season = value, page = 1, hasNextPage = true, isLoading = true)
+    override fun setSeason(value: AnimeSeason) {
+        mutableUiState.update {
+            it.copy(season = value, page = 1, hasNextPage = true, isLoading = true)
+        }
     }
 
-    fun selectItem(value: SeasonalAnimeQuery.Medium?) = mutableUiState.update {
-        it.copy(selectedItem = value)
+    override fun selectItem(value: SeasonalAnimeQuery.Medium?) {
+        mutableUiState.update {
+            it.copy(selectedItem = value)
+        }
     }
 
-    val animeSeasonal = mutableStateListOf<SeasonalAnimeQuery.Medium>()
-
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         uiState.value.selectedItem?.let { selectedItem ->
             val index = animeSeasonal.indexOf(selectedItem)
             if (index != -1) {
@@ -66,6 +68,8 @@ class SeasonAnimeViewModel @Inject constructor(
             }
         }
     }
+
+    val animeSeasonal = mutableStateListOf<SeasonalAnimeQuery.Medium>()
 
     init {
         combine(

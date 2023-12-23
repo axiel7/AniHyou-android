@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
@@ -18,29 +19,51 @@ fun PublishCommentView(
     parentCommentId: Int?,
     id: Int? = null,
     text: String? = null,
-    navigateBack: () -> Unit,
+    navActionManager: NavActionManager,
 ) {
-    val context = LocalContext.current
     val viewModel: PublishCommentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    PublishCommentContent(
+        threadId = threadId,
+        parentCommentId = parentCommentId,
+        id = id,
+        text = text,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@Composable
+private fun PublishCommentContent(
+    threadId: Int?,
+    parentCommentId: Int?,
+    id: Int? = null,
+    text: String? = null,
+    uiState: PublishCommentUiState,
+    event: PublishCommentEvent?,
+    navActionManager: NavActionManager,
+) {
+    val context = LocalContext.current
 
     LaunchedEffect(uiState.error) {
         if (uiState.error != null) {
             context.showToast(uiState.error)
-            viewModel.onErrorDisplayed()
+            event?.onErrorDisplayed()
         }
     }
 
     LaunchedEffect(uiState.wasPublished) {
         if (uiState.wasPublished == true) {
-            viewModel.setWasPublished(false)
-            navigateBack()
+            event?.setWasPublished(false)
+            navActionManager.goBack()
         }
     }
 
     PublishMarkdownView(
         onPublish = {
-            viewModel.publishThreadComment(
+            event?.publishThreadComment(
                 threadId = threadId,
                 parentCommentId = parentCommentId,
                 id = id,
@@ -49,7 +72,7 @@ fun PublishCommentView(
         },
         isLoading = uiState.isLoading,
         initialText = text,
-        navigateBack = navigateBack
+        navigateBack = navActionManager::goBack
     )
 }
 
@@ -58,10 +81,12 @@ fun PublishCommentView(
 fun PublishActivityViewPreview() {
     AniHyouTheme {
         Surface {
-            PublishCommentView(
+            PublishCommentContent(
                 threadId = 1,
-                parentCommentId = null,
-                navigateBack = {}
+                parentCommentId = 1,
+                uiState = PublishCommentUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -29,51 +29,59 @@ import javax.inject.Inject
 class ActivityFeedViewModel @Inject constructor(
     private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
-) : PagedUiStateViewModel<ActivityFeedUiState>() {
+) : PagedUiStateViewModel<ActivityFeedUiState>(), ActivityFeedEvent {
 
     override val mutableUiState = MutableStateFlow(ActivityFeedUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setIsFollowing(value: Boolean) = mutableUiState.update {
-        it.copy(isFollowing = value, page = 1, hasNextPage = true)
+    override fun setIsFollowing(value: Boolean) {
+        mutableUiState.update {
+            it.copy(isFollowing = value, page = 1, hasNextPage = true)
+        }
     }
 
-    fun setType(value: ActivityTypeGrouped) = mutableUiState.update {
-        it.copy(type = value, page = 1, hasNextPage = true)
+    override fun setType(value: ActivityTypeGrouped) {
+        mutableUiState.update {
+            it.copy(type = value, page = 1, hasNextPage = true)
+        }
     }
 
-    fun refreshList() = mutableUiState.update {
-        it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true, isLoading = true)
+    override fun refreshList() {
+        mutableUiState.update {
+            it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true, isLoading = true)
+        }
     }
 
-    val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
-
-    fun toggleLikeActivity(id: Int) = viewModelScope.launch {
-        likeRepository.toggleLike(
-            likeableId = id,
-            type = LikeableType.ACTIVITY
-        ).collect { result ->
-            if (result is DataResult.Success && result.data != null) {
-                val foundIndex = activities.indexOfFirst {
-                    it.onListActivity?.listActivityFragment?.id == id
-                            || it.onTextActivity?.textActivityFragment?.id == id
-                }
-                if (foundIndex != -1) {
-                    val oldItem = activities[foundIndex]
-                    activities[foundIndex] = oldItem.copy(
-                        onTextActivity = oldItem.onTextActivity?.copy(
-                            textActivityFragment = oldItem.onTextActivity.textActivityFragment
-                                .updateLikeStatus(result.data)
-                        ),
-                        onListActivity = oldItem.onListActivity?.copy(
-                            listActivityFragment = oldItem.onListActivity.listActivityFragment
-                                .updateLikeStatus(result.data)
+    override fun toggleLikeActivity(id: Int) {
+        viewModelScope.launch {
+            likeRepository.toggleLike(
+                likeableId = id,
+                type = LikeableType.ACTIVITY
+            ).collect { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    val foundIndex = activities.indexOfFirst {
+                        it.onListActivity?.listActivityFragment?.id == id
+                                || it.onTextActivity?.textActivityFragment?.id == id
+                    }
+                    if (foundIndex != -1) {
+                        val oldItem = activities[foundIndex]
+                        activities[foundIndex] = oldItem.copy(
+                            onTextActivity = oldItem.onTextActivity?.copy(
+                                textActivityFragment = oldItem.onTextActivity.textActivityFragment
+                                    .updateLikeStatus(result.data)
+                            ),
+                            onListActivity = oldItem.onListActivity?.copy(
+                                listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                    .updateLikeStatus(result.data)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     }
+
+    val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
 
     init {
         //first load

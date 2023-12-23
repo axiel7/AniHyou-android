@@ -24,8 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFeedItem
 import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityFollowingChip
@@ -33,22 +35,36 @@ import com.axiel7.anihyou.ui.screens.home.activity.composables.ActivityTypeChip
 import com.axiel7.anihyou.ui.screens.profile.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: ActivityFeedViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    ActivityFeedContent(
+        activities = viewModel.activities,
+        modifier = modifier,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ActivityFeedContent(
+    activities: List<ActivityFeedQuery.Activity>,
+    modifier: Modifier = Modifier,
+    uiState: ActivityFeedUiState,
+    event: ActivityFeedEvent?,
+    navActionManager: NavActionManager,
+) {
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            viewModel.refreshList()
+            event?.refreshList()
         }
     }
     LaunchedEffect(uiState.isLoading) {
@@ -56,7 +72,7 @@ fun ActivityFeedView(
     }
 
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     Box(
         modifier = Modifier
@@ -74,11 +90,11 @@ fun ActivityFeedView(
                 ) {
                     ActivityTypeChip(
                         value = uiState.type,
-                        onValueChanged = viewModel::setType
+                        onValueChanged = { event?.setType(it) }
                     )
                     ActivityFollowingChip(
                         value = uiState.isFollowing,
-                        onValueChanged = viewModel::setIsFollowing
+                        onValueChanged = { event?.setIsFollowing(it) }
                     )
                 }
             }
@@ -90,7 +106,7 @@ fun ActivityFeedView(
                 }
             }
             items(
-                items = viewModel.activities,
+                items = activities,
                 contentType = { it }
             ) { item ->
                 item.onListActivity?.let {
@@ -106,16 +122,16 @@ fun ActivityFeedView(
                         isLiked = it.listActivityFragment.isLiked,
                         mediaCoverUrl = it.listActivityFragment.media?.coverImage?.medium,
                         onClick = {
-                            navigateToActivityDetails(it.listActivityFragment.id)
+                            navActionManager.toActivityDetails(it.listActivityFragment.id)
                         },
                         onClickUser = {
-                            it.listActivityFragment.userId?.let(navigateToUserDetails)
+                            it.listActivityFragment.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            viewModel.toggleLikeActivity(it.listActivityFragment.id)
+                            event?.toggleLikeActivity(it.listActivityFragment.id)
                         },
                         onClickMedia = {
-                            it.listActivityFragment.media?.id?.let(navigateToMediaDetails)
+                            it.listActivityFragment.media?.id?.let(navActionManager::toMediaDetails)
                         }
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
@@ -132,15 +148,15 @@ fun ActivityFeedView(
                         likeCount = it.likeCount,
                         isLiked = it.isLiked,
                         onClick = {
-                            navigateToActivityDetails(it.id)
+                            navActionManager.toActivityDetails(it.id)
                         },
                         onClickUser = {
-                            it.userId?.let(navigateToUserDetails)
+                            it.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            viewModel.toggleLikeActivity(it.id)
+                            event?.toggleLikeActivity(it.id)
                         },
-                        navigateToFullscreenImage = navigateToFullscreenImage
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -158,11 +174,11 @@ fun ActivityFeedView(
 fun ActivityFeedViewPreview() {
     AniHyouTheme {
         Surface {
-            ActivityFeedView(
-                navigateToActivityDetails = {},
-                navigateToMediaDetails = {},
-                navigateToUserDetails = {},
-                navigateToFullscreenImage = {},
+            ActivityFeedContent(
+                activities = emptyList(),
+                uiState = ActivityFeedUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

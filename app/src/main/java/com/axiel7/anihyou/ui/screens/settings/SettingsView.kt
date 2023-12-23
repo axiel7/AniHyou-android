@@ -32,6 +32,7 @@ import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PlainPreference
@@ -55,20 +56,28 @@ import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotif
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsView(
-    navigateToListStyleSettings: () -> Unit,
-    navigateToTranslations: () -> Unit,
-    navigateBack: () -> Unit
+    navActionManager: NavActionManager
+) {
+    val viewModel: SettingsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    SettingsContent(
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@Composable
+private fun SettingsContent(
+    uiState: SettingsUiState,
+    event: SettingsEvent?,
+    navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
-    val viewModel: SettingsViewModel = hiltViewModel()
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val notificationCheckInterval by viewModel.notificationCheckInterval.collectAsStateWithLifecycle(
-        initialValue = NotificationInterval.DAILY
-    )
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -80,7 +89,7 @@ fun SettingsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
         navigationIcon = {
-            BackIconButton(onClick = navigateBack)
+            BackIconButton(onClick = navActionManager::goBack)
         },
         actions = {
             if (uiState.isLoading) {
@@ -104,7 +113,7 @@ fun SettingsView(
                 entriesValues = Theme.entriesLocalized,
                 preferenceValue = uiState.theme,
                 icon = R.drawable.palette_24,
-                onValueChange = viewModel::setTheme
+                onValueChange = { event?.setTheme(it) }
             )
 
             ListPreference(
@@ -112,7 +121,7 @@ fun SettingsView(
                 entriesValues = AppColorMode.entriesLocalized,
                 preferenceValue = uiState.appColorMode,
                 icon = R.drawable.colors_24,
-                onValueChange = viewModel::setAppColorMode
+                onValueChange = { event?.setAppColorMode(it) }
             )
 
             LanguagePreference()
@@ -122,14 +131,14 @@ fun SettingsView(
                 entriesValues = HomeTab.entriesLocalized,
                 preferenceValue = uiState.defaultHomeTab,
                 icon = R.drawable.home_24,
-                onValueChange = viewModel::setDefaultHomeTab
+                onValueChange = { event?.setDefaultHomeTab(it) }
             )
 
             SwitchPreference(
                 title = stringResource(R.string.use_separated_list_styles),
                 preferenceValue = uiState.useGeneralListStyle?.not(),
                 onValueChange = {
-                    viewModel.setUseGeneralListStyle(it.not())
+                    event?.setUseGeneralListStyle(it.not())
                 }
             )
             if (uiState.useGeneralListStyle == true) {
@@ -138,13 +147,13 @@ fun SettingsView(
                     entriesValues = ListStyle.entriesLocalized,
                     preferenceValue = uiState.generalListStyle,
                     icon = R.drawable.format_list_bulleted_24,
-                    onValueChange = viewModel::setGeneralListStyle
+                    onValueChange = { event?.setGeneralListStyle(it) }
                 )
             } else {
                 PlainPreference(
                     title = stringResource(R.string.list_style),
                     icon = R.drawable.format_list_bulleted_24,
-                    onClick = navigateToListStyleSettings
+                    onClick = navActionManager::toListStyleSettings
                 )
             }
 
@@ -154,7 +163,7 @@ fun SettingsView(
                     entriesValues = ItemsPerRow.entriesLocalized,
                     preferenceValue = uiState.gridItemsPerRow,
                     icon = R.drawable.grid_view_24,
-                    onValueChange = viewModel::setGridItemsPerRow
+                    onValueChange = { event?.setGridItemsPerRow(it) }
                 )
             }
 
@@ -164,7 +173,7 @@ fun SettingsView(
                 preferenceValue = uiState.userOptions?.options?.titleLanguage,
                 icon = R.drawable.title_24,
                 onValueChange = { value ->
-                    viewModel.setTitleLanguage(value)
+                    event?.setTitleLanguage(value)
                     context.showToast(R.string.changes_will_take_effect_on_app_restart)
                 }
             )
@@ -175,7 +184,7 @@ fun SettingsView(
                 preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
                 icon = R.drawable.group_24,
                 onValueChange = { value ->
-                    viewModel.setStaffNameLanguage(value)
+                    event?.setStaffNameLanguage(value)
                     context.showToast(R.string.changes_will_take_effect_on_app_restart)
                 }
             )
@@ -185,7 +194,7 @@ fun SettingsView(
                 entriesValues = ScoreFormat.entriesLocalized,
                 preferenceValue = uiState.scoreFormat,
                 icon = R.drawable.star_24,
-                onValueChange = viewModel::setScoreFormat
+                onValueChange = { event?.setScoreFormat(it) }
             )
 
             PreferencesTitle(text = stringResource(R.string.content))
@@ -193,13 +202,13 @@ fun SettingsView(
                 title = stringResource(R.string.display_adult_content),
                 preferenceValue = uiState.userOptions?.options?.displayAdultContent,
                 icon = R.drawable.no_adult_content_24,
-                onValueChange = viewModel::setDisplayAdultContent
+                onValueChange = { event?.setDisplayAdultContent(it) }
             )
             SwitchPreference(
                 title = stringResource(R.string.airing_on_my_list),
                 preferenceValue = uiState.airingOnMyList,
                 subtitle = stringResource(R.string.airing_on_my_list_summary),
-                onValueChange = viewModel::setAiringOnMyList
+                onValueChange = { event?.setAiringOnMyList(it) }
             )
 
             PreferencesTitle(text = stringResource(R.string.notifications))
@@ -208,7 +217,7 @@ fun SettingsView(
                 preferenceValue = uiState.isNotificationsEnabled,
                 icon = R.drawable.notifications_24,
                 onValueChange = { isEnabled ->
-                    viewModel.setNotificationsEnabled(
+                    event?.setNotificationsEnabled(
                         isEnabled = isEnabled,
                         notificationPermission = notificationPermission,
                         createNotificationChannels = {
@@ -221,14 +230,14 @@ fun SettingsView(
                 ListPreference(
                     title = stringResource(R.string.update_interval),
                     entriesValues = NotificationInterval.entriesLocalized,
-                    preferenceValue = notificationCheckInterval,
-                    onValueChange = viewModel::setNotificationCheckInterval
+                    preferenceValue = uiState.notificationCheckInterval,
+                    onValueChange = { event?.setNotificationCheckInterval(it) }
                 )
                 SwitchPreference(
                     title = stringResource(R.string.airing_anime_notifications),
                     preferenceValue = uiState.userOptions?.options?.airingNotifications,
                     icon = R.drawable.podcasts_24,
-                    onValueChange = viewModel::setAiringNotification
+                    onValueChange = { event?.setAiringNotification(it) }
                 )
             }
 
@@ -244,7 +253,7 @@ fun SettingsView(
                 title = stringResource(R.string.logout),
                 icon = R.drawable.logout_24,
                 onClick = {
-                    viewModel.logOut {
+                    event?.logOut {
                         context.getActivity()?.recreate()
                     }
                 }
@@ -287,7 +296,7 @@ fun SettingsView(
             PlainPreference(
                 title = stringResource(R.string.translations),
                 icon = R.drawable.language_24,
-                onClick = navigateToTranslations
+                onClick = navActionManager::toTranslations
             )
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -308,10 +317,10 @@ fun SettingsView(
 fun SettingsViewPreview() {
     AniHyouTheme {
         Surface {
-            SettingsView(
-                navigateToListStyleSettings = {},
-                navigateToTranslations = {},
-                navigateBack = {}
+            SettingsContent(
+                uiState = SettingsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -15,9 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.fragment.StudioStat
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsEvent
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemView
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemViewPlaceholder
@@ -25,11 +26,9 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun StudiosStatsView(
-    stats: List<StudioStat>?,
-    isLoading: Boolean,
-    studiosType: StatDistributionType,
-    setStudiosType: (StatDistributionType) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
+    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -43,11 +42,11 @@ fun StudiosStatsView(
                 text = stringResource(R.string.studios)
             )
             DistributionTypeChips(
-                value = studiosType,
-                onValueChanged = setStudiosType,
+                value = uiState.studiosType,
+                onValueChanged = { event?.setStudiosType(it) },
             )
         }
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(
                 count = 3,
                 contentType = { it }
@@ -58,7 +57,7 @@ fun StudiosStatsView(
             }
         }
         itemsIndexed(
-            items = stats.orEmpty(),
+            items = uiState.studios.orEmpty(),
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(
@@ -70,7 +69,7 @@ fun StudiosStatsView(
                 minutesWatched = stat.minutesWatched,
                 chaptersRead = stat.chaptersRead,
                 onClick = {
-                    stat.studio?.id?.let(navigateToStudioDetails)
+                    stat.studio?.id?.let(navActionManager::toStudioDetails)
                 }
             )
         }
@@ -83,11 +82,9 @@ fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             StudiosStatsView(
-                stats = null,
-                isLoading = true,
-                studiosType = StatDistributionType.TITLES,
-                setStudiosType = {},
-                navigateToStudioDetails = {},
+                uiState = UserStatsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

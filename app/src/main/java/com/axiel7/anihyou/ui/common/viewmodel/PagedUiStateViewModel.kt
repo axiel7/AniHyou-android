@@ -1,10 +1,11 @@
 package com.axiel7.anihyou.ui.common.viewmodel
 
 import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.ui.common.event.PagedEvent
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 import kotlinx.coroutines.flow.update
 
-abstract class PagedUiStateViewModel<S : PagedUiState<S>> : UiStateViewModel<S>() {
+abstract class PagedUiStateViewModel<S : PagedUiState<S>> : UiStateViewModel<S>(), PagedEvent {
 
     protected fun <D> PagedResult<D>.toUiState(): S {
         return when (this) {
@@ -28,7 +29,7 @@ abstract class PagedUiStateViewModel<S : PagedUiState<S>> : UiStateViewModel<S>(
 
     fun setHasNextPage(value: Boolean) = mutableUiState.update { it.setHasNextPage(value) }
 
-    fun loadNextPage() {
+    override fun onLoadMore() {
         if (uiState.value.hasNextPage && !uiState.value.isLoading) {
             mutableUiState.update { it.setPage(it.page + 1) }
         }

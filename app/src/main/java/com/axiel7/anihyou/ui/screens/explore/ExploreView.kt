@@ -1,145 +1,53 @@
 package com.axiel7.anihyou.ui.screens.explore
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.IconCard
-import com.axiel7.anihyou.ui.screens.explore.search.SearchContentView
-import com.axiel7.anihyou.ui.screens.explore.search.SearchViewModel
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreView(
     modifier: Modifier = Modifier,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToMediaChart: (ChartType) -> Unit,
-    navigateToAnimeSeason: (year: Int, season: String) -> Unit,
-    navigateToCalendar: () -> Unit,
+    navActionManager: NavActionManager
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
-    val performSearch = remember { mutableStateOf(false) }
-    var isSearchActive by rememberSaveable { mutableStateOf(false) }
-
-    val searchHorizontalPadding by animateDpAsState(
-        targetValue = if (!isSearchActive) 16.dp else 0.dp,
-        label = "searchHorizontalPadding"
+    ExploreContent(
+        topBar = {
+            ExploreSearchBar(
+                navActionManager = navActionManager
+            )
+        },
+        modifier = modifier,
+        navActionManager = navActionManager,
     )
-    val searchBottomPadding by animateDpAsState(
-        targetValue = if (!isSearchActive) 4.dp else 0.dp,
-        label = "searchBottomPadding"
-    )
+}
 
+@Composable
+private fun ExploreContent(
+    topBar: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    navActionManager: NavActionManager,
+) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val searchViewModel: SearchViewModel = hiltViewModel()
-                SearchBar(
-                    query = query,
-                    onQueryChange = { query = it },
-                    onSearch = {
-                        performSearch.value = true
-                    },
-                    active = isSearchActive,
-                    onActiveChange = {
-                        isSearchActive = it
-                        if (!isSearchActive) query = ""
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = searchHorizontalPadding)
-                        .padding(bottom = searchBottomPadding),
-                    placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
-                    leadingIcon = {
-                        if (isSearchActive) {
-                            IconButton(
-                                onClick = {
-                                    isSearchActive = false
-                                    query = ""
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.arrow_back_24),
-                                    contentDescription = stringResource(R.string.action_back)
-                                )
-                            }
-                        } else {
-                            Icon(
-                                painter = painterResource(R.drawable.search_24),
-                                contentDescription = stringResource(R.string.search)
-                            )
-                        }
-                    },
-                    trailingIcon = {
-                        if (isSearchActive && query.isNotEmpty()) {
-                            IconButton(
-                                onClick = {
-                                    query = ""
-                                    performSearch.value = true
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.close_24),
-                                    contentDescription = stringResource(R.string.delete)
-                                )
-                            }
-                        }
-                    }
-                ) {
-                    SearchContentView(
-                        viewModel = searchViewModel,
-                        query = query,
-                        performSearch = performSearch,
-                        initialGenre = null,
-                        initialTag = null,
-                        navigateToMediaDetails = navigateToMediaDetails,
-                        navigateToCharacterDetails = navigateToCharacterDetails,
-                        navigateToStaffDetails = navigateToStaffDetails,
-                        navigateToStudioDetails = navigateToStudioDetails,
-                        navigateToUserDetails = navigateToUserDetails
-                    )
-                }//:SearchBar
-            }
-        }
+        topBar = topBar
     ) { padding ->
         Column(
             modifier = Modifier
@@ -164,7 +72,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.TOP_ANIME)
+                        navActionManager.toMediaChart(ChartType.TOP_ANIME)
                     }
                 )
                 IconCard(
@@ -174,7 +82,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.POPULAR_ANIME)
+                        navActionManager.toMediaChart(ChartType.POPULAR_ANIME)
                     }
                 )
             }
@@ -188,7 +96,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.UPCOMING_ANIME)
+                        navActionManager.toMediaChart(ChartType.UPCOMING_ANIME)
                     }
                 )
                 IconCard(
@@ -198,7 +106,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.AIRING_ANIME)
+                        navActionManager.toMediaChart(ChartType.AIRING_ANIME)
                     }
                 )
             }
@@ -212,7 +120,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.SPRING.name)
+                        navActionManager.toAnimeSeason(DateUtils.currentYear, MediaSeason.SPRING)
                     }
                 )
                 IconCard(
@@ -222,7 +130,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.SUMMER.name)
+                        navActionManager.toAnimeSeason(DateUtils.currentYear, MediaSeason.SUMMER)
                     }
                 )
             }
@@ -236,7 +144,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.FALL.name)
+                        navActionManager.toAnimeSeason(DateUtils.currentYear, MediaSeason.FALL)
                     }
                 )
                 IconCard(
@@ -246,7 +154,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToAnimeSeason(DateUtils.currentYear, MediaSeason.WINTER.name)
+                        navActionManager.toAnimeSeason(DateUtils.currentYear, MediaSeason.WINTER)
                     }
                 )
             }
@@ -260,7 +168,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.TOP_MOVIES)
+                        navActionManager.toMediaChart(ChartType.TOP_MOVIES)
                     }
                 )
                 IconCard(
@@ -270,7 +178,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToCalendar()
+                        navActionManager.toCalendar()
                     }
                 )
             }
@@ -292,7 +200,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.TOP_MANGA)
+                        navActionManager.toMediaChart(ChartType.TOP_MANGA)
                     }
                 )
                 IconCard(
@@ -302,7 +210,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.POPULAR_MANGA)
+                        navActionManager.toMediaChart(ChartType.POPULAR_MANGA)
                     }
                 )
             }
@@ -316,7 +224,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.UPCOMING_MANGA)
+                        navActionManager.toMediaChart(ChartType.UPCOMING_MANGA)
                     }
                 )
                 IconCard(
@@ -326,7 +234,7 @@ fun ExploreView(
                         .weight(1f)
                         .padding(horizontal = 8.dp),
                     onClick = {
-                        navigateToMediaChart(ChartType.PUBLISHING_MANGA)
+                        navActionManager.toMediaChart(ChartType.PUBLISHING_MANGA)
                     }
                 )
             }
@@ -339,15 +247,9 @@ fun ExploreView(
 fun ExploreViewPreview() {
     AniHyouTheme {
         Surface {
-            ExploreView(
-                navigateToMediaDetails = {},
-                navigateToMediaChart = {},
-                navigateToAnimeSeason = { _, _ -> },
-                navigateToCharacterDetails = {},
-                navigateToStaffDetails = {},
-                navigateToStudioDetails = {},
-                navigateToUserDetails = {},
-                navigateToCalendar = {}
+            ExploreContent(
+                topBar = { ExploreSearchBarPreview() },
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

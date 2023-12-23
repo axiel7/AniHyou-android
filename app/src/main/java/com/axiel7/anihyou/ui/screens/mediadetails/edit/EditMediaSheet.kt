@@ -75,10 +75,8 @@ fun EditMediaSheet(
     bottomPadding: Dp = 0.dp,
     onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
 ) {
-    val context = LocalContext.current
-    val datePickerState = rememberDatePickerState()
-
     val viewModel: EditMediaViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(mediaDetails) {
         viewModel.setMediaDetails(mediaDetails)
@@ -88,29 +86,47 @@ fun EditMediaSheet(
         viewModel.setListEntry(listEntry)
     }
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scoreFormat by viewModel.scoreFormat.collectAsStateWithLifecycle()
+    EditMediaSheetContent(
+        uiState = uiState,
+        event = viewModel,
+        sheetState = sheetState,
+        bottomPadding = bottomPadding,
+        onDismiss = onDismiss,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditMediaSheetContent(
+    uiState: EditMediaUiState,
+    event: EditMediaEvent?,
+    sheetState: SheetState,
+    bottomPadding: Dp = 0.dp,
+    onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
+) {
+    val context = LocalContext.current
+    val datePickerState = rememberDatePickerState()
 
     if (uiState.openDatePicker) {
         EditMediaDatePicker(
             datePickerState = datePickerState,
             onDateSelected = {
                 when (uiState.selectedDateType) {
-                    1 -> viewModel.setStartedAt(it)
-                    2 -> viewModel.setCompletedAt(it)
+                    1 -> event?.setStartedAt(it)
+                    2 -> event?.setCompletedAt(it)
                 }
             },
-            onDismiss = { viewModel.onDateDialogClosed() }
+            onDismiss = { event?.onDateDialogClosed() }
         )
     }
 
     if (uiState.openDeleteDialog) {
         DeleteMediaEntryDialog(
             onClickOk = {
-                viewModel.deleteListEntry()
+                event?.deleteListEntry()
             },
             onDismiss = {
-                viewModel.toggleDeleteDialog(false)
+                event?.toggleDeleteDialog(false)
             }
         )
     }
@@ -120,23 +136,23 @@ fun EditMediaSheet(
             lists = uiState.customLists.orEmpty(),
             isLoading = uiState.isLoading,
             onConfirm = {
-                viewModel.updateCustomLists(it)
+                event?.updateCustomLists(it)
             },
-            onDismiss = { viewModel.toggleCustomListsDialog(false) }
+            onDismiss = { event?.toggleCustomListsDialog(false) }
         )
     }
 
     LaunchedEffect(uiState.error) {
         if (uiState.error != null) {
             context.showToast(uiState.error)
-            viewModel.onErrorDisplayed()
+            event?.onErrorDisplayed()
         }
     }
 
     LaunchedEffect(uiState.updateSuccess) {
         if (uiState.updateSuccess) {
             onDismiss(uiState.listEntry)
-            viewModel.setUpdateSuccess(false)
+            event?.setUpdateSuccess(false)
         }
     }
 
@@ -160,11 +176,11 @@ fun EditMediaSheet(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = { onDismiss(listEntry) }) {
+                TextButton(onClick = { onDismiss(uiState.listEntry) }) {
                     Text(text = stringResource(R.string.cancel))
                 }
 
-                Button(onClick = { viewModel.updateListEntry() }) {
+                Button(onClick = { event?.updateListEntry() }) {
                     if (uiState.isLoading) {
                         SmallCircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary
@@ -187,12 +203,12 @@ fun EditMediaSheet(
                     SelectableIconToggleButton(
                         icon = status.icon(),
                         tooltipText = status.localized(
-                            mediaType = mediaDetails.type ?: MediaType.UNKNOWN__
+                            mediaType = uiState.mediaDetails?.type ?: MediaType.UNKNOWN__
                         ),
                         value = status,
                         selectedValue = uiState.status,
                         onClick = {
-                            viewModel.onChangeStatus(status)
+                            event?.onChangeStatus(status)
                         }
                     )
                 }
@@ -200,30 +216,30 @@ fun EditMediaSheet(
 
             // Progress
             EditMediaProgressRow(
-                label = if (mediaDetails.isAnime()) stringResource(R.string.episodes)
+                label = if (uiState.mediaDetails?.isAnime() == true) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
                 progress = uiState.progress,
                 modifier = Modifier.padding(horizontal = 16.dp),
-                totalProgress = mediaDetails.duration(),
-                onValueChange = { viewModel.onChangeProgress(it.toIntOrNull()) },
-                onMinusClick = { viewModel.onChangeProgress(uiState.progress?.minus(1)) },
-                onPlusClick = { viewModel.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
+                totalProgress = uiState.mediaDetails?.duration(),
+                onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
+                onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },
+                onPlusClick = { event?.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
             )
 
-            if (mediaDetails.isManga()) {
+            if (uiState.mediaDetails?.isManga() == true) {
                 EditMediaProgressRow(
                     label = stringResource(R.string.volumes),
                     progress = uiState.volumeProgress,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
-                    totalProgress = mediaDetails.volumes,
-                    onValueChange = { viewModel.onChangeVolumeProgress(it.toIntOrNull()) },
+                    totalProgress = uiState.mediaDetails.volumes,
+                    onValueChange = { event?.onChangeVolumeProgress(it.toIntOrNull()) },
                     onMinusClick = {
-                        viewModel.onChangeVolumeProgress(
+                        event?.onChangeVolumeProgress(
                             uiState.volumeProgress?.minus(1)
                         )
                     },
                     onPlusClick = {
-                        viewModel.onChangeVolumeProgress(
+                        event?.onChangeVolumeProgress(
                             uiState.volumeProgress?.plus(1) ?: 1
                         )
                     }
@@ -235,17 +251,17 @@ fun EditMediaSheet(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                when (scoreFormat) {
+                when (uiState.scoreFormat) {
                     ScoreFormat.POINT_10,
                     ScoreFormat.POINT_10_DECIMAL,
                     ScoreFormat.POINT_100 -> {
                         SliderRatingView(
-                            maxValue = scoreFormat?.maxValue() ?: 0.0,
+                            maxValue = uiState.scoreFormat.maxValue(),
                             modifier = Modifier
                                 .padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = uiState.score ?: 0.0,
-                            showAsDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL,
-                            onRatingChanged = viewModel::onChangeScore
+                            showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
+                            onRatingChanged = { event?.onChangeScore(it) }
                         )
                     }
 
@@ -253,7 +269,7 @@ fun EditMediaSheet(
                         FiveStarRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             initialRating = uiState.score ?: 0.0,
-                            onRatingChanged = viewModel::onChangeScore
+                            onRatingChanged = { event?.onChangeScore(it) }
                         )
                     }
 
@@ -261,7 +277,7 @@ fun EditMediaSheet(
                         SmileyRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
                             rating = uiState.score ?: 0.0,
-                            onRatingChanged = viewModel::onChangeScore
+                            onRatingChanged = { event?.onChangeScore(it) }
                         )
                     }
 
@@ -278,7 +294,7 @@ fun EditMediaSheet(
                 label = { Text(text = stringResource(R.string.start_date)) },
                 trailingIcon = {
                     if (uiState.startedAt != null) {
-                        IconButton(onClick = { viewModel.setStartedAt(null) }) {
+                        IconButton(onClick = { event?.setStartedAt(null) }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
                                 contentDescription = stringResource(R.string.delete)
@@ -288,7 +304,7 @@ fun EditMediaSheet(
                 },
                 onClick = {
                     datePickerState.selectedDateMillis = uiState.startedAt?.toEpochMillis()
-                    viewModel.onDateDialogOpen(dateType = 1)
+                    event?.onDateDialogOpen(dateType = 1)
                 }
             )
             ClickableOutlinedTextField(
@@ -298,7 +314,7 @@ fun EditMediaSheet(
                 label = { Text(text = stringResource(R.string.end_date)) },
                 trailingIcon = {
                     if (uiState.completedAt != null) {
-                        IconButton(onClick = { viewModel.setCompletedAt(null) }) {
+                        IconButton(onClick = { event?.setCompletedAt(null) }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
                                 contentDescription = stringResource(R.string.delete)
@@ -308,7 +324,7 @@ fun EditMediaSheet(
                 },
                 onClick = {
                     datePickerState.selectedDateMillis = uiState.completedAt?.toEpochMillis()
-                    viewModel.onDateDialogOpen(dateType = 2)
+                    event?.onDateDialogOpen(dateType = 2)
                 }
             )
 
@@ -318,16 +334,16 @@ fun EditMediaSheet(
                 progress = uiState.repeatCount,
                 modifier = Modifier.padding(16.dp),
                 totalProgress = null,
-                onValueChange = { viewModel.onChangeRepeatCount(it.toIntOrNull()) },
-                onMinusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
-                onPlusClick = { viewModel.onChangeRepeatCount(uiState.repeatCount?.plus(1) ?: 1) }
+                onValueChange = { event?.onChangeRepeatCount(it.toIntOrNull()) },
+                onMinusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
+                onPlusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.plus(1) ?: 1) }
             )
 
             // Custom lists
             TextButton(
                 onClick = {
-                    if (uiState.customLists == null) viewModel.getCustomLists()
-                    else viewModel.toggleCustomListsDialog(true)
+                    if (uiState.customLists == null) event?.getCustomLists()
+                    else event?.toggleCustomListsDialog(true)
                 }
             ) {
                 if (uiState.isLoading) {
@@ -347,14 +363,14 @@ fun EditMediaSheet(
             TextCheckbox(
                 text = stringResource(R.string.list_private),
                 checked = uiState.isPrivate ?: false,
-                onCheckedChange = viewModel::setIsPrivate,
+                onCheckedChange = { event?.setIsPrivate(it) },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
             // Notes
             OutlinedTextField(
                 value = uiState.notes.orEmpty(),
-                onValueChange = viewModel::setNotes,
+                onValueChange = { event?.setNotes(it) },
                 modifier = Modifier.padding(horizontal = 16.dp),
                 label = { Text(text = stringResource(R.string.notes)) },
                 singleLine = false,
@@ -363,7 +379,7 @@ fun EditMediaSheet(
 
             // Delete
             Button(
-                onClick = { viewModel.toggleDeleteDialog(true) },
+                onClick = { event?.toggleDeleteDialog(true) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 16.dp),
@@ -387,18 +403,10 @@ fun EditMediaSheet(
 fun EditMediaSheetPreview() {
     AniHyouTheme {
         Surface {
-            EditMediaSheet(
+            EditMediaSheetContent(
+                uiState = EditMediaUiState(),
+                event = null,
                 sheetState = rememberModalBottomSheetState(),
-                mediaDetails = BasicMediaDetails(
-                    __typename = "",
-                    id = 1,
-                    title = BasicMediaDetails.Title(userPreferred = ""),
-                    episodes = 12,
-                    chapters = null,
-                    volumes = null,
-                    type = MediaType.ANIME
-                ),
-                listEntry = null,
                 onDismiss = {}
             )
         }

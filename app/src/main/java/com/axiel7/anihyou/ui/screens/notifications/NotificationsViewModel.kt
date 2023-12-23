@@ -7,7 +7,7 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class NotificationsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val notificationRepository: NotificationRepository,
-) : PagedUiStateViewModel<NotificationsUiState>() {
+) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
 
     private val initialUnreadCount: Int = savedStateHandle[NavArgument.UnreadCount.name] ?: 0
 
@@ -35,8 +35,10 @@ class NotificationsViewModel @Inject constructor(
 
     private var resetCount = true
 
-    fun setType(value: NotificationTypeGroup) = mutableUiState.update {
-        it.copy(type = value, page = 1, hasNextPage = true)
+    override fun setType(value: NotificationTypeGroup) {
+        mutableUiState.update {
+            it.copy(type = value, page = 1, hasNextPage = true)
+        }
     }
 
     val notifications = mutableStateListOf<GenericNotification>()

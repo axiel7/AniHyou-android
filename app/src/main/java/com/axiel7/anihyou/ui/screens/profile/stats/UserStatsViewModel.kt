@@ -22,42 +22,43 @@ import javax.inject.Inject
 @HiltViewModel
 class UserStatsViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : UiStateViewModel<UserStatsUiState>() {
+) : UiStateViewModel<UserStatsUiState>(), UserStatsEvent {
 
     override val mutableUiState = MutableStateFlow(UserStatsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
     fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 
-    fun setType(value: UserStatType) = mutableUiState.update { it.copy(type = value) }
+    override fun setType(value: UserStatType) = mutableUiState.update { it.copy(type = value) }
 
-    fun setMediaType(value: MediaType) = mutableUiState.update { it.copy(mediaType = value) }
+    override fun setMediaType(value: MediaType) =
+        mutableUiState.update { it.copy(mediaType = value) }
 
-    fun setScoreType(value: StatDistributionType) =
+    override fun setScoreType(value: StatDistributionType) =
         mutableUiState.update { it.copy(scoreType = value) }
 
-    fun setLengthType(value: StatDistributionType) =
+    override fun setLengthType(value: StatDistributionType) =
         mutableUiState.update { it.copy(lengthType = value) }
 
-    fun setReleaseYearType(value: StatDistributionType) =
+    override fun setReleaseYearType(value: StatDistributionType) =
         mutableUiState.update { it.copy(releaseYearType = value) }
 
-    fun setStartYearType(value: StatDistributionType) =
+    override fun setStartYearType(value: StatDistributionType) =
         mutableUiState.update { it.copy(startYearType = value) }
 
-    fun setGenresType(value: StatDistributionType) =
+    override fun setGenresType(value: StatDistributionType) =
         mutableUiState.update { it.copy(genresType = value) }
 
-    fun setTagsType(value: StatDistributionType) =
+    override fun setTagsType(value: StatDistributionType) =
         mutableUiState.update { it.copy(tagsType = value) }
 
-    fun setStaffType(value: StatDistributionType) =
+    override fun setStaffType(value: StatDistributionType) =
         mutableUiState.update { it.copy(staffType = value) }
 
-    fun setVoiceActorsType(value: StatDistributionType) =
+    override fun setVoiceActorsType(value: StatDistributionType) =
         mutableUiState.update { it.copy(voiceActorsType = value) }
 
-    fun setStudiosType(value: StatDistributionType) =
+    override fun setStudiosType(value: StatDistributionType) =
         mutableUiState.update { it.copy(studiosType = value) }
 
     init {

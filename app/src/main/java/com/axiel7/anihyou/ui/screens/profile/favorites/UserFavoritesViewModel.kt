@@ -27,15 +27,17 @@ import javax.inject.Inject
 @HiltViewModel
 class UserFavoritesViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository
-) : PagedUiStateViewModel<UserFavoritesUiState>() {
+) : PagedUiStateViewModel<UserFavoritesUiState>(), UserFavoritesEvent {
 
     override val mutableUiState = MutableStateFlow(UserFavoritesUiState())
     override val uiState = mutableUiState.asStateFlow()
 
     fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 
-    fun setType(value: FavoritesType) = mutableUiState.update {
-        it.copy(type = value, page = 1, hasNextPage = true)
+    override fun setType(value: FavoritesType) {
+        mutableUiState.update {
+            it.copy(type = value, page = 1, hasNextPage = true)
+        }
     }
 
     val anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()

@@ -43,17 +43,25 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.SearchCharacterQuery
+import com.axiel7.anihyou.SearchMediaQuery
+import com.axiel7.anihyou.SearchStaffQuery
+import com.axiel7.anihyou.SearchStudioQuery
+import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
@@ -71,6 +79,7 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchSortC
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchStatusChip
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearChip
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
+import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,14 +88,10 @@ fun SearchView(
     initialGenre: String? = null,
     initialTag: String? = null,
     initialFocus: Boolean = false,
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: SearchViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var query by rememberSaveable { mutableStateOf("") }
     val performSearch = remember { mutableStateOf(false) }
@@ -112,7 +117,7 @@ fun SearchView(
                     .focusRequester(focusRequester),
                 placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
                 leadingIcon = {
-                    BackIconButton(onClick = navigateBack)
+                    BackIconButton(onClick = navActionManager::goBack)
                 },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
@@ -142,16 +147,18 @@ fun SearchView(
                 )
             )
             SearchContentView(
-                viewModel = viewModel,
                 query = query,
                 performSearch = performSearch,
                 initialGenre = initialGenre,
                 initialTag = initialTag,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToStudioDetails = navigateToStudioDetails,
-                navigateToUserDetails = navigateToUserDetails,
+                media = viewModel.media,
+                characters = viewModel.characters,
+                staff = viewModel.staff,
+                studios = viewModel.studios,
+                users = viewModel.users,
+                uiState = uiState,
+                event = viewModel,
+                navActionManager = navActionManager,
             )
         }//:Column
     }//:Surface
@@ -160,22 +167,22 @@ fun SearchView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchContentView(
-    viewModel: SearchViewModel,
     query: String,
     performSearch: MutableState<Boolean>,
     initialGenre: String?,
     initialTag: String?,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
+    media: List<SearchMediaQuery.Medium>,
+    characters: List<SearchCharacterQuery.Character>,
+    staff: List<SearchStaffQuery.Staff>,
+    studios: List<SearchStudioQuery.Studio>,
+    users: List<SearchUserQuery.User>,
+    uiState: SearchUiState,
+    event: SearchEvent?,
+    navActionManager: NavActionManager,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     var showMoreFilters by rememberSaveable { mutableStateOf(false) }
@@ -187,7 +194,7 @@ fun SearchContentView(
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
             listState.scrollToItem(0)
-            viewModel.setQuery(query)
+            event?.setQuery(query)
             performSearch.value = false
         }
     }
@@ -195,11 +202,11 @@ fun SearchContentView(
     if (editSheetState.isVisible && uiState.selectedMediaItem != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = uiState.selectedMediaItem!!.basicMediaDetails,
-            listEntry = uiState.selectedMediaItem?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedMediaItem.basicMediaDetails,
+            listEntry = uiState.selectedMediaItem.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
+                    event?.onUpdateListEntry(updatedListEntry)
                     editSheetState.hide()
                 }
             }
@@ -220,7 +227,7 @@ fun SearchContentView(
                         selected = uiState.searchType == it,
                         text = it.localized(),
                         onClick = {
-                            viewModel.setSearchType(it)
+                            event?.setSearchType(it)
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     )
@@ -231,7 +238,7 @@ fun SearchContentView(
                     mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
                         ?: MediaSortSearch.SEARCH_MATCH,
                     onSortChanged = {
-                        viewModel.setMediaSort(it)
+                        event?.setMediaSort(it)
                     }
                 )
                 if (showMoreFilters) {
@@ -244,35 +251,35 @@ fun SearchContentView(
                         MediaSearchFormatChip(
                             mediaType = uiState.mediaType ?: MediaType.ANIME,
                             selectedMediaFormats = uiState.selectedMediaFormats,
-                            onMediaFormatsChanged = viewModel::setMediaFormats
+                            onMediaFormatsChanged = { event?.setMediaFormats(it) }
                         )
 
                         MediaSearchStatusChip(
                             selectedMediaStatuses = uiState.selectedMediaStatuses,
-                            onMediaStatusesChanged = viewModel::setMediaStatuses
+                            onMediaStatusesChanged = { event?.setMediaStatuses(it) }
                         )
 
                         TriFilterChip(
                             text = stringResource(R.string.on_my_list),
                             value = uiState.onMyList,
-                            onValueChanged = viewModel::setOnMyList,
+                            onValueChanged = { event?.setOnMyList(it) },
                         )
 
                         MediaSearchCountryChip(
                             value = uiState.country,
-                            onValueChanged = viewModel::setCountry
+                            onValueChanged = { event?.setCountry(it) }
                         )
                     }
                     MediaSearchYearChip(
                         startYear = uiState.startYear,
                         endYear = uiState.endYear,
-                        onStartYearChanged = viewModel::setStartYear,
-                        onEndYearChanged = viewModel::setEndYear
+                        onStartYearChanged = { event?.setStartYear(it) },
+                        onEndYearChanged = { event?.setEndYear(it) }
                     )
                     MediaSearchGenresChips(
                         externalGenre = initialGenre?.let { SelectableGenre(name = it) },
                         externalTag = initialTag?.let { SelectableGenre(name = it) },
-                        onGenreTagStateChanged = viewModel::onGenreTagStateChanged,
+                        onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
                     )
                     Row(
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -281,12 +288,12 @@ fun SearchContentView(
                         TriFilterChip(
                             text = stringResource(R.string.doujinshi),
                             value = uiState.isDoujin,
-                            onValueChanged = viewModel::setIsDoujin
+                            onValueChanged = { event?.setIsDoujin(it) }
                         )
                         TriFilterChip(
                             text = stringResource(R.string.is_adult),
                             value = uiState.isAdult,
-                            onValueChanged = viewModel::setIsAdult
+                            onValueChanged = { event?.setIsAdult(it) }
                         )
                     }
                 }
@@ -304,7 +311,7 @@ fun SearchContentView(
                     }
                     ErrorTextButton(
                         text = stringResource(R.string.clear),
-                        onClick = viewModel::clearFilters
+                        onClick = { event?.clearFilters() }
                     )
                 }
             }
@@ -317,7 +324,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = viewModel.media,
+                    items = media,
                     contentType = { it }
                 ) { item ->
                     MediaItemHorizontal(
@@ -327,11 +334,11 @@ fun SearchContentView(
                         format = item.format ?: MediaFormat.UNKNOWN__,
                         year = item.startDate?.year,
                         onClick = {
-                            navigateToMediaDetails(item.id)
+                            navActionManager.toMediaDetails(item.id)
                         },
                         onLongClick = {
                             scope.launch {
-                                viewModel.selectMediaItem(item)
+                                event?.selectMediaItem(item)
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 editSheetState.show()
                             }
@@ -355,7 +362,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = viewModel.characters,
+                    items = characters,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -363,7 +370,7 @@ fun SearchContentView(
                         modifier = Modifier.fillMaxWidth(),
                         imageUrl = item.image?.medium,
                         onClick = {
-                            navigateToCharacterDetails(item.id)
+                            navActionManager.toCharacterDetails(item.id)
                         }
                     )
                 }
@@ -376,7 +383,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = viewModel.staff,
+                    items = staff,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -384,7 +391,7 @@ fun SearchContentView(
                         modifier = Modifier.fillMaxWidth(),
                         imageUrl = item.image?.medium,
                         onClick = {
-                            navigateToStaffDetails(item.id)
+                            navActionManager.toStaffDetails(item.id)
                         }
                     )
                 }
@@ -402,14 +409,14 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = viewModel.studios,
+                    items = studios,
                     contentType = { it }
                 ) { item ->
                     Text(
                         text = item.name,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { navigateToStudioDetails(item.id) }
+                            .clickable { navActionManager.toStudioDetails(item.id) }
                             .padding(16.dp)
                     )
                 }
@@ -422,7 +429,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = viewModel.users,
+                    items = users,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -430,11 +437,37 @@ fun SearchContentView(
                         modifier = Modifier.fillMaxWidth(),
                         imageUrl = item.avatar?.medium,
                         onClick = {
-                            navigateToUserDetails(item.id)
+                            navActionManager.toUserDetails(item.id)
                         }
                     )
                 }
             }
         }
     }//: LazyColumn
+}
+
+@Preview
+@Composable
+fun SearchPreview() {
+    AniHyouTheme {
+        Surface {
+            SearchContentView(
+                query = "",
+                performSearch = remember { mutableStateOf(false) },
+                initialGenre = null,
+                initialTag = null,
+                media = emptyList(),
+                characters = emptyList(),
+                staff = emptyList(),
+                studios = emptyList(),
+                users = emptyList(),
+                uiState = SearchUiState(
+                    searchType = SearchType.ANIME,
+                    mediaSort = MediaSort.SEARCH_MATCH
+                ),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
+            )
+        }
+    }
 }

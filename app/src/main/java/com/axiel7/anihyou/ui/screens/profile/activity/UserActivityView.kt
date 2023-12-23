@@ -15,24 +15,23 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.ui.screens.profile.ProfileEvent
+import com.axiel7.anihyou.ui.screens.profile.ProfileUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun UserActivityView(
     activities: List<UserActivityQuery.Activity>,
-    isLoading: Boolean,
-    loadMore: () -> Unit,
-    toggleLike: (Int) -> Unit,
+    uiState: ProfileUiState,
+    event: ProfileEvent?,
     modifier: Modifier = Modifier,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit
+    navActionManager: NavActionManager,
 ) {
     val listState = rememberLazyListState()
-    if (!isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     LazyColumn(
@@ -40,7 +39,7 @@ fun UserActivityView(
         state = listState,
         contentPadding = PaddingValues(top = 8.dp)
     ) {
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(10) {
                 ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)
@@ -65,13 +64,13 @@ fun UserActivityView(
                     imageUrl = activity.media?.coverImage?.medium,
                     isLocked = activity.isLocked,
                     onClick = {
-                        navigateToActivityDetails(activity.id)
+                        navActionManager.toActivityDetails(activity.id)
                     },
                     onClickImage = {
-                        activity.media?.id?.let(navigateToMediaDetails)
+                        activity.media?.id?.let(navActionManager::toMediaDetails)
                     },
                     onClickLike = {
-                        toggleLike(activity.id)
+                        event?.toggleLikeActivity(activity.id)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
@@ -91,15 +90,15 @@ fun UserActivityView(
                     username = activity.user?.name,
                     isLocked = activity.isLocked,
                     onClick = {
-                        navigateToActivityDetails(activity.id)
+                        navActionManager.toActivityDetails(activity.id)
                     },
                     onClickImage = {
-                        activity.userId?.let(navigateToUserDetails)
+                        activity.userId?.let(navActionManager::toUserDetails)
                     },
                     onClickLike = {
-                        toggleLike(activity.id)
+                        event?.toggleLikeActivity(activity.id)
                     },
-                    navigateToFullscreenImage = navigateToFullscreenImage
+                    navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
@@ -119,15 +118,15 @@ fun UserActivityView(
                     isPrivate = activity.isPrivate,
                     isLocked = activity.isLocked,
                     onClick = {
-                        navigateToActivityDetails(activity.id)
+                        navActionManager.toActivityDetails(activity.id)
                     },
                     onClickImage = {
-                        activity.messengerId?.let(navigateToUserDetails)
+                        activity.messengerId?.let(navActionManager::toUserDetails)
                     },
                     onClickLike = {
-                        toggleLike(activity.id)
+                        event?.toggleLikeActivity(activity.id)
                     },
-                    navigateToFullscreenImage = navigateToFullscreenImage
+                    navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
@@ -142,13 +141,9 @@ fun UserActivityViewPreview() {
         Surface {
             UserActivityView(
                 activities = emptyList(),
-                isLoading = true,
-                loadMore = {},
-                toggleLike = {},
-                navigateToMediaDetails = {},
-                navigateToUserDetails = {},
-                navigateToActivityDetails = {},
-                navigateToFullscreenImage = {}
+                uiState = ProfileUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -41,10 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.ui.common.TabRowItem
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -58,24 +59,21 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 import java.time.LocalDate
 
-private val calendarTabs = arrayOf(
-    TabRowItem(value = DayOfWeek.MONDAY, title = R.string.monday),
-    TabRowItem(value = DayOfWeek.TUESDAY, title = R.string.tuesday),
-    TabRowItem(value = DayOfWeek.WEDNESDAY, title = R.string.wednesday),
-    TabRowItem(value = DayOfWeek.THURSDAY, title = R.string.thursday),
-    TabRowItem(value = DayOfWeek.FRIDAY, title = R.string.friday),
-    TabRowItem(value = DayOfWeek.SATURDAY, title = R.string.saturday),
-    TabRowItem(value = DayOfWeek.SUNDAY, title = R.string.sunday)
-)
+@Composable
+fun CalendarView(
+    navActionManager: NavActionManager
+) {
+    CalendarViewContent(
+        navActionManager = navActionManager
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarView(
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateBack: () -> Unit
+private fun CalendarViewContent(
+    navActionManager: NavActionManager
 ) {
     var onMyList by rememberSaveable { mutableStateOf<Boolean?>(null) }
 
@@ -86,7 +84,7 @@ fun CalendarView(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             TriFilterChip(
                 text = stringResource(R.string.on_my_list),
@@ -98,7 +96,7 @@ fun CalendarView(
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         DefaultTabRowWithPager(
-            tabs = calendarTabs,
+            tabs = CalendarTab.tabRows,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
@@ -108,12 +106,23 @@ fun CalendarView(
                 ),
             initialPage = LocalDate.now().dayOfWeek.value - 1,
             isTabScrollable = true,
-        ) {
+        ) { page ->
+            val weekday = CalendarTab.tabRows[page].value.ordinal + 1
+            val viewModel: CalendarViewModel = hiltViewModel(key = weekday.toString())
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            LaunchedEffect(weekday) {
+                viewModel.setWeekday(weekday)
+            }
+            LaunchedEffect(onMyList) {
+                viewModel.setOnMyList(onMyList)
+            }
+
             CalendarDayView(
-                weekday = calendarTabs[it].value.value,
-                onMyList = onMyList,
+                list = viewModel.weeklyAnime,
+                uiState = uiState,
+                events = viewModel,
                 editSheetState = editSheetState,
-                navigateToMediaDetails = navigateToMediaDetails,
+                navActionManager = navActionManager,
                 modifier = Modifier
                     .fillMaxHeight()
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
@@ -128,38 +137,31 @@ fun CalendarView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarDayView(
-    weekday: Int,
-    onMyList: Boolean?,
+private fun CalendarDayView(
+    list: List<AiringAnimesQuery.AiringSchedule>,
+    uiState: CalendarUiState,
+    events: CalendarEvent?,
     editSheetState: SheetState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navigateToMediaDetails: (Int) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val viewModel: CalendarViewModel = hiltViewModel(key = weekday.toString())
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // TODO: pass these to SavedStateHandle
-    LaunchedEffect(weekday) {
-        viewModel.setWeekday(weekday)
-    }
-    LaunchedEffect(onMyList) {
-        viewModel.setOnMyList(onMyList)
-    }
 
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    listState.OnBottomReached(buffer = 3) {
+        events?.onLoadMore()
+    }
 
     if (editSheetState.isVisible && uiState.selectedItem?.media != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = uiState.selectedItem!!.media!!.basicMediaDetails,
-            listEntry = uiState.selectedItem?.media?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedItem.media.basicMediaDetails,
+            listEntry = uiState.selectedItem.media.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
+                    events?.onUpdateListEntry(updatedListEntry)
                     editSheetState.hide()
                 }
             }
@@ -175,7 +177,7 @@ fun CalendarDayView(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         items(
-            items = viewModel.weeklyAnime,
+            items = list,
             contentType = { it }
         ) { item ->
             MediaItemVertical(
@@ -204,11 +206,11 @@ fun CalendarDayView(
                 },
                 minLines = 1,
                 onClick = {
-                    navigateToMediaDetails(item.mediaId)
+                    navActionManager.toMediaDetails(item.mediaId)
                 },
                 onLongClick = {
                     scope.launch {
-                        viewModel.selectItem(item)
+                        events?.selectItem(item)
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         editSheetState.show()
                     }
@@ -223,14 +225,18 @@ fun CalendarDayView(
     }//: LazyVerticalGrid
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CalendarViewPreview() {
     AniHyouTheme {
         Surface {
-            CalendarView(
-                navigateToMediaDetails = {},
-                navigateBack = {}
+            CalendarDayView(
+                list = emptyList(),
+                uiState = CalendarUiState(),
+                events = null,
+                editSheetState = rememberModalBottomSheetState(),
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -7,6 +7,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavDestination
 
 sealed class BottomDestination(
     val index: Int,

@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.type.NotificationType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
@@ -39,29 +41,40 @@ import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 import java.time.temporal.ChronoUnit
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsView(
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToThreadDetails: (Int) -> Unit,
-    navigateBack: () -> Unit
+    navActionManager: NavActionManager,
 ) {
     val viewModel: NotificationsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    NotificationsContent(
+        notifications = viewModel.notifications,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NotificationsContent(
+    notifications: List<GenericNotification>,
+    uiState: NotificationsUiState,
+    event: NotificationsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.notifications),
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior,
     ) { padding ->
         LazyColumn(
@@ -89,7 +102,7 @@ fun NotificationsView(
                         FilterSelectionChip(
                             selected = uiState.type == it,
                             text = it.localized(),
-                            onClick = { viewModel.setType(it) },
+                            onClick = { event?.setType(it) },
                             modifier = Modifier.padding(end = 8.dp)
                         )
                     }
@@ -105,7 +118,7 @@ fun NotificationsView(
                 }
             }
             items(
-                items = viewModel.notifications,
+                items = notifications,
                 contentType = { it }
             ) { item ->
                 NotificationItem(
@@ -127,14 +140,14 @@ fun NotificationsView(
                             NotificationType.MEDIA_DATA_CHANGE,
                             NotificationType.MEDIA_MERGE,
                             NotificationType.MEDIA_DELETION ->
-                                navigateToMediaDetails(item.contentId)
+                                navActionManager.toMediaDetails(item.contentId)
 
                             NotificationType.THREAD_SUBSCRIBED,
                             NotificationType.THREAD_LIKE,
                             NotificationType.THREAD_COMMENT_MENTION,
                             NotificationType.THREAD_COMMENT_REPLY,
                             NotificationType.THREAD_COMMENT_LIKE ->
-                                navigateToThreadDetails(item.contentId)
+                                navActionManager.toThreadDetails(item.contentId)
 
                             NotificationType.ACTIVITY_MESSAGE,
                             NotificationType.ACTIVITY_REPLY,
@@ -142,16 +155,18 @@ fun NotificationsView(
                             NotificationType.ACTIVITY_LIKE,
                             NotificationType.ACTIVITY_REPLY_LIKE,
                             NotificationType.ACTIVITY_REPLY_SUBSCRIBED ->
-                                navigateToActivityDetails(item.contentId)
+                                navActionManager.toActivityDetails(item.contentId)
 
-                            NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
+                            NotificationType.FOLLOWING ->
+                                navActionManager.toUserDetails(item.contentId)
 
                             else -> {}
                         }
                     },
                     onClickImage = {
                         when (item.type) {
-                            NotificationType.FOLLOWING -> navigateToUserDetails(item.contentId)
+                            NotificationType.FOLLOWING ->
+                                navActionManager.toUserDetails(item.contentId)
 
                             NotificationType.ACTIVITY_MESSAGE,
                             NotificationType.ACTIVITY_MENTION,
@@ -160,7 +175,9 @@ fun NotificationsView(
                             NotificationType.THREAD_COMMENT_MENTION,
                             NotificationType.THREAD_COMMENT_LIKE,
                             NotificationType.THREAD_LIKE ->
-                                navigateToUserDetails(item.secondaryContentId ?: item.contentId)
+                                navActionManager.toUserDetails(
+                                    item.secondaryContentId ?: item.contentId
+                                )
 
                             else -> {}
                         }
@@ -176,12 +193,11 @@ fun NotificationsView(
 fun NotificationsViewPreview() {
     AniHyouTheme {
         Surface {
-            NotificationsView(
-                navigateToMediaDetails = {},
-                navigateToUserDetails = {},
-                navigateToActivityDetails = {},
-                navigateToThreadDetails = {},
-                navigateBack = {}
+            NotificationsContent(
+                notifications = emptyList(),
+                uiState = NotificationsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }
