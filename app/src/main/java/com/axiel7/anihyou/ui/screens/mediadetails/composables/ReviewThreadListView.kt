@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.mediadetails.reviewthread
+package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior

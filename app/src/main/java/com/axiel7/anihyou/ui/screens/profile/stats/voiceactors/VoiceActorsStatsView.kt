@@ -15,9 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.stats.StatDistributionType
-import com.axiel7.anihyou.fragment.VoiceActorStat
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsEvent
+import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemView
 import com.axiel7.anihyou.ui.screens.profile.stats.composables.PositionalStatItemViewPlaceholder
@@ -25,11 +26,9 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
 fun VoiceActorsStatsView(
-    stats: List<VoiceActorStat>?,
-    isLoading: Boolean,
-    voiceActorsType: StatDistributionType,
-    setVoiceActorsType: (StatDistributionType) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
+    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -43,11 +42,11 @@ fun VoiceActorsStatsView(
                 text = stringResource(R.string.voice_actors)
             )
             DistributionTypeChips(
-                value = voiceActorsType,
-                onValueChanged = setVoiceActorsType,
+                value = uiState.voiceActorsType,
+                onValueChanged = { event?.setVoiceActorsType(it) },
             )
         }
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(
                 count = 3,
                 contentType = { it }
@@ -58,7 +57,7 @@ fun VoiceActorsStatsView(
             }
         }
         itemsIndexed(
-            items = stats.orEmpty(),
+            items = uiState.voiceActors.orEmpty(),
             contentType = { _, stat -> stat }
         ) { index, stat ->
             PositionalStatItemView(
@@ -71,7 +70,7 @@ fun VoiceActorsStatsView(
                 chaptersRead = stat.chaptersRead,
                 imageUrl = stat.voiceActor?.image?.medium,
                 onClick = {
-                    stat.voiceActor?.id?.let(navigateToStaffDetails)
+                    stat.voiceActor?.id?.let(navActionManager::toStaffDetails)
                 }
             )
         }
@@ -84,11 +83,9 @@ fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             VoiceActorsStatsView(
-                stats = null,
-                isLoading = true,
-                voiceActorsType = StatDistributionType.TITLES,
-                setVoiceActorsType = {},
-                navigateToStaffDetails = {},
+                uiState = UserStatsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.repository.ReviewRepository
 import com.axiel7.anihyou.type.ReviewRating
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,14 +23,14 @@ import javax.inject.Inject
 class ReviewDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val reviewRepository: ReviewRepository
-) : UiStateViewModel<ReviewDetailsUiState>() {
+) : UiStateViewModel<ReviewDetailsUiState>(), ReviewDetailsEvent {
 
-    val reviewId = savedStateHandle.getStateFlow<Int?>(NavArgument.ReviewId.name, null)
+    private val reviewId = savedStateHandle.getStateFlow<Int?>(NavArgument.ReviewId.name, null)
 
     override val mutableUiState = MutableStateFlow(ReviewDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun rateReview(rating: ReviewRating) {
+    override fun rateReview(rating: ReviewRating) {
         reviewId.value?.let { id ->
             reviewRepository.rateReview(id, rating)
                 .onEach { result ->

@@ -141,11 +141,11 @@ class DefaultPreferencesRepository @Inject constructor(
 
     // home
     val defaultHomeTab =
-        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.index)
+        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.ordinal)
             .map { HomeTab.valueOf(it) }
 
     suspend fun setDefaultHomeTab(value: HomeTab) {
-        dataStore.setValue(DEFAULT_HOME_TAB_KEY, value.index)
+        dataStore.setValue(DEFAULT_HOME_TAB_KEY, value.ordinal)
     }
 
     val airingOnMyList = dataStore.getValue(key = AIRING_ON_MY_LIST_KEY, default = false)

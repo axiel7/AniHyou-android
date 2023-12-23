@@ -30,15 +30,12 @@ import javax.inject.Inject
 class EditMediaViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
-) : UiStateViewModel<EditMediaUiState>() {
+) : UiStateViewModel<EditMediaUiState>(), EditMediaEvent {
 
     override val mutableUiState = MutableStateFlow(EditMediaUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    val scoreFormat = defaultPreferencesRepository.scoreFormat
-        .stateInViewModel()
-
-    val userId = defaultPreferencesRepository.userId
+    private val userId = defaultPreferencesRepository.userId
         .stateInViewModel()
 
     fun setMediaDetails(value: BasicMediaDetails) =
@@ -59,7 +56,7 @@ class EditMediaViewModel @Inject constructor(
         )
     }
 
-    fun onChangeStatus(value: MediaListStatus) {
+    override fun onChangeStatus(value: MediaListStatus) {
         if (mutableUiState.value.isNewEntry && value == MediaListStatus.CURRENT) {
             mutableUiState.update {
                 it.copy(
@@ -81,7 +78,7 @@ class EditMediaViewModel @Inject constructor(
         }
     }
 
-    fun onChangeProgress(value: Int?) {
+    override fun onChangeProgress(value: Int?) {
         if (canChangeProgressTo(value, uiState.value.mediaDetails?.duration())) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING) {
@@ -92,7 +89,7 @@ class EditMediaViewModel @Inject constructor(
         }
     }
 
-    fun onChangeVolumeProgress(value: Int?) {
+    override fun onChangeVolumeProgress(value: Int?) {
         if (canChangeProgressTo(value, uiState.value.mediaDetails?.volumes)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING) {
@@ -113,19 +110,19 @@ class EditMediaViewModel @Inject constructor(
         else -> false
     }
 
-    fun onChangeScore(value: Double) {
+    override fun onChangeScore(value: Double) {
         mutableUiState.update { it.copy(score = value) }
     }
 
-    fun setStartedAt(value: Long?) {
+    override fun setStartedAt(value: Long?) {
         mutableUiState.update { it.copy(startedAt = value?.millisToLocalDate()) }
     }
 
-    fun setCompletedAt(value: Long?) {
+    override fun setCompletedAt(value: Long?) {
         mutableUiState.update { it.copy(completedAt = value?.millisToLocalDate()) }
     }
 
-    fun onDateDialogOpen(dateType: Int) {
+    override fun onDateDialogOpen(dateType: Int) {
         mutableUiState.update {
             it.copy(
                 selectedDateType = dateType,
@@ -134,11 +131,11 @@ class EditMediaViewModel @Inject constructor(
         }
     }
 
-    fun onDateDialogClosed() {
+    override fun onDateDialogClosed() {
         mutableUiState.update { it.copy(openDatePicker = false) }
     }
 
-    fun onChangeRepeatCount(value: Int?): Boolean {
+    override fun onChangeRepeatCount(value: Int?): Boolean {
         if (value != null && value >= 0) {
             mutableUiState.update { it.copy(repeatCount = value) }
             return true
@@ -146,69 +143,73 @@ class EditMediaViewModel @Inject constructor(
         return false
     }
 
-    fun setIsPrivate(value: Boolean) {
+    override fun setIsPrivate(value: Boolean) {
         mutableUiState.update { it.copy(isPrivate = value) }
     }
 
-    fun setNotes(value: String) {
+    override fun setNotes(value: String) {
         mutableUiState.update { it.copy(notes = value) }
     }
 
-    fun updateListEntry() = mediaListRepository.updateEntry(
-        oldEntry = uiState.value.listEntry,
-        mediaId = uiState.value.mediaDetails!!.id,
-        status = uiState.value.status,
-        score = uiState.value.score,
-        progress = uiState.value.progress,
-        progressVolumes = uiState.value.volumeProgress,
-        startedAt = uiState.value.startedAt?.toFuzzyDate(),
-        completedAt = uiState.value.completedAt?.toFuzzyDate(),
-        repeat = uiState.value.repeatCount,
-        private = uiState.value.isPrivate,
-        notes = uiState.value.notes,
-    ).onEach { result ->
-        mutableUiState.update {
-            if (result is DataResult.Success) {
-                it.copy(
-                    isLoading = false,
-                    listEntry = result.data?.basicMediaListEntry ?: it.listEntry,
-                    updateSuccess = result.data != null
-                )
-            } else {
-                result.toUiState()
-            }
-        }
-    }.catch {
-        mutableUiState.update {
-            it.copy(
-                isLoading = false,
-                updateSuccess = false
-            )
-        }
-    }.launchIn(viewModelScope)
-
-    @Suppress("UNCHECKED_CAST")
-    fun updateCustomLists(customsList: List<String>) = mediaListRepository
-        .updateEntry(
+    override fun updateListEntry() {
+        mediaListRepository.updateEntry(
+            oldEntry = uiState.value.listEntry,
             mediaId = uiState.value.mediaDetails!!.id,
-            customLists = customsList
+            status = uiState.value.status,
+            score = uiState.value.score,
+            progress = uiState.value.progress,
+            progressVolumes = uiState.value.volumeProgress,
+            startedAt = uiState.value.startedAt?.toFuzzyDate(),
+            completedAt = uiState.value.completedAt?.toFuzzyDate(),
+            repeat = uiState.value.repeatCount,
+            private = uiState.value.isPrivate,
+            notes = uiState.value.notes,
         ).onEach { result ->
             mutableUiState.update {
                 if (result is DataResult.Success) {
                     it.copy(
                         isLoading = false,
-                        customLists = result.data?.customLists as? LinkedHashMap<String, Boolean>,
-                        openCustomListsDialog = false
+                        listEntry = result.data?.basicMediaListEntry ?: it.listEntry,
+                        updateSuccess = result.data != null
                     )
                 } else {
                     result.toUiState()
                 }
             }
         }.catch {
-            mutableUiState.update { it.copy(isLoading = false) }
+            mutableUiState.update {
+                it.copy(
+                    isLoading = false,
+                    updateSuccess = false
+                )
+            }
         }.launchIn(viewModelScope)
+    }
 
-    fun getCustomLists() {
+    @Suppress("UNCHECKED_CAST")
+    override fun updateCustomLists(customsList: List<String>) {
+        mediaListRepository
+            .updateEntry(
+                mediaId = uiState.value.mediaDetails!!.id,
+                customLists = customsList
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            customLists = result.data?.customLists as? LinkedHashMap<String, Boolean>,
+                            openCustomListsDialog = false
+                        )
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }.catch {
+                mutableUiState.update { it.copy(isLoading = false) }
+            }.launchIn(viewModelScope)
+    }
+
+    override fun getCustomLists() {
         uiState.value.listEntry?.id?.let { entryId ->
             userId
                 .filterNotNull()
@@ -232,19 +233,19 @@ class EditMediaViewModel @Inject constructor(
         }
     }
 
-    fun toggleCustomListsDialog(open: Boolean) {
+    override fun toggleCustomListsDialog(open: Boolean) {
         mutableUiState.update {
             it.copy(openCustomListsDialog = open)
         }
     }
 
-    fun toggleDeleteDialog(open: Boolean) {
+    override fun toggleDeleteDialog(open: Boolean) {
         mutableUiState.update {
             it.copy(openDeleteDialog = open)
         }
     }
 
-    fun deleteListEntry() {
+    override fun deleteListEntry() {
         uiState.value.listEntry?.id?.let { entryId ->
             mediaListRepository.deleteEntry(entryId)
                 .onEach { result ->
@@ -264,7 +265,16 @@ class EditMediaViewModel @Inject constructor(
         }
     }
 
-    fun setUpdateSuccess(value: Boolean) {
+    override fun setUpdateSuccess(value: Boolean) {
         mutableUiState.update { it.copy(updateSuccess = value) }
+    }
+
+    init {
+        defaultPreferencesRepository.scoreFormat
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(scoreFormat = value) }
+            }
+            .launchIn(viewModelScope)
     }
 }

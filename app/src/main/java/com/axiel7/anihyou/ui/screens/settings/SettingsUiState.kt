@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.settings
 
+import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.fragment.UserOptionsFragment
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.AppColorMode
@@ -21,6 +22,7 @@ data class SettingsUiState(
     val airingOnMyList: Boolean? = null,
     val scoreFormat: ScoreFormat? = null,
     val isNotificationsEnabled: Boolean? = null,
+    val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val userOptions: UserOptionsFragment? = null,
 ) : UiState<SettingsUiState> {
     override fun setError(value: String?) = copy(error = value)

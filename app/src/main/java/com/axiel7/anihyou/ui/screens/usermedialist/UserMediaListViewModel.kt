@@ -16,12 +16,13 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -47,15 +48,15 @@ class UserMediaListViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
-) : PagedUiStateViewModel<UserMediaListUiState>() {
+) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
-    val mediaType =
+    private val mediaType =
         savedStateHandle.getStateFlow(NavArgument.MediaType.name, MediaType.UNKNOWN__.name)
             .map { MediaType.safeValueOf(it) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, MediaType.UNKNOWN__)
 
-    val userId: Int? = savedStateHandle[NavArgument.UserId.name]
-    val isMyList = userId == null
+    private val userId: StateFlow<Int?> =
+        savedStateHandle.getStateFlow(NavArgument.UserId.name, null)
 
     private val scoreFormatArg: String? = savedStateHandle[NavArgument.ScoreFormat.name]
 
@@ -66,61 +67,75 @@ class UserMediaListViewModel @Inject constructor(
 
     override val mutableUiState = MutableStateFlow(
         UserMediaListUiState(
+            mediaType = mediaType.value,
             scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
         )
     )
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setScoreFormat(value: ScoreFormat) = mutableUiState.update { it.copy(scoreFormat = value) }
-
-    fun setStatus(value: MediaListStatus) = mutableUiState.update {
-        it.copy(status = value, page = 1, hasNextPage = true)
+    fun setIsCompactScreen(value: Boolean) {
+        mutableUiState.update { it.copy(isCompactScreen = value) }
     }
 
-    fun setSort(value: MediaListSort) = viewModelScope.launch {
-        var sort = value
-        if (sort == MediaListSort.MEDIA_TITLE_ROMAJI
-            || sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
-        ) {
-            val isDesc = sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
-            sort = when (titleLanguage.first()) {
-                UserTitleLanguage.ENGLISH,
-                UserTitleLanguage.ENGLISH_STYLISED ->
-                    if (isDesc) MediaListSort.MEDIA_TITLE_ENGLISH_DESC
-                    else MediaListSort.MEDIA_TITLE_ENGLISH
+    override fun setScoreFormat(value: ScoreFormat) {
+        mutableUiState.update { it.copy(scoreFormat = value) }
+    }
 
-                UserTitleLanguage.NATIVE,
-                UserTitleLanguage.NATIVE_STYLISED ->
-                    if (isDesc) MediaListSort.MEDIA_TITLE_NATIVE_DESC
-                    else MediaListSort.MEDIA_TITLE_NATIVE
+    override fun setStatus(value: MediaListStatus) {
+        mutableUiState.update {
+            it.copy(status = value, page = 1, hasNextPage = true)
+        }
+    }
 
-                else -> value
+    override fun setSort(value: MediaListSort) {
+        viewModelScope.launch {
+            var sort = value
+            if (sort == MediaListSort.MEDIA_TITLE_ROMAJI
+                || sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
+            ) {
+                val isDesc = sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
+                sort = when (titleLanguage.first()) {
+                    UserTitleLanguage.ENGLISH,
+                    UserTitleLanguage.ENGLISH_STYLISED ->
+                        if (isDesc) MediaListSort.MEDIA_TITLE_ENGLISH_DESC
+                        else MediaListSort.MEDIA_TITLE_ENGLISH
+
+                    UserTitleLanguage.NATIVE,
+                    UserTitleLanguage.NATIVE_STYLISED ->
+                        if (isDesc) MediaListSort.MEDIA_TITLE_NATIVE_DESC
+                        else MediaListSort.MEDIA_TITLE_NATIVE
+
+                    else -> value
+                }
+            }
+            if (mediaType.value == MediaType.ANIME) {
+                defaultPreferencesRepository.setAnimeListSort(sort)
+            } else if (mediaType.value == MediaType.MANGA) {
+                defaultPreferencesRepository.setMangaListSort(sort)
             }
         }
-        if (mediaType.value == MediaType.ANIME) {
-            defaultPreferencesRepository.setAnimeListSort(sort)
-        } else if (mediaType.value == MediaType.MANGA) {
-            defaultPreferencesRepository.setMangaListSort(sort)
+    }
+
+    override fun toggleSortMenu(open: Boolean) {
+        mutableUiState.update { it.copy(sortMenuExpanded = open) }
+    }
+
+    override fun toggleNotesDialog(open: Boolean) {
+        mutableUiState.update { it.copy(openNotesDialog = open) }
+    }
+
+    override fun refreshList() {
+        mutableUiState.update {
+            it.copy(
+                fetchFromNetwork = true,
+                page = 1,
+                hasNextPage = true,
+                isLoading = true
+            )
         }
     }
 
-    fun toggleSortMenu(open: Boolean) = mutableUiState.update { it.copy(sortMenuExpanded = open) }
-
-    fun toggleNotesDialog(open: Boolean) = mutableUiState.update { it.copy(openNotesDialog = open) }
-
-    fun refreshList() = mutableUiState.update {
-        it.copy(
-            fetchFromNetwork = true,
-            page = 1,
-            hasNextPage = true,
-            isLoading = true
-        )
-    }
-
-    fun updateEntryProgress(
-        entryId: Int,
-        progress: Int
-    ) {
+    override fun updateEntryProgress(entryId: Int, progress: Int) {
         mediaListRepository.updateEntryProgress(
             entryId = entryId,
             progress = progress,
@@ -145,42 +160,59 @@ class UserMediaListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    var selectedItem: UserMediaListQuery.MediaList? = null
-        private set
-
-    fun selectItem(value: UserMediaListQuery.MediaList?) {
-        selectedItem = value
+    override fun selectItem(value: UserMediaListQuery.MediaList?) {
+        mutableUiState.update { it.copy(selectedItem = value) }
     }
 
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        if (selectedItem != null && selectedItem?.basicMediaListEntry != newListEntry) {
-            if (newListEntry != null
-                && newListEntry.status == selectedItem?.basicMediaListEntry?.status
-            ) {
-                val index = media.indexOf(selectedItem)
-                if (index != -1) {
-                    media[index] = selectedItem!!.copy(basicMediaListEntry = newListEntry)
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        uiState.value.selectedItem?.let { selectedItem ->
+            if (selectedItem.basicMediaListEntry != newListEntry) {
+                if (newListEntry != null
+                    && newListEntry.status == selectedItem.basicMediaListEntry.status
+                ) {
+                    val index = media.indexOf(selectedItem)
+                    if (index != -1) {
+                        media[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
+                    }
+                } else {
+                    media.remove(selectedItem)
                 }
-            } else {
-                media.remove(selectedItem)
             }
         }
     }
 
-    val itemsPerRow = listPreferencesRepository.gridItemsPerRow.stateInViewModel()
-
     val media = mutableStateListOf<UserMediaListQuery.MediaList>()
 
     init {
-        if (isMyList) {
-            // score format
-            defaultPreferencesRepository.scoreFormat
-                .filterNotNull()
-                .onEach { format ->
-                    mutableUiState.update { it.copy(scoreFormat = format) }
+        userId
+            .onEach { value ->
+                mutableUiState.update {
+                    it.copy(
+                        userId = value,
+                        isMyList = value == null
+                    )
                 }
-                .launchIn(viewModelScope)
-        }
+            }
+            .launchIn(viewModelScope)
+
+        mediaType
+            .onEach { value ->
+                mutableUiState.update { it.copy(mediaType = value) }
+            }
+            .launchIn(viewModelScope)
+
+        // score format
+        uiState
+            .distinctUntilChangedBy { it.isMyList }
+            .flatMapLatest {
+                if (it.isMyList) {
+                    defaultPreferencesRepository.scoreFormat.filterNotNull()
+                } else emptyFlow()
+            }
+            .onEach { format ->
+                mutableUiState.update { it.copy(scoreFormat = format) }
+            }
+            .launchIn(viewModelScope)
 
         // list style
         combine(
@@ -202,6 +234,14 @@ class UserMediaListViewModel @Inject constructor(
                     }
             }
         }.launchIn(viewModelScope)
+
+        // grid items per row
+        listPreferencesRepository.gridItemsPerRow
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(itemsPerRow = value) }
+            }
+            .launchIn(viewModelScope)
 
         // sort preference
         mediaType
@@ -230,7 +270,7 @@ class UserMediaListViewModel @Inject constructor(
             }
             .combine(mediaType, ::Pair)
             .flatMapLatest { (uiState, mediaType) ->
-                val listUserId = userId ?: myUserId.first()
+                val listUserId = uiState.userId ?: myUserId.first()
                 mediaListRepository.getUserMediaListPage(
                     userId = listUserId,
                     mediaType = mediaType,

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.mediadetails.stats
+package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

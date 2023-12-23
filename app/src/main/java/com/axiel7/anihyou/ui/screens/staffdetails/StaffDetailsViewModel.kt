@@ -11,7 +11,7 @@ import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StaffRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,18 +34,20 @@ class StaffDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val staffRepository: StaffRepository,
     private val favoriteRepository: FavoriteRepository,
-) : UiStateViewModel<StaffDetailsUiState>() {
+) : UiStateViewModel<StaffDetailsUiState>(), StaffDetailsEvent {
 
-    val staffId = savedStateHandle.getStateFlow<Int?>(NavArgument.StaffId.name, null)
+    private val staffId = savedStateHandle.getStateFlow<Int?>(NavArgument.StaffId.name, null)
 
     override val mutableUiState = MutableStateFlow(StaffDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun setMediaOnMyList(value: Boolean?) = mutableUiState.update {
-        it.copy(mediaOnMyList = value, pageMedia = 1, hasNextPageMedia = true)
+    override fun setMediaOnMyList(value: Boolean?) {
+        mutableUiState.update {
+            it.copy(mediaOnMyList = value, pageMedia = 1, hasNextPageMedia = true)
+        }
     }
 
-    fun toggleFavorite() {
+    override fun toggleFavorite() {
         staffId.value?.let { staffId ->
             favoriteRepository.toggleFavorite(staffId = staffId)
                 .onEach { result ->
@@ -64,18 +66,16 @@ class StaffDetailsViewModel @Inject constructor(
         }
     }
 
-    val media = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
-
-    fun loadNextPageMedia() {
+    override fun loadNextPageMedia() {
         if (mutableUiState.value.hasNextPageMedia)
             mutableUiState.update { it.copy(pageMedia = it.pageMedia + 1) }
     }
 
-    fun selectMediaItem(value: Pair<Int, StaffMediaGrouped>?) = mutableUiState.update {
+    override fun selectMediaItem(value: Pair<Int, StaffMediaGrouped>?) = mutableUiState.update {
         it.copy(selectedMediaItem = value)
     }
 
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         uiState.value.selectedMediaItem?.let { selectedItem ->
             val index = media.indexOfFirst { it.first == selectedItem.first }
             if (index != -1) {
@@ -100,12 +100,13 @@ class StaffDetailsViewModel @Inject constructor(
         }
     }
 
-    val characters = mutableStateListOf<StaffCharacterQuery.Edge>()
-
-    fun loadNextPageCharacters() {
+    override fun loadNextPageCharacters() {
         if (mutableUiState.value.hasNextPageCharacters)
             mutableUiState.update { it.copy(pageCharacters = it.pageCharacters + 1) }
     }
+
+    val media = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
+    val characters = mutableStateListOf<StaffCharacterQuery.Edge>()
 
     init {
         // staff details

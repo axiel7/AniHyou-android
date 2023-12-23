@@ -1,10 +1,6 @@
 package com.axiel7.anihyou.ui.screens.home.discover
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
@@ -17,13 +13,16 @@ import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -31,7 +30,17 @@ import javax.inject.Inject
 class DiscoverViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
-) : ViewModel() {
+) : UiStateViewModel<DiscoverUiState>(), DiscoverEvent {
+
+    private val now = LocalDateTime.now()
+
+    override val mutableUiState = MutableStateFlow(
+        DiscoverUiState(
+            nowAnimeSeason = now.currentAnimeSeason(),
+            nextAnimeSeason = now.nextAnimeSeason(),
+        )
+    )
+    override val uiState = mutableUiState.asStateFlow()
 
     val infos = mutableStateListOf(
         DiscoverInfo.AIRING,
@@ -39,24 +48,14 @@ class DiscoverViewModel @Inject constructor(
         DiscoverInfo.TRENDING_ANIME
     )
 
-    fun addNextInfo() {
+    override fun addNextInfo() {
         if (infos.size < DiscoverInfo.entries.size)
             infos.add(DiscoverInfo.entries[infos.size])
     }
 
-    private val now = LocalDateTime.now()
-    val nowAnimeSeason = now.currentAnimeSeason()
-    val nextAnimeSeason = now.nextAnimeSeason()
-
-    val airingOnMyList = defaultPreferencesRepository.airingOnMyList
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
-
-    var isLoadingAiring by mutableStateOf(true)
-        private set
-
     val airingAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
 
-    fun fetchAiringAnime() {
+    override fun fetchAiringAnime() {
         if (airingAnime.isEmpty()) {
             mediaRepository.getAiringAnimesPage(
                 airingAtGreater = System.currentTimeMillis() / 1000,
@@ -65,51 +64,60 @@ class DiscoverViewModel @Inject constructor(
                 if (result is PagedResult.Success) {
                     airingAnime.addAll(result.list)
                 }
-                isLoadingAiring = result is PagedResult.Loading
+                mutableUiState.update {
+                    it.copy(
+                        isLoadingAiring = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
             }.launchIn(viewModelScope)
         }
     }
 
     val airingAnimeOnMyList = mutableStateListOf<AiringOnMyListQuery.Medium>()
 
-    fun fetchAiringAnimeOnMyList() {
+    override fun fetchAiringAnimeOnMyList() {
         if (airingAnimeOnMyList.isEmpty()) {
             mediaRepository.getAiringAnimeOnMyListPage(page = 1)
                 .onEach { result ->
                     if (result is PagedResult.Success) {
                         airingAnimeOnMyList.addAll(result.list)
                     }
-                    isLoadingAiring = result is PagedResult.Loading
+                    mutableUiState.update {
+                        it.copy(
+                            isLoadingAiring = result is PagedResult.Loading,
+                            error = (result as? PagedResult.Error)?.message
+                        )
+                    }
                 }
                 .launchIn(viewModelScope)
         }
     }
 
-    var isLoadingThisSeason by mutableStateOf(true)
-        private set
-
     val thisSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
 
-    fun fetchThisSeasonAnime() {
+    override fun fetchThisSeasonAnime() {
         if (thisSeasonAnime.isEmpty()) {
             mediaRepository.getSeasonalAnimePage(
-                animeSeason = nowAnimeSeason,
+                animeSeason = uiState.value.nowAnimeSeason,
                 page = 1
             ).onEach { result ->
                 if (result is PagedResult.Success) {
                     thisSeasonAnime.addAll(result.list)
                 }
-                isLoadingThisSeason = result is PagedResult.Loading
+                mutableUiState.update {
+                    it.copy(
+                        isLoadingThisSeason = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
             }.launchIn(viewModelScope)
         }
     }
 
-    var isLoadingTrendingAnime by mutableStateOf(true)
-        private set
-
     val trendingAnime = mutableStateListOf<MediaSortedQuery.Medium>()
 
-    fun fetchTrendingAnime() {
+    override fun fetchTrendingAnime() {
         if (trendingAnime.isEmpty()) {
             mediaRepository.getMediaSortedPage(
                 mediaType = MediaType.ANIME,
@@ -119,36 +127,40 @@ class DiscoverViewModel @Inject constructor(
                 if (result is PagedResult.Success) {
                     trendingAnime.addAll(result.list)
                 }
-                isLoadingTrendingAnime = result is PagedResult.Loading
+                mutableUiState.update {
+                    it.copy(
+                        isLoadingTrendingAnime = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
             }.launchIn(viewModelScope)
         }
     }
 
-    var isLoadingNextSeason by mutableStateOf(true)
-        private set
-
     val nextSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
 
-    fun fetchNextSeasonAnime() {
+    override fun fetchNextSeasonAnime() {
         if (nextSeasonAnime.isEmpty()) {
             mediaRepository.getSeasonalAnimePage(
-                animeSeason = nextAnimeSeason,
+                animeSeason = uiState.value.nextAnimeSeason,
                 page = 1
             ).onEach { result ->
                 if (result is PagedResult.Success) {
                     nextSeasonAnime.addAll(result.list)
                 }
-                isLoadingNextSeason = result is PagedResult.Loading
+                mutableUiState.update {
+                    it.copy(
+                        isLoadingNextSeason = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
             }.launchIn(viewModelScope)
         }
     }
 
-    var isLoadingTrendingManga by mutableStateOf(true)
-        private set
-
     val trendingManga = mutableStateListOf<MediaSortedQuery.Medium>()
 
-    fun fetchTrendingManga() {
+    override fun fetchTrendingManga() {
         if (trendingManga.isEmpty()) {
             mediaRepository.getMediaSortedPage(
                 mediaType = MediaType.MANGA,
@@ -158,18 +170,31 @@ class DiscoverViewModel @Inject constructor(
                 if (result is PagedResult.Success) {
                     trendingManga.addAll(result.list)
                 }
-                isLoadingTrendingManga = result is PagedResult.Loading
+                mutableUiState.update {
+                    it.copy(
+                        isLoadingTrendingManga = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
             }.launchIn(viewModelScope)
         }
     }
 
-    var selectedMediaDetails: BasicMediaDetails? = null
-        private set
-    var selectedMediaListEntry: BasicMediaListEntry? = null
-        private set
+    override fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
+        mutableUiState.update {
+            it.copy(
+                selectedMediaDetails = details,
+                selectedMediaListEntry = listEntry
+            )
+        }
+    }
 
-    fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
-        selectedMediaDetails = details
-        selectedMediaListEntry = listEntry
+    init {
+        defaultPreferencesRepository.airingOnMyList
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(airingOnMyList = value) }
+            }
+            .launchIn(viewModelScope)
     }
 }

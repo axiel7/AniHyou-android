@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.screens.profile.stats.genres.GenresStatsView
 import com.axiel7.anihyou.ui.screens.profile.stats.overview.OverviewStatsView
@@ -35,9 +35,7 @@ fun UserStatsView(
     userId: Int,
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
-    navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToStudioDetails: (Int) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: UserStatsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -46,6 +44,23 @@ fun UserStatsView(
         viewModel.setUserId(userId)
     }
 
+    UserStatsContent(
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+        modifier = modifier,
+        nestedScrollConnection = nestedScrollConnection
+    )
+}
+
+@Composable
+private fun UserStatsContent(
+    uiState: UserStatsUiState,
+    event: UserStatsEvent?,
+    navActionManager: NavActionManager,
+    modifier: Modifier = Modifier,
+    nestedScrollConnection: NestedScrollConnection,
+) {
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -59,7 +74,7 @@ fun UserStatsView(
                     selected = uiState.type == it,
                     text = it.localized(),
                     onClick = {
-                        viewModel.setType(it)
+                        event?.setType(it)
                     },
                     modifier = Modifier.padding(end = 8.dp)
                 )
@@ -69,19 +84,8 @@ fun UserStatsView(
         when (uiState.type) {
             UserStatType.OVERVIEW -> {
                 OverviewStatsView(
-                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeOverview
-                    else uiState.mangaOverview,
-                    isLoading = uiState.isLoading,
-                    mediaType = uiState.mediaType,
-                    setMediaType = viewModel::setMediaType,
-                    scoreType = uiState.scoreType,
-                    setScoreType = viewModel::setScoreType,
-                    lengthType = uiState.lengthType,
-                    setLengthType = viewModel::setLengthType,
-                    releaseYearType = uiState.releaseYearType,
-                    setReleaseYearType = viewModel::setReleaseYearType,
-                    startYearType = uiState.startYearType,
-                    setStartYearType = viewModel::setStartYearType,
+                    uiState = uiState,
+                    event = event,
                     modifier = Modifier
                         .nestedScroll(nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
@@ -91,67 +95,44 @@ fun UserStatsView(
 
             UserStatType.GENRES -> {
                 GenresStatsView(
-                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeGenres
-                    else uiState.mangaGenres,
-                    isLoading = uiState.isLoading,
-                    mediaType = uiState.mediaType,
-                    setMediaType = viewModel::setMediaType,
-                    genresType = uiState.genresType,
-                    setGenresType = viewModel::setGenresType,
-                    navigateToExplore = { genre ->
-                        navigateToGenreTag(uiState.mediaType, genre, null)
-                    },
+                    uiState = uiState,
+                    event = event,
+                    navActionManager = navActionManager,
                     modifier = Modifier.nestedScroll(nestedScrollConnection)
                 )
             }
 
             UserStatType.TAGS -> {
                 TagsStatsView(
-                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeTags
-                    else uiState.mangaTags,
-                    isLoading = uiState.isLoading,
-                    mediaType = uiState.mediaType,
-                    setMediaType = viewModel::setMediaType,
-                    tagsType = uiState.tagsType,
-                    setTagsType = viewModel::setTagsType,
-                    navigateToExplore = { tag ->
-                        navigateToGenreTag(uiState.mediaType, null, tag)
-                    },
+                    uiState = uiState,
+                    event = event,
+                    navActionManager = navActionManager,
                     modifier = Modifier.nestedScroll(nestedScrollConnection)
                 )
             }
 
             UserStatType.STAFF -> {
                 StaffStatsView(
-                    stats = if (uiState.mediaType == MediaType.ANIME) uiState.animeStaff
-                    else uiState.mangaStaff,
-                    isLoading = uiState.isLoading,
-                    mediaType = uiState.mediaType,
-                    setMediaType = viewModel::setMediaType,
-                    staffType = uiState.staffType,
-                    setStaffType = viewModel::setStaffType,
-                    navigateToStaffDetails = navigateToStaffDetails,
+                    uiState = uiState,
+                    event = event,
+                    navActionManager = navActionManager,
                     modifier = Modifier.nestedScroll(nestedScrollConnection)
                 )
             }
 
             UserStatType.VOICE_ACTORS -> {
                 VoiceActorsStatsView(
-                    stats = uiState.voiceActors,
-                    isLoading = uiState.isLoading,
-                    voiceActorsType = uiState.voiceActorsType,
-                    setVoiceActorsType = viewModel::setVoiceActorsType,
-                    navigateToStaffDetails = navigateToStaffDetails,
+                    uiState = uiState,
+                    event = event,
+                    navActionManager = navActionManager,
                 )
             }
 
             UserStatType.STUDIOS -> {
                 StudiosStatsView(
-                    stats = uiState.studios,
-                    isLoading = uiState.isLoading,
-                    studiosType = uiState.studiosType,
-                    setStudiosType = viewModel::setStudiosType,
-                    navigateToStudioDetails = navigateToStudioDetails
+                    uiState = uiState,
+                    event = event,
+                    navActionManager = navActionManager,
                 )
             }
         }
@@ -163,12 +144,11 @@ fun UserStatsView(
 fun UserStatsViewPreview() {
     AniHyouTheme {
         Surface {
-            UserStatsView(
-                userId = 1,
-                navigateToGenreTag = { _, _, _ -> },
-                navigateToStaffDetails = {},
-                navigateToStudioDetails = {},
-                nestedScrollConnection = rememberNestedScrollInteropConnection(),
+            UserStatsContent(
+                uiState = UserStatsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager(),
+                nestedScrollConnection = rememberNestedScrollInteropConnection()
             )
         }
     }

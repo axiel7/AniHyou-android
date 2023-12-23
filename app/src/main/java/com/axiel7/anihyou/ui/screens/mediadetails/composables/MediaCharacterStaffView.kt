@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.screens.mediadetails.characterstaff
+package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

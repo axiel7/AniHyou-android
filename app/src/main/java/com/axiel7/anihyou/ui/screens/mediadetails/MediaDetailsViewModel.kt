@@ -11,7 +11,7 @@ import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,35 +30,18 @@ class MediaDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
-) : UiStateViewModel<MediaDetailsUiState>() {
+) : UiStateViewModel<MediaDetailsUiState>(), MediaDetailsEvent {
 
-    val mediaId = savedStateHandle.getStateFlow<Int?>(NavArgument.MediaId.name, null)
+    private val mediaId = savedStateHandle.getStateFlow<Int?>(NavArgument.MediaId.name, null)
 
     override val mutableUiState = MutableStateFlow(MediaDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    init {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaDetails(mediaId)
-            }
-            .onEach { result ->
-                mutableUiState.update {
-                    if (result is DataResult.Success) {
-                        it.copy(
-                            isLoading = false,
-                            details = result.data
-                        )
-                    } else {
-                        result.toUiState()
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
+    fun setIsLoggedIn(value: Boolean) {
+        mutableUiState.update { it.copy(isLoggedIn = value) }
     }
 
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         if (mutableUiState.value.details?.mediaListEntry?.basicMediaListEntry != newListEntry) {
             mutableUiState.update { uiState ->
                 uiState.copy(
@@ -81,7 +64,7 @@ class MediaDetailsViewModel @Inject constructor(
         }
     }
 
-    fun toggleFavorite() {
+    override fun toggleFavorite() {
         mutableUiState.value.details?.let { details ->
             favoriteRepository.toggleFavorite(
                 animeId = if (details.basicMediaDetails.type == MediaType.ANIME)
@@ -104,98 +87,129 @@ class MediaDetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchCharactersAndStaff() = mediaId
-        .filterNotNull()
-        .flatMapLatest { mediaId ->
-            mediaRepository.getMediaCharactersAndStaff(mediaId)
-        }
-        .onEach { result ->
-            if (result is DataResult.Success) {
-                mutableUiState.update {
-                    it.copy(
-                        charactersAndStaff = result.data
-                    )
+    override fun fetchCharactersAndStaff() {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaCharactersAndStaff(mediaId)
+            }
+            .onEach { result ->
+                if (result is DataResult.Success) {
+                    mutableUiState.update {
+                        it.copy(
+                            charactersAndStaff = result.data
+                        )
+                    }
                 }
             }
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
+    }
 
-    fun fetchRelationsAndRecommendations() = mediaId
-        .filterNotNull()
-        .flatMapLatest { mediaId ->
-            mediaRepository.getMediaRelationsAndRecommendations(mediaId)
-        }
-        .onEach { result ->
-            if (result is DataResult.Success) {
-                mutableUiState.update {
-                    it.copy(
-                        relationsAndRecommendations = result.data
-                    )
+    override fun fetchRelationsAndRecommendations() {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaRelationsAndRecommendations(mediaId)
+            }
+            .onEach { result ->
+                if (result is DataResult.Success) {
+                    mutableUiState.update {
+                        it.copy(
+                            relationsAndRecommendations = result.data
+                        )
+                    }
                 }
             }
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
+    }
 
-    fun fetchStats() = mediaId
-        .filterNotNull()
-        .flatMapLatest { mediaId ->
-            mediaRepository.getMediaStats(mediaId)
-        }
-        .onEach { result ->
-            if (result is DataResult.Success) {
+    override fun fetchStats() {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaStats(mediaId)
+            }
+            .onEach { result ->
+                if (result is DataResult.Success) {
+                    mutableUiState.update { uiState ->
+                        uiState.copy(
+                            isSuccessStats = true,
+                            mediaStatusDistribution = result.data?.stats?.statusDistribution
+                                ?.mapNotNull { it?.asStat() }.orEmpty(),
+                            mediaScoreDistribution = result.data?.stats?.scoreDistribution
+                                ?.mapNotNull { it?.asStat() }.orEmpty(),
+                            mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    override fun fetchThreads() {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaThreadsPage(mediaId, page = 1)
+            }
+            .onEach { result ->
                 mutableUiState.update { uiState ->
-                    uiState.copy(
-                        isSuccessStats = true,
-                        mediaStatusDistribution = result.data?.stats?.statusDistribution
-                            ?.mapNotNull { it?.asStat() }.orEmpty(),
-                        mediaScoreDistribution = result.data?.stats?.scoreDistribution
-                            ?.mapNotNull { it?.asStat() }.orEmpty(),
-                        mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
-                    )
+                    if (result is PagedResult.Success) {
+                        uiState.copy(
+                            isLoadingThreads = false,
+                            threads = result.list
+                        )
+                    } else {
+                        uiState.copy(
+                            isLoadingThreads = result is PagedResult.Loading,
+                        )
+                    }
                 }
             }
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
+    }
 
-    fun fetchThreads() = mediaId
-        .filterNotNull()
-        .flatMapLatest { mediaId ->
-            mediaRepository.getMediaThreadsPage(mediaId, page = 1)
-        }
-        .onEach { result ->
-            mutableUiState.update { uiState ->
-                if (result is PagedResult.Success) {
-                    uiState.copy(
-                        isLoadingThreads = false,
-                        threads = result.list
-                    )
-                } else {
-                    uiState.copy(
-                        isLoadingThreads = result is PagedResult.Loading,
-                    )
+    override fun fetchReviews() {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaReviewsPage(mediaId, page = 1)
+            }
+            .onEach { result ->
+                mutableUiState.update { uiState ->
+                    if (result is PagedResult.Success) {
+                        uiState.copy(
+                            isLoadingReviews = false,
+                            reviews = result.list
+                        )
+                    } else {
+                        uiState.copy(
+                            isLoadingThreads = result is PagedResult.Loading,
+                        )
+                    }
                 }
             }
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
+    }
 
-    fun fetchReviews() = mediaId
-        .filterNotNull()
-        .flatMapLatest { mediaId ->
-            mediaRepository.getMediaReviewsPage(mediaId, page = 1)
-        }
-        .onEach { result ->
-            mutableUiState.update { uiState ->
-                if (result is PagedResult.Success) {
-                    uiState.copy(
-                        isLoadingReviews = false,
-                        reviews = result.list
-                    )
-                } else {
-                    uiState.copy(
-                        isLoadingThreads = result is PagedResult.Loading,
-                    )
+    init {
+        mediaId
+            .filterNotNull()
+            .flatMapLatest { mediaId ->
+                mediaRepository.getMediaDetails(mediaId)
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            details = result.data
+                        )
+                    } else {
+                        result.toUiState()
+                    }
                 }
             }
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
+    }
 }

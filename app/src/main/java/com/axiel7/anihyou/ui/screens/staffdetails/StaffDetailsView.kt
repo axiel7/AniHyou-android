@@ -25,6 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.StaffCharacterQuery
+import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -37,17 +40,31 @@ import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffDetailsView(
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: StaffDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    StaffDetailsContent(
+        media = viewModel.media,
+        characters = viewModel.characters,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun StaffDetailsContent(
+    media: List<Pair<Int, StaffMediaGrouped>>,
+    characters: List<StaffCharacterQuery.Edge>,
+    uiState: StaffDetailsUiState,
+    event: StaffDetailsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -65,7 +82,7 @@ fun StaffDetailsView(
                 listEntry = node.mediaListEntry?.basicMediaListEntry,
                 onDismiss = { updatedListEntry ->
                     scope.launch {
-                        viewModel.onUpdateListEntry(updatedListEntry)
+                        event?.onUpdateListEntry(updatedListEntry)
                         editSheetState.hide()
                     }
                 }
@@ -75,13 +92,13 @@ fun StaffDetailsView(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             FavoriteIconButton(
                 isFavorite = uiState.details?.isFavourite ?: false,
                 favoritesCount = uiState.details?.favourites ?: 0,
                 onClick = {
-                    viewModel.toggleFavorite()
+                    event?.toggleFavorite()
                 }
             )
             ShareIconButton(url = uiState.details?.siteUrl.orEmpty())
@@ -112,41 +129,41 @@ fun StaffDetailsView(
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        navigateToFullscreenImage = navigateToFullscreenImage
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
 
                 StaffInfoType.MEDIA -> {
                     StaffMediaView(
-                        staffMedia = viewModel.media,
+                        staffMedia = media,
                         isLoading = uiState.isLoadingMedia,
-                        loadMore = viewModel::loadNextPageMedia,
+                        loadMore = { event?.loadNextPageMedia() },
                         mediaOnMyList = uiState.mediaOnMyList,
-                        setMediaOnMyList = viewModel::setMediaOnMyList,
+                        setMediaOnMyList = { event?.setMediaOnMyList(it) },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
                         showEditSheet = {
                             scope.launch {
-                                viewModel.selectMediaItem(it)
+                                event?.selectMediaItem(it)
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 editSheetState.show()
                             }
                         },
-                        navigateToMediaDetails = navigateToMediaDetails
+                        navigateToMediaDetails = navActionManager::toMediaDetails
                     )
                 }
 
                 StaffInfoType.CHARACTER -> {
                     StaffCharacterView(
-                        staffCharacters = viewModel.characters,
+                        staffCharacters = characters,
                         isLoading = uiState.isLoadingCharacters,
-                        loadMore = viewModel::loadNextPageCharacters,
+                        loadMore = { event?.loadNextPageCharacters() },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        navigateToCharacterDetails = navigateToCharacterDetails
+                        navigateToCharacterDetails = navActionManager::toCharacterDetails
                     )
                 }
             }
@@ -159,11 +176,12 @@ fun StaffDetailsView(
 fun StaffDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            StaffDetailsView(
-                navigateBack = {},
-                navigateToMediaDetails = {},
-                navigateToCharacterDetails = {},
-                navigateToFullscreenImage = {}
+            StaffDetailsContent(
+                media = emptyList(),
+                characters = emptyList(),
+                uiState = StaffDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

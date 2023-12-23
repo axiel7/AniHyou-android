@@ -4,12 +4,14 @@ import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.state.UiState
 import java.time.LocalDate
 
 data class EditMediaUiState(
     val mediaDetails: BasicMediaDetails? = null,
     val listEntry: BasicMediaListEntry? = null,
+    val scoreFormat: ScoreFormat = ScoreFormat.POINT_10_DECIMAL,
 
     val status: MediaListStatus? = null,
     val progress: Int? = null,

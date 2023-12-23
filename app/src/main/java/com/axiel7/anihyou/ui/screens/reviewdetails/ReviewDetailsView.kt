@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.review.userRatingsString
 import com.axiel7.anihyou.type.ReviewRating
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -40,24 +41,36 @@ import com.axiel7.anihyou.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_REVIEW_URL
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewDetailsView(
-    navigateBack: () -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: ReviewDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val reviewId by viewModel.reviewId.collectAsStateWithLifecycle()
 
+    ReviewDetailsContent(
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReviewDetailsContent(
+    uiState: ReviewDetailsUiState,
+    event: ReviewDetailsEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
     DefaultScaffoldWithSmallTopAppBar(
         title = uiState.details?.user?.name ?: stringResource(R.string.loading),
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
-            OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + reviewId)
+            OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + uiState.details?.id)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -121,7 +134,7 @@ fun ReviewDetailsView(
                 LikeButton(
                     isLiked = isUpvote,
                     onClick = {
-                        viewModel.rateReview(
+                        event?.rateReview(
                             rating = if (isUpvote) ReviewRating.NO_VOTE else ReviewRating.UP_VOTE
                         )
                     }
@@ -131,7 +144,7 @@ fun ReviewDetailsView(
                     isLiked = isDownvote,
                     isDislike = true,
                     onClick = {
-                        viewModel.rateReview(
+                        event?.rateReview(
                             rating = if (isDownvote) ReviewRating.NO_VOTE else ReviewRating.DOWN_VOTE
                         )
                     }
@@ -146,8 +159,10 @@ fun ReviewDetailsView(
 fun ReviewDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            ReviewDetailsView(
-                navigateBack = {}
+            ReviewDetailsContent(
+                uiState = ReviewDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

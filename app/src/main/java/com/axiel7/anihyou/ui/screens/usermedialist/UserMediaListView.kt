@@ -17,19 +17,14 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.UserMediaListQuery
-import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -38,37 +33,26 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaL
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
-import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListView(
     mediaList: List<UserMediaListQuery.MediaList>,
-    status: MediaListStatus,
-    scoreFormat: ScoreFormat,
-    listStyle: ListStyle,
-    itemsPerRowFlow: StateFlow<ItemsPerRow?>,
-    isMyList: Boolean,
-    isLoading: Boolean,
-    isRefreshing: Boolean,
-    showAsGrid: Boolean,
+    uiState: UserMediaListUiState,
+    event: UserMediaListEvent?,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     nestedScrollConnection: NestedScrollConnection,
-    navigateToDetails: (mediaId: Int) -> Unit,
-    onLoadMore: suspend () -> Unit,
-    onRefresh: () -> Unit,
+    navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
-    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
-    onUpdateProgress: (BasicMediaListEntry) -> Unit,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            onRefresh()
+            event?.refreshList()
         }
     }
-    LaunchedEffect(isRefreshing) {
-        if (!isRefreshing) pullRefreshState.endRefresh()
+    LaunchedEffect(uiState.fetchFromNetwork) {
+        if (!uiState.fetchFromNetwork) pullRefreshState.endRefresh()
     }
 
     Box(
@@ -79,48 +63,34 @@ fun UserMediaListView(
         val listModifier = Modifier
             .fillMaxWidth()
             .nestedScroll(nestedScrollConnection)
-        if (listStyle == ListStyle.GRID) {
+        if (uiState.listStyle == ListStyle.GRID) {
             LazyListGrid(
                 mediaList = mediaList,
-                scoreFormat = scoreFormat,
-                isLoading = isLoading,
-                itemsPerRowFlow = itemsPerRowFlow,
+                uiState = uiState,
+                event = event,
                 modifier = listModifier,
-                onLoadMore = onLoadMore,
-                navigateToDetails = navigateToDetails,
+                navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
             )
-        } else if (showAsGrid) {
+        } else if (!uiState.isCompactScreen) {
             LazyListTablet(
                 mediaList = mediaList,
-                listStyle = listStyle,
-                status = status,
-                scoreFormat = scoreFormat,
-                isMyList = isMyList,
-                isLoading = isLoading,
+                uiState = uiState,
+                event = event,
                 modifier = listModifier,
                 contentPadding = contentPadding,
-                onLoadMore = onLoadMore,
-                navigateToDetails = navigateToDetails,
+                navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
-                onUpdateProgress = onUpdateProgress,
-                onClickNotes = onClickNotes,
             )
         } else {
             LazyListPhone(
                 mediaList = mediaList,
-                listStyle = listStyle,
-                status = status,
-                scoreFormat = scoreFormat,
-                isMyList = isMyList,
-                isLoading = isLoading,
+                uiState = uiState,
+                event = event,
                 modifier = listModifier,
                 contentPadding = contentPadding,
-                onLoadMore = onLoadMore,
-                navigateToDetails = navigateToDetails,
+                navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
-                onUpdateProgress = onUpdateProgress,
-                onClickNotes = onClickNotes,
             )
         }
         PullToRefreshContainer(
@@ -133,21 +103,17 @@ fun UserMediaListView(
 @Composable
 private fun LazyListGrid(
     mediaList: List<UserMediaListQuery.MediaList>,
-    scoreFormat: ScoreFormat,
-    isLoading: Boolean,
-    itemsPerRowFlow: StateFlow<ItemsPerRow?>,
+    uiState: UserMediaListUiState,
+    event: UserMediaListEvent?,
     modifier: Modifier,
-    onLoadMore: suspend () -> Unit,
-    navigateToDetails: (mediaId: Int) -> Unit,
+    navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
 ) {
-    val itemsPerRow by itemsPerRowFlow.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 6, onLoadMore = onLoadMore)
+    listState.OnBottomReached(buffer = 6, onLoadMore = { event?.onLoadMore() })
 
     LazyVerticalGrid(
-        columns = if (itemsPerRow != null && itemsPerRow!!.value > 0)
-            GridCells.Fixed(itemsPerRow!!.value)
+        columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
         modifier = modifier,
         state = listState,
@@ -155,7 +121,7 @@ private fun LazyListGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        if (isLoading) {
+        if (uiState.isLoading) {
             items(10) {
                 MediaItemVerticalPlaceholder()
             }
@@ -166,8 +132,8 @@ private fun LazyListGrid(
         ) { item ->
             GridUserMediaListItem(
                 item = item,
-                scoreFormat = scoreFormat,
-                onClick = { navigateToDetails(item.mediaId) },
+                scoreFormat = uiState.scoreFormat,
+                onClick = { navActionManager.toMediaDetails(item.mediaId) },
                 onLongClick = { onShowEditSheet(item) }
             )
         }
@@ -177,21 +143,15 @@ private fun LazyListGrid(
 @Composable
 private fun LazyListTablet(
     mediaList: List<UserMediaListQuery.MediaList>,
-    listStyle: ListStyle,
-    status: MediaListStatus,
-    scoreFormat: ScoreFormat,
-    isMyList: Boolean,
-    isLoading: Boolean,
+    uiState: UserMediaListUiState,
+    event: UserMediaListEvent?,
     modifier: Modifier,
     contentPadding: PaddingValues,
-    onLoadMore: suspend () -> Unit,
-    navigateToDetails: (mediaId: Int) -> Unit,
+    navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
-    onUpdateProgress: (BasicMediaListEntry) -> Unit,
-    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
 ) {
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -200,9 +160,9 @@ private fun LazyListTablet(
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.Center
     ) {
-        when (listStyle) {
+        when (uiState.listStyle) {
             ListStyle.STANDARD -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -213,23 +173,23 @@ private fun LazyListTablet(
                 ) { item ->
                     StandardUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }
             }
 
             ListStyle.COMPACT -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -240,23 +200,23 @@ private fun LazyListTablet(
                 ) { item ->
                     CompactUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }
             }
 
             ListStyle.MINIMAL -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -267,16 +227,16 @@ private fun LazyListTablet(
                 ) { item ->
                     MinimalUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }
@@ -290,22 +250,16 @@ private fun LazyListTablet(
 @Composable
 private fun LazyListPhone(
     mediaList: List<UserMediaListQuery.MediaList>,
-    listStyle: ListStyle,
-    status: MediaListStatus,
-    scoreFormat: ScoreFormat,
-    isMyList: Boolean,
-    isLoading: Boolean,
+    uiState: UserMediaListUiState,
+    event: UserMediaListEvent?,
     modifier: Modifier,
     contentPadding: PaddingValues,
-    onLoadMore: suspend () -> Unit,
-    navigateToDetails: (mediaId: Int) -> Unit,
+    navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
-    onUpdateProgress: (BasicMediaListEntry) -> Unit,
-    onClickNotes: (UserMediaListQuery.MediaList) -> Unit,
 ) {
     val listState = rememberLazyListState()
-    if (!isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = onLoadMore)
+    if (!uiState.isLoading) {
+        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     LazyColumn(
@@ -313,9 +267,9 @@ private fun LazyListPhone(
         state = listState,
         contentPadding = contentPadding,
     ) {
-        when (listStyle) {
+        when (uiState.listStyle) {
             ListStyle.STANDARD -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -326,23 +280,23 @@ private fun LazyListPhone(
                 ) { item ->
                     StandardUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }
             }
 
             ListStyle.COMPACT -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -353,23 +307,23 @@ private fun LazyListPhone(
                 ) { item ->
                     CompactUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }
             }
 
             ListStyle.MINIMAL -> {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     items(10) {
                         MediaItemHorizontalPlaceholder()
                     }
@@ -380,16 +334,16 @@ private fun LazyListPhone(
                 ) { item ->
                     MinimalUserMediaListItem(
                         item = item,
-                        status = status,
-                        scoreFormat = scoreFormat,
-                        isMyList = isMyList,
-                        onClick = { navigateToDetails(item.mediaId) },
+                        status = uiState.status,
+                        scoreFormat = uiState.scoreFormat,
+                        isMyList = uiState.isMyList,
+                        onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = {
-                            onUpdateProgress(item.basicMediaListEntry)
+                            event?.onClickPlusOne(item.basicMediaListEntry)
                         },
                         onClickNotes = {
-                            onClickNotes(item)
+                            event?.onClickNotes(item)
                         }
                     )
                 }

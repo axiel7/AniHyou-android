@@ -9,7 +9,7 @@ import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,16 +32,16 @@ class ThreadDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     threadRepository: ThreadRepository,
     private val likeRepository: LikeRepository,
-) : PagedUiStateViewModel<ThreadDetailsUiState>() {
+) : PagedUiStateViewModel<ThreadDetailsUiState>(), ThreadDetailsEvent {
 
-    val threadId = savedStateHandle.getStateFlow<Int?>(NavArgument.ThreadId.name, null)
+    private val threadId = savedStateHandle.getStateFlow<Int?>(NavArgument.ThreadId.name, null)
 
     override val mutableUiState = MutableStateFlow(ThreadDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
     val threadComments = mutableStateListOf<ChildComment>()
 
-    fun toggleLikeThread() {
+    override fun toggleLikeThread() {
         threadId.value?.let { threadId ->
             likeRepository.toggleLike(
                 likeableId = threadId,
@@ -54,7 +54,7 @@ class ThreadDetailsViewModel @Inject constructor(
         }
     }
 
-    suspend fun toggleLikeComment(id: Int): Boolean {
+    override suspend fun toggleLikeComment(id: Int): Boolean {
         var liked = false
         runBlocking {
             likeRepository.toggleLike(

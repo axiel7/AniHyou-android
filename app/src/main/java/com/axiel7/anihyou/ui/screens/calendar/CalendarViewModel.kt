@@ -29,7 +29,7 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
-) : PagedUiStateViewModel<CalendarUiState>() {
+) : PagedUiStateViewModel<CalendarUiState>(), CalendarEvent {
 
     private val displayAdult = defaultPreferencesRepository.displayAdult
 
@@ -46,13 +46,7 @@ class CalendarViewModel @Inject constructor(
         it.copy(weekday = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
-    fun selectItem(value: AiringAnimesQuery.AiringSchedule?) = mutableUiState.update {
-        it.copy(selectedItem = value)
-    }
-
-    val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
-
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         uiState.value.selectedItem?.let { selectedItem ->
             val index = weeklyAnime.indexOf(selectedItem)
             if (index != -1) {
@@ -71,6 +65,14 @@ class CalendarViewModel @Inject constructor(
             }
         }
     }
+
+    override fun selectItem(value: AiringAnimesQuery.AiringSchedule?) {
+        mutableUiState.update {
+            it.copy(selectedItem = value)
+        }
+    }
+
+    val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
 
     init {
         mutableUiState

@@ -5,10 +5,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -16,16 +18,22 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.data.model.media.AnimeSeason
-import com.axiel7.anihyou.type.MediaSort
+import com.axiel7.anihyou.AiringAnimesQuery
+import com.axiel7.anihyou.AiringOnMyListQuery
+import com.axiel7.anihyou.MediaSortedQuery
+import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.home.discover.content.AiringContent
 import com.axiel7.anihyou.ui.screens.home.discover.content.SeasonAnimeContent
 import com.axiel7.anihyou.ui.screens.home.discover.content.TrendingMediaContent
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
+import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 enum class DiscoverInfo {
     AIRING,
@@ -35,21 +43,49 @@ enum class DiscoverInfo {
     TRENDING_MANGA,
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navigateToMediaDetails: (mediaId: Int) -> Unit,
-    navigateToAnimeSeason: (AnimeSeason) -> Unit,
-    navigateToCalendar: () -> Unit,
-    navigateToExplore: (MediaType, MediaSort) -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: DiscoverViewModel = hiltViewModel()
-    val airingOnMyList by viewModel.airingOnMyList.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    DiscoverContent(
+        infos = viewModel.infos,
+        airingAnime = viewModel.airingAnime,
+        airingAnimeOnMyList = viewModel.airingAnimeOnMyList,
+        thisSeasonAnime = viewModel.thisSeasonAnime,
+        trendingAnime = viewModel.trendingAnime,
+        nextSeasonAnime = viewModel.nextSeasonAnime,
+        trendingManga = viewModel.trendingManga,
+        modifier = modifier,
+        contentPadding = contentPadding,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DiscoverContent(
+    infos: List<DiscoverInfo>,
+    airingAnime: List<AiringAnimesQuery.AiringSchedule>,
+    airingAnimeOnMyList: List<AiringOnMyListQuery.Medium>,
+    thisSeasonAnime: List<SeasonalAnimeQuery.Medium>,
+    trendingAnime: List<MediaSortedQuery.Medium>,
+    nextSeasonAnime: List<SeasonalAnimeQuery.Medium>,
+    trendingManga: List<MediaSortedQuery.Medium>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    uiState: DiscoverUiState,
+    event: DiscoverEvent?,
+    navActionManager: NavActionManager,
+) {
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 0, onLoadMore = viewModel::addNextInfo)
+    listState.OnBottomReached(buffer = 0, onLoadMore = { event?.addNextInfo() })
 
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
@@ -60,11 +96,11 @@ fun DiscoverView(
         editSheetState.show()
     }
 
-    if (editSheetState.isVisible && viewModel.selectedMediaDetails != null) {
+    if (editSheetState.isVisible && uiState.selectedMediaDetails != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = viewModel.selectedMediaDetails!!,
-            listEntry = viewModel.selectedMediaListEntry,
+            mediaDetails = uiState.selectedMediaDetails,
+            listEntry = uiState.selectedMediaListEntry,
             onDismiss = { _ ->
                 scope.launch {
                     //TODO: update corresponding list item
@@ -80,116 +116,116 @@ fun DiscoverView(
         state = listState,
         contentPadding = contentPadding
     ) {
-        items(viewModel.infos) { item ->
+        items(infos) { item ->
             when (item) {
                 DiscoverInfo.AIRING -> {
-                    LaunchedEffect(airingOnMyList) {
-                        if (airingOnMyList == true) viewModel.fetchAiringAnimeOnMyList()
-                        else if (airingOnMyList == false) viewModel.fetchAiringAnime()
+                    LaunchedEffect(uiState.airingOnMyList) {
+                        if (uiState.airingOnMyList == true) event?.fetchAiringAnimeOnMyList()
+                        else if (uiState.airingOnMyList == false) event?.fetchAiringAnime()
                     }
                     AiringContent(
-                        airingOnMyList = airingOnMyList,
-                        airingAnime = viewModel.airingAnime,
-                        airingAnimeOnMyList = viewModel.airingAnimeOnMyList,
-                        isLoading = viewModel.isLoadingAiring,
+                        airingOnMyList = uiState.airingOnMyList,
+                        airingAnime = airingAnime,
+                        airingAnimeOnMyList = airingAnimeOnMyList,
+                        isLoading = uiState.isLoadingAiring,
                         onLongClickItem = { details, listEntry ->
                             scope.launch {
-                                viewModel.selectItem(details, listEntry)
+                                event?.selectItem(details, listEntry)
                                 showEditSheet()
                             }
                         },
-                        navigateToCalendar = navigateToCalendar,
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToCalendar = navActionManager::toCalendar,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
 
                 DiscoverInfo.THIS_SEASON -> {
-                    LaunchedEffect(viewModel.nowAnimeSeason) {
-                        viewModel.fetchThisSeasonAnime()
+                    LaunchedEffect(uiState.nowAnimeSeason) {
+                        event?.fetchThisSeasonAnime()
                     }
                     SeasonAnimeContent(
-                        animeSeason = viewModel.nowAnimeSeason,
-                        seasonAnime = viewModel.thisSeasonAnime,
-                        isLoading = viewModel.isLoadingThisSeason,
+                        animeSeason = uiState.nowAnimeSeason,
+                        seasonAnime = thisSeasonAnime,
+                        isLoading = uiState.isLoadingThisSeason,
                         isNextSeason = false,
                         onLongClickItem = {
                             scope.launch {
-                                viewModel.selectItem(
+                                event?.selectItem(
                                     details = it.basicMediaDetails,
                                     listEntry = it.mediaListEntry?.basicMediaListEntry
                                 )
                                 showEditSheet()
                             }
                         },
-                        navigateToAnimeSeason = navigateToAnimeSeason,
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToAnimeSeason = navActionManager::toAnimeSeason,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
 
                 DiscoverInfo.TRENDING_ANIME -> {
                     LaunchedEffect(MediaType.ANIME) {
-                        viewModel.fetchTrendingAnime()
+                        event?.fetchTrendingAnime()
                     }
                     TrendingMediaContent(
                         mediaType = MediaType.ANIME,
-                        trendingMedia = viewModel.trendingAnime,
-                        isLoading = viewModel.isLoadingTrendingAnime,
+                        trendingMedia = trendingAnime,
+                        isLoading = uiState.isLoadingTrendingAnime,
                         onLongClickItem = {
                             scope.launch {
-                                viewModel.selectItem(
+                                event?.selectItem(
                                     details = it.basicMediaDetails,
                                     listEntry = it.mediaListEntry?.basicMediaListEntry
                                 )
                                 showEditSheet()
                             }
                         },
-                        navigateToExplore = navigateToExplore,
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToExplore = navActionManager::toExplore,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
 
                 DiscoverInfo.NEXT_SEASON -> {
-                    LaunchedEffect(viewModel.nextAnimeSeason) {
-                        viewModel.fetchNextSeasonAnime()
+                    LaunchedEffect(uiState.nextAnimeSeason) {
+                        event?.fetchNextSeasonAnime()
                     }
                     SeasonAnimeContent(
-                        animeSeason = viewModel.nextAnimeSeason,
-                        seasonAnime = viewModel.nextSeasonAnime,
-                        isLoading = viewModel.isLoadingNextSeason,
+                        animeSeason = uiState.nextAnimeSeason,
+                        seasonAnime = nextSeasonAnime,
+                        isLoading = uiState.isLoadingNextSeason,
                         isNextSeason = true,
                         onLongClickItem = {
                             scope.launch {
-                                viewModel.selectItem(
+                                event?.selectItem(
                                     details = it.basicMediaDetails,
                                     listEntry = it.mediaListEntry?.basicMediaListEntry
                                 )
                                 showEditSheet()
                             }
                         },
-                        navigateToAnimeSeason = navigateToAnimeSeason,
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToAnimeSeason = navActionManager::toAnimeSeason,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
 
                 DiscoverInfo.TRENDING_MANGA -> {
                     LaunchedEffect(MediaType.MANGA) {
-                        viewModel.fetchTrendingManga()
+                        event?.fetchTrendingManga()
                     }
                     TrendingMediaContent(
                         mediaType = MediaType.MANGA,
-                        trendingMedia = viewModel.trendingManga,
-                        isLoading = viewModel.isLoadingTrendingManga,
+                        trendingMedia = trendingManga,
+                        isLoading = uiState.isLoadingTrendingManga,
                         onLongClickItem = {
                             scope.launch {
-                                viewModel.selectItem(
+                                event?.selectItem(
                                     details = it.basicMediaDetails,
                                     listEntry = it.mediaListEntry?.basicMediaListEntry
                                 )
                                 showEditSheet()
                             }
                         },
-                        navigateToExplore = navigateToExplore,
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToExplore = navActionManager::toExplore,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
             }
@@ -200,12 +236,24 @@ fun DiscoverView(
 @Preview
 @Composable
 fun DiscoverViewPreview() {
+    val now = remember { LocalDateTime.now() }
     AniHyouTheme {
-        DiscoverView(
-            navigateToMediaDetails = { },
-            navigateToAnimeSeason = { },
-            navigateToCalendar = { },
-            navigateToExplore = { _, _ -> },
-        )
+        Surface {
+            DiscoverContent(
+                infos = DiscoverInfo.entries,
+                airingAnime = emptyList(),
+                airingAnimeOnMyList = emptyList(),
+                thisSeasonAnime = emptyList(),
+                trendingAnime = emptyList(),
+                nextSeasonAnime = emptyList(),
+                trendingManga = emptyList(),
+                uiState = DiscoverUiState(
+                    nowAnimeSeason = now.currentAnimeSeason(),
+                    nextAnimeSeason = now.nextAnimeSeason(),
+                ),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager(),
+            )
+        }
     }
 }

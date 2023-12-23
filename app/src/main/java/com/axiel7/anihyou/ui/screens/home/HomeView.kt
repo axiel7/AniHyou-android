@@ -30,9 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.media.AnimeSeason
-import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.IconButtonWithBadge
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
@@ -47,30 +45,22 @@ fun HomeView(
     defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navigateToMediaDetails: (mediaId: Int) -> Unit,
-    navigateToAnimeSeason: (AnimeSeason) -> Unit,
-    navigateToCalendar: () -> Unit,
-    navigateToExplore: (MediaType, MediaSort) -> Unit,
-    navigateToNotifications: (Int) -> Unit,
-    navigateToUserDetails: (Int) -> Unit,
-    navigateToActivityDetails: (Int) -> Unit,
-    navigateToPublishActivity: (Int?, String?) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab.index) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab.ordinal) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
         modifier = modifier,
         floatingActionButton = {
-            if (selectedTabIndex == HomeTab.ACTIVITY_FEED.index && isLoggedIn) {
+            if (selectedTabIndex == HomeTab.ACTIVITY_FEED.ordinal && isLoggedIn) {
                 FloatingActionButton(
-                    onClick = { navigateToPublishActivity(null, null) }
+                    onClick = { navActionManager.toPublishActivity(null, null) }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add_24),
@@ -90,7 +80,7 @@ fun HomeView(
                         }
                     }
                 },
-                onClick = { navigateToNotifications(unreadNotificationCount) }
+                onClick = { navActionManager.toNotifications(unreadNotificationCount) }
             )
         },
         scrollBehavior = topAppBarScrollBehavior,
@@ -105,30 +95,25 @@ fun HomeView(
             ) {
                 HomeTab.entries.forEach { tab ->
                     Tab(
-                        selected = selectedTabIndex == tab.index,
-                        onClick = { selectedTabIndex = tab.index },
+                        selected = selectedTabIndex == tab.ordinal,
+                        onClick = { selectedTabIndex = tab.ordinal },
                         text = { Text(text = tab.localized()) }
                     )
                 }
             }
             when (HomeTab.entries[selectedTabIndex]) {
-                HomeTab.DISCOVER -> DiscoverView(
-                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                    contentPadding = contentPadding,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToAnimeSeason = navigateToAnimeSeason,
-                    navigateToCalendar = navigateToCalendar,
-                    navigateToExplore = navigateToExplore
-                )
+                HomeTab.DISCOVER ->
+                    DiscoverView(
+                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        contentPadding = contentPadding,
+                        navActionManager = navActionManager,
+                    )
 
                 HomeTab.ACTIVITY_FEED -> {
                     if (isLoggedIn) {
                         ActivityFeedView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navigateToActivityDetails = navigateToActivityDetails,
-                            navigateToMediaDetails = navigateToMediaDetails,
-                            navigateToUserDetails = navigateToUserDetails,
-                            navigateToFullscreenImage = navigateToFullscreenImage,
+                            navActionManager = navActionManager,
                         )
                     } else {
                         LoginView()
@@ -147,15 +132,7 @@ fun HomeViewPreview() {
             HomeView(
                 isLoggedIn = true,
                 defaultHomeTab = HomeTab.DISCOVER,
-                navigateToMediaDetails = {},
-                navigateToAnimeSeason = {},
-                navigateToCalendar = {},
-                navigateToExplore = { _, _ -> },
-                navigateToNotifications = {},
-                navigateToUserDetails = {},
-                navigateToActivityDetails = {},
-                navigateToPublishActivity = { _, _ -> },
-                navigateToFullscreenImage = {},
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

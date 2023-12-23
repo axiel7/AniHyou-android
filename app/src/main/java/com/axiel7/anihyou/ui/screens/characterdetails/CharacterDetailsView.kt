@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.R
-import com.axiel7.anihyou.ui.common.TabRowItem
+import com.axiel7.anihyou.CharacterMediaQuery
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -40,28 +40,30 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-private enum class CharacterInfoType {
-    INFO, MEDIA;
+@Composable
+fun CharacterDetailsView(
+    navActionManager: NavActionManager
+) {
+    val viewModel: CharacterDetailsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    companion object {
-        val tabRows = arrayOf(
-            TabRowItem(INFO, icon = R.drawable.info_24),
-            TabRowItem(MEDIA, icon = R.drawable.movie_24),
-        )
-    }
+    CharacterDetailsContent(
+        media = viewModel.media,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharacterDetailsView(
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
-    navigateToFullscreenImage: (String) -> Unit,
+private fun CharacterDetailsContent(
+    media: List<CharacterMediaQuery.Edge>,
+    uiState: CharacterDetailsUiState,
+    event: CharacterDetailsEvent?,
+    navActionManager: NavActionManager,
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel: CharacterDetailsViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -77,7 +79,7 @@ fun CharacterDetailsView(
         CharacterVoiceActorsSheet(
             voiceActors = uiState.selectedMediaVoiceActors.orEmpty(),
             sheetState = vaSheetState,
-            navigateToStaffDetails = navigateToStaffDetails,
+            navigateToStaffDetails = navActionManager::toStaffDetails,
             onDismiss = {
                 scope.launch { vaSheetState.hide() }
             }
@@ -87,11 +89,11 @@ fun CharacterDetailsView(
     if (editSheetState.isVisible && uiState.selectedMediaItem?.node != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = uiState.selectedMediaItem!!.node!!.basicMediaDetails,
-            listEntry = uiState.selectedMediaItem?.node?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedMediaItem.node.basicMediaDetails,
+            listEntry = uiState.selectedMediaItem.node.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
+                    event?.onUpdateListEntry(updatedListEntry)
                     editSheetState.hide()
                 }
             }
@@ -100,13 +102,13 @@ fun CharacterDetailsView(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navigateBack) },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             FavoriteIconButton(
                 isFavorite = uiState.character?.isFavourite ?: false,
                 favoritesCount = uiState.character?.favourites ?: 0,
                 onClick = {
-                    viewModel.toggleFavorite()
+                    event?.toggleFavorite()
                 }
             )
             ShareIconButton(url = uiState.character?.siteUrl.orEmpty())
@@ -122,7 +124,7 @@ fun CharacterDetailsView(
                 )
         ) {
             SegmentedButtons(
-                items = CharacterInfoType.tabRows,
+                items = CharacterDetailsTab.tabRows,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 selectedIndex = selectedTabIndex,
                 onItemSelection = {
@@ -130,39 +132,39 @@ fun CharacterDetailsView(
                 }
             )
 
-            when (CharacterInfoType.tabRows[selectedTabIndex].value) {
-                CharacterInfoType.INFO ->
+            when (CharacterDetailsTab.tabRows[selectedTabIndex].value) {
+                CharacterDetailsTab.INFO ->
                     CharacterInfoView(
                         uiState = uiState,
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        navigateToFullscreenImage = navigateToFullscreenImage,
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage,
                     )
 
-                CharacterInfoType.MEDIA -> {
+                CharacterDetailsTab.MEDIA -> {
                     LaunchedEffect(uiState.page) {
-                        if (uiState.page == 0) viewModel.loadNextPage()
+                        if (uiState.page == 0) event?.onLoadMore()
                     }
                     CharacterMediaView(
-                        media = viewModel.media,
+                        media = media,
                         isLoading = uiState.isLoadingMedia,
-                        loadMore = viewModel::loadNextPage,
+                        loadMore = { event?.onLoadMore() },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        navigateToMediaDetails = navigateToMediaDetails,
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
                         showVoiceActorsSheet = {
                             scope.launch {
-                                viewModel.onShowVoiceActorsSheet(it)
+                                event?.onShowVoiceActorsSheet(it)
                                 vaSheetState.show()
                             }
                         },
                         showEditSheet = {
                             scope.launch {
-                                viewModel.selectMediaItem(it)
+                                event?.selectMediaItem(it)
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 editSheetState.show()
                             }
@@ -179,11 +181,11 @@ fun CharacterDetailsView(
 fun CharacterDetailsViewPreview() {
     AniHyouTheme {
         Surface {
-            CharacterDetailsView(
-                navigateBack = {},
-                navigateToMediaDetails = {},
-                navigateToStaffDetails = {},
-                navigateToFullscreenImage = {}
+            CharacterDetailsContent(
+                media = emptyList(),
+                uiState = CharacterDetailsUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

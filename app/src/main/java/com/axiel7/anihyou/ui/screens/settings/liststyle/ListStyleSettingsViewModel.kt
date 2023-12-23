@@ -15,9 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ListStyleSettingsViewModel @Inject constructor(
     private val listPreferencesRepository: ListPreferencesRepository
-) : ViewModel() {
+) : ViewModel(), ListStyleSettingsEvent {
 
-    fun getAnimeListStyle(status: MediaListStatus) =
+    override fun getAnimeListStyle(status: MediaListStatus) =
         when (status) {
             MediaListStatus.CURRENT -> listPreferencesRepository.animeCurrentListStyle
             MediaListStatus.PLANNING -> listPreferencesRepository.animePlanningListStyle
@@ -29,19 +29,21 @@ class ListStyleSettingsViewModel @Inject constructor(
         }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    fun setAnimeListStyle(status: MediaListStatus, value: ListStyle) = viewModelScope.launch {
-        when (status) {
-            MediaListStatus.CURRENT -> listPreferencesRepository.setAnimeCompletedListStyle(value)
-            MediaListStatus.PLANNING -> listPreferencesRepository.setAnimePlanningListStyle(value)
-            MediaListStatus.COMPLETED -> listPreferencesRepository.setAnimeCompletedListStyle(value)
-            MediaListStatus.DROPPED -> listPreferencesRepository.setAnimeDroppedListStyle(value)
-            MediaListStatus.PAUSED -> listPreferencesRepository.setAnimePausedListStyle(value)
-            MediaListStatus.REPEATING -> listPreferencesRepository.setAnimeRepeatingListStyle(value)
-            MediaListStatus.UNKNOWN__ -> {}
+    override fun setAnimeListStyle(status: MediaListStatus, value: ListStyle) {
+        viewModelScope.launch {
+            when (status) {
+                MediaListStatus.CURRENT -> listPreferencesRepository.setAnimeCompletedListStyle(value)
+                MediaListStatus.PLANNING -> listPreferencesRepository.setAnimePlanningListStyle(value)
+                MediaListStatus.COMPLETED -> listPreferencesRepository.setAnimeCompletedListStyle(value)
+                MediaListStatus.DROPPED -> listPreferencesRepository.setAnimeDroppedListStyle(value)
+                MediaListStatus.PAUSED -> listPreferencesRepository.setAnimePausedListStyle(value)
+                MediaListStatus.REPEATING -> listPreferencesRepository.setAnimeRepeatingListStyle(value)
+                MediaListStatus.UNKNOWN__ -> {}
+            }
         }
     }
 
-    fun getMangaListStyle(status: MediaListStatus) =
+    override fun getMangaListStyle(status: MediaListStatus) =
         when (status) {
             MediaListStatus.CURRENT -> listPreferencesRepository.mangaCurrentListStyle
             MediaListStatus.PLANNING -> listPreferencesRepository.mangaPlanningListStyle
@@ -53,15 +55,17 @@ class ListStyleSettingsViewModel @Inject constructor(
         }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    fun setMangaListStyle(status: MediaListStatus, value: ListStyle) = viewModelScope.launch {
-        when (status) {
-            MediaListStatus.CURRENT -> listPreferencesRepository.setMangaCompletedListStyle(value)
-            MediaListStatus.PLANNING -> listPreferencesRepository.setMangaPlanningListStyle(value)
-            MediaListStatus.COMPLETED -> listPreferencesRepository.setMangaCompletedListStyle(value)
-            MediaListStatus.DROPPED -> listPreferencesRepository.setMangaDroppedListStyle(value)
-            MediaListStatus.PAUSED -> listPreferencesRepository.setMangaPausedListStyle(value)
-            MediaListStatus.REPEATING -> listPreferencesRepository.setMangaRepeatingListStyle(value)
-            MediaListStatus.UNKNOWN__ -> {}
+    override fun setMangaListStyle(status: MediaListStatus, value: ListStyle) {
+        viewModelScope.launch {
+            when (status) {
+                MediaListStatus.CURRENT -> listPreferencesRepository.setMangaCompletedListStyle(value)
+                MediaListStatus.PLANNING -> listPreferencesRepository.setMangaPlanningListStyle(value)
+                MediaListStatus.COMPLETED -> listPreferencesRepository.setMangaCompletedListStyle(value)
+                MediaListStatus.DROPPED -> listPreferencesRepository.setMangaDroppedListStyle(value)
+                MediaListStatus.PAUSED -> listPreferencesRepository.setMangaPausedListStyle(value)
+                MediaListStatus.REPEATING -> listPreferencesRepository.setMangaRepeatingListStyle(value)
+                MediaListStatus.UNKNOWN__ -> {}
+            }
         }
     }
 }

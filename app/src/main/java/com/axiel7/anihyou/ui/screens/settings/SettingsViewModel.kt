@@ -27,7 +27,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -42,28 +41,27 @@ class SettingsViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val loginRepository: LoginRepository,
     private val workManager: WorkManager,
-) : UiStateViewModel<SettingsUiState>() {
+) : UiStateViewModel<SettingsUiState>(), SettingsEvent {
 
     override val mutableUiState = MutableStateFlow(SettingsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    val profileColor = defaultPreferencesRepository.profileColor.stateInViewModel()
+    private val profileColor = defaultPreferencesRepository.profileColor.stateInViewModel()
 
-    val notificationCheckInterval =
-        defaultPreferencesRepository.notificationCheckInterval.stateInViewModel(
-            initialValue = NotificationInterval.DAILY
-        )
-
-    fun setTheme(value: Theme) = viewModelScope.launch {
-        defaultPreferencesRepository.setTheme(value)
+    override fun setTheme(value: Theme) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setTheme(value)
+        }
     }
 
-    fun setAppColorMode(value: AppColorMode) = viewModelScope.launch {
-        defaultPreferencesRepository.setAppColorMode(value)
-        when (value) {
-            AppColorMode.DEFAULT -> setAppColor(null)
-            AppColorMode.PROFILE -> {
-                profileColor.firstOrNull()?.let { setAppColor(it) }
+    override fun setAppColorMode(value: AppColorMode) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setAppColorMode(value)
+            when (value) {
+                AppColorMode.DEFAULT -> setAppColor(null)
+                AppColorMode.PROFILE -> {
+                    profileColor.firstOrNull()?.let { setAppColor(it) }
+                }
             }
         }
     }
@@ -72,76 +70,107 @@ class SettingsViewModel @Inject constructor(
         defaultPreferencesRepository.setAppColor(value)
     }
 
-    fun setUseGeneralListStyle(value: Boolean) = viewModelScope.launch {
-        listPreferencesRepository.setUseGeneralListStyle(value)
+    override fun setUseGeneralListStyle(value: Boolean) {
+        viewModelScope.launch {
+            listPreferencesRepository.setUseGeneralListStyle(value)
+        }
     }
 
-    fun setGeneralListStyle(value: ListStyle) = viewModelScope.launch {
-        listPreferencesRepository.setGeneralListStyle(value)
+    override fun setGeneralListStyle(value: ListStyle) {
+        viewModelScope.launch {
+            listPreferencesRepository.setGeneralListStyle(value)
+        }
     }
 
-    fun setGridItemsPerRow(value: ItemsPerRow) = viewModelScope.launch {
-        listPreferencesRepository.setGridItemsPerRow(value)
+    override fun setGridItemsPerRow(value: ItemsPerRow) {
+        viewModelScope.launch {
+            listPreferencesRepository.setGridItemsPerRow(value)
+        }
     }
 
-    fun setDefaultHomeTab(value: HomeTab) = viewModelScope.launch {
-        defaultPreferencesRepository.setDefaultHomeTab(value)
+    override fun setDefaultHomeTab(value: HomeTab) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setDefaultHomeTab(value)
+        }
     }
 
-    fun setAiringOnMyList(value: Boolean) = viewModelScope.launch {
-        defaultPreferencesRepository.setAiringOnMyList(value)
+    override fun setAiringOnMyList(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setAiringOnMyList(value)
+        }
     }
 
     // Notifications
     @OptIn(ExperimentalPermissionsApi::class)
-    fun setNotificationsEnabled(
+    override fun setNotificationsEnabled(
         isEnabled: Boolean,
         notificationPermission: PermissionState?,
         createNotificationChannels: () -> Unit,
-    ) = viewModelScope.launch {
-        if (isEnabled) {
-            if (notificationPermission == null || notificationPermission.status.isGranted) {
-                defaultPreferencesRepository.setNotificationsEnabled(true)
-                createNotificationChannels()
-                scheduleNotificationWork(interval = notificationCheckInterval.first())
+    ) {
+        viewModelScope.launch {
+            if (isEnabled) {
+                if (notificationPermission == null || notificationPermission.status.isGranted) {
+                    defaultPreferencesRepository.setNotificationsEnabled(true)
+                    createNotificationChannels()
+                    scheduleNotificationWork(interval = uiState.value.notificationCheckInterval)
+                } else {
+                    notificationPermission.launchPermissionRequest()
+                }
             } else {
-                notificationPermission.launchPermissionRequest()
+                defaultPreferencesRepository.setNotificationsEnabled(false)
+                workManager.cancelNotificationWork()
             }
-        } else {
-            defaultPreferencesRepository.setNotificationsEnabled(false)
-            workManager.cancelNotificationWork()
         }
     }
 
-    fun setNotificationCheckInterval(value: NotificationInterval) = viewModelScope.launch {
-        defaultPreferencesRepository.setNotificationCheckInterval(value)
-        scheduleNotificationWork(value)
+    override fun setNotificationCheckInterval(value: NotificationInterval) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setNotificationCheckInterval(value)
+            scheduleNotificationWork(value)
+        }
     }
 
     private fun scheduleNotificationWork(interval: NotificationInterval) {
         workManager.scheduleNotificationWork(interval)
     }
 
-    fun setDisplayAdultContent(value: Boolean) = viewModelScope.launch {
-        defaultPreferencesRepository.setDisplayAdult(value)
-        updateUser(displayAdultContent = value).collect()
+    override fun setDisplayAdultContent(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setDisplayAdult(value)
+            updateUser(displayAdultContent = value).collect()
+        }
     }
 
-    fun setTitleLanguage(value: UserTitleLanguage) = viewModelScope.launch {
-        updateUser(titleLanguage = value).collect()
+    override fun setTitleLanguage(value: UserTitleLanguage) {
+        viewModelScope.launch {
+            updateUser(titleLanguage = value).collect()
+        }
     }
 
-    fun setStaffNameLanguage(value: UserStaffNameLanguage) = viewModelScope.launch {
-        updateUser(staffNameLanguage = value).collect()
+    override fun setStaffNameLanguage(value: UserStaffNameLanguage) {
+        viewModelScope.launch {
+            updateUser(staffNameLanguage = value).collect()
+        }
     }
 
-    fun setScoreFormat(value: ScoreFormat) = viewModelScope.launch {
-        defaultPreferencesRepository.setScoreFormat(value)
-        updateUser(scoreFormat = value).collect()
+    override fun setScoreFormat(value: ScoreFormat) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setScoreFormat(value)
+            updateUser(scoreFormat = value).collect()
+        }
     }
 
-    fun setAiringNotification(value: Boolean) = viewModelScope.launch {
-        updateUser(airingNotifications = value).collect()
+    override fun setAiringNotification(value: Boolean) {
+        viewModelScope.launch {
+            updateUser(airingNotifications = value).collect()
+        }
+    }
+
+    override fun logOut(recreate: () -> Unit) {
+        viewModelScope.launch {
+            loginRepository.logOut()
+            recreate()
+        }
     }
 
     private fun updateUser(
@@ -170,11 +199,6 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
-
-    fun logOut(recreate: () -> Unit) = viewModelScope.launch {
-        loginRepository.logOut()
-        recreate()
-    }
 
     init {
         userRepository.getUserOptions()
@@ -243,6 +267,12 @@ class SettingsViewModel @Inject constructor(
         defaultPreferencesRepository.isNotificationsEnabled
             .onEach { value ->
                 mutableUiState.update { it.copy(isNotificationsEnabled = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.notificationCheckInterval
+            .onEach { value ->
+                mutableUiState.update { it.copy(notificationCheckInterval = value) }
             }
             .launchIn(viewModelScope)
     }

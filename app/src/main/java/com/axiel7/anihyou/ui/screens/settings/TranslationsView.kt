@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -40,7 +41,7 @@ private val translations = mapOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslationsView(
-    navigateBack: () -> Unit,
+    navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -49,7 +50,7 @@ fun TranslationsView(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.translations),
         navigationIcon = {
-            BackIconButton(onClick = navigateBack)
+            BackIconButton(onClick = navActionManager::goBack)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -84,7 +85,7 @@ fun TranslationsViewPreview() {
     AniHyouTheme {
         Surface {
             TranslationsView(
-                navigateBack = {}
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

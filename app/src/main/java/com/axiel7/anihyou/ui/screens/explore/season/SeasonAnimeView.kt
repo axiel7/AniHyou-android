@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -49,15 +51,29 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeasonAnimeView(
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: SeasonAnimeViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    SeasonAnimeContent(
+        anime = viewModel.animeSeasonal,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SeasonAnimeContent(
+    anime: List<SeasonalAnimeQuery.Medium>,
+    uiState: SeasonAnimeUiState,
+    event: SeasonAnimeEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -68,15 +84,15 @@ fun SeasonAnimeView(
     val editSheetState = rememberModalBottomSheetState()
 
     val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     if (sheetState.isVisible && uiState.season != null) {
         SeasonChartFilterSheet(
             sheetState = sheetState,
-            initialSeason = uiState.season!!,
+            initialSeason = uiState.season,
             onDismiss = { scope.launch { sheetState.hide() } },
             onConfirm = {
-                viewModel.setSeason(it)
+                event?.setSeason(it)
                 scope.launch { sheetState.hide() }
             }
         )
@@ -85,11 +101,11 @@ fun SeasonAnimeView(
     if (editSheetState.isVisible && uiState.selectedItem != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = uiState.selectedItem!!.basicMediaDetails,
-            listEntry = uiState.selectedItem?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedItem.basicMediaDetails,
+            listEntry = uiState.selectedItem.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
+                    event?.onUpdateListEntry(updatedListEntry)
                     editSheetState.hide()
                 }
             }
@@ -110,7 +126,7 @@ fun SeasonAnimeView(
             }
         },
         navigationIcon = {
-            BackIconButton(onClick = navigateBack)
+            BackIconButton(onClick = navActionManager::goBack)
         },
         scrollBehavior = topAppBarScrollBehavior,
         contentWindowInsets = WindowInsets.systemBars
@@ -126,7 +142,7 @@ fun SeasonAnimeView(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             items(
-                items = viewModel.animeSeasonal,
+                items = anime,
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
@@ -146,11 +162,11 @@ fun SeasonAnimeView(
                     },
                     minLines = 2,
                     onClick = {
-                        navigateToMediaDetails(item.id)
+                        navActionManager.toMediaDetails(item.id)
                     },
                     onLongClick = {
                         scope.launch {
-                            viewModel.selectItem(item)
+                            event?.selectItem(item)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             editSheetState.show()
                         }
@@ -171,9 +187,11 @@ fun SeasonAnimeView(
 fun SeasonAnimeViewPreview() {
     AniHyouTheme {
         Surface {
-            SeasonAnimeView(
-                navigateBack = {},
-                navigateToMediaDetails = {}
+            SeasonAnimeContent(
+                anime = emptyList(),
+                uiState = SeasonAnimeUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

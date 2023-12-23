@@ -11,7 +11,7 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +33,7 @@ class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
-) : PagedUiStateViewModel<ProfileUiState>() {
+) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
     private val userId = savedStateHandle.getStateFlow<Int?>(NavArgument.UserId.name, null)
     private val userName = savedStateHandle.getStateFlow<String?>(NavArgument.UserName.name, null)
@@ -86,7 +86,7 @@ class ProfileViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun toggleFollow() {
+    override fun toggleFollow() {
         uiState.value.userInfo?.id?.let { userId ->
             userRepository.toggleFollow(userId)
                 .onEach { result ->
@@ -103,9 +103,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    val userActivities = mutableStateListOf<UserActivityQuery.Activity>()
-
-    fun toggleLikeActivity(id: Int) {
+    override fun toggleLikeActivity(id: Int) {
         likeRepository.toggleLike(
             likeableId = id,
             type = LikeableType.ACTIVITY
@@ -132,9 +130,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun loadNextActivityPage() {
-        if (!uiState.value.isLoadingActivity) loadNextPage()
+    override fun onLoadMore() {
+        if (!uiState.value.isLoadingActivity) super.onLoadMore()
     }
+
+    val userActivities = mutableStateListOf<UserActivityQuery.Activity>()
 
     init {
         combine(userId, userName) { id, name ->

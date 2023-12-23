@@ -27,9 +27,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -39,21 +41,35 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaChartListView(
-    navigateBack: () -> Unit,
-    navigateToMediaDetails: (Int) -> Unit,
+    navActionManager: NavActionManager
 ) {
     val viewModel: MediaChartViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    MediaChartListContent(
+        media = viewModel.mediaChart,
+        uiState = uiState,
+        event = viewModel,
+        navActionManager = navActionManager,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MediaChartListContent(
+    media: List<MediaChartQuery.Medium>,
+    uiState: MediaChartUiState,
+    event: MediaChartEvent?,
+    navActionManager: NavActionManager,
+) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = viewModel::loadNextPage)
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
@@ -62,11 +78,11 @@ fun MediaChartListView(
     if (editSheetState.isVisible && uiState.selectedItem != null) {
         EditMediaSheet(
             sheetState = editSheetState,
-            mediaDetails = uiState.selectedItem!!.basicMediaDetails,
-            listEntry = uiState.selectedItem?.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedItem.basicMediaDetails,
+            listEntry = uiState.selectedItem.mediaListEntry?.basicMediaListEntry,
             onDismiss = { updatedListEntry ->
                 scope.launch {
-                    viewModel.onUpdateListEntry(updatedListEntry)
+                    event?.onUpdateListEntry(updatedListEntry)
                     editSheetState.hide()
                 }
             }
@@ -76,7 +92,7 @@ fun MediaChartListView(
     DefaultScaffoldWithMediumTopAppBar(
         title = uiState.chartType?.localized().orEmpty(),
         navigationIcon = {
-            BackIconButton(onClick = navigateBack)
+            BackIconButton(onClick = navActionManager::goBack)
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
@@ -94,7 +110,7 @@ fun MediaChartListView(
             ),
         ) {
             itemsIndexed(
-                items = viewModel.mediaChart,
+                items = media,
                 contentType = { _, item -> item }
             ) { index, item ->
                 MediaItemHorizontal(
@@ -104,11 +120,11 @@ fun MediaChartListView(
                     format = item.format ?: MediaFormat.UNKNOWN__,
                     year = item.startDate?.year,
                     onClick = {
-                        navigateToMediaDetails(item.id)
+                        navActionManager.toMediaDetails(item.id)
                     },
                     onLongClick = {
                         scope.launch {
-                            viewModel.selectItem(item)
+                            event?.selectItem(item)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             editSheetState.show()
                         }
@@ -143,9 +159,11 @@ fun MediaChartListView(
 fun MediaChartListViewPreview() {
     AniHyouTheme {
         Surface {
-            MediaChartListView(
-                navigateBack = {},
-                navigateToMediaDetails = {}
+            MediaChartListContent(
+                media = emptyList(),
+                uiState = MediaChartUiState(),
+                event = null,
+                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

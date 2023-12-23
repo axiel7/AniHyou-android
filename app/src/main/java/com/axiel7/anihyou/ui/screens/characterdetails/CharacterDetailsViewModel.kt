@@ -9,7 +9,7 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.ui.common.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class CharacterDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val characterRepository: CharacterRepository,
     private val favoriteRepository: FavoriteRepository,
-) : PagedUiStateViewModel<CharacterDetailsUiState>() {
+) : PagedUiStateViewModel<CharacterDetailsUiState>(), CharacterDetailsEvent {
 
     private val characterId =
         savedStateHandle.getStateFlow<Int?>(NavArgument.CharacterId.name, null)
@@ -40,33 +40,37 @@ class CharacterDetailsViewModel @Inject constructor(
     override val mutableUiState = MutableStateFlow(CharacterDetailsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    fun toggleFavorite() = viewModelScope.launch {
-        favoriteRepository.toggleFavorite(
-            characterId = characterId.value
-        ).collect { result ->
-            if (result is DataResult.Success && result.data != null) {
-                mutableUiState.update {
-                    it.copy(
-                        character = it.character?.copy(
-                            isFavourite = it.character.isFavourite.not()
+    override fun toggleFavorite() {
+        viewModelScope.launch {
+            favoriteRepository.toggleFavorite(
+                characterId = characterId.value
+            ).collect { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    mutableUiState.update {
+                        it.copy(
+                            character = it.character?.copy(
+                                isFavourite = it.character.isFavourite.not()
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     }
 
-    val media = mutableStateListOf<CharacterMediaQuery.Edge>()
-
-    fun selectMediaItem(value: CharacterMediaQuery.Edge?) = mutableUiState.update {
-        it.copy(selectedMediaItem = value)
+    override fun selectMediaItem(value: CharacterMediaQuery.Edge?) {
+        mutableUiState.update {
+            it.copy(selectedMediaItem = value)
+        }
     }
 
-    fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) = mutableUiState.update {
-        it.copy(selectedMediaVoiceActors = item.voiceActors?.filterNotNull())
+    override fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) {
+        mutableUiState.update {
+            it.copy(selectedMediaVoiceActors = item.voiceActors?.filterNotNull())
+        }
     }
 
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         uiState.value.selectedMediaItem?.let { selectedItem ->
             val index = media.indexOf(selectedItem)
             if (index != -1) {
@@ -85,6 +89,8 @@ class CharacterDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    val media = mutableStateListOf<CharacterMediaQuery.Edge>()
 
     init {
         characterId

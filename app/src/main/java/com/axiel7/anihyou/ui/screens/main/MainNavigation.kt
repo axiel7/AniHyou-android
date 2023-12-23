@@ -18,14 +18,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
-import com.axiel7.anihyou.ui.common.DestArgument.Companion.getBoolean
-import com.axiel7.anihyou.ui.common.DestArgument.Companion.getIntArg
-import com.axiel7.anihyou.ui.common.DestArgument.Companion.getStringArg
-import com.axiel7.anihyou.ui.common.NavArgument
-import com.axiel7.anihyou.ui.common.NavDestination
+import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getBoolean
+import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getIntArg
+import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getStringArg
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager.Companion.rememberNavActionManager
+import com.axiel7.anihyou.ui.common.navigation.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.NavDestination
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
 import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetailsView
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivityView
@@ -50,9 +50,6 @@ import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
-import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
-import com.axiel7.anihyou.utils.UTF_8
-import java.net.URLEncoder
 
 @Composable
 fun MainNavigation(
@@ -70,88 +67,35 @@ fun MainNavigation(
     )
 
     // common navigation actions
-    val navigateBack: () -> Unit = { navController.popBackStack() }
-    val navigateToMediaDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.MediaDetails
-                .putArguments(mapOf(NavArgument.MediaId to id.toString()))
-        )
-    }
-    val navigateToCharacterDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.CharacterDetails
-                .putArguments(mapOf(NavArgument.CharacterId to id.toString()))
-        )
-    }
-    val navigateToStaffDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.StaffDetails
-                .putArguments(mapOf(NavArgument.StaffId to id.toString()))
-        )
-    }
-    val navigateToStudioDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.StudioDetails
-                .putArguments(mapOf(NavArgument.StudioId to id.toString()))
-        )
-    }
-    val navigateToUserDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.UserDetails
-                .putArguments(mapOf(NavArgument.UserId to id.toString()))
-        )
-    }
-    val navigateToActivityDetails: (Int) -> Unit = { id ->
-        navController.navigate(
-            NavDestination.ActivityDetails
-                .putArguments(mapOf(NavArgument.ActivityId to id.toString()))
-        )
-    }
-    val navigateToFullscreenImage: (String) -> Unit = { url ->
-        val encodedUrl = URLEncoder.encode(url, UTF_8)
-        navController.navigate(
-            NavDestination.FullscreenImage
-                .putArguments(mapOf(NavArgument.Url to encodedUrl))
-        )
-    }
-    val navigateToGenreTag: (MediaType, String?, String?) -> Unit = { mediaType, genre, tag ->
-        navController.navigate(
-            NavDestination.Search.putArguments(
-                mapOf(
-                    NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.Genre to genre,
-                    NavArgument.Tag to tag
-                )
-            )
-        )
-    }
+    val navActionManager = rememberNavActionManager(navController)
 
     LaunchedEffect(deepLink) {
         if (deepLink != null) {
             when (deepLink.type) {
                 DeepLink.Type.ANIME, DeepLink.Type.MANGA -> {
-                    navigateToMediaDetails(deepLink.id.toInt())
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toMediaDetails(it) }
                 }
 
                 DeepLink.Type.USER -> {
-                    val userId = deepLink.id.toIntOrNull()
-                    navController.navigate(
-                        NavDestination.UserDetails.putArguments(
-                            mapOf(
-                                NavArgument.UserId to (userId ?: 0).toString(),
-                                NavArgument.UserName to deepLink.id
-                            )
-                        )
+                    navActionManager.toUserDetails(
+                        userId = deepLink.id.toIntOrNull(),
+                        username = deepLink.id
                     )
                 }
 
-                DeepLink.Type.SEARCH -> navController.navigate(NavDestination.Search.route())
+                DeepLink.Type.SEARCH -> navActionManager.toSearch()
 
-                DeepLink.Type.CHARACTER -> navigateToCharacterDetails(deepLink.id.toInt())
+                DeepLink.Type.CHARACTER -> {
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toCharacterDetails(it) }
+                }
 
-                DeepLink.Type.STAFF -> navigateToStaffDetails(deepLink.id.toInt())
+                DeepLink.Type.STAFF -> {
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toStaffDetails(it) }
+                }
 
-                DeepLink.Type.STUDIO -> navigateToStudioDetails(deepLink.id.toInt())
+                DeepLink.Type.STUDIO -> {
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toStudioDetails(it) }
+                }
             }
         }
     }
@@ -185,49 +129,7 @@ fun MainNavigation(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
                 else PaddingValues(bottom = 16.dp + bottomPadding),
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToAnimeSeason = { animeSeason ->
-                    navController.navigate(
-                        NavDestination.SeasonAnime.putArguments(
-                            mapOf(
-                                NavArgument.Year to animeSeason.year.toString(),
-                                NavArgument.Season to animeSeason.season.name
-                            )
-                        )
-                    )
-                },
-                navigateToCalendar = {
-                    navController.navigate(NavDestination.Calendar.route())
-                },
-                navigateToExplore = { mediaType, mediaSort ->
-                    navController.navigate(
-                        NavDestination.Search.putArguments(
-                            mapOf(
-                                NavArgument.MediaType to mediaType.rawValue,
-                                NavArgument.MediaSort to mediaSort.rawValue
-                            )
-                        )
-                    )
-                },
-                navigateToNotifications = { unread ->
-                    navController.navigate(
-                        NavDestination.Notifications
-                            .putArguments(mapOf(NavArgument.UnreadCount to unread.toString()))
-                    )
-                },
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToActivityDetails = navigateToActivityDetails,
-                navigateToPublishActivity = { id, text ->
-                    navController.navigate(
-                        NavDestination.PublishActivity.putArguments(
-                            mapOf(
-                                NavArgument.ActivityId to id.toStringOrZero(),
-                                NavArgument.Text to text
-                            )
-                        )
-                    )
-                },
-                navigateToFullscreenImage = navigateToFullscreenImage,
+                navActionManager = navActionManager,
             )
         }
 
@@ -239,18 +141,7 @@ fun MainNavigation(
                 UserMediaListHostView(
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToSearch = { mediaType ->
-                        navController.navigate(
-                            NavDestination.Search.putArguments(
-                                mapOf(
-                                    NavArgument.MediaType to mediaType.rawValue,
-                                    NavArgument.OnList to true.toString(),
-                                    NavArgument.Focus to true.toString()
-                                )
-                            )
-                        )
-                    }
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -265,18 +156,7 @@ fun MainNavigation(
                 UserMediaListHostView(
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToSearch = { mediaType ->
-                        navController.navigate(
-                            NavDestination.Search.putArguments(
-                                mapOf(
-                                    NavArgument.MediaType to mediaType.rawValue,
-                                    NavArgument.OnList to true.toString(),
-                                    NavArgument.Focus to true.toString()
-                                )
-                            )
-                        )
-                    }
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -287,18 +167,7 @@ fun MainNavigation(
             if (isLoggedIn) {
                 ProfileView(
                     modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                    navigateToSettings = {
-                        navController.navigate(NavDestination.Settings.route())
-                    },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToCharacterDetails = navigateToCharacterDetails,
-                    navigateToStaffDetails = navigateToStaffDetails,
-                    navigateToStudioDetails = navigateToStudioDetails,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToActivityDetails = navigateToActivityDetails,
-                    navigateToUserMediaList = null,
-                    navigateToGenreTag = navigateToGenreTag,
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -308,31 +177,7 @@ fun MainNavigation(
         composable(BottomDestination.Explore.route) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToStudioDetails = navigateToStudioDetails,
-                navigateToMediaChart = { type ->
-                    navController.navigate(
-                        NavDestination.MediaChart.putArguments(
-                            mapOf(NavArgument.ChartType to type.name)
-                        )
-                    )
-                },
-                navigateToAnimeSeason = { year, season ->
-                    navController.navigate(
-                        NavDestination.SeasonAnime.putArguments(
-                            mapOf(
-                                NavArgument.Year to year.toString(),
-                                NavArgument.Season to season
-                            )
-                        )
-                    )
-                },
-                navigateToCalendar = {
-                    navController.navigate(NavDestination.Calendar.route())
-                }
+                navActionManager = navActionManager,
             )
         }
 
@@ -351,12 +196,7 @@ fun MainNavigation(
                 initialFocus = navEntry.getBoolean(
                     NavDestination.Search.findDestArgument(NavArgument.Focus)
                 ) == true,
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToStudioDetails = navigateToStudioDetails,
+                navActionManager = navActionManager,
             )
         }
 
@@ -367,8 +207,7 @@ fun MainNavigation(
             UserMediaListHostView(
                 isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
 
@@ -378,17 +217,7 @@ fun MainNavigation(
         ) {
             if (isLoggedIn) {
                 NotificationsView(
-                    navigateToMediaDetails = navigateToMediaDetails,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToActivityDetails = navigateToActivityDetails,
-                    navigateToThreadDetails = { id ->
-                        navController.navigate(
-                            NavDestination.ThreadDetails.putArguments(
-                                mapOf(NavArgument.ThreadId to id.toString())
-                            )
-                        )
-                    },
-                    navigateBack = navigateBack
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -401,27 +230,7 @@ fun MainNavigation(
         ) {
             MediaDetailsView(
                 isLoggedIn = isLoggedIn,
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToFullscreenImage = navigateToFullscreenImage,
-                navigateToStudioDetails = navigateToStudioDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToReviewDetails = { id ->
-                    navController.navigate(
-                        NavDestination.ReviewDetails.putArguments(
-                            mapOf(NavArgument.ReviewId to id.toString())
-                        )
-                    )
-                },
-                navigateToThreadDetails = { id ->
-                    navController.navigate(
-                        NavDestination.ThreadDetails.putArguments(
-                            mapOf(NavArgument.ThreadId to id.toString())
-                        )
-                    )
-                },
-                navigateToGenreTag = navigateToGenreTag,
+                navActionManager = navActionManager,
             )
         }
 
@@ -430,8 +239,7 @@ fun MainNavigation(
             arguments = NavDestination.MediaChart.namedNavArguments
         ) {
             MediaChartListView(
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails
+                navActionManager = navActionManager,
             )
         }
 
@@ -440,15 +248,13 @@ fun MainNavigation(
             arguments = NavDestination.SeasonAnime.namedNavArguments
         ) {
             SeasonAnimeView(
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails
+                navActionManager = navActionManager,
             )
         }
 
         composable(NavDestination.Calendar.route()) {
             CalendarView(
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
 
@@ -458,26 +264,7 @@ fun MainNavigation(
         ) {
             ProfileView(
                 modifier = Modifier.padding(bottom = bottomPadding),
-                navigateToFullscreenImage = navigateToFullscreenImage,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToStudioDetails = navigateToStudioDetails,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToActivityDetails = navigateToActivityDetails,
-                navigateToUserMediaList = { mediaType, userId, scoreFormat ->
-                    navController.navigate(
-                        NavDestination.UserMediaList.putArguments(
-                            mapOf(
-                                NavArgument.UserId to userId.toString(),
-                                NavArgument.MediaType to mediaType.rawValue,
-                                NavArgument.ScoreFormat to scoreFormat.rawValue
-                            )
-                        )
-                    )
-                },
-                navigateToGenreTag = navigateToGenreTag,
-                navigateBack = navigateBack,
+                navActionManager = navActionManager,
             )
         }
 
@@ -486,10 +273,7 @@ fun MainNavigation(
             arguments = NavDestination.CharacterDetails.namedNavArguments
         ) {
             CharacterDetailsView(
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToStaffDetails = navigateToStaffDetails,
-                navigateToFullscreenImage = navigateToFullscreenImage,
+                navActionManager = navActionManager,
             )
         }
 
@@ -498,10 +282,7 @@ fun MainNavigation(
             arguments = NavDestination.StaffDetails.namedNavArguments
         ) {
             StaffDetailsView(
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails,
-                navigateToCharacterDetails = navigateToCharacterDetails,
-                navigateToFullscreenImage = navigateToFullscreenImage
+                navActionManager = navActionManager,
             )
         }
 
@@ -510,7 +291,7 @@ fun MainNavigation(
             arguments = NavDestination.ReviewDetails.namedNavArguments
         ) {
             ReviewDetailsView(
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
 
@@ -520,33 +301,9 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.getIntArg(
                 NavDestination.ThreadDetails.findDestArgument(NavArgument.ThreadId)
-            )?.let { threadId ->
+            )?.let {
                 ThreadDetailsView(
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToPublishThreadComment = { commentId, text ->
-                        navController.navigate(
-                            NavDestination.PublishThreadComment.putArguments(
-                                mapOf(
-                                    NavArgument.ThreadId to threadId.toString(),
-                                    NavArgument.CommentId to commentId.toStringOrZero(),
-                                    NavArgument.Text to text
-                                )
-                            )
-                        )
-                    },
-                    navigateToPublishCommentReply = { parentCommentId, commentId, text ->
-                        navController.navigate(
-                            NavDestination.PublishCommentReply.putArguments(
-                                mapOf(
-                                    NavArgument.ParentCommentId to parentCommentId.toString(),
-                                    NavArgument.CommentId to commentId.toStringOrZero(),
-                                    NavArgument.Text to text
-                                )
-                            )
-                        )
-                    },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
-                    navigateBack = navigateBack
+                    navActionManager = navActionManager,
                 )
             }
         }
@@ -556,30 +313,23 @@ fun MainNavigation(
             arguments = NavDestination.StudioDetails.namedNavArguments
         ) {
             StudioDetailsView(
-                navigateBack = navigateBack,
-                navigateToMediaDetails = navigateToMediaDetails
+                navActionManager = navActionManager,
             )
         }
 
         composable(NavDestination.Settings.route()) {
             SettingsView(
-                navigateToListStyleSettings = {
-                    navController.navigate(NavDestination.ListStyleSettings.route())
-                },
-                navigateToTranslations = {
-                    navController.navigate(NavDestination.Translations.route())
-                },
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
         composable(NavDestination.ListStyleSettings.route()) {
             ListStyleSettingsView(
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
         composable(NavDestination.Translations.route()) {
             TranslationsView(
-                navigateBack = navigateBack
+                navActionManager = navActionManager,
             )
         }
 
@@ -591,7 +341,7 @@ fun MainNavigation(
                 imageUrl = navEntry.getStringArg(
                     NavDestination.FullscreenImage.findDestArgument(NavArgument.Url)
                 ),
-                onDismiss = navigateBack
+                onDismiss = navActionManager::goBack
             )
         }
 
@@ -601,22 +351,9 @@ fun MainNavigation(
         ) { navEntry ->
             navEntry.getIntArg(
                 NavDestination.ActivityDetails.findDestArgument(NavArgument.ActivityId)
-            )?.let { activityId ->
+            )?.let {
                 ActivityDetailsView(
-                    navigateBack = navigateBack,
-                    navigateToUserDetails = navigateToUserDetails,
-                    navigateToPublishActivityReply = { id, text ->
-                        navController.navigate(
-                            NavDestination.PublishActivityReply.putArguments(
-                                mapOf(
-                                    NavArgument.ActivityId to activityId.toString(),
-                                    NavArgument.ReplyId to id.toStringOrZero(),
-                                    NavArgument.Text to text
-                                )
-                            )
-                        )
-                    },
-                    navigateToFullscreenImage = navigateToFullscreenImage,
+                    navActionManager = navActionManager,
                 )
             }
         }
@@ -634,7 +371,7 @@ fun MainNavigation(
                     text = navEntry.getStringArg(
                         NavDestination.PublishActivity.findDestArgument(NavArgument.Text)
                     ),
-                    navigateBack = navigateBack
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -657,7 +394,7 @@ fun MainNavigation(
                     text = navEntry.getStringArg(
                         NavDestination.PublishActivityReply.findDestArgument(NavArgument.Text)
                     ),
-                    navigateBack = navigateBack
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -681,7 +418,7 @@ fun MainNavigation(
                     text = navEntry.getStringArg(
                         NavDestination.PublishThreadComment.findDestArgument(NavArgument.Text)
                     ),
-                    navigateBack = navigateBack,
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
@@ -705,7 +442,7 @@ fun MainNavigation(
                     text = navEntry.getStringArg(
                         NavDestination.PublishCommentReply.findDestArgument(NavArgument.Text)
                     ),
-                    navigateBack = navigateBack,
+                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
