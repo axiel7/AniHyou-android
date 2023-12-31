@@ -31,13 +31,15 @@ fun SmallScoreIndicator(
         Icon(
             painter = painterResource(R.drawable.star_filled_20),
             contentDescription = stringResource(R.string.mean_score),
+            modifier = Modifier.padding(bottom = 2.dp),
             tint = MaterialTheme.colorScheme.outline
         )
         Text(
             text = score,
             modifier = Modifier.padding(horizontal = 4.dp),
             color = MaterialTheme.colorScheme.outline,
-            fontSize = fontSize
+            fontSize = fontSize,
+            lineHeight = fontSize,
         )
     }
 }
