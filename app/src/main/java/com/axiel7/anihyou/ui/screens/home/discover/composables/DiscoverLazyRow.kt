@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.home.discover.composables
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,10 +22,9 @@ fun DiscoverLazyRow(
     val state = rememberLazyListState()
     LazyRow(
         modifier = Modifier
-            .padding(top = 8.dp)
             .sizeIn(minHeight = minHeight),
         state = state,
-        contentPadding = PaddingValues(horizontal = 8.dp),
+        contentPadding = PaddingValues(8.dp),
         flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
         content = content
     )
