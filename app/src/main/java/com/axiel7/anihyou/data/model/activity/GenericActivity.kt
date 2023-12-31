@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.data.model.activity
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
 
+@Immutable
 data class GenericActivity(
     val id: Int,
     val createdAt: Int,

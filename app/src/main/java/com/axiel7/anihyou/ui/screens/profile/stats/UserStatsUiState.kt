@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.profile.stats
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.data.model.stats.overview.OverviewStats
 import com.axiel7.anihyou.fragment.GenreStat
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.fragment.VoiceActorStat
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.UiState
 
+@Immutable
 data class UserStatsUiState(
     val userId: Int? = null,
     val type: UserStatType = UserStatType.OVERVIEW,

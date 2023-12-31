@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.ui.common.navigation
 
+import androidx.compose.runtime.Immutable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.navArgument
 
+@Immutable
 data class DestArgument(
     val argument: NavArgument,
     val isNullable: Boolean = false,

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.settings
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.fragment.UserOptionsFragment
 import com.axiel7.anihyou.type.ScoreFormat
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.common.state.UiState
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 
+@Immutable
 data class SettingsUiState(
     override val error: String? = null,
     override val isLoading: Boolean = true,

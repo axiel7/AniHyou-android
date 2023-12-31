@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.ui.screens.staffdetails
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.common.state.UiState
 
+@Immutable
 data class StaffDetailsUiState(
     val details: StaffDetailsQuery.Staff? = null,
     val mediaOnMyList: Boolean? = null,

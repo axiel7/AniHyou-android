@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.common.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +15,7 @@ import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
 import com.axiel7.anihyou.utils.UTF_8
 import java.net.URLEncoder
 
+@Immutable
 class NavActionManager(
     private val navController: NavHostController
 ) {

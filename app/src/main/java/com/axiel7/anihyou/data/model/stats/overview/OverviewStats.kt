@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.data.model.stats.overview
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.ScoreFormat
 
+@Immutable
 data class OverviewStats(
     val count: Int,
     val episodeOrChapterCount: Int,

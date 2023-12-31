@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Immutable
 data class CharacterDetailsUiState(
     val character: CharacterDetailsQuery.Character? = null,
     val isLoadingMedia: Boolean = true,

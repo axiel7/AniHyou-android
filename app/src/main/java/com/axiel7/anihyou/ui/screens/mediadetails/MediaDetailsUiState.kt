@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.mediadetails
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
@@ -11,6 +12,7 @@ import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.ui.common.state.UiState
 
+@Immutable
 data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
     

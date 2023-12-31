@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
@@ -9,6 +10,7 @@ import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Immutable
 data class UserMediaListUiState(
     val mediaType: MediaType,
     val isMyList: Boolean = true,

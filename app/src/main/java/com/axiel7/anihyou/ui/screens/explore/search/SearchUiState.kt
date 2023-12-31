@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Immutable
 data class SearchUiState(
     val query: String = "",
     val searchType: SearchType,

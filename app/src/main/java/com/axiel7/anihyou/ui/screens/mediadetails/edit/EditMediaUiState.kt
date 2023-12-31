@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
@@ -8,6 +9,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.state.UiState
 import java.time.LocalDate
 
+@Immutable
 data class EditMediaUiState(
     val mediaDetails: BasicMediaDetails? = null,
     val listEntry: BasicMediaListEntry? = null,
