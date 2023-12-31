@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.data.repository
 
+import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.asDataResult
@@ -39,10 +40,12 @@ class MediaRepository @Inject constructor(
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
+            fun AiringAnimesQuery.AiringSchedule.adultFilter() =
+                if (!displayAdult) media?.isAdult == false else true
             when (onMyList) {
-                true -> list.filter { it.media?.mediaListEntry != null && it.media.isAdult == displayAdult }
-                false -> list.filter { it.media?.mediaListEntry == null && it.media?.isAdult == displayAdult }
-                null -> list.filter { it.media?.isAdult == displayAdult }
+                true -> list.filter { it.media?.mediaListEntry != null && it.adultFilter() }
+                false -> list.filter { it.media?.mediaListEntry == null && it.adultFilter() }
+                null -> list.filter { it.adultFilter() }
             }
         }
 
