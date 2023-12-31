@@ -130,10 +130,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    override fun onLoadMore() {
-        if (!uiState.value.isLoadingActivity) super.onLoadMore()
-    }
-
     val userActivities = mutableStateListOf<UserActivityQuery.Activity>()
 
     init {

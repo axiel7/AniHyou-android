@@ -30,7 +30,7 @@ fun UserActivityView(
     navActionManager: NavActionManager,
 ) {
     val listState = rememberLazyListState()
-    if (!uiState.isLoading) {
+    if (!uiState.isLoadingActivity) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
@@ -39,7 +39,7 @@ fun UserActivityView(
         state = listState,
         contentPadding = PaddingValues(top = 8.dp)
     ) {
-        if (uiState.isLoading) {
+        if (uiState.isLoadingActivity) {
             items(10) {
                 ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)
