@@ -43,7 +43,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun setWeekday(value: Int) = mutableUiState.update {
-        it.copy(weekday = value, page = 1, hasNextPage = true, isLoading = true)
+        it.copy(weekday = value)
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {

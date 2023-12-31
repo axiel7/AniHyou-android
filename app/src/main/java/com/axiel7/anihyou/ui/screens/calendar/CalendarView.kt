@@ -114,7 +114,8 @@ private fun CalendarViewContent(
                 viewModel.setWeekday(weekday)
             }
             LaunchedEffect(onMyList) {
-                viewModel.setOnMyList(onMyList)
+                if (uiState.onMyList != onMyList)
+                    viewModel.setOnMyList(onMyList)
             }
 
             CalendarDayView(
