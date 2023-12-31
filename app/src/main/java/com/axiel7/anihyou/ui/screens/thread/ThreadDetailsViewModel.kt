@@ -109,7 +109,10 @@ class ThreadDetailsViewModel @Inject constructor(
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
                         threadComments.addAll(result.list)
-                        it.copy(isLoading = false)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage
+                        )
                     } else {
                         result.toUiState()
                     }
