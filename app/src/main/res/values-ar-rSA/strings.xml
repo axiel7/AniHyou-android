@@ -24,7 +24,7 @@
     <string name="trending_manga">مانجا شائعة</string>
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
-    <string name="current">متداول</string>
+    <string name="current">أشاهدها</string>
     <string name="planning">أرغب بمشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
@@ -207,6 +207,7 @@
     <string name="friday">الجمعة</string>
     <string name="saturday">السبت</string>
     <string name="sunday">الأحد</string>
+    <string name="episode_airing_at">الحلقة %d تُبث في %s</string>
     <string name="filter">فلتر</string>
     <string name="notifications">الإشعارات</string>
     <string name="threads">المواضيع</string>
@@ -335,4 +336,6 @@
     <string name="release_year">سنة الإصدار</string>
     <string name="watch_year">سنة المشاهدة</string>
     <string name="read_year">سنة القراءة</string>
+    <string name="top_movies">أفضل الأفلام</string>
+    <string name="progress">التقدم</string>
 </resources>
