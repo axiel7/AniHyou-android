@@ -94,6 +94,7 @@ class UserMediaListViewModel @Inject constructor(
     override fun setSort(value: MediaListSort) {
         viewModelScope.launch {
             var sort = value
+            // when sorting by title, change according to the user preferred title lang
             if (sort == MediaListSort.MEDIA_TITLE_ROMAJI
                 || sort == MediaListSort.MEDIA_TITLE_ROMAJI_DESC
             ) {
