@@ -82,8 +82,12 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     override fun setStatus(value: MediaListStatus) {
-        mutableUiState.update {
-            it.copy(status = value, page = 1, hasNextPage = true)
+        viewModelScope.launch {
+            if (mediaType.value == MediaType.ANIME) {
+                listPreferencesRepository.setAnimeListStatus(value)
+            } else if (mediaType.value == MediaType.MANGA) {
+                listPreferencesRepository.setMangaListStatus(value)
+            }
         }
     }
 
@@ -256,6 +260,22 @@ class UserMediaListViewModel @Inject constructor(
             .onEach { sort ->
                 mutableUiState.update {
                     it.copy(sort = sort, page = 1, hasNextPage = true)
+                }
+            }
+            .launchIn(viewModelScope)
+
+        // status preference
+        mediaType
+            .flatMapLatest {
+                when (it) {
+                    MediaType.ANIME -> listPreferencesRepository.animeListStatus
+                    MediaType.MANGA -> listPreferencesRepository.mangaListStatus
+                    else -> emptyFlow()
+                }
+            }
+            .onEach { status ->
+                mutableUiState.update {
+                    it.copy(status = status, page = 1, hasNextPage = true)
                 }
             }
             .launchIn(viewModelScope)

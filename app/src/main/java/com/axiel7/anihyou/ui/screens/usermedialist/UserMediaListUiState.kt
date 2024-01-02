@@ -26,7 +26,7 @@ data class UserMediaListUiState(
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
     override val page: Int = 1,
-    override val hasNextPage: Boolean = true,
+    override val hasNextPage: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = true,
 ) : PagedUiState<UserMediaListUiState> {
