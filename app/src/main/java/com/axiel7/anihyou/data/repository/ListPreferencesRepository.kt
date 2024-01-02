@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.axiel7.anihyou.di.DataStoreModule.getValue
 import com.axiel7.anihyou.di.DataStoreModule.setValue
+import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
@@ -35,6 +36,25 @@ class ListPreferencesRepository @Inject constructor(
 
     suspend fun setMangaListStatus(value: MediaListStatus) {
         dataStore.setValue(MANGA_LIST_STATUS_KEY, value.name)
+    }
+
+    // list sort
+    val animeListSort = dataStore.getValue(
+        key = ANIME_LIST_SORT_KEY,
+        default = MediaListSort.UPDATED_TIME_DESC.rawValue
+    ).map { MediaListSort.safeValueOf(it) }
+
+    suspend fun setAnimeListSort(value: MediaListSort) {
+        dataStore.setValue(ANIME_LIST_SORT_KEY, value.rawValue)
+    }
+
+    val mangaListSort = dataStore.getValue(
+        key = MANGA_LIST_SORT_KEY,
+        default = MediaListSort.UPDATED_TIME_DESC.rawValue
+    ).map { MediaListSort.safeValueOf(it) }
+
+    suspend fun setMangaListSort(value: MediaListSort) {
+        dataStore.setValue(MANGA_LIST_SORT_KEY, value.rawValue)
     }
 
     // list styles
@@ -174,6 +194,9 @@ class ListPreferencesRepository @Inject constructor(
     companion object {
         private val ANIME_LIST_STATUS_KEY = stringPreferencesKey("anime_list_status")
         private val MANGA_LIST_STATUS_KEY = stringPreferencesKey("manga_list_status")
+
+        private val ANIME_LIST_SORT_KEY = stringPreferencesKey("anime_list_sort")
+        private val MANGA_LIST_SORT_KEY = stringPreferencesKey("manga_list_sort")
 
         private val GENERAL_LIST_STYLE_KEY = stringPreferencesKey("list_display_mode")
         private val USE_GENERAL_LIST_STYLE_KEY = booleanPreferencesKey("use_general_list_style")

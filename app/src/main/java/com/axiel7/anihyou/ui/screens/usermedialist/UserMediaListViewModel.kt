@@ -114,9 +114,9 @@ class UserMediaListViewModel @Inject constructor(
                 }
             }
             if (mediaType.value == MediaType.ANIME) {
-                defaultPreferencesRepository.setAnimeListSort(sort)
+                listPreferencesRepository.setAnimeListSort(sort)
             } else if (mediaType.value == MediaType.MANGA) {
-                defaultPreferencesRepository.setMangaListSort(sort)
+                listPreferencesRepository.setMangaListSort(sort)
             }
         }
     }
@@ -252,8 +252,8 @@ class UserMediaListViewModel @Inject constructor(
         mediaType
             .flatMapLatest {
                 when (it) {
-                    MediaType.ANIME -> defaultPreferencesRepository.animeListSort
-                    MediaType.MANGA -> defaultPreferencesRepository.mangaListSort
+                    MediaType.ANIME -> listPreferencesRepository.animeListSort
+                    MediaType.MANGA -> listPreferencesRepository.mangaListSort
                     else -> emptyFlow()
                 }
             }

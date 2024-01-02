@@ -14,7 +14,6 @@ import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.di.DataStoreModule.getValue
 import com.axiel7.anihyou.di.DataStoreModule.setValue
 import com.axiel7.anihyou.fragment.UserInfo
-import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
@@ -120,25 +119,6 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(LAST_TAB_KEY, value)
     }
 
-    // list sort
-    val animeListSort = dataStore.getValue(
-        key = ANIME_LIST_SORT_KEY,
-        default = MediaListSort.UPDATED_TIME_DESC.rawValue
-    ).map { MediaListSort.safeValueOf(it) }
-
-    suspend fun setAnimeListSort(value: MediaListSort) {
-        dataStore.setValue(ANIME_LIST_SORT_KEY, value.rawValue)
-    }
-
-    val mangaListSort = dataStore.getValue(
-        key = MANGA_LIST_SORT_KEY,
-        default = MediaListSort.UPDATED_TIME_DESC.rawValue
-    ).map { MediaListSort.safeValueOf(it) }
-
-    suspend fun setMangaListSort(value: MediaListSort) {
-        dataStore.setValue(MANGA_LIST_SORT_KEY, value.rawValue)
-    }
-
     // home
     val defaultHomeTab =
         dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.ordinal)
@@ -203,9 +183,6 @@ class DefaultPreferencesRepository @Inject constructor(
 
         private val THEME_KEY = stringPreferencesKey("theme")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
-
-        private val ANIME_LIST_SORT_KEY = stringPreferencesKey("anime_list_sort")
-        private val MANGA_LIST_SORT_KEY = stringPreferencesKey("manga_list_sort")
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")
