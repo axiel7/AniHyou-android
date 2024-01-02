@@ -71,7 +71,7 @@ private fun ListStyleSettingsContent(
             )
 
             PreferencesTitle(text = stringResource(R.string.anime_list))
-            MediaListStatus.entries.forEach { status ->
+            MediaListStatus.knownEntries.forEach { status ->
                 val preference = event?.getAnimeListStyle(status)?.collectAsStateWithLifecycle()
 
                 ListPreference(
@@ -86,7 +86,7 @@ private fun ListStyleSettingsContent(
             }
 
             PreferencesTitle(text = stringResource(R.string.manga_list))
-            MediaListStatus.entries.forEach { status ->
+            MediaListStatus.knownEntries.forEach { status ->
                 val preference = event?.getMangaListStyle(status)?.collectAsStateWithLifecycle()
 
                 ListPreference(
