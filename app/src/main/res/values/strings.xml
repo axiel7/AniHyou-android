@@ -351,4 +351,5 @@
     <string name="read_year">Read Year</string>
     <string name="top_movies">Top Movies</string>
     <string name="progress">Progress</string>
+    <string name="list">List</string>
 </resources>

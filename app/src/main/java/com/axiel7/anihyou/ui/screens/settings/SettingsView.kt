@@ -131,12 +131,44 @@ private fun SettingsContent(
             LanguagePreference()
 
             ListPreference(
+                title = stringResource(R.string.title_language),
+                entriesValues = UserTitleLanguage.entriesLocalized,
+                preferenceValue = uiState.userOptions?.options?.titleLanguage,
+                icon = R.drawable.title_24,
+                onValueChange = { value ->
+                    event?.setTitleLanguage(value)
+                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.staff_character_name_language),
+                entriesValues = UserStaffNameLanguage.entriesLocalized,
+                preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
+                icon = R.drawable.group_24,
+                onValueChange = { value ->
+                    event?.setStaffNameLanguage(value)
+                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                }
+            )
+
+            ListPreference(
+                title = stringResource(R.string.score_format),
+                entriesValues = ScoreFormat.entriesLocalized,
+                preferenceValue = uiState.scoreFormat,
+                icon = R.drawable.star_24,
+                onValueChange = { event?.setScoreFormat(it) }
+            )
+
+            ListPreference(
                 title = stringResource(R.string.default_home_tab),
                 entriesValues = HomeTab.entriesLocalized,
                 preferenceValue = uiState.defaultHomeTab,
                 icon = R.drawable.home_24,
                 onValueChange = { event?.setDefaultHomeTab(it) }
             )
+
+            PreferencesTitle(text = stringResource(R.string.list))
 
             SwitchPreference(
                 title = stringResource(R.string.use_separated_list_styles),
@@ -171,37 +203,8 @@ private fun SettingsContent(
                 )
             }
 
-            ListPreference(
-                title = stringResource(R.string.title_language),
-                entriesValues = UserTitleLanguage.entriesLocalized,
-                preferenceValue = uiState.userOptions?.options?.titleLanguage,
-                icon = R.drawable.title_24,
-                onValueChange = { value ->
-                    event?.setTitleLanguage(value)
-                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                }
-            )
-
-            ListPreference(
-                title = stringResource(R.string.staff_character_name_language),
-                entriesValues = UserStaffNameLanguage.entriesLocalized,
-                preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
-                icon = R.drawable.group_24,
-                onValueChange = { value ->
-                    event?.setStaffNameLanguage(value)
-                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                }
-            )
-
-            ListPreference(
-                title = stringResource(R.string.score_format),
-                entriesValues = ScoreFormat.entriesLocalized,
-                preferenceValue = uiState.scoreFormat,
-                icon = R.drawable.star_24,
-                onValueChange = { event?.setScoreFormat(it) }
-            )
-
             PreferencesTitle(text = stringResource(R.string.content))
+
             SwitchPreference(
                 title = stringResource(R.string.display_adult_content),
                 preferenceValue = uiState.userOptions?.options?.displayAdultContent,
@@ -216,6 +219,7 @@ private fun SettingsContent(
             )
 
             PreferencesTitle(text = stringResource(R.string.notifications))
+
             SwitchPreference(
                 title = stringResource(R.string.push_notifications),
                 preferenceValue = uiState.isNotificationsEnabled,
@@ -246,6 +250,7 @@ private fun SettingsContent(
             }
 
             PreferencesTitle(text = stringResource(R.string.account))
+
             PlainPreference(
                 title = stringResource(R.string.anilist_account_settings),
                 icon = R.drawable.manage_accounts_24,
@@ -264,6 +269,7 @@ private fun SettingsContent(
             )
 
             PreferencesTitle(text = stringResource(R.string.information))
+
             PlainPreference(
                 title = stringResource(R.string.github_repository),
                 icon = R.drawable.github_24,
