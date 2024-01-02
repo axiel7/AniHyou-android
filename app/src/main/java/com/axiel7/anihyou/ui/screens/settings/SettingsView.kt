@@ -54,18 +54,24 @@ import com.axiel7.anihyou.utils.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.utils.GITHUB_REPO_URL
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotificationChannels
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsView(
     navActionManager: NavActionManager
 ) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else null
 
     SettingsContent(
         uiState = uiState,
         event = viewModel,
+        notificationPermission = notificationPermission,
         navActionManager = navActionManager,
     )
 }
@@ -75,6 +81,7 @@ fun SettingsView(
 private fun SettingsContent(
     uiState: SettingsUiState,
     event: SettingsEvent?,
+    notificationPermission: PermissionState?,
     navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
@@ -82,9 +89,6 @@ private fun SettingsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-    } else null
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
@@ -312,6 +316,7 @@ private fun SettingsContent(
     }//: Scaffold
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun SettingsViewPreview() {
@@ -320,6 +325,7 @@ fun SettingsViewPreview() {
             SettingsContent(
                 uiState = SettingsUiState(),
                 event = null,
+                notificationPermission = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
