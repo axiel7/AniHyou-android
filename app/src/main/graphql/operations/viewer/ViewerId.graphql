@@ -8,7 +8,14 @@ query ViewerId {
             displayAdultContent
         }
         mediaListOptions {
-            scoreFormat
+            ...CommonMediaListOptions
         }
+    }
+}
+
+fragment CommonMediaListOptions on MediaListOptions {
+    scoreFormat
+    animeList {
+        advancedScoringEnabled # shared between animeList and mangaList
     }
 }

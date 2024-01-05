@@ -7,6 +7,7 @@ interface EditMediaEvent {
     fun onChangeProgress(value: Int?)
     fun onChangeVolumeProgress(value: Int?)
     fun onChangeScore(value: Double)
+    fun setAdvancedScore(key: String, value: Double)
     fun setStartedAt(value: Long?)
     fun setCompletedAt(value: Long?)
     fun onDateDialogOpen(dateType: Int)

@@ -39,7 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.canUseAdvancedScoring
 import com.axiel7.anihyou.data.model.maxValue
+import com.axiel7.anihyou.data.model.media.advancedScoreNames
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.isAnime
@@ -376,6 +378,20 @@ private fun EditMediaSheetContent(
                 singleLine = false,
                 minLines = 3
             )
+
+            if (uiState.scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
+                uiState.listEntry?.advancedScoreNames()?.forEach { score ->
+                    SliderRatingView(
+                        maxValue = uiState.scoreFormat.maxValue(),
+                        modifier = Modifier
+                            .padding(start = 8.dp, top = 16.dp, end = 8.dp),
+                        label = score,
+                        initialRating = uiState.advancedScores?.get(score) ?: 0.0,
+                        showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
+                        onRatingChanged = { event?.setAdvancedScore(key = score, value = it) }
+                    )
+                }
+            }
 
             // Delete
             Button(

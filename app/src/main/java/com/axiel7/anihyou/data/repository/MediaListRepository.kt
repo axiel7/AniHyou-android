@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.repository
 import com.axiel7.anihyou.data.api.MediaListApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
+import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
@@ -55,6 +56,7 @@ class MediaListRepository @Inject constructor(
         mediaId: Int,
         status: MediaListStatus? = null,
         score: Double? = null,
+        advancedScores: Collection<Double>? = null,
         progress: Int? = null,
         progressVolumes: Int? = null,
         startedAt: FuzzyDate? = null,
@@ -68,6 +70,8 @@ class MediaListRepository @Inject constructor(
             mediaId = mediaId,
             status = if (status != oldEntry?.status) status else null,
             score = if (score != oldEntry?.score) score else null,
+            advancedScores = if (oldEntry?.advancedScoresMap()?.values != advancedScores) advancedScores?.toList()
+            else null,
             progress = if (progress != oldEntry?.progress) progress else null,
             progressVolumes = if (progressVolumes != oldEntry?.progressVolumes) progressVolumes
             else null,

@@ -17,7 +17,7 @@ fragment UserInfo on User {
         titleLanguage
     }
     mediaListOptions {
-        scoreFormat
+        ...CommonMediaListOptions
     }
     isFollowing
     isFollower

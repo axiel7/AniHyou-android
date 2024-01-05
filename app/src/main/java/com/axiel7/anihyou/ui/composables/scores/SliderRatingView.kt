@@ -29,6 +29,7 @@ import com.axiel7.anihyou.utils.NumberUtils.toFloatOrNullLocaleInvariant
 fun SliderRatingView(
     maxValue: Double,
     modifier: Modifier = Modifier,
+    label: String = stringResource(R.string.score),
     initialRating: Double = 0.0,
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double) -> Unit,
@@ -63,7 +64,7 @@ fun SliderRatingView(
                 }
             },
             modifier = Modifier.width(128.dp),
-            label = { Text(text = stringResource(R.string.score)) },
+            label = { Text(text = label) },
             suffix = { Text(text = "/${maxValue.format(decimalLength = 0)}") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)

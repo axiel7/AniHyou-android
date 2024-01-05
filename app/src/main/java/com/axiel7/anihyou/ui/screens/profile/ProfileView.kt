@@ -228,7 +228,7 @@ private fun ProfileContent(
                                     navActionManager.toUserMediaList(
                                         mediaType,
                                         uiState.userInfo.id,
-                                        uiState.userInfo.mediaListOptions!!.scoreFormat!!
+                                        uiState.userInfo.mediaListOptions!!.commonMediaListOptions.scoreFormat!!
                                     )
                                 }
                             } else null,

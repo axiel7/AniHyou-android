@@ -57,6 +57,11 @@ fun ScoreFormat.maxValue() = when (this) {
     ScoreFormat.UNKNOWN__ -> 0.0
 }
 
+fun ScoreFormat.canUseAdvancedScoring() = when (this) {
+    ScoreFormat.POINT_100, ScoreFormat.POINT_10_DECIMAL -> true
+    else -> false
+}
+
 fun ScoreFormat.stringRes() = when (this) {
     ScoreFormat.POINT_100 -> R.string.score_point_100
     ScoreFormat.POINT_10_DECIMAL -> R.string.score_point_10_decimal

@@ -25,6 +25,7 @@ fragment BasicMediaListEntry on MediaList {
     id
     status
     score
+    advancedScores
     progress
     progressVolumes
     repeat

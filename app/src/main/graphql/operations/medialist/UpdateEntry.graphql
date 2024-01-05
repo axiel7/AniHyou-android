@@ -1,12 +1,13 @@
 mutation UpdateEntry(
     $mediaId: Int, $status: MediaListStatus, $score: Float, $progress: Int,
     $progressVolumes: Int, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $repeat: Int,
-    $private: Boolean, $notes: String, $customLists: [String]
+    $private: Boolean, $notes: String, $customLists: [String], $advancedScores: [Float]
 ) {
     SaveMediaListEntry(
         mediaId: $mediaId, status: $status, score: $score, progress: $progress,
         progressVolumes: $progressVolumes, startedAt: $startedAt, completedAt: $completedAt,
-        repeat: $repeat, private: $private, notes: $notes, customLists: $customLists
+        repeat: $repeat, private: $private, notes: $notes, customLists: $customLists,
+        advancedScores: $advancedScores
     ) {
         ...BasicMediaListEntry
         customLists

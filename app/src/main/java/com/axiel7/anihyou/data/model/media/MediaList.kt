@@ -16,6 +16,13 @@ fun UserMediaListQuery.MediaList.calculateProgressBarValue(): Float {
 
 fun BasicMediaListEntry.isBehind(nextAiringEpisode: Int) = (progress ?: 0) < (nextAiringEpisode - 1)
 
+@Suppress("UNCHECKED_CAST")
+fun BasicMediaListEntry.advancedScoreNames() = (advancedScores as? LinkedHashMap<String, Any>)?.keys
+
+@Suppress("UNCHECKED_CAST")
+fun BasicMediaListEntry.advancedScoresMap() = (advancedScores as? LinkedHashMap<String, Any>)
+    ?.mapValues { (it.value as? Number ?: 0).toDouble() } as LinkedHashMap<String, Double>
+
 val exampleMediaList = UserMediaListQuery.MediaList(
     __typename = "",
     id = 1,
@@ -45,6 +52,7 @@ val exampleMediaList = UserMediaListQuery.MediaList(
         mediaId = 1,
         status = MediaListStatus.CURRENT,
         score = 77.0,
+        advancedScores = null,
         progress = 999,
         progressVolumes = null,
         repeat = 2,

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
@@ -48,6 +49,7 @@ class EditMediaViewModel @Inject constructor(
             progress = value?.progress,
             volumeProgress = value?.progressVolumes,
             score = value?.score,
+            advancedScores = value?.advancedScoresMap(),
             startedAt = value?.startedAt?.fuzzyDate?.toLocalDate(),
             completedAt = value?.completedAt?.fuzzyDate?.toLocalDate(),
             repeatCount = value?.repeat,
@@ -114,6 +116,14 @@ class EditMediaViewModel @Inject constructor(
         mutableUiState.update { it.copy(score = value) }
     }
 
+    override fun setAdvancedScore(key: String, value: Double) {
+        mutableUiState.update {
+            val newScores = it.advancedScores
+            newScores?.set(key, value)
+            it.copy(advancedScores = newScores)
+        }
+    }
+
     override fun setStartedAt(value: Long?) {
         mutableUiState.update { it.copy(startedAt = value?.millisToLocalDate()) }
     }
@@ -157,6 +167,7 @@ class EditMediaViewModel @Inject constructor(
             mediaId = uiState.value.mediaDetails!!.id,
             status = uiState.value.status,
             score = uiState.value.score,
+            advancedScores = uiState.value.advancedScores?.values,
             progress = uiState.value.progress,
             progressVolumes = uiState.value.volumeProgress,
             startedAt = uiState.value.startedAt?.toFuzzyDate(),
@@ -274,6 +285,12 @@ class EditMediaViewModel @Inject constructor(
             .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(scoreFormat = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.advancedScoringEnabled
+            .onEach { value ->
+                mutableUiState.update { it.copy(advancedScoringEnabled = value) }
             }
             .launchIn(viewModelScope)
     }

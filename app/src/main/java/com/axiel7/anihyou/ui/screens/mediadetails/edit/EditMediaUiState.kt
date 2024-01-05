@@ -14,11 +14,13 @@ data class EditMediaUiState(
     val mediaDetails: BasicMediaDetails? = null,
     val listEntry: BasicMediaListEntry? = null,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10_DECIMAL,
+    val advancedScoringEnabled: Boolean = false,
 
     val status: MediaListStatus? = null,
     val progress: Int? = null,
     val volumeProgress: Int? = null,
     val score: Double? = null,
+    val advancedScores: LinkedHashMap<String, Double>? = null,
     val startedAt: LocalDate? = null,
     val completedAt: LocalDate? = null,
     val repeatCount: Int? = null,

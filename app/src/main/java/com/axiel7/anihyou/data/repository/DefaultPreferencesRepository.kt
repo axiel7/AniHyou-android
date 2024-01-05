@@ -47,7 +47,10 @@ class DefaultPreferencesRepository @Inject constructor(
             it[DISPLAY_ADULT_KEY] = viewer.options?.displayAdultContent == true
             it[PROFILE_COLOR_KEY] = viewer.options?.profileColor ?: "#526CFD"
             it[SCORE_FORMAT_KEY] =
-                viewer.mediaListOptions?.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
+                viewer.mediaListOptions?.commonMediaListOptions?.scoreFormat?.rawValue
+                    ?: ScoreFormat.POINT_10.rawValue
+            it[ADVANCED_SCORING_KEY] =
+                viewer.mediaListOptions?.commonMediaListOptions?.animeList?.advancedScoringEnabled == true
             it[TITLE_LANGUAGE_KEY] =
                 viewer.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
         }
@@ -60,6 +63,7 @@ class DefaultPreferencesRepository @Inject constructor(
             it.remove(DISPLAY_ADULT_KEY)
             it.remove(PROFILE_COLOR_KEY)
             it.remove(SCORE_FORMAT_KEY)
+            it.remove(ADVANCED_SCORING_KEY)
             it.remove(TITLE_LANGUAGE_KEY)
             it.remove(NOTIFICATIONS_ENABLED_KEY)
         }
@@ -87,6 +91,8 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(SCORE_FORMAT_KEY, value.name)
     }
 
+    val advancedScoringEnabled = dataStore.getValue(ADVANCED_SCORING_KEY, false)
+
     val titleLanguage = dataStore.getValue(TITLE_LANGUAGE_KEY).map {
         if (it != null) UserTitleLanguage.safeValueOf(it) else null
     }
@@ -96,7 +102,10 @@ class DefaultPreferencesRepository @Inject constructor(
             val profileColor = userInfo.hexColor()
             it[PROFILE_COLOR_KEY] = profileColor
             it[SCORE_FORMAT_KEY] =
-                userInfo.mediaListOptions?.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
+                userInfo.mediaListOptions?.commonMediaListOptions?.scoreFormat?.rawValue
+                    ?: ScoreFormat.POINT_10.rawValue
+            it[ADVANCED_SCORING_KEY] =
+                userInfo.mediaListOptions?.commonMediaListOptions?.animeList?.advancedScoringEnabled == true
             it[TITLE_LANGUAGE_KEY] =
                 userInfo.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
             if (it[APP_COLOR_MODE_KEY] == AppColorMode.PROFILE.name) {
@@ -180,6 +189,7 @@ class DefaultPreferencesRepository @Inject constructor(
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
+        private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
 
         private val THEME_KEY = stringPreferencesKey("theme")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
