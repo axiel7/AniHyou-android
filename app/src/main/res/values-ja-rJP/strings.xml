@@ -325,5 +325,6 @@
     <string name="read_year">年</string>
     <string name="top_movies">映画のトップ</string>
     <string name="progress">進歩</string>
-    <string name="list" comment="section title for list settings">リスト</string>
+    <string name="list">リスト</string>
+    <string name="plus_one">+1</string>
 </resources>
