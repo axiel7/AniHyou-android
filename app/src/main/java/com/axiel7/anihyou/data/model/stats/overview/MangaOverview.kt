@@ -45,11 +45,11 @@ private fun UserStatsMangaOverviewQuery.Manga.scoreStatsCount() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.chapters_read_format,
-                    value = it.chaptersRead.format()
+                    value = it.chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -63,11 +63,11 @@ private fun UserStatsMangaOverviewQuery.Manga.scoreStatsTime() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.chapters_read_format,
-                    value = it.chaptersRead.format()
+                    value = it.chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -81,11 +81,11 @@ private fun UserStatsMangaOverviewQuery.Manga.lengthStatsCount() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = chaptersRead.format()
+                    value = chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -99,11 +99,11 @@ private fun UserStatsMangaOverviewQuery.Manga.lengthStatsTime() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = chaptersRead.format()
+                    value = chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -117,11 +117,11 @@ private fun UserStatsMangaOverviewQuery.Manga.lengthStatsScore() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = chaptersRead.format()
+                    value = chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -137,11 +137,11 @@ private fun UserStatsMangaOverviewQuery.Manga.statusDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.chapters_read_format,
-                    value = it.chaptersRead.format()
+                    value = it.chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -155,11 +155,11 @@ private fun UserStatsMangaOverviewQuery.Manga.formatDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.chapters_read_format,
-                    value = it.chaptersRead.format()
+                    value = it.chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -173,11 +173,11 @@ private fun UserStatsMangaOverviewQuery.Manga.countryDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.chapters_read_format,
-                    value = chaptersRead.format()
+                    value = chaptersRead.format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -194,11 +194,11 @@ private fun UserStatsMangaOverviewQuery.Manga.releaseYearCount() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -215,11 +215,11 @@ private fun UserStatsMangaOverviewQuery.Manga.releaseYearTime() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -236,11 +236,11 @@ private fun UserStatsMangaOverviewQuery.Manga.releaseYearScore() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -257,11 +257,11 @@ private fun UserStatsMangaOverviewQuery.Manga.startYearCount() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -278,11 +278,11 @@ private fun UserStatsMangaOverviewQuery.Manga.startYearTime() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -299,11 +299,11 @@ private fun UserStatsMangaOverviewQuery.Manga.startYearScore() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.chapters_read_format,
-                        value = chaptersRead.format()
+                        value = chaptersRead.format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )

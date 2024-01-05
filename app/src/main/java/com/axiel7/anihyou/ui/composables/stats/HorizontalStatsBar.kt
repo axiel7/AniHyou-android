@@ -73,7 +73,7 @@ fun <T> HorizontalStatsBar(
                             }
                         }
                     } else null,
-                    leadingIcon = { Text(text = stat.value.toInt().format()) },
+                    leadingIcon = { Text(text = stat.value.toInt().format().orEmpty()) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = stat.type.primaryColor(),
                         labelColor = stat.type.onPrimaryColor(),

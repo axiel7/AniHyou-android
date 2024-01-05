@@ -45,11 +45,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsCount() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
+                    value = (it.minutesWatched / 60).format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -63,11 +63,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.scoreStatsTime() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
+                    value = (it.minutesWatched / 60).format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -83,11 +83,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsCount() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -103,11 +103,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsTime() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -123,11 +123,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.lengthStatsScore() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -142,11 +142,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.statusDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
+                    value = (it.minutesWatched / 60).format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -160,11 +160,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.formatDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
+                    value = (it.minutesWatched / 60).format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -178,11 +178,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.countryDistribution() =
             details = listOf(
                 Stat.Detail(
                     name = R.string.hours_watched_format,
-                    value = (it.minutesWatched / 60).format()
+                    value = (it.minutesWatched / 60).format().orEmpty()
                 ),
                 Stat.Detail(
                     name = R.string.mean_score_format,
-                    value = it.meanScore.format()
+                    value = it.meanScore.format().orEmpty()
                 )
             )
         )
@@ -199,11 +199,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.releaseYearCount() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -220,11 +220,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.releaseYearTime() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -241,11 +241,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.releaseYearScore() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -262,11 +262,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.startYearCount() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -283,11 +283,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.startYearTime() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )
@@ -304,11 +304,11 @@ private fun UserStatsAnimeOverviewQuery.Anime.startYearScore() =
                 details = listOf(
                     Stat.Detail(
                         name = R.string.hours_watched_format,
-                        value = (it.minutesWatched / 60).format()
+                        value = (it.minutesWatched / 60).format().orEmpty()
                     ),
                     Stat.Detail(
                         name = R.string.mean_score_format,
-                        value = it.meanScore.format()
+                        value = it.meanScore.format().orEmpty()
                     )
                 )
             )

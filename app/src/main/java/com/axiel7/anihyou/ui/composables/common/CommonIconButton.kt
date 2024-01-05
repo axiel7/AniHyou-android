@@ -77,7 +77,7 @@ fun FavoriteIconButton(
     ) {
         if (favoritesCount > 0) {
             Text(
-                text = favoritesCount.abbreviated(),
+                text = favoritesCount.abbreviated().orEmpty(),
                 color = tint,
                 fontSize = fontSize
             )
@@ -111,7 +111,7 @@ fun CommentIconButton(
     ) {
         if (commentCount > 0) {
             Text(
-                text = commentCount.abbreviated(),
+                text = commentCount.abbreviated().orEmpty(),
                 color = tint,
                 fontSize = fontSize,
             )
@@ -193,7 +193,7 @@ fun LikeButton(
         modifier = modifier
     ) {
         if (likeCount > 0) {
-            Text(text = likeCount.format())
+            Text(text = likeCount.format().orEmpty())
         }
         Icon(
             painter = painterResource(icon),

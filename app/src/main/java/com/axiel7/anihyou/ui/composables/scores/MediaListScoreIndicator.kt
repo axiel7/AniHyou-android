@@ -26,7 +26,7 @@ import com.axiel7.anihyou.data.model.smileyIcon
 import com.axiel7.anihyou.data.model.smileyOnPrimaryColor
 import com.axiel7.anihyou.data.model.smileyPrimaryColor
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.utils.NumberUtils.format
+import com.axiel7.anihyou.utils.NumberUtils.formatPositiveValueOrUnknown
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @Composable
@@ -69,7 +69,7 @@ fun BadgeScoreIndicator(
                         ?: MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = if (score != null && score != 0.0) score.format() else UNKNOWN_CHAR,
+                    text = score.formatPositiveValueOrUnknown(),
                     color = score?.point10DecimalOnPrimaryColor()
                         ?: MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
@@ -135,7 +135,7 @@ fun MinimalScoreIndicator(
                     tint = score?.point10DecimalPrimaryColor() ?: MaterialTheme.colorScheme.outline
                 )
                 Text(
-                    text = if (score != null && score != 0.0) score.format() else UNKNOWN_CHAR,
+                    text = score.formatPositiveValueOrUnknown(),
                     color = score?.point10DecimalPrimaryColor()
                         ?: MaterialTheme.colorScheme.outline,
                     fontSize = 14.sp

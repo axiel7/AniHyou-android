@@ -89,7 +89,7 @@ fun <T> VerticalStatsBar(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stat.value.toInt().format(),
+                        text = stat.value.toInt().format().orEmpty(),
                         modifier = Modifier.padding(bottom = 4.dp),
                         fontSize = 13.sp
                     )

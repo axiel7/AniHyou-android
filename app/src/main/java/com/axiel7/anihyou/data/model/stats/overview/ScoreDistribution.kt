@@ -19,7 +19,7 @@ data class ScoreDistribution(
     override fun onPrimaryColor() = primaryColor()
 
     @Composable
-    override fun localized(): String = score.format()
+    override fun localized(): String = score.format().orEmpty()
 
     companion object {
         fun MediaStatsQuery.ScoreDistribution.asStat() =
