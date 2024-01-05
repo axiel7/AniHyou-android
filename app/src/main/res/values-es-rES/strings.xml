@@ -339,5 +339,6 @@
     <string name="read_year">Año de Lectura</string>
     <string name="top_movies">Top Películas</string>
     <string name="progress">Progreso</string>
-    <string name="list" comment="section title for list settings">Lista</string>
+    <string name="list">Lista</string>
+    <string name="plus_one">+1</string>
 </resources>
