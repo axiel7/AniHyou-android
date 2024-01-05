@@ -336,5 +336,6 @@
     <string name="read_year">Tahun Membaca</string>
     <string name="top_movies">Top Film</string>
     <string name="progress">Progres</string>
-    <string name="list" comment="section title for list settings">Daftar</string>
+    <string name="list">Daftar</string>
+    <string name="plus_one">+1</string>
 </resources>
