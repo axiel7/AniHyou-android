@@ -22,8 +22,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.NumberUtils.toDoubleLocaleInvariant
-import com.axiel7.anihyou.utils.NumberUtils.toDoubleOrNullLocaleInvariant
-import com.axiel7.anihyou.utils.NumberUtils.toFloatOrNullLocaleInvariant
+import com.axiel7.anihyou.utils.NumberUtils.toFloatLocaleInvariant
 
 @Composable
 fun SliderRatingView(
@@ -34,7 +33,10 @@ fun SliderRatingView(
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double) -> Unit,
 ) {
-    var ratingString by remember(initialRating) { mutableStateOf(initialRating.toString()) }
+    val decimalLength = remember { if (showAsDecimal) 1 else 0 }
+    var ratingString by remember(initialRating) {
+        mutableStateOf(initialRating.format(decimalLength))
+    }
 
     Column(
         modifier = modifier,
@@ -47,19 +49,16 @@ fun SliderRatingView(
                     ratingString = value
                     onRatingChanged(0.0)
                 } else {
-                    value.toDoubleOrNullLocaleInvariant()?.let {
-                        if (it == 0.0) {
-                            ratingString = ""
-                            onRatingChanged(0.0)
-                        } else {
-                            val valueRoundedString = it.format(
-                                decimalLength = if (showAsDecimal) 1 else 0
-                            )
-                            val valueRounded = valueRoundedString.toDoubleLocaleInvariant()
-                            if (valueRounded <= maxValue)
-                                ratingString = valueRoundedString
-                            onRatingChanged(valueRounded)
-                        }
+                    value.toDoubleLocaleInvariant()?.let { doubleValue ->
+                        val doubleValueRoundedString = doubleValue.format(decimalLength)
+                        doubleValueRoundedString
+                            .toDoubleLocaleInvariant()
+                            ?.let { doubleValueRounded ->
+                                if (doubleValueRounded <= maxValue) {
+                                    ratingString = doubleValueRoundedString
+                                    onRatingChanged(doubleValueRounded)
+                                }
+                            }
                     }
                 }
             },
@@ -71,7 +70,7 @@ fun SliderRatingView(
         )
 
         Slider(
-            value = ratingString.toFloatOrNullLocaleInvariant() ?: 0f,
+            value = ratingString.toFloatLocaleInvariant() ?: 0f,
             onValueChange = {
                 ratingString = if (it == 0f) "" else it.toDouble().format(
                     decimalLength = if (showAsDecimal) 1 else 0
@@ -80,7 +79,7 @@ fun SliderRatingView(
             valueRange = 0f..maxValue.toFloat(),
             steps = if (maxValue <= 10.0 && !showAsDecimal) (maxValue.toInt() - 1) else 0,
             onValueChangeFinished = {
-                onRatingChanged(ratingString.toDoubleOrNullLocaleInvariant() ?: 0.0)
+                onRatingChanged(ratingString.toDoubleLocaleInvariant() ?: 0.0)
             }
         )
     }

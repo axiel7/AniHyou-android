@@ -48,24 +48,16 @@ object NumberUtils {
 
     /**
      * Parses the string as a [Double] number and returns the result.
-     * Can be called with comma as decimal separator.
-     * @throws NumberFormatException if the string is not a valid representation of a number.
+     * It uses the default locale to parse the input
      */
-    fun String.toDoubleLocaleInvariant() = replace(',', '.').toDouble()
-
-    /**
-     * Parses the string as a [Double] number and returns the result
-     * or `null` if the string is not a valid representation of a number.
-     * Can be called with comma as decimal separator.
-     */
-    fun String.toDoubleOrNullLocaleInvariant() = replace(',', '.').toDoubleOrNull()
+    fun String.toDoubleLocaleInvariant() = defaultNumberFormat.parse(this)?.toDouble()
 
     /**
      * Parses the string as a [Float] number and returns the result
      * or `null` if the string is not a valid representation of a number.
      * Can be called with comma as decimal separator.
      */
-    fun String.toFloatOrNullLocaleInvariant() = replace(',', '.').toFloatOrNull()
+    fun String.toFloatLocaleInvariant() = defaultNumberFormat.parse(this)?.toFloat()
 
     /**
      * @return if true 1 else 0
