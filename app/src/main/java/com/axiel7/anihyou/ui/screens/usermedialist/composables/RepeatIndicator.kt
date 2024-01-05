@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun RepeatIndicator(
@@ -22,7 +23,7 @@ fun RepeatIndicator(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = count.toString())
+        Text(text = count.format().orEmpty())
         Icon(
             painter = painterResource(R.drawable.replay_20),
             contentDescription = stringResource(R.string.repeat_count),

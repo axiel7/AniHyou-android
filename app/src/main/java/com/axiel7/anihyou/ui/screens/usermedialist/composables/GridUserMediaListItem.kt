@@ -33,6 +33,7 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -96,8 +97,10 @@ fun GridUserMediaListItem(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val progress = item.basicMediaListEntry.progress?.format() ?: 0
+                val duration = item.media?.basicMediaDetails?.duration()?.format() ?: 0
                 Text(
-                    text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                    text = "$progress/$duration",
                     fontSize = 15.sp,
                     maxLines = 1
                 )

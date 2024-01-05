@@ -138,7 +138,7 @@ fun MediaItemHorizontal(
         },
         subtitle2 = {
             SmallScoreIndicator(
-                score = "$score%",
+                score = score,
                 fontSize = 15.sp
             )
         },

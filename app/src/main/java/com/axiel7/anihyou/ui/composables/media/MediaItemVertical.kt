@@ -145,7 +145,7 @@ fun MediaItemVerticalPreview() {
                 imageUrl = null,
                 subtitle = {
                     SmallScoreIndicator(
-                        score = "83%",
+                        score = 83,
                         fontSize = 13.sp
                     )
                 },

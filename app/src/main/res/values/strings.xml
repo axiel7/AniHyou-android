@@ -352,4 +352,6 @@
     <string name="top_movies">Top Movies</string>
     <string name="progress">Progress</string>
     <string name="list">List</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
 </resources>

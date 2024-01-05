@@ -56,7 +56,7 @@ fun AiringContent(
                                 ?.secondsToLegibleText() ?: UNKNOWN_CHAR
                         ),
                         imageUrl = item.coverImage?.large,
-                        score = item.meanScore?.let { "$it%" },
+                        score = item.meanScore,
                         badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
                             {
                                 Icon(
@@ -99,7 +99,7 @@ fun AiringContent(
                             item.timeUntilAiring.toLong().secondsToLegibleText()
                         ),
                         imageUrl = item.media?.coverImage?.large,
-                        score = item.media?.meanScore?.let { "$it%" },
+                        score = item.media?.meanScore,
                         badgeContent = item.media?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
                             {
                                 Icon(

@@ -75,13 +75,13 @@ fun ReviewThreadListView(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 TextIconHorizontal(
-                                    text = item.basicThreadDetails.replyCount?.format() ?: "0",
+                                    text = item.basicThreadDetails.replyCount?.format().orEmpty(),
                                     icon = R.drawable.chat_bubble_24,
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
                                     fontSize = 15.sp
                                 )
                                 TextIconHorizontal(
-                                    text = item.basicThreadDetails.viewCount?.format() ?: "0",
+                                    text = item.basicThreadDetails.viewCount?.format().orEmpty(),
                                     icon = R.drawable.visibility_24,
                                     modifier = Modifier.padding(end = 8.dp),
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
@@ -135,13 +135,13 @@ fun ReviewThreadListView(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 TextIconHorizontal(
-                                    text = item.score?.toString() ?: "0",
+                                    text = item.score?.format().orEmpty(),
                                     icon = R.drawable.star_filled_20,
                                     iconPadding = PaddingValues(0.dp),
                                     fontSize = 15.sp
                                 )
                                 TextIconHorizontal(
-                                    text = item.rating?.format() ?: "0",
+                                    text = item.rating?.format().orEmpty(),
                                     icon = R.drawable.thumb_up_filled_20,
                                     modifier = Modifier.padding(end = 8.dp),
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),

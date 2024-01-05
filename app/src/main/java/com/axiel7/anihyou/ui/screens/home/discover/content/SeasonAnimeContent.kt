@@ -53,7 +53,7 @@ fun SeasonAnimeContent(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 subtitle = {
                     if (item.meanScore != null) {
-                        SmallScoreIndicator(score = "${item.meanScore}%")
+                        SmallScoreIndicator(score = item.meanScore)
                     } else {
                         Spacer(modifier = Modifier.size(20.dp))
                     }

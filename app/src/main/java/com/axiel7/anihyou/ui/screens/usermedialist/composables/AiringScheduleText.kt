@@ -11,6 +11,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.isBehind
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun AiringScheduleText(
@@ -27,7 +28,9 @@ fun AiringScheduleText(
             if (isBehind)
                 stringResource(
                     R.string.num_episodes_behind,
-                    (nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0)
+                    ((nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0))
+                        .format()
+                        .orEmpty()
                 )
             else
                 stringResource(

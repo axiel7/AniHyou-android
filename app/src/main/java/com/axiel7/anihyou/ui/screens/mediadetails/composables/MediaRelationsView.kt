@@ -26,7 +26,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun MediaRelationsView(
@@ -108,7 +108,7 @@ fun MediaRelationsView(
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             TextIconHorizontal(
-                                text = item.mediaRecommended.rating.toStringOrZero(),
+                                text = item.mediaRecommended.rating?.format().orEmpty(),
                                 icon = R.drawable.thumbs_up_down_20,
                                 color = MaterialTheme.colorScheme.outline,
                                 fontSize = 14.sp

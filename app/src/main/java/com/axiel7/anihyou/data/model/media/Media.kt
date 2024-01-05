@@ -8,6 +8,7 @@ import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.type.ExternalLinkType
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DAILYMOTION_VIDEO_URL
+import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import com.axiel7.anihyou.utils.YOUTUBE_VIDEO_URL
 
@@ -23,8 +24,8 @@ fun BasicMediaDetails.isManga() = type == MediaType.MANGA
 
 @Composable
 fun BasicMediaDetails.durationText() = when (this.type) {
-    MediaType.ANIME -> stringResource(R.string.num_episodes, episodes ?: UNKNOWN_CHAR)
-    MediaType.MANGA -> stringResource(R.string.num_chapters, chapters ?: UNKNOWN_CHAR)
+    MediaType.ANIME -> stringResource(R.string.num_episodes, episodes?.format() ?: UNKNOWN_CHAR)
+    MediaType.MANGA -> stringResource(R.string.num_chapters, chapters?.format() ?: UNKNOWN_CHAR)
     else -> UNKNOWN_CHAR
 }
 

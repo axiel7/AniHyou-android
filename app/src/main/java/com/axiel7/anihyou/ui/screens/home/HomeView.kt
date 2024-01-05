@@ -37,6 +37,7 @@ import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +77,7 @@ fun HomeView(
                 badge = {
                     if (unreadNotificationCount > 0) {
                         Badge {
-                            Text(text = unreadNotificationCount.toString())
+                            Text(text = unreadNotificationCount.format().orEmpty())
                         }
                     }
                 },

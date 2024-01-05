@@ -29,6 +29,7 @@ import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.currentTimeSeconds
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.NumberUtils.format
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -102,7 +103,7 @@ class AiringWidget : GlanceAppWidget() {
                                         val airingText = if (airingIn > 0) {
                                             val timeText = airingIn.secondsToLegibleText(
                                                 buildString = { id, time ->
-                                                    LocalContext.current.getString(id, time)
+                                                    LocalContext.current.getString(id, time.format())
                                                 }
                                             )
                                             LocalContext.current.getString(
@@ -114,7 +115,7 @@ class AiringWidget : GlanceAppWidget() {
                                             val timeText =
                                                 airingIn.absoluteValue.secondsToLegibleText(
                                                     buildString = { id, time ->
-                                                        LocalContext.current.getString(id, time)
+                                                        LocalContext.current.getString(id, time.format())
                                                     }
                                                 )
                                             LocalContext.current.getString(

@@ -17,10 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun SmallScoreIndicator(
-    score: String,
+    score: Int,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 14.sp,
 ) {
@@ -35,7 +36,7 @@ fun SmallScoreIndicator(
             tint = MaterialTheme.colorScheme.outline
         )
         Text(
-            text = score,
+            text = "${score.format()}%",
             modifier = Modifier.padding(horizontal = 4.dp),
             color = MaterialTheme.colorScheme.outline,
             fontSize = fontSize,
@@ -49,7 +50,7 @@ fun SmallScoreIndicator(
 fun SmallScoreIndicatorPreview() {
     AniHyouTheme {
         Surface {
-            SmallScoreIndicator(score = "75%")
+            SmallScoreIndicator(score = 75)
         }
     }
 }

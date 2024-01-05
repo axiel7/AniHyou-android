@@ -150,7 +150,9 @@ private fun SeasonAnimeContent(
                     imageUrl = item.coverImage?.large,
                     modifier = Modifier.wrapContentWidth(),
                     subtitle = {
-                        SmallScoreIndicator(score = "${item.meanScore ?: 0}%")
+                        if (item.meanScore != null) {
+                            SmallScoreIndicator(score = item.meanScore)
+                        }
                     },
                     badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
                         {

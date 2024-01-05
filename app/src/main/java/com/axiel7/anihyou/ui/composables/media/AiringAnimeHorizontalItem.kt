@@ -34,7 +34,7 @@ fun AiringAnimeHorizontalItem(
     title: String,
     subtitle: String,
     imageUrl: String?,
-    score: String? = null,
+    score: Int? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -147,7 +147,7 @@ fun AiringAnimeHorizontalItemPreview() {
                 title = "Kimetsu no Yaiba: Katanakaji no Sato-hen",
                 subtitle = "Airing in 12 min",
                 imageUrl = null,
-                score = "79%",
+                score = 79,
                 badgeContent = {
                     Icon(
                         painter = painterResource(R.drawable.check_circle_24),

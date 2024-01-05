@@ -30,6 +30,7 @@ import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun MediaStatsView(
@@ -56,7 +57,7 @@ fun MediaStatsView(
                         label = {
                             Text(
                                 text = buildString {
-                                    append("#${it.rank} ${it.context.capitalize(Locale.current)}")
+                                    append("#${it.rank.format()} ${it.context.capitalize(Locale.current)}")
                                     it.season?.let { season ->
                                         append(" ${season.localized()}")
                                     }

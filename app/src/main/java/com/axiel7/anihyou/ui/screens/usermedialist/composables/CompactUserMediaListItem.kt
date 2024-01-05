@@ -22,10 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
@@ -35,6 +37,7 @@ import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -102,8 +105,10 @@ fun CompactUserMediaListItem(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
+                    val progress = item.basicMediaListEntry.progress?.format() ?: 0
+                    val duration = item.media?.basicMediaDetails?.duration()?.format() ?: 0
                     Text(
-                        text = "${item.basicMediaListEntry.progress ?: 0}/${item.media?.basicMediaDetails?.duration() ?: 0}",
+                        text = "$progress/$duration",
                         fontSize = 15.sp,
                     )
 
@@ -126,7 +131,7 @@ fun CompactUserMediaListItem(
                                     || status == MediaListStatus.REPEATING)
                         ) {
                             FilledTonalButton(onClick = onClickPlus) {
-                                Text(text = "+1")
+                                Text(text = stringResource(R.string.plus_one))
                             }
                         }
                     }

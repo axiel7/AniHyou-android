@@ -29,7 +29,7 @@ import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsUiState
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
-import com.axiel7.anihyou.utils.StringUtils.toStringOrNull
+import com.axiel7.anihyou.utils.NumberUtils.format
 
 @Composable
 fun StaffInfoView(
@@ -97,7 +97,7 @@ fun StaffInfoView(
         )
         InfoItemView(
             title = stringResource(R.string.age),
-            info = uiState.details?.age.toStringOrNull(),
+            info = uiState.details?.age?.format(),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(

@@ -39,6 +39,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.NumberUtils.format
 import kotlinx.coroutines.launch
 
 @Composable
@@ -139,7 +140,7 @@ private fun MediaChartListContent(
                     },
                     topBadgeContent = {
                         Text(
-                            text = "#${index + 1}",
+                            text = "#${(index + 1).format()}",
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
