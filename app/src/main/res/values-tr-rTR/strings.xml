@@ -338,5 +338,6 @@
     <string name="read_year">Okuma Yılı</string>
     <string name="top_movies">En İyi Filmler</string>
     <string name="progress">İlerleme</string>
-    <string name="list" comment="section title for list settings">Liste</string>
+    <string name="list">Liste</string>
+    <string name="plus_one">+1</string>
 </resources>
