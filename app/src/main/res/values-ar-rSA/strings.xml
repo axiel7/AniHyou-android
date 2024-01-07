@@ -337,7 +337,6 @@
     <string name="watch_year">سنة المشاهدة</string>
     <string name="read_year">سنة القراءة</string>
     <string name="top_movies">أفضل الأفلام</string>
-    <string name="progress">التقدم</string>
+    <string name="progress" comment="sort list by progress">التقدم</string>
     <string name="list">قائمة</string>
-    <string name="plus_one">1+</string>
 </resources>
