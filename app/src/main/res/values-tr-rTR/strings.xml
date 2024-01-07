@@ -337,7 +337,8 @@
     <string name="watch_year">İzleme Yılı</string>
     <string name="read_year">Okuma Yılı</string>
     <string name="top_movies">En İyi Filmler</string>
-    <string name="progress">İlerleme</string>
+    <string name="progress" comment="sort list by progress">İlerleme</string>
     <string name="list">Liste</string>
-    <string name="plus_one">+1</string>
+    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
+    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
 </resources>
