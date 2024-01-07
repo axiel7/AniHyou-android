@@ -319,12 +319,14 @@
     <string name="country">国</string>
     <string name="custom_lists">カスタムリスト</string>
     <string name="no_custom_lists">カスタムリストなし</string>
+    <string name="mean_score_format">平均スコア：%s</string>
     <string name="country_distribution">国の内訳</string>
     <string name="release_year">発売年</string>
     <string name="watch_year">年</string>
     <string name="read_year">年</string>
     <string name="top_movies">映画のトップ</string>
-    <string name="progress">進歩</string>
+    <string name="progress" comment="sort list by progress">進歩</string>
     <string name="list">リスト</string>
-    <string name="plus_one">+1</string>
+    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
+    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
 </resources>
