@@ -335,7 +335,8 @@
     <string name="watch_year">Tahun Menonton</string>
     <string name="read_year">Tahun Membaca</string>
     <string name="top_movies">Top Film</string>
-    <string name="progress">Progres</string>
+    <string name="progress" comment="sort list by progress">Progres</string>
     <string name="list">Daftar</string>
-    <string name="plus_one">+1</string>
+    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
+    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
 </resources>
