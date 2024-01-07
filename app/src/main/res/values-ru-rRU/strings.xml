@@ -339,5 +339,6 @@
     <string name="top_movies">Топ фильмы</string>
     <string name="progress">Прогресс</string>
     <string name="list">Список</string>
-    <string name="plus_one">+1</string>
+    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
+    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
 </resources>
