@@ -335,7 +335,7 @@
     <string name="watch_year">Рік відстеження</string>
     <string name="read_year">Рік читання</string>
     <string name="top_movies">Найпопулярніші фільми</string>
-    <string name="progress" comment="sort list by progress">Прогрес</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="progress">Прогрес</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
 </resources>
