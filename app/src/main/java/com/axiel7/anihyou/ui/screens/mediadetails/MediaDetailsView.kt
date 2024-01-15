@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.mediadetails
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -348,6 +349,7 @@ private fun MediaDetailsContent(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                     .clickable { isSynopsisExpanded = !isSynopsisExpanded }
+                    .animateContentSize()
                     .defaultPlaceholder(visible = uiState.isLoading),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
