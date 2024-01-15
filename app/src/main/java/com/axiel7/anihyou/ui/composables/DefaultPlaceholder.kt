@@ -10,7 +10,7 @@ import io.github.fornewid.placeholder.material3.placeholder
 fun Modifier.defaultPlaceholder(
     visible: Boolean
 ) = composed {
-    placeholder(
+    this.placeholder(
         visible = visible,
         color = MaterialTheme.colorScheme.outline,
         highlight = PlaceholderHighlight.fade()
