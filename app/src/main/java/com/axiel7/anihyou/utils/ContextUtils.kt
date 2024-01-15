@@ -151,6 +151,9 @@ object ContextUtils {
     fun Context.copyToClipBoard(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
-        showToast(getString(R.string.copied))
+        // Android 13+ has clipboard popups
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            showToast(getString(R.string.copied))
+        }
     }
 }
