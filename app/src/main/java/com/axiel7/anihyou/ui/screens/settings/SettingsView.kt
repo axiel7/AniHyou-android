@@ -44,6 +44,7 @@ import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.settings.composables.LanguagePreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
+import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.ContextUtils.openByDefaultSettings
@@ -56,6 +57,8 @@ import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotif
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
+
+private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -288,10 +291,10 @@ private fun SettingsContent(
 
             PlainPreference(
                 title = stringResource(R.string.version),
-                subtitle = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                subtitle = versionString,
                 icon = R.drawable.anihyou_24,
                 onClick = {
-
+                    context.copyToClipBoard(versionString)
                 }
             )
 
