@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun <T : Any> DefaultTabRowWithPager(
+fun <T : Any> TabRowWithPager(
     tabs: Array<TabRowItem<T>>,
     modifier: Modifier = Modifier,
     initialPage: Int = 0,

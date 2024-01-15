@@ -47,7 +47,7 @@ import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.ui.composables.DefaultTabRowWithPager
+import com.axiel7.anihyou.ui.composables.TabRowWithPager
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -95,7 +95,7 @@ private fun CalendarViewContent(
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        DefaultTabRowWithPager(
+        TabRowWithPager(
             tabs = CalendarTab.tabRows,
             modifier = Modifier
                 .fillMaxSize()
