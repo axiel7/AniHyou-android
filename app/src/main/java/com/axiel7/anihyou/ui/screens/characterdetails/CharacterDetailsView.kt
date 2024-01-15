@@ -8,12 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,7 +39,6 @@ import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun CharacterDetailsView(
@@ -70,33 +70,30 @@ private fun CharacterDetailsContent(
     )
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val vaSheetState = rememberModalBottomSheetState()
-
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
+    var showVaSheet by remember { mutableStateOf(false) }
 
-    if (vaSheetState.isVisible) {
+    if (showVaSheet) {
         CharacterVoiceActorsSheet(
             voiceActors = uiState.selectedMediaVoiceActors.orEmpty(),
-            sheetState = vaSheetState,
+            scope = scope,
             navigateToStaffDetails = navActionManager::toStaffDetails,
             onDismiss = {
-                scope.launch { vaSheetState.hide() }
+                showVaSheet = false
             }
         )
     }
 
-    if (editSheetState.isVisible && uiState.selectedMediaItem?.node != null) {
+    if (showEditSheet && uiState.selectedMediaItem?.node != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedMediaItem.node.basicMediaDetails,
             listEntry = uiState.selectedMediaItem.node.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            scope = scope,
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -157,17 +154,13 @@ private fun CharacterDetailsContent(
                         ),
                         navigateToMediaDetails = navActionManager::toMediaDetails,
                         showVoiceActorsSheet = {
-                            scope.launch {
-                                event?.onShowVoiceActorsSheet(it)
-                                vaSheetState.show()
-                            }
+                            event?.onShowVoiceActorsSheet(it)
+                            showVaSheet = true
                         },
                         showEditSheet = {
-                            scope.launch {
-                                event?.selectMediaItem(it)
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                editSheetState.show()
-                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            event?.selectMediaItem(it)
+                            showEditSheet = true
                         }
                     )
                 }

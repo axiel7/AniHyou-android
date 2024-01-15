@@ -13,11 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -40,7 +41,6 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
-import kotlinx.coroutines.launch
 
 @Composable
 fun MediaChartListView(
@@ -72,21 +72,17 @@ private fun MediaChartListContent(
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
 
-    if (editSheetState.isVisible && uiState.selectedItem != null) {
+    if (showEditSheet && uiState.selectedItem != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedItem.basicMediaDetails,
             listEntry = uiState.selectedItem.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -124,11 +120,9 @@ private fun MediaChartListContent(
                         navActionManager.toMediaDetails(item.id)
                     },
                     onLongClick = {
-                        scope.launch {
-                            event?.selectItem(item)
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            editSheetState.show()
-                        }
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        event?.selectItem(item)
+                        showEditSheet = true
                     },
                     badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
                         {

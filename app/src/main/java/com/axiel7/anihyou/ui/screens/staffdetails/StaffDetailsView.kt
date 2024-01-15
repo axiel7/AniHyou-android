@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,7 +38,6 @@ import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffCharacterView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffInfoView
 import com.axiel7.anihyou.ui.screens.staffdetails.content.StaffMediaView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun StaffDetailsView(
@@ -70,22 +69,18 @@ private fun StaffDetailsContent(
     )
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
 
-    if (editSheetState.isVisible) {
+    if (showEditSheet) {
         uiState.selectedMediaItem?.second?.value?.node?.let { node ->
             EditMediaSheet(
-                sheetState = editSheetState,
                 mediaDetails = node.basicMediaDetails,
                 listEntry = node.mediaListEntry?.basicMediaListEntry,
-                onDismiss = { updatedListEntry ->
-                    scope.launch {
-                        event?.onUpdateListEntry(updatedListEntry)
-                        editSheetState.hide()
-                    }
-                }
+                onEntryUpdated = {
+                    event?.onUpdateListEntry(it)
+                },
+                onDismissed = { showEditSheet = false }
             )
         }
     }
@@ -144,11 +139,9 @@ private fun StaffDetailsContent(
                             bottom = padding.calculateBottomPadding()
                         ),
                         showEditSheet = {
-                            scope.launch {
-                                event?.selectMediaItem(it)
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                editSheetState.show()
-                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            event?.selectMediaItem(it)
+                            showEditSheet = true
                         },
                         navigateToMediaDetails = navActionManager::toMediaDetails
                     )

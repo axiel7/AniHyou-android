@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -32,7 +31,6 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 enum class DiscoverInfo {
@@ -68,7 +66,6 @@ fun DiscoverView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiscoverContent(
     infos: List<DiscoverInfo>,
@@ -87,27 +84,23 @@ private fun DiscoverContent(
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 0, onLoadMore = { event?.addNextInfo() })
 
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
 
-    suspend fun showEditSheet() {
+    fun showEditSheetAction() {
         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        editSheetState.show()
+        showEditSheet = true
     }
 
-    if (editSheetState.isVisible && uiState.selectedMediaDetails != null) {
+    if (showEditSheet && uiState.selectedMediaDetails != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedMediaDetails,
             listEntry = uiState.selectedMediaListEntry,
-            onDismiss = { _ ->
-                scope.launch {
-                    //TODO: update corresponding list item
-                    //viewModel.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            onEntryUpdated = {
+                //TODO: update corresponding list item
+                //viewModel.onUpdateListEntry(updatedListEntry)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -129,10 +122,8 @@ private fun DiscoverContent(
                         airingAnimeOnMyList = airingAnimeOnMyList,
                         isLoading = uiState.isLoadingAiring,
                         onLongClickItem = { details, listEntry ->
-                            scope.launch {
-                                event?.selectItem(details, listEntry)
-                                showEditSheet()
-                            }
+                            event?.selectItem(details, listEntry)
+                            showEditSheetAction()
                         },
                         navigateToCalendar = navActionManager::toCalendar,
                         navigateToMediaDetails = navActionManager::toMediaDetails,
@@ -149,13 +140,11 @@ private fun DiscoverContent(
                         isLoading = uiState.isLoadingThisSeason,
                         isNextSeason = false,
                         onLongClickItem = {
-                            scope.launch {
-                                event?.selectItem(
-                                    details = it.basicMediaDetails,
-                                    listEntry = it.mediaListEntry?.basicMediaListEntry
-                                )
-                                showEditSheet()
-                            }
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
                         },
                         navigateToAnimeSeason = navActionManager::toAnimeSeason,
                         navigateToMediaDetails = navActionManager::toMediaDetails,
@@ -171,13 +160,11 @@ private fun DiscoverContent(
                         trendingMedia = trendingAnime,
                         isLoading = uiState.isLoadingTrendingAnime,
                         onLongClickItem = {
-                            scope.launch {
-                                event?.selectItem(
-                                    details = it.basicMediaDetails,
-                                    listEntry = it.mediaListEntry?.basicMediaListEntry
-                                )
-                                showEditSheet()
-                            }
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
                         },
                         navigateToExplore = navActionManager::toExplore,
                         navigateToMediaDetails = navActionManager::toMediaDetails,
@@ -194,13 +181,11 @@ private fun DiscoverContent(
                         isLoading = uiState.isLoadingNextSeason,
                         isNextSeason = true,
                         onLongClickItem = {
-                            scope.launch {
-                                event?.selectItem(
-                                    details = it.basicMediaDetails,
-                                    listEntry = it.mediaListEntry?.basicMediaListEntry
-                                )
-                                showEditSheet()
-                            }
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
                         },
                         navigateToAnimeSeason = navActionManager::toAnimeSeason,
                         navigateToMediaDetails = navActionManager::toMediaDetails,
@@ -216,13 +201,11 @@ private fun DiscoverContent(
                         trendingMedia = trendingManga,
                         isLoading = uiState.isLoadingTrendingManga,
                         onLongClickItem = {
-                            scope.launch {
-                                event?.selectItem(
-                                    details = it.basicMediaDetails,
-                                    listEntry = it.mediaListEntry?.basicMediaListEntry
-                                )
-                                showEditSheet()
-                            }
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
                         },
                         navigateToExplore = navActionManager::toExplore,
                         navigateToMediaDetails = navActionManager::toMediaDetails,

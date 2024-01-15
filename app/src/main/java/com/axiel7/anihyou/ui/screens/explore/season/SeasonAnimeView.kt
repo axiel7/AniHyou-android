@@ -18,11 +18,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -49,7 +51,6 @@ import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.screens.explore.season.composables.SeasonChartFilterSheet
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun SeasonAnimeView(
@@ -79,36 +80,31 @@ private fun SeasonAnimeContent(
     )
 
     val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState()
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showFilterSheet by remember { mutableStateOf(false) }
+    var showEditSheet by remember { mutableStateOf(false) }
 
     val listState = rememberLazyGridState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
-    if (sheetState.isVisible && uiState.season != null) {
+    if (showFilterSheet && uiState.season != null) {
         SeasonChartFilterSheet(
-            sheetState = sheetState,
             initialSeason = uiState.season,
-            onDismiss = { scope.launch { sheetState.hide() } },
-            onConfirm = {
-                event?.setSeason(it)
-                scope.launch { sheetState.hide() }
-            }
+            scope = scope,
+            onDismiss = { showFilterSheet = false },
+            setSeason = { event?.setSeason(it) }
         )
     }
 
-    if (editSheetState.isVisible && uiState.selectedItem != null) {
+    if (showEditSheet && uiState.selectedItem != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedItem.basicMediaDetails,
             listEntry = uiState.selectedItem.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            scope = scope,
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -116,7 +112,7 @@ private fun SeasonAnimeContent(
         title = uiState.season?.localized().orEmpty(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { scope.launch { sheetState.show() } },
+                onClick = { showFilterSheet = true },
                 modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())
             ) {
                 Icon(
@@ -167,11 +163,9 @@ private fun SeasonAnimeContent(
                         navActionManager.toMediaDetails(item.id)
                     },
                     onLongClick = {
-                        scope.launch {
-                            event?.selectItem(item)
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            editSheetState.show()
-                        }
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        event?.selectItem(item)
+                        showEditSheet = true
                     }
                 )
             }

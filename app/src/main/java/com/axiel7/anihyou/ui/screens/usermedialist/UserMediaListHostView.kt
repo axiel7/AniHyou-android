@@ -24,14 +24,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -56,7 +57,6 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.SortMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun UserMediaListHostView(
@@ -92,8 +92,8 @@ private fun UserMediaListHostContent(
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
-    val statusSheetState = rememberModalBottomSheetState()
-    val editSheetState = rememberModalBottomSheetState()
+    var showStatusSheet by remember { mutableStateOf(false) }
+    var showEditSheet by remember { mutableStateOf(false) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
@@ -112,28 +112,27 @@ private fun UserMediaListHostContent(
         )
     }
 
-    if (statusSheetState.isVisible) {
+    if (showStatusSheet) {
         ListStatusSheet(
             selectedStatus = uiState.status,
             mediaType = uiState.mediaType,
-            sheetState = statusSheetState,
+            scope = scope,
             bottomPadding = bottomBarPadding,
-            onStatusChanged = { event?.setStatus(it) }
+            onStatusChanged = { event?.setStatus(it) },
+            onDismiss = { showStatusSheet = false }
         )
     }
 
-    if (uiState.isMyList && editSheetState.isVisible && uiState.selectedItem != null) {
+    if (showEditSheet && uiState.isMyList && uiState.selectedItem != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedItem!!.media!!.basicMediaDetails,
             listEntry = uiState.selectedItem!!.basicMediaListEntry,
             bottomPadding = bottomBarPadding,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            scope = scope,
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -148,9 +147,7 @@ private fun UserMediaListHostContent(
                 enter = slideInVertically(initialOffsetY = { it * 2 }),
                 exit = slideOutVertically(targetOffsetY = { it * 2 }),
             ) {
-                ExtendedFloatingActionButton(
-                    onClick = { scope.launch { statusSheetState.show() } }
-                ) {
+                ExtendedFloatingActionButton(onClick = { showStatusSheet = true }) {
                     Icon(
                         painter = painterResource(uiState.status.icon()),
                         contentDescription = stringResource(R.string.list_status),
@@ -221,7 +218,7 @@ private fun UserMediaListHostContent(
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     event?.selectItem(it)
-                    scope.launch { editSheetState.show() }
+                    showEditSheet = true
                 },
             )
         }//: Column

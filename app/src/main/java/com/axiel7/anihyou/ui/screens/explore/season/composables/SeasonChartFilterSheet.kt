@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,25 +31,27 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.ui.composables.ModalBottomSheet
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.utils.DateUtils
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeasonChartFilterSheet(
-    sheetState: SheetState,
     initialSeason: AnimeSeason,
+    scope: CoroutineScope,
     onDismiss: () -> Unit,
-    onConfirm: (AnimeSeason) -> Unit,
+    setSeason: (AnimeSeason) -> Unit,
 ) {
     var selectedYear by remember { mutableIntStateOf(initialSeason.year) }
     var selectedSeason by remember { mutableStateOf(initialSeason.season) }
 
     ModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = onDismiss,
+        onDismissed = onDismiss,
+        scope = scope,
         windowInsets = WindowInsets(0, 0, 0, 0)
-    ) {
+    ) { dismiss ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -65,13 +65,16 @@ fun SeasonChartFilterSheet(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = onDismiss) {
+                TextButton(onClick = dismiss) {
                     Text(text = stringResource(R.string.cancel))
                 }
 
-                Button(onClick = {
-                    onConfirm(AnimeSeason(selectedYear, selectedSeason))
-                }) {
+                Button(
+                    onClick = {
+                        setSeason(AnimeSeason(selectedYear, selectedSeason))
+                        dismiss()
+                    }
+                ) {
                     Text(text = stringResource(R.string.apply))
                 }
             }

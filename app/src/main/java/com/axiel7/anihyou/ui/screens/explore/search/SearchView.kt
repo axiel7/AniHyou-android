@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,14 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -80,7 +77,6 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchStatu
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearChip
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun SearchView(
@@ -164,7 +160,6 @@ fun SearchView(
     }//:Surface
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchContentView(
     query: String,
@@ -187,9 +182,8 @@ fun SearchContentView(
 
     var showMoreFilters by rememberSaveable { mutableStateOf(false) }
 
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val editSheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
@@ -199,17 +193,14 @@ fun SearchContentView(
         }
     }
 
-    if (editSheetState.isVisible && uiState.selectedMediaItem != null) {
+    if (showEditSheet && uiState.selectedMediaItem != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedMediaItem.basicMediaDetails,
             listEntry = uiState.selectedMediaItem.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
-            }
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -337,11 +328,9 @@ fun SearchContentView(
                             navActionManager.toMediaDetails(item.id)
                         },
                         onLongClick = {
-                            scope.launch {
-                                event?.selectMediaItem(item)
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                editSheetState.show()
-                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            event?.selectMediaItem(item)
+                            showEditSheet = true
                         },
                         badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
                             {

@@ -17,17 +17,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -53,6 +51,7 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.ClickableOutlinedTextField
+import com.axiel7.anihyou.ui.composables.ModalBottomSheet
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.common.TextCheckbox
@@ -67,15 +66,16 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.utils.DateUtils.toLocalized
+import kotlinx.coroutines.CoroutineScope
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMediaSheet(
-    sheetState: SheetState,
     mediaDetails: BasicMediaDetails,
     listEntry: BasicMediaListEntry?,
     bottomPadding: Dp = 0.dp,
-    onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
+    scope: CoroutineScope = rememberCoroutineScope(),
+    onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
+    onDismissed: () -> Unit,
 ) {
     val viewModel: EditMediaViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -91,9 +91,10 @@ fun EditMediaSheet(
     EditMediaSheetContent(
         uiState = uiState,
         event = viewModel,
-        sheetState = sheetState,
         bottomPadding = bottomPadding,
-        onDismiss = onDismiss,
+        scope = scope,
+        onEntryUpdated = onEntryUpdated,
+        onDismissed = onDismissed,
     )
 }
 
@@ -102,9 +103,10 @@ fun EditMediaSheet(
 private fun EditMediaSheetContent(
     uiState: EditMediaUiState,
     event: EditMediaEvent?,
-    sheetState: SheetState,
     bottomPadding: Dp = 0.dp,
-    onDismiss: (updatedListEntry: BasicMediaListEntry?) -> Unit
+    scope: CoroutineScope = rememberCoroutineScope(),
+    onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
+    onDismissed: () -> Unit,
 ) {
     val context = LocalContext.current
     val datePickerState = rememberDatePickerState()
@@ -153,16 +155,17 @@ private fun EditMediaSheetContent(
 
     LaunchedEffect(uiState.updateSuccess) {
         if (uiState.updateSuccess) {
-            onDismiss(uiState.listEntry)
+            onEntryUpdated(uiState.listEntry)
             event?.setUpdateSuccess(false)
+            onDismissed()
         }
     }
 
     ModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = { onDismiss(uiState.listEntry) },
+        onDismissed = onDismissed,
+        scope = scope,
         windowInsets = WindowInsets(0, 0, 0, 0)
-    ) {
+    ) { dismiss ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -178,7 +181,7 @@ private fun EditMediaSheetContent(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = { onDismiss(uiState.listEntry) }) {
+                TextButton(onClick = { dismiss() }) {
                     Text(text = stringResource(R.string.cancel))
                 }
 
@@ -413,7 +416,6 @@ private fun EditMediaSheetContent(
     }//:Sheet
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun EditMediaSheetPreview() {
@@ -422,8 +424,8 @@ fun EditMediaSheetPreview() {
             EditMediaSheetContent(
                 uiState = EditMediaUiState(),
                 event = null,
-                sheetState = rememberModalBottomSheetState(),
-                onDismiss = {}
+                onEntryUpdated = {},
+                onDismissed = {}
             )
         }
     }

@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -39,7 +38,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -92,7 +90,6 @@ import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
-import kotlinx.coroutines.launch
 
 @Composable
 fun MediaDetailsView(
@@ -125,8 +122,7 @@ private fun MediaDetailsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState()
+    var showEditSheet by remember { mutableStateOf(false) }
 
     var isSynopsisExpanded by remember { mutableStateOf(false) }
     val maxLinesSynopsis by remember {
@@ -141,18 +137,15 @@ private fun MediaDetailsContent(
     val isCurrentLanguageEn = LocalIsLanguageEn.current
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    if (sheetState.isVisible && uiState.details != null) {
+    if (showEditSheet && uiState.details != null) {
         EditMediaSheet(
-            sheetState = sheetState,
             mediaDetails = uiState.details.basicMediaDetails,
             listEntry = uiState.details.mediaListEntry?.basicMediaListEntry,
             bottomPadding = bottomBarPadding,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    event?.onUpdateListEntry(updatedListEntry)
-                    sheetState.hide()
-                }
-            }
+            onEntryUpdated = {
+                event?.onUpdateListEntry(it)
+            },
+            onDismissed = { showEditSheet = false }
         )
     }
 
@@ -184,7 +177,7 @@ private fun MediaDetailsContent(
         },
         floatingActionButton = {
             if (uiState.isLoggedIn) {
-                ExtendedFloatingActionButton(onClick = { scope.launch { sheetState.show() } }) {
+                ExtendedFloatingActionButton(onClick = { showEditSheet = true }) {
                     Icon(
                         painter = painterResource(
                             if (uiState.isNewEntry) R.drawable.add_24

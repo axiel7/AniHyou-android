@@ -15,17 +15,16 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,7 +57,6 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -80,7 +78,7 @@ private fun CalendarViewContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val editSheetState = rememberModalBottomSheetState()
+    val showEditSheet = remember { mutableStateOf(false) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
@@ -122,7 +120,7 @@ private fun CalendarViewContent(
                 list = viewModel.weeklyAnime,
                 uiState = uiState,
                 events = viewModel,
-                editSheetState = editSheetState,
+                showEditSheet = showEditSheet,
                 navActionManager = navActionManager,
                 modifier = Modifier
                     .fillMaxHeight()
@@ -136,18 +134,16 @@ private fun CalendarViewContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarDayView(
     list: List<AiringAnimesQuery.AiringSchedule>,
     uiState: CalendarUiState,
     events: CalendarEvent?,
-    editSheetState: SheetState,
+    showEditSheet: MutableState<Boolean>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navActionManager: NavActionManager,
 ) {
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
     val listState = rememberLazyGridState()
@@ -155,16 +151,15 @@ private fun CalendarDayView(
         events?.onLoadMore()
     }
 
-    if (editSheetState.isVisible && uiState.selectedItem?.media != null) {
+    if (showEditSheet.value && uiState.selectedItem?.media != null) {
         EditMediaSheet(
-            sheetState = editSheetState,
             mediaDetails = uiState.selectedItem.media.basicMediaDetails,
             listEntry = uiState.selectedItem.media.mediaListEntry?.basicMediaListEntry,
-            onDismiss = { updatedListEntry ->
-                scope.launch {
-                    events?.onUpdateListEntry(updatedListEntry)
-                    editSheetState.hide()
-                }
+            onEntryUpdated = {
+                events?.onUpdateListEntry(it)
+            },
+            onDismissed = {
+                showEditSheet.value = false
             }
         )
     }
@@ -210,11 +205,9 @@ private fun CalendarDayView(
                     navActionManager.toMediaDetails(item.mediaId)
                 },
                 onLongClick = {
-                    scope.launch {
-                        events?.selectItem(item)
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        editSheetState.show()
-                    }
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    events?.selectItem(item)
+                    showEditSheet.value = true
                 }
             )
         }
@@ -226,7 +219,6 @@ private fun CalendarDayView(
     }//: LazyVerticalGrid
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CalendarViewPreview() {
@@ -236,7 +228,7 @@ fun CalendarViewPreview() {
                 list = emptyList(),
                 uiState = CalendarUiState(),
                 events = null,
-                editSheetState = rememberModalBottomSheetState(),
+                showEditSheet = remember { mutableStateOf(false) },
                 navActionManager = NavActionManager.rememberNavActionManager()
             )
         }

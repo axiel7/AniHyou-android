@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,20 +20,22 @@ import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.ui.composables.ModalBottomSheet
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListStatusSheet(
     selectedStatus: MediaListStatus,
     mediaType: MediaType,
-    sheetState: SheetState,
+    scope: CoroutineScope,
     bottomPadding: Dp,
     onStatusChanged: (MediaListStatus) -> Unit,
-    onDismiss: () -> Unit = {},
+    onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
+        onDismissed = onDismiss,
+        scope = scope,
         windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         Column(
@@ -46,7 +46,10 @@ fun ListStatusSheet(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onStatusChanged(it) }
+                        .clickable {
+                            onStatusChanged(it)
+                            onDismiss()
+                        }
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
