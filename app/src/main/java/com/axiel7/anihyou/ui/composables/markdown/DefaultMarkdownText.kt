@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.ui.composables
+package com.axiel7.anihyou.ui.composables.markdown
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme

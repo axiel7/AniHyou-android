@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.BasicThreadDetails
-import com.axiel7.anihyou.ui.composables.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.common.ReplyButton
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
