@@ -335,6 +335,6 @@
     <string name="watch_year">Anno di visione</string>
     <string name="read_year">Anno lettura</string>
     <string name="top_movies">Top Film</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
 </resources>
