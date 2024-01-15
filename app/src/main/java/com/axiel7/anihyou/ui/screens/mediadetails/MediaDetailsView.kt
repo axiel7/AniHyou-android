@@ -88,6 +88,7 @@ import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
+import com.axiel7.anihyou.utils.StringUtils.orUnknown
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
@@ -294,7 +295,7 @@ private fun MediaDetailsContent(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${uiState.details?.meanScore?.format()}%",
+                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.mean_score),
                     isLoading = uiState.isLoading
                 )
@@ -304,7 +305,7 @@ private fun MediaDetailsContent(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = "${uiState.details?.averageScore?.format()}%",
+                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.average_score),
                     isLoading = uiState.isLoading
                 )

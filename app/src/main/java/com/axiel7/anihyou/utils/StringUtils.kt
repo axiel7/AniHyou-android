@@ -16,6 +16,8 @@ import androidx.core.text.HtmlCompat
 
 object StringUtils {
 
+    fun String?.orUnknown() = this ?: UNKNOWN_CHAR
+
     fun String.htmlStripped() = replace(Regex("<[^>]+>"), "")
 
     fun String.htmlDecoded() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)

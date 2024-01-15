@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.NumberUtils.format
+import com.axiel7.anihyou.utils.StringUtils.orUnknown
 import kotlinx.coroutines.launch
 
 @Composable
@@ -149,7 +150,7 @@ fun TagChip(
             label = { Text(text = name) },
             modifier = Modifier
                 .padding(horizontal = 4.dp),
-            leadingIcon = { Text(text = "${(rank ?: 0).format()}%") }
+            leadingIcon = { Text(text = "${rank?.format().orUnknown()}%") }
         )
     }
 }
