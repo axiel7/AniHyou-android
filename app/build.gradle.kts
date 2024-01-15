@@ -18,8 +18,8 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 46
-        versionName = "1.2.3-1"
+        versionCode = 49
+        versionName = "1.2.4"
         archivesName.set("anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
