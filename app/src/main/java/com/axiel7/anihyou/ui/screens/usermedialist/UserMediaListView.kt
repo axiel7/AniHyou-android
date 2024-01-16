@@ -9,9 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -109,14 +109,10 @@ private fun LazyListGrid(
     navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
 ) {
-    val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 6, onLoadMore = { event?.onLoadMore() })
-
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
         modifier = modifier,
-        state = listState,
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
@@ -138,6 +134,18 @@ private fun LazyListGrid(
                 onLongClick = { onShowEditSheet(item) }
             )
         }
+        item(contentType = { 0 }) {
+            if (uiState.hasNextPage) {
+                Box {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                LaunchedEffect(true) {
+                    event?.onLoadMore()
+                }
+            }
+        }
     }
 }
 
@@ -151,13 +159,9 @@ private fun LazyListTablet(
     navActionManager: NavActionManager,
     onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
 ) {
-    val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
-        state = listState,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -244,6 +248,19 @@ private fun LazyListTablet(
             }
 
             else -> {}
+        }
+
+        item(contentType = { 0 }) {
+            if (uiState.hasNextPage) {
+                Box {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                LaunchedEffect(true) {
+                    event?.onLoadMore()
+                }
+            }
         }
     }//: LazyVerticalGrid
 }
