@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
@@ -21,12 +20,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.displayName
+import com.axiel7.anihyou.data.model.media.episodeNumber
 import com.axiel7.anihyou.data.model.media.externalLinks
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.link
@@ -40,7 +38,6 @@ import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.common.SpoilerTagChip
 import com.axiel7.anihyou.ui.composables.common.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
-import com.axiel7.anihyou.ui.composables.media.VIDEO_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.VideoThumbnailItem
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -193,31 +190,35 @@ fun MediaInformationView(
 
         // Streaming episodes
         if (!uiState.details?.streamingEpisodes.isNullOrEmpty()) {
+            // Next episode to watch
+            uiState.details?.mediaListEntry?.basicMediaListEntry?.progress?.let { progress ->
+                if (progress > 0) {
+                    uiState.details.streamingEpisodes
+                        ?.find { it?.episodeNumber() == progress + 1 }
+                        ?.let { nextEpisode ->
+                            InfoTitle(text = stringResource(R.string.continue_watching))
+                            EpisodeItem(
+                                item = nextEpisode,
+                                modifier = Modifier.padding(start = 8.dp),
+                                onClick = {
+                                    nextEpisode.url?.let { context.openActionView(it) }
+                                }
+                            )
+                        }
+                }
+            }
             InfoTitle(text = stringResource(R.string.episodes))
             LazyRow(
                 modifier = Modifier.padding(bottom = 4.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(uiState.details!!.streamingEpisodes!!) { item ->
-                    Column {
-                        VideoThumbnailItem(
-                            imageUrl = item?.thumbnail,
-                            modifier = Modifier.padding(8.dp),
-                            onClick = {
-                                item?.url?.let { context.openActionView(it) }
-                            }
-                        )
-                        Text(
-                            text = item?.title.orEmpty(),
-                            modifier = Modifier
-                                .width(VIDEO_SMALL_WIDTH.dp)
-                                .padding(horizontal = 8.dp, vertical = 4.dp),
-                            fontSize = 15.sp,
-                            lineHeight = 18.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2
-                        )
-                    }
+                items(uiState.details?.streamingEpisodes.orEmpty()) { item ->
+                    EpisodeItem(
+                        item = item,
+                        onClick = {
+                            item?.url?.let { context.openActionView(it) }
+                        }
+                    )
                 }
             }
         }
