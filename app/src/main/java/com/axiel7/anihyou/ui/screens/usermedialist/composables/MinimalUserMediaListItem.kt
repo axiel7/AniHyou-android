@@ -87,7 +87,7 @@ fun MinimalUserMediaListItem(
                     val progress = item.basicMediaListEntry.progress?.format() ?: 0
                     val duration = item.media?.basicMediaDetails?.duration()?.format() ?: 0
                     Text(
-                        text = "$progress/$duration}",
+                        text = "$progress/$duration",
                         fontSize = 15.sp,
                         maxLines = 1
                     )
