@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
@@ -39,10 +41,12 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 @Composable
 fun GridUserMediaListItem(
     item: UserMediaListQuery.MediaList,
+    listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val status = listStatus ?: item.basicMediaListEntry.status
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,6 +70,14 @@ fun GridUserMediaListItem(
                     score = item.basicMediaListEntry.score,
                     scoreFormat = scoreFormat
                 )
+
+                if (listStatus == null && status != null) {
+                    ListStatusBadgeIndicator(
+                        alignment = Alignment.BottomEnd,
+                        status = status
+                    )
+                }
+
                 if (item.media?.nextAiringEpisode != null) {
                     ElevatedCard(
                         modifier = Modifier
@@ -125,6 +137,7 @@ fun GridUserMediaListItemPreview() {
                         item = if (it == 1) exampleMediaList.copy(
                             media = exampleMediaList.media?.copy(nextAiringEpisode = null)
                         ) else exampleMediaList,
+                        listStatus = null,
                         scoreFormat = ScoreFormat.POINT_100,
                         onClick = { },
                         onLongClick = { }

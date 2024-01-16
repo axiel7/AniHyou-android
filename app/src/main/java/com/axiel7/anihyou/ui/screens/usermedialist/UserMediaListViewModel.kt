@@ -81,7 +81,7 @@ class UserMediaListViewModel @Inject constructor(
         mutableUiState.update { it.copy(scoreFormat = value) }
     }
 
-    override fun setStatus(value: MediaListStatus) {
+    override fun setStatus(value: MediaListStatus?) {
         viewModelScope.launch {
             if (mediaType.value == MediaType.ANIME) {
                 listPreferencesRepository.setAnimeListStatus(value)
@@ -231,7 +231,7 @@ class UserMediaListViewModel @Inject constructor(
                 uiState
                     .distinctUntilChangedBy { it.status }
                     .collectLatest { uiState ->
-                        ListType(uiState.status, mediaType)
+                        ListType(uiState.status ?: MediaListStatus.CURRENT, mediaType)
                             .stylePreference(listPreferencesRepository)
                             ?.collectLatest { style ->
                                 mutableUiState.update { it.copy(listStyle = style) }
@@ -292,11 +292,16 @@ class UserMediaListViewModel @Inject constructor(
             .combine(mediaType, ::Pair)
             .flatMapLatest { (uiState, mediaType) ->
                 val listUserId = uiState.userId ?: myUserId.first()
+                val sort = if (uiState.status == null) {
+                    listOf(MediaListSort.STATUS, uiState.sort)
+                } else {
+                    listOf(uiState.sort, MediaListSort.MEDIA_ID_DESC)
+                }
                 mediaListRepository.getUserMediaListPage(
                     userId = listUserId,
                     mediaType = mediaType,
                     status = uiState.status,
-                    sort = uiState.sort,
+                    sort = sort,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page
                 )

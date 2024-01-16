@@ -23,7 +23,7 @@ class MediaListApi @Inject constructor(
     fun userMediaListQuery(
         userId: Int,
         mediaType: MediaType,
-        status: MediaListStatus,
+        status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean,
         page: Int,
@@ -35,7 +35,7 @@ class MediaListApi @Inject constructor(
                 perPage = Optional.present(perPage),
                 userId = Optional.present(userId),
                 type = Optional.present(mediaType),
-                status = Optional.present(status),
+                status = Optional.presentIfNotNull(status),
                 sort = Optional.present(sort)
             )
         )

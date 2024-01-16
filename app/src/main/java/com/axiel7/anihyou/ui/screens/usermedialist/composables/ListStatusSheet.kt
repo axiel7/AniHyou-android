@@ -26,11 +26,11 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListStatusSheet(
-    selectedStatus: MediaListStatus,
+    selectedStatus: MediaListStatus?,
     mediaType: MediaType,
     scope: CoroutineScope,
     bottomPadding: Dp,
-    onStatusChanged: (MediaListStatus) -> Unit,
+    onStatusChanged: (MediaListStatus?) -> Unit,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -41,33 +41,56 @@ fun ListStatusSheet(
         Column(
             modifier = Modifier.padding(bottom = 8.dp + bottomPadding)
         ) {
-            MediaListStatus.knownEntries.forEach {
-                val isSelected = selectedStatus == it
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onStatusChanged(it)
-                            onDismiss()
-                        }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(it.icon()),
-                        contentDescription = "check",
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Text(
-                        text = it.localized(mediaType = mediaType),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = if (isSelected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            StatusItem(
+                status = null,
+                mediaType = mediaType,
+                isSelected = selectedStatus == null,
+                onClick = {
+                    onStatusChanged(null)
+                    onDismiss()
                 }
+            )
+            MediaListStatus.knownEntries.forEach {
+                StatusItem(
+                    status = it,
+                    mediaType = mediaType,
+                    isSelected = selectedStatus == it,
+                    onClick = {
+                        onStatusChanged(it)
+                        onDismiss()
+                    }
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun StatusItem(
+    status: MediaListStatus?,
+    mediaType: MediaType,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(status.icon()),
+            contentDescription = "check",
+            tint = if (isSelected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Text(
+            text = status.localized(mediaType = mediaType),
+            modifier = Modifier.padding(start = 8.dp),
+            color = if (isSelected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }

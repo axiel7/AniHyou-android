@@ -33,6 +33,7 @@ import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
+import com.axiel7.anihyou.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
@@ -44,7 +45,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 @Composable
 fun CompactUserMediaListItem(
     item: UserMediaListQuery.MediaList,
-    status: MediaListStatus,
+    listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     onClick: () -> Unit,
@@ -52,6 +53,7 @@ fun CompactUserMediaListItem(
     onClickPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
+    val status = listStatus ?: item.basicMediaListEntry.status
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -61,9 +63,7 @@ fun CompactUserMediaListItem(
         Row(
             modifier = Modifier.height(IntrinsicSize.Max)
         ) {
-            Box(
-                contentAlignment = Alignment.BottomStart
-            ) {
+            Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
                     showShadow = false,
@@ -74,7 +74,15 @@ fun CompactUserMediaListItem(
                         .width(MEDIA_POSTER_SMALL_WIDTH.dp)
                 )
 
+                if (listStatus == null && status != null) {
+                    ListStatusBadgeIndicator(
+                        alignment = Alignment.TopStart,
+                        status = status
+                    )
+                }
+
                 BadgeScoreIndicator(
+                    modifier = Modifier.align(Alignment.BottomStart),
                     score = item.basicMediaListEntry.score,
                     scoreFormat = scoreFormat
                 )
@@ -152,7 +160,7 @@ fun CompactUserMediaListItemPreview() {
             Column {
                 CompactUserMediaListItem(
                     item = exampleMediaList,
-                    status = MediaListStatus.CURRENT,
+                    listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     onClick = { },
@@ -163,10 +171,11 @@ fun CompactUserMediaListItemPreview() {
                 CompactUserMediaListItem(
                     item = exampleMediaList.copy(
                         basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
-                            score = 3.0
+                            score = 3.0,
+                            status = MediaListStatus.PLANNING
                         )
                     ),
-                    status = MediaListStatus.PLANNING,
+                    listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     onClick = { },

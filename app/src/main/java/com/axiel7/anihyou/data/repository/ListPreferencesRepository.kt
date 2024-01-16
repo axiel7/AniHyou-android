@@ -21,21 +21,23 @@ class ListPreferencesRepository @Inject constructor(
 ) {
     // default status
     val animeListStatus = dataStore.getValue(
-        key = ANIME_LIST_STATUS_KEY,
-        default = MediaListStatus.CURRENT.name
-    ).map { MediaListStatus.valueOf(it) }
+        key = ANIME_LIST_STATUS_KEY
+    ).map { value ->
+        value?.let { MediaListStatus.valueOf(it) }
+    }
 
-    suspend fun setAnimeListStatus(value: MediaListStatus) {
-        dataStore.setValue(ANIME_LIST_STATUS_KEY, value.name)
+    suspend fun setAnimeListStatus(value: MediaListStatus?) {
+        dataStore.setValue(ANIME_LIST_STATUS_KEY, value?.name)
     }
 
     val mangaListStatus = dataStore.getValue(
-        key = MANGA_LIST_STATUS_KEY,
-        default = MediaListStatus.CURRENT.name
-    ).map { MediaListStatus.valueOf(it) }
+        key = MANGA_LIST_STATUS_KEY
+    ).map { value ->
+        value?.let { MediaListStatus.valueOf(it) }
+    }
 
-    suspend fun setMangaListStatus(value: MediaListStatus) {
-        dataStore.setValue(MANGA_LIST_STATUS_KEY, value.name)
+    suspend fun setMangaListStatus(value: MediaListStatus?) {
+        dataStore.setValue(MANGA_LIST_STATUS_KEY, value?.name)
     }
 
     // list sort

@@ -11,14 +11,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +31,8 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleMediaList
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.scores.MinimalScoreIndicator
@@ -39,7 +44,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 @Composable
 fun MinimalUserMediaListItem(
     item: UserMediaListQuery.MediaList,
-    status: MediaListStatus,
+    listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     onClick: () -> Unit,
@@ -47,6 +52,7 @@ fun MinimalUserMediaListItem(
     onClickPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
+    val status = listStatus ?: item.basicMediaListEntry.status
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,6 +101,13 @@ fun MinimalUserMediaListItem(
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
                     )
+                    if (listStatus == null && status != null) {
+                        Icon(
+                            painter = painterResource(status.icon()),
+                            contentDescription = status.localized(),
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
                     Spacer(modifier = Modifier.weight(1f))
                     if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
                         RepeatIndicator(count = item.basicMediaListEntry.repeat ?: 0)
@@ -127,7 +140,7 @@ fun MinimalUserMediaListItemPreview() {
             Column {
                 MinimalUserMediaListItem(
                     item = exampleMediaList,
-                    status = MediaListStatus.CURRENT,
+                    listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     onClick = { },
@@ -138,10 +151,11 @@ fun MinimalUserMediaListItemPreview() {
                 MinimalUserMediaListItem(
                     item = exampleMediaList.copy(
                         basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
-                            score = 3.0
+                            score = 3.0,
+                            status = MediaListStatus.PLANNING
                         )
                     ),
-                    status = MediaListStatus.PLANNING,
+                    listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     onClick = { },

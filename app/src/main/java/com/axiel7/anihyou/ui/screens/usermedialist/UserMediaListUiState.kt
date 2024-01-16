@@ -16,7 +16,7 @@ data class UserMediaListUiState(
     val isMyList: Boolean = true,
     val userId: Int? = null,
     var selectedItem: UserMediaListQuery.MediaList? = null,
-    val status: MediaListStatus = MediaListStatus.CURRENT,
+    val status: MediaListStatus? = MediaListStatus.CURRENT,
     val sort: MediaListSort = MediaListSort.UPDATED_TIME_DESC,
     val listStyle: ListStyle = ListStyle.STANDARD,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,

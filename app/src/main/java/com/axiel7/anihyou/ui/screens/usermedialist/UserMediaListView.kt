@@ -132,6 +132,7 @@ private fun LazyListGrid(
         ) { item ->
             GridUserMediaListItem(
                 item = item,
+                listStatus = uiState.status,
                 scoreFormat = uiState.scoreFormat,
                 onClick = { navActionManager.toMediaDetails(item.mediaId) },
                 onLongClick = { onShowEditSheet(item) }
@@ -173,7 +174,7 @@ private fun LazyListTablet(
                 ) { item ->
                     StandardUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
@@ -200,7 +201,7 @@ private fun LazyListTablet(
                 ) { item ->
                     CompactUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
@@ -227,7 +228,7 @@ private fun LazyListTablet(
                 ) { item ->
                     MinimalUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
@@ -280,7 +281,7 @@ private fun LazyListPhone(
                 ) { item ->
                     StandardUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
@@ -307,7 +308,7 @@ private fun LazyListPhone(
                 ) { item ->
                     CompactUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
@@ -334,7 +335,7 @@ private fun LazyListPhone(
                 ) { item ->
                     MinimalUserMediaListItem(
                         item = item,
-                        status = uiState.status,
+                        listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },

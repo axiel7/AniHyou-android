@@ -10,7 +10,7 @@ import com.axiel7.anihyou.ui.common.event.PagedEvent
 interface UserMediaListEvent : PagedEvent {
     fun setScoreFormat(value: ScoreFormat)
 
-    fun setStatus(value: MediaListStatus)
+    fun setStatus(value: MediaListStatus?)
 
     fun setSort(value: MediaListSort)
 
