@@ -341,4 +341,7 @@
     <string name="list">Список</string>
     <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
+    <string name="show_less">Меньше</string>
+    <string name="show_more">Больше</string>
+    <string name="continue_watching">Продолжить просмотр</string>
 </resources>
