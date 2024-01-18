@@ -1,0 +1,9 @@
+- Support for advanced scoring
+- The last list status used is now saved instead of always loading the watching/reading list
+- Improved the performance on some screens
+- Small UI fixes
+- Fixed calendar not loading correctly
+- Fixed activity following filter
+- Fixed related anime/manga opens staff details
+- Fixed navigation bar text alignment on some languages
+- Updated translations
