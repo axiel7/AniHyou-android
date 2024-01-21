@@ -139,9 +139,10 @@ dependencies {
     implementation("io.github.fornewid:placeholder-material3:1.0.1")
     implementation("com.materialkolor:material-kolor:1.3.0")
 
-    val coilVersion = "2.5.0"
-    implementation("io.coil-kt:coil-compose:$coilVersion")
-    implementation("io.coil-kt:coil-gif:$coilVersion")
+    val coilVersion = "3.0.0-alpha03"
+    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
+    implementation("io.coil-kt.coil3:coil-gif:$coilVersion")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:$coilVersion")
 
     val apolloVersion = "4.0.0-beta.4"
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
