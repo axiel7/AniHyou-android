@@ -4,7 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.apollographql.apollo3") version "4.0.0-beta.4"
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -152,10 +152,11 @@ dependencies {
 
     val hiltVersion = "2.50"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    implementation("androidx.hilt:hilt-work:1.1.0")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    val androidHiltVersion = "1.1.0"
+    ksp("androidx.hilt:hilt-compiler:$androidHiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:$androidHiltVersion")
+    implementation("androidx.hilt:hilt-work:$androidHiltVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
@@ -168,10 +169,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 apollo {
