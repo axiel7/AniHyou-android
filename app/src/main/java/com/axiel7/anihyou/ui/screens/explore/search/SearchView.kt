@@ -1,10 +1,12 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -190,107 +192,114 @@ fun SearchContentView(
     }
 
     LazyColumn(
+        modifier = Modifier
+            .fillMaxHeight(),
         state = listState
     ) {
         item(contentType = 0) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(start = 16.dp, top = 8.dp, end = 8.dp)
+                    .animateContentSize()
             ) {
-                SearchType.entries.forEach {
-                    FilterSelectionChip(
-                        selected = uiState.searchType == it,
-                        text = it.localized(),
-                        onClick = {
-                            event?.setSearchType(it)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-            }
-            if (uiState.searchType.isSearchMedia) {
-                MediaSearchSortChip(
-                    mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
-                        ?: MediaSortSearch.SEARCH_MATCH,
-                    onSortChanged = {
-                        event?.setMediaSort(it)
-                    }
-                )
-                if (showMoreFilters) {
-                    Row(
-                        modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        MediaSearchFormatChip(
-                            mediaType = uiState.mediaType ?: MediaType.ANIME,
-                            selectedMediaFormats = uiState.selectedMediaFormats,
-                            onMediaFormatsChanged = { event?.setMediaFormats(it) }
-                        )
-
-                        MediaSearchStatusChip(
-                            selectedMediaStatuses = uiState.selectedMediaStatuses,
-                            onMediaStatusesChanged = { event?.setMediaStatuses(it) }
-                        )
-
-                        TriFilterChip(
-                            text = stringResource(R.string.on_my_list),
-                            value = uiState.onMyList,
-                            onValueChanged = { event?.setOnMyList(it) },
-                        )
-
-                        MediaSearchCountryChip(
-                            value = uiState.country,
-                            onValueChanged = { event?.setCountry(it) }
-                        )
-                    }
-                    MediaSearchYearChip(
-                        startYear = uiState.startYear,
-                        endYear = uiState.endYear,
-                        onStartYearChanged = { event?.setStartYear(it) },
-                        onEndYearChanged = { event?.setEndYear(it) }
-                    )
-                    MediaSearchGenresChips(
-                        externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-                        externalTag = initialTag?.let { SelectableGenre(name = it) },
-                        onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
-                    )
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TriFilterChip(
-                            text = stringResource(R.string.doujinshi),
-                            value = uiState.isDoujin,
-                            onValueChanged = { event?.setIsDoujin(it) }
-                        )
-                        TriFilterChip(
-                            text = stringResource(R.string.is_adult),
-                            value = uiState.isAdult,
-                            onValueChanged = { event?.setIsAdult(it) }
-                        )
-                    }
-                }
                 Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(start = 16.dp, top = 8.dp, end = 8.dp)
                 ) {
-                    TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
-                        Text(
-                            text = stringResource(
-                                if (showMoreFilters) R.string.hide_filters
-                                else R.string.more_filters
-                            )
+                    SearchType.entries.forEach {
+                        FilterSelectionChip(
+                            selected = uiState.searchType == it,
+                            text = it.localized(),
+                            onClick = {
+                                event?.setSearchType(it)
+                            },
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
-                    ErrorTextButton(
-                        text = stringResource(R.string.clear),
-                        onClick = { event?.clearFilters() }
-                    )
                 }
-            }
+                if (uiState.searchType.isSearchMedia) {
+                    MediaSearchSortChip(
+                        mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
+                            ?: MediaSortSearch.SEARCH_MATCH,
+                        onSortChanged = {
+                            event?.setMediaSort(it)
+                        }
+                    )
+                    if (showMoreFilters) {
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            MediaSearchFormatChip(
+                                mediaType = uiState.mediaType ?: MediaType.ANIME,
+                                selectedMediaFormats = uiState.selectedMediaFormats,
+                                onMediaFormatsChanged = { event?.setMediaFormats(it) }
+                            )
+
+                            MediaSearchStatusChip(
+                                selectedMediaStatuses = uiState.selectedMediaStatuses,
+                                onMediaStatusesChanged = { event?.setMediaStatuses(it) }
+                            )
+
+                            TriFilterChip(
+                                text = stringResource(R.string.on_my_list),
+                                value = uiState.onMyList,
+                                onValueChanged = { event?.setOnMyList(it) },
+                            )
+
+                            MediaSearchCountryChip(
+                                value = uiState.country,
+                                onValueChanged = { event?.setCountry(it) }
+                            )
+                        }
+                        MediaSearchYearChip(
+                            startYear = uiState.startYear,
+                            endYear = uiState.endYear,
+                            onStartYearChanged = { event?.setStartYear(it) },
+                            onEndYearChanged = { event?.setEndYear(it) }
+                        )
+                        MediaSearchGenresChips(
+                            externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                            externalTag = initialTag?.let { SelectableGenre(name = it) },
+                            onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            TriFilterChip(
+                                text = stringResource(R.string.doujinshi),
+                                value = uiState.isDoujin,
+                                onValueChanged = { event?.setIsDoujin(it) }
+                            )
+                            TriFilterChip(
+                                text = stringResource(R.string.is_adult),
+                                value = uiState.isAdult,
+                                onValueChanged = { event?.setIsAdult(it) }
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
+                            Text(
+                                text = stringResource(
+                                    if (showMoreFilters) R.string.hide_filters
+                                    else R.string.more_filters
+                                )
+                            )
+                        }
+                        ErrorTextButton(
+                            text = stringResource(R.string.clear),
+                            onClick = { event?.clearFilters() }
+                        )
+                    }
+                }//:media filters
+            }//:Column
         }
         when (uiState.searchType) {
             SearchType.ANIME, SearchType.MANGA -> {
