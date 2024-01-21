@@ -131,23 +131,12 @@ fun ReviewThreadListView(
                         title = item.summary.orEmpty(),
                         author = item.user?.name.orEmpty(),
                         subtitle = {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                TextIconHorizontal(
-                                    text = item.score?.format().orEmpty(),
-                                    icon = R.drawable.star_filled_20,
-                                    iconPadding = PaddingValues(0.dp),
-                                    fontSize = 15.sp
-                                )
-                                TextIconHorizontal(
-                                    text = item.rating?.format().orEmpty(),
-                                    icon = R.drawable.thumb_up_filled_20,
-                                    modifier = Modifier.padding(end = 8.dp),
-                                    iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                    fontSize = 15.sp
-                                )
-                            }
+                            TextIconHorizontal(
+                                text = item.score?.format().orEmpty(),
+                                icon = R.drawable.star_filled_20,
+                                iconPadding = PaddingValues(0.dp),
+                                fontSize = 15.sp
+                            )
                         },
                         onClick = {
                             navigateToReviewDetails(item.id)
