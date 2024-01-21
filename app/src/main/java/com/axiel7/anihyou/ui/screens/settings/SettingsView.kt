@@ -123,153 +123,158 @@ private fun SettingsContent(
                 onValueChange = { event?.setTheme(it) }
             )
 
-            ListPreference(
-                title = stringResource(R.string.color),
-                entriesValues = AppColorMode.entriesLocalized,
-                preferenceValue = uiState.appColorMode,
-                icon = R.drawable.colors_24,
-                onValueChange = { event?.setAppColorMode(it) }
-            )
+            if (uiState.isLoggedIn) {
+                ListPreference(
+                    title = stringResource(R.string.color),
+                    entriesValues = AppColorMode.entriesLocalized,
+                    preferenceValue = uiState.appColorMode,
+                    icon = R.drawable.colors_24,
+                    onValueChange = { event?.setAppColorMode(it) }
+                )
+            }
 
             LanguagePreference()
 
-            ListPreference(
-                title = stringResource(R.string.title_language),
-                entriesValues = UserTitleLanguage.entriesLocalized,
-                preferenceValue = uiState.userOptions?.options?.titleLanguage,
-                icon = R.drawable.title_24,
-                onValueChange = { value ->
-                    event?.setTitleLanguage(value)
-                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                }
-            )
-
-            ListPreference(
-                title = stringResource(R.string.staff_character_name_language),
-                entriesValues = UserStaffNameLanguage.entriesLocalized,
-                preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
-                icon = R.drawable.group_24,
-                onValueChange = { value ->
-                    event?.setStaffNameLanguage(value)
-                    context.showToast(R.string.changes_will_take_effect_on_app_restart)
-                }
-            )
-
-            ListPreference(
-                title = stringResource(R.string.score_format),
-                entriesValues = ScoreFormat.entriesLocalized,
-                preferenceValue = uiState.scoreFormat,
-                icon = R.drawable.star_24,
-                onValueChange = { event?.setScoreFormat(it) }
-            )
-
-            ListPreference(
-                title = stringResource(R.string.default_home_tab),
-                entriesValues = HomeTab.entriesLocalized,
-                preferenceValue = uiState.defaultHomeTab,
-                icon = R.drawable.home_24,
-                onValueChange = { event?.setDefaultHomeTab(it) }
-            )
-
-            PreferencesTitle(text = stringResource(R.string.list))
-
-            SwitchPreference(
-                title = stringResource(R.string.use_separated_list_styles),
-                preferenceValue = uiState.useGeneralListStyle?.not(),
-                onValueChange = {
-                    event?.setUseGeneralListStyle(it.not())
-                }
-            )
-            if (uiState.useGeneralListStyle == true) {
+            if (uiState.isLoggedIn) {
                 ListPreference(
-                    title = stringResource(R.string.list_style),
-                    entriesValues = ListStyle.entriesLocalized,
-                    preferenceValue = uiState.generalListStyle,
-                    icon = R.drawable.format_list_bulleted_24,
-                    onValueChange = { event?.setGeneralListStyle(it) }
+                    title = stringResource(R.string.title_language),
+                    entriesValues = UserTitleLanguage.entriesLocalized,
+                    preferenceValue = uiState.userOptions?.options?.titleLanguage,
+                    icon = R.drawable.title_24,
+                    onValueChange = { value ->
+                        event?.setTitleLanguage(value)
+                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                    }
                 )
-            } else {
-                PlainPreference(
-                    title = stringResource(R.string.list_style),
-                    icon = R.drawable.format_list_bulleted_24,
-                    onClick = navActionManager::toListStyleSettings
-                )
-            }
 
-            if (uiState.generalListStyle == ListStyle.GRID || uiState.useGeneralListStyle == false) {
                 ListPreference(
-                    title = stringResource(R.string.items_per_row),
-                    entriesValues = ItemsPerRow.entriesLocalized,
-                    preferenceValue = uiState.gridItemsPerRow,
-                    icon = R.drawable.grid_view_24,
-                    onValueChange = { event?.setGridItemsPerRow(it) }
+                    title = stringResource(R.string.staff_character_name_language),
+                    entriesValues = UserStaffNameLanguage.entriesLocalized,
+                    preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
+                    icon = R.drawable.group_24,
+                    onValueChange = { value ->
+                        event?.setStaffNameLanguage(value)
+                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                    }
                 )
-            }
 
-            PreferencesTitle(text = stringResource(R.string.content))
+                ListPreference(
+                    title = stringResource(R.string.score_format),
+                    entriesValues = ScoreFormat.entriesLocalized,
+                    preferenceValue = uiState.scoreFormat,
+                    icon = R.drawable.star_24,
+                    onValueChange = { event?.setScoreFormat(it) }
+                )
 
-            SwitchPreference(
-                title = stringResource(R.string.display_adult_content),
-                preferenceValue = uiState.userOptions?.options?.displayAdultContent,
-                icon = R.drawable.no_adult_content_24,
-                onValueChange = { event?.setDisplayAdultContent(it) }
-            )
-            SwitchPreference(
-                title = stringResource(R.string.airing_on_my_list),
-                preferenceValue = uiState.airingOnMyList,
-                subtitle = stringResource(R.string.airing_on_my_list_summary),
-                onValueChange = { event?.setAiringOnMyList(it) }
-            )
+                ListPreference(
+                    title = stringResource(R.string.default_home_tab),
+                    entriesValues = HomeTab.entriesLocalized,
+                    preferenceValue = uiState.defaultHomeTab,
+                    icon = R.drawable.home_24,
+                    onValueChange = { event?.setDefaultHomeTab(it) }
+                )
 
-            PreferencesTitle(text = stringResource(R.string.notifications))
 
-            SwitchPreference(
-                title = stringResource(R.string.push_notifications),
-                preferenceValue = uiState.isNotificationsEnabled,
-                icon = R.drawable.notifications_24,
-                onValueChange = { isEnabled ->
-                    event?.setNotificationsEnabled(
-                        isEnabled = isEnabled,
-                        notificationPermission = notificationPermission,
-                        createNotificationChannels = {
-                            context.createDefaultNotificationChannels()
-                        }
+                PreferencesTitle(text = stringResource(R.string.list))
+
+                SwitchPreference(
+                    title = stringResource(R.string.use_separated_list_styles),
+                    preferenceValue = uiState.useGeneralListStyle?.not(),
+                    onValueChange = {
+                        event?.setUseGeneralListStyle(it.not())
+                    }
+                )
+                if (uiState.useGeneralListStyle == true) {
+                    ListPreference(
+                        title = stringResource(R.string.list_style),
+                        entriesValues = ListStyle.entriesLocalized,
+                        preferenceValue = uiState.generalListStyle,
+                        icon = R.drawable.format_list_bulleted_24,
+                        onValueChange = { event?.setGeneralListStyle(it) }
+                    )
+                } else {
+                    PlainPreference(
+                        title = stringResource(R.string.list_style),
+                        icon = R.drawable.format_list_bulleted_24,
+                        onClick = navActionManager::toListStyleSettings
                     )
                 }
-            )
-            if (uiState.isNotificationsEnabled == true) {
-                ListPreference(
-                    title = stringResource(R.string.update_interval),
-                    entriesValues = NotificationInterval.entriesLocalized,
-                    preferenceValue = uiState.notificationCheckInterval,
-                    onValueChange = { event?.setNotificationCheckInterval(it) }
+
+                if (uiState.generalListStyle == ListStyle.GRID || uiState.useGeneralListStyle == false) {
+                    ListPreference(
+                        title = stringResource(R.string.items_per_row),
+                        entriesValues = ItemsPerRow.entriesLocalized,
+                        preferenceValue = uiState.gridItemsPerRow,
+                        icon = R.drawable.grid_view_24,
+                        onValueChange = { event?.setGridItemsPerRow(it) }
+                    )
+                }
+
+                PreferencesTitle(text = stringResource(R.string.content))
+
+                SwitchPreference(
+                    title = stringResource(R.string.display_adult_content),
+                    preferenceValue = uiState.userOptions?.options?.displayAdultContent,
+                    icon = R.drawable.no_adult_content_24,
+                    onValueChange = { event?.setDisplayAdultContent(it) }
                 )
                 SwitchPreference(
-                    title = stringResource(R.string.airing_anime_notifications),
-                    preferenceValue = uiState.userOptions?.options?.airingNotifications,
-                    icon = R.drawable.podcasts_24,
-                    onValueChange = { event?.setAiringNotification(it) }
+                    title = stringResource(R.string.airing_on_my_list),
+                    preferenceValue = uiState.airingOnMyList,
+                    subtitle = stringResource(R.string.airing_on_my_list_summary),
+                    onValueChange = { event?.setAiringOnMyList(it) }
+                )
+
+                PreferencesTitle(text = stringResource(R.string.notifications))
+
+                SwitchPreference(
+                    title = stringResource(R.string.push_notifications),
+                    preferenceValue = uiState.isNotificationsEnabled,
+                    icon = R.drawable.notifications_24,
+                    onValueChange = { isEnabled ->
+                        event?.setNotificationsEnabled(
+                            isEnabled = isEnabled,
+                            notificationPermission = notificationPermission,
+                            createNotificationChannels = {
+                                context.createDefaultNotificationChannels()
+                            }
+                        )
+                    }
+                )
+                if (uiState.isNotificationsEnabled == true) {
+                    ListPreference(
+                        title = stringResource(R.string.update_interval),
+                        entriesValues = NotificationInterval.entriesLocalized,
+                        preferenceValue = uiState.notificationCheckInterval,
+                        onValueChange = { event?.setNotificationCheckInterval(it) }
+                    )
+                    SwitchPreference(
+                        title = stringResource(R.string.airing_anime_notifications),
+                        preferenceValue = uiState.userOptions?.options?.airingNotifications,
+                        icon = R.drawable.podcasts_24,
+                        onValueChange = { event?.setAiringNotification(it) }
+                    )
+                }
+
+                PreferencesTitle(text = stringResource(R.string.account))
+
+                PlainPreference(
+                    title = stringResource(R.string.anilist_account_settings),
+                    icon = R.drawable.manage_accounts_24,
+                    onClick = {
+                        context.openLink(ANILIST_ACCOUNT_SETTINGS_URL)
+                    }
+                )
+                PlainPreference(
+                    title = stringResource(R.string.logout),
+                    icon = R.drawable.logout_24,
+                    onClick = {
+                        event?.logOut {
+                            context.getActivity()?.recreate()
+                        }
+                    }
                 )
             }
-
-            PreferencesTitle(text = stringResource(R.string.account))
-
-            PlainPreference(
-                title = stringResource(R.string.anilist_account_settings),
-                icon = R.drawable.manage_accounts_24,
-                onClick = {
-                    context.openLink(ANILIST_ACCOUNT_SETTINGS_URL)
-                }
-            )
-            PlainPreference(
-                title = stringResource(R.string.logout),
-                icon = R.drawable.logout_24,
-                onClick = {
-                    event?.logOut {
-                        context.getActivity()?.recreate()
-                    }
-                }
-            )
 
             PreferencesTitle(text = stringResource(R.string.information))
 

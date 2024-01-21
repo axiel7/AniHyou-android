@@ -36,6 +36,8 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(ACCESS_TOKEN_KEY, value)
     }
 
+    val isLoggedIn = accessToken.map { it != null }
+
     val userId = dataStore.getValue(USER_ID_KEY)
     suspend fun setUserId(value: Int) {
         dataStore.setValue(USER_ID_KEY, value)

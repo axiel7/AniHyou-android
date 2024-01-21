@@ -9,7 +9,6 @@ import com.axiel7.anihyou.data.repository.LoginRepository
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class MainViewModel @Inject constructor(
 
     private val accessToken = defaultPreferencesRepository.accessToken
 
-    val isLoggedIn = accessToken.map { it != null }
+    val isLoggedIn = defaultPreferencesRepository.isLoggedIn
 
     val startTab = defaultPreferencesRepository.lastTab
 

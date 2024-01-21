@@ -170,7 +170,10 @@ fun MainNavigation(
                     navActionManager = navActionManager,
                 )
             } else {
-                LoginView()
+                LoginView(
+                    showSettingsButton = true,
+                    navigateToSettings = navActionManager::toSettings
+                )
             }
         }
 

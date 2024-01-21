@@ -24,14 +24,18 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
@@ -44,6 +48,8 @@ class SettingsViewModel @Inject constructor(
     override val initialState = SettingsUiState()
 
     private val profileColor = defaultPreferencesRepository.profileColor
+
+    private val isLoggedIn = defaultPreferencesRepository.isLoggedIn
 
     override fun setTheme(value: Theme) {
         viewModelScope.launch {
@@ -198,7 +204,14 @@ class SettingsViewModel @Inject constructor(
         }
 
     init {
-        userRepository.getUserOptions()
+        isLoggedIn
+            .onEach { value ->
+                mutableUiState.update { it.copy(isLoggedIn = value) }
+            }
+            .filter { it }
+            .flatMapLatest {
+                userRepository.getUserOptions()
+            }
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
