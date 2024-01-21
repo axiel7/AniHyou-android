@@ -12,8 +12,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
@@ -33,8 +31,7 @@ class MediaChartViewModel @Inject constructor(
     private val initialType =
         savedStateHandle.getStateFlow<String?>(NavArgument.ChartType.name, null)
 
-    override val mutableUiState = MutableStateFlow(MediaChartUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = MediaChartUiState()
 
     override fun selectItem(value: MediaChartQuery.Medium?) {
         mutableUiState.update {

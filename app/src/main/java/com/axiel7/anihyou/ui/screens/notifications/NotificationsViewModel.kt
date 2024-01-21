@@ -11,8 +11,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -30,8 +28,7 @@ class NotificationsViewModel @Inject constructor(
 
     private val initialUnreadCount: Int = savedStateHandle[NavArgument.UnreadCount.name] ?: 0
 
-    override val mutableUiState = MutableStateFlow(NotificationsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = NotificationsUiState()
 
     private var resetCount = true
 

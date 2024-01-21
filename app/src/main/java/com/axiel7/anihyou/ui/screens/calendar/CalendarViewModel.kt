@@ -11,8 +11,6 @@ import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.thisWeekdayTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -31,10 +29,9 @@ class CalendarViewModel @Inject constructor(
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<CalendarUiState>(), CalendarEvent {
 
-    private val displayAdult = defaultPreferencesRepository.displayAdult
+    override val initialState = CalendarUiState()
 
-    override val mutableUiState = MutableStateFlow(CalendarUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    private val displayAdult = defaultPreferencesRepository.displayAdult
 
     private val now: LocalDateTime = LocalDateTime.now()
 

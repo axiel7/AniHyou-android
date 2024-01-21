@@ -18,7 +18,7 @@ data class StaffDetailsUiState(
     val isLoadingCharacters: Boolean = true,
     override val error: String? = null,
     override val isLoading: Boolean = true,
-) : UiState<StaffDetailsUiState> {
+) : UiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 }

@@ -9,8 +9,6 @@ import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -25,8 +23,7 @@ class UserSocialViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : PagedUiStateViewModel<UserSocialUiState>(), UserSocialEvent {
 
-    override val mutableUiState = MutableStateFlow(UserSocialUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = UserSocialUiState()
 
     fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 

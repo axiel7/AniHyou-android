@@ -13,8 +13,6 @@ import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -31,8 +29,7 @@ class ActivityFeedViewModel @Inject constructor(
     private val likeRepository: LikeRepository,
 ) : PagedUiStateViewModel<ActivityFeedUiState>(), ActivityFeedEvent {
 
-    override val mutableUiState = MutableStateFlow(ActivityFeedUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = ActivityFeedUiState()
 
     override fun setIsFollowing(value: Boolean) {
         mutableUiState.update {

@@ -24,8 +24,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
@@ -43,8 +41,7 @@ class SettingsViewModel @Inject constructor(
     private val workManager: WorkManager,
 ) : UiStateViewModel<SettingsUiState>(), SettingsEvent {
 
-    override val mutableUiState = MutableStateFlow(SettingsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = SettingsUiState()
 
     private val profileColor = defaultPreferencesRepository.profileColor
 

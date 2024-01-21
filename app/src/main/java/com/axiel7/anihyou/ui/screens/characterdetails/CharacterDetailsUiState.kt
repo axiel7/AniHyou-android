@@ -15,18 +15,15 @@ data class CharacterDetailsUiState(
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,
     override val error: String? = null,
-) : PagedUiState<CharacterDetailsUiState> {
+) : PagedUiState() {
 
-    val alternativeNames
-        get() = character?.name?.alternative?.filterNotNull()?.joinToString()
-    val alternativeNamesSpoiler
-        get() = character?.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
+    val alternativeNames =
+        character?.name?.alternative?.filterNotNull()?.joinToString()
+    val alternativeNamesSpoiler =
+        character?.name?.alternativeSpoiler?.filterNotNull()?.joinToString()
 
     override fun setError(value: String?) = copy(error = value)
-
     override fun setLoading(value: Boolean) = copy(isLoading = value)
-
     override fun setPage(value: Int) = copy(page = value)
-
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
 }

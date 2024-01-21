@@ -15,8 +15,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -34,8 +32,7 @@ class MediaDetailsViewModel @Inject constructor(
 
     private val mediaId = savedStateHandle.getStateFlow<Int?>(NavArgument.MediaId.name, null)
 
-    override val mutableUiState = MutableStateFlow(MediaDetailsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = MediaDetailsUiState()
 
     fun setIsLoggedIn(value: Boolean) {
         mutableUiState.update { it.copy(isLoggedIn = value) }

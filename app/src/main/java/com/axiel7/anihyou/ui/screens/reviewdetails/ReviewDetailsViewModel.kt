@@ -9,8 +9,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -27,8 +25,7 @@ class ReviewDetailsViewModel @Inject constructor(
 
     private val reviewId = savedStateHandle.getStateFlow<Int?>(NavArgument.ReviewId.name, null)
 
-    override val mutableUiState = MutableStateFlow(ReviewDetailsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = ReviewDetailsUiState()
 
     override fun rateReview(rating: ReviewRating) {
         reviewId.value?.let { id ->

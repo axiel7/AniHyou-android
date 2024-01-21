@@ -11,7 +11,7 @@ data class StudioDetailsUiState(
     override val hasNextPage: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = true,
-) : PagedUiState<StudioDetailsUiState> {
+) : PagedUiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)

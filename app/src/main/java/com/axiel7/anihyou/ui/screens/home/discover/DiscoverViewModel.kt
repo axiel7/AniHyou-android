@@ -17,8 +17,6 @@ import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -34,13 +32,11 @@ class DiscoverViewModel @Inject constructor(
 
     private val now = LocalDateTime.now()
 
-    override val mutableUiState = MutableStateFlow(
+    override val initialState =
         DiscoverUiState(
             nowAnimeSeason = now.currentAnimeSeason(),
             nextAnimeSeason = now.nextAnimeSeason(),
         )
-    )
-    override val uiState = mutableUiState.asStateFlow()
 
     val infos = mutableStateListOf(
         DiscoverInfo.AIRING,

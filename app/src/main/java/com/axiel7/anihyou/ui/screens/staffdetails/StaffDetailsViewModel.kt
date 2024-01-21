@@ -15,8 +15,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -38,8 +36,7 @@ class StaffDetailsViewModel @Inject constructor(
 
     private val staffId = savedStateHandle.getStateFlow<Int?>(NavArgument.StaffId.name, null)
 
-    override val mutableUiState = MutableStateFlow(StaffDetailsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = StaffDetailsUiState()
 
     override fun setMediaOnMyList(value: Boolean?) {
         mutableUiState.update {

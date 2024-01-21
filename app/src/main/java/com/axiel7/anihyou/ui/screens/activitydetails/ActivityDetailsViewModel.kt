@@ -13,8 +13,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -34,8 +32,7 @@ class ActivityDetailsViewModel @Inject constructor(
 
     val activityId = savedStateHandle.getStateFlow<Int?>(NavArgument.ActivityId.name, null)
 
-    override val mutableUiState = MutableStateFlow(ActivityDetailsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = ActivityDetailsUiState()
 
     override fun toggleLikeActivity() {
         viewModelScope.launch {

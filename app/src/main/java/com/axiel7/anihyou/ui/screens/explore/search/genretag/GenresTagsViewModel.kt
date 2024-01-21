@@ -12,8 +12,6 @@ import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,8 +24,7 @@ class GenresTagsViewModel @Inject constructor(
     searchRepository: SearchRepository
 ) : UiStateViewModel<GenresTagsUiState>() {
 
-    override val mutableUiState = MutableStateFlow(GenresTagsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = GenresTagsUiState()
 
     fun setExternalGenre(value: SelectableGenre?) = mutableUiState.update {
         it.copy(externalGenre = value)

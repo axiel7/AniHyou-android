@@ -5,33 +5,34 @@ import com.axiel7.anihyou.ui.common.event.PagedEvent
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 import kotlinx.coroutines.flow.update
 
-abstract class PagedUiStateViewModel<S : PagedUiState<S>> : UiStateViewModel<S>(), PagedEvent {
+@Suppress("UNCHECKED_CAST")
+abstract class PagedUiStateViewModel<S : PagedUiState> : UiStateViewModel<S>(), PagedEvent {
 
     protected fun <D> PagedResult<D>.toUiState(): S {
         return when (this) {
-            is PagedResult.Loading -> mutableUiState.value.setLoading(true)
+            is PagedResult.Loading -> mutableUiState.value.setLoading(true) as S
 
-            is PagedResult.Error -> mutableUiState.value.setError(message).setLoading(false)
+            is PagedResult.Error -> mutableUiState.value.setError(message).setLoading(false) as S
 
-            is PagedResult.Success -> mutableUiState.value.setLoading(false)
+            is PagedResult.Success -> mutableUiState.value.setLoading(false) as S
         }
     }
 
     protected fun <D> PagedResult<D>.toUiState(loadingWhen: Boolean): S {
         return when (this) {
-            is PagedResult.Loading -> mutableUiState.value.setLoading(loadingWhen)
+            is PagedResult.Loading -> mutableUiState.value.setLoading(loadingWhen) as S
 
-            is PagedResult.Error -> mutableUiState.value.setError(message).setLoading(false)
+            is PagedResult.Error -> mutableUiState.value.setError(message).setLoading(false) as S
 
-            is PagedResult.Success -> mutableUiState.value.setLoading(false)
+            is PagedResult.Success -> mutableUiState.value.setLoading(false) as S
         }
     }
 
-    fun setHasNextPage(value: Boolean) = mutableUiState.update { it.setHasNextPage(value) }
+    fun setHasNextPage(value: Boolean) = mutableUiState.update { it.setHasNextPage(value) as S }
 
     override fun onLoadMore() {
         if (uiState.value.hasNextPage && !uiState.value.isLoading) {
-            mutableUiState.update { it.setPage(it.page + 1) }
+            mutableUiState.update { it.setPage(it.page + 1) as S }
         }
     }
 }

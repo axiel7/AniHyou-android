@@ -22,8 +22,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -52,7 +50,7 @@ class SearchViewModel @Inject constructor(
     private val initialOnList: Boolean? = savedStateHandle
         .get<String?>(NavArgument.OnList.name)?.toBooleanStrictOrNull()
 
-    override val mutableUiState = MutableStateFlow(
+    override val initialState =
         SearchUiState(
             searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
@@ -65,8 +63,6 @@ class SearchViewModel @Inject constructor(
                     || initialTag != null
                     || initialMediaSort != null
         )
-    )
-    override val uiState = mutableUiState.asStateFlow()
 
     override fun setQuery(value: String) = mutableUiState.update {
         it.copy(query = value, page = 1, hasNextPage = true, isLoading = true)

@@ -5,8 +5,6 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -17,8 +15,7 @@ class PublishCommentViewModel @Inject constructor(
     private val threadRepository: ThreadRepository
 ) : UiStateViewModel<PublishCommentUiState>(), PublishCommentEvent {
 
-    override val mutableUiState = MutableStateFlow(PublishCommentUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = PublishCommentUiState()
 
     override fun setWasPublished(value: Boolean) {
         mutableUiState.update { it.copy(wasPublished = value) }

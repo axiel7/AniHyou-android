@@ -15,7 +15,7 @@ import com.axiel7.anihyou.ui.common.state.UiState
 @Immutable
 data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
-    
+
     val details: MediaDetailsQuery.Media? = null,
     val charactersAndStaff: MediaCharactersAndStaff? = null,
     val relationsAndRecommendations: MediaRelationsAndRecommendations? = null,
@@ -33,15 +33,13 @@ data class MediaDetailsUiState(
 
     override val error: String? = null,
     override val isLoading: Boolean = true,
-) : UiState<MediaDetailsUiState> {
+) : UiState() {
+
+    val studios = details?.studios?.nodes?.filterNotNull()?.filter { it.isAnimationStudio }
+    val producers = details?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
+
+    val isNewEntry = details?.mediaListEntry == null
+
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
-
-    val studios
-        get() = details?.studios?.nodes?.filterNotNull()?.filter { it.isAnimationStudio }
-    val producers
-        get() = details?.studios?.nodes?.filterNotNull()?.filter { !it.isAnimationStudio }
-
-    val isNewEntry
-        get() = details?.mediaListEntry == null
 }

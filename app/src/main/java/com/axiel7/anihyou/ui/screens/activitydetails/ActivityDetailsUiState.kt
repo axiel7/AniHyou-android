@@ -7,7 +7,7 @@ data class ActivityDetailsUiState(
     override val isLoading: Boolean = true,
     override val error: String? = null,
     val details: GenericActivity? = null,
-) : UiState<ActivityDetailsUiState> {
+) : UiState() {
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setError(value: String?) = copy(error = value)
 }

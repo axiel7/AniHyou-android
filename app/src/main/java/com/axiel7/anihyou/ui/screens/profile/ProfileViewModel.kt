@@ -15,8 +15,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -38,8 +36,7 @@ class ProfileViewModel @Inject constructor(
     private val userId = savedStateHandle.getStateFlow<Int?>(NavArgument.UserId.name, null)
     private val userName = savedStateHandle.getStateFlow<String?>(NavArgument.UserName.name, null)
 
-    override val mutableUiState = MutableStateFlow(ProfileUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = ProfileUiState()
 
     private fun getMyUserInfo() {
         mutableUiState

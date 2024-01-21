@@ -9,7 +9,7 @@ data class UserSocialUiState(
     override val hasNextPage: Boolean = true,
     override val error: String? = null,
     override val isLoading: Boolean = true,
-) : PagedUiState<UserSocialUiState> {
+) : PagedUiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)

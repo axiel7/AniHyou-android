@@ -1,22 +1,23 @@
 package com.axiel7.anihyou.ui.common.state
 
-/**
- * The inferred type here should be the implementing class itself
- */
-interface UiState<T> {
-    val isLoading: Boolean
-    val error: String?
+abstract class UiState {
+    // We use abstract instead of open to force them to be in the data class declaration
+    // so we can use it in the copy() methods
+    abstract val isLoading: Boolean
+    abstract val error: String?
 
-    // These methods are required because kotlin data class can't inherit from abstract class
+    // These methods are required because we can't have an abstract data class
     // so we need to manually implement the copy() method
 
     /**
      * copy(isLoading = value)
      */
-    fun setLoading(value: Boolean): T
+    abstract fun setLoading(value: Boolean): UiState
 
     /**
      * copy(error = value)
      */
-    fun setError(value: String?): T
+    abstract fun setError(value: String?): UiState
+
+    fun removeError() = setError(null)
 }

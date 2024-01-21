@@ -12,8 +12,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -34,8 +32,7 @@ class StudioDetailsViewModel @Inject constructor(
 
     val studioId = savedStateHandle.getStateFlow<Int?>(NavArgument.StudioId.name, null)
 
-    override val mutableUiState = MutableStateFlow(StudioDetailsUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = StudioDetailsUiState()
 
     override fun toggleFavorite() {
         studioId.value?.let { studioId ->

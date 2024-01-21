@@ -13,8 +13,6 @@ import com.axiel7.anihyou.ui.screens.home.HomeTab
 
 @Immutable
 data class SettingsUiState(
-    override val error: String? = null,
-    override val isLoading: Boolean = true,
     val theme: Theme? = null,
     val appColorMode: AppColorMode? = null,
     val useGeneralListStyle: Boolean? = null,
@@ -26,7 +24,9 @@ data class SettingsUiState(
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val userOptions: UserOptionsFragment? = null,
-) : UiState<SettingsUiState> {
+    override val error: String? = null,
+    override val isLoading: Boolean = true,
+) : UiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 }

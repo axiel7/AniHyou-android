@@ -12,8 +12,6 @@ import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -29,8 +27,7 @@ class UserFavoritesViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository
 ) : PagedUiStateViewModel<UserFavoritesUiState>(), UserFavoritesEvent {
 
-    override val mutableUiState = MutableStateFlow(UserFavoritesUiState())
-    override val uiState = mutableUiState.asStateFlow()
+    override val initialState = UserFavoritesUiState()
 
     fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
 

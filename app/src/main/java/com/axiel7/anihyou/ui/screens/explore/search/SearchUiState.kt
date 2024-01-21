@@ -29,32 +29,37 @@ data class SearchUiState(
     val isAdult: Boolean? = null,
     val country: CountryOfOrigin? = null,
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
-
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = false,
-) : PagedUiState<SearchUiState> {
+) : PagedUiState() {
 
-    val mediaType
-        get() = when (searchType) {
-            SearchType.ANIME -> MediaType.ANIME
-            SearchType.MANGA -> MediaType.MANGA
-            else -> null
-        }
+    val mediaType = when (searchType) {
+        SearchType.ANIME -> MediaType.ANIME
+        SearchType.MANGA -> MediaType.MANGA
+        else -> null
+    }
 
-    val mediaSortForSearch
-        get() = if (
-            (genresAndTagsForSearch.genreIn.isNotEmpty()
-                    || genresAndTagsForSearch.tagIn.isNotEmpty()
-                    || selectedMediaFormats.isNotEmpty()
-                    || selectedMediaStatuses.isNotEmpty()
-                    || startYear != null
-                    || endYear != null)
-            && mediaSort == MediaSort.SEARCH_MATCH
-        ) {
-            MediaSort.POPULARITY_DESC
-        } else mediaSort
+    private val hasGenreOrTagFilter = genresAndTagsForSearch.genreIn.isNotEmpty()
+            || genresAndTagsForSearch.tagIn.isNotEmpty()
+
+    private val hasMediaFormatFilter = selectedMediaFormats.isNotEmpty()
+
+    private val hasMediaStatusFilter = selectedMediaStatuses.isNotEmpty()
+
+    private val hasYearFilter = startYear != null || endYear != null
+
+    private val hasFiltersApplied = hasGenreOrTagFilter
+            || hasMediaFormatFilter
+            || hasMediaStatusFilter
+            || hasYearFilter
+
+    val mediaSortForSearch = if (mediaSort == MediaSort.SEARCH_MATCH && hasFiltersApplied) {
+        MediaSort.POPULARITY_DESC
+    } else {
+        mediaSort
+    }
 
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)

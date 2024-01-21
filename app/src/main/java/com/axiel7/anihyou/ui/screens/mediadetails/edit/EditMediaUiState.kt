@@ -36,11 +36,9 @@ data class EditMediaUiState(
 
     override val error: String? = null,
     override val isLoading: Boolean = false,
-) : UiState<EditMediaUiState> {
-    override fun setError(value: String?) = copy(error = value)
-    override fun setLoading(value: Boolean) = copy(isLoading = value)
+) : UiState() {
 
-    val isNewEntry get() = listEntry == null
+    val isNewEntry = listEntry == null
 
     fun mediaHasDuration(): Int? {
         val duration = mediaDetails?.duration()
@@ -51,4 +49,7 @@ data class EditMediaUiState(
         val volumes = mediaDetails?.volumes
         return if (volumes != null && volumes > 0) volumes else null
     }
+
+    override fun setError(value: String?) = copy(error = value)
+    override fun setLoading(value: Boolean) = copy(isLoading = value)
 }

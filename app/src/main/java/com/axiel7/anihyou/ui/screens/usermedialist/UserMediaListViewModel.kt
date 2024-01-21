@@ -20,10 +20,8 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -60,18 +58,16 @@ class UserMediaListViewModel @Inject constructor(
 
     private val scoreFormatArg: String? = savedStateHandle[NavArgument.ScoreFormat.name]
 
-    private val myUserId = defaultPreferencesRepository.userId
-        .filterNotNull()
-
-    private val titleLanguage = defaultPreferencesRepository.titleLanguage
-
-    override val mutableUiState = MutableStateFlow(
+    override val initialState =
         UserMediaListUiState(
             mediaType = mediaType.value,
             scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
         )
-    )
-    override val uiState = mutableUiState.asStateFlow()
+
+    private val myUserId = defaultPreferencesRepository.userId
+        .filterNotNull()
+
+    private val titleLanguage = defaultPreferencesRepository.titleLanguage
 
     fun setIsCompactScreen(value: Boolean) {
         mutableUiState.update { it.copy(isCompactScreen = value) }
