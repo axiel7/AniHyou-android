@@ -139,7 +139,7 @@ dependencies {
     implementation("io.github.fornewid:placeholder-material3:1.0.1")
     implementation("com.materialkolor:material-kolor:1.3.0")
 
-    val coilVersion = "3.0.0-alpha02"
+    val coilVersion = "3.0.0-alpha03"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
     implementation("io.coil-kt.coil3:coil-gif:$coilVersion")
     implementation("io.coil-kt.coil3:coil-network:$coilVersion")
