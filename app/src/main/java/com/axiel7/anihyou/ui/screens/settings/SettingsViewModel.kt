@@ -46,7 +46,7 @@ class SettingsViewModel @Inject constructor(
     override val mutableUiState = MutableStateFlow(SettingsUiState())
     override val uiState = mutableUiState.asStateFlow()
 
-    private val profileColor = defaultPreferencesRepository.profileColor.stateInViewModel()
+    private val profileColor = defaultPreferencesRepository.profileColor
 
     override fun setTheme(value: Theme) {
         viewModelScope.launch {

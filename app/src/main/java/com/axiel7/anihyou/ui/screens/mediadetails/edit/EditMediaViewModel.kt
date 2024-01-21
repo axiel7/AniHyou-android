@@ -37,7 +37,6 @@ class EditMediaViewModel @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
 
     private val userId = defaultPreferencesRepository.userId
-        .stateInViewModel()
 
     fun setMediaDetails(value: BasicMediaDetails) =
         mutableUiState.update { it.copy(mediaDetails = value) }
