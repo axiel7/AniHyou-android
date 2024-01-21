@@ -1,13 +1,16 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
-@Immutable
+@Stable
 data class CharacterDetailsUiState(
     val character: CharacterDetailsQuery.Character? = null,
+    val media: SnapshotStateList<CharacterMediaQuery.Edge> = mutableStateListOf(),
     val isLoadingMedia: Boolean = true,
     val selectedMediaItem: CharacterMediaQuery.Edge? = null,
     val selectedMediaVoiceActors: List<CharacterMediaQuery.VoiceActor>? = null,

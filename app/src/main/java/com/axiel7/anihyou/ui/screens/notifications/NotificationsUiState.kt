@@ -1,9 +1,15 @@
 package com.axiel7.anihyou.ui.screens.notifications
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Stable
 data class NotificationsUiState(
+    val notifications: SnapshotStateList<GenericNotification> = mutableStateListOf(),
     val type: NotificationTypeGroup = NotificationTypeGroup.ALL,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,

@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.ui.screens.home.activity
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
@@ -56,29 +54,29 @@ class ActivityFeedViewModel @Inject constructor(
                 type = LikeableType.ACTIVITY
             ).collect { result ->
                 if (result is DataResult.Success && result.data != null) {
-                    val foundIndex = activities.indexOfFirst {
-                        it.onListActivity?.listActivityFragment?.id == id
-                                || it.onTextActivity?.textActivityFragment?.id == id
-                    }
-                    if (foundIndex != -1) {
-                        val oldItem = activities[foundIndex]
-                        activities[foundIndex] = oldItem.copy(
-                            onTextActivity = oldItem.onTextActivity?.copy(
-                                textActivityFragment = oldItem.onTextActivity.textActivityFragment
-                                    .updateLikeStatus(result.data)
-                            ),
-                            onListActivity = oldItem.onListActivity?.copy(
-                                listActivityFragment = oldItem.onListActivity.listActivityFragment
-                                    .updateLikeStatus(result.data)
+                    mutableUiState.value.run {
+                        val foundIndex = activities.indexOfFirst {
+                            it.onListActivity?.listActivityFragment?.id == id
+                                    || it.onTextActivity?.textActivityFragment?.id == id
+                        }
+                        if (foundIndex != -1) {
+                            val oldItem = activities[foundIndex]
+                            activities[foundIndex] = oldItem.copy(
+                                onTextActivity = oldItem.onTextActivity?.copy(
+                                    textActivityFragment = oldItem.onTextActivity.textActivityFragment
+                                        .updateLikeStatus(result.data)
+                                ),
+                                onListActivity = oldItem.onListActivity?.copy(
+                                    listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                        .updateLikeStatus(result.data)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
         }
     }
-
-    val activities = mutableStateListOf<ActivityFeedQuery.Activity>()
 
     init {
         //first load
@@ -103,8 +101,8 @@ class ActivityFeedViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) activities.clear()
-                        activities.addAll(result.list)
+                        if (it.page == 1) it.activities.clear()
+                        it.activities.addAll(result.list)
                         it.copy(
                             fetchFromNetwork = false,
                             hasNextPage = result.hasNextPage,

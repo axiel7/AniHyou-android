@@ -1,7 +1,13 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
+import com.axiel7.anihyou.SearchStaffQuery
+import com.axiel7.anihyou.SearchStudioQuery
+import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
@@ -11,10 +17,15 @@ import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
-@Immutable
+@Stable
 data class SearchUiState(
     val query: String = "",
     val searchType: SearchType,
+    val media: SnapshotStateList<SearchMediaQuery.Medium> = mutableStateListOf(),
+    val characters: SnapshotStateList<SearchCharacterQuery.Character> = mutableStateListOf(),
+    val staff: SnapshotStateList<SearchStaffQuery.Staff> = mutableStateListOf(),
+    val studios: SnapshotStateList<SearchStudioQuery.Studio> = mutableStateListOf(),
+    val users: SnapshotStateList<SearchUserQuery.User> = mutableStateListOf(),
     val mediaSort: MediaSort,
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val genresOrTagsChanged: Boolean = false,

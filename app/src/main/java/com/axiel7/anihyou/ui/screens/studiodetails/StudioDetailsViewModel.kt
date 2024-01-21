@@ -1,13 +1,11 @@
 package com.axiel7.anihyou.ui.screens.studiodetails
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StudioRepository
-import com.axiel7.anihyou.fragment.CommonStudioMedia
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,8 +48,6 @@ class StudioDetailsViewModel @Inject constructor(
         }
     }
 
-    val studioMedia = mutableStateListOf<CommonStudioMedia.Node>()
-
     init {
         // studio details
         // it also gets the first media page in this query to avoid two consecutive api calls
@@ -64,7 +60,7 @@ class StudioDetailsViewModel @Inject constructor(
                 mutableUiState.update { uiState ->
                     if (result is DataResult.Success) {
                         result.data?.media?.commonStudioMedia?.nodes?.filterNotNull()?.let {
-                            studioMedia.addAll(it)
+                            uiState.media.addAll(it)
                         }
                         uiState.copy(
                             isLoading = false,
@@ -92,7 +88,7 @@ class StudioDetailsViewModel @Inject constructor(
             }
             .onEach { result ->
                 if (result is PagedResult.Success) {
-                    studioMedia.addAll(result.list)
+                    mutableUiState.value.media.addAll(result.list)
                 }
             }
             .launchIn(viewModelScope)

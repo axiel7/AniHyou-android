@@ -1,10 +1,15 @@
 package com.axiel7.anihyou.ui.screens.calendar
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Stable
 data class CalendarUiState(
     val weekday: Int = 0,
+    val weeklyAnime: SnapshotStateList<AiringAnimesQuery.AiringSchedule> = mutableStateListOf(),
     val onMyList: Boolean? = null,
     val selectedItem: AiringAnimesQuery.AiringSchedule? = null,
     override val page: Int = 1,

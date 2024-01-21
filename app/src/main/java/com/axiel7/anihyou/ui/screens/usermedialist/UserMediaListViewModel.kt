@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.UserMediaListQuery
@@ -141,15 +140,16 @@ class UserMediaListViewModel @Inject constructor(
             entryId = entryId,
             progress = progress,
         ).onEach { result ->
-            mutableUiState.update {
+            mutableUiState.update { uiState ->
                 if (result is DataResult.Success && result.data != null) {
-                    val foundIndex = media.indexOfFirst { it.basicMediaListEntry.id == entryId }
+                    val foundIndex =
+                        uiState.media.indexOfFirst { it.basicMediaListEntry.id == entryId }
                     if (foundIndex != -1) {
-                        if (result.data.status != media[foundIndex].basicMediaListEntry.status) {
-                            media.removeAt(foundIndex)
+                        if (result.data.status != uiState.media[foundIndex].basicMediaListEntry.status) {
+                            uiState.media.removeAt(foundIndex)
                         } else {
-                            media[foundIndex] = media[foundIndex].copy(
-                                basicMediaListEntry = media[foundIndex].basicMediaListEntry.copy(
+                            uiState.media[foundIndex] = uiState.media[foundIndex].copy(
+                                basicMediaListEntry = uiState.media[foundIndex].basicMediaListEntry.copy(
                                     progress = progress
                                 )
                             )
@@ -166,23 +166,23 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedItem?.let { selectedItem ->
-            if (selectedItem.basicMediaListEntry != newListEntry) {
-                if (newListEntry != null
-                    && newListEntry.status == selectedItem.basicMediaListEntry.status
-                ) {
-                    val index = media.indexOf(selectedItem)
-                    if (index != -1) {
-                        media[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
+        mutableUiState.value.run {
+            selectedItem?.let { selectedItem ->
+                if (selectedItem.basicMediaListEntry != newListEntry) {
+                    if (newListEntry != null
+                        && newListEntry.status == selectedItem.basicMediaListEntry.status
+                    ) {
+                        val index = media.indexOf(selectedItem)
+                        if (index != -1) {
+                            media[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
+                        }
+                    } else {
+                        media.remove(selectedItem)
                     }
-                } else {
-                    media.remove(selectedItem)
                 }
             }
         }
     }
-
-    val media = mutableStateListOf<UserMediaListQuery.MediaList>()
 
     init {
         userId
@@ -305,8 +305,8 @@ class UserMediaListViewModel @Inject constructor(
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     mutableUiState.update {
-                        if (it.page == 1) media.clear()
-                        media.addAll(result.list)
+                        if (it.page == 1) it.media.clear()
+                        it.media.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,

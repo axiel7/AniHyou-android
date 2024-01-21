@@ -45,11 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.SearchCharacterQuery
-import com.axiel7.anihyou.SearchMediaQuery
-import com.axiel7.anihyou.SearchStaffQuery
-import com.axiel7.anihyou.SearchStudioQuery
-import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
@@ -147,11 +142,6 @@ fun SearchView(
                 performSearch = performSearch,
                 initialGenre = initialGenre,
                 initialTag = initialTag,
-                media = viewModel.media,
-                characters = viewModel.characters,
-                staff = viewModel.staff,
-                studios = viewModel.studios,
-                users = viewModel.users,
                 uiState = uiState,
                 event = viewModel,
                 navActionManager = navActionManager,
@@ -166,11 +156,6 @@ fun SearchContentView(
     performSearch: MutableState<Boolean>,
     initialGenre: String?,
     initialTag: String?,
-    media: List<SearchMediaQuery.Medium>,
-    characters: List<SearchCharacterQuery.Character>,
-    staff: List<SearchStaffQuery.Staff>,
-    studios: List<SearchStudioQuery.Studio>,
-    users: List<SearchUserQuery.User>,
     uiState: SearchUiState,
     event: SearchEvent?,
     navActionManager: NavActionManager,
@@ -315,7 +300,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = media,
+                    items = uiState.media,
                     contentType = { it }
                 ) { item ->
                     MediaItemHorizontal(
@@ -351,7 +336,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = characters,
+                    items = uiState.characters,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -372,7 +357,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = staff,
+                    items = uiState.staff,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -398,7 +383,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = studios,
+                    items = uiState.studios,
                     contentType = { it }
                 ) { item ->
                     Text(
@@ -418,7 +403,7 @@ fun SearchContentView(
                     }
                 }
                 items(
-                    items = users,
+                    items = uiState.users,
                     contentType = { it }
                 ) { item ->
                     PersonItemHorizontal(
@@ -445,11 +430,6 @@ fun SearchPreview() {
                 performSearch = remember { mutableStateOf(false) },
                 initialGenre = null,
                 initialTag = null,
-                media = emptyList(),
-                characters = emptyList(),
-                staff = emptyList(),
-                studios = emptyList(),
-                users = emptyList(),
                 uiState = SearchUiState(
                     searchType = SearchType.ANIME,
                     mediaSort = MediaSort.SEARCH_MATCH

@@ -1,9 +1,7 @@
 package com.axiel7.anihyou.ui.screens.staffdetails
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffMediaQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -73,26 +71,28 @@ class StaffDetailsViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedMediaItem?.let { selectedItem ->
-            val index = media.indexOfFirst { it.first == selectedItem.first }
-            if (index != -1) {
-                media[index] = selectedItem.copy(
-                    first = selectedItem.first,
-                    second = selectedItem.second.copy(
-                        value = selectedItem.second.value.copy(
-                            node = selectedItem.second.value.node?.copy(
-                                mediaListEntry = newListEntry?.let {
-                                    StaffMediaQuery.MediaListEntry(
-                                        __typename = "StaffMediaQuery.MediaListEntry",
-                                        id = newListEntry.id,
-                                        mediaId = newListEntry.mediaId,
-                                        basicMediaListEntry = newListEntry
-                                    )
-                                }
+        uiState.value.run {
+            selectedMediaItem?.let { selectedItem ->
+                val index = media.indexOfFirst { it.first == selectedItem.first }
+                if (index != -1) {
+                    media[index] = selectedItem.copy(
+                        first = selectedItem.first,
+                        second = selectedItem.second.copy(
+                            value = selectedItem.second.value.copy(
+                                node = selectedItem.second.value.node?.copy(
+                                    mediaListEntry = newListEntry?.let {
+                                        StaffMediaQuery.MediaListEntry(
+                                            __typename = "StaffMediaQuery.MediaListEntry",
+                                            id = newListEntry.id,
+                                            mediaId = newListEntry.mediaId,
+                                            basicMediaListEntry = newListEntry
+                                        )
+                                    }
+                                )
                             )
                         )
                     )
-                )
+                }
             }
         }
     }
@@ -101,9 +101,6 @@ class StaffDetailsViewModel @Inject constructor(
         if (mutableUiState.value.hasNextPageCharacters)
             mutableUiState.update { it.copy(pageCharacters = it.pageCharacters + 1) }
     }
-
-    val media = mutableStateListOf<Pair<Int, StaffMediaGrouped>>()
-    val characters = mutableStateListOf<StaffCharacterQuery.Edge>()
 
     init {
         // staff details
@@ -144,8 +141,8 @@ class StaffDetailsViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.pageMedia == 1) media.clear()
-                        media.addAll(result.list)
+                        if (it.pageMedia == 1) it.media.clear()
+                        it.media.addAll(result.list)
                         it.copy(
                             hasNextPageMedia = result.hasNextPage,
                             isLoadingMedia = false,
@@ -173,7 +170,7 @@ class StaffDetailsViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        characters.addAll(result.list)
+                        it.characters.addAll(result.list)
                         it.copy(
                             hasNextPageCharacters = result.hasNextPage,
                             isLoadingCharacters = false

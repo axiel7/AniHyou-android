@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.calendar
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.data.model.PagedResult
@@ -44,21 +43,23 @@ class CalendarViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedItem?.let { selectedItem ->
-            val index = weeklyAnime.indexOf(selectedItem)
-            if (index != -1) {
-                weeklyAnime[index] = selectedItem.copy(
-                    media = selectedItem.media?.copy(
-                        mediaListEntry = newListEntry?.let {
-                            AiringAnimesQuery.MediaListEntry(
-                                __typename = "AiringAnimesQuery.MediaListEntry",
-                                id = newListEntry.id,
-                                mediaId = newListEntry.mediaId,
-                                basicMediaListEntry = newListEntry
-                            )
-                        }
-                    ),
-                )
+        mutableUiState.value.run {
+            selectedItem?.let { selectedItem ->
+                val index = weeklyAnime.indexOf(selectedItem)
+                if (index != -1) {
+                    weeklyAnime[index] = selectedItem.copy(
+                        media = selectedItem.media?.copy(
+                            mediaListEntry = newListEntry?.let {
+                                AiringAnimesQuery.MediaListEntry(
+                                    __typename = "AiringAnimesQuery.MediaListEntry",
+                                    id = newListEntry.id,
+                                    mediaId = newListEntry.mediaId,
+                                    basicMediaListEntry = newListEntry
+                                )
+                            }
+                        ),
+                    )
+                }
             }
         }
     }
@@ -68,8 +69,6 @@ class CalendarViewModel @Inject constructor(
             it.copy(selectedItem = value)
         }
     }
-
-    val weeklyAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
 
     init {
         mutableUiState
@@ -100,8 +99,8 @@ class CalendarViewModel @Inject constructor(
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     mutableUiState.update {
-                        if (it.page == 1) weeklyAnime.clear()
-                        weeklyAnime.addAll(result.list)
+                        if (it.page == 1) it.weeklyAnime.clear()
+                        it.weeklyAnime.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,

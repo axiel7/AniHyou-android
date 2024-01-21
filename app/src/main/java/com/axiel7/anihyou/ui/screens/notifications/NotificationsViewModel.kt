@@ -1,10 +1,8 @@
 package com.axiel7.anihyou.ui.screens.notifications
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.PagedResult
-import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
@@ -38,8 +36,6 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
-    val notifications = mutableStateListOf<GenericNotification>()
-
     init {
         mutableUiState
             .filter { it.hasNextPage }
@@ -60,8 +56,8 @@ class NotificationsViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) notifications.clear()
-                        notifications.addAll(result.list)
+                        if (it.page == 1) it.notifications.clear()
+                        it.notifications.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false

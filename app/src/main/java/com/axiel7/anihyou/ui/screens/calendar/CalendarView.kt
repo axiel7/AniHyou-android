@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
@@ -117,7 +116,6 @@ private fun CalendarViewContent(
             }
 
             CalendarDayView(
-                list = viewModel.weeklyAnime,
                 uiState = uiState,
                 events = viewModel,
                 showEditSheet = showEditSheet,
@@ -136,7 +134,6 @@ private fun CalendarViewContent(
 
 @Composable
 private fun CalendarDayView(
-    list: List<AiringAnimesQuery.AiringSchedule>,
     uiState: CalendarUiState,
     events: CalendarEvent?,
     showEditSheet: MutableState<Boolean>,
@@ -173,7 +170,7 @@ private fun CalendarDayView(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         items(
-            items = list,
+            items = uiState.weeklyAnime,
             contentType = { it }
         ) { item ->
             MediaItemVertical(
@@ -225,7 +222,6 @@ fun CalendarViewPreview() {
     AniHyouTheme {
         Surface {
             CalendarDayView(
-                list = emptyList(),
                 uiState = CalendarUiState(),
                 events = null,
                 showEditSheet = remember { mutableStateOf(false) },

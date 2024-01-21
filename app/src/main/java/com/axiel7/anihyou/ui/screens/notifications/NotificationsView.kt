@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.notification.GenericNotification
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
@@ -49,7 +48,6 @@ fun NotificationsView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     NotificationsContent(
-        notifications = viewModel.notifications,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -59,7 +57,6 @@ fun NotificationsView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NotificationsContent(
-    notifications: List<GenericNotification>,
     uiState: NotificationsUiState,
     event: NotificationsEvent?,
     navActionManager: NavActionManager,
@@ -118,7 +115,7 @@ private fun NotificationsContent(
                 }
             }
             items(
-                items = notifications,
+                items = uiState.notifications,
                 contentType = { it }
             ) { item ->
                 NotificationItem(
@@ -194,7 +191,6 @@ fun NotificationsViewPreview() {
     AniHyouTheme {
         Surface {
             NotificationsContent(
-                notifications = emptyList(),
                 uiState = NotificationsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

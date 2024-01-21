@@ -21,8 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.FollowersQuery
-import com.axiel7.anihyou.FollowingsQuery
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -45,8 +43,6 @@ fun UserSocialView(
     }
 
     UserSocialContent(
-        followers = viewModel.followers,
-        following = viewModel.following,
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
@@ -56,8 +52,6 @@ fun UserSocialView(
 
 @Composable
 private fun UserSocialContent(
-    followers: List<FollowersQuery.Follower>,
-    following: List<FollowingsQuery.Following>,
     uiState: UserSocialUiState,
     event: UserSocialEvent?,
     modifier: Modifier = Modifier,
@@ -96,7 +90,7 @@ private fun UserSocialContent(
             when (uiState.type) {
                 UserSocialType.FOLLOWERS -> {
                     items(
-                        items = followers,
+                        items = uiState.followers,
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
@@ -116,7 +110,7 @@ private fun UserSocialContent(
 
                 UserSocialType.FOLLOWING -> {
                     items(
-                        items = following,
+                        items = uiState.following,
                         contentType = { it }
                     ) { item ->
                         PersonItemVertical(
@@ -144,8 +138,6 @@ fun UserSocialViewPreview() {
     AniHyouTheme {
         Surface {
             UserSocialContent(
-                followers = emptyList(),
-                following = emptyList(),
                 uiState = UserSocialUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

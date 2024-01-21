@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -48,7 +47,6 @@ fun CharacterDetailsView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CharacterDetailsContent(
-        media = viewModel.media,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -58,7 +56,6 @@ fun CharacterDetailsView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterDetailsContent(
-    media: List<CharacterMediaQuery.Edge>,
     uiState: CharacterDetailsUiState,
     event: CharacterDetailsEvent?,
     navActionManager: NavActionManager,
@@ -145,7 +142,7 @@ private fun CharacterDetailsContent(
                         if (uiState.page == 0) event?.onLoadMore()
                     }
                     CharacterMediaView(
-                        media = media,
+                        media = uiState.media,
                         isLoading = uiState.isLoadingMedia,
                         loadMore = { event?.onLoadMore() },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
@@ -175,7 +172,6 @@ fun CharacterDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             CharacterDetailsContent(
-                media = emptyList(),
                 uiState = CharacterDetailsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

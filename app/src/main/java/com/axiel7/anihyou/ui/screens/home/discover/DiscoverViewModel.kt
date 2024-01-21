@@ -2,10 +2,6 @@ package com.axiel7.anihyou.ui.screens.home.discover
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.AiringAnimesQuery
-import com.axiel7.anihyou.AiringOnMyListQuery
-import com.axiel7.anihyou.MediaSortedQuery
-import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
@@ -34,33 +30,32 @@ class DiscoverViewModel @Inject constructor(
 
     override val initialState =
         DiscoverUiState(
+            infos = mutableStateListOf(
+                DiscoverInfo.AIRING,
+                DiscoverInfo.THIS_SEASON,
+                DiscoverInfo.TRENDING_ANIME
+            ),
             nowAnimeSeason = now.currentAnimeSeason(),
             nextAnimeSeason = now.nextAnimeSeason(),
         )
 
-    val infos = mutableStateListOf(
-        DiscoverInfo.AIRING,
-        DiscoverInfo.THIS_SEASON,
-        DiscoverInfo.TRENDING_ANIME
-    )
-
     override fun addNextInfo() {
-        if (infos.size < DiscoverInfo.entries.size)
-            infos.add(DiscoverInfo.entries[infos.size])
+        mutableUiState.value.run {
+            if (infos.size < DiscoverInfo.entries.size)
+                infos.add(DiscoverInfo.entries[infos.size])
+        }
     }
 
-    val airingAnime = mutableStateListOf<AiringAnimesQuery.AiringSchedule>()
-
     override fun fetchAiringAnime() {
-        if (airingAnime.isEmpty()) {
+        if (mutableUiState.value.airingAnime.isEmpty()) {
             mediaRepository.getAiringAnimesPage(
                 airingAtGreater = System.currentTimeMillis() / 1000,
                 page = 1
             ).onEach { result ->
-                if (result is PagedResult.Success) {
-                    airingAnime.addAll(result.list)
-                }
                 mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.airingAnime.addAll(result.list)
+                    }
                     it.copy(
                         isLoadingAiring = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
@@ -70,16 +65,14 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    val airingAnimeOnMyList = mutableStateListOf<AiringOnMyListQuery.Medium>()
-
     override fun fetchAiringAnimeOnMyList() {
-        if (airingAnimeOnMyList.isEmpty()) {
+        if (mutableUiState.value.airingAnimeOnMyList.isEmpty()) {
             mediaRepository.getAiringAnimeOnMyListPage(page = 1)
                 .onEach { result ->
-                    if (result is PagedResult.Success) {
-                        airingAnimeOnMyList.addAll(result.list)
-                    }
                     mutableUiState.update {
+                        if (result is PagedResult.Success) {
+                            it.airingAnimeOnMyList.addAll(result.list)
+                        }
                         it.copy(
                             isLoadingAiring = result is PagedResult.Loading,
                             error = (result as? PagedResult.Error)?.message
@@ -90,18 +83,16 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    val thisSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
-
     override fun fetchThisSeasonAnime() {
-        if (thisSeasonAnime.isEmpty()) {
+        if (mutableUiState.value.thisSeasonAnime.isEmpty()) {
             mediaRepository.getSeasonalAnimePage(
                 animeSeason = uiState.value.nowAnimeSeason,
                 page = 1
             ).onEach { result ->
-                if (result is PagedResult.Success) {
-                    thisSeasonAnime.addAll(result.list)
-                }
                 mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.thisSeasonAnime.addAll(result.list)
+                    }
                     it.copy(
                         isLoadingThisSeason = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
@@ -111,19 +102,17 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    val trendingAnime = mutableStateListOf<MediaSortedQuery.Medium>()
-
     override fun fetchTrendingAnime() {
-        if (trendingAnime.isEmpty()) {
+        if (mutableUiState.value.trendingAnime.isEmpty()) {
             mediaRepository.getMediaSortedPage(
                 mediaType = MediaType.ANIME,
                 sort = listOf(MediaSort.TRENDING_DESC),
                 page = 1
             ).onEach { result ->
-                if (result is PagedResult.Success) {
-                    trendingAnime.addAll(result.list)
-                }
                 mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.trendingAnime.addAll(result.list)
+                    }
                     it.copy(
                         isLoadingTrendingAnime = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
@@ -133,18 +122,16 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    val nextSeasonAnime = mutableStateListOf<SeasonalAnimeQuery.Medium>()
-
     override fun fetchNextSeasonAnime() {
-        if (nextSeasonAnime.isEmpty()) {
+        if (mutableUiState.value.nextSeasonAnime.isEmpty()) {
             mediaRepository.getSeasonalAnimePage(
                 animeSeason = uiState.value.nextAnimeSeason,
                 page = 1
             ).onEach { result ->
-                if (result is PagedResult.Success) {
-                    nextSeasonAnime.addAll(result.list)
-                }
                 mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.nextSeasonAnime.addAll(result.list)
+                    }
                     it.copy(
                         isLoadingNextSeason = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
@@ -154,19 +141,17 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    val trendingManga = mutableStateListOf<MediaSortedQuery.Medium>()
-
     override fun fetchTrendingManga() {
-        if (trendingManga.isEmpty()) {
+        if (mutableUiState.value.trendingManga.isEmpty()) {
             mediaRepository.getMediaSortedPage(
                 mediaType = MediaType.MANGA,
                 sort = listOf(MediaSort.TRENDING_DESC),
                 page = 1
             ).onEach { result ->
-                if (result is PagedResult.Success) {
-                    trendingManga.addAll(result.list)
-                }
                 mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.trendingManga.addAll(result.list)
+                    }
                     it.copy(
                         isLoadingTrendingManga = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message

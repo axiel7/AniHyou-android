@@ -25,11 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.SearchCharacterQuery
-import com.axiel7.anihyou.SearchMediaQuery
-import com.axiel7.anihyou.SearchStaffQuery
-import com.axiel7.anihyou.SearchStudioQuery
-import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
@@ -47,11 +42,6 @@ fun ExploreSearchBar(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ExploreSearchBarContent(
-        media = viewModel.media,
-        characters = viewModel.characters,
-        staff = viewModel.staff,
-        studios = viewModel.studios,
-        users = viewModel.users,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -61,11 +51,6 @@ fun ExploreSearchBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExploreSearchBarContent(
-    media: List<SearchMediaQuery.Medium>,
-    characters: List<SearchCharacterQuery.Character>,
-    staff: List<SearchStaffQuery.Staff>,
-    studios: List<SearchStudioQuery.Studio>,
-    users: List<SearchUserQuery.User>,
     uiState: SearchUiState,
     event: SearchEvent?,
     navActionManager: NavActionManager,
@@ -144,11 +129,6 @@ private fun ExploreSearchBarContent(
                 performSearch = performSearch,
                 initialGenre = null,
                 initialTag = null,
-                media = media,
-                characters = characters,
-                staff = staff,
-                studios = studios,
-                users = users,
                 uiState = uiState,
                 event = event,
                 navActionManager = navActionManager,
@@ -163,11 +143,6 @@ fun ExploreSearchBarPreview() {
     AniHyouTheme {
         Surface {
             ExploreSearchBarContent(
-                media = emptyList(),
-                characters = emptyList(),
-                staff = emptyList(),
-                studios = emptyList(),
-                users = emptyList(),
                 uiState = SearchUiState(
                     searchType = SearchType.ANIME,
                     mediaSort = MediaSort.SEARCH_MATCH

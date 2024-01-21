@@ -37,7 +37,6 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMedia
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMediaListView(
-    mediaList: List<UserMediaListQuery.MediaList>,
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
@@ -65,7 +64,7 @@ fun UserMediaListView(
             .nestedScroll(nestedScrollConnection)
         if (uiState.listStyle == ListStyle.GRID) {
             LazyListGrid(
-                mediaList = mediaList,
+                mediaList = uiState.media,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,
@@ -74,7 +73,7 @@ fun UserMediaListView(
             )
         } else if (!uiState.isCompactScreen) {
             LazyListTablet(
-                mediaList = mediaList,
+                mediaList = uiState.media,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,
@@ -84,7 +83,7 @@ fun UserMediaListView(
             )
         } else {
             LazyListPhone(
-                mediaList = mediaList,
+                mediaList = uiState.media,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,

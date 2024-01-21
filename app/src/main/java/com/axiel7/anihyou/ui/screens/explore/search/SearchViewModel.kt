@@ -1,13 +1,8 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.SearchCharacterQuery
 import com.axiel7.anihyou.SearchMediaQuery
-import com.axiel7.anihyou.SearchStaffQuery
-import com.axiel7.anihyou.SearchStudioQuery
-import com.axiel7.anihyou.SearchUserQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
@@ -153,28 +148,24 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedMediaItem?.let { selectedItem ->
-            val index = media.indexOf(selectedItem)
-            if (index != -1) {
-                media[index] = selectedItem.copy(
-                    mediaListEntry = newListEntry?.let {
-                        SearchMediaQuery.MediaListEntry(
-                            __typename = "SearchMediaQuery.MediaListEntry",
-                            id = newListEntry.id,
-                            mediaId = newListEntry.mediaId,
-                            basicMediaListEntry = newListEntry
-                        )
-                    }
-                )
+        mutableUiState.value.run {
+            selectedMediaItem?.let { selectedItem ->
+                val index = media.indexOf(selectedItem)
+                if (index != -1) {
+                    media[index] = selectedItem.copy(
+                        mediaListEntry = newListEntry?.let {
+                            SearchMediaQuery.MediaListEntry(
+                                __typename = "SearchMediaQuery.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    )
+                }
             }
         }
     }
-
-    val media = mutableStateListOf<SearchMediaQuery.Medium>()
-    val characters = mutableStateListOf<SearchCharacterQuery.Character>()
-    val staff = mutableStateListOf<SearchStaffQuery.Staff>()
-    val studios = mutableStateListOf<SearchStudioQuery.Studio>()
-    val users = mutableStateListOf<SearchUserQuery.User>()
 
     init {
         // media search
@@ -218,8 +209,8 @@ class SearchViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) media.clear()
-                        media.addAll(result.list)
+                        if (it.page == 1) it.media.clear()
+                        it.media.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
@@ -254,8 +245,8 @@ class SearchViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) characters.clear()
-                        characters.addAll(result.list)
+                        if (it.page == 1) it.characters.clear()
+                        it.characters.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
@@ -287,8 +278,8 @@ class SearchViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) staff.clear()
-                        staff.addAll(result.list)
+                        if (it.page == 1) it.staff.clear()
+                        it.staff.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
@@ -320,8 +311,8 @@ class SearchViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) studios.clear()
-                        studios.addAll(result.list)
+                        if (it.page == 1) it.studios.clear()
+                        it.studios.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
@@ -353,8 +344,8 @@ class SearchViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) users.clear()
-                        users.addAll(result.list)
+                        if (it.page == 1) it.users.clear()
+                        it.users.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,

@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -70,7 +69,6 @@ fun ProfileView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ProfileContent(
-        userActivities = viewModel.userActivities,
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
@@ -81,7 +79,6 @@ fun ProfileView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileContent(
-    userActivities: List<UserActivityQuery.Activity>,
     uiState: ProfileUiState,
     event: ProfileEvent?,
     modifier: Modifier = Modifier,
@@ -239,7 +236,7 @@ private fun ProfileContent(
                             if (uiState.page == 0) event?.onLoadMore()
                         }
                         UserActivityView(
-                            activities = userActivities,
+                            activities = uiState.activities,
                             uiState = uiState,
                             event = event,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
@@ -279,7 +276,6 @@ fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
             ProfileContent(
-                userActivities = emptyList(),
                 uiState = ProfileUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

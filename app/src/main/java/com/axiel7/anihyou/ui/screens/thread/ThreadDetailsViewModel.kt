@@ -1,11 +1,9 @@
 package com.axiel7.anihyou.ui.screens.thread
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
-import com.axiel7.anihyou.data.model.thread.ChildComment
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.type.LikeableType
@@ -35,8 +33,6 @@ class ThreadDetailsViewModel @Inject constructor(
     private val threadId = savedStateHandle.getStateFlow<Int?>(NavArgument.ThreadId.name, null)
 
     override val initialState = ThreadDetailsUiState()
-
-    val threadComments = mutableStateListOf<ChildComment>()
 
     override fun toggleLikeThread() {
         threadId.value?.let { threadId ->
@@ -105,7 +101,7 @@ class ThreadDetailsViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        threadComments.addAll(result.list)
+                        it.comments.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage

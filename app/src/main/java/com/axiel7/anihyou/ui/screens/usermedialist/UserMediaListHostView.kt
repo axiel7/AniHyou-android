@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaType
@@ -72,7 +71,6 @@ fun UserMediaListHostView(
     }
 
     UserMediaListHostContent(
-        media = viewModel.media,
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
@@ -83,7 +81,6 @@ fun UserMediaListHostView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserMediaListHostContent(
-    media: List<UserMediaListQuery.MediaList>,
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     modifier: Modifier = Modifier,
@@ -207,7 +204,6 @@ private fun UserMediaListHostContent(
                 )
         ) {
             UserMediaListView(
-                mediaList = media,
                 uiState = uiState,
                 event = event,
                 contentPadding = if (!uiState.isMyList)
@@ -231,7 +227,6 @@ fun UserMediaListViewPreview() {
     AniHyouTheme {
         Surface {
             UserMediaListHostContent(
-                media = emptyList(),
                 uiState = UserMediaListUiState(
                     mediaType = MediaType.ANIME
                 ),

@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
@@ -44,7 +43,6 @@ fun ActivityFeedView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ActivityFeedContent(
-        activities = viewModel.activities,
         modifier = modifier,
         uiState = uiState,
         event = viewModel,
@@ -55,7 +53,6 @@ fun ActivityFeedView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ActivityFeedContent(
-    activities: List<ActivityFeedQuery.Activity>,
     modifier: Modifier = Modifier,
     uiState: ActivityFeedUiState,
     event: ActivityFeedEvent?,
@@ -106,7 +103,7 @@ private fun ActivityFeedContent(
                 }
             }
             items(
-                items = activities,
+                items = uiState.activities,
                 contentType = { it }
             ) { item ->
                 item.onListActivity?.let {
@@ -175,7 +172,6 @@ fun ActivityFeedViewPreview() {
     AniHyouTheme {
         Surface {
             ActivityFeedContent(
-                activities = emptyList(),
                 uiState = ActivityFeedUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

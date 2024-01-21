@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -44,7 +43,6 @@ fun ActivityDetailsView(
 
     ActivityDetailsContent(
         activityId = activityId ?: 0,
-        replies = viewModel.replies,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -55,7 +53,6 @@ fun ActivityDetailsView(
 @Composable
 private fun ActivityDetailsContent(
     activityId: Int,
-    replies: List<ActivityReplyFragment>,
     uiState: ActivityDetailsUiState,
     event: ActivityDetailsEvent?,
     navActionManager: NavActionManager,
@@ -121,7 +118,7 @@ private fun ActivityDetailsContent(
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
             items(
-                items = replies,
+                items = uiState.replies,
                 contentType = { it }
             ) { item ->
                 ActivityTextView(
@@ -152,7 +149,6 @@ fun ActivityDetailsViewPreview() {
         Surface {
             ActivityDetailsContent(
                 activityId = 1,
-                replies = emptyList(),
                 uiState = ActivityDetailsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager(),

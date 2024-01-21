@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.explore.season
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.SeasonalAnimeQuery
@@ -49,24 +48,24 @@ class SeasonAnimeViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedItem?.let { selectedItem ->
-            val index = animeSeasonal.indexOf(selectedItem)
-            if (index != -1) {
-                animeSeasonal[index] = selectedItem.copy(
-                    mediaListEntry = newListEntry?.let {
-                        SeasonalAnimeQuery.MediaListEntry(
-                            __typename = "SeasonalAnimeQuery.MediaListEntry",
-                            id = newListEntry.id,
-                            mediaId = newListEntry.mediaId,
-                            basicMediaListEntry = newListEntry
-                        )
-                    }
-                )
+        uiState.value.run {
+            selectedItem?.let { selectedItem ->
+                val index = animeSeasonal.indexOf(selectedItem)
+                if (index != -1) {
+                    animeSeasonal[index] = selectedItem.copy(
+                        mediaListEntry = newListEntry?.let {
+                            SeasonalAnimeQuery.MediaListEntry(
+                                __typename = "SeasonalAnimeQuery.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    )
+                }
             }
         }
     }
-
-    val animeSeasonal = mutableStateListOf<SeasonalAnimeQuery.Medium>()
 
     init {
         combine(
@@ -95,8 +94,8 @@ class SeasonAnimeViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) animeSeasonal.clear()
-                        animeSeasonal.addAll(result.list)
+                        if (it.page == 1) it.animeSeasonal.clear()
+                        it.animeSeasonal.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,

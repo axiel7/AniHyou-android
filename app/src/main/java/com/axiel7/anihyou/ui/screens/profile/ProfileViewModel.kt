@@ -1,9 +1,7 @@
 package com.axiel7.anihyou.ui.screens.profile
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.activity.updateLikeStatus
@@ -106,28 +104,28 @@ class ProfileViewModel @Inject constructor(
             type = LikeableType.ACTIVITY
         ).onEach { result ->
             if (result is DataResult.Success && result.data != null) {
-                val foundIndex = userActivities.indexOfFirst {
-                    it.onListActivity?.listActivityFragment?.id == id
-                            || it.onTextActivity?.textActivityFragment?.id == id
-                }
-                if (foundIndex != -1) {
-                    val oldItem = userActivities[foundIndex]
-                    userActivities[foundIndex] = oldItem.copy(
-                        onTextActivity = oldItem.onTextActivity?.copy(
-                            textActivityFragment = oldItem.onTextActivity.textActivityFragment
-                                .updateLikeStatus(result.data)
-                        ),
-                        onListActivity = oldItem.onListActivity?.copy(
-                            listActivityFragment = oldItem.onListActivity.listActivityFragment
-                                .updateLikeStatus(result.data)
+                mutableUiState.value.run {
+                    val foundIndex = activities.indexOfFirst {
+                        it.onListActivity?.listActivityFragment?.id == id
+                                || it.onTextActivity?.textActivityFragment?.id == id
+                    }
+                    if (foundIndex != -1) {
+                        val oldItem = activities[foundIndex]
+                        activities[foundIndex] = oldItem.copy(
+                            onTextActivity = oldItem.onTextActivity?.copy(
+                                textActivityFragment = oldItem.onTextActivity.textActivityFragment
+                                    .updateLikeStatus(result.data)
+                            ),
+                            onListActivity = oldItem.onListActivity?.copy(
+                                listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                    .updateLikeStatus(result.data)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     }
-
-    val userActivities = mutableStateListOf<UserActivityQuery.Activity>()
 
     init {
         combine(userId, userName) { id, name ->
@@ -154,7 +152,7 @@ class ProfileViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        userActivities.addAll(result.list)
+                        it.activities.addAll(result.list)
                         it.copy(
                             isLoadingActivity = false,
                             hasNextPage = result.hasNextPage

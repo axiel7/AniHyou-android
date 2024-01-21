@@ -25,11 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.UserFavoritesAnimeQuery
-import com.axiel7.anihyou.UserFavoritesCharacterQuery
-import com.axiel7.anihyou.UserFavoritesMangaQuery
-import com.axiel7.anihyou.UserFavoritesStaffQuery
-import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -55,11 +50,6 @@ fun UserFavoritesView(
     }
 
     UserFavoritesContent(
-        anime = viewModel.anime,
-        manga = viewModel.manga,
-        characters = viewModel.characters,
-        staff = viewModel.staff,
-        studios = viewModel.studios,
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
@@ -69,11 +59,6 @@ fun UserFavoritesView(
 
 @Composable
 private fun UserFavoritesContent(
-    anime: List<UserFavoritesAnimeQuery.Node>,
-    manga: List<UserFavoritesMangaQuery.Node>,
-    characters: List<UserFavoritesCharacterQuery.Node>,
-    staff: List<UserFavoritesStaffQuery.Node>,
-    studios: List<UserFavoritesStudioQuery.Node>,
     uiState: UserFavoritesUiState,
     event: UserFavoritesEvent?,
     modifier: Modifier = Modifier,
@@ -112,7 +97,7 @@ private fun UserFavoritesContent(
             when (uiState.type) {
                 FavoritesType.ANIME -> {
                     items(
-                        items = anime,
+                        items = uiState.anime,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -134,7 +119,7 @@ private fun UserFavoritesContent(
 
                 FavoritesType.MANGA -> {
                     items(
-                        items = manga,
+                        items = uiState.manga,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -156,7 +141,7 @@ private fun UserFavoritesContent(
 
                 FavoritesType.CHARACTERS -> {
                     items(
-                        items = characters,
+                        items = uiState.characters,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -177,7 +162,7 @@ private fun UserFavoritesContent(
 
                 FavoritesType.STAFF -> {
                     items(
-                        items = staff,
+                        items = uiState.staff,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -198,7 +183,7 @@ private fun UserFavoritesContent(
 
                 FavoritesType.STUDIOS -> {
                     items(
-                        items = studios,
+                        items = uiState.studios,
                         key = { it.id },
                         contentType = { it }
                     ) { item ->
@@ -245,11 +230,6 @@ fun UserFavoritesViewPreview() {
     AniHyouTheme {
         Surface {
             UserFavoritesContent(
-                anime = emptyList(),
-                manga = emptyList(),
-                characters = emptyList(),
-                staff = emptyList(),
-                studios = emptyList(),
                 uiState = UserFavoritesUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

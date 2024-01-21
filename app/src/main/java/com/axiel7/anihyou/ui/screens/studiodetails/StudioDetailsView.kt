@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.fragment.CommonStudioMedia
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -50,7 +49,6 @@ fun StudioDetailsView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     StudioDetailsContent(
-        media = viewModel.studioMedia,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -60,7 +58,6 @@ fun StudioDetailsView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StudioDetailsContent(
-    media: List<CommonStudioMedia.Node>,
     uiState: StudioDetailsUiState,
     event: StudioDetailsEvent?,
     navActionManager: NavActionManager,
@@ -103,7 +100,7 @@ private fun StudioDetailsContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             items(
-                items = media,
+                items = uiState.media,
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
@@ -127,7 +124,7 @@ private fun StudioDetailsContent(
                 items(13) {
                     MediaItemVerticalPlaceholder()
                 }
-            } else if (media.isEmpty()) {
+            } else if (uiState.media.isEmpty()) {
                 item(
                     span = { GridItemSpan(maxLineSpan) }
                 ) {
@@ -147,7 +144,6 @@ fun StudioDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             StudioDetailsContent(
-                media = emptyList(),
                 uiState = StudioDetailsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

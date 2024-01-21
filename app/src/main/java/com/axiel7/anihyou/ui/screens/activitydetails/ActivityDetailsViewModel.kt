@@ -1,13 +1,11 @@
 package com.axiel7.anihyou.ui.screens.activitydetails
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
-import com.axiel7.anihyou.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -66,14 +64,16 @@ class ActivityDetailsViewModel @Inject constructor(
                 type = LikeableType.ACTIVITY_REPLY
             ).collect { result ->
                 if (result is DataResult.Success && result.data != null) {
-                    val foundIndex = replies.indexOfFirst { it.id == id }
-                    if (foundIndex != -1) {
-                        val oldItem = replies[foundIndex]
-                        replies[foundIndex] = oldItem.copy(
-                            isLiked = result.data,
-                            likeCount = if (result.data) oldItem.likeCount + 1
-                            else oldItem.likeCount - 1
-                        )
+                    mutableUiState.value.run {
+                        val foundIndex = replies.indexOfFirst { it.id == id }
+                        if (foundIndex != -1) {
+                            val oldItem = replies[foundIndex]
+                            replies[foundIndex] = oldItem.copy(
+                                isLiked = result.data,
+                                likeCount = if (result.data) oldItem.likeCount + 1
+                                else oldItem.likeCount - 1
+                            )
+                        }
                     }
                 } else if (result !is DataResult.Loading) {
                     mutableUiState.update {
@@ -85,8 +85,6 @@ class ActivityDetailsViewModel @Inject constructor(
             }
         }
     }
-
-    val replies = mutableStateListOf<ActivityReplyFragment>()
 
     init {
         activityId
@@ -104,7 +102,7 @@ class ActivityDetailsViewModel @Inject constructor(
                                 ?: result.data?.onMessageActivity?.toGenericActivity()
                         )
                     }.also {
-                        replies.addAll(it.details?.replies.orEmpty())
+                        it.replies.addAll(it.details?.replies.orEmpty())
                     }
                 } else {
                     mutableUiState.update { result.toUiState() }

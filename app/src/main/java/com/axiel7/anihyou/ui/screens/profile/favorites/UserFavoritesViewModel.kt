@@ -1,12 +1,6 @@
 package com.axiel7.anihyou.ui.screens.profile.favorites
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.UserFavoritesAnimeQuery
-import com.axiel7.anihyou.UserFavoritesCharacterQuery
-import com.axiel7.anihyou.UserFavoritesMangaQuery
-import com.axiel7.anihyou.UserFavoritesStaffQuery
-import com.axiel7.anihyou.UserFavoritesStudioQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -37,12 +31,6 @@ class UserFavoritesViewModel @Inject constructor(
         }
     }
 
-    val anime = mutableStateListOf<UserFavoritesAnimeQuery.Node>()
-    val manga = mutableStateListOf<UserFavoritesMangaQuery.Node>()
-    val characters = mutableStateListOf<UserFavoritesCharacterQuery.Node>()
-    val staff = mutableStateListOf<UserFavoritesStaffQuery.Node>()
-    var studios = mutableStateListOf<UserFavoritesStudioQuery.Node>()
-
     init {
         // anime
         mutableUiState
@@ -63,7 +51,7 @@ class UserFavoritesViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        anime.addAll(result.list)
+                        it.anime.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
@@ -94,7 +82,7 @@ class UserFavoritesViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        manga.addAll(result.list)
+                        it.manga.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
@@ -125,7 +113,7 @@ class UserFavoritesViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        characters.addAll(result.list)
+                        it.characters.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
@@ -156,7 +144,7 @@ class UserFavoritesViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        staff.addAll(result.list)
+                        it.staff.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
@@ -187,7 +175,7 @@ class UserFavoritesViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        studios.addAll(result.list)
+                        it.studios.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage

@@ -1,12 +1,16 @@
 package com.axiel7.anihyou.ui.screens.studiodetails
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.StudioDetailsQuery
+import com.axiel7.anihyou.fragment.CommonStudioMedia
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
-@Immutable
+@Stable
 data class StudioDetailsUiState(
     val details: StudioDetailsQuery.Studio? = null,
+    val media: SnapshotStateList<CommonStudioMedia.Node> = mutableStateListOf(),
     override val page: Int = 1,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,

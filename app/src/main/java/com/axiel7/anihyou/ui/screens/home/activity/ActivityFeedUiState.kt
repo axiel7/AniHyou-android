@@ -1,9 +1,15 @@
 package com.axiel7.anihyou.ui.screens.home.activity
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
+@Stable
 data class ActivityFeedUiState(
+    val activities: SnapshotStateList<ActivityFeedQuery.Activity> = mutableStateListOf(),
     val isFollowing: Boolean = true,
     val type: ActivityTypeGrouped = ActivityTypeGrouped.ALL,
     val fetchFromNetwork: Boolean = false,

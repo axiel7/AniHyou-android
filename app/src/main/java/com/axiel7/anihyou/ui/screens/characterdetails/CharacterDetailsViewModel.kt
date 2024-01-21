@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.characterdetails
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.CharacterMediaQuery
@@ -68,26 +67,26 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedMediaItem?.let { selectedItem ->
-            val index = media.indexOf(selectedItem)
-            if (index != -1) {
-                media[index] = selectedItem.copy(
-                    node = selectedItem.node?.copy(
-                        mediaListEntry = newListEntry?.let {
-                            CharacterMediaQuery.MediaListEntry(
-                                __typename = "CharacterMediaQuery.MediaListEntry",
-                                id = newListEntry.id,
-                                mediaId = newListEntry.mediaId,
-                                basicMediaListEntry = newListEntry
-                            )
-                        }
+        mutableUiState.value.run {
+            selectedMediaItem?.let { selectedItem ->
+                val index = media.indexOf(selectedItem)
+                if (index != -1) {
+                    media[index] = selectedItem.copy(
+                        node = selectedItem.node?.copy(
+                            mediaListEntry = newListEntry?.let {
+                                CharacterMediaQuery.MediaListEntry(
+                                    __typename = "CharacterMediaQuery.MediaListEntry",
+                                    id = newListEntry.id,
+                                    mediaId = newListEntry.mediaId,
+                                    basicMediaListEntry = newListEntry
+                                )
+                            }
+                        )
                     )
-                )
+                }
             }
         }
     }
-
-    val media = mutableStateListOf<CharacterMediaQuery.Edge>()
 
     init {
         characterId
@@ -122,7 +121,7 @@ class CharacterDetailsViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        media.addAll(result.list)
+                        it.media.addAll(result.list)
                         it.copy(
                             isLoadingMedia = false,
                             hasNextPage = result.hasNextPage

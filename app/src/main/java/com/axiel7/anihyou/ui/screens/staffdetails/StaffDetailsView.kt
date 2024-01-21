@@ -25,8 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.StaffCharacterQuery
-import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -47,8 +45,6 @@ fun StaffDetailsView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     StaffDetailsContent(
-        media = viewModel.media,
-        characters = viewModel.characters,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -58,8 +54,6 @@ fun StaffDetailsView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StaffDetailsContent(
-    media: List<Pair<Int, StaffMediaGrouped>>,
-    characters: List<StaffCharacterQuery.Edge>,
     uiState: StaffDetailsUiState,
     event: StaffDetailsEvent?,
     navActionManager: NavActionManager,
@@ -129,7 +123,7 @@ private fun StaffDetailsContent(
 
                 StaffInfoType.MEDIA -> {
                     StaffMediaView(
-                        staffMedia = media,
+                        staffMedia = uiState.media,
                         isLoading = uiState.isLoadingMedia,
                         loadMore = { event?.loadNextPageMedia() },
                         mediaOnMyList = uiState.mediaOnMyList,
@@ -149,7 +143,7 @@ private fun StaffDetailsContent(
 
                 StaffInfoType.CHARACTER -> {
                     StaffCharacterView(
-                        staffCharacters = characters,
+                        staffCharacters = uiState.characters,
                         isLoading = uiState.isLoadingCharacters,
                         loadMore = { event?.loadNextPageCharacters() },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
@@ -170,8 +164,6 @@ fun StaffDetailsViewPreview() {
     AniHyouTheme {
         Surface {
             StaffDetailsContent(
-                media = emptyList(),
-                characters = emptyList(),
                 uiState = StaffDetailsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

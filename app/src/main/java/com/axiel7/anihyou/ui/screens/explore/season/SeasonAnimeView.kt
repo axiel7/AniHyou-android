@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
@@ -60,7 +59,6 @@ fun SeasonAnimeView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SeasonAnimeContent(
-        anime = viewModel.animeSeasonal,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -70,7 +68,6 @@ fun SeasonAnimeView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SeasonAnimeContent(
-    anime: List<SeasonalAnimeQuery.Medium>,
     uiState: SeasonAnimeUiState,
     event: SeasonAnimeEvent?,
     navActionManager: NavActionManager,
@@ -138,7 +135,7 @@ private fun SeasonAnimeContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             items(
-                items = anime,
+                items = uiState.animeSeasonal,
                 contentType = { it }
             ) { item ->
                 MediaItemVertical(
@@ -184,7 +181,6 @@ fun SeasonAnimeViewPreview() {
     AniHyouTheme {
         Surface {
             SeasonAnimeContent(
-                anime = emptyList(),
                 uiState = SeasonAnimeUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager(),

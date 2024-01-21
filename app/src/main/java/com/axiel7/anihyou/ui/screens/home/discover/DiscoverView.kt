@@ -11,16 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.AiringAnimesQuery
-import com.axiel7.anihyou.AiringOnMyListQuery
-import com.axiel7.anihyou.MediaSortedQuery
-import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -51,35 +48,21 @@ fun DiscoverView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DiscoverContent(
-        infos = viewModel.infos,
-        airingAnime = viewModel.airingAnime,
-        airingAnimeOnMyList = viewModel.airingAnimeOnMyList,
-        thisSeasonAnime = viewModel.thisSeasonAnime,
-        trendingAnime = viewModel.trendingAnime,
-        nextSeasonAnime = viewModel.nextSeasonAnime,
-        trendingManga = viewModel.trendingManga,
-        modifier = modifier,
-        contentPadding = contentPadding,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
+        modifier = modifier,
+        contentPadding = contentPadding,
     )
 }
 
 @Composable
 private fun DiscoverContent(
-    infos: List<DiscoverInfo>,
-    airingAnime: List<AiringAnimesQuery.AiringSchedule>,
-    airingAnimeOnMyList: List<AiringOnMyListQuery.Medium>,
-    thisSeasonAnime: List<SeasonalAnimeQuery.Medium>,
-    trendingAnime: List<MediaSortedQuery.Medium>,
-    nextSeasonAnime: List<SeasonalAnimeQuery.Medium>,
-    trendingManga: List<MediaSortedQuery.Medium>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     uiState: DiscoverUiState,
     event: DiscoverEvent?,
     navActionManager: NavActionManager,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 0, onLoadMore = { event?.addNextInfo() })
@@ -109,7 +92,7 @@ private fun DiscoverContent(
         state = listState,
         contentPadding = contentPadding
     ) {
-        items(infos) { item ->
+        items(uiState.infos) { item ->
             when (item) {
                 DiscoverInfo.AIRING -> {
                     LaunchedEffect(uiState.airingOnMyList) {
@@ -118,8 +101,8 @@ private fun DiscoverContent(
                     }
                     AiringContent(
                         airingOnMyList = uiState.airingOnMyList,
-                        airingAnime = airingAnime,
-                        airingAnimeOnMyList = airingAnimeOnMyList,
+                        airingAnime = uiState.airingAnime,
+                        airingAnimeOnMyList = uiState.airingAnimeOnMyList,
                         isLoading = uiState.isLoadingAiring,
                         onLongClickItem = { details, listEntry ->
                             event?.selectItem(details, listEntry)
@@ -136,7 +119,7 @@ private fun DiscoverContent(
                     }
                     SeasonAnimeContent(
                         animeSeason = uiState.nowAnimeSeason,
-                        seasonAnime = thisSeasonAnime,
+                        seasonAnime = uiState.thisSeasonAnime,
                         isLoading = uiState.isLoadingThisSeason,
                         isNextSeason = false,
                         onLongClickItem = {
@@ -157,7 +140,7 @@ private fun DiscoverContent(
                     }
                     TrendingMediaContent(
                         mediaType = MediaType.ANIME,
-                        trendingMedia = trendingAnime,
+                        trendingMedia = uiState.trendingAnime,
                         isLoading = uiState.isLoadingTrendingAnime,
                         onLongClickItem = {
                             event?.selectItem(
@@ -177,7 +160,7 @@ private fun DiscoverContent(
                     }
                     SeasonAnimeContent(
                         animeSeason = uiState.nextAnimeSeason,
-                        seasonAnime = nextSeasonAnime,
+                        seasonAnime = uiState.nextSeasonAnime,
                         isLoading = uiState.isLoadingNextSeason,
                         isNextSeason = true,
                         onLongClickItem = {
@@ -198,7 +181,7 @@ private fun DiscoverContent(
                     }
                     TrendingMediaContent(
                         mediaType = MediaType.MANGA,
-                        trendingMedia = trendingManga,
+                        trendingMedia = uiState.trendingManga,
                         isLoading = uiState.isLoadingTrendingManga,
                         onLongClickItem = {
                             event?.selectItem(
@@ -223,14 +206,8 @@ fun DiscoverViewPreview() {
     AniHyouTheme {
         Surface {
             DiscoverContent(
-                infos = DiscoverInfo.entries,
-                airingAnime = emptyList(),
-                airingAnimeOnMyList = emptyList(),
-                thisSeasonAnime = emptyList(),
-                trendingAnime = emptyList(),
-                nextSeasonAnime = emptyList(),
-                trendingManga = emptyList(),
                 uiState = DiscoverUiState(
+                    infos = DiscoverInfo.entries.toMutableStateList(),
                     nowAnimeSeason = now.currentAnimeSeason(),
                     nextAnimeSeason = now.nextAnimeSeason(),
                 ),

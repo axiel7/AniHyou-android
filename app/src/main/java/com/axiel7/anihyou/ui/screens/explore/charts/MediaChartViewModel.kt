@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.explore.charts
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.MediaChartQuery
@@ -40,24 +39,24 @@ class MediaChartViewModel @Inject constructor(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        uiState.value.selectedItem?.let { selectedItem ->
-            val index = mediaChart.indexOf(selectedItem)
-            if (index != -1) {
-                mediaChart[index] = selectedItem.copy(
-                    mediaListEntry = newListEntry?.let {
-                        MediaChartQuery.MediaListEntry(
-                            __typename = "MediaChartQuery.MediaListEntry",
-                            id = newListEntry.id,
-                            mediaId = newListEntry.mediaId,
-                            basicMediaListEntry = newListEntry
-                        )
-                    }
-                )
+        mutableUiState.value.run {
+            selectedItem?.let { selectedItem ->
+                val index = media.indexOf(selectedItem)
+                if (index != -1) {
+                    media[index] = selectedItem.copy(
+                        mediaListEntry = newListEntry?.let {
+                            MediaChartQuery.MediaListEntry(
+                                __typename = "MediaChartQuery.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    )
+                }
             }
         }
     }
-
-    val mediaChart = mutableStateListOf<MediaChartQuery.Medium>()
 
     init {
         initialType
@@ -89,8 +88,8 @@ class MediaChartViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) mediaChart.clear()
-                        mediaChart.addAll(result.list)
+                        if (it.page == 1) it.media.clear()
+                        it.media.addAll(result.list)
 
                         val hasNextPage = when (it.chartType) {
                             ChartType.TOP_ANIME, ChartType.TOP_MANGA, ChartType.TOP_MOVIES -> {

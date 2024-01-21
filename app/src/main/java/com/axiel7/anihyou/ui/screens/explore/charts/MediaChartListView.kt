@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
@@ -50,7 +49,6 @@ fun MediaChartListView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MediaChartListContent(
-        media = viewModel.mediaChart,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
@@ -60,7 +58,6 @@ fun MediaChartListView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MediaChartListContent(
-    media: List<MediaChartQuery.Medium>,
     uiState: MediaChartUiState,
     event: MediaChartEvent?,
     navActionManager: NavActionManager,
@@ -107,7 +104,7 @@ private fun MediaChartListContent(
             ),
         ) {
             itemsIndexed(
-                items = media,
+                items = uiState.media,
                 contentType = { _, item -> item }
             ) { index, item ->
                 MediaItemHorizontal(
@@ -155,7 +152,6 @@ fun MediaChartListViewPreview() {
     AniHyouTheme {
         Surface {
             MediaChartListContent(
-                media = emptyList(),
                 uiState = MediaChartUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager(),

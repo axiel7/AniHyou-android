@@ -1,9 +1,6 @@
 package com.axiel7.anihyou.ui.screens.profile.social
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.FollowersQuery
-import com.axiel7.anihyou.FollowingsQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -33,9 +30,6 @@ class UserSocialViewModel @Inject constructor(
         }
     }
 
-    val followers = mutableStateListOf<FollowersQuery.Follower>()
-    val following = mutableStateListOf<FollowingsQuery.Following>()
-
     init {
         // followers
         mutableUiState
@@ -55,8 +49,8 @@ class UserSocialViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) followers.clear()
-                        followers.addAll(result.list)
+                        if (it.page == 1) it.followers.clear()
+                        it.followers.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
@@ -86,8 +80,8 @@ class UserSocialViewModel @Inject constructor(
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        if (it.page == 1) following.clear()
-                        following.addAll(result.list)
+                        if (it.page == 1) it.following.clear()
+                        it.following.addAll(result.list)
                         it.copy(
                             isLoading = false,
                             hasNextPage = result.hasNextPage
