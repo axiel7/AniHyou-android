@@ -271,7 +271,16 @@ object DateUtils {
             )
         }
 
-        day == null && month == null && year != null -> "$year"
+        month != null && day != null -> {
+            LocalDate.of(currentYear, month, day).format(
+                DateTimeFormatter.ofPattern(
+                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM")
+                )
+            )
+        }
+
+        year != null -> "$year"
+
         else -> stringResource(R.string.unknown)
     }
 }
