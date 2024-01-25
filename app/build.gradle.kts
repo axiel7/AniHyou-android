@@ -134,7 +134,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.glance:glance-appwidget:1.0.0")
 
-    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
     implementation("io.github.fornewid:placeholder-material3:1.0.1")
     implementation("com.materialkolor:material-kolor:1.3.0")
