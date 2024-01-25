@@ -67,7 +67,7 @@
     <string name="light_novel">Light novel</string>
     <string name="video_game">Gra komputerowa</string>
     <string name="other">Inne</string>
-    <string name="doujinshi">Doujinshi</string>
+    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
     <string name="game">Gra</string>
     <string name="comic">Komiks</string>
     <string name="romaji">Romaji</string>
