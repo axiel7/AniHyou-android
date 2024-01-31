@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.axiel7.anihyou.AiringAnimesQuery
+import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.asDataResult
@@ -107,6 +108,12 @@ class MediaRepository @Inject constructor(
         .mediaDetailsQuery(mediaId)
         .toFlow()
         .asDataResult { it.Media }
+
+    suspend fun updateMediaDetailsCache(media: MediaDetailsQuery.Media) {
+        api.updateMediaDetailsCache(
+            data = MediaDetailsQuery.Data(media)
+        )
+    }
 
     fun getMediaCharactersAndStaff(mediaId: Int) = api
         .mediaCharactersAndStaffQuery(mediaId)

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.api
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.GenreTagCollectionQuery
@@ -149,6 +150,16 @@ class MediaApi @Inject constructor(
                 mediaId = Optional.present(mediaId)
             )
         )
+
+    suspend fun updateMediaDetailsCache(data: MediaDetailsQuery.Data) {
+        client.apolloStore
+            .writeOperation(
+                operation = MediaDetailsQuery(
+                    mediaId = Optional.presentIfNotNull(data.Media?.id)
+                ),
+                operationData = data,
+            )
+    }
 
     fun mediaCharactersAndStaffQuery(mediaId: Int) = client
         .query(

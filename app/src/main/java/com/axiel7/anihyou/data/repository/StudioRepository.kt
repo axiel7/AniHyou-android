@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.StudioDetailsQuery
 import com.axiel7.anihyou.data.api.StudioApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -21,6 +22,12 @@ class StudioRepository @Inject constructor(
         .asDataResult {
             it.Studio
         }
+
+    suspend fun updateStudioDetailsCache(details: StudioDetailsQuery.Studio) {
+        api.updateStudioDetailsCache(
+            data = StudioDetailsQuery.Data(details)
+        )
+    }
 
     fun getStudioMediaPage(
         studioId: Int,

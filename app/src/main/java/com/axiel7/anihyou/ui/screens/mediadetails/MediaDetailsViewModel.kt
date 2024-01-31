@@ -69,13 +69,18 @@ class MediaDetailsViewModel @Inject constructor(
                 mangaId = if (details.basicMediaDetails.type == MediaType.MANGA)
                     details.id else null,
             ).onEach { result ->
-                mutableUiState.update {
+                mutableUiState.update { state ->
                     if (result is DataResult.Success && result.data != null) {
-                        it.copy(
-                            details = it.details?.copy(isFavourite = !it.details.isFavourite)
+                        val newDetails = state.details
+                            ?.copy(isFavourite = !state.details.isFavourite)
+                            ?.also {
+                                mediaRepository.updateMediaDetailsCache(it)
+                            }
+                        state.copy(
+                            details = newDetails
                         )
                     } else {
-                        it.copy(
+                        state.copy(
                             error = (result as? DataResult.Error)?.message
                         )
                     }

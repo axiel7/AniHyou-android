@@ -48,11 +48,14 @@ class StaffDetailsViewModel @Inject constructor(
                 .onEach { result ->
                     if (result is DataResult.Success && result.data != null) {
                         mutableUiState.update { uiState ->
+                            val newDetails = uiState.details
+                                ?.copy(isFavourite = !uiState.details.isFavourite)
+                                ?.also {
+                                    staffRepository.updateStaffDetailsCache(it)
+                                }
                             uiState.copy(
                                 isLoading = false,
-                                details = uiState.details?.copy(
-                                    isFavourite = !uiState.details.isFavourite
-                                )
+                                details = newDetails
                             )
                         }
                     }

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.api
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.axiel7.anihyou.SearchStudioQuery
 import com.axiel7.anihyou.StudioDetailsQuery
 import com.axiel7.anihyou.StudioMediaQuery
@@ -35,6 +36,16 @@ class StudioApi @Inject constructor(
                 perPage = Optional.present(perPage)
             )
         )
+
+    suspend fun updateStudioDetailsCache(data: StudioDetailsQuery.Data) {
+        client.apolloStore
+            .writeOperation(
+                operation = StudioDetailsQuery(
+                    studioId = Optional.presentIfNotNull(data.Studio?.id)
+                ),
+                operationData = data
+            )
+    }
 
     fun studioMediaQuery(
         studioId: Int,

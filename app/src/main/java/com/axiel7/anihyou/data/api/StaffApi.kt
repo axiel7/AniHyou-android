@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.api
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.axiel7.anihyou.SearchStaffQuery
 import com.axiel7.anihyou.StaffCharacterQuery
 import com.axiel7.anihyou.StaffDetailsQuery
@@ -32,6 +33,16 @@ class StaffApi @Inject constructor(
                 staffId = Optional.present(staffId)
             )
         )
+
+    suspend fun updateStaffDetailsCache(data: StaffDetailsQuery.Data) {
+        client.apolloStore
+            .writeOperation(
+                operation = StaffDetailsQuery(
+                    staffId = Optional.presentIfNotNull(data.Staff?.id)
+                ),
+                operationData = data
+            )
+    }
 
     fun staffMediaQuery(
         staffId: Int,

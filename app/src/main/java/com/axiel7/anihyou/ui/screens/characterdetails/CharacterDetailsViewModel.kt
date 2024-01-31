@@ -42,11 +42,14 @@ class CharacterDetailsViewModel @Inject constructor(
                 characterId = characterId.value
             ).collect { result ->
                 if (result is DataResult.Success && result.data != null) {
-                    mutableUiState.update {
-                        it.copy(
-                            character = it.character?.copy(
-                                isFavourite = it.character.isFavourite.not()
-                            )
+                    mutableUiState.update { state ->
+                        val newDetails = state.character
+                            ?.copy(isFavourite = state.character.isFavourite.not())
+                            ?.also {
+                                characterRepository.updateCharacterDetailsCache(it)
+                            }
+                        state.copy(
+                            character = newDetails
                         )
                     }
                 }

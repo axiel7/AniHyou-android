@@ -2,6 +2,7 @@ package com.axiel7.anihyou.data.api
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.SearchCharacterQuery
@@ -31,6 +32,16 @@ class CharacterApi @Inject constructor(
                 characterId = Optional.present(characterId)
             )
         )
+
+    suspend fun updateCharacterDetailsCache(data: CharacterDetailsQuery.Data) {
+        client.apolloStore
+            .writeOperation(
+                operation = CharacterDetailsQuery(
+                    characterId = Optional.presentIfNotNull(data.Character?.id)
+                ),
+                operationData = data
+            )
+    }
 
     fun characterMediaQuery(
         characterId: Int,

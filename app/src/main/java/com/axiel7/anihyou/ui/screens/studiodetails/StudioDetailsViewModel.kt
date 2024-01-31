@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StudioDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    studioRepository: StudioRepository,
+    private val studioRepository: StudioRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<StudioDetailsUiState>(), StudioDetailsEvent {
 
@@ -37,9 +37,14 @@ class StudioDetailsViewModel @Inject constructor(
             favoriteRepository.toggleFavorite(studioId = studioId)
                 .onEach { result ->
                     if (result is DataResult.Success && result.data != null) {
-                        mutableUiState.update {
-                            it.copy(
-                                details = it.details?.copy(isFavourite = !it.details.isFavourite)
+                        mutableUiState.update { state ->
+                            val newDetails = state.details
+                                ?.copy(isFavourite = !state.details.isFavourite)
+                                ?.also {
+                                    studioRepository.updateStudioDetailsCache(it)
+                                }
+                            state.copy(
+                                details = newDetails
                             )
                         }
                     }

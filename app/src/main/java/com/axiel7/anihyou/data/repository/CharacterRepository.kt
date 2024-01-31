@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.data.api.CharacterApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -18,6 +19,12 @@ class CharacterRepository @Inject constructor(
         .asDataResult {
             it.Character
         }
+
+    suspend fun updateCharacterDetailsCache(details: CharacterDetailsQuery.Character) {
+        api.updateCharacterDetailsCache(
+            data = CharacterDetailsQuery.Data(details)
+        )
+    }
 
     fun getCharacterMediaPage(
         characterId: Int,

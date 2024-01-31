@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.data.api.StaffApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -19,6 +20,12 @@ class StaffRepository @Inject constructor(
         .asDataResult {
             it.Staff
         }
+
+    suspend fun updateStaffDetailsCache(details: StaffDetailsQuery.Staff) {
+        api.updateStaffDetailsCache(
+            data = StaffDetailsQuery.Data(details)
+        )
+    }
 
     fun getStaffMediaPage(
         staffId: Int,
