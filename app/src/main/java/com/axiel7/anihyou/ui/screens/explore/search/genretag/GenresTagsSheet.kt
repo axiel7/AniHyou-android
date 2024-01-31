@@ -50,25 +50,13 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.TextTriCheckbox
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-private enum class GenresTagsSheetTab {
-    GENRES, TAGS;
-
-    companion object {
-        val tabRows = arrayOf(
-            TabRowItem(value = GENRES, title = R.string.genres),
-            TabRowItem(value = TAGS, title = R.string.tags),
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GenresTagsSheet(
     sheetState: SheetState,
@@ -80,16 +68,6 @@ fun GenresTagsSheet(
     val viewModel: GenresTagsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-
-    val scope = rememberCoroutineScope()
-    val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-
-    SideEffect {
-        scope.launch { if (isKeyboardVisible) sheetState.expand() }
-    }
-
     // TODO: pass these by savedStateHandle?
     LaunchedEffect(externalGenre) {
         if (uiState.externalGenre == null)
@@ -100,9 +78,37 @@ fun GenresTagsSheet(
             viewModel.setExternalTag(externalTag)
     }
 
+    GenresTagsSheetContent(
+        uiState = uiState,
+        event = viewModel,
+        sheetState = sheetState,
+        bottomPadding = bottomPadding,
+        onDismiss = onDismiss,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+private fun GenresTagsSheetContent(
+    uiState: GenresTagsUiState,
+    event: GenresTagsEvent?,
+    sheetState: SheetState,
+    bottomPadding: Dp = 0.dp,
+    onDismiss: (GenresAndTagsForSearch) -> Unit,
+) {
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+
+    val scope = rememberCoroutineScope()
+    val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    SideEffect {
+        scope.launch { if (isKeyboardVisible) sheetState.expand() }
+    }
+
     ModalBottomSheet(
         onDismissRequest = {
-            onDismiss(viewModel.genresAndTagsForSearch)
+            onDismiss(uiState.genresAndTagsForSearch())
         },
         sheetState = sheetState,
         windowInsets = WindowInsets(0, 0, 0, 0)
@@ -119,13 +125,13 @@ fun GenresTagsSheet(
             ) {
                 ErrorTextButton(
                     text = stringResource(R.string.clear),
-                    onClick = viewModel::unselectAllGenresAndTags,
+                    onClick = { event?.unselectAllGenresAndTags() },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
                 TextButton(
                     onClick = {
-                        onDismiss(viewModel.genresAndTagsForSearch)
+                        onDismiss(uiState.genresAndTagsForSearch())
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
@@ -144,8 +150,8 @@ fun GenresTagsSheet(
             )
 
             OutlinedTextField(
-                value = viewModel.filter,
-                onValueChange = viewModel::onFilterChanged,
+                value = uiState.filter,
+                onValueChange = { event?.onFilterChanged(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -159,8 +165,8 @@ fun GenresTagsSheet(
                     )
                 },
                 trailingIcon = {
-                    if (viewModel.filter.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.onFilterChanged("") }) {
+                    if (uiState.filter.isNotEmpty()) {
+                        IconButton(onClick = { event?.onFilterChanged("") }) {
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24),
                                 contentDescription = stringResource(R.string.clear)
@@ -185,24 +191,24 @@ fun GenresTagsSheet(
             ) {
                 when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {
                     GenresTagsSheetTab.GENRES ->
-                        items(viewModel.displayGenres) { item ->
+                        items(uiState.displayGenres) { item ->
                             TextTriCheckbox(
                                 text = item.name.genreTagLocalized(),
                                 state = item.state.toggleableState,
                                 onStateChange = {
-                                    viewModel.onGenreUpdated(item.setState(it))
+                                    event?.onGenreUpdated(item.setState(it))
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
 
                     GenresTagsSheetTab.TAGS ->
-                        items(viewModel.displayTags) { item ->
+                        items(uiState.displayTags) { item ->
                             TextTriCheckbox(
                                 text = item.name,
                                 state = item.state.toggleableState,
                                 onStateChange = {
-                                    viewModel.onTagUpdated(item.setState(it))
+                                    event?.onTagUpdated(item.setState(it))
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -219,9 +225,9 @@ fun GenresTagsSheet(
 fun GenresTagsSheetPreview() {
     AniHyouTheme {
         Surface {
-            GenresTagsSheet(
-                externalGenre = null,
-                externalTag = null,
+            GenresTagsSheetContent(
+                uiState = GenresTagsUiState(),
+                event = null,
                 sheetState = rememberModalBottomSheetState(),
                 onDismiss = { }
             )
