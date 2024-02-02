@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -56,11 +55,11 @@ fun UserMediaListView(
 
     Box(
         modifier = Modifier
-            .nestedScroll(pullRefreshState.nestedScrollConnection)
             .fillMaxSize()
+            .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {
         val listModifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .nestedScroll(nestedScrollConnection)
         if (uiState.listStyle == ListStyle.GRID) {
             LazyListGrid(
