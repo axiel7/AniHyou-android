@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.UserCurrentAnimeListQuery
@@ -106,7 +107,7 @@ class MediaRepository @Inject constructor(
 
     fun getMediaDetails(mediaId: Int) = api
         .mediaDetailsQuery(mediaId)
-        .toFlow()
+        .watch()
         .asDataResult { it.Media }
 
     suspend fun updateMediaDetailsCache(media: MediaDetailsQuery.Media) {
