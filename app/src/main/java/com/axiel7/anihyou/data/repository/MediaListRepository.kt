@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.MediaListApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -36,7 +37,7 @@ class MediaListRepository @Inject constructor(
             page = page,
             perPage = perPage,
         )
-        .toFlow()
+        .watch()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.mediaList?.filterNotNull().orEmpty()
         }
@@ -88,6 +89,10 @@ class MediaListRepository @Inject constructor(
         .asDataResult {
             it.SaveMediaListEntry
         }
+
+    suspend fun updateMediaListCache(data: BasicMediaListEntry) {
+        api.updateMediaListCache(data)
+    }
 
     fun deleteEntry(id: Int) = api
         .deleteMediaListMutation(id)

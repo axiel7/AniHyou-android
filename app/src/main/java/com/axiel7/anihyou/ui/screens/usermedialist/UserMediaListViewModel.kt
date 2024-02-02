@@ -305,7 +305,7 @@ class UserMediaListViewModel @Inject constructor(
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     mutableUiState.update {
-                        if (it.page == 1) it.media.clear()
+                        if (it.page == 1 || result.currentPage == 1) it.media.clear()
                         it.media.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,

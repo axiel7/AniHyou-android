@@ -175,6 +175,7 @@ apollo {
     generateSourcesDuringGradleSync.set(false)
     service("service") {
         packageName.set("com.axiel7.anihyou")
+        generateFragmentImplementations.set(true)
         mapScalarToKotlinInt("FuzzyDateInt")
         mapScalar(
             "CountryCode",

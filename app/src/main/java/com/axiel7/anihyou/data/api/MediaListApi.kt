@@ -3,12 +3,16 @@ package com.axiel7.anihyou.data.api
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.api.CacheKey
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.DeleteMediaListMutation
 import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserMediaListQuery
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.BasicMediaListEntryImpl
 import com.axiel7.anihyou.type.FuzzyDateInput
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
@@ -40,6 +44,15 @@ class MediaListApi @Inject constructor(
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+
+    suspend fun updateMediaListCache(data: BasicMediaListEntry) {
+        client.apolloStore
+            .writeFragment(
+                fragment = BasicMediaListEntryImpl(),
+                cacheKey = CacheKey("${data.id} ${data.mediaId}"),
+                fragmentData = data,
+            )
+    }
 
     fun updateEntryProgressMutation(
         entryId: Int,
