@@ -158,39 +158,41 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun updateListEntry() {
-        mediaListRepository.updateEntry(
-            oldEntry = uiState.value.listEntry,
-            mediaId = uiState.value.mediaDetails!!.id,
-            status = uiState.value.status,
-            score = uiState.value.score,
-            advancedScores = uiState.value.advancedScores?.values,
-            progress = uiState.value.progress,
-            progressVolumes = uiState.value.volumeProgress,
-            startedAt = uiState.value.startedAt?.toFuzzyDate(),
-            completedAt = uiState.value.completedAt?.toFuzzyDate(),
-            repeat = uiState.value.repeatCount,
-            private = uiState.value.isPrivate,
-            notes = uiState.value.notes,
-        ).onEach { result ->
-            mutableUiState.update {
-                if (result is DataResult.Success) {
+        mutableUiState.value.run {
+            mediaListRepository.updateEntry(
+                oldEntry = listEntry,
+                mediaId = mediaDetails!!.id,
+                status = status,
+                score = score,
+                advancedScores = advancedScores?.values,
+                progress = progress,
+                progressVolumes = volumeProgress,
+                startedAt = startedAt?.toFuzzyDate(),
+                completedAt = completedAt?.toFuzzyDate(),
+                repeat = repeatCount,
+                private = isPrivate,
+                notes = notes,
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            listEntry = result.data?.basicMediaListEntry ?: it.listEntry,
+                            updateSuccess = result.data != null
+                        )
+                    } else {
+                        result.toUiState()
+                    }
+                }
+            }.catch {
+                mutableUiState.update {
                     it.copy(
                         isLoading = false,
-                        listEntry = result.data?.basicMediaListEntry ?: it.listEntry,
-                        updateSuccess = result.data != null
+                        updateSuccess = false
                     )
-                } else {
-                    result.toUiState()
                 }
-            }
-        }.catch {
-            mutableUiState.update {
-                it.copy(
-                    isLoading = false,
-                    updateSuccess = false
-                )
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

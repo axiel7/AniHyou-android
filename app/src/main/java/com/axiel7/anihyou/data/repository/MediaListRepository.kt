@@ -68,20 +68,20 @@ class MediaListRepository @Inject constructor(
     ) = api
         .updateEntryMutation(
             mediaId = mediaId,
-            status = if (status != oldEntry?.status) status else null,
-            score = if (score != oldEntry?.score) score else null,
-            advancedScores = if (oldEntry?.advancedScoresMap()?.values != advancedScores) advancedScores?.toList()
-            else null,
-            progress = if (progress != oldEntry?.progress) progress else null,
-            progressVolumes = if (progressVolumes != oldEntry?.progressVolumes) progressVolumes
-            else null,
-            startedAt = if (startedAt != oldEntry?.startedAt?.fuzzyDate)
-                startedAt?.toFuzzyDateInput() else null,
-            completedAt = if (completedAt != oldEntry?.completedAt?.fuzzyDate)
-                completedAt?.toFuzzyDateInput() else null,
-            repeat = if (repeat != oldEntry?.repeat) repeat else null,
-            private = if (private != oldEntry?.private) private else null,
-            notes = if (notes != oldEntry?.notes) notes else null,
+            status = status.takeIf { status != oldEntry?.status },
+            score = score.takeIf { score != oldEntry?.score },
+            advancedScores = advancedScores?.toList()
+                .takeIf { oldEntry?.advancedScoresMap()?.values != advancedScores },
+            progress = progress.takeIf { progress != oldEntry?.progress },
+            progressVolumes = progressVolumes.takeIf { progressVolumes != oldEntry?.progressVolumes },
+            startedAt =
+            startedAt?.toFuzzyDateInput().takeIf { startedAt != oldEntry?.startedAt?.fuzzyDate },
+            completedAt =
+            completedAt?.toFuzzyDateInput()
+                .takeIf { completedAt != oldEntry?.completedAt?.fuzzyDate },
+            repeat = repeat.takeIf { repeat != oldEntry?.repeat },
+            private = private.takeIf { private != oldEntry?.private },
+            notes = notes.takeIf { notes != oldEntry?.notes },
             customLists = customLists,
         )
         .toFlow()
