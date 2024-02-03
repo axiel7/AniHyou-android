@@ -61,12 +61,14 @@ class StaffApi @Inject constructor(
 
     fun staffCharacterQuery(
         staffId: Int,
+        onList: Boolean?,
         page: Int = 1,
         perPage: Int = 25,
     ) = client
         .query(
             StaffCharacterQuery(
                 staffId = Optional.present(staffId),
+                onList = Optional.presentIfNotNull(onList),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage)
             )

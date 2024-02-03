@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.staffdetails.content
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.StaffCharacterQuery
+import com.axiel7.anihyou.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
@@ -24,6 +26,8 @@ fun StaffCharacterView(
     staffCharacters: List<StaffCharacterQuery.Edge>,
     isLoading: Boolean,
     loadMore: () -> Unit,
+    charactersOnMyList: Boolean?,
+    setCharactersOnMyList: (Boolean?) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navigateToCharacterDetails: (Int) -> Unit,
@@ -38,6 +42,16 @@ fun StaffCharacterView(
         contentPadding = contentPadding,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                TriFilterChip(
+                    text = stringResource(R.string.on_my_list),
+                    value = charactersOnMyList,
+                    onValueChanged = setCharactersOnMyList,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+        }
         items(
             items = staffCharacters,
             contentType = { it }

@@ -15,7 +15,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -105,6 +104,16 @@ class StaffDetailsViewModel @Inject constructor(
             mutableUiState.update { it.copy(pageCharacters = it.pageCharacters + 1) }
     }
 
+    override fun setCharactersOnMyList(value: Boolean?) {
+        mutableUiState.update {
+            it.copy(
+                charactersOnMyList = value,
+                pageCharacters = 1,
+                hasNextPageCharacters = true,
+            )
+        }
+    }
+
     init {
         // staff details
         staffId
@@ -162,17 +171,22 @@ class StaffDetailsViewModel @Inject constructor(
         // staff characters
         mutableUiState
             .filter { it.hasNextPageCharacters }
-            .distinctUntilChangedBy { it.pageCharacters }
+            .distinctUntilChanged { old, new ->
+                old.pageCharacters == new.pageCharacters
+                        && old.charactersOnMyList == new.charactersOnMyList
+            }
             .combine(staffId.filterNotNull(), ::Pair)
             .flatMapLatest { (uiState, staffId) ->
                 staffRepository.getStaffCharactersPage(
                     staffId = staffId,
+                    onList = uiState.charactersOnMyList,
                     page = uiState.pageCharacters
                 )
             }
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
+                        if (it.pageCharacters == 1) it.characters.clear()
                         it.characters.addAll(result.list)
                         it.copy(
                             hasNextPageCharacters = result.hasNextPage,

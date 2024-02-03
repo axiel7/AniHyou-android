@@ -10,4 +10,5 @@ interface StaffDetailsEvent {
     fun selectMediaItem(value: Pair<Int, StaffMediaGrouped>?)
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
     fun loadNextPageCharacters()
+    fun setCharactersOnMyList(value: Boolean?)
 }

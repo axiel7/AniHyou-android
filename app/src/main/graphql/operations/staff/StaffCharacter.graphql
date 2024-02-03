@@ -1,6 +1,6 @@
-query StaffCharacter($staffId: Int, $page: Int, $perPage: Int) {
+query StaffCharacter($staffId: Int, $onList: Boolean $page: Int, $perPage: Int) {
     Staff(id: $staffId) {
-        characterMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+        characterMedia(page: $page, perPage: $perPage, sort: [START_DATE_DESC], onList: $onList) {
             edges {
                 id
                 node {

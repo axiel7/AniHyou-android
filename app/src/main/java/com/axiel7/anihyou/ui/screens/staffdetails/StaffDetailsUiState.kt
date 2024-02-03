@@ -18,6 +18,7 @@ data class StaffDetailsUiState(
     val isLoadingMedia: Boolean = true,
     val selectedMediaItem: Pair<Int, StaffMediaGrouped>? = null,
     val characters: SnapshotStateList<StaffCharacterQuery.Edge> = mutableStateListOf(),
+    val charactersOnMyList: Boolean? = null,
     val pageCharacters: Int = 0,
     val hasNextPageCharacters: Boolean = true,
     val isLoadingCharacters: Boolean = true,

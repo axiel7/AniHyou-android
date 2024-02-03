@@ -51,10 +51,11 @@ class StaffRepository @Inject constructor(
 
     fun getStaffCharactersPage(
         staffId: Int,
+        onList: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = api
-        .staffCharacterQuery(staffId, page, perPage)
+        .staffCharacterQuery(staffId, onList, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Staff?.characterMedia?.pageInfo?.commonPage }) {
             it.Staff?.characterMedia?.edges?.filterNotNull().orEmpty()

@@ -146,6 +146,8 @@ private fun StaffDetailsContent(
                         staffCharacters = uiState.characters,
                         isLoading = uiState.isLoadingCharacters,
                         loadMore = { event?.loadNextPageCharacters() },
+                        charactersOnMyList = uiState.charactersOnMyList,
+                        setCharactersOnMyList = { event?.setCharactersOnMyList(it) },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
