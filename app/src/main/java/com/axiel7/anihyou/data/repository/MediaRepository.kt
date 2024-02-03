@@ -11,6 +11,7 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
+import com.axiel7.anihyou.data.model.media.isActive
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
@@ -59,7 +60,10 @@ class MediaRepository @Inject constructor(
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.media?.filterNotNull()
-                ?.filter { it.nextAiringEpisode != null }
+                ?.filter {
+                    it.nextAiringEpisode != null
+                            && it.mediaListEntry?.basicMediaListEntry?.status?.isActive() == true
+                }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
                 .orEmpty()
         }

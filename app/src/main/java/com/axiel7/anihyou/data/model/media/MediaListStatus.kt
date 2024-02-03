@@ -27,6 +27,15 @@ fun MediaListStatus?.localized(
     null -> stringResource(R.string.all)
 }
 
+/**
+ * Returns if this is a status considered as active.
+ * That means the user is consuming or will be consuming the series.
+ */
+fun MediaListStatus.isActive() =
+    this == MediaListStatus.CURRENT
+            || this == MediaListStatus.PLANNING
+            || this == MediaListStatus.REPEATING
+
 fun MediaListStatus?.icon() = when (this) {
     MediaListStatus.CURRENT -> R.drawable.play_circle_24
     MediaListStatus.PLANNING -> R.drawable.schedule_24
