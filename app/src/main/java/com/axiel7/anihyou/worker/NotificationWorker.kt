@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.TaskStackBuilder
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -50,7 +52,7 @@ class NotificationWorker @AssistedInject constructor(
             perPage = 25
         ).execute().data?.Page?.notifications?.filterNotNull()?.toGenericNotifications()
 
-        return if (notifications == null) Result.failure()
+        return if (notifications == null) Result.retry()
         else {
             // since AniList API does not have a filter for createdAt we need to filter
             // locally the new notifications by saving the latest createdAt to preferences
@@ -116,6 +118,7 @@ class NotificationWorker @AssistedInject constructor(
         ) {
             val notificationWorkRequest =
                 PeriodicWorkRequestBuilder<NotificationWorker>(interval.value, interval.timeUnit)
+                    .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
                     .build()
 
             enqueueUniquePeriodicWork(
