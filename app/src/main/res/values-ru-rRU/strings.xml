@@ -77,7 +77,7 @@
     <string name="visual_novel">Визуальная новелла</string>
     <string name="video_game">Видеоигра</string>
     <string name="other">Прочее</string>
-    <string name="doujinshi">Додзинси</string>
+    <string name="doujinshi" comment="independently published manga">Додзинси</string>
     <string name="web_novel">Веб новелла</string>
     <string name="live_action">Живое действие</string>
     <string name="game">Игра</string>
@@ -172,7 +172,7 @@
     <string name="genres">Жанры</string>
     <string name="add_genre">Добавить жанр</string>
     <string name="clear">Очистить</string>
-    <string name="list_private">Приватное</string>
+    <string name="list_private" comment="list entry marked as private">Приватное</string>
     <string name="followers">Подписчиков</string>
     <string name="following">Подписки</string>
     <string name="trailer">Трейлер</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Эп %d вышел %s назад</string>
     <string name="title_language">Язык названия</string>
     <string name="romaji_western_order">Ромадзи (Западный Порядок)</string>
-    <string name="staff_character_name_language"><![CDATA[Язык имен сотрудников и персонажей]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Язык имен сотрудников и персонажей]]></string>
     <string name="score_format">Формат счета</string>
     <string name="score_point_100">100 Очков (55/100)</string>
     <string name="score_point_10_decimal">10-балльная десятичная система (5,5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Фэнтези</string>
     <string name="genre_hentai">Хэнтай</string>
     <string name="genre_horror">Ужасы</string>
-    <string name="genre_mahou_shoujo">Махо-седзе</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Махо-седзе</string>
     <string name="genre_mecha">Меха</string>
     <string name="genre_music">Музыка</string>
     <string name="genre_mystery">Таинственное</string>
