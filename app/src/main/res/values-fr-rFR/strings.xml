@@ -50,7 +50,7 @@
     <string name="source">Source</string>
     <string name="original">Original</string>
     <string name="other">Autre</string>
-    <string name="doujinshi">Doujinshi</string>
+    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
     <string name="game">Jeu</string>
     <string name="comic">Comique</string>
     <string name="romaji">Romaji</string>
@@ -107,7 +107,7 @@
     <string name="close">Fermer</string>
     <string name="genres">Genres</string>
     <string name="clear">Effacer</string>
-    <string name="list_private">Privé</string>
+    <string name="list_private" comment="list entry marked as private">Privé</string>
     <string name="followers">Abonnés</string>
     <string name="following">Suivi</string>
     <string name="external_links">Liens externes</string>
@@ -163,7 +163,7 @@
     <string name="genre_fantasy">Fantaisie</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horreur</string>
-    <string name="genre_mahou_shoujo">Fille Magique</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Fille Magique</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Musique</string>
     <string name="genre_mystery">Mystère</string>
