@@ -126,7 +126,7 @@
     <string name="genre_fantasy">Fantasia</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Terror</string>
-    <string name="genre_mahou_shoujo">Menina Mágica</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Menina Mágica</string>
     <string name="genre_mecha">Robô</string>
     <string name="genre_music">Música</string>
     <string name="genre_mystery">Mistério</string>

@@ -77,7 +77,7 @@
     <string name="visual_novel">ビジュアルノベル</string>
     <string name="video_game">ゲーム</string>
     <string name="other">他</string>
-    <string name="doujinshi">同人誌</string>
+    <string name="doujinshi" comment="independently published manga">同人誌</string>
     <string name="web_novel">WEBノベル</string>
     <string name="live_action">実写版</string>
     <string name="game">ゲーム</string>
@@ -170,7 +170,7 @@
     <string name="genres">ジャンル</string>
     <string name="add_genre">ジャンルを追加</string>
     <string name="clear">削除する</string>
-    <string name="list_private">非公開</string>
+    <string name="list_private" comment="list entry marked as private">非公開</string>
     <string name="followers">フォロワー</string>
     <string name="following">フォロー中</string>
     <string name="trailer">PV</string>
@@ -229,7 +229,7 @@
     <string name="episode_aired_ago">第%d話は%sで配信しました</string>
     <string name="title_language">作品名の言語</string>
     <string name="romaji_western_order">英語表記（ローマ字）</string>
-    <string name="staff_character_name_language"><![CDATA[スタッフとキャラクター名の言語]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[スタッフとキャラクター名の言語]]></string>
     <string name="score_format">スコアの形式</string>
     <string name="score_point_100">１００点（５５/１００）</string>
     <string name="score_point_10_decimal">１０小数点（５.５/１０）</string>
@@ -290,7 +290,7 @@
     <string name="genre_fantasy">ファンタジー</string>
     <string name="genre_hentai">変態</string>
     <string name="genre_horror">ホラー</string>
-    <string name="genre_mahou_shoujo">魔法少女</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">魔法少女</string>
     <string name="genre_mecha">メカ</string>
     <string name="genre_music">音楽</string>
     <string name="genre_mystery">ミステリー</string>
@@ -325,8 +325,8 @@
     <string name="watch_year">年</string>
     <string name="read_year">年</string>
     <string name="top_movies">映画のトップ</string>
-    <string name="progress" comment="sort list by progress">進歩</string>
+    <string name="progress">進歩</string>
     <string name="list">リスト</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
 </resources>

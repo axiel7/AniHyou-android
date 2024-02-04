@@ -77,7 +77,7 @@
     <string name="visual_novel">Novela visual</string>
     <string name="video_game">Videojuego</string>
     <string name="other">Otros</string>
-    <string name="doujinshi">Doujinshi</string>
+    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
     <string name="web_novel">Novela web</string>
     <string name="live_action">Live action</string>
     <string name="game">Videojuego</string>
@@ -172,7 +172,7 @@
     <string name="genres">Géneros</string>
     <string name="add_genre">Añadir género</string>
     <string name="clear">Restablecer</string>
-    <string name="list_private">Privado</string>
+    <string name="list_private" comment="list entry marked as private">Privado</string>
     <string name="followers">Seguidores</string>
     <string name="following">Siguiendo</string>
     <string name="trailer">Tráiler</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Ep %d emitido hace %s</string>
     <string name="title_language">Idioma del título</string>
     <string name="romaji_western_order">Romaji (Orden Occidental)</string>
-    <string name="staff_character_name_language"><![CDATA[Idioma de los nombres de Staff y Personajes]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Idioma de los nombres de Staff y Personajes]]></string>
     <string name="score_format">Formato de puntuación</string>
     <string name="score_point_100">100 Puntos (55/100)</string>
     <string name="score_point_10_decimal">10 Puntos Decimales (5.5/10)</string>
@@ -299,7 +299,7 @@
     <string name="genre_fantasy">Fantasía</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Música</string>
     <string name="genre_mystery">Misterio</string>
@@ -340,6 +340,9 @@
     <string name="top_movies">Top Películas</string>
     <string name="progress">Progreso</string>
     <string name="list">Lista</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
+    <string name="show_less">Menos</string>
+    <string name="show_more">Más</string>
+    <string name="continue_watching">Seguir viendo</string>
 </resources>

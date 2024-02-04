@@ -77,7 +77,7 @@
     <string name="visual_novel">Görsel Roman</string>
     <string name="video_game">Video Oyunu</string>
     <string name="other">Diğer</string>
-    <string name="doujinshi">Fan yapımı</string>
+    <string name="doujinshi" comment="independently published manga">Fan yapımı</string>
     <string name="web_novel">Web romanı</string>
     <string name="live_action">Canlandırma</string>
     <string name="game">Oyun</string>
@@ -172,7 +172,7 @@
     <string name="genres">Türler</string>
     <string name="add_genre">Tür ekle</string>
     <string name="clear">Temizle</string>
-    <string name="list_private">Gizli</string>
+    <string name="list_private" comment="list entry marked as private">Gizli</string>
     <string name="followers">Takipçiler</string>
     <string name="following">Takip Edilen</string>
     <string name="trailer">Ön izleme</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Bölüm, %d, %s önce yayınlandı</string>
     <string name="title_language">Başlık dili</string>
     <string name="romaji_western_order">Romaji (Japonca Okunuş)</string>
-    <string name="staff_character_name_language"><![CDATA[Ekip & Karakter adı dili]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Ekip & Karakter adı dili]]></string>
     <string name="score_format">Puanlama türü</string>
     <string name="score_point_100">100 Puan (55/100)</string>
     <string name="score_point_10_decimal">10 puan ondalık (5.5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Fantastik</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Korku</string>
-    <string name="genre_mahou_shoujo">Sihirli Kız</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Sihirli Kız</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Müzik</string>
     <string name="genre_mystery">Gizem</string>
@@ -337,8 +337,11 @@
     <string name="watch_year">İzleme Yılı</string>
     <string name="read_year">Okuma Yılı</string>
     <string name="top_movies">En İyi Filmler</string>
-    <string name="progress" comment="sort list by progress">İlerleme</string>
+    <string name="progress">İlerleme</string>
     <string name="list">Liste</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
+    <string name="show_less">Daha az</string>
+    <string name="show_more">Daha fazla</string>
+    <string name="continue_watching">İzlemeye devam et</string>
 </resources>

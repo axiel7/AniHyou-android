@@ -123,7 +123,7 @@
     <string name="genre_fantasy">Fantasy</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horor</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Hudba</string>
     <string name="genre_mystery">Mysteriózny</string>

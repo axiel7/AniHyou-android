@@ -4,6 +4,7 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Eksploruj</string>
+    <string name="num_days">%s dni</string>
     <string name="hour_abbreviation">%s godz</string>
     <string name="unknown">Nieznane</string>
     <string name="airing_soon">Emisja wkrótce</string>
@@ -15,6 +16,7 @@
     <string name="profile">Profil</string>
     <string name="trending_now">Popularne teraz</string>
     <string name="next_season">Następny Sezon</string>
+    <string name="trending_manga">Popularna Manga</string>
     <string name="not_logged_text">Zaloguj się, aby skorzystać z tej funkcji</string>
     <string name="login">Zaloguj</string>
     <string name="current">Obecnie</string>
@@ -55,6 +57,7 @@
     <string name="favorites">Ulubionych</string>
     <string name="episode_in_time">Odc. %d za %s</string>
     <string name="airing">Emitowanie</string>
+    <string name="num_episodes_behind">%s odcinki z tyłu</string>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
     <string name="start_date">Data rozpoczęcia</string>
@@ -67,11 +70,12 @@
     <string name="light_novel">Light novel</string>
     <string name="video_game">Gra komputerowa</string>
     <string name="other">Inne</string>
-    <string name="doujinshi">Doujinshi</string>
+    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
     <string name="game">Gra</string>
     <string name="comic">Komiks</string>
     <string name="romaji">Romaji</string>
     <string name="english">Angielski</string>
+    <string name="native_title">Natywny</string>
     <string name="save">Zapisz</string>
     <string name="episodes">Odcinków</string>
     <string name="chapters">Rozdziałów</string>
@@ -88,6 +92,7 @@
     <string name="users">Użytkownicy</string>
     <string name="title_romaji">Tytuł Romaji</string>
     <string name="title_english">Tytuł Angielski</string>
+    <string name="title_native">Tytuł Natywny</string>
     <string name="sort_type">Rodzaj</string>
     <string name="format">Format</string>
     <string name="trending">Popularne</string>
@@ -152,7 +157,7 @@
     <string name="genres">Gatunki</string>
     <string name="add_genre">Dodaj gatunek</string>
     <string name="clear">Wyczyść</string>
-    <string name="list_private">Prywatne</string>
+    <string name="list_private" comment="list entry marked as private">Prywatne</string>
     <string name="followers">Obserwujący</string>
     <string name="following">Obserwowani</string>
     <string name="trailer">Zwiastun</string>
@@ -185,6 +190,7 @@
     <string name="friday">Piątek</string>
     <string name="saturday">Sobota</string>
     <string name="sunday">Niedziela</string>
+    <string name="episode_airing_at">Odc. %d emitowany za %s</string>
     <string name="filter">Filtruj</string>
     <string name="notifications">Powiadomienia</string>
     <string name="threads">Wątki</string>
@@ -193,6 +199,7 @@
     <string name="notifications_airing">Emitowanie</string>
     <string name="activity">Aktywność</string>
     <string name="forum">Forum</string>
+    <string name="content">Zawartość</string>
     <string name="airing_on_my_list">Emitowane na mojej liście</string>
     <string name="airing_on_my_list_summary">Pokaż tylko emitowane wkrótce anime, które znajdują się na Twojej liście</string>
     <string name="follow">Obserwuj</string>
@@ -205,6 +212,8 @@
     <string name="media_status">Status</string>
     <string name="year">Rok</string>
     <string name="title_language">Język tytułu</string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Język personelu i nazwy postaci]]></string>
+    <string name="score_format">Format oceny</string>
     <string name="every_six_hours">Co 6 godzin</string>
     <string name="every_twelve_hours">Co 12 godzin</string>
     <string name="daily">Codziennie</string>
@@ -216,6 +225,7 @@
     <string name="airing_anime_notifications">Powiadomienia o emisji anime</string>
     <string name="color">Kolor</string>
     <string name="discover">Odkryj</string>
+    <string name="default_home_tab">Domyślna główna zakładka</string>
     <string name="all">Wszystkie</string>
     <string name="format_bold">Pogrubienie</string>
     <string name="format_italic">Kursywa</string>
@@ -253,7 +263,7 @@
     <string name="genre_fantasy">Fantastyka</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Muzyka</string>
     <string name="genre_mystery">Tajemnica</string>
@@ -290,6 +300,11 @@
     <string name="watch_year">Rok obejrzenia</string>
     <string name="read_year">Rok przeczytania</string>
     <string name="top_movies">Najlepsze filmy</string>
-    <string name="minus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">-1</string>
-    <string name="plus_one" comment="in case your language uses different symbols for numbers. Otherwise just leave as it">+1</string>
+    <string name="progress">Postęp</string>
+    <string name="list">Lista</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
+    <string name="show_less">Mniej</string>
+    <string name="show_more">Więcej</string>
+    <string name="continue_watching">Kontynuuj oglądanie</string>
 </resources>
