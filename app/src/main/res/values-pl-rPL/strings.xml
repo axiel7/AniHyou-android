@@ -157,7 +157,7 @@
     <string name="genres">Gatunki</string>
     <string name="add_genre">Dodaj gatunek</string>
     <string name="clear">Wyczyść</string>
-    <string name="list_private">Prywatne</string>
+    <string name="list_private" comment="list entry marked as private">Prywatne</string>
     <string name="followers">Obserwujący</string>
     <string name="following">Obserwowani</string>
     <string name="trailer">Zwiastun</string>
@@ -212,7 +212,7 @@
     <string name="media_status">Status</string>
     <string name="year">Rok</string>
     <string name="title_language">Język tytułu</string>
-    <string name="staff_character_name_language"><![CDATA[Język personelu i nazwy postaci]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Język personelu i nazwy postaci]]></string>
     <string name="score_format">Format oceny</string>
     <string name="every_six_hours">Co 6 godzin</string>
     <string name="every_twelve_hours">Co 12 godzin</string>
@@ -263,7 +263,7 @@
     <string name="genre_fantasy">Fantastyka</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
-    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Muzyka</string>
     <string name="genre_mystery">Tajemnica</string>
