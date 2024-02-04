@@ -77,7 +77,7 @@
     <string name="visual_novel">Візуальна новела</string>
     <string name="video_game">Відеогра</string>
     <string name="other">Інше</string>
-    <string name="doujinshi">Доджінші</string>
+    <string name="doujinshi" comment="independently published manga">Доджінші</string>
     <string name="web_novel">Веб-роман</string>
     <string name="live_action">Лайв-екшн</string>
     <string name="game">Гра</string>
@@ -172,7 +172,7 @@
     <string name="genres">Жанри</string>
     <string name="add_genre">Додати жанр</string>
     <string name="clear">Очистити</string>
-    <string name="list_private">Приватне</string>
+    <string name="list_private" comment="list entry marked as private">Приватне</string>
     <string name="followers">Підписники</string>
     <string name="following">Підписаний</string>
     <string name="trailer">Трейлер</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Серія %d вийшла %s тому</string>
     <string name="title_language">Мова назви</string>
     <string name="romaji_western_order">Ромаджі (Західний порядок)</string>
-    <string name="staff_character_name_language"><![CDATA[Мова імен персоналу та персонажів]]></string>
+    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Мова імен персоналу та персонажів]]></string>
     <string name="score_format">Формат оцінки</string>
     <string name="score_point_100">100 балів (55/100)</string>
     <string name="score_point_10_decimal">10-значний десятковий (5.5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Фентезі</string>
     <string name="genre_hentai">Хентай</string>
     <string name="genre_horror">Жахи</string>
-    <string name="genre_mahou_shoujo">Махо-шьоджьо (дівчина-чарівниця)</string>
+    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Махо-шьоджьо (дівчина-чарівниця)</string>
     <string name="genre_mecha">Меха</string>
     <string name="genre_music">Музика</string>
     <string name="genre_mystery">Детектив</string>
