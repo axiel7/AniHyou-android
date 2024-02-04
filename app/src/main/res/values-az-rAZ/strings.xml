@@ -313,6 +313,8 @@
     <string name="reading">Oxuyur</string>
     <string name="synonyms">Sinonimlər</string>
     <string name="translations">Tərcümələr</string>
+    <string name="from_year">Ildən</string>
+    <string name="to_year">Ilə</string>
     <string name="hide_filters">Filtrləri gizlə</string>
     <string name="more_filters">Daha çox filtrlər</string>
     <string name="is_adult">Yetkin</string>
