@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
@@ -36,7 +34,6 @@ import com.axiel7.anihyou.ui.composables.IconButtonWithBadge
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
-import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,18 +120,4 @@ fun HomeView(
             }
         }//:Column
     }//:Scaffold
-}
-
-@Preview
-@Composable
-fun HomeViewPreview() {
-    AniHyouTheme {
-        Surface {
-            HomeView(
-                isLoggedIn = true,
-                defaultHomeTab = HomeTab.DISCOVER,
-                navActionManager = NavActionManager.rememberNavActionManager()
-            )
-        }
-    }
 }
