@@ -7,13 +7,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -63,16 +61,9 @@ fun <T : Any> TabRowWithPager(
 
         if (isTabScrollable) {
             if (isPrimaryTab) {
-                ScrollableTabRow(
+                PrimaryScrollableTabRow(
                     selectedTabIndex = state.currentPage,
                     edgePadding = 16.dp,
-                    indicator = {
-                        if (state.currentPage < it.size) {
-                            TabRowDefaults.PrimaryIndicator(
-                                Modifier.tabIndicatorOffset(it[state.currentPage])
-                            )
-                        }
-                    },
                     tabs = tabsLayout
                 )
             } else {
@@ -84,15 +75,8 @@ fun <T : Any> TabRowWithPager(
             }
         } else {
             if (isPrimaryTab) {
-                TabRow(
+                PrimaryTabRow(
                     selectedTabIndex = state.currentPage,
-                    indicator = {
-                        if (state.currentPage < it.size) {
-                            TabRowDefaults.PrimaryIndicator(
-                                Modifier.tabIndicatorOffset(it[state.currentPage])
-                            )
-                        }
-                    },
                     tabs = tabsLayout
                 )
             } else {
