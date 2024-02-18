@@ -159,7 +159,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:$androidHiltVersion")
     implementation("androidx.hilt:hilt-work:$androidHiltVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
