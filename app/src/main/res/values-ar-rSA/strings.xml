@@ -3,7 +3,7 @@
     <string name="home">الصفحة الرئيسية</string>
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
-    <string name="explore">أستكشف</string>
+    <string name="explore">تصفح</string>
     <string name="num_years">%s سنة</string>
     <string name="num_months">%s شهور</string>
     <string name="num_weeks">%s أسابيع</string>
@@ -11,8 +11,8 @@
     <string name="hour_abbreviation">%s ساعة</string>
     <string name="minutes_abbreviation">%s دقيقة</string>
     <string name="unknown">غير معروف</string>
-    <string name="airing_soon">يبث قريباً</string>
-    <string name="mean_score">متوسط التقييم</string>
+    <string name="airing_soon">يبث قريبًا</string>
+    <string name="mean_score">الدرجة</string>
     <string name="airing_in">سيبث في %s</string>
     <string name="winter">الشتاء</string>
     <string name="spring">الربيع</string>
@@ -24,7 +24,7 @@
     <string name="trending_manga">مانجا شائعة</string>
     <string name="not_logged_text">يرجى تسجيل الدخول لاستخدام هذه الميزة</string>
     <string name="login">تسجيل الدخول</string>
-    <string name="current">أشاهدها</string>
+    <string name="current">الحالي</string>
     <string name="planning">أرغب بمشاهدة</string>
     <string name="completed">أكملته</string>
     <string name="dropped">سئمت منه</string>
@@ -35,7 +35,7 @@
     <string name="ok">حسنًا</string>
     <string name="cancel">إلغاء</string>
     <string name="sort_title">العنوان</string>
-    <string name="sort_score">التقييم</string>
+    <string name="sort_score">الدرجة</string>
     <string name="sort_updated">تاريخ التحديث</string>
     <string name="sort_added">تاريخ الإضافة</string>
     <string name="sort">ترتيب</string>
@@ -58,7 +58,7 @@
     <string name="not_yet_released">لم يصدر بعد</string>
     <string name="cancelled">مُلغى</string>
     <string name="hiatus">متوقف</string>
-    <string name="average_score">متوسط النتيجة</string>
+    <string name="average_score">متوسط الدرجة</string>
     <string name="popularity">الشعبية</string>
     <string name="favorites">المُفضلات</string>
     <string name="episode_in_time">الحلقة %d بعد %s</string>
@@ -158,7 +158,7 @@
     <string name="hometown">الموطن</string>
     <string name="occupations">المهنة</string>
     <string name="no_information">لا توجد معلومات</string>
-    <string name="score">التقييم</string>
+    <string name="score">الدرجة</string>
     <string name="total_entries">المجموع: %s</string>
     <string name="status_distribution">توزيع الحالة</string>
     <string name="rankings">المتصدرون</string>
@@ -237,11 +237,11 @@
     <string name="title_language">لغة العنوان</string>
     <string name="romaji_western_order">روماجي (ترتيب غربي)</string>
     <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[لغة اسم طاقم العمل و الشخصية]]></string>
-    <string name="score_format">تنسيق التقييم</string>
-    <string name="score_point_100">100 نقطة (55/100)</string>
-    <string name="score_point_10_decimal">10 نقاط عشرية (5.5/10)</string>
-    <string name="score_point_10">10 نقاط (5/10)</string>
-    <string name="score_point_5">5 نجوم (3/5)</string>
+    <string name="score_format">تنسيق الدرجة</string>
+    <string name="score_point_100">100 نقطة (55\100)</string>
+    <string name="score_point_10_decimal">10 نقاط عشرية (5.5\10)</string>
+    <string name="score_point_10">10 نقاط (5\10)</string>
+    <string name="score_point_5">5 نجوم (3\5)</string>
     <string name="score_point_3">3 نقاط مبتسمة :)</string>
     <string name="no_media">لا وسائط</string>
     <string name="every_six_hours">كل 6 ساعات</string>
@@ -329,7 +329,7 @@
     <string name="no_custom_lists">لا توجد قائمة مخصصة</string>
     <string name="hours_watched_format">ساعات المشاهدة %s</string>
     <string name="chapters_read_format">الفصول المقروءة: %s</string>
-    <string name="mean_score_format">متوسط النقاط: %s</string>
+    <string name="mean_score_format">الدرجة: %s</string>
     <string name="episode_count">عدد الحلقات</string>
     <string name="chapter_count">عدد الفصول</string>
     <string name="country_distribution">توزيع البلدان</string>
