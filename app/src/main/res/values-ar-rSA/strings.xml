@@ -26,7 +26,7 @@
     <string name="login">تسجيل الدخول</string>
     <string name="current">الحالي</string>
     <string name="planning">أرغب بمشاهدة</string>
-    <string name="completed">أكملته</string>
+    <string name="completed">مكتمل</string>
     <string name="dropped">سئمت منه</string>
     <string name="paused">متوقف مؤقتاً</string>
     <string name="repeating">إعادة</string>
@@ -160,9 +160,9 @@
     <string name="no_information">لا توجد معلومات</string>
     <string name="score">الدرجة</string>
     <string name="total_entries">المجموع: %s</string>
-    <string name="status_distribution">توزيع الحالة</string>
+    <string name="status_distribution">توزّع الحالات</string>
     <string name="rankings">المتصدرون</string>
-    <string name="score_distribution">توزيع النقاط</string>
+    <string name="score_distribution">توزّع الدرجات</string>
     <string name="no_description">لا يوجد وصف</string>
     <string name="reviews">المراجعات</string>
     <string name="loading">تحميل</string>
@@ -197,7 +197,7 @@
     <string name="standard_deviation">الإنحراف المعياري</string>
     <string name="title_count">عدد العناوين</string>
     <string name="time_spent">الوقت المستغرق</string>
-    <string name="format_distribution">تنسيق التوزيع</string>
+    <string name="format_distribution">توزّع التنسيق</string>
     <string name="notes">ملاحظات</string>
     <string name="calendar">التقويم</string>
     <string name="monday">الأثنين</string>
@@ -332,7 +332,7 @@
     <string name="mean_score_format">الدرجة: %s</string>
     <string name="episode_count">عدد الحلقات</string>
     <string name="chapter_count">عدد الفصول</string>
-    <string name="country_distribution">توزيع البلدان</string>
+    <string name="country_distribution">توزّع البلدان</string>
     <string name="release_year">سنة الإصدار</string>
     <string name="watch_year">سنة المشاهدة</string>
     <string name="read_year">سنة القراءة</string>
