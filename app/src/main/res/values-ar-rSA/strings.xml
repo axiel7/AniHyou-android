@@ -66,7 +66,7 @@
     <string name="num_episodes_behind">حلقات لم أشاهدها بعد %s</string>
     <string name="information">معلومات</string>
     <string name="duration">المدة</string>
-    <string name="start_date">تاريخ البث</string>
+    <string name="start_date">تاريخ البدء</string>
     <string name="end_date">تاريخ الانتهاء</string>
     <string name="season">موسم</string>
     <string name="studios">الاستوديو</string>
@@ -74,26 +74,26 @@
     <string name="source">المصدر</string>
     <string name="original">أصلي</string>
     <string name="light_novel">رواية خفيفة</string>
-    <string name="visual_novel">رواية بصرية</string>
+    <string name="visual_novel">رواية مرئية</string>
     <string name="video_game">لعبة فيديو</string>
     <string name="other">أخرى</string>
     <string name="doujinshi" comment="independently published manga">دوجينشي</string>
     <string name="web_novel">رواية ويب</string>
     <string name="live_action">نسخة حية</string>
     <string name="game">لعبة</string>
-    <string name="comic">كوميدي</string>
+    <string name="comic">قصة مصورة</string>
     <string name="multimedia_project">مشروع متعدد الوسائط</string>
     <string name="picture_book">كتاب مصور</string>
     <string name="romaji">روماجي</string>
     <string name="english">الإنجليزية</string>
-    <string name="native_title">الأصلي</string>
+    <string name="native_title">اللغة الأم</string>
     <string name="save">حفظ</string>
     <string name="episodes">الحلقات</string>
     <string name="chapters">الفصول</string>
     <string name="volumes">المجلدات</string>
     <string name="repeat_count">عدد التكرار</string>
     <string name="delete">حذف</string>
-    <string name="delete_confirmation">هل أنت متأكد أنك تريد حذف هذا المدخل؟</string>
+    <string name="delete_confirmation">هل أنت متأكد من أنك تريد حذف هذا الإدخال؟</string>
     <string name="tags">العلامات</string>
     <string name="show_spoiler">إظهار الحرق</string>
     <string name="hide_spoiler">إخفاء الحرق</string>
@@ -339,4 +339,9 @@
     <string name="top_movies">أفضل الأفلام</string>
     <string name="progress">التقدم</string>
     <string name="list">قائمة</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
+    <string name="show_less">أقل</string>
+    <string name="show_more">أكثر</string>
+    <string name="continue_watching">استمر بالمشاهدة</string>
 </resources>
