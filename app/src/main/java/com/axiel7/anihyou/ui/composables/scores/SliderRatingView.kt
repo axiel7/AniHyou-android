@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.composables.scores
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -74,6 +75,7 @@ fun SliderRatingView(
             onValueChange = {
                 ratingString = it.toDouble().format(decimalLength).orEmpty()
             },
+            modifier = Modifier.padding(8.dp),
             valueRange = 0f..maxValue.toFloat(),
             steps = if (maxValue <= 10.0 && !showAsDecimal) (maxValue.toInt() - 1) else 0,
             onValueChangeFinished = {
