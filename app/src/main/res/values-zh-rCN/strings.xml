@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="hide_filters">隐藏筛选条件</string>
+    <string name="progress">进度</string>
+</resources>
