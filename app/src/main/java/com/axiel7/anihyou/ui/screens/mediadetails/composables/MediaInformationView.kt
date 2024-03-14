@@ -132,12 +132,14 @@ fun MediaInformationView(
         InfoTitle(
             text = stringResource(R.string.tags),
             trailingIcon = {
-                TextButton(onClick = { showSpoiler = !showSpoiler }) {
-                    Text(
-                        text = stringResource(
-                            if (showSpoiler) R.string.hide_spoiler else R.string.show_spoiler
+                if (uiState.hasSpoilerTags) {
+                    TextButton(onClick = { showSpoiler = !showSpoiler }) {
+                        Text(
+                            text = stringResource(
+                                if (showSpoiler) R.string.hide_spoiler else R.string.show_spoiler
+                            )
                         )
-                    )
+                    }
                 }
             }
         )

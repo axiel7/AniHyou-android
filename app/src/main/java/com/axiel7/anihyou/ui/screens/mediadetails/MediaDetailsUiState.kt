@@ -40,6 +40,8 @@ data class MediaDetailsUiState(
 
     val isNewEntry = details?.mediaListEntry == null
 
+    val hasSpoilerTags = details?.tags?.any { it?.isMediaSpoiler == true } ?: false
+
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 }
