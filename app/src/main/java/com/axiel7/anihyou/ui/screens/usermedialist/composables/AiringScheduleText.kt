@@ -8,15 +8,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.isBehind
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.StringUtils.orUnknown
 
 @Composable
 fun AiringScheduleText(
-    item: UserMediaListQuery.MediaList,
+    item: CommonMediaListEntry,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
     textAlign: TextAlign? = null,

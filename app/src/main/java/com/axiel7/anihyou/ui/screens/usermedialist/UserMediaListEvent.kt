@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
@@ -18,7 +18,7 @@ interface UserMediaListEvent : PagedEvent {
 
     fun toggleNotesDialog(open: Boolean)
 
-    fun onClickNotes(value: UserMediaListQuery.MediaList?) {
+    fun onClickNotes(value: CommonMediaListEntry?) {
         selectItem(value)
         toggleNotesDialog(true)
     }
@@ -36,5 +36,5 @@ interface UserMediaListEvent : PagedEvent {
 
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
 
-    fun selectItem(value: UserMediaListQuery.MediaList?)
+    fun selectItem(value: CommonMediaListEntry?)
 }

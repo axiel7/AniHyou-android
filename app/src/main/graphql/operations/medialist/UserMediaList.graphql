@@ -1,19 +1,7 @@
 query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
     Page(page: $page, perPage: $perPage) {
         mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
-            ...BasicMediaListEntry
-            mediaId
-            media {
-                ...BasicMediaDetails
-                coverImage {
-                    large
-                }
-                nextAiringEpisode {
-                    episode
-                    timeUntilAiring
-                }
-                status
-            }
+            ...CommonMediaListEntry
         }
         pageInfo {
             ...CommonPage
@@ -37,4 +25,20 @@ fragment BasicMediaListEntry on MediaList {
         ...FuzzyDate
     }
     notes
+}
+
+fragment CommonMediaListEntry on MediaList {
+    ...BasicMediaListEntry
+    mediaId
+    media {
+        ...BasicMediaDetails
+        coverImage {
+            large
+        }
+        nextAiringEpisode {
+            episode
+            timeUntilAiring
+        }
+        status
+    }
 }

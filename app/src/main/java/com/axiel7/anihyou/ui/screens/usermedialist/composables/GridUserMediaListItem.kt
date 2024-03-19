@@ -24,9 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
-import com.axiel7.anihyou.data.model.media.exampleMediaList
+import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.media.ListStatusBadgeIndicator
@@ -40,7 +40,7 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GridUserMediaListItem(
-    item: UserMediaListQuery.MediaList,
+    item: CommonMediaListEntry,
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     onClick: () -> Unit,
@@ -134,9 +134,9 @@ fun GridUserMediaListItemPreview() {
             ) {
                 items(3) {
                     GridUserMediaListItem(
-                        item = if (it == 1) exampleMediaList.copy(
-                            media = exampleMediaList.media?.copy(nextAiringEpisode = null)
-                        ) else exampleMediaList,
+                        item = if (it == 1) exampleCommonMediaListEntry.copy(
+                            media = exampleCommonMediaListEntry.media?.copy(nextAiringEpisode = null)
+                        ) else exampleCommonMediaListEntry,
                         listStatus = null,
                         scoreFormat = ScoreFormat.POINT_100,
                         onClick = { },

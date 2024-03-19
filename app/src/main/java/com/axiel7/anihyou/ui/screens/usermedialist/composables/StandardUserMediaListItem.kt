@@ -30,10 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.media.duration
-import com.axiel7.anihyou.data.model.media.exampleMediaList
+import com.axiel7.anihyou.data.model.media.exampleBasicMediaListEntry
+import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.media.ListStatusBadgeIndicator
@@ -48,7 +49,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StandardUserMediaListItem(
-    item: UserMediaListQuery.MediaList,
+    item: CommonMediaListEntry,
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
@@ -175,7 +176,7 @@ fun StandardUserMediaListItemPreview() {
         Surface {
             Column {
                 StandardUserMediaListItem(
-                    item = exampleMediaList,
+                    item = exampleCommonMediaListEntry,
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
@@ -185,8 +186,8 @@ fun StandardUserMediaListItemPreview() {
                     onClickNotes = {},
                 )
                 StandardUserMediaListItem(
-                    item = exampleMediaList.copy(
-                        basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
+                    item = exampleCommonMediaListEntry.copy(
+                        basicMediaListEntry = exampleBasicMediaListEntry.copy(
                             score = 3.0,
                             status = MediaListStatus.PLANNING
                         )

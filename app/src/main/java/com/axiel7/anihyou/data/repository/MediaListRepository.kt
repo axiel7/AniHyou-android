@@ -38,8 +38,8 @@ class MediaListRepository @Inject constructor(
             perPage = perPage,
         )
         .watch()
-        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
-            it.Page?.mediaList?.filterNotNull().orEmpty()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
         }
 
     fun updateEntryProgress(

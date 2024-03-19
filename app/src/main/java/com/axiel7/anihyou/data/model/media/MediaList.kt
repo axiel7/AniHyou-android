@@ -1,13 +1,13 @@
 package com.axiel7.anihyou.data.model.media
 
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 
-fun UserMediaListQuery.MediaList.calculateProgressBarValue(): Float {
+fun CommonMediaListEntry.calculateProgressBarValue(): Float {
     val total = media?.basicMediaDetails?.duration() ?: 0
     return if (total == 0) 0f
     //TODO: volume progress
@@ -23,15 +23,30 @@ fun BasicMediaListEntry.advancedScoreNames() = (advancedScores as? LinkedHashMap
 fun BasicMediaListEntry.advancedScoresMap() = (advancedScores as? LinkedHashMap<String, Any>)
     ?.mapValues { (it.value as? Number ?: 0).toDouble() } as LinkedHashMap<String, Double>
 
-val exampleMediaList = UserMediaListQuery.MediaList(
+val exampleBasicMediaListEntry = BasicMediaListEntry(
     __typename = "",
     id = 1,
     mediaId = 1,
-    media = UserMediaListQuery.Media(
+    status = MediaListStatus.CURRENT,
+    score = 77.0,
+    advancedScores = null,
+    progress = 999,
+    progressVolumes = null,
+    repeat = 2,
+    startedAt = null,
+    completedAt = null,
+    private = false,
+    notes = "This is a note",
+)
+
+val exampleCommonMediaListEntry = CommonMediaListEntry(
+    __typename = "",
+    mediaId = 1,
+    media = CommonMediaListEntry.Media(
         __typename = "",
         id = 1,
         coverImage = null,
-        nextAiringEpisode = UserMediaListQuery.NextAiringEpisode(
+        nextAiringEpisode = CommonMediaListEntry.NextAiringEpisode(
             episode = 3,
             timeUntilAiring = 1203239
         ),
@@ -46,19 +61,6 @@ val exampleMediaList = UserMediaListQuery.MediaList(
             type = MediaType.ANIME
         )
     ),
-    basicMediaListEntry = BasicMediaListEntry(
-        __typename = "",
-        id = 1,
-        mediaId = 1,
-        status = MediaListStatus.CURRENT,
-        score = 77.0,
-        advancedScores = null,
-        progress = 999,
-        progressVolumes = null,
-        repeat = 2,
-        startedAt = null,
-        completedAt = null,
-        private = false,
-        notes = "This is a note",
-    )
+    id = 1,
+    basicMediaListEntry = exampleBasicMediaListEntry
 )

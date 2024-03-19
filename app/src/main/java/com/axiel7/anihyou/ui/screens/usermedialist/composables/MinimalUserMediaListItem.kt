@@ -28,11 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.media.duration
-import com.axiel7.anihyou.data.model.media.exampleMediaList
+import com.axiel7.anihyou.data.model.media.exampleBasicMediaListEntry
+import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.scores.MinimalScoreIndicator
@@ -43,7 +44,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MinimalUserMediaListItem(
-    item: UserMediaListQuery.MediaList,
+    item: CommonMediaListEntry,
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
@@ -139,7 +140,7 @@ fun MinimalUserMediaListItemPreview() {
         Surface {
             Column {
                 MinimalUserMediaListItem(
-                    item = exampleMediaList,
+                    item = exampleCommonMediaListEntry,
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
@@ -149,8 +150,8 @@ fun MinimalUserMediaListItemPreview() {
                     onClickNotes = {}
                 )
                 MinimalUserMediaListItem(
-                    item = exampleMediaList.copy(
-                        basicMediaListEntry = exampleMediaList.basicMediaListEntry.copy(
+                    item = exampleCommonMediaListEntry.copy(
+                        basicMediaListEntry = exampleBasicMediaListEntry.copy(
                             score = 3.0,
                             status = MediaListStatus.PLANNING
                         )

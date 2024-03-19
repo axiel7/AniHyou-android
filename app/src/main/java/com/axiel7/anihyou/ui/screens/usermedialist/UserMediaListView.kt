@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.UserMediaListQuery
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -41,7 +41,7 @@ fun UserMediaListView(
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     nestedScrollConnection: NestedScrollConnection,
     navActionManager: NavActionManager,
-    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
@@ -100,12 +100,12 @@ fun UserMediaListView(
 
 @Composable
 private fun LazyListGrid(
-    mediaList: List<UserMediaListQuery.MediaList>,
+    mediaList: List<CommonMediaListEntry>,
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     modifier: Modifier,
     navActionManager: NavActionManager,
-    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
@@ -149,13 +149,13 @@ private fun LazyListGrid(
 
 @Composable
 private fun LazyListTablet(
-    mediaList: List<UserMediaListQuery.MediaList>,
+    mediaList: List<CommonMediaListEntry>,
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     modifier: Modifier,
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
-    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -265,13 +265,13 @@ private fun LazyListTablet(
 
 @Composable
 private fun LazyListPhone(
-    mediaList: List<UserMediaListQuery.MediaList>,
+    mediaList: List<CommonMediaListEntry>,
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     modifier: Modifier,
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
-    onShowEditSheet: (UserMediaListQuery.MediaList) -> Unit,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {

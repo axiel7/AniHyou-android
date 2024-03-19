@@ -2,7 +2,6 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
@@ -10,6 +9,7 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
@@ -142,8 +142,7 @@ class UserMediaListViewModel @Inject constructor(
         ).onEach { result ->
             mutableUiState.update { uiState ->
                 if (result is DataResult.Success && result.data != null) {
-                    val foundIndex =
-                        uiState.media.indexOfFirst { it.basicMediaListEntry.id == entryId }
+                    val foundIndex = uiState.media.indexOfFirst { it.id == entryId }
                     if (foundIndex != -1) {
                         if (result.data.status != uiState.media[foundIndex].basicMediaListEntry.status) {
                             uiState.media.removeAt(foundIndex)
@@ -161,7 +160,7 @@ class UserMediaListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    override fun selectItem(value: UserMediaListQuery.MediaList?) {
+    override fun selectItem(value: CommonMediaListEntry?) {
         mutableUiState.update { it.copy(selectedItem = value) }
     }
 
