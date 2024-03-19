@@ -26,7 +26,7 @@ class MediaListRepository @Inject constructor(
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
         page: Int = 1,
-        perPage: Int = 15,
+        perPage: Int = 25,
     ) = api
         .userMediaListQuery(
             userId = userId,
