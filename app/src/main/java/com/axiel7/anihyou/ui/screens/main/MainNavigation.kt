@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.main
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -110,19 +111,34 @@ fun MainNavigation(
             end = padding.calculateEndPadding(LocalLayoutDirection.current),
         ),
         enterTransition = {
-            fadeIn(tween(400))
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(300)
+            )
         },
         exitTransition = {
-            fadeOut(tween(400))
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(350)
+            )
         },
         popEnterTransition = {
-            fadeIn(tween(400))
+            fadeIn(tween(300))
         },
         popExitTransition = {
-            fadeOut(tween(400))
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(350)
+            )
         }
     ) {
-        composable(BottomDestination.Home.route) {
+        composable(
+            route = BottomDestination.Home.route,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
+        ) {
             HomeView(
                 isLoggedIn = isLoggedIn,
                 defaultHomeTab = homeTab,
@@ -135,7 +151,11 @@ fun MainNavigation(
 
         composable(
             route = BottomDestination.AnimeList.route,
-            arguments = NavDestination.AnimeTab.namedNavArguments
+            arguments = NavDestination.AnimeTab.namedNavArguments,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -150,7 +170,11 @@ fun MainNavigation(
 
         composable(
             route = BottomDestination.MangaList.route,
-            arguments = NavDestination.MangaTab.namedNavArguments
+            arguments = NavDestination.MangaTab.namedNavArguments,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -163,7 +187,13 @@ fun MainNavigation(
             }
         }
 
-        composable(BottomDestination.Profile.route) {
+        composable(
+            route = BottomDestination.Profile.route,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
+        ) {
             if (isLoggedIn) {
                 ProfileView(
                     modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
@@ -177,7 +207,13 @@ fun MainNavigation(
             }
         }
 
-        composable(BottomDestination.Explore.route) {
+        composable(
+            route = BottomDestination.Explore.route,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
+        ) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 navActionManager = navActionManager,
@@ -338,7 +374,11 @@ fun MainNavigation(
 
         composable(
             route = NavDestination.FullscreenImage.route(),
-            arguments = NavDestination.FullscreenImage.namedNavArguments
+            arguments = NavDestination.FullscreenImage.namedNavArguments,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
         ) { navEntry ->
             FullScreenImageView(
                 imageUrl = navEntry.getStringArg(
