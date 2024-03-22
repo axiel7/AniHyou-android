@@ -8,6 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Decode Keystore File
+        uses: timheuer/base64-to-file@v1
+        id: android_keystore
+        with:
+          fileName: "android_keystore.keystore"
+          encodedString: ${{secrets.KEYSTORE_FILE}}
       
       - name: Accept Android SDK license
         run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
@@ -21,7 +28,7 @@ jobs:
       - name: Build Android release
         run: fastlane release
         env:
-          KEYSTORE_FILE: ${{secrets.KEYSTORE_FILE}}
+          KEYSTORE_FILE: ${{steps.android_keystore.outputs.filePath}}
           KEYSTORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
           KEY_ALIAS: ${{secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
