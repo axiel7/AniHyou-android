@@ -1,4 +1,4 @@
-name: Android Build & Deploy
+name: Android Build Release APK
 
 on:
   workflow_dispatch:
@@ -8,35 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0' # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
-      - name: Decode Service Account Key JSON File
-        uses: timheuer/base64-to-file@v1
-        id: service_account_json_file
-        with:
-          fileName: "serviceAccount.json"
-          encodedString: ${{secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON}}
-
-      - name: Decode Keystore File
-        uses: timheuer/base64-to-file@v1
-        id: android_keystore
-        with:
-          fileName: "android_keystore.keystore"
-          encodedString: ${{secrets.KEYSTORE_FILE}}
-
-      - name: Create Client ID
-        env:
-          CLIENT_ID: ${{secrets.CLIENT_ID}}
-        run: echo CLIENT_ID=$CLIENT_ID > ./local.properties
-
+      
       - name: Accept Android SDK license
         run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
-
-      - name: Accept Android SDK license
-        run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0-rc3"
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -44,18 +18,17 @@ jobs:
           java-version: 17
           distribution: adopt
 
-      - name: Build & deploy Android release
-        run: bundle exec fastlane deploy
+      - name: Build Android release
+        run: bundle exec fastlane release
         env:
-          KEYSTORE_FILE: ${{steps.android_keystore.outputs.filePath}}
-          STORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
+          KEYSTORE_FILE: ${{secrets.KEYSTORE_FILE}}
+          KEYSTORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
           KEY_ALIAS: ${{secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
-          ANDROID_JSON_KEY_FILE: ${{steps.service_account_json_file.outputs.filePath}}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: assets
           path: |
-            ${{github.workspace}}/app/build/outputs/bundle/release
+            ${{github.workspace}}/app/release
