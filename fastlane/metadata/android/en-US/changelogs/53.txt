@@ -1,0 +1,13 @@
+- "All" option in anime/manga list
+- Anime details: next episode to watch
+- Staff characters: added on my list button
+- Access settings when logged out
+- Discover: filter dropped/paused airing anime
+- Improved image loading
+- UI improvements
+- Fix loading with grid style
+- Fix favorite button state not updating
+- Fix dates showing as "Unknown" when there's no year
+- Fix anime/manga list swipe to refresh when the list is empty
+- Fix spoiler tag button always visible
+- Added Azerbaijani language (thanks @oolyvi)
