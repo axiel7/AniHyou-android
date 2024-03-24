@@ -1,6 +1,11 @@
 name: Android Build Release APK
 
 on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
