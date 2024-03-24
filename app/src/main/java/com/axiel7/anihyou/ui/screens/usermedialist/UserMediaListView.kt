@@ -139,8 +139,8 @@ private fun LazyListGrid(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-                LaunchedEffect(true) {
-                    event?.onLoadMore()
+                LaunchedEffect(uiState.isLoading) {
+                    if (!uiState.isLoading) event?.onLoadMore()
                 }
             }
         }
@@ -255,8 +255,8 @@ private fun LazyListTablet(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-                LaunchedEffect(true) {
-                    event?.onLoadMore()
+                LaunchedEffect(uiState.isLoading) {
+                    if (!uiState.isLoading) event?.onLoadMore()
                 }
             }
         }

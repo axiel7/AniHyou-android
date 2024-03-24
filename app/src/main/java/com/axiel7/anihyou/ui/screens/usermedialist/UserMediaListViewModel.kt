@@ -271,7 +271,7 @@ class UserMediaListViewModel @Inject constructor(
             }
             .onEach { status ->
                 mutableUiState.update {
-                    it.copy(status = status, page = 1, hasNextPage = true)
+                    it.copy(status = status, page = 1, hasNextPage = true, isLoading = true)
                 }
             }
             .launchIn(viewModelScope)
