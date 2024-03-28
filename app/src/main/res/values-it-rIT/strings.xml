@@ -77,7 +77,7 @@
     <string name="visual_novel">Romanzo visivo</string>
     <string name="video_game">Videogioco</string>
     <string name="other">Altro</string>
-    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
+    <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Romanzo web</string>
     <string name="live_action">Live action</string>
     <string name="game">Gioco</string>
@@ -172,7 +172,7 @@
     <string name="genres">Generi</string>
     <string name="add_genre">Aggiungi genere</string>
     <string name="clear">Cancella</string>
-    <string name="list_private" comment="list entry marked as private">Privato</string>
+    <string name="list_private">Privato</string>
     <string name="followers">Seguaci</string>
     <string name="following">Seguiti</string>
     <string name="trailer">Trailer</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Ep %d in onda %s fa</string>
     <string name="title_language">Lingua del titolo</string>
     <string name="romaji_western_order">Romaji (Ordine Occidentale)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Lingua dei nomi dello staff e dei personaggi]]></string>
+    <string name="staff_character_name_language"><![CDATA[Lingua dei nomi dello staff e dei personaggi]]></string>
     <string name="score_format">Formato del punteggio</string>
     <string name="score_point_100">100 punti (55/100)</string>
     <string name="score_point_10_decimal">10 punti decimali (5,5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Fantasia</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Musica</string>
     <string name="genre_mystery">Mistero</string>
