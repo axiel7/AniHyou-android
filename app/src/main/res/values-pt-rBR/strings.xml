@@ -77,7 +77,7 @@
     <string name="visual_novel">Visual novel</string>
     <string name="video_game">Jogo</string>
     <string name="other">Outros</string>
-    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
+    <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Web novel</string>
     <string name="live_action">Live action</string>
     <string name="game">Jogo</string>
@@ -172,7 +172,7 @@
     <string name="genres">Gêneros</string>
     <string name="add_genre">Adicionar gênero</string>
     <string name="clear">Limpar</string>
-    <string name="list_private" comment="list entry marked as private">Privada</string>
+    <string name="list_private">Privada</string>
     <string name="followers">Seguidores</string>
     <string name="following">Seguindo</string>
     <string name="trailer">Trailer</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Ep %d estreou %s atrás</string>
     <string name="title_language">Idioma do título</string>
     <string name="romaji_western_order">Romaji (Ordem Ocidental)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Língua do nome da Equipe e Personagens]]></string>
+    <string name="staff_character_name_language"><![CDATA[Língua do nome da Equipe e Personagens]]></string>
     <string name="score_format">Formato da nota</string>
     <string name="score_point_100">100 Pontos (55/100)</string>
     <string name="score_point_10_decimal">10 Pontos Decimais (5,5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Fantasia</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Terror</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Música</string>
     <string name="genre_mystery">Mistério</string>
