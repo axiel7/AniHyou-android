@@ -364,12 +364,19 @@ private fun EditMediaSheetContent(
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-            
+
+            TextCheckbox(
+                text = stringResource(R.string.hide_from_status_lists),
+                checked = uiState.isHiddenFromStatusLists ?: false,
+                onCheckedChange = { event?.setIsHiddenFromStatusLists(it) },
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
             TextCheckbox(
                 text = stringResource(R.string.list_private),
                 checked = uiState.isPrivate ?: false,
                 onCheckedChange = { event?.setIsPrivate(it) },
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp)
             )
 
             // Notes

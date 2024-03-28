@@ -76,6 +76,7 @@ class MediaListApi @Inject constructor(
         completedAt: FuzzyDateInput?,
         repeat: Int?,
         private: Boolean?,
+        hiddenFromStatusLists: Boolean?,
         notes: String?,
         customLists: List<String?>?,
     ) = client
@@ -91,6 +92,7 @@ class MediaListApi @Inject constructor(
                 completedAt = Optional.presentIfNotNull(completedAt),
                 repeat = Optional.presentIfNotNull(repeat),
                 private = Optional.presentIfNotNull(private),
+                hiddenFromStatusLists = Optional.presentIfNotNull(hiddenFromStatusLists),
                 notes = Optional.presentIfNotNull(notes),
                 customLists = Optional.presentIfNotNull(customLists),
             )

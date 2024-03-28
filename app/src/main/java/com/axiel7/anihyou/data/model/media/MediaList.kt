@@ -36,6 +36,7 @@ val exampleBasicMediaListEntry = BasicMediaListEntry(
     startedAt = null,
     completedAt = null,
     private = false,
+    hiddenFromStatusLists = false,
     notes = "This is a note",
 )
 

@@ -25,6 +25,7 @@ data class EditMediaUiState(
     val completedAt: LocalDate? = null,
     val repeatCount: Int? = null,
     val isPrivate: Boolean? = null,
+    val isHiddenFromStatusLists: Boolean? = null,
     val notes: String? = null,
     val customLists: LinkedHashMap<String, Boolean>? = null,
 

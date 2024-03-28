@@ -18,6 +18,7 @@ fragment BasicMediaListEntry on MediaList {
     progressVolumes
     repeat
     private
+    hiddenFromStatusLists
     startedAt {
         ...FuzzyDate
     }

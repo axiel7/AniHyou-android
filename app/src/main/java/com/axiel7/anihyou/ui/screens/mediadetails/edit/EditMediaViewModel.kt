@@ -50,6 +50,7 @@ class EditMediaViewModel @Inject constructor(
             completedAt = value?.completedAt?.fuzzyDate?.toLocalDate(),
             repeatCount = value?.repeat,
             isPrivate = value?.private,
+            isHiddenFromStatusLists = value?.hiddenFromStatusLists,
             notes = value?.notes,
         )
     }
@@ -153,6 +154,10 @@ class EditMediaViewModel @Inject constructor(
         mutableUiState.update { it.copy(isPrivate = value) }
     }
 
+    override fun setIsHiddenFromStatusLists(value: Boolean) {
+        mutableUiState.update { it.copy(isHiddenFromStatusLists = value) }
+    }
+
     override fun setNotes(value: String) {
         mutableUiState.update { it.copy(notes = value) }
     }
@@ -171,6 +176,7 @@ class EditMediaViewModel @Inject constructor(
                 completedAt = completedAt?.toFuzzyDate(),
                 repeat = repeatCount,
                 private = isPrivate,
+                hiddenFromStatusLists = isHiddenFromStatusLists,
                 notes = notes,
             ).onEach { result ->
                 mutableUiState.update {

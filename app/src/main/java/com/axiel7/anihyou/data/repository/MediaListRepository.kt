@@ -64,6 +64,7 @@ class MediaListRepository @Inject constructor(
         completedAt: FuzzyDate? = null,
         repeat: Int? = null,
         private: Boolean? = null,
+        hiddenFromStatusLists: Boolean? = null,
         notes: String? = null,
         customLists: List<String?>? = null,
     ) = api
@@ -82,6 +83,8 @@ class MediaListRepository @Inject constructor(
                 .takeIf { completedAt != oldEntry?.completedAt?.fuzzyDate },
             repeat = repeat.takeIf { repeat != oldEntry?.repeat },
             private = private.takeIf { private != oldEntry?.private },
+            hiddenFromStatusLists = hiddenFromStatusLists
+                .takeIf { hiddenFromStatusLists != oldEntry?.hiddenFromStatusLists },
             notes = notes.takeIf { notes != oldEntry?.notes },
             customLists = customLists,
         )
