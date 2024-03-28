@@ -77,7 +77,7 @@
     <string name="visual_novel">Visual Novel</string>
     <string name="video_game">Videospiel</string>
     <string name="other">Anderes</string>
-    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
+    <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Web Novel</string>
     <string name="live_action">Live-Action</string>
     <string name="game">Spiel</string>
@@ -184,7 +184,7 @@
     <string name="episode_aired_ago">Ep %d ausgestrahlt vor %s</string>
     <string name="title_language">Titelsprache</string>
     <string name="romaji_western_order">Romaji (Westliche Ordnung)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Sprache der Personal- und Charakternamen]]></string>
+    <string name="staff_character_name_language"><![CDATA[Sprache der Personal- und Charakternamen]]></string>
     <string name="score_format">Score-Format</string>
     <string name="all">Alle</string>
     <string name="format_image">Bild</string>
@@ -200,7 +200,7 @@
     <string name="genre_fantasy">Fantasie</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horror</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Mecha</string>
     <string name="genre_music">Musik</string>
     <string name="genre_mystery">Geheimnis</string>
