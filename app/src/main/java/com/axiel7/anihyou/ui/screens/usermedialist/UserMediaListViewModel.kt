@@ -238,6 +238,7 @@ class UserMediaListViewModel @Inject constructor(
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()
+            .distinctUntilChanged()
             .onEach { value ->
                 mutableUiState.update { it.copy(itemsPerRow = value) }
             }
@@ -253,6 +254,7 @@ class UserMediaListViewModel @Inject constructor(
                 }
             }
             .filterNotNull()
+            .distinctUntilChanged()
             .onEach { sort ->
                 mutableUiState.update {
                     it.copy(sort = sort, page = 1, hasNextPage = true)
@@ -269,6 +271,7 @@ class UserMediaListViewModel @Inject constructor(
                     else -> emptyFlow()
                 }
             }
+            .distinctUntilChanged()
             .onEach { status ->
                 mutableUiState.update {
                     it.copy(status = status, page = 1, hasNextPage = true, isLoading = true)
