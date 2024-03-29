@@ -345,4 +345,5 @@
     <string name="show_less">Menos</string>
     <string name="show_more">Más</string>
     <string name="continue_watching">Seguir viendo</string>
+    <string name="hide_from_status_lists" comment="If the entry shown be hidden from non-custom lists">Ocultar de las listas de estado</string>
 </resources>
