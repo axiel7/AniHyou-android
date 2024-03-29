@@ -344,4 +344,5 @@
     <string name="show_less">أقل</string>
     <string name="show_more">أكثر</string>
     <string name="continue_watching">استمر بالمشاهدة</string>
+    <string name="hide_from_status_lists" comment="If the entry shown be hidden from non-custom lists">عدم الظهور في قائمة الحالة</string>
 </resources>
