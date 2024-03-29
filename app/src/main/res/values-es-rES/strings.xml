@@ -212,7 +212,7 @@
     <string name="notifications">Notificaciones</string>
     <string name="threads">Discusiones</string>
     <string name="no_threads">Sin discusiones</string>
-    <string name="notifications_all">Todas</string>
+    <string name="notifications_all">Todos</string>
     <string name="notifications_airing">En emisión</string>
     <string name="activity">Actividad</string>
     <string name="forum">Foro</string>
@@ -258,7 +258,7 @@
     <string name="default_home_tab">Pestaña por defecto en Inicio</string>
     <string name="text_status">Texto</string>
     <string name="list_progress">Progreso de lista</string>
-    <string name="all">Todas</string>
+    <string name="all">Todos</string>
     <string name="global_feed">Global</string>
     <string name="format_bold">Negrita</string>
     <string name="format_italic">Cursiva</string>
