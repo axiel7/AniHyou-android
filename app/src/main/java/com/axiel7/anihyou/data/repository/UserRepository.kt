@@ -1,5 +1,8 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo3.cache.normalized.refetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.UserApi
 import com.axiel7.anihyou.data.model.asDataResult
@@ -31,6 +34,8 @@ class UserRepository @Inject constructor(
         .filterNotNull()
         .flatMapLatest {
             api.unreadNotificationCountQuery()
+                .fetchPolicy(FetchPolicy.NetworkOnly)
+                .refetchPolicy(FetchPolicy.NetworkFirst)
                 .watch()
                 .map {
                     it.data?.Viewer?.unreadNotificationCount ?: 0
