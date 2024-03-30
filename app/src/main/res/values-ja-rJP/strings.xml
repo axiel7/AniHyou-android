@@ -329,4 +329,8 @@
     <string name="list">リスト</string>
     <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
+    <string name="show_less">閉じる</string>
+    <string name="show_more">すべてを表示</string>
+    <string name="continue_watching">視聴を続ける</string>
+    <string name="hide_from_status_lists" comment="If the entry shown be hidden from non-custom lists">ステータスリストから隠す</string>
 </resources>
