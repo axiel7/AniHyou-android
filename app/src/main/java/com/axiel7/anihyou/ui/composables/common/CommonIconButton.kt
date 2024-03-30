@@ -23,11 +23,22 @@ import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
 import com.axiel7.anihyou.utils.NumberUtils.format
 
+fun singleClick(onClick: () -> Unit): () -> Unit {
+    var latest = 0L
+    return {
+        val now = System.currentTimeMillis()
+        if (now - latest >= 1000) {
+            onClick()
+            latest = now
+        }
+    }
+}
+
 @Composable
 fun BackIconButton(
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = singleClick(onClick)) {
         Icon(
             painter = painterResource(R.drawable.arrow_back_24),
             contentDescription = stringResource(R.string.action_back),
