@@ -130,6 +130,7 @@ private fun SeasonAnimeContent(
             modifier = Modifier
                 .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            state = listState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
