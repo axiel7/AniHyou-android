@@ -60,39 +60,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var deepLink: DeepLink? = null
-        when {
-            // Widget intent
-            intent.action == "media_details" -> {
-                deepLink = DeepLink(
-                    type = DeepLink.Type.ANIME,// does not mather ANIME or MANGA
-                    id = intent.getIntExtra("media_id", 0).toString()
-                )
-            }
-            // Search shortcut
-            intent.action == "search" -> {
-                deepLink = DeepLink(
-                    type = DeepLink.Type.SEARCH,
-                    id = true.toString()
-                )
-            }
-            // Login intent or anilist link
-            intent.data != null -> {
-                viewModel.onIntentDataReceived(intent.data)
-                // Manually handle deep links because the uri pattern in the compose navigation
-                // matches this -> https://anilist.co/manga/41514/
-                // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
-                //TODO: find a better solution :)
-                val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
-                if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
-                    val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
-                    deepLink = DeepLink(
-                        type = DeepLink.Type.valueOf(linkSplit[1].uppercase()),
-                        id = linkSplit[2]
-                    )
-                }
-            }
-        }
+        val deepLink = findDeepLink()
 
         //get necessary preferences while on splashscreen
         val initialIsLoggedIn = viewModel.isLoggedIn.firstBlocking()
@@ -158,6 +126,43 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         viewModel.onIntentDataReceived(intent?.data)
+    }
+
+    private fun findDeepLink(): DeepLink? {
+        return when {
+            // Widget intent
+            intent.action == "media_details" -> {
+                DeepLink(
+                    type = DeepLink.Type.ANIME,// does not mather ANIME or MANGA
+                    id = intent.getIntExtra("media_id", 0).toString()
+                )
+            }
+            // Search shortcut
+            intent.action == "search" -> {
+                DeepLink(
+                    type = DeepLink.Type.SEARCH,
+                    id = true.toString()
+                )
+            }
+            // Login intent or anilist link
+            intent.data != null -> {
+                viewModel.onIntentDataReceived(intent.data)
+                // Manually handle deep links because the uri pattern in the compose navigation
+                // matches this -> https://anilist.co/manga/41514/
+                // but not this -> https://anilist.co/manga/41514/Otoyomegatari/
+                //TODO: find a better solution :)
+                val anilistSchemeIndex = intent.dataString?.indexOf("anilist.co")
+                if (anilistSchemeIndex != null && anilistSchemeIndex != -1) {
+                    val linkSplit = intent.dataString!!.substring(anilistSchemeIndex).split('/')
+                    DeepLink(
+                        type = DeepLink.Type.valueOf(linkSplit[1].uppercase()),
+                        id = linkSplit[2]
+                    )
+                } else null
+            }
+
+            else -> null
+        }
     }
 }
 
