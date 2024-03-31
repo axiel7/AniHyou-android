@@ -14,6 +14,7 @@ import com.axiel7.anihyou.ui.screens.home.HomeTab
 @Immutable
 data class SettingsUiState(
     val theme: Theme? = null,
+    val useBlackColors: Boolean = false,
     val appColorMode: AppColorMode? = null,
     val useGeneralListStyle: Boolean? = null,
     val generalListStyle: ListStyle? = null,

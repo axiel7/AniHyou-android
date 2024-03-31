@@ -125,6 +125,12 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(THEME_KEY, value.name)
     }
 
+    val useBlackColors = dataStore.getValue(key = USE_BLACK_COLORS_KEY, default = false)
+
+    suspend fun setUseBlackColors(value: Boolean) {
+        dataStore.setValue(USE_BLACK_COLORS_KEY, value)
+    }
+
     val lastTab = dataStore.getValue(key = LAST_TAB_KEY, default = 0)
     suspend fun setLastTab(value: Int) {
         dataStore.setValue(LAST_TAB_KEY, value)
@@ -189,6 +195,7 @@ class DefaultPreferencesRepository @Inject constructor(
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
 
         private val THEME_KEY = stringPreferencesKey("theme")
+        private val USE_BLACK_COLORS_KEY = booleanPreferencesKey("use_black_colors")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")

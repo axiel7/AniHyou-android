@@ -8,8 +8,7 @@ import com.axiel7.anihyou.data.model.base.Localizable
 enum class Theme : Localizable {
     FOLLOW_SYSTEM,
     LIGHT,
-    DARK,
-    BLACK;
+    DARK;
 
     @Composable
     override fun localized() = stringResource(stringRes)
@@ -19,7 +18,6 @@ enum class Theme : Localizable {
             FOLLOW_SYSTEM -> R.string.theme_system
             LIGHT -> R.string.theme_light
             DARK -> R.string.theme_dark
-            BLACK -> R.string.theme_black
         }
 
     companion object {

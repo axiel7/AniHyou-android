@@ -16,6 +16,8 @@ interface SettingsEvent {
 
     fun setTheme(value: Theme)
 
+    fun setUseBlackColors(value: Boolean)
+
     fun setAppColorMode(value: AppColorMode)
 
     fun setUseGeneralListStyle(value: Boolean)

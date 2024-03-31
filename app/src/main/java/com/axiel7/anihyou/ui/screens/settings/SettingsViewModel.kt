@@ -57,6 +57,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    override fun setUseBlackColors(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setUseBlackColors(value)
+        }
+    }
+
     override fun setAppColorMode(value: AppColorMode) {
         viewModelScope.launch {
             defaultPreferencesRepository.setAppColorMode(value)
@@ -229,6 +235,12 @@ class SettingsViewModel @Inject constructor(
         defaultPreferencesRepository.theme
             .onEach { value ->
                 mutableUiState.update { it.copy(theme = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.useBlackColors
+            .onEach { value ->
+                mutableUiState.update { it.copy(useBlackColors = value) }
             }
             .launchIn(viewModelScope)
 

@@ -123,6 +123,12 @@ private fun SettingsContent(
                 onValueChange = { event?.setTheme(it) }
             )
 
+            SwitchPreference(
+                title = stringResource(R.string.black_theme_variant),
+                preferenceValue = uiState.useBlackColors,
+                onValueChange = { event?.setUseBlackColors(it) }
+            )
+
             if (uiState.isLoggedIn) {
                 ListPreference(
                     title = stringResource(R.string.color),

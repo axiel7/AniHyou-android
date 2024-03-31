@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         //get necessary preferences while on splashscreen
         val initialIsLoggedIn = viewModel.isLoggedIn.firstBlocking()
         val initialTheme = viewModel.theme.firstBlocking()
+        val initialUseBlackColors = viewModel.useBlackColors.firstBlocking()
         val initialAppColor = viewModel.appColor.firstBlocking()
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val startTab = viewModel.startTab.firstBlocking()
@@ -106,31 +107,34 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
-            val darkTheme = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
-            else theme == Theme.DARK || theme == Theme.BLACK
+            val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+            else theme == Theme.DARK
+            val useBlackColors by viewModel.useBlackColors.collectAsStateWithLifecycle(
+                initialValue = initialUseBlackColors
+            )
             val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
                 initialValue = initialAppColorMode
             )
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
-            DisposableEffect(darkTheme) {
+            DisposableEffect(isDark) {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(
                         android.graphics.Color.TRANSPARENT,
                         android.graphics.Color.TRANSPARENT,
-                    ) { darkTheme },
+                    ) { isDark },
                     navigationBarStyle = SystemBarStyle.auto(
                         light_scrim.toArgb(),
                         dark_scrim.toArgb(),
-                    ) { darkTheme },
+                    ) { isDark },
                 )
                 onDispose {}
             }
 
             AniHyouTheme(
-                darkTheme = darkTheme,
-                blackColors = theme == Theme.BLACK,
+                darkTheme = isDark,
+                blackColors = useBlackColors,
                 appColor = appColor,
                 appColorMode = appColorMode,
             ) {

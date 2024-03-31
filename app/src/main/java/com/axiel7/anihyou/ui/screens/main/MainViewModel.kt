@@ -36,6 +36,8 @@ class MainViewModel @Inject constructor(
 
     val theme = defaultPreferencesRepository.theme
 
+    val useBlackColors = defaultPreferencesRepository.useBlackColors
+
     val appColor = defaultPreferencesRepository.appColor
 
     val appColorMode = defaultPreferencesRepository.appColorMode
