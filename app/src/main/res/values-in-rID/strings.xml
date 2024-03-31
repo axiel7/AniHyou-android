@@ -342,5 +342,5 @@
     <string name="show_less">Ringkas</string>
     <string name="show_more">Selengkapnya</string>
     <string name="continue_watching">Lanjutkan menonton</string>
-    <string name="hide_from_status_lists" comment="If the entry shown be hidden from non-custom lists">Sembunyikan dari daftar status</string>
+    <string name="hide_from_status_lists">Sembunyikan dari daftar status</string>
 </resources>
