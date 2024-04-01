@@ -343,4 +343,5 @@
     <string name="show_more">Di più</string>
     <string name="continue_watching">Continua a guardare</string>
     <string name="hide_from_status_lists">Nascondi dalle liste di stato</string>
+    <string name="black_theme_variant">Variante tema nero</string>
 </resources>
