@@ -14,14 +14,7 @@ query CharacterMedia($characterId: Int, $page: Int, $perPage: Int) {
                 }
                 characterRole
                 voiceActors(sort: [RELEVANCE, LANGUAGE]) {
-                    id
-                    name {
-                        userPreferred
-                    }
-                    image {
-                        medium
-                    }
-                    languageV2
+                    ...CommonVoiceActor
                 }
             }
             pageInfo {
@@ -29,4 +22,15 @@ query CharacterMedia($characterId: Int, $page: Int, $perPage: Int) {
             }
         }
     }
+}
+
+fragment CommonVoiceActor on Staff {
+    id
+    name {
+        userPreferred
+    }
+    image {
+        medium
+    }
+    languageV2
 }

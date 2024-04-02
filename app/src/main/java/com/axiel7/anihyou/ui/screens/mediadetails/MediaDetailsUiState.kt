@@ -5,11 +5,13 @@ import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
-import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
+import com.axiel7.anihyou.fragment.CommonVoiceActor
+import com.axiel7.anihyou.fragment.MediaCharacter
+import com.axiel7.anihyou.fragment.MediaStaff
 import com.axiel7.anihyou.ui.common.state.UiState
 
 @Immutable
@@ -17,7 +19,12 @@ data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
 
     val details: MediaDetailsQuery.Media? = null,
-    val charactersAndStaff: MediaCharactersAndStaff? = null,
+
+    val staff: List<MediaStaff>? = null,
+    val characters: List<MediaCharacter>? = null,
+    val selectedCharacterVoiceActors: List<CommonVoiceActor>? = null,
+    val showVoiceActorsSheet: Boolean = false,
+
     val relationsAndRecommendations: MediaRelationsAndRecommendations? = null,
 
     val isSuccessStats: Boolean = false,

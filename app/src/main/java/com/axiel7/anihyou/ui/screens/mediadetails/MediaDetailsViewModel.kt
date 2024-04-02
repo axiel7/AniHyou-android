@@ -10,6 +10,7 @@ import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.MediaCharacter
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
@@ -97,9 +98,10 @@ class MediaDetailsViewModel @Inject constructor(
             }
             .onEach { result ->
                 if (result is DataResult.Success) {
-                    mutableUiState.update {
-                        it.copy(
-                            charactersAndStaff = result.data
+                    mutableUiState.update { uiState ->
+                        uiState.copy(
+                            staff = result.data.staff.map { it.mediaStaff },
+                            characters = result.data.characters.map { it.mediaCharacter }
                         )
                     }
                 }
@@ -192,6 +194,19 @@ class MediaDetailsViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    override fun showVoiceActorsSheet(character: MediaCharacter) {
+        mutableUiState.update { uiState ->
+            uiState.copy(
+                selectedCharacterVoiceActors = character.voiceActors?.mapNotNull { it?.commonVoiceActor },
+                showVoiceActorsSheet = true
+            )
+        }
+    }
+
+    override fun hideVoiceActorSheet() {
+        mutableUiState.update { it.copy(showVoiceActorsSheet = false) }
     }
 
     init {

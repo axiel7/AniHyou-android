@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.mediadetails
 
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.MediaCharacter
 
 interface MediaDetailsEvent {
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
@@ -10,4 +11,6 @@ interface MediaDetailsEvent {
     fun fetchStats()
     fun fetchThreads()
     fun fetchReviews()
+    fun showVoiceActorsSheet(character: MediaCharacter)
+    fun hideVoiceActorSheet()
 }

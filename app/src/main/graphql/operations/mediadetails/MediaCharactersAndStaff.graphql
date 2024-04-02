@@ -24,6 +24,9 @@ fragment MediaCharacter on CharacterEdge {
             medium
         }
     }
+    voiceActors(sort: [RELEVANCE, LANGUAGE]) {
+        ...CommonVoiceActor
+    }
 }
 
 fragment MediaStaff on StaffEdge {

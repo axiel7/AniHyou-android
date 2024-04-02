@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.axiel7.anihyou.CharacterMediaQuery
+import com.axiel7.anihyou.fragment.CommonVoiceActor
 import com.axiel7.anihyou.ui.composables.ModalBottomSheet
 import com.axiel7.anihyou.ui.composables.person.PersonItemHorizontal
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterVoiceActorsSheet(
-    voiceActors: List<CharacterMediaQuery.VoiceActor>,
+    voiceActors: List<CommonVoiceActor>,
     scope: CoroutineScope,
     navigateToStaffDetails: (Int) -> Unit,
     onDismiss: () -> Unit

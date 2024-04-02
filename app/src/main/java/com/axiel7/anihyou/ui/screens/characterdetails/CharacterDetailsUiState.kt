@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
+import com.axiel7.anihyou.fragment.CommonVoiceActor
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 @Stable
@@ -13,7 +14,7 @@ data class CharacterDetailsUiState(
     val media: SnapshotStateList<CharacterMediaQuery.Edge> = mutableStateListOf(),
     val isLoadingMedia: Boolean = true,
     val selectedMediaItem: CharacterMediaQuery.Edge? = null,
-    val selectedMediaVoiceActors: List<CharacterMediaQuery.VoiceActor>? = null,
+    val selectedMediaVoiceActors: List<CommonVoiceActor>? = null,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,

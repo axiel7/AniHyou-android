@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -75,6 +76,7 @@ import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.ui.screens.characterdetails.composables.CharacterVoiceActorsSheet
 import com.axiel7.anihyou.ui.screens.mediadetails.composables.MediaCharacterStaffView
 import com.axiel7.anihyou.ui.screens.mediadetails.composables.MediaInformationView
 import com.axiel7.anihyou.ui.screens.mediadetails.composables.MediaRelationsView
@@ -120,6 +122,7 @@ private fun MediaDetailsContent(
     navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -144,10 +147,22 @@ private fun MediaDetailsContent(
             mediaDetails = uiState.details.basicMediaDetails,
             listEntry = uiState.details.mediaListEntry?.basicMediaListEntry,
             bottomPadding = bottomBarPadding,
+            scope = scope,
             onEntryUpdated = {
                 event?.onUpdateListEntry(it)
             },
             onDismissed = { showEditSheet = false }
+        )
+    }
+
+    if (uiState.showVoiceActorsSheet) {
+        CharacterVoiceActorsSheet(
+            voiceActors = uiState.selectedCharacterVoiceActors.orEmpty(),
+            scope = scope,
+            navigateToStaffDetails = navActionManager::toStaffDetails,
+            onDismiss = {
+                event?.hideVoiceActorSheet()
+            }
         )
     }
 
@@ -459,7 +474,10 @@ fun MediaInfoTabs(
                     uiState = uiState,
                     fetchData = { event?.fetchCharactersAndStaff() },
                     navigateToCharacterDetails = navActionManager::toCharacterDetails,
-                    navigateToStaffDetails = navActionManager::toStaffDetails
+                    navigateToStaffDetails = navActionManager::toStaffDetails,
+                    showVoiceActorsSheet = {
+                        event?.showVoiceActorsSheet(it)
+                    }
                 )
 
             MediaDetailsType.RELATIONS ->

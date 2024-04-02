@@ -64,8 +64,10 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     override fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) {
-        mutableUiState.update {
-            it.copy(selectedMediaVoiceActors = item.voiceActors?.filterNotNull())
+        mutableUiState.update { uiState ->
+            uiState.copy(
+                selectedMediaVoiceActors = item.voiceActors?.mapNotNull { it?.commonVoiceActor },
+            )
         }
     }
 
