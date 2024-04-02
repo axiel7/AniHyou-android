@@ -17,6 +17,7 @@ import com.axiel7.anihyou.data.api.NotificationsApi
 import com.axiel7.anihyou.data.model.notification.GenericNotification.Companion.toGenericNotifications
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.screens.main.MainActivity
@@ -32,6 +33,7 @@ class NotificationWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val userRepository: UserRepository,
     private val notificationsApi: NotificationsApi,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : CoroutineWorker(context, params) {
 
     // AniList API does not have a socket for notifications, so we schedule a work with an interval
@@ -44,15 +46,28 @@ class NotificationWorker @AssistedInject constructor(
         if (unreadCount == null) return Result.retry()
         else if (unreadCount <= 0) return Result.success()
 
-        val newNotifications = notificationsApi.notificationsQuery(
+        val notifications = notificationsApi.notificationsQuery(
             typeIn = null,
             resetCount = false,
             page = 1,
             perPage = unreadCount
         ).execute().data?.Page?.notifications?.filterNotNull()?.toGenericNotifications()
 
-        return if (newNotifications == null) Result.retry()
+        return if (notifications == null) Result.retry()
         else {
+            // since AniList API does not have a filter for createdAt we need to filter
+            // locally the new notifications by saving the latest createdAt to preferences
+            // so we don't notify the same notification more than once
+            val lastCreatedAt = defaultPreferencesRepository.lastNotificationCreatedAt
+                .firstOrNull() ?: 0
+            val newNotifications = notifications.filter {
+                it.createdAt != null && it.createdAt > lastCreatedAt
+            }
+            if (newNotifications.isNotEmpty()) {
+                newNotifications.firstOrNull()?.createdAt?.let { createdAt ->
+                    defaultPreferencesRepository.setLastNotificationCreatedAt(createdAt)
+                }
+            }
             newNotifications.forEach {
                 var pendingIntent: PendingIntent? = null
                 // if the notification contains a media, open details on click

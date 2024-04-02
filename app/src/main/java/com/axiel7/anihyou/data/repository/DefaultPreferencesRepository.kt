@@ -167,6 +167,11 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(NOTIFICATION_INTERVAL_KEY, value.name)
     }
 
+    val lastNotificationCreatedAt = dataStore.getValue(LAST_NOTIFICATION_CREATED_AT_KEY)
+    suspend fun setLastNotificationCreatedAt(value: Int) {
+        dataStore.setValue(LAST_NOTIFICATION_CREATED_AT_KEY, value)
+    }
+
     // custom app color
     val appColorMode =
         dataStore.getValue(key = APP_COLOR_MODE_KEY, default = AppColorMode.DEFAULT.name)
@@ -203,6 +208,8 @@ class DefaultPreferencesRepository @Inject constructor(
 
         private val NOTIFICATIONS_ENABLED_KEY = booleanPreferencesKey("enabled_notifications")
         private val NOTIFICATION_INTERVAL_KEY = stringPreferencesKey("notification_interval")
+        private val LAST_NOTIFICATION_CREATED_AT_KEY =
+            intPreferencesKey("last_notification_created_at")
 
         private val APP_COLOR_MODE_KEY = stringPreferencesKey("app_color_mode")
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
