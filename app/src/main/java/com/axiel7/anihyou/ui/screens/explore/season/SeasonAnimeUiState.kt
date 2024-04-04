@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 @Stable
@@ -12,6 +13,7 @@ data class SeasonAnimeUiState(
     val season: AnimeSeason? = null,
     val animeSeasonal: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
     val selectedItem: SeasonalAnimeQuery.Medium? = null,
+    val listStyle: ListStyle = ListStyle.GRID,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,

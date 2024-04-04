@@ -6,6 +6,11 @@ query SeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear
                 large
             }
             meanScore
+            nextAiringEpisode {
+                episode
+                timeUntilAiring
+            }
+            genres
             mediaListEntry {
                 ...BasicMediaListEntry
             }

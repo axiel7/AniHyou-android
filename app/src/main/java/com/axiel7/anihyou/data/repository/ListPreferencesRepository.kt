@@ -193,6 +193,15 @@ class ListPreferencesRepository @Inject constructor(
         dataStore.setValue(MANGA_REPEATING_LIST_STYLE_KEY, value.name)
     }
 
+    val seasonalListStyle = dataStore.getValue(
+        key = SEASONAL_LIST_STYLE,
+        default = ListStyle.GRID.name
+    ).map { ListStyle.valueOf(it) }
+
+    suspend fun setSeasonalListStyle(value: ListStyle) {
+        dataStore.setValue(SEASONAL_LIST_STYLE, value.name)
+    }
+
     companion object {
         private val ANIME_LIST_STATUS_KEY = stringPreferencesKey("anime_list_status")
         private val MANGA_LIST_STATUS_KEY = stringPreferencesKey("manga_list_status")
@@ -224,5 +233,7 @@ class ListPreferencesRepository @Inject constructor(
         private val MANGA_DROPPED_LIST_STYLE_KEY = stringPreferencesKey("manga_dropped_list_style")
         private val MANGA_REPEATING_LIST_STYLE_KEY =
             stringPreferencesKey("anime_repeating_list_style")
+
+        private val SEASONAL_LIST_STYLE = stringPreferencesKey("seasonal_list_style")
     }
 }

@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -27,6 +30,7 @@ import javax.inject.Inject
 class SeasonAnimeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mediaRepository: MediaRepository,
+    private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<SeasonAnimeUiState>(), SeasonAnimeEvent {
 
     private val initialYear = savedStateHandle.getStateFlow<Int?>(NavArgument.Year.name, null)
@@ -67,7 +71,20 @@ class SeasonAnimeViewModel @Inject constructor(
         }
     }
 
+    override fun onChangeListStyle(value: ListStyle) {
+        viewModelScope.launch {
+            listPreferencesRepository.setSeasonalListStyle(value)
+        }
+    }
+
     init {
+        listPreferencesRepository.seasonalListStyle
+            .distinctUntilChanged()
+            .onEach { value ->
+                mutableUiState.update { it.copy(listStyle = value) }
+            }
+            .launchIn(viewModelScope)
+
         combine(
             initialYear.filterNotNull(),
             initialSeason.filterNotNull()

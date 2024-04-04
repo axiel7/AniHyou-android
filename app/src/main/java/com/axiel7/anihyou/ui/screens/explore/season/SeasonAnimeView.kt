@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -37,19 +43,25 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.SeasonalAnimeQuery
+import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
+import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.screens.explore.season.composables.SeasonChartFilterSheet
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 
 @Composable
 fun SeasonAnimeView(
@@ -80,9 +92,6 @@ private fun SeasonAnimeContent(
     val haptic = LocalHapticFeedback.current
     var showFilterSheet by remember { mutableStateOf(false) }
     var showEditSheet by remember { mutableStateOf(false) }
-
-    val listState = rememberLazyGridState()
-    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     if (showFilterSheet && uiState.season != null) {
         SeasonChartFilterSheet(
@@ -121,59 +130,174 @@ private fun SeasonAnimeContent(
         navigationIcon = {
             BackIconButton(onClick = navActionManager::goBack)
         },
+        actions = {
+            IconButton(
+                onClick = {
+                    val value = if (uiState.listStyle == ListStyle.STANDARD) ListStyle.GRID
+                    else ListStyle.STANDARD
+                    event?.onChangeListStyle(value)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = if (uiState.listStyle == ListStyle.STANDARD) R.drawable.grid_view_24
+                        else R.drawable.format_list_bulleted_24
+                    ),
+                    contentDescription = stringResource(R.string.list_style)
+                )
+            }
+        },
         scrollBehavior = topAppBarScrollBehavior,
         contentWindowInsets = WindowInsets.systemBars
             .only(WindowInsetsSides.Horizontal)
     ) { padding ->
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
-            modifier = Modifier
-                .padding(padding)
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
-            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-        ) {
-            items(
-                items = uiState.animeSeasonal,
-                contentType = { it }
-            ) { item ->
-                MediaItemVertical(
-                    title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                    imageUrl = item.coverImage?.large,
-                    modifier = Modifier.wrapContentWidth(),
-                    subtitle = {
-                        if (item.meanScore != null) {
-                            SmallScoreIndicator(score = item.meanScore)
-                        }
-                    },
-                    badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                        {
-                            Icon(
-                                painter = painterResource(status.icon()),
-                                contentDescription = status.localized()
-                            )
-                        }
-                    },
-                    minLines = 2,
-                    onClick = {
-                        navActionManager.toMediaDetails(item.id)
-                    },
-                    onLongClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        event?.selectItem(item)
-                        showEditSheet = true
-                    }
-                )
-            }
-            if (uiState.isLoading) {
-                items(13) {
-                    MediaItemVerticalPlaceholder()
+        if (uiState.listStyle == ListStyle.STANDARD) {
+            SeasonalList(
+                uiState = uiState,
+                event = event,
+                modifier = Modifier
+                    .padding(padding)
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                onClickItem = {
+                    navActionManager.toMediaDetails(it.id)
+                },
+                onLongClickItem = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    event?.selectItem(it)
+                    showEditSheet = true
                 }
-            }
-        }//: Grid
+            )
+        } else {
+            SeasonalGrid(
+                uiState = uiState,
+                event = event,
+                modifier = Modifier
+                    .padding(padding)
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                onClickItem = {
+                    navActionManager.toMediaDetails(it.id)
+                },
+                onLongClickItem = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    event?.selectItem(it)
+                    showEditSheet = true
+                }
+            )
+        }
     }//: Scaffold
+}
+
+@Composable
+private fun SeasonalGrid(
+    uiState: SeasonAnimeUiState,
+    event: SeasonAnimeEvent?,
+    modifier: Modifier,
+    onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+    onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+) {
+    val listState = rememberLazyGridState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
+        modifier = modifier,
+        state = listState,
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+    ) {
+        items(
+            items = uiState.animeSeasonal,
+            contentType = { it }
+        ) { item ->
+            MediaItemVertical(
+                title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
+                imageUrl = item.coverImage?.large,
+                modifier = Modifier.wrapContentWidth(),
+                subtitle = {
+                    if (item.meanScore != null) {
+                        SmallScoreIndicator(score = item.meanScore)
+                    }
+                },
+                badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                    {
+                        Icon(
+                            painter = painterResource(status.icon()),
+                            contentDescription = status.localized()
+                        )
+                    }
+                },
+                minLines = 2,
+                onClick = { onClickItem(item) },
+                onLongClick = { onLongClickItem(item) }
+            )
+        }
+        if (uiState.isLoading) {
+            items(13) {
+                MediaItemVerticalPlaceholder()
+            }
+        }
+    }//: Grid
+}
+
+@Composable
+private fun SeasonalList(
+    uiState: SeasonAnimeUiState,
+    event: SeasonAnimeEvent?,
+    modifier: Modifier,
+    onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+    onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+) {
+    val listState = rememberLazyListState()
+    listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
+    LazyColumn(
+        modifier = modifier,
+        state = listState,
+    ) {
+        items(
+            items = uiState.animeSeasonal,
+            contentType = { it }
+        ) { item ->
+            MediaItemHorizontal(
+                title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
+                imageUrl = item.coverImage?.large,
+                subtitle1 = {
+                    if (item.nextAiringEpisode != null) {
+                        Text(
+                            text = stringResource(
+                                R.string.episode_in_time,
+                                item.nextAiringEpisode.episode,
+                                item.nextAiringEpisode.timeUntilAiring.toLong()
+                                    .secondsToLegibleText()
+                            ),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                },
+                subtitle2 = {
+                    if (!item.genres.isNullOrEmpty()) {
+                        Text(
+                            text = item.genres.take(3)
+                                .mapNotNull { it?.genreTagLocalized() }
+                                .joinToString(),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                badgeContent = {
+                    if (item.meanScore != null) {
+                        Text(text = "${item.meanScore}%")
+                    }
+                },
+                onClick = { onClickItem(item) },
+                onLongClick = { onLongClickItem(item) },
+            )
+        }
+        if (uiState.isLoading) {
+            items(10) {
+                MediaItemHorizontalPlaceholder()
+            }
+        }
+    }//: LazyColumn
 }
 
 @Preview
