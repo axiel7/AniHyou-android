@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.ui.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -17,7 +16,6 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.common.TabRowItem
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> SegmentedButtons(
     items: Array<TabRowItem<T>>,
