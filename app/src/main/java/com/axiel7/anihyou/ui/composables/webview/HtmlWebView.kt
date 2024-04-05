@@ -104,7 +104,6 @@ fun baseCss(
     linkColor: String
 ) = """
     body {background-color: $backgroundColor;}
-    img{max-height: 100%; min-height: 100%; height:auto; max-width: 100%; width:auto;margin-bottom:5px; border-radius: 8px;}
     h1, h2, h3, h4, h5, h6, p, div, dl, ol, ul, pre, blockquote {text-align:left; line-height: 170%; font-family: 'Arial' !important; color: $fontColor; }
     iframe{width:100%; height:250px;}
     a:link {color: $linkColor;}
