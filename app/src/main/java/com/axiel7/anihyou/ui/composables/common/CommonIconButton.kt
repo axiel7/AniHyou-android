@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
-import com.axiel7.anihyou.utils.ContextUtils.openTranslator
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
 import com.axiel7.anihyou.utils.NumberUtils.format
+import com.axiel7.anihyou.utils.TranslateUtils.openTranslator
 
 fun singleClick(onClick: () -> Unit): () -> Unit {
     var latest = 0L

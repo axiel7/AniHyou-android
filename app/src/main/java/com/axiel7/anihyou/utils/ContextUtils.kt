@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -13,13 +12,11 @@ import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.utils.LocaleUtils.getCurrentLanguageTag
 
 object ContextUtils {
 
@@ -131,54 +128,6 @@ object ContextUtils {
         // Android 13+ has clipboard popups
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             showToast(getString(R.string.copied))
-        }
-    }
-
-    fun Context.openTranslator(text: String) {
-        if (!openInDeepL(text)) {
-            if (!openInGoogleTranslate(text)) {
-                showToast(getString(R.string.google_translate_not_installed))
-            }
-        }
-    }
-
-    private fun Context.openInGoogleTranslate(text: String): Boolean {
-        return try {
-            Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, text)
-                putExtra("key_text_input", text)
-                putExtra("key_text_output", "")
-                putExtra("key_language_from", "en")
-                putExtra("key_language_to", getCurrentLanguageTag())
-                putExtra("key_suggest_translation", "")
-                putExtra("key_from_floating_window", false)
-                component = ComponentName(
-                    "com.google.android.apps.translate",
-                    "com.google.android.apps.translate.TranslateActivity"
-                )
-                startActivity(this)
-            }
-            true
-        } catch (e: Exception) {
-            Log.d("translate", e.toString())
-            false
-        }
-    }
-
-    private fun Context.openInDeepL(text: String): Boolean {
-        return try {
-            copyToClipBoard(text)
-            Intent(Intent.ACTION_VIEW).apply {
-                component = ComponentName(
-                    "com.deepl.mobiletranslator",
-                    "com.deepl.mobiletranslator.MiniTranslatorActivity"
-                )
-                startActivity(this)
-            }
-            true
-        } catch (e: Exception) {
-            Log.d("translate", e.toString())
-            false
         }
     }
 }
