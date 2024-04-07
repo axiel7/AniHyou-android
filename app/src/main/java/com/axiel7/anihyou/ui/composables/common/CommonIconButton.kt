@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.utils.ContextUtils.openInGoogleTranslate
 import com.axiel7.anihyou.utils.ContextUtils.openLink
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
+import com.axiel7.anihyou.utils.ContextUtils.openTranslator
 import com.axiel7.anihyou.utils.NumberUtils.abbreviated
 import com.axiel7.anihyou.utils.NumberUtils.format
 
@@ -174,7 +174,7 @@ fun TranslateIconButton(
     val context = LocalContext.current
     IconButton(
         onClick = {
-            text?.let { context.openInGoogleTranslate(it) }
+            text?.let { context.openTranslator(it) }
         },
         modifier = modifier
     ) {

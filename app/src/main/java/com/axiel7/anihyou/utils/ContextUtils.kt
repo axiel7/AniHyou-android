@@ -125,8 +125,25 @@ object ContextUtils {
         else -> null
     }
 
-    fun Context.openInGoogleTranslate(text: String) {
-        try {
+    fun Context.copyToClipBoard(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
+        // Android 13+ has clipboard popups
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            showToast(getString(R.string.copied))
+        }
+    }
+
+    fun Context.openTranslator(text: String) {
+        if (!openInDeepL(text)) {
+            if (!openInGoogleTranslate(text)) {
+                showToast(getString(R.string.google_translate_not_installed))
+            }
+        }
+    }
+
+    private fun Context.openInGoogleTranslate(text: String): Boolean {
+        return try {
             Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, text)
                 putExtra("key_text_input", text)
@@ -141,19 +158,27 @@ object ContextUtils {
                 )
                 startActivity(this)
             }
-        } catch (e: ActivityNotFoundException) {
-            showToast(getString(R.string.google_translate_not_installed))
+            true
         } catch (e: Exception) {
             Log.d("translate", e.toString())
+            false
         }
     }
 
-    fun Context.copyToClipBoard(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
-        // Android 13+ has clipboard popups
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            showToast(getString(R.string.copied))
+    private fun Context.openInDeepL(text: String): Boolean {
+        return try {
+            copyToClipBoard(text)
+            Intent(Intent.ACTION_VIEW).apply {
+                component = ComponentName(
+                    "com.deepl.mobiletranslator",
+                    "com.deepl.mobiletranslator.MiniTranslatorActivity"
+                )
+                startActivity(this)
+            }
+            true
+        } catch (e: Exception) {
+            Log.d("translate", e.toString())
+            false
         }
     }
 }
