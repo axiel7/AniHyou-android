@@ -345,4 +345,5 @@
     <string name="show_more">أكثر</string>
     <string name="continue_watching">استمر بالمشاهدة</string>
     <string name="hide_from_status_lists">عدم الظهور في قائمة الحالة</string>
+    <string name="black_theme_variant">المظهر الأسود</string>
 </resources>
