@@ -10,7 +10,7 @@ assignees: ''
 **Request (required)**
 Describe the feature you want to be implemented.
 
-**Additional context (optinal)**
+**Additional context (optional)**
 Add any other context or app screenshots about the feature request here.
 
 **Examples (optional)**
