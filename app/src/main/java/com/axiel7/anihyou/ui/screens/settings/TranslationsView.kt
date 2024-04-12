@@ -28,6 +28,7 @@ import java.util.Locale
 private val translations = mapOf(
     "ar-SA" to "Hussain889, Hussain69o, WhiteCanvas, eyadalomar, sakugaky, Comikazie, mlvin, bobteen1",
     "az-AZ" to "oolyvi",
+    "de-DE" to "LittleFreak, Secresa, MaximilianGT500",
     "in-ID" to "Clxf12",
     "it-IT" to "maicol07, DomeF",
     "ja-JP" to "axiel7",
