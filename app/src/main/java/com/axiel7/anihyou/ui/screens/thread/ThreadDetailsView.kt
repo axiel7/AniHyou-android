@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.ui.composables.common.NotificationIconButton
 import com.axiel7.anihyou.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.thread.composables.ParentThreadView
@@ -66,6 +67,10 @@ private fun ThreadDetailsContent(
         title = "",
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
+            NotificationIconButton(
+                isActive = uiState.isSubscribed,
+                onClick = { event?.subscribeToThread(!uiState.isSubscribed) }
+            )
             OpenInBrowserIconButton(
                 url = ANILIST_THREAD_URL + uiState.details?.basicThreadDetails?.id
             )

@@ -20,6 +20,13 @@ class ThreadRepository @Inject constructor(
             it.Thread
         }
 
+    fun subscribeToThread(threadId: Int, subscribe: Boolean) = api
+        .subscribeToThread(threadId, subscribe)
+        .toFlow()
+        .asDataResult {
+            it.ToggleThreadSubscription?.isSubscribed
+        }
+
     fun getThreadCommentsPage(
         threadId: Int,
         page: Int,

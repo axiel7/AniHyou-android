@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.api
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.ChildCommentsQuery
+import com.axiel7.anihyou.SubscribeThreadMutation
 import com.axiel7.anihyou.ThreadDetailsQuery
 import com.axiel7.anihyou.UpdateThreadCommentMutation
 import javax.inject.Inject
@@ -16,6 +17,14 @@ class ThreadApi @Inject constructor(
         .query(
             ThreadDetailsQuery(
                 threadId = Optional.present(threadId)
+            )
+        )
+
+    fun subscribeToThread(threadId: Int, subscribe: Boolean) = client
+        .mutation(
+            SubscribeThreadMutation(
+                threadId = Optional.present(threadId),
+                subscribe = Optional.present(subscribe)
             )
         )
 

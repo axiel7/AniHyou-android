@@ -212,3 +212,23 @@ fun LikeButton(
         )
     }
 }
+
+@Composable
+fun NotificationIconButton(
+    isActive: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(
+                id = if (isActive) R.drawable.notifications_active_filled_24
+                else R.drawable.notifications_24
+            ),
+            contentDescription = stringResource(R.string.notifications)
+        )
+    }
+}

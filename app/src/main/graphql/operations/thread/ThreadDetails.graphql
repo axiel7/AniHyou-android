@@ -11,6 +11,7 @@ fragment BasicThreadDetails on Thread {
     viewCount
     likeCount
     isLiked
+    isSubscribed
     replyCount
     isLocked
     user {

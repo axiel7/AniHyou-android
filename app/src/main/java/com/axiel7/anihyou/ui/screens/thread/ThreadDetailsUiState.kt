@@ -12,6 +12,7 @@ data class ThreadDetailsUiState(
     val details: ThreadDetailsQuery.Thread? = null,
     val comments: SnapshotStateList<ChildComment> = mutableStateListOf(),
     val isLiked: Boolean = false,
+    val isSubscribed: Boolean = false,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,

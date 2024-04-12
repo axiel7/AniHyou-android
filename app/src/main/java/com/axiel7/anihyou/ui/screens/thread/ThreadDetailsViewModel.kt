@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ThreadDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    threadRepository: ThreadRepository,
+    private val threadRepository: ThreadRepository,
     private val likeRepository: LikeRepository,
 ) : PagedUiStateViewModel<ThreadDetailsUiState>(), ThreadDetailsEvent {
 
@@ -44,6 +44,18 @@ class ThreadDetailsViewModel @Inject constructor(
                     mutableUiState.update { it.copy(isLiked = result.data) }
                 }
             }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun subscribeToThread(subscribe: Boolean) {
+        threadId.value?.let { threadId ->
+            threadRepository.subscribeToThread(threadId, subscribe)
+                .onEach { result ->
+                    if (result is DataResult.Success && result.data != null) {
+                        mutableUiState.update { it.copy(isSubscribed = result.data) }
+                    }
+                }
+                .launchIn(viewModelScope)
         }
     }
 
@@ -78,7 +90,8 @@ class ThreadDetailsViewModel @Inject constructor(
                     if (result is DataResult.Success) {
                         it.copy(
                             details = result.data,
-                            isLiked = result.data?.basicThreadDetails?.isLiked ?: false
+                            isLiked = result.data?.basicThreadDetails?.isLiked ?: false,
+                            isSubscribed = result.data?.basicThreadDetails?.isSubscribed ?: false
                         )
                     } else {
                         result.toUiState()
