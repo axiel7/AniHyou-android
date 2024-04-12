@@ -77,7 +77,7 @@
     <string name="visual_novel">رواية مرئية</string>
     <string name="video_game">لعبة فيديو</string>
     <string name="other">أخرى</string>
-    <string name="doujinshi" comment="independently published manga">دوجينشي</string>
+    <string name="doujinshi">دوجينشي</string>
     <string name="web_novel">رواية ويب</string>
     <string name="live_action">نسخة حية</string>
     <string name="game">لعبة</string>
@@ -172,7 +172,7 @@
     <string name="genres">التصنيفات</string>
     <string name="add_genre">إضافة تصنيف</string>
     <string name="clear">إزالة</string>
-    <string name="list_private" comment="list entry marked as private">خاص</string>
+    <string name="list_private">خاص</string>
     <string name="followers">مُتابِعون</string>
     <string name="following">يتابِع</string>
     <string name="trailer">العرض الدعائي</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">الحلقة %d بُثت %s منذ</string>
     <string name="title_language">لغة العنوان</string>
     <string name="romaji_western_order">روماجي (ترتيب غربي)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[لغة اسم طاقم العمل و الشخصية]]></string>
+    <string name="staff_character_name_language"><![CDATA[لغة اسم طاقم العمل و الشخصية]]></string>
     <string name="score_format">تنسيق الدرجة</string>
     <string name="score_point_100">100 نقطة (55\100)</string>
     <string name="score_point_10_decimal">10 نقاط عشرية (5.5\10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">الخيال</string>
     <string name="genre_hentai">هنتاي</string>
     <string name="genre_horror">رعب</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">فتيات بقوة سحرية</string>
+    <string name="genre_mahou_shoujo">فتيات بقوة سحرية</string>
     <string name="genre_mecha">ميكا</string>
     <string name="genre_music">موسيقى</string>
     <string name="genre_mystery">غموض</string>
@@ -344,4 +344,6 @@
     <string name="show_less">أقل</string>
     <string name="show_more">أكثر</string>
     <string name="continue_watching">استمر بالمشاهدة</string>
+    <string name="hide_from_status_lists">عدم الظهور في قائمة الحالة</string>
+    <string name="black_theme_variant">المظهر الأسود</string>
 </resources>

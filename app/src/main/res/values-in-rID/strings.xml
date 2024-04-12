@@ -77,7 +77,7 @@
     <string name="visual_novel">Novel Visual</string>
     <string name="video_game">Video Game</string>
     <string name="other">Lainnya</string>
-    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
+    <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Web Novel</string>
     <string name="live_action">Live action</string>
     <string name="game">Game</string>
@@ -172,7 +172,7 @@
     <string name="genres">Genre</string>
     <string name="add_genre">Tambah genre</string>
     <string name="clear">Kosongkan</string>
-    <string name="list_private" comment="list entry marked as private">Privasi</string>
+    <string name="list_private">Privasi</string>
     <string name="followers">Pengikut</string>
     <string name="following">Diikuti</string>
     <string name="trailer">Cuplikan</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Ep %d ditayangkan %s yang lalu</string>
     <string name="title_language">Judul bahasa</string>
     <string name="romaji_western_order">Romaji (Ordo Barat)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Bahasa untuk nama Staff & Karakter]]></string>
+    <string name="staff_character_name_language"><![CDATA[Bahasa untuk nama Staff & Karakter]]></string>
     <string name="score_format">Format Skor</string>
     <string name="score_point_100">Nilai 100 (55/100)</string>
     <string name="score_point_10_decimal">Nilai 10 Desimal (5.5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Fantasi</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Horor</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Robot</string>
     <string name="genre_music">Musik</string>
     <string name="genre_mystery">Misteri</string>
@@ -342,4 +342,6 @@
     <string name="show_less">Ringkas</string>
     <string name="show_more">Selengkapnya</string>
     <string name="continue_watching">Lanjutkan menonton</string>
+    <string name="hide_from_status_lists">Sembunyikan dari daftar status</string>
+    <string name="black_theme_variant">Variasi tema hitam</string>
 </resources>

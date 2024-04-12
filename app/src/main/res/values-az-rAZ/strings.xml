@@ -77,7 +77,7 @@
     <string name="visual_novel">Vizual roman</string>
     <string name="video_game">Video oyun</string>
     <string name="other">Digər</string>
-    <string name="doujinshi" comment="independently published manga">Doujinshi</string>
+    <string name="doujinshi">Doujinshi</string>
     <string name="web_novel">Web romanı</string>
     <string name="live_action">Canlı fəaliyyət</string>
     <string name="game">Oyun</string>
@@ -172,7 +172,7 @@
     <string name="genres">Janrlar</string>
     <string name="add_genre">Janr əlavə et</string>
     <string name="clear">Təmizlə</string>
-    <string name="list_private" comment="list entry marked as private">Gizli</string>
+    <string name="list_private">Gizli</string>
     <string name="followers">İzləyicilər</string>
     <string name="following">İzləyir</string>
     <string name="trailer">Treyler</string>
@@ -236,7 +236,7 @@
     <string name="episode_aired_ago">Bölüm %d, %s dəqiqə öncə yayımlandı</string>
     <string name="title_language">Başlıq dili</string>
     <string name="romaji_western_order">Romaji (Qərb Sırasında)</string>
-    <string name="staff_character_name_language" comment="you can translate &amp; as and"><![CDATA[Heyət & Xarakter adlarının dili]]></string>
+    <string name="staff_character_name_language"><![CDATA[Heyət & Xarakter adlarının dili]]></string>
     <string name="score_format">Xal formatı</string>
     <string name="score_point_100">100 Xal (55/100)</string>
     <string name="score_point_10_decimal">10 Xal onluq sistemdə (5.5/10)</string>
@@ -298,7 +298,7 @@
     <string name="genre_fantasy">Fantaziya</string>
     <string name="genre_hentai">Hentai</string>
     <string name="genre_horror">Qorxu</string>
-    <string name="genre_mahou_shoujo" comment="in most languages you can leave it as it">Mahou Shoujo</string>
+    <string name="genre_mahou_shoujo">Mahou Shoujo</string>
     <string name="genre_mecha">Mexanik</string>
     <string name="genre_music">Musiqi</string>
     <string name="genre_mystery">Dedektiv</string>
