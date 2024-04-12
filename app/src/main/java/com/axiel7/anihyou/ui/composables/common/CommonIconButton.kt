@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,8 +42,7 @@ fun BackIconButton(
     IconButton(onClick = singleClick(onClick)) {
         Icon(
             painter = painterResource(R.drawable.arrow_back_24),
-            contentDescription = stringResource(R.string.action_back),
-            tint = MaterialTheme.colorScheme.onSurface
+            contentDescription = stringResource(R.string.action_back)
         )
     }
 }
@@ -53,8 +53,7 @@ fun ShareIconButton(url: String) {
     IconButton(onClick = { context.openShareSheet(url) }) {
         Icon(
             painter = painterResource(R.drawable.share_24),
-            contentDescription = stringResource(R.string.share),
-            tint = MaterialTheme.colorScheme.onSurface
+            contentDescription = stringResource(R.string.share)
         )
     }
 }
@@ -65,8 +64,7 @@ fun OpenInBrowserIconButton(url: String) {
     IconButton(onClick = { context.openLink(url) }) {
         Icon(
             painter = painterResource(R.drawable.open_in_browser_24),
-            contentDescription = stringResource(R.string.external_links),
-            tint = MaterialTheme.colorScheme.onSurface
+            contentDescription = stringResource(R.string.external_links)
         )
     }
 }
@@ -81,7 +79,7 @@ fun FavoriteIconButton(
     iconSize: Dp = 24.dp,
 ) {
     val tint = if (isFavorite) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.onSurface
+    else LocalContentColor.current
     TextButton(
         onClick = onClick,
         modifier = modifier,
@@ -114,7 +112,7 @@ fun CommentIconButton(
     onClick: () -> Unit,
     fontSize: TextUnit = TextUnit.Unspecified,
     iconSize: Dp = 24.dp,
-    tint: Color = MaterialTheme.colorScheme.onSurface
+    tint: Color = LocalContentColor.current
 ) {
     TextButton(
         onClick = onClick,
@@ -144,7 +142,7 @@ fun ReplyButton(
     onClick: () -> Unit,
     fontSize: TextUnit = TextUnit.Unspecified,
     iconSize: Dp = 24.dp,
-    tint: Color = MaterialTheme.colorScheme.onSurface
+    tint: Color = LocalContentColor.current
 ) {
     TextButton(
         onClick = onClick,
