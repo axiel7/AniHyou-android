@@ -97,6 +97,13 @@ fun MainNavigation(
                 DeepLink.Type.STUDIO -> {
                     deepLink.id.toIntOrNull()?.let { navActionManager.toStudioDetails(it) }
                 }
+
+                DeepLink.Type.THREAD -> {
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toThreadDetails(it) }
+                }
+                DeepLink.Type.ACTIVITY -> {
+                    deepLink.id.toIntOrNull()?.let { navActionManager.toActivityDetails(it) }
+                }
             }
         }
     }
