@@ -215,5 +215,7 @@ enum class NavDestination(
                 routeWithArguments = routeWithArguments.replace("{${arg.name}}", value)
         }
         return routeWithArguments
+            // remove remaining optional arguments
+            .replace(Regex("\\?\\D*=\\{\\D*\\}"), "")
     }
 }
