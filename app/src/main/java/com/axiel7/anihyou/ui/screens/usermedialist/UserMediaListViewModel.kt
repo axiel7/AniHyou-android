@@ -136,6 +136,7 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     override fun updateEntryProgress(entryId: Int, progress: Int) {
+        if (mutableUiState.value.isLoading) return
         mediaListRepository.updateEntryProgress(
             entryId = entryId,
             progress = progress,
@@ -158,6 +159,12 @@ class UserMediaListViewModel @Inject constructor(
                 result.toUiState()
             }
         }.launchIn(viewModelScope)
+    }
+
+    override fun onClickPlusOne(entry: BasicMediaListEntry) {
+        if (!mutableUiState.value.isLoading) {
+            super.onClickPlusOne(entry)
+        }
     }
 
     override fun selectItem(value: CommonMediaListEntry?) {
