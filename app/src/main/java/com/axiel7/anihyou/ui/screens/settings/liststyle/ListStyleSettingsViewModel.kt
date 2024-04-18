@@ -32,7 +32,7 @@ class ListStyleSettingsViewModel @Inject constructor(
     override fun setAnimeListStyle(status: MediaListStatus, value: ListStyle) {
         viewModelScope.launch {
             when (status) {
-                MediaListStatus.CURRENT -> listPreferencesRepository.setAnimeCompletedListStyle(value)
+                MediaListStatus.CURRENT -> listPreferencesRepository.setAnimeCurrentListStyle(value)
                 MediaListStatus.PLANNING -> listPreferencesRepository.setAnimePlanningListStyle(value)
                 MediaListStatus.COMPLETED -> listPreferencesRepository.setAnimeCompletedListStyle(value)
                 MediaListStatus.DROPPED -> listPreferencesRepository.setAnimeDroppedListStyle(value)
@@ -58,7 +58,7 @@ class ListStyleSettingsViewModel @Inject constructor(
     override fun setMangaListStyle(status: MediaListStatus, value: ListStyle) {
         viewModelScope.launch {
             when (status) {
-                MediaListStatus.CURRENT -> listPreferencesRepository.setMangaCompletedListStyle(value)
+                MediaListStatus.CURRENT -> listPreferencesRepository.setMangaCurrentListStyle(value)
                 MediaListStatus.PLANNING -> listPreferencesRepository.setMangaPlanningListStyle(value)
                 MediaListStatus.COMPLETED -> listPreferencesRepository.setMangaCompletedListStyle(value)
                 MediaListStatus.DROPPED -> listPreferencesRepository.setMangaDroppedListStyle(value)
