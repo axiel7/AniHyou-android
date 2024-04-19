@@ -1,5 +1,6 @@
 # <img alt="app-icon" height="50" src="https://github.com/axiel7/AniHyou-android/blob/master/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>AniHyou
 
+[![Downloads](https://img.shields.io/github/downloads/axiel7/AniHyou-android/total.svg)](https://github.com/axiel7/MoeList/releases/latest)
 [![Crowdin](https://badges.crowdin.net/anihyou/localized.svg)](https://crowdin.com/project/anihyou)
 [![Donate](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://ko-fi.com/axiel7)
 
