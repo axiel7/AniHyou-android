@@ -109,8 +109,8 @@ class NavActionManager(
             NavDestination.Search.putArguments(
                 mapOf(
                     NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.OnList to true.toString(),
-                    NavArgument.Focus to true.toString()
+                    NavArgument.OnList to TriBoolean.TRUE.value.toString(),
+                    NavArgument.Focus to TriBoolean.TRUE.value.toString()
                 )
             )
         )

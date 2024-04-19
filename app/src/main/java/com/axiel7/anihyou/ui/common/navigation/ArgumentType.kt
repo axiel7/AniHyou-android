@@ -9,12 +9,6 @@ enum class ArgumentType {
         String -> NavType.StringType
         Int -> NavType.IntType
         Boolean -> NavType.BoolType
-        BooleanOptional -> NavType.StringType // null boolean is not supported in androidx.navigation
+        BooleanOptional -> NavType.IntType // null boolean is not supported in androidx.navigation
     }
-
-    val isOptional
-        get() = when (this) {
-            BooleanOptional -> true
-            else -> false
-        }
 }

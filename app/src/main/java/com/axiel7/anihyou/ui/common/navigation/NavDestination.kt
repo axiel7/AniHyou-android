@@ -49,11 +49,11 @@ enum class NavDestination(
             ),
             DestArgument(
                 argument = NavArgument.OnList,
-                isNullable = true,
+                defaultValue = TriBoolean.NONE.value
             ),
             DestArgument(
                 argument = NavArgument.Focus,
-                isNullable = true,
+                defaultValue = TriBoolean.NONE.value
             )
         )
     ),
@@ -210,12 +210,12 @@ enum class NavDestination(
 
     fun putArguments(arguments: Map<NavArgument, String?>): String {
         var routeWithArguments = route()
-        arguments.forEach { (arg, value) ->
-            if (value != null)
-                routeWithArguments = routeWithArguments.replace("{${arg.name}}", value)
+        this.arguments.forEach { destArg ->
+            val value = arguments.getOrDefault(destArg.argument, null)
+                ?: destArg.defaultValue?.toString()
+            routeWithArguments = routeWithArguments
+                .replace("{${destArg.argument.name}}", value ?: "null")
         }
         return routeWithArguments
-            // remove remaining optional arguments
-            .replace(Regex("\\?\\D*=\\{\\D*\\}"), "")
     }
 }

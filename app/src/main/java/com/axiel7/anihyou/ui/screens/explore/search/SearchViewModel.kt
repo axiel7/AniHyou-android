@@ -14,6 +14,8 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
+import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toBoolean
+import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toTriBoolean
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +45,7 @@ class SearchViewModel @Inject constructor(
     private val initialTag: String? = savedStateHandle[NavArgument.Tag.name]
 
     private val initialOnList: Boolean? = savedStateHandle
-        .get<String?>(NavArgument.OnList.name)?.toBooleanStrictOrNull()
+        .get<Int?>(NavArgument.OnList.name)?.toTriBoolean()?.toBoolean()
 
     override val initialState =
         SearchUiState(

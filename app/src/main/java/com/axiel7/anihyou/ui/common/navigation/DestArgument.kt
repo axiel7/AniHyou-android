@@ -3,6 +3,8 @@ package com.axiel7.anihyou.ui.common.navigation
 import androidx.compose.runtime.Immutable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.navArgument
+import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toBoolean
+import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toTriBoolean
 
 @Immutable
 data class DestArgument(
@@ -12,7 +14,7 @@ data class DestArgument(
 ) {
     fun toNamedNavArgument() = navArgument(argument.name) {
         type = argument.type.toNavType()
-        nullable = isNullable || argument.type.isOptional
+        nullable = isNullable
         if (this@DestArgument.defaultValue != null) {
             defaultValue = this@DestArgument.defaultValue
         }
@@ -40,12 +42,12 @@ data class DestArgument(
                     arguments?.getBoolean(destArgument.argument.name, destArgument.defaultValue)
                 else arguments?.getBoolean(destArgument.argument.name)
             } else if (destArgument?.argument?.type == ArgumentType.BooleanOptional) {
-                if (destArgument.defaultValue is Boolean) {
-                    arguments?.getString(
+                if (destArgument.defaultValue is Int) {
+                    arguments?.getInt(
                         destArgument.argument.name,
-                        destArgument.defaultValue.toString()
-                    )?.toBooleanStrictOrNull()
-                } else arguments?.getString(destArgument.argument.name)?.toBooleanStrictOrNull()
+                        destArgument.defaultValue
+                    )?.toTriBoolean()?.toBoolean()
+                } else arguments?.getInt(destArgument.argument.name)?.toTriBoolean()?.toBoolean()
             } else null
     }
 }
