@@ -95,10 +95,17 @@ fun RatingView(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
-                if (ratingString.isEmpty()) {
-                    Text(text = "0")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (ratingString.isEmpty()) {
+                        Text(
+                            text = "0",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    innerTextField()
                 }
-                innerTextField()
             }
         )
         Text(

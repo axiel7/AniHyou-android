@@ -64,12 +64,21 @@ fun EditMediaProgressRow(
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                decorationBox = { innerTextField ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (progress == null) {
+                            Text(
+                                text = "0",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
             )
-
-            if (progress == null) {
-                Text(text = "0")
-            }
 
             if (totalProgress != null) {
                 Text(
