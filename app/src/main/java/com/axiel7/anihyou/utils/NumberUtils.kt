@@ -31,7 +31,7 @@ object NumberUtils {
         var pattern = "0"
         if (decimalLength > 0) {
             pattern = "0."
-            pattern += "0".repeat(decimalLength)
+            pattern += "#".repeat(decimalLength)
         }
         return try {
             defaultDecimalFormat.applyPattern(pattern)

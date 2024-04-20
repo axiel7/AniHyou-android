@@ -40,20 +40,20 @@ object DateUtils {
     fun LocalDate.getNextDayOfWeek(dayOfWeek: DayOfWeek): LocalDate =
         with(TemporalAdjusters.nextOrSame(dayOfWeek))
 
-    fun LocalDate?.toLocalized(
+    fun LocalDate.toLocalized(
         style: FormatStyle = FormatStyle.MEDIUM
-    ): String = try {
-        this?.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
+    ): String? = try {
+        this.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
     } catch (e: DateTimeException) {
-        ""
+        null
     }
 
-    fun LocalDateTime?.toLocalized(
+    fun LocalDateTime.toLocalized(
         style: FormatStyle = FormatStyle.MEDIUM
-    ): String = try {
-        this?.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
+    ): String? = try {
+        this.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
     } catch (e: DateTimeException) {
-        ""
+        null
     }
 
     private fun LocalDateTime.toCalendar(): GregorianCalendar =
@@ -171,7 +171,7 @@ object DateUtils {
         }
         return LocalDateTime.now(defaultZoneOffset)
             .plusSeconds(if (isFutureDate) this else -this)
-            .toLocalized()
+            .toLocalized().orEmpty()
     }
 
     @Composable

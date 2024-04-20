@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails.edit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,24 +12,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,24 +56,25 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.composables.ClickableOutlinedTextField
 import com.axiel7.anihyou.ui.composables.ModalBottomSheet
+import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
+import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
-import com.axiel7.anihyou.ui.composables.common.TextCheckbox
 import com.axiel7.anihyou.ui.composables.scores.FiveStarRatingView
-import com.axiel7.anihyou.ui.composables.scores.SliderRatingView
+import com.axiel7.anihyou.ui.composables.scores.RatingView
 import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.CustomListsDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.DeleteMediaEntryDialog
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDateField
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDatePicker
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaProgressRow
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
-import com.axiel7.anihyou.utils.DateUtils.toLocalized
 import kotlinx.coroutines.CoroutineScope
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMediaSheet(
     mediaDetails: BasicMediaDetails,
@@ -105,6 +112,7 @@ private fun EditMediaSheetContent(
     event: EditMediaEvent?,
     bottomPadding: Dp = 0.dp,
     scope: CoroutineScope = rememberCoroutineScope(),
+    sheetState: SheetState = rememberModalBottomSheetState(),
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
@@ -164,6 +172,7 @@ private fun EditMediaSheetContent(
     ModalBottomSheet(
         onDismissed = onDismissed,
         scope = scope,
+        sheetState = sheetState,
         windowInsets = WindowInsets(0, 0, 0, 0)
     ) { dismiss ->
         Column(
@@ -172,7 +181,7 @@ private fun EditMediaSheetContent(
                 .verticalScroll(rememberScrollState())
                 .imePadding()
                 .padding(bottom = 32.dp + bottomPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             // Cancel / Save buttons
             Row(
@@ -200,7 +209,7 @@ private fun EditMediaSheetContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -223,8 +232,13 @@ private fun EditMediaSheetContent(
             EditMediaProgressRow(
                 label = if (uiState.mediaDetails?.isAnime() == true) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
+                icon = if (uiState.mediaDetails?.isAnime() == true) R.drawable.play_arrow_24
+                else R.drawable.book_24,
                 progress = uiState.progress,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(
+                    start = 0.dp,
+                    end = 16.dp
+                ),
                 totalProgress = uiState.mediaDetails?.duration(),
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },
@@ -234,8 +248,9 @@ private fun EditMediaSheetContent(
             if (uiState.mediaDetails?.isManga() == true) {
                 EditMediaProgressRow(
                     label = stringResource(R.string.volumes),
+                    icon = R.drawable.bookmark_24,
                     progress = uiState.volumeProgress,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+                    modifier = Modifier.padding(end = 16.dp, top = 8.dp),
                     totalProgress = uiState.mediaDetails.volumes,
                     onValueChange = { event?.onChangeVolumeProgress(it.toIntOrNull()) },
                     onMinusClick = {
@@ -260,11 +275,11 @@ private fun EditMediaSheetContent(
                     ScoreFormat.POINT_10,
                     ScoreFormat.POINT_10_DECIMAL,
                     ScoreFormat.POINT_100 -> {
-                        SliderRatingView(
+                        RatingView(
                             maxValue = uiState.scoreFormat.maxValue(),
-                            modifier = Modifier
-                                .padding(start = 8.dp, top = 16.dp, end = 8.dp),
-                            initialRating = uiState.score ?: 0.0,
+                            modifier = Modifier.padding(top = 8.dp, end = 16.dp),
+                            showIcon = true,
+                            rating = uiState.score,
                             showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
                             onRatingChanged = { event?.onChangeScore(it) }
                         )
@@ -293,40 +308,21 @@ private fun EditMediaSheetContent(
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
             // Dates
-            ClickableOutlinedTextField(
-                value = uiState.startedAt.toLocalized(),
-                onValueChange = { },
-                label = { Text(text = stringResource(R.string.start_date)) },
-                trailingIcon = {
-                    if (uiState.startedAt != null) {
-                        IconButton(onClick = { event?.setStartedAt(null) }) {
-                            Icon(
-                                painter = painterResource(R.drawable.cancel_24),
-                                contentDescription = stringResource(R.string.delete)
-                            )
-                        }
-                    }
-                },
+            EditMediaDateField(
+                date = uiState.startedAt,
+                label = stringResource(R.string.start_date),
+                icon = R.drawable.calendar_today_24,
+                removeDate = { event?.setStartedAt(null) },
                 onClick = {
                     datePickerState.selectedDateMillis = uiState.startedAt?.toEpochMillis()
                     event?.onDateDialogOpen(dateType = 1)
                 }
             )
-            ClickableOutlinedTextField(
-                value = uiState.completedAt.toLocalized(),
-                onValueChange = { },
-                modifier = Modifier.padding(vertical = 8.dp),
-                label = { Text(text = stringResource(R.string.end_date)) },
-                trailingIcon = {
-                    if (uiState.completedAt != null) {
-                        IconButton(onClick = { event?.setCompletedAt(null) }) {
-                            Icon(
-                                painter = painterResource(R.drawable.cancel_24),
-                                contentDescription = stringResource(R.string.delete)
-                            )
-                        }
-                    }
-                },
+            EditMediaDateField(
+                date = uiState.completedAt,
+                label = stringResource(R.string.end_date),
+                icon = R.drawable.event_available_24,
+                removeDate = { event?.setCompletedAt(null) },
                 onClick = {
                     datePickerState.selectedDateMillis = uiState.completedAt?.toEpochMillis()
                     event?.onDateDialogOpen(dateType = 2)
@@ -336,8 +332,9 @@ private fun EditMediaSheetContent(
             // Repeat
             EditMediaProgressRow(
                 label = stringResource(R.string.repeat_count),
+                icon = R.drawable.repeat_24,
                 progress = uiState.repeatCount,
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(end = 16.dp),
                 totalProgress = null,
                 onValueChange = { event?.onChangeRepeatCount(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
@@ -345,58 +342,79 @@ private fun EditMediaSheetContent(
             )
 
             // Custom lists
-            TextButton(
+            PlainPreference(
+                title = stringResource(R.string.custom_lists),
+                icon = R.drawable.list_alt_24,
+                iconTint = LocalContentColor.current,
+                iconPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                ),
+                isLoading = uiState.isLoading,
                 onClick = {
                     if (uiState.customLists == null) event?.getCustomLists()
                     else event?.toggleCustomListsDialog(true)
                 }
-            ) {
-                if (uiState.isLoading) {
-                    SmallCircularProgressIndicator()
-                } else {
-                    Icon(
-                        painter = painterResource(R.drawable.list_alt_24),
-                        contentDescription = stringResource(R.string.custom_lists)
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.custom_lists),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-
-            TextCheckbox(
-                text = stringResource(R.string.hide_from_status_lists),
-                checked = uiState.isHiddenFromStatusLists ?: false,
-                onCheckedChange = { event?.setIsHiddenFromStatusLists(it) },
-                modifier = Modifier.padding(vertical = 8.dp)
             )
 
-            TextCheckbox(
-                text = stringResource(R.string.list_private),
-                checked = uiState.isPrivate ?: false,
-                onCheckedChange = { event?.setIsPrivate(it) },
-                modifier = Modifier.padding(bottom = 8.dp)
+            SwitchPreference(
+                title = stringResource(R.string.hide_from_status_lists),
+                preferenceValue = uiState.isHiddenFromStatusLists,
+                icon = R.drawable.visibility_off_24,
+                iconTint = LocalContentColor.current,
+                iconPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                ),
+                onValueChange = { event?.setIsHiddenFromStatusLists(it) },
+            )
+
+            SwitchPreference(
+                title = stringResource(R.string.list_private),
+                preferenceValue = uiState.isPrivate,
+                icon = R.drawable.lock_24,
+                iconTint = LocalContentColor.current,
+                iconPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                ),
+                onValueChange = { event?.setIsPrivate(it) },
             )
 
             // Notes
-            OutlinedTextField(
-                value = uiState.notes.orEmpty(),
-                onValueChange = { event?.setNotes(it) },
-                modifier = Modifier.padding(horizontal = 16.dp),
-                label = { Text(text = stringResource(R.string.notes)) },
-                singleLine = false,
-                minLines = 3
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.notes_24),
+                    contentDescription = stringResource(R.string.notes),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                OutlinedTextField(
+                    value = uiState.notes.orEmpty(),
+                    onValueChange = { event?.setNotes(it) },
+                    placeholder = {
+                        Text(text = stringResource(R.string.notes))
+                    },
+                    singleLine = false,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedBorderColor = Color.Transparent
+                    )
+                )
+            }
 
             if (uiState.scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
                 uiState.listEntry?.advancedScoreNames()?.forEach { score ->
-                    SliderRatingView(
+                    RatingView(
                         maxValue = uiState.scoreFormat.maxValue(),
                         modifier = Modifier
-                            .padding(start = 8.dp, top = 16.dp, end = 8.dp),
+                            .padding(top = 8.dp, end = 8.dp),
                         label = score,
-                        initialRating = uiState.advancedScores?.get(score) ?: 0.0,
+                        rating = uiState.advancedScores.getOrDefault(score, null),
                         showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
                         onRatingChanged = { event?.setAdvancedScore(key = score, value = it) }
                     )
@@ -404,25 +422,24 @@ private fun EditMediaSheetContent(
             }
 
             // Delete
-            Button(
-                onClick = { event?.toggleDeleteDialog(true) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
+            PlainPreference(
+                title = stringResource(R.string.delete),
+                titleTint = MaterialTheme.colorScheme.error,
+                icon = R.drawable.delete_24,
+                iconTint = MaterialTheme.colorScheme.error,
+                iconPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                ),
                 enabled = !uiState.isNewEntry,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                    disabledContainerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.12f),
-                    disabledContentColor = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.38f)
-                )
-            ) {
-                Text(text = stringResource(R.string.delete))
-            }
+                onClick = { event?.toggleDeleteDialog(true) }
+            )
         }//:Column
     }//:Sheet
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun EditMediaSheetPreview() {
@@ -431,6 +448,11 @@ fun EditMediaSheetPreview() {
             EditMediaSheetContent(
                 uiState = EditMediaUiState(),
                 event = null,
+                sheetState = SheetState(
+                    skipPartiallyExpanded = true,
+                    density = LocalDensity.current,
+                    initialValue = SheetValue.Expanded
+                ),
                 onEntryUpdated = {},
                 onDismissed = {}
             )

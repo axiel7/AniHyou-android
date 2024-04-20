@@ -39,13 +39,15 @@ class EditMediaViewModel @Inject constructor(
         mutableUiState.update { it.copy(mediaDetails = value) }
 
     fun setListEntry(value: BasicMediaListEntry?) = mutableUiState.update {
+        value?.advancedScoresMap()?.let { advancedScores ->
+            it.advancedScores.putAll(advancedScores)
+        }
         it.copy(
             listEntry = value,
             status = value?.status,
             progress = value?.progress,
             volumeProgress = value?.progressVolumes,
             score = value?.score,
-            advancedScores = value?.advancedScoresMap(),
             startedAt = value?.startedAt?.fuzzyDate?.toLocalDate(),
             completedAt = value?.completedAt?.fuzzyDate?.toLocalDate(),
             repeatCount = value?.repeat,
@@ -109,16 +111,12 @@ class EditMediaViewModel @Inject constructor(
         else -> false
     }
 
-    override fun onChangeScore(value: Double) {
+    override fun onChangeScore(value: Double?) {
         mutableUiState.update { it.copy(score = value) }
     }
 
-    override fun setAdvancedScore(key: String, value: Double) {
-        mutableUiState.update {
-            val newScores = it.advancedScores
-            newScores?.set(key, value)
-            it.copy(advancedScores = newScores)
-        }
+    override fun setAdvancedScore(key: String, value: Double?) {
+        mutableUiState.value.advancedScores[key] = value ?: 0.0
     }
 
     override fun setStartedAt(value: Long?) {
@@ -169,7 +167,7 @@ class EditMediaViewModel @Inject constructor(
                 mediaId = mediaDetails!!.id,
                 status = status,
                 score = score,
-                advancedScores = advancedScores?.values,
+                advancedScores = advancedScores.values.takeIf { advancedScores.isNotEmpty() },
                 progress = progress,
                 progressVolumes = volumeProgress,
                 startedAt = startedAt?.toFuzzyDate(),

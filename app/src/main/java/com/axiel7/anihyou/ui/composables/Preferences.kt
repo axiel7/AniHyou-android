@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 
 @Composable
 fun PreferencesTitle(text: String) {
@@ -49,15 +52,20 @@ fun PreferencesTitle(text: String) {
 @Composable
 fun PlainPreference(
     title: String,
+    titleTint: Color = MaterialTheme.colorScheme.onSurface,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     @DrawableRes icon: Int? = null,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+    iconPadding: PaddingValues = PaddingValues(16.dp),
+    enabled: Boolean = true,
+    isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(enabled = enabled, onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -69,13 +77,13 @@ fun PlainPreference(
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = title,
-                    modifier = Modifier.padding(16.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    modifier = Modifier.padding(iconPadding),
+                    tint = if (enabled) iconTint else iconTint.copy(alpha = 0.38f)
                 )
             } else {
                 Spacer(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(iconPadding)
                         .size(24.dp)
                 )
             }
@@ -87,7 +95,7 @@ fun PlainPreference(
             ) {
                 Text(
                     text = title,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (enabled) titleTint else titleTint.copy(alpha = 0.38f)
                 )
 
                 if (subtitle != null) {
@@ -99,6 +107,11 @@ fun PlainPreference(
                 }
             }//: Column
         }//: Row
+        if (isLoading) {
+            SmallCircularProgressIndicator(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
     }//: Row
 }
 
@@ -109,6 +122,8 @@ fun SwitchPreference(
     subtitle: String? = null,
     preferenceValue: Boolean?,
     @DrawableRes icon: Int? = null,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+    iconPadding: PaddingValues = PaddingValues(16.dp),
     onValueChange: (Boolean) -> Unit
 ) {
     Row(
@@ -129,13 +144,13 @@ fun SwitchPreference(
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = title,
-                    modifier = Modifier.padding(16.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    modifier = Modifier.padding(iconPadding),
+                    tint = iconTint
                 )
             } else {
                 Spacer(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(iconPadding)
                         .size(24.dp)
                 )
             }

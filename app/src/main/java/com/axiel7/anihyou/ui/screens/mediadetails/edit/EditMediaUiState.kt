@@ -1,6 +1,8 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
@@ -20,7 +22,7 @@ data class EditMediaUiState(
     val progress: Int? = null,
     val volumeProgress: Int? = null,
     val score: Double? = null,
-    val advancedScores: LinkedHashMap<String, Double>? = null,
+    val advancedScores: SnapshotStateMap<String, Double> = mutableStateMapOf(),
     val startedAt: LocalDate? = null,
     val completedAt: LocalDate? = null,
     val repeatCount: Int? = null,
