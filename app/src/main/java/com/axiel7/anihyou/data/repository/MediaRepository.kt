@@ -114,7 +114,7 @@ class MediaRepository @Inject constructor(
         .watch()
         .asDataResult { it.Media }
 
-    suspend fun updateMediaDetailsCache(media: MediaDetailsQuery.Media) {
+    fun updateMediaDetailsCache(media: MediaDetailsQuery.Media) {
         api.updateMediaDetailsCache(
             data = MediaDetailsQuery.Data(media)
         )

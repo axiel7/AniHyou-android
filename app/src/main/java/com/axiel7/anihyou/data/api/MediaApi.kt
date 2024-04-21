@@ -151,14 +151,19 @@ class MediaApi @Inject constructor(
             )
         )
 
-    suspend fun updateMediaDetailsCache(data: MediaDetailsQuery.Data) {
-        client.apolloStore
-            .writeOperation(
-                operation = MediaDetailsQuery(
-                    mediaId = Optional.presentIfNotNull(data.Media?.id)
-                ),
-                operationData = data,
-            )
+    fun updateMediaDetailsCache(data: MediaDetailsQuery.Data) {
+        data.Media?.id?.let { mediaId ->
+            try {
+                client.apolloStore
+                    .writeOperation(
+                        operation = MediaDetailsQuery(
+                            mediaId = Optional.present(mediaId)
+                        ),
+                        operationData = data,
+                    )
+            } catch (_: IllegalStateException) {
+            }
+        }
     }
 
     fun mediaCharactersAndStaffQuery(mediaId: Int) = client
