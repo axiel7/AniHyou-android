@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.ui.common.ListStyle
@@ -43,6 +45,7 @@ fun UserMediaListView(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
+    val context = LocalContext.current
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
@@ -51,6 +54,13 @@ fun UserMediaListView(
     }
     LaunchedEffect(uiState.fetchFromNetwork) {
         if (!uiState.fetchFromNetwork) pullRefreshState.endRefresh()
+    }
+
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            Toast.makeText(context, uiState.error, Toast.LENGTH_LONG).show()
+            event?.onErrorDisplayed()
+        }
     }
 
     Box(

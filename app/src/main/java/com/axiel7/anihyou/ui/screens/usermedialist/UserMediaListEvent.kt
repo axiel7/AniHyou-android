@@ -6,8 +6,9 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.event.PagedEvent
+import com.axiel7.anihyou.ui.common.event.UiEvent
 
-interface UserMediaListEvent : PagedEvent {
+interface UserMediaListEvent : PagedEvent, UiEvent {
     fun setScoreFormat(value: ScoreFormat)
 
     fun setStatus(value: MediaListStatus?)

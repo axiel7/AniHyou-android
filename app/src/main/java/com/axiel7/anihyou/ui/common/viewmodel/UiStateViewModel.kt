@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.common.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.ui.common.event.UiEvent
 import com.axiel7.anihyou.ui.common.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 @Suppress("UNCHECKED_CAST")
-abstract class UiStateViewModel<S : UiState> : ViewModel() {
+abstract class UiStateViewModel<S : UiState> : ViewModel(), UiEvent {
 
     protected abstract val initialState: S
     protected val mutableUiState by lazy { MutableStateFlow(initialState) }
@@ -25,7 +26,7 @@ abstract class UiStateViewModel<S : UiState> : ViewModel() {
         }
     }
 
-    fun onErrorDisplayed() {
+    override fun onErrorDisplayed() {
         mutableUiState.update { it.removeError() as S }
     }
 }
