@@ -42,6 +42,7 @@ import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.common.Theme
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
@@ -176,6 +177,7 @@ fun MainView(
     deepLink: DeepLink?,
 ) {
     val navController = rememberNavController()
+    val navActionManager = NavActionManager.rememberNavActionManager(navController)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     Scaffold(
@@ -183,6 +185,7 @@ fun MainView(
             if (isCompactScreen) {
                 MainBottomNavBar(
                     navController = navController,
+                    navActionManager = navActionManager,
                     onItemSelected = saveLastTab
                 )
             }
@@ -193,6 +196,7 @@ fun MainView(
         if (isCompactScreen) {
             MainNavigation(
                 navController = navController,
+                navActionManager = navActionManager,
                 isCompactScreen = true,
                 isLoggedIn = isLoggedIn,
                 lastTabOpened = lastTabOpened,
@@ -209,6 +213,7 @@ fun MainView(
                 )
                 MainNavigation(
                     navController = navController,
+                    navActionManager = navActionManager,
                     isCompactScreen = false,
                     isLoggedIn = isLoggedIn,
                     lastTabOpened = lastTabOpened,

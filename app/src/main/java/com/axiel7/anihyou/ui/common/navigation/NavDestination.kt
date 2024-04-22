@@ -208,7 +208,7 @@ enum class NavDestination(
 
     val namedNavArguments get() = arguments.map { it.toNamedNavArgument() }
 
-    fun putArguments(arguments: Map<NavArgument, String?>): String {
+    fun putArguments(arguments: Map<NavArgument, String?> = emptyMap()): String {
         var routeWithArguments = route()
         this.arguments.forEach { destArg ->
             val value = arguments.getOrDefault(destArg.argument, null)

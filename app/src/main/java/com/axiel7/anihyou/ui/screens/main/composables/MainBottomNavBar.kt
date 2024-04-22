@@ -16,10 +16,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.axiel7.anihyou.ui.common.BottomDestination
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 
 @Composable
 fun MainBottomNavBar(
     navController: NavController,
+    navActionManager: NavActionManager,
     onItemSelected: (Int) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,13 +57,23 @@ fun MainBottomNavBar(
                     },
                     selected = isSelected,
                     onClick = {
-                        onItemSelected(index)
-                        navController.navigate(dest.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                        if (isSelected) {
+                            when (dest) {
+                                BottomDestination.Explore -> {
+                                    navActionManager.toSearch()
+                                }
+
+                                else -> {}
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                        } else {
+                            onItemSelected(index)
+                            navController.navigate(dest.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                     }
                 )

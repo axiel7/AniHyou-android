@@ -24,7 +24,7 @@ import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinat
 import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getBoolean
 import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getIntArg
 import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getStringArg
-import com.axiel7.anihyou.ui.common.navigation.NavActionManager.Companion.rememberNavActionManager
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.navigation.NavDestination
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
@@ -55,6 +55,7 @@ import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 @Composable
 fun MainNavigation(
     navController: NavHostController,
+    navActionManager: NavActionManager,
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
     lastTabOpened: Int,
@@ -66,9 +67,6 @@ fun MainNavigation(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
     )
-
-    // common navigation actions
-    val navActionManager = rememberNavActionManager(navController)
 
     LaunchedEffect(deepLink) {
         if (deepLink != null) {

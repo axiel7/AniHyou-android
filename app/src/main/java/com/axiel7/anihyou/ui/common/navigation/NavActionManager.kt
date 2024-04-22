@@ -101,7 +101,11 @@ class NavActionManager(
     }
 
     fun toSearch() {
-        navController.navigate(NavDestination.Search.route())
+        navController.navigate(
+            NavDestination.Search.putArguments(
+                mapOf(NavArgument.Focus to TriBoolean.TRUE.value.toString())
+            )
+        )
     }
 
     fun toSearchOnMyList(mediaType: MediaType) {
