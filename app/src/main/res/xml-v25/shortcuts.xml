@@ -4,7 +4,7 @@
         android:enabled="true"
         android:icon="@drawable/search_accent_24"
         android:shortcutId="home_shortcut"
-        android:shortcutShortLabel="@string/explore">
+        android:shortcutShortLabel="@string/search">
         <intent
             android:action="search"
             android:targetClass="com.axiel7.anihyou.ui.screens.main.MainActivity"

@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
             intent.action == "search" -> {
                 DeepLink(
                     type = DeepLink.Type.SEARCH,
-                    id = true.toString()
+                    id = "search"
                 )
             }
             // Login intent or anilist link
