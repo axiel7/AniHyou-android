@@ -9,6 +9,7 @@ import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSeason
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -42,6 +43,12 @@ class SeasonAnimeViewModel @Inject constructor(
     override fun setSeason(value: AnimeSeason) {
         mutableUiState.update {
             it.copy(season = value, page = 1, hasNextPage = true, isLoading = true)
+        }
+    }
+
+    override fun onChangeSort(value: MediaSort) {
+        mutableUiState.update {
+            it.copy(sort = value, page = 1, hasNextPage = true, isLoading = true)
         }
     }
 
@@ -101,10 +108,12 @@ class SeasonAnimeViewModel @Inject constructor(
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && old.season == new.season
+                        && old.sort == new.sort
             }
             .flatMapLatest {
                 mediaRepository.getSeasonalAnimePage(
                     animeSeason = it.season!!,
+                    sort = listOf(it.sort),
                     page = it.page
                 )
             }

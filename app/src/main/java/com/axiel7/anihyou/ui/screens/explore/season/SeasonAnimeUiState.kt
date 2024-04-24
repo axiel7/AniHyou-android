@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.media.AnimeSeason
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
 @Stable
 data class SeasonAnimeUiState(
     val season: AnimeSeason? = null,
+    val sort: MediaSort = MediaSort.POPULARITY_DESC,
     val animeSeasonal: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
     val selectedItem: SeasonalAnimeQuery.Medium? = null,
     val listStyle: ListStyle = ListStyle.GRID,

@@ -96,9 +96,11 @@ private fun SeasonAnimeContent(
     if (showFilterSheet && uiState.season != null) {
         SeasonChartFilterSheet(
             initialSeason = uiState.season,
+            initialSort = uiState.sort,
             scope = scope,
             onDismiss = { showFilterSheet = false },
-            setSeason = { event?.setSeason(it) }
+            setSeason = { event?.setSeason(it) },
+            setSort = { event?.onChangeSort(it) }
         )
     }
 

@@ -70,10 +70,11 @@ class MediaRepository @Inject constructor(
 
     fun getSeasonalAnimePage(
         animeSeason: AnimeSeason,
+        sort: List<MediaSort> = listOf(MediaSort.POPULARITY_DESC),
         page: Int,
         perPage: Int = 25,
     ) = api
-        .seasonalAnimeQuery(animeSeason, page, perPage)
+        .seasonalAnimeQuery(animeSeason, sort, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.media?.filterNotNull().orEmpty()

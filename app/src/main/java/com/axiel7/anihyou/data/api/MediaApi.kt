@@ -116,6 +116,7 @@ class MediaApi @Inject constructor(
 
     fun seasonalAnimeQuery(
         animeSeason: AnimeSeason,
+        sort: List<MediaSort>,
         page: Int,
         perPage: Int,
     ) = client
@@ -125,7 +126,7 @@ class MediaApi @Inject constructor(
                 perPage = Optional.present(perPage),
                 season = Optional.present(animeSeason.season),
                 seasonYear = Optional.present(animeSeason.year),
-                sort = Optional.present(listOf(MediaSort.POPULARITY_DESC))
+                sort = Optional.present(sort)
             )
         )
 
