@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +59,13 @@ fun SeasonChartFilterSheet(
     var selectedYear by remember { mutableIntStateOf(initialSeason.year) }
     var selectedSeason by remember { mutableStateOf(initialSeason.season) }
     var selectedSort by remember { mutableStateOf(initialSort) }
+
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(initialSeason.year) {
+        val index = DateUtils.seasonYears.indexOf(initialSeason.year)
+        if (index >= 0) listState.scrollToItem(index)
+    }
 
     ModalBottomSheet(
         onDismissed = onDismiss,
@@ -112,6 +121,7 @@ fun SeasonChartFilterSheet(
             }
 
             LazyRow(
+                state = listState,
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
                 items(DateUtils.seasonYears) {
