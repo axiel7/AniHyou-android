@@ -466,7 +466,8 @@ fun MediaInfoTabs(
                 MediaInformationView(
                     uiState = uiState,
                     navigateToGenreTag = navActionManager::toGenreTag,
-                    navigateToStudioDetails = navActionManager::toStudioDetails
+                    navigateToStudioDetails = navActionManager::toStudioDetails,
+                    navigateToAnimeSeason = navActionManager::toAnimeSeason
                 )
 
             MediaDetailsType.STAFF_CHARACTERS ->

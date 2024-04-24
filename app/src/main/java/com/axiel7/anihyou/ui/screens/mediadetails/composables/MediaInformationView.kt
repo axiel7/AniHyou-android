@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.displayName
 import com.axiel7.anihyou.data.model.media.episodeNumber
 import com.axiel7.anihyou.data.model.media.externalLinks
@@ -51,6 +53,7 @@ fun MediaInformationView(
     uiState: MediaDetailsUiState,
     navigateToGenreTag: (mediaType: MediaType, genre: String?, tag: String?) -> Unit,
     navigateToStudioDetails: (Int) -> Unit,
+    navigateToAnimeSeason: (AnimeSeason) -> Unit,
 ) {
     val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
@@ -79,7 +82,14 @@ fun MediaInformationView(
         if (isAnime) {
             InfoItemView(
                 title = stringResource(R.string.season),
-                info = uiState.details?.seasonAndYear()
+                info = uiState.details?.seasonAndYear(),
+                modifier = Modifier.clickable {
+                    uiState.details?.season?.let { season ->
+                        uiState.details.seasonYear?.let { year ->
+                            navigateToAnimeSeason(AnimeSeason(year, season))
+                        }
+                    }
+                }
             )
         }
         InfoItemView(
@@ -267,7 +277,8 @@ fun MediaInformationViewPreview() {
             MediaInformationView(
                 uiState = MediaDetailsUiState(),
                 navigateToGenreTag = { _, _, _ -> },
-                navigateToStudioDetails = {}
+                navigateToStudioDetails = {},
+                navigateToAnimeSeason = {}
             )
         }
     }
