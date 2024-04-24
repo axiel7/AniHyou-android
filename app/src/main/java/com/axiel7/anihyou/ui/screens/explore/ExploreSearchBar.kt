@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,57 +73,64 @@ private fun ExploreSearchBarContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val onActiveChange: (Boolean) -> Unit = {
+            isSearchActive = it
+            if (!isSearchActive) query = ""
+        }
         SearchBar(
-            query = query,
-            onQueryChange = { query = it },
-            onSearch = {
-                performSearch.value = true
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = query,
+                    onQueryChange = { query = it },
+                    onSearch = {
+                        performSearch.value = true
+                    },
+                    expanded = isSearchActive,
+                    onExpandedChange = onActiveChange,
+                    placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
+                    leadingIcon = {
+                        if (isSearchActive) {
+                            IconButton(
+                                onClick = {
+                                    isSearchActive = false
+                                    query = ""
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_back_24),
+                                    contentDescription = stringResource(R.string.action_back)
+                                )
+                            }
+                        } else {
+                            Icon(
+                                painter = painterResource(R.drawable.search_24),
+                                contentDescription = stringResource(R.string.search)
+                            )
+                        }
+                    },
+                    trailingIcon = {
+                        if (isSearchActive && query.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    query = ""
+                                    performSearch.value = true
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24),
+                                    contentDescription = stringResource(R.string.delete)
+                                )
+                            }
+                        }
+                    }
+                )
             },
-            active = isSearchActive,
-            onActiveChange = {
-                isSearchActive = it
-                if (!isSearchActive) query = ""
-            },
+            expanded = isSearchActive,
+            onExpandedChange = onActiveChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = searchHorizontalPadding)
-                .padding(bottom = searchBottomPadding),
-            placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
-            leadingIcon = {
-                if (isSearchActive) {
-                    IconButton(
-                        onClick = {
-                            isSearchActive = false
-                            query = ""
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.arrow_back_24),
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                } else {
-                    Icon(
-                        painter = painterResource(R.drawable.search_24),
-                        contentDescription = stringResource(R.string.search)
-                    )
-                }
-            },
-            trailingIcon = {
-                if (isSearchActive && query.isNotEmpty()) {
-                    IconButton(
-                        onClick = {
-                            query = ""
-                            performSearch.value = true
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.close_24),
-                            contentDescription = stringResource(R.string.delete)
-                        )
-                    }
-                }
-            }
+                .padding(bottom = searchBottomPadding)
         ) {
             SearchContentView(
                 query = query,
