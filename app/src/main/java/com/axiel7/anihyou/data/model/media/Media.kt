@@ -50,11 +50,6 @@ fun MediaDetailsQuery.Media.streamingLinks() =
 fun MediaDetailsQuery.Media.externalLinks() =
     externalLinks?.filterNotNull()?.filter { it.type != ExternalLinkType.STREAMING }
 
-fun MediaDetailsQuery.ExternalLink.displayName() = buildString {
-    append(site)
-    languageShort()?.let { lang -> append(" ($lang)") }
-}
-
 fun MediaDetailsQuery.ExternalLink.languageShort() = when (language) {
     "Japanese" -> "JP"
     "English" -> "EN"

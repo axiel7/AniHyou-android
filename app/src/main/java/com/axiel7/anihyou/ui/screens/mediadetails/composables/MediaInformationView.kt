@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,10 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.AnimeSeason
-import com.axiel7.anihyou.data.model.media.displayName
 import com.axiel7.anihyou.data.model.media.episodeNumber
 import com.axiel7.anihyou.data.model.media.externalLinks
 import com.axiel7.anihyou.data.model.media.isAnime
+import com.axiel7.anihyou.data.model.media.languageShort
 import com.axiel7.anihyou.data.model.media.link
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.data.model.media.seasonAndYear
@@ -240,28 +241,50 @@ fun MediaInformationView(
             if (streamingLinks.isNotEmpty()) {
                 InfoTitle(text = stringResource(R.string.streaming_sites))
                 FlowRow(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 8.dp
+                    )
                 ) {
                     streamingLinks.forEach { link ->
-                        TextButton(onClick = { link.url?.let { context.openActionView(it) } }) {
-                            Text(text = link.displayName())
-                        }
+                        AssistChip(
+                            onClick = { link.url?.let { context.openActionView(it) } },
+                            label = { Text(text = link.site) },
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            trailingIcon = {
+                                link.languageShort()?.let { lang ->
+                                    Text(text = lang)
+                                }
+                            }
+                        )
                     }
                 }
             }
         }
 
-        //External links
+        // External links
         uiState.details?.externalLinks()?.let { externalLinks ->
             if (externalLinks.isNotEmpty()) {
                 InfoTitle(text = stringResource(R.string.external_links))
                 FlowRow(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 8.dp
+                    )
                 ) {
                     externalLinks.forEach { link ->
-                        TextButton(onClick = { link.url?.let { context.openActionView(it) } }) {
-                            Text(text = link.displayName())
-                        }
+                        AssistChip(
+                            onClick = { link.url?.let { context.openActionView(it) } },
+                            label = { Text(text = link.site) },
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            trailingIcon = {
+                                link.languageShort()?.let { lang ->
+                                    Text(text = lang)
+                                }
+                            }
+                        )
                     }
                 }
             }
