@@ -115,9 +115,9 @@ fun CompactUserMediaListItem(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     val progress = item.basicMediaListEntry.progress?.format() ?: 0
-                    val duration = item.media?.basicMediaDetails?.duration()?.format() ?: 0
+                    val duration = item.media?.basicMediaDetails?.duration()?.format()
                     Text(
-                        text = "$progress/$duration",
+                        text = if (duration != null) "$progress/$duration" else "$progress",
                         fontSize = 15.sp,
                     )
 
