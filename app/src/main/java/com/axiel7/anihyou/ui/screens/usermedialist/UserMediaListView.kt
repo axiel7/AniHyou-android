@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -141,9 +142,12 @@ private fun LazyListGrid(
             item(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
-                RandomEntryButton(
-                    onClick = { event?.getRandomPlannedEntry() }
-                )
+                Row {
+                    RandomEntryButton(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = { event?.getRandomPlannedEntry() }
+                    )
+                }
             }
         }
         if (uiState.isLoading) {
@@ -198,9 +202,12 @@ private fun LazyListTablet(
             item(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
-                RandomEntryButton(
-                    onClick = { event?.getRandomPlannedEntry() }
-                )
+                Row {
+                    RandomEntryButton(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = { event?.getRandomPlannedEntry() }
+                    )
+                }
             }
         }
         when (uiState.listStyle) {
@@ -327,6 +334,7 @@ private fun LazyListPhone(
             item {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     RandomEntryButton(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         onClick = { event?.getRandomPlannedEntry() }
                     )
                 }
