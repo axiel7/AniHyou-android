@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.common.navigation
 
 // this is required because androidx.navigation doesn't support nullable boolean
-enum class TriBoolean(val value: Int) {
+enum class TriBoolean(val value: Byte) {
     TRUE(1),
     FALSE(0),
     NONE(2);
