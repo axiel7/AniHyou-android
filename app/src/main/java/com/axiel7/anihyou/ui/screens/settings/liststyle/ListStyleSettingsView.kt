@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -36,8 +37,10 @@ fun ListStyleSettingsView(
     navActionManager: NavActionManager,
 ) {
     val viewModel: ListStyleSettingsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ListStyleSettingsContent(
+        uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,
     )
@@ -46,6 +49,7 @@ fun ListStyleSettingsView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ListStyleSettingsContent(
+    uiState: ListStyleSettingsUiState,
     event: ListStyleSettingsEvent?,
     navActionManager: NavActionManager,
 ) {
@@ -72,12 +76,20 @@ private fun ListStyleSettingsContent(
 
             PreferencesTitle(text = stringResource(R.string.anime_list))
             MediaListStatus.knownEntries.forEach { status ->
-                val preference = event?.getAnimeListStyle(status)?.collectAsStateWithLifecycle()
+                val preference = when (status) {
+                    MediaListStatus.CURRENT -> uiState.animeCurrentListStyle
+                    MediaListStatus.PLANNING -> uiState.animePlanningListStyle
+                    MediaListStatus.COMPLETED -> uiState.animeCompletedListStyle
+                    MediaListStatus.DROPPED -> uiState.animeDroppedListStyle
+                    MediaListStatus.PAUSED -> uiState.animePausedListStyle
+                    MediaListStatus.REPEATING -> uiState.animeRepeatingListStyle
+                    MediaListStatus.UNKNOWN__ -> null
+                }
 
                 ListPreference(
                     title = status.localized(mediaType = MediaType.ANIME),
                     entriesValues = ListStyle.entriesLocalized,
-                    preferenceValue = preference?.value,
+                    preferenceValue = preference,
                     icon = status.icon(),
                     onValueChange = { value ->
                         event?.setAnimeListStyle(status, value)
@@ -87,12 +99,20 @@ private fun ListStyleSettingsContent(
 
             PreferencesTitle(text = stringResource(R.string.manga_list))
             MediaListStatus.knownEntries.forEach { status ->
-                val preference = event?.getMangaListStyle(status)?.collectAsStateWithLifecycle()
+                val preference = when (status) {
+                    MediaListStatus.CURRENT -> uiState.mangaCurrentListStyle
+                    MediaListStatus.PLANNING -> uiState.mangaPlanningListStyle
+                    MediaListStatus.COMPLETED -> uiState.mangaCompletedListStyle
+                    MediaListStatus.DROPPED -> uiState.mangaDroppedListStyle
+                    MediaListStatus.PAUSED -> uiState.mangaPausedListStyle
+                    MediaListStatus.REPEATING -> uiState.mangaRepeatingListStyle
+                    MediaListStatus.UNKNOWN__ -> null
+                }
 
                 ListPreference(
                     title = status.localized(mediaType = MediaType.MANGA),
                     entriesValues = ListStyle.entriesLocalized,
-                    preferenceValue = preference?.value,
+                    preferenceValue = preference,
                     icon = status.icon(),
                     onValueChange = { value ->
                         event?.setMangaListStyle(status, value)
@@ -109,6 +129,7 @@ fun ListStyleSettingsViewPreview() {
     AniHyouTheme {
         Surface {
             ListStyleSettingsContent(
+                uiState = ListStyleSettingsUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )
