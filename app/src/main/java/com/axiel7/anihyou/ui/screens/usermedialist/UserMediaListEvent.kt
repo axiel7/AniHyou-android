@@ -38,4 +38,8 @@ interface UserMediaListEvent : PagedEvent, UiEvent {
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
 
     fun selectItem(value: CommonMediaListEntry?)
+
+    fun getRandomPlannedEntry(chunk: Int = 1)
+
+    fun onRandomEntryOpened()
 }

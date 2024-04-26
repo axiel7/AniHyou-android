@@ -4,9 +4,12 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -24,6 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
@@ -33,6 +37,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.RandomEntryButton
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +59,13 @@ fun UserMediaListView(
     }
     LaunchedEffect(uiState.fetchFromNetwork) {
         if (!uiState.fetchFromNetwork) pullRefreshState.endRefresh()
+    }
+
+    LaunchedEffect(uiState.randomEntryId) {
+        uiState.randomEntryId?.let { id ->
+            event?.onRandomEntryOpened()
+            navActionManager.toMediaDetails(id)
+        }
     }
 
     LaunchedEffect(uiState.error) {
@@ -125,6 +137,15 @@ private fun LazyListGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
+        if (uiState.status == MediaListStatus.PLANNING) {
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                RandomEntryButton(
+                    onClick = { event?.getRandomPlannedEntry() }
+                )
+            }
+        }
         if (uiState.isLoading) {
             items(10) {
                 MediaItemVerticalPlaceholder()
@@ -173,6 +194,15 @@ private fun LazyListTablet(
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.Center
     ) {
+        if (uiState.status == MediaListStatus.PLANNING) {
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                RandomEntryButton(
+                    onClick = { event?.getRandomPlannedEntry() }
+                )
+            }
+        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
                 if (uiState.isLoading) {
@@ -293,6 +323,15 @@ private fun LazyListPhone(
         state = listState,
         contentPadding = contentPadding,
     ) {
+        if (uiState.status == MediaListStatus.PLANNING) {
+            item {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    RandomEntryButton(
+                        onClick = { event?.getRandomPlannedEntry() }
+                    )
+                }
+            }
+        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
                 if (uiState.isLoading) {

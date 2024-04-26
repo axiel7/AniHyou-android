@@ -190,6 +190,43 @@ class UserMediaListViewModel @Inject constructor(
         }
     }
 
+    override fun getRandomPlannedEntry(chunk: Int) {
+        if (chunk == 1 && mutableUiState.value.plannedEntriesIds.isNotEmpty()) {
+            mutableUiState.update {
+                it.copy(randomEntryId = it.plannedEntriesIds.random())
+            }
+        } else {
+            viewModelScope.launch {
+                var hasNextPage = false
+                mediaListRepository.getMediaListIds(
+                    userId = mutableUiState.value.userId ?: myUserId.first(),
+                    type = mutableUiState.value.mediaType,
+                    status = MediaListStatus.PLANNING,
+                    chunk = chunk
+                ).collectLatest { result ->
+                    mutableUiState.update {
+                        if (result is PagedResult.Success) {
+                            hasNextPage = result.hasNextPage
+                            val newList = it.plannedEntriesIds + result.list
+                            it.copy(
+                                plannedEntriesIds = newList,
+                                randomEntryId = if (!result.hasNextPage) newList.random() else null,
+                                isLoading = result.hasNextPage
+                            )
+                        } else result.toUiState()
+                    }
+                }
+                if (hasNextPage) {
+                    getRandomPlannedEntry(chunk + 1)
+                }
+            }
+        }
+    }
+
+    override fun onRandomEntryOpened() {
+        mutableUiState.update { it.copy(randomEntryId = null) }
+    }
+
     init {
         userId
             .onEach { value ->

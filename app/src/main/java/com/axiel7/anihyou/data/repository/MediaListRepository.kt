@@ -1,11 +1,14 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.MediaListApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.fragment.CommonPage
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
@@ -110,5 +113,25 @@ class MediaListRepository @Inject constructor(
         .toFlow()
         .asDataResult {
             it.MediaList?.customLists as? LinkedHashMap<String, Boolean>
+        }
+
+    fun getMediaListIds(
+        userId: Int,
+        type: MediaType,
+        status: MediaListStatus?,
+        chunk: Int = 1,
+        perChunk: Int = 500,
+    ) = api
+        .mediaListIds(userId, type, status, chunk, perChunk)
+        .fetchPolicy(FetchPolicy.CacheFirst)
+        .toFlow()
+        .asPagedResult(
+            page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }
+        ) { data ->
+            data.MediaListCollection?.lists
+                ?.flatMap { list ->
+                    list?.entries?.mapNotNull { it?.mediaId }.orEmpty()
+                }
+                .orEmpty()
         }
 }

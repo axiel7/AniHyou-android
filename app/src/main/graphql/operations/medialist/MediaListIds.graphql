@@ -1,0 +1,22 @@
+query MediaListIds(
+    $type: MediaType,
+    $userId: Int,
+    $status: MediaListStatus,
+    $chunk: Int,
+    $perChunk: Int
+) {
+    MediaListCollection(
+        type: $type,
+        userId: $userId,
+        status: $status,
+        chunk: $chunk,
+        perChunk: $perChunk
+    ) {
+        lists {
+            entries {
+                mediaId
+            }
+        }
+        hasNextChunk
+    }
+}
