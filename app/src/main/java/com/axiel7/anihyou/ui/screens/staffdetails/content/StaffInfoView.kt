@@ -1,6 +1,8 @@
 package com.axiel7.anihyou.ui.screens.staffdetails.content
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,10 +30,12 @@ import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsUiState
+import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.utils.NumberUtils.format
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StaffInfoView(
     uiState: StaffDetailsUiState,
@@ -38,6 +43,7 @@ fun StaffInfoView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     val isCurrentLanguageEn = LocalIsLanguageEn.current
 
     Column(
@@ -68,7 +74,15 @@ fun StaffInfoView(
                     text = uiState.details?.name?.userPreferred ?: "Loading",
                     modifier = Modifier
                         .padding(8.dp)
-                        .defaultPlaceholder(visible = uiState.isLoading),
+                        .defaultPlaceholder(visible = uiState.isLoading)
+                        .combinedClickable(
+                            onLongClick = {
+                                uiState.details?.name?.userPreferred?.let {
+                                    context.copyToClipBoard(it)
+                                }
+                            },
+                            onClick = {}
+                        ),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )

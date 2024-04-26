@@ -1,6 +1,8 @@
 package com.axiel7.anihyou.ui.screens.characterdetails.content
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,10 +33,12 @@ import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsUiState
+import com.axiel7.anihyou.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.LocaleUtils.LocalIsLanguageEn
 import io.github.fornewid.placeholder.material3.placeholder
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterInfoView(
     uiState: CharacterDetailsUiState,
@@ -41,6 +46,7 @@ fun CharacterInfoView(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToFullscreenImage: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
     val isCurrentLanguageEn = LocalIsLanguageEn.current
 
@@ -72,7 +78,15 @@ fun CharacterInfoView(
                     text = uiState.character?.name?.userPreferred ?: "Loading",
                     modifier = Modifier
                         .padding(8.dp)
-                        .defaultPlaceholder(visible = uiState.isLoading),
+                        .defaultPlaceholder(visible = uiState.isLoading)
+                        .combinedClickable(
+                            onLongClick = {
+                                uiState.character?.name?.userPreferred?.let {
+                                    context.copyToClipBoard(it)
+                                }
+                            },
+                            onClick = {}
+                        ),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -88,7 +102,7 @@ fun CharacterInfoView(
 
                 if (uiState.alternativeNames?.isNotBlank() == true) {
                     Text(
-                        text = uiState.alternativeNames.orEmpty(),
+                        text = uiState.alternativeNames,
                         modifier = Modifier
                             .padding(8.dp)
                             .defaultPlaceholder(visible = uiState.isLoading),
@@ -97,7 +111,7 @@ fun CharacterInfoView(
 
                 if (uiState.alternativeNamesSpoiler?.isNotBlank() == true) {
                     Text(
-                        text = uiState.alternativeNamesSpoiler.orEmpty(),
+                        text = uiState.alternativeNamesSpoiler,
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                             .placeholder(visible = !showSpoiler)
