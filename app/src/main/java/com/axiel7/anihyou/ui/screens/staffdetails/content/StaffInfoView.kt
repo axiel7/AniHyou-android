@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,19 +88,21 @@ fun StaffInfoView(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                if (!uiState.details?.name?.native.isNullOrBlank() || uiState.isLoading) {
-                    Text(
-                        text = uiState.details?.name?.native ?: "Loading...",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading),
-                    )
-                }
-                if (!uiState.details?.name?.alternative.isNullOrEmpty()) {
-                    Text(
-                        text = uiState.details?.name?.alternative?.joinToString().orEmpty(),
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+                SelectionContainer {
+                    if (!uiState.details?.name?.native.isNullOrBlank() || uiState.isLoading) {
+                        Text(
+                            text = uiState.details?.name?.native ?: "Loading...",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .defaultPlaceholder(visible = uiState.isLoading),
+                        )
+                    }
+                    if (!uiState.details?.name?.alternative.isNullOrEmpty()) {
+                        Text(
+                            text = uiState.details?.name?.alternative?.joinToString().orEmpty(),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
                 }
             }//: Column
         }//: Row

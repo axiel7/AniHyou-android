@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,32 +92,34 @@ fun CharacterInfoView(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                if (!uiState.character?.name?.native.isNullOrBlank() || uiState.isLoading) {
-                    Text(
-                        text = uiState.character?.name?.native ?: "Loading...",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading),
-                    )
-                }
+                SelectionContainer {
+                    if (!uiState.character?.name?.native.isNullOrBlank() || uiState.isLoading) {
+                        Text(
+                            text = uiState.character?.name?.native ?: "Loading...",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .defaultPlaceholder(visible = uiState.isLoading),
+                        )
+                    }
 
-                if (uiState.alternativeNames?.isNotBlank() == true) {
-                    Text(
-                        text = uiState.alternativeNames,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading),
-                    )
-                }
+                    if (uiState.alternativeNames?.isNotBlank() == true) {
+                        Text(
+                            text = uiState.alternativeNames,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .defaultPlaceholder(visible = uiState.isLoading),
+                        )
+                    }
 
-                if (uiState.alternativeNamesSpoiler?.isNotBlank() == true) {
-                    Text(
-                        text = uiState.alternativeNamesSpoiler,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .placeholder(visible = !showSpoiler)
-                            .clickable { showSpoiler = !showSpoiler }
-                    )
+                    if (uiState.alternativeNamesSpoiler?.isNotBlank() == true) {
+                        Text(
+                            text = uiState.alternativeNamesSpoiler,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .placeholder(visible = !showSpoiler)
+                                .clickable { showSpoiler = !showSpoiler }
+                        )
+                    }
                 }
             }//: Column
         }//: Row
