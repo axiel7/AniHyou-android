@@ -336,6 +336,12 @@
     <string name="read_year">Рік читання</string>
     <string name="top_movies">Найпопулярніші фільми</string>
     <string name="progress">Прогрес</string>
+    <string name="list">Список</string>
     <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
+    <string name="show_less">Менше</string>
+    <string name="show_more">Більше</string>
+    <string name="continue_watching">Продовжити перегляд</string>
+    <string name="hide_from_status_lists">Не показувати в списках статусу</string>
+    <string name="black_theme_variant">Варіант темної теми</string>
 </resources>
