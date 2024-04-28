@@ -347,4 +347,5 @@
     <string name="continue_watching">Seguir viendo</string>
     <string name="hide_from_status_lists">Ocultar de las listas de estado</string>
     <string name="black_theme_variant">Variante del tema negro</string>
+    <string name="random">Aleatorio</string>
 </resources>
