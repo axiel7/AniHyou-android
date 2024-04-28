@@ -37,7 +37,7 @@ private val translations = mapOf(
     "ru-RU" to "Ronner231, grin3671",
     "es-ES" to "axiel7",
     "tr-TR" to "hsinankirdar",
-    "uk-UA" to "Syly_vibes, Sensetivity",
+    "uk-UA" to "Syly_vibes, Sensetivity, magnariuk",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
