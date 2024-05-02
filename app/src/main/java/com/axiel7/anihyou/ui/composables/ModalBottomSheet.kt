@@ -31,7 +31,7 @@ fun ModalBottomSheet(
         onDismissRequest = { dismiss() },
         modifier = modifier,
         sheetState = sheetState,
-        windowInsets = windowInsets,
+        contentWindowInsets = { windowInsets },
     ) {
         content { dismiss() }
     }

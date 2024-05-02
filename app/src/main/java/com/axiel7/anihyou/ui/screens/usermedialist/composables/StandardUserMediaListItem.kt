@@ -158,7 +158,7 @@ fun StandardUserMediaListItem(
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp),
                         strokeCap = StrokeCap.Round,
-                        drawStopIndicator = null,
+                        drawStopIndicator = { },
                     )
                 }//:Column
             }//:Column

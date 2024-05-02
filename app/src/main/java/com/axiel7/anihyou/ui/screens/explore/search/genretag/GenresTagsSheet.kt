@@ -111,7 +111,7 @@ private fun GenresTagsSheetContent(
             onDismiss(uiState.genresAndTagsForSearch())
         },
         sheetState = sheetState,
-        windowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
     ) {
         Column(
             modifier = Modifier

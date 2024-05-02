@@ -17,7 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,14 +53,6 @@ fun UserMediaListView(
 ) {
     val context = LocalContext.current
     val pullRefreshState = rememberPullToRefreshState()
-    if (pullRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            event?.refreshList()
-        }
-    }
-    LaunchedEffect(uiState.fetchFromNetwork) {
-        if (!uiState.fetchFromNetwork) pullRefreshState.endRefresh()
-    }
 
     LaunchedEffect(uiState.randomEntryId) {
         uiState.randomEntryId?.let { id ->
@@ -76,10 +68,11 @@ fun UserMediaListView(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(pullRefreshState.nestedScrollConnection)
+    PullToRefreshBox(
+        isRefreshing = uiState.fetchFromNetwork,
+        onRefresh = { event?.refreshList() },
+        modifier = Modifier.fillMaxSize(),
+        state = pullRefreshState,
     ) {
         val listModifier = Modifier
             .fillMaxSize()
@@ -114,10 +107,6 @@ fun UserMediaListView(
                 onShowEditSheet = onShowEditSheet,
             )
         }
-        PullToRefreshContainer(
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
     }//: Box
 }
 
