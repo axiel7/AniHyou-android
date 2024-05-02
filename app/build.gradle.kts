@@ -133,7 +133,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$materialVersion")
     implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
 
-    implementation("androidx.navigation:navigation-compose:2.8.0-alpha07")
+    implementation("androidx.navigation:navigation-compose:2.8.0-alpha08")
     implementation("androidx.glance:glance-appwidget:1.0.0")
 
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
