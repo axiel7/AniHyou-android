@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -14,5 +15,6 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val unreadNotificationCount = userRepository.getUnreadNotificationCount()
+        .map { it ?: 0 }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 }

@@ -38,7 +38,7 @@ class UserRepository @Inject constructor(
                 .refetchPolicy(FetchPolicy.NetworkFirst)
                 .watch()
                 .map {
-                    it.data?.Viewer?.unreadNotificationCount ?: 0
+                    it.data?.Viewer?.unreadNotificationCount
                 }
         }
 
