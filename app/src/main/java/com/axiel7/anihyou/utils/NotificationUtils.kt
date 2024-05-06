@@ -35,6 +35,7 @@ object NotificationUtils {
         text: String,
         pendingIntent: PendingIntent? = null,
         group: String? = null,
+        isGroupSummary: Boolean = false,
     ): Boolean {
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setContentTitle(title)
@@ -43,6 +44,7 @@ object NotificationUtils {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setGroup(group)
+            .setGroupSummary(isGroupSummary)
 
         with(NotificationManagerCompat.from(applicationContext)) {
             if (ActivityCompat.checkSelfPermission(

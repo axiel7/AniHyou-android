@@ -108,7 +108,17 @@ class NotificationWorker @AssistedInject constructor(
                         title = it.text,
                         text = "",
                         pendingIntent = pendingIntent,
-                        group = it.type?.name
+                        group = "default"
+                    )
+                }
+                if (newNotifications.size > 4) {
+                    applicationContext.showNotification(
+                        notificationId = 1,
+                        channelId = DEFAULT_CHANNEL_ID,
+                        title = "${newNotifications.size} ${applicationContext.getString(R.string.notifications)}",
+                        text = "",
+                        group = "default",
+                        isGroupSummary = true
                     )
                 }
 
