@@ -116,7 +116,13 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun setAdvancedScore(key: String, value: Double?) {
-        mutableUiState.value.advancedScores[key] = value ?: 0.0
+        mutableUiState.update { uiState ->
+            uiState.advancedScores[key] = value ?: 0.0
+            val scoresToSum = uiState.advancedScores.values.filter { it > 0.0 }
+            uiState.copy(
+                score = scoresToSum.sum() / scoresToSum.size
+            )
+        }
     }
 
     override fun setStartedAt(value: Long?) {
