@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
@@ -19,7 +21,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -31,9 +32,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,9 +47,8 @@ class UserMediaListViewModel @Inject constructor(
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
     private val mediaType =
-        savedStateHandle.getStateFlow(NavArgument.MediaType.name, MediaType.UNKNOWN__.name)
-            .map { MediaType.safeValueOf(it) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, MediaType.UNKNOWN__)
+        savedStateHandle.get<String>(NavArgument.MediaType.name)
+            ?.let { MediaType.safeValueOf(it) } ?: MediaType.UNKNOWN__
 
     private val userId: StateFlow<Int?> =
         savedStateHandle.getStateFlow(NavArgument.UserId.name, null)
@@ -59,7 +57,7 @@ class UserMediaListViewModel @Inject constructor(
 
     override val initialState =
         UserMediaListUiState(
-            mediaType = mediaType.value,
+            mediaType = mediaType,
             scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
         )
 
@@ -76,13 +74,12 @@ class UserMediaListViewModel @Inject constructor(
         mutableUiState.update { it.copy(scoreFormat = value) }
     }
 
-    override fun setStatus(value: MediaListStatus?) {
-        viewModelScope.launch {
-            if (mediaType.value == MediaType.ANIME) {
-                listPreferencesRepository.setAnimeListStatus(value)
-            } else if (mediaType.value == MediaType.MANGA) {
-                listPreferencesRepository.setMangaListStatus(value)
-            }
+    override fun onChangeList(listName: String?) {
+        mutableUiState.update {
+            it.copy(
+                entries = it.getEntriesFromListName(listName).toMutableStateList(),
+                selectedListName = listName,
+            )
         }
     }
 
@@ -108,9 +105,9 @@ class UserMediaListViewModel @Inject constructor(
                     else -> value
                 }
             }
-            if (mediaType.value == MediaType.ANIME) {
+            if (mediaType == MediaType.ANIME) {
                 listPreferencesRepository.setAnimeListSort(sort)
-            } else if (mediaType.value == MediaType.MANGA) {
+            } else if (mediaType == MediaType.MANGA) {
                 listPreferencesRepository.setMangaListSort(sort)
             }
         }
@@ -142,18 +139,22 @@ class UserMediaListViewModel @Inject constructor(
             progress = progress,
         ).onEach { result ->
             mutableUiState.update { uiState ->
-                if (result is DataResult.Success && result.data != null) {
-                    val foundIndex = uiState.media.indexOfFirst { it.id == entryId }
-                    if (foundIndex != -1) {
-                        if (result.data.status != uiState.media[foundIndex].basicMediaListEntry.status) {
-                            uiState.media.removeAt(foundIndex)
+                if (result is DataResult.Success
+                    && result.data != null
+                    && uiState.selectedListName != null
+                ) {
+                    uiState.entries.indexOfFirstOrNull { it.id == entryId }?.let { foundIndex ->
+                        val oldValue = uiState.entries[foundIndex]
+                        if (result.data.status != oldValue.basicMediaListEntry.status) {
+                            uiState.entries.removeAt(foundIndex)
                         } else {
-                            uiState.media[foundIndex] = uiState.media[foundIndex].copy(
-                                basicMediaListEntry = uiState.media[foundIndex].basicMediaListEntry.copy(
+                            uiState.entries[foundIndex] = oldValue.copy(
+                                basicMediaListEntry = oldValue.basicMediaListEntry.copy(
                                     progress = progress
                                 )
                             )
                         }
+                        uiState.lists[uiState.selectedListName] = uiState.entries
                     }
                 }
                 result.toUiState()
@@ -178,12 +179,15 @@ class UserMediaListViewModel @Inject constructor(
                     if (newListEntry != null
                         && newListEntry.status == selectedItem.basicMediaListEntry.status
                     ) {
-                        val index = media.indexOf(selectedItem)
+                        val index = entries.indexOf(selectedItem)
                         if (index != -1) {
-                            media[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
+                            entries[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
                         }
                     } else {
-                        media.remove(selectedItem)
+                        entries.remove(selectedItem)
+                    }
+                    selectedListName?.let { selectedListName ->
+                        lists[selectedListName] = entries
                     }
                 }
             }
@@ -239,12 +243,6 @@ class UserMediaListViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        mediaType
-            .onEach { value ->
-                mutableUiState.update { it.copy(mediaType = value) }
-            }
-            .launchIn(viewModelScope)
-
         // score format
         uiState
             .distinctUntilChangedBy { it.isMyList }
@@ -260,10 +258,9 @@ class UserMediaListViewModel @Inject constructor(
 
         // list style
         combine(
-            mediaType,
             listPreferencesRepository.useGeneralListStyle,
             listPreferencesRepository.generalListStyle
-        ) { mediaType, useGeneral, generalStyle ->
+        ) { useGeneral, generalStyle ->
             if (useGeneral) {
                 mutableUiState.update { it.copy(listStyle = generalStyle) }
             } else {
@@ -289,14 +286,11 @@ class UserMediaListViewModel @Inject constructor(
             .launchIn(viewModelScope)
 
         // sort preference
-        mediaType
-            .flatMapLatest {
-                when (it) {
-                    MediaType.ANIME -> listPreferencesRepository.animeListSort
-                    MediaType.MANGA -> listPreferencesRepository.mangaListSort
-                    else -> emptyFlow()
-                }
-            }
+        when (mediaType) {
+            MediaType.ANIME -> listPreferencesRepository.animeListSort
+            MediaType.MANGA -> listPreferencesRepository.mangaListSort
+            else -> emptyFlow()
+        }
             .filterNotNull()
             .distinctUntilChanged()
             .onEach { sort ->
@@ -306,20 +300,16 @@ class UserMediaListViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        // status preference
-        mediaType
-            .flatMapLatest {
-                when (it) {
-                    MediaType.ANIME -> listPreferencesRepository.animeListStatus
-                    MediaType.MANGA -> listPreferencesRepository.mangaListStatus
-                    else -> emptyFlow()
-                }
-            }
+        // custom lists
+        when (mediaType) {
+            MediaType.ANIME -> defaultPreferencesRepository.animeCustomLists
+            MediaType.MANGA -> defaultPreferencesRepository.mangaCustomLists
+            else -> emptyFlow()
+        }
+            .filterNotNull()
             .distinctUntilChanged()
-            .onEach { status ->
-                mutableUiState.update {
-                    it.copy(status = status, page = 1, hasNextPage = true, isLoading = true)
-                }
+            .onEach { customLists ->
+                mutableUiState.update { it.copy(customLists = customLists) }
             }
             .launchIn(viewModelScope)
 
@@ -327,41 +317,42 @@ class UserMediaListViewModel @Inject constructor(
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
-                        && old.status == new.status
                         && old.sort == new.sort
                         && !new.fetchFromNetwork
             }
-            .combine(mediaType, ::Pair)
-            .flatMapLatest { (uiState, mediaType) ->
+            .flatMapLatest { uiState ->
                 val listUserId = uiState.userId ?: myUserId.first()
-                val sort = if (uiState.status == null) {
-                    listOf(MediaListSort.STATUS, uiState.sort)
-                } else {
-                    listOf(uiState.sort, MediaListSort.MEDIA_ID_DESC)
-                }
-                mediaListRepository.getUserMediaListPage(
+                mediaListRepository.getMediaListCollection(
                     userId = listUserId,
                     mediaType = mediaType,
-                    status = uiState.status,
-                    sort = sort,
+                    sort = listOf(uiState.sort),
                     fetchFromNetwork = uiState.fetchFromNetwork,
-                    page = uiState.page
+                    chunk = uiState.page,
+                    perChunk = 50
                 )
             }
             .onEach { result ->
-                if (result is PagedResult.Success) {
-                    mutableUiState.update {
-                        if (it.page == 1 || result.currentPage == 1) it.media.clear()
-                        it.media.addAll(result.list)
-                        it.copy(
+                mutableUiState.update { uiState ->
+                    if (result is PagedResult.Success) {
+                        if (uiState.page == 1 || result.currentPage == 1) {
+                            uiState.lists.clear()
+                        }
+                        result.list.forEach { list ->
+                            list?.name?.let { name ->
+                                uiState.lists[name] = uiState.lists[name].orEmpty() +
+                                        list.entries?.mapNotNull { it?.commonMediaListEntry }
+                                            .orEmpty()
+                            }
+                        }
+                        uiState.copy(
+                            entries = uiState.getEntriesFromListName(uiState.selectedListName)
+                                .toMutableStateList(),
                             hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
                             isLoading = false,
                         )
-                    }
-                } else {
-                    mutableUiState.update {
-                        result.toUiState(loadingWhen = it.page == 1)
+                    } else {
+                        result.toUiState(loadingWhen = uiState.page == 1)
                     }
                 }
             }

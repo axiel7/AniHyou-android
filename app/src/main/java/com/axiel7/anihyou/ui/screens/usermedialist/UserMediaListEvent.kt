@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
-import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.event.PagedEvent
 import com.axiel7.anihyou.ui.common.event.UiEvent
@@ -11,7 +10,7 @@ import com.axiel7.anihyou.ui.common.event.UiEvent
 interface UserMediaListEvent : PagedEvent, UiEvent {
     fun setScoreFormat(value: ScoreFormat)
 
-    fun setStatus(value: MediaListStatus?)
+    fun onChangeList(listName: String?)
 
     fun setSort(value: MediaListSort)
 

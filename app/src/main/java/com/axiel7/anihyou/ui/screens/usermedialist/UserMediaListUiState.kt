@@ -3,9 +3,9 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
-import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.ItemsPerRow
@@ -15,11 +15,13 @@ import com.axiel7.anihyou.ui.common.state.PagedUiState
 @Stable
 data class UserMediaListUiState(
     val mediaType: MediaType,
-    val media: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val lists: MutableMap<String, List<CommonMediaListEntry>> = mutableMapOf(),
+    val customLists: List<String> = emptyList(),
+    val selectedListName: String? = null,
+    val entries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val isMyList: Boolean = true,
     val userId: Int? = null,
     var selectedItem: CommonMediaListEntry? = null,
-    val status: MediaListStatus? = MediaListStatus.CURRENT,
     val sort: MediaListSort = MediaListSort.UPDATED_TIME_DESC,
     val listStyle: ListStyle = ListStyle.STANDARD,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,
@@ -39,4 +41,12 @@ data class UserMediaListUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
+
+    val status = selectedListName?.asMediaListStatus()
+
+    fun getEntriesFromListName(name: String?) = if (name != null) {
+        lists[name].orEmpty()
+    } else {
+        lists.values.flatten()
+    }
 }

@@ -1,11 +1,18 @@
-query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
-    Page(page: $page, perPage: $perPage) {
-        mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
-            ...CommonMediaListEntry
+query UserListCollection(
+    $userId: Int,
+    $type: MediaType,
+    $sort: [MediaListSort],
+    $chunk: Int,
+    $perChunk: Int
+) {
+    MediaListCollection(userId: $userId, type: $type, sort: $sort, chunk: $chunk, perChunk: $perChunk) {
+        lists {
+            name
+            entries {
+                ...CommonMediaListEntry
+            }
         }
-        pageInfo {
-            ...CommonPage
-        }
+        hasNextChunk
     }
 }
 

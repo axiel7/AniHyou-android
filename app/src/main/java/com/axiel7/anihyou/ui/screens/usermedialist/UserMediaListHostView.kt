@@ -52,7 +52,7 @@ import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
-import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListStatusSheet
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.SortMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -89,7 +89,7 @@ private fun UserMediaListHostContent(
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
-    var showStatusSheet by remember { mutableStateOf(false) }
+    var showListsSheet by remember { mutableStateOf(false) }
     var showEditSheet by remember { mutableStateOf(false) }
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -109,14 +109,15 @@ private fun UserMediaListHostContent(
         )
     }
 
-    if (showStatusSheet) {
-        ListStatusSheet(
-            selectedStatus = uiState.status,
+    if (showListsSheet) {
+        ListSelectSheet(
+            selectedListName = uiState.selectedListName,
             mediaType = uiState.mediaType,
+            customLists = uiState.customLists,
             scope = scope,
             bottomPadding = bottomBarPadding,
-            onStatusChanged = { event?.setStatus(it) },
-            onDismiss = { showStatusSheet = false }
+            onListChanged = { event?.onChangeList(it) },
+            onDismiss = { showListsSheet = false }
         )
     }
 
@@ -144,13 +145,20 @@ private fun UserMediaListHostContent(
                 enter = slideInVertically(initialOffsetY = { it * 2 }),
                 exit = slideOutVertically(targetOffsetY = { it * 2 }),
             ) {
-                ExtendedFloatingActionButton(onClick = { showStatusSheet = true }) {
-                    Icon(
-                        painter = painterResource(uiState.status.icon()),
-                        contentDescription = stringResource(R.string.list_status),
-                        modifier = Modifier.padding(end = 8.dp)
+                ExtendedFloatingActionButton(onClick = { showListsSheet = true }) {
+                    if (uiState.selectedListName == null || uiState.status != null) {
+                        Icon(
+                            painter = painterResource(
+                                id = uiState.status?.icon() ?: R.drawable.list_alt_24
+                            ),
+                            contentDescription = stringResource(R.string.list_status),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+                    Text(
+                        text = uiState.status?.localized(uiState.mediaType)
+                            ?: uiState.selectedListName ?: stringResource(R.string.all)
                     )
-                    Text(text = uiState.status.localized(mediaType = uiState.mediaType))
                 }
             }
         },

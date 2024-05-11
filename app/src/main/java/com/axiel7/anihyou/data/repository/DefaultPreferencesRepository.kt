@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.repository
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -13,6 +14,7 @@ import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.di.DataStoreModule.getValue
 import com.axiel7.anihyou.di.DataStoreModule.setValue
+import com.axiel7.anihyou.fragment.CommonMediaListOptions
 import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
@@ -48,13 +50,11 @@ class DefaultPreferencesRepository @Inject constructor(
             it[USER_ID_KEY] = viewer.id
             it[DISPLAY_ADULT_KEY] = viewer.options?.displayAdultContent == true
             it[PROFILE_COLOR_KEY] = viewer.options?.profileColor ?: "#526CFD"
-            it[SCORE_FORMAT_KEY] =
-                viewer.mediaListOptions?.commonMediaListOptions?.scoreFormat?.rawValue
-                    ?: ScoreFormat.POINT_10.rawValue
-            it[ADVANCED_SCORING_KEY] =
-                viewer.mediaListOptions?.commonMediaListOptions?.animeList?.advancedScoringEnabled == true
             it[TITLE_LANGUAGE_KEY] =
                 viewer.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
+            viewer.mediaListOptions?.commonMediaListOptions?.let { options ->
+                it.saveUserMediaListOption(options)
+            }
         }
     }
 
@@ -103,17 +103,34 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.edit {
             val profileColor = userInfo.hexColor()
             it[PROFILE_COLOR_KEY] = profileColor
-            it[SCORE_FORMAT_KEY] =
-                userInfo.mediaListOptions?.commonMediaListOptions?.scoreFormat?.rawValue
-                    ?: ScoreFormat.POINT_10.rawValue
-            it[ADVANCED_SCORING_KEY] =
-                userInfo.mediaListOptions?.commonMediaListOptions?.animeList?.advancedScoringEnabled == true
-            it[TITLE_LANGUAGE_KEY] =
-                userInfo.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
             if (it[APP_COLOR_MODE_KEY] == AppColorMode.PROFILE.name) {
                 it[APP_COLOR_KEY] = profileColor
             }
+            it[TITLE_LANGUAGE_KEY] =
+                userInfo.options?.titleLanguage?.rawValue ?: UserTitleLanguage.ROMAJI.rawValue
+            userInfo.mediaListOptions?.commonMediaListOptions?.let { options ->
+                it.saveUserMediaListOption(options)
+            }
         }
+    }
+
+    private fun MutablePreferences.saveUserMediaListOption(options: CommonMediaListOptions) {
+        this[SCORE_FORMAT_KEY] = options.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
+        this[ADVANCED_SCORING_KEY] = options.animeList?.advancedScoringEnabled == true
+        options.animeList?.customLists?.let { customLists ->
+            this[ANIME_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
+        }
+        options.mangaList?.customLists?.let { customLists ->
+            this[MANGA_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
+        }
+    }
+
+    val animeCustomLists = dataStore.getValue(ANIME_CUSTOM_LISTS_KEY).map {
+        it?.split(",")
+    }
+
+    val mangaCustomLists = dataStore.getValue(MANGA_CUSTOM_LISTS_KEY).map {
+        it?.split(",")
     }
 
     // app
@@ -198,6 +215,8 @@ class DefaultPreferencesRepository @Inject constructor(
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
+        private val ANIME_CUSTOM_LISTS_KEY = stringPreferencesKey("anime_custom_lists")
+        private val MANGA_CUSTOM_LISTS_KEY = stringPreferencesKey("manga_custom_lists")
 
         private val THEME_KEY = stringPreferencesKey("theme")
         private val USE_BLACK_COLORS_KEY = booleanPreferencesKey("use_black_colors")

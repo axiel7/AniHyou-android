@@ -7,7 +7,7 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 
 @Composable
-fun MediaListStatus?.localized(
+fun MediaListStatus.localized(
     mediaType: MediaType = MediaType.UNKNOWN__
 ) = when (this) {
     MediaListStatus.CURRENT -> {
@@ -24,7 +24,31 @@ fun MediaListStatus?.localized(
     MediaListStatus.PAUSED -> stringResource(R.string.paused)
     MediaListStatus.REPEATING -> stringResource(R.string.repeating)
     MediaListStatus.UNKNOWN__ -> stringResource(R.string.unknown)
-    null -> stringResource(R.string.all)
+}
+
+fun String.asMediaListStatus() = when (this) {
+    "Watching", "Reading" -> MediaListStatus.CURRENT
+    "Planning" -> MediaListStatus.PLANNING
+    "Completed" -> MediaListStatus.COMPLETED
+    "Dropped" -> MediaListStatus.DROPPED
+    "Paused" -> MediaListStatus.PAUSED
+    "Repeating" -> MediaListStatus.REPEATING
+    else -> null
+}
+
+fun MediaListStatus?.listName(mediaType: MediaType) = when (this) {
+    MediaListStatus.CURRENT -> when (mediaType) {
+        MediaType.ANIME -> "Watching"
+        MediaType.MANGA -> "Reading"
+        MediaType.UNKNOWN__ -> null
+    }
+
+    MediaListStatus.PLANNING -> "Planning"
+    MediaListStatus.COMPLETED -> "Completed"
+    MediaListStatus.DROPPED -> "Dropped"
+    MediaListStatus.PAUSED -> "Paused"
+    MediaListStatus.REPEATING -> "Repeating"
+    else -> null
 }
 
 /**
@@ -36,12 +60,12 @@ fun MediaListStatus.isActive() =
             || this == MediaListStatus.PLANNING
             || this == MediaListStatus.REPEATING
 
-fun MediaListStatus?.icon() = when (this) {
+fun MediaListStatus.icon() = when (this) {
     MediaListStatus.CURRENT -> R.drawable.play_circle_24
     MediaListStatus.PLANNING -> R.drawable.schedule_24
     MediaListStatus.COMPLETED -> R.drawable.check_circle_24
     MediaListStatus.DROPPED -> R.drawable.delete_24
     MediaListStatus.PAUSED -> R.drawable.pause_circle_24
     MediaListStatus.REPEATING -> R.drawable.repeat_24
-    else -> R.drawable.list_alt_24
+    MediaListStatus.UNKNOWN__ -> R.drawable.list_alt_24
 }

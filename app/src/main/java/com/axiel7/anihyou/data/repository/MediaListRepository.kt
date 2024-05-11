@@ -21,28 +21,18 @@ import javax.inject.Singleton
 class MediaListRepository @Inject constructor(
     private val api: MediaListApi
 ) {
-
-    fun getUserMediaListPage(
+    fun getMediaListCollection(
         userId: Int,
         mediaType: MediaType,
-        status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
-        page: Int = 1,
-        perPage: Int = 25,
+        chunk: Int,
+        perChunk: Int,
     ) = api
-        .userMediaListQuery(
-            userId = userId,
-            mediaType = mediaType,
-            status = status,
-            sort = sort,
-            fetchFromNetwork = fetchFromNetwork,
-            page = page,
-            perPage = perPage,
-        )
+        .mediaListCollection(userId, mediaType, sort, fetchFromNetwork, chunk, perChunk)
         .watch()
-        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+        .asPagedResult(page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }) {
+            it.MediaListCollection?.lists.orEmpty()
         }
 
     fun updateEntryProgress(

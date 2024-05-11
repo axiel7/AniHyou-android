@@ -79,7 +79,7 @@ fun UserMediaListView(
             .nestedScroll(nestedScrollConnection)
         if (uiState.listStyle == ListStyle.GRID) {
             LazyListGrid(
-                mediaList = uiState.media,
+                mediaList = uiState.entries,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,
@@ -88,7 +88,7 @@ fun UserMediaListView(
             )
         } else if (!uiState.isCompactScreen) {
             LazyListTablet(
-                mediaList = uiState.media,
+                mediaList = uiState.entries,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,
@@ -98,7 +98,7 @@ fun UserMediaListView(
             )
         } else {
             LazyListPhone(
-                mediaList = uiState.media,
+                mediaList = uiState.entries,
                 uiState = uiState,
                 event = event,
                 modifier = listModifier,

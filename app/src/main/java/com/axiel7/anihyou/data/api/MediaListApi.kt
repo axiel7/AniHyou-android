@@ -11,7 +11,7 @@ import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.MediaListIdsQuery
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UpdateEntryProgressMutation
-import com.axiel7.anihyou.UserMediaListQuery
+import com.axiel7.anihyou.UserListCollectionQuery
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.BasicMediaListEntryImpl
 import com.axiel7.anihyou.type.FuzzyDateInput
@@ -25,23 +25,21 @@ import javax.inject.Singleton
 class MediaListApi @Inject constructor(
     private val client: ApolloClient
 ) {
-    fun userMediaListQuery(
+    fun mediaListCollection(
         userId: Int,
         mediaType: MediaType,
-        status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean,
-        page: Int,
-        perPage: Int,
+        chunk: Int,
+        perChunk: Int
     ) = client
         .query(
-            UserMediaListQuery(
-                page = Optional.present(page),
-                perPage = Optional.present(perPage),
+            UserListCollectionQuery(
                 userId = Optional.present(userId),
                 type = Optional.present(mediaType),
-                status = Optional.presentIfNotNull(status),
-                sort = Optional.present(sort)
+                sort = Optional.present(sort),
+                chunk = Optional.present(chunk),
+                perChunk = Optional.present(perChunk)
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
