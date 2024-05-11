@@ -1,0 +1,18 @@
+query AiringWidget($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        media(type: ANIME, status: RELEASING, onList: true, sort: [POPULARITY_DESC]) {
+            id
+            title {
+                userPreferred
+            }
+            nextAiringEpisode {
+                timeUntilAiring
+                airingAt
+                episode
+            }
+            mediaListEntry {
+                status
+            }
+        }
+    }
+}

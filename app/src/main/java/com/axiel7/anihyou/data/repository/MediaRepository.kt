@@ -2,8 +2,8 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.AiringAnimesQuery
+import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.MediaDetailsQuery
-import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -14,7 +14,6 @@ import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.data.model.media.isActive
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -170,17 +169,20 @@ class MediaRepository @Inject constructor(
 
     // widget
 
-    suspend fun getUserCurrentAnimeAiringList(userId: Int): List<UserCurrentAnimeListQuery.MediaList>? {
-        val response = api.userCurrentAnimeListQuery(userId).execute()
+    suspend fun getAiringWidgetData(
+        page: Int,
+        perPage: Int = 25,
+    ): List<AiringWidgetQuery.Medium>? {
+        val response = api.airingWidgetQuery(page, perPage).execute()
         return if (response.hasErrors()) null
         else {
-            response.data?.Page?.mediaList?.filterNotNull()?.let { mediaList ->
+            response.data?.Page?.media?.filterNotNull()?.let { mediaList ->
                 return mediaList
                     .filter {
-                        it.media?.status == MediaStatus.RELEASING
-                                && it.media.nextAiringEpisode != null
+                        it.nextAiringEpisode != null
+                                && it.mediaListEntry?.status?.isActive() == true
                     }
-                    .sortedBy { it.media?.nextAiringEpisode?.timeUntilAiring }
+                    .sortedBy { it.nextAiringEpisode?.timeUntilAiring }
             }
             return null
         }

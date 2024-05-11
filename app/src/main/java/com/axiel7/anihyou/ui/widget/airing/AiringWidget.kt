@@ -20,9 +20,8 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.UserCurrentAnimeListQuery
-import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
@@ -34,7 +33,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
 import kotlin.math.absoluteValue
 
 class AiringWidget : GlanceAppWidget() {
@@ -42,7 +40,6 @@ class AiringWidget : GlanceAppWidget() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface AiringWidgetEntryPoint {
-        val defaultPreferencesRepository: DefaultPreferencesRepository
         val mediaRepository: MediaRepository
     }
 
@@ -82,22 +79,22 @@ class AiringWidget : GlanceAppWidget() {
                                                 MainActivity::class.java
                                             ).apply {
                                                 action = "media_details"
-                                                putExtra("media_id", item.mediaId)
+                                                putExtra("media_id", item.id)
                                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                                addCategory(item.mediaId.toString())
+                                                addCategory(item.id.toString())
                                             }
                                         ))
                                 ) {
                                     Text(
-                                        text = item.media?.title?.userPreferred.orEmpty(),
+                                        text = item.title?.userPreferred.orEmpty(),
                                         style = TextStyle(
                                             color = GlanceTheme.colors.onSurfaceVariant
                                         ),
                                         maxLines = 1
                                     )
 
-                                    item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
+                                    item.nextAiringEpisode?.let { nextAiringEpisode ->
                                         val airingIn =
                                             nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
                                         val airingText = if (airingIn > 0) {
@@ -143,10 +140,9 @@ class AiringWidget : GlanceAppWidget() {
 
     private suspend fun getAiringAnime(
         hiltEntryPoint: AiringWidgetEntryPoint
-    ): List<UserCurrentAnimeListQuery.MediaList>? {
+    ): List<AiringWidgetQuery.Medium>? {
         return try {
-            val userId = hiltEntryPoint.defaultPreferencesRepository.userId.first()!!
-            hiltEntryPoint.mediaRepository.getUserCurrentAnimeAiringList(userId)
+            hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 25)
         } catch (e: Exception) {
             null
         }

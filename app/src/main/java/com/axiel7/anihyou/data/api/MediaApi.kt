@@ -5,6 +5,7 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
+import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.GenreTagCollectionQuery
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaChartQuery
@@ -16,7 +17,6 @@ import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.SeasonalAnimeQuery
-import com.axiel7.anihyou.UserCurrentAnimeListQuery
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.type.AiringSort
@@ -109,6 +109,17 @@ class MediaApi @Inject constructor(
     ) = client
         .query(
             AiringOnMyListQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(perPage)
+            )
+        )
+
+    fun airingWidgetQuery(
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            AiringWidgetQuery(
                 page = Optional.present(page),
                 perPage = Optional.present(perPage)
             )
@@ -231,13 +242,6 @@ class MediaApi @Inject constructor(
                 type = Optional.present(type),
                 status = Optional.presentIfNotNull(status),
                 format = Optional.presentIfNotNull(format),
-            )
-        )
-
-    fun userCurrentAnimeListQuery(userId: Int) = client
-        .query(
-            UserCurrentAnimeListQuery(
-                userId = Optional.present(userId)
             )
         )
 }
