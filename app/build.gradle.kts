@@ -97,7 +97,7 @@ android {
         aaptOptions.cruncherEnabled = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
