@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.axiel7.anihyou.ViewerIdQuery
+import com.axiel7.anihyou.ViewerOptionsQuery
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.model.user.hexColor
 import com.axiel7.anihyou.di.DataStoreModule.getValue
@@ -43,7 +43,7 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(USER_ID_KEY, value)
     }
 
-    suspend fun saveViewerInfo(viewer: ViewerIdQuery.Viewer) {
+    suspend fun saveViewerInfo(viewer: ViewerOptionsQuery.Viewer) {
         dataStore.edit {
             it[USER_ID_KEY] = viewer.id
             it[DISPLAY_ADULT_KEY] = viewer.options?.displayAdultContent == true

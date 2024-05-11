@@ -10,7 +10,6 @@ import com.axiel7.anihyou.UnreadNotificationCountQuery
 import com.axiel7.anihyou.UpdateUserMutation
 import com.axiel7.anihyou.UserActivityQuery
 import com.axiel7.anihyou.UserBasicInfoQuery
-import com.axiel7.anihyou.UserOptionsQuery
 import com.axiel7.anihyou.UserStatsAnimeGenresQuery
 import com.axiel7.anihyou.UserStatsAnimeOverviewQuery
 import com.axiel7.anihyou.UserStatsAnimeStaffQuery
@@ -21,7 +20,8 @@ import com.axiel7.anihyou.UserStatsMangaStaffQuery
 import com.axiel7.anihyou.UserStatsMangaTagsQuery
 import com.axiel7.anihyou.UserStatsStudiosQuery
 import com.axiel7.anihyou.UserStatsVoiceActorsQuery
-import com.axiel7.anihyou.ViewerQuery
+import com.axiel7.anihyou.ViewerSettingsQuery
+import com.axiel7.anihyou.ViewerUserInfoQuery
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
 import com.axiel7.anihyou.type.ScoreFormat
@@ -50,7 +50,7 @@ class UserApi @Inject constructor(
 
     fun unreadNotificationCountQuery() = client.query(UnreadNotificationCountQuery())
 
-    fun userOptionsQuery() = client.query(UserOptionsQuery())
+    fun viewerSettingsQuery() = client.query(ViewerSettingsQuery())
 
     fun updateUserMutation(
         displayAdultContent: Boolean?,
@@ -73,7 +73,7 @@ class UserApi @Inject constructor(
             )
         )
 
-    fun viewerQuery() = client.query(ViewerQuery())
+    fun viewerUserInfoQuery() = client.query(ViewerUserInfoQuery())
 
     fun userBasicInfoQuery(
         userId: Int?,

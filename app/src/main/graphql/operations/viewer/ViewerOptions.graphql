@@ -1,9 +1,8 @@
-query ViewerId {
+query ViewerOptions {
     Viewer {
         id
         options {
             profileColor
-            staffNameLanguage
             titleLanguage
             displayAdultContent
         }

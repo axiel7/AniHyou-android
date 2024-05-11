@@ -16,6 +16,6 @@ mutation UpdateUser(
         animeListOptions: $animeListOptions,
         mangaListOptions: $mangaListOptions
     ) {
-        ...UserOptionsFragment
+        ...UserSettings
     }
 }

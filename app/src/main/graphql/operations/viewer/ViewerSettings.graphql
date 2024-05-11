@@ -1,14 +1,14 @@
-query UserOptions {
+query ViewerSettings {
     Viewer {
-        ...UserOptionsFragment
+        id
+        ...UserSettings
     }
 }
 
-fragment UserOptionsFragment on User {
+fragment UserSettings on User {
     id
     options {
         displayAdultContent
-        profileColor
         staffNameLanguage
         titleLanguage
         airingNotifications

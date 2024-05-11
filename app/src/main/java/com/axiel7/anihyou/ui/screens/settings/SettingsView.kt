@@ -145,7 +145,7 @@ private fun SettingsContent(
                 ListPreference(
                     title = stringResource(R.string.title_language),
                     entriesValues = UserTitleLanguage.entriesLocalized,
-                    preferenceValue = uiState.userOptions?.options?.titleLanguage,
+                    preferenceValue = uiState.userSettings?.options?.titleLanguage,
                     icon = R.drawable.title_24,
                     onValueChange = { value ->
                         event?.setTitleLanguage(value)
@@ -156,7 +156,7 @@ private fun SettingsContent(
                 ListPreference(
                     title = stringResource(R.string.staff_character_name_language),
                     entriesValues = UserStaffNameLanguage.entriesLocalized,
-                    preferenceValue = uiState.userOptions?.options?.staffNameLanguage,
+                    preferenceValue = uiState.userSettings?.options?.staffNameLanguage,
                     icon = R.drawable.group_24,
                     onValueChange = { value ->
                         event?.setStaffNameLanguage(value)
@@ -220,7 +220,7 @@ private fun SettingsContent(
 
                 SwitchPreference(
                     title = stringResource(R.string.display_adult_content),
-                    preferenceValue = uiState.userOptions?.options?.displayAdultContent,
+                    preferenceValue = uiState.userSettings?.options?.displayAdultContent,
                     icon = R.drawable.no_adult_content_24,
                     onValueChange = { event?.setDisplayAdultContent(it) }
                 )
@@ -256,7 +256,7 @@ private fun SettingsContent(
                     )
                     SwitchPreference(
                         title = stringResource(R.string.airing_anime_notifications),
-                        preferenceValue = uiState.userOptions?.options?.airingNotifications,
+                        preferenceValue = uiState.userSettings?.options?.airingNotifications,
                         icon = R.drawable.podcasts_24,
                         onValueChange = { event?.setAiringNotification(it) }
                     )

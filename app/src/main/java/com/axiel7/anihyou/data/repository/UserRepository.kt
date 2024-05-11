@@ -42,11 +42,11 @@ class UserRepository @Inject constructor(
                 }
         }
 
-    fun getUserOptions() = api
-        .userOptionsQuery()
+    fun getViewerSettings() = api
+        .viewerSettingsQuery()
         .watch()
         .asDataResult {
-            it.Viewer?.userOptionsFragment
+            it.Viewer?.userSettings
         }
 
     fun updateUser(
@@ -69,11 +69,11 @@ class UserRepository @Inject constructor(
         )
         .toFlow()
         .asDataResult {
-            it.UpdateUser?.userOptionsFragment
+            it.UpdateUser?.userSettings
         }
 
     fun getMyUserInfo() = api
-        .viewerQuery()
+        .viewerUserInfoQuery()
         .watch()
         .asDataResult {
             it.Viewer?.userInfo

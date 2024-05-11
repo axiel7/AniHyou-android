@@ -201,7 +201,7 @@ class SettingsViewModel @Inject constructor(
                 if (result is DataResult.Success) {
                     it.copy(
                         isLoading = false,
-                        userOptions = result.data
+                        userSettings = result.data
                     )
                 } else {
                     result.toUiState()
@@ -216,14 +216,14 @@ class SettingsViewModel @Inject constructor(
             }
             .filter { it }
             .flatMapLatest {
-                userRepository.getUserOptions()
+                userRepository.getViewerSettings()
             }
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            userOptions = result.data
+                            userSettings = result.data
                         )
                     } else {
                         result.toUiState()
