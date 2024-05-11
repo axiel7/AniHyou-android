@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.model
 import android.util.Log
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Operation
+import com.apollographql.apollo3.exception.ApolloHttpException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
@@ -29,13 +30,15 @@ fun <D : Operation.Data, R> Flow<ApolloResponse<D>>.asDataResult(
                 DataResult.Success(transform(response.data!!))
             }
 
-            response.exception != null -> {
-                Log.e("AniHyou", "Apollo error", response.exception)
+            response.hasErrors() -> {
+                Log.e("AniHyou", "Apollo error: ${response.errors?.joinToString()}")
                 DataResult.Error(
-                    message = response.exception?.localizedMessage
-                        ?: "Exception: ${response.exception}"
+                    message = response.errors?.joinToString() ?: "Unknown error"
                 )
             }
+
+            response.exception is ApolloHttpException ->
+                DataResult.Error(message = response.exception?.localizedMessage ?: "Unknown error")
 
             else -> DataResult.Loading
         }

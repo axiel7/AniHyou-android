@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.data.model
 
+import android.util.Log
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.exception.ApolloHttpException
@@ -35,6 +36,13 @@ fun <D : Operation.Data, R> Flow<ApolloResponse<D>>.asPagedResult(
                     list = transform(response.data!!),
                     currentPage = commonPage?.currentPage,
                     hasNextPage = commonPage?.hasNextPage == true,
+                )
+            }
+
+            response.hasErrors() -> {
+                Log.e("AniHyou", "Apollo error: ${response.errors?.joinToString()}")
+                PagedResult.Error(
+                    message = response.errors?.joinToString() ?: "Unknown error"
                 )
             }
 
