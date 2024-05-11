@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.common.indexOfFirstOrNull
@@ -77,8 +76,9 @@ class UserMediaListViewModel @Inject constructor(
 
     override fun onChangeList(listName: String?) {
         mutableUiState.update {
+            it.entries.clear()
+            it.entries.addAll(it.getEntriesFromListName(listName))
             it.copy(
-                entries = it.getEntriesFromListName(listName).toMutableStateList(),
                 selectedListName = listName,
                 status = listName?.asMediaListStatus()
             )
@@ -338,17 +338,25 @@ class UserMediaListViewModel @Inject constructor(
                     if (result is PagedResult.Success) {
                         if (uiState.page == 1 || result.currentPage == 1) {
                             uiState.lists.clear()
+                            uiState.entries.clear()
                         }
+                        var newEntries = emptyList<CommonMediaListEntry>()
                         result.list.forEach { list ->
                             list?.name?.let { name ->
-                                uiState.lists[name] = uiState.lists[name].orEmpty() +
-                                        list.entries?.mapNotNull { it?.commonMediaListEntry }
-                                            .orEmpty()
+                                val entries = list.entries?.mapNotNull { it?.commonMediaListEntry }
+                                    .orEmpty()
+                                uiState.lists[name] = uiState.lists[name].orEmpty() + entries
+                                if (name == uiState.selectedListName) {
+                                    newEntries = entries
+                                }
                             }
                         }
+                        if (uiState.selectedListName == null) {
+                            uiState.entries.addAll(uiState.lists.values.flatten())
+                        } else {
+                            uiState.entries.addAll(newEntries)
+                        }
                         uiState.copy(
-                            entries = uiState.getEntriesFromListName(uiState.selectedListName)
-                                .toMutableStateList(),
                             hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
                             isLoading = false,
