@@ -7,6 +7,7 @@ import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
+import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
@@ -79,6 +80,7 @@ class UserMediaListViewModel @Inject constructor(
             it.copy(
                 entries = it.getEntriesFromListName(listName).toMutableStateList(),
                 selectedListName = listName,
+                status = listName?.asMediaListStatus()
             )
         }
     }
