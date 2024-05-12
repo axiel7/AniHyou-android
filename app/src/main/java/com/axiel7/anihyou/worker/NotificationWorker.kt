@@ -111,7 +111,7 @@ class NotificationWorker @AssistedInject constructor(
                         group = "default"
                     )
                 }
-                if (newNotifications.size > 4) {
+                if (newNotifications.size > 1) {
                     applicationContext.showNotification(
                         notificationId = 1,
                         channelId = DEFAULT_CHANNEL_ID,
