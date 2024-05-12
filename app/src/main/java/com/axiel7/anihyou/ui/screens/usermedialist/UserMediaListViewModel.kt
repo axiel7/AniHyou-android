@@ -327,10 +327,10 @@ class UserMediaListViewModel @Inject constructor(
                 mediaListRepository.getMediaListCollection(
                     userId = listUserId,
                     mediaType = mediaType,
-                    sort = listOf(uiState.sort),
+                    sort = listOf(uiState.sort, MediaListSort.STATUS_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     chunk = uiState.page,
-                    perChunk = 50
+                    perChunk = 100
                 )
             }
             .onEach { result ->
@@ -340,23 +340,23 @@ class UserMediaListViewModel @Inject constructor(
                             uiState.lists.clear()
                             uiState.entries.clear()
                         }
-                        var newEntries = emptyList<CommonMediaListEntry>()
+                        val newEntries = mutableListOf<CommonMediaListEntry>()
                         result.list.forEach { list ->
                             list?.name?.let { name ->
                                 val entries = list.entries?.mapNotNull { it?.commonMediaListEntry }
                                     .orEmpty()
                                 uiState.lists[name] = uiState.lists[name].orEmpty() + entries
-                                if (name == uiState.selectedListName) {
-                                    newEntries = entries
+                                if (uiState.selectedListName == null && list.isCustomList == false) {
+                                    newEntries.addAll(entries)
+                                } else if (name == uiState.selectedListName) {
+                                    newEntries.addAll(entries)
                                 }
                             }
                         }
-                        if (uiState.selectedListName == null) {
-                            uiState.entries.addAll(uiState.lists.values.flatten())
-                        } else {
-                            uiState.entries.addAll(newEntries)
-                        }
+                        uiState.entries.addAll(newEntries)
                         uiState.copy(
+                            page = if (newEntries.isEmpty() && result.hasNextPage) uiState.page + 1
+                            else uiState.page,
                             hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
                             isLoading = false,

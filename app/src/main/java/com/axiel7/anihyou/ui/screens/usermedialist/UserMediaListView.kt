@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -31,7 +30,6 @@ import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
@@ -309,14 +307,8 @@ private fun LazyListPhone(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    if (!uiState.isLoading) {
-        listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
-    }
-
     LazyColumn(
         modifier = modifier,
-        state = listState,
         contentPadding = contentPadding,
     ) {
         if (uiState.status == MediaListStatus.PLANNING) {
@@ -412,6 +404,19 @@ private fun LazyListPhone(
             }
 
             else -> {}
+        }
+
+        item(contentType = { 0 }) {
+            if (uiState.hasNextPage) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                LaunchedEffect(uiState.isLoading) {
+                    if (!uiState.isLoading) event?.onLoadMore()
+                }
+            }
         }
     }//: LazyColumn
 }

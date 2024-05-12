@@ -8,6 +8,7 @@ query UserListCollection(
     MediaListCollection(userId: $userId, type: $type, sort: $sort, chunk: $chunk, perChunk: $perChunk) {
         lists {
             name
+            isCustomList
             entries {
                 ...CommonMediaListEntry
             }

@@ -51,6 +51,9 @@ fun MediaListStatus?.listName(mediaType: MediaType) = when (this) {
     else -> null
 }
 
+val mediaListStatusNames =
+    arrayOf("Watching", "Reading", "Planning", "Completed", "Dropped", "Paused", "Repeating")
+
 /**
  * Returns if this is a status considered as active.
  * That means the user is consuming or will be consuming the series.
