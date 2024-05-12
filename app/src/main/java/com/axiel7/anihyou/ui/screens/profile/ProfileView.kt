@@ -48,6 +48,7 @@ import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.TopBannerView
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.ShareIconButton
+import com.axiel7.anihyou.ui.composables.common.singleClick
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.ui.composables.person.PersonImage
@@ -130,9 +131,9 @@ private fun ProfileContent(
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         .size(PERSON_IMAGE_SIZE_SMALL.dp)
-                        .clickable {
+                        .clickable(onClick = singleClick {
                             uiState.userInfo?.avatar?.large?.let(navActionManager::toFullscreenImage)
-                        },
+                        }),
                     showShadow = true
                 )
             }//: Box

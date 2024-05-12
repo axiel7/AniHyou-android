@@ -72,6 +72,7 @@ import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
+import com.axiel7.anihyou.ui.composables.common.singleClick
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
@@ -240,10 +241,10 @@ private fun MediaDetailsContent(
                             width = MEDIA_POSTER_BIG_WIDTH.dp,
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
-                        .clickable {
+                        .clickable(onClick = singleClick {
                             uiState.details?.coverImage?.extraLarge
                                 ?.let(navActionManager::toFullscreenImage)
-                        }
+                        })
                 )
                 Column {
                     Text(

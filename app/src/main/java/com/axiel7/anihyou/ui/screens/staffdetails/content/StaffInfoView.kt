@@ -26,6 +26,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.staff.yearsActiveFormatted
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
+import com.axiel7.anihyou.ui.composables.common.singleClick
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_BIG
@@ -61,9 +62,9 @@ fun StaffInfoView(
                 modifier = Modifier
                     .padding(16.dp)
                     .size(PERSON_IMAGE_SIZE_BIG.dp)
-                    .clickable {
+                    .clickable(onClick = singleClick {
                         uiState.details?.image?.large?.let(navigateToFullscreenImage)
-                    },
+                    }),
                 showShadow = true
             )
 
