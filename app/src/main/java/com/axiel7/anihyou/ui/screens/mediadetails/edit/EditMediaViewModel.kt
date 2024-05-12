@@ -14,17 +14,17 @@ import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class EditMediaViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
@@ -54,6 +54,7 @@ class EditMediaViewModel @Inject constructor(
             isPrivate = value?.private,
             isHiddenFromStatusLists = value?.hiddenFromStatusLists,
             notes = value?.notes,
+            customLists = null,
         )
     }
 
@@ -232,26 +233,25 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun getCustomLists() {
-        uiState.value.listEntry?.id?.let { entryId ->
-            userId
-                .filterNotNull()
-                .flatMapLatest { userId ->
-                    mediaListRepository.getMediaListCustomLists(entryId, userId)
-                }
-                .onEach { result ->
-                    mutableUiState.update {
-                        if (result is DataResult.Success) {
-                            it.copy(
-                                isLoading = false,
-                                customLists = result.data,
-                                openCustomListsDialog = true
-                            )
-                        } else {
-                            result.toUiState()
-                        }
+        viewModelScope.launch {
+            val userId = userId.first() ?: return@launch
+            val entryId = mutableUiState.value.listEntry?.id ?: return@launch
+            mediaListRepository.getMediaListCustomLists(
+                id = entryId,
+                userId = userId
+            ).collectLatest { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            isLoading = false,
+                            customLists = result.data,
+                            openCustomListsDialog = true
+                        )
+                    } else {
+                        result.toUiState()
                     }
                 }
-                .launchIn(viewModelScope)
+            }
         }
     }
 
