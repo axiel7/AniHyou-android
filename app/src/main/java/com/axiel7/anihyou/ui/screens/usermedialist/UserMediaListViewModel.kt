@@ -327,7 +327,7 @@ class UserMediaListViewModel @Inject constructor(
                 mediaListRepository.getMediaListCollection(
                     userId = listUserId,
                     mediaType = mediaType,
-                    sort = listOf(uiState.sort, MediaListSort.STATUS_DESC),
+                    sort = listOf(uiState.sort),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     chunk = uiState.page,
                     perChunk = 100
