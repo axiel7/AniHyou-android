@@ -7,12 +7,16 @@ query AiringWidget($page: Int, $perPage: Int) {
             }
             nextAiringEpisode {
                 timeUntilAiring
-                airingAt
-                episode
+                ...CommonAiringSchedule
             }
             mediaListEntry {
                 status
             }
         }
     }
+}
+
+fragment CommonAiringSchedule on AiringSchedule {
+    airingAt
+    episode
 }

@@ -1,0 +1,27 @@
+query MediaListWidget(
+    $page: Int,
+    $perPage: Int,
+    $type: MediaType,
+    $userId: Int
+) {
+    Page(page: $page, perPage: $perPage) {
+        mediaList(type: $type, userId: $userId, status: CURRENT) {
+            id
+            mediaId
+            media {
+                title {
+                    userPreferred
+                }
+                episodes
+                chapters
+                mediaListEntry {
+                    id
+                    progress
+                }
+                nextAiringEpisode {
+                    ...CommonAiringSchedule
+                }
+            }
+        }
+    }
+}

@@ -166,6 +166,19 @@
                 android:resource="@xml/airing_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".ui.widget.medialist.MediaListWidgetReceiver"
+            android:enabled="@bool/glance_appwidget_available"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/media_list_widget_info" />
+        </receiver>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

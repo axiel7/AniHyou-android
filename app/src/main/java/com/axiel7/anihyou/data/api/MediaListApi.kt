@@ -9,6 +9,7 @@ import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.DeleteMediaListMutation
 import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.MediaListIdsQuery
+import com.axiel7.anihyou.MediaListWidgetQuery
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserListCollectionQuery
@@ -43,6 +44,21 @@ class MediaListApi @Inject constructor(
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+
+    fun mediaListWidget(
+        userId: Int,
+        mediaType: MediaType,
+        page: Int,
+        perPage: Int
+    ) = client
+        .query(
+            MediaListWidgetQuery(
+                userId = Optional.present(userId),
+                type = Optional.present(mediaType),
+                page = Optional.present(page),
+                perPage = Optional.present(perPage)
+            )
+        )
 
     suspend fun updateMediaListCache(data: BasicMediaListEntry) {
         client.apolloStore

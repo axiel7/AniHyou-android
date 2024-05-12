@@ -10,6 +10,7 @@ import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
+import com.axiel7.anihyou.data.repository.WidgetRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
@@ -44,6 +45,7 @@ class UserMediaListViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
+    private val widgetRepository: WidgetRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
     private val mediaType =
@@ -158,6 +160,7 @@ class UserMediaListViewModel @Inject constructor(
                         }
                         uiState.lists[uiState.selectedListName] = uiState.entries
                     }
+                    widgetRepository.updateMediaListWidget()
                 }
                 result.toUiState()
             }

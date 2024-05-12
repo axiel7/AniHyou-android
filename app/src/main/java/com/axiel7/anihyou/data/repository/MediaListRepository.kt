@@ -124,4 +124,16 @@ class MediaListRepository @Inject constructor(
                 }
                 .orEmpty()
         }
+
+    // widget
+
+    suspend fun getMediaListWidgetData(
+        userId: Int,
+        mediaType: MediaType,
+        page: Int,
+        perPage: Int
+    ) = api
+        .mediaListWidget(userId, mediaType, page, perPage)
+        .execute()
+        .data?.Page?.mediaList?.filterNotNull()
 }
