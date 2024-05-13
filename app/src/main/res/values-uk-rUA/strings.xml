@@ -344,4 +344,5 @@
     <string name="continue_watching">Продовжити перегляд</string>
     <string name="hide_from_status_lists">Не показувати в списках статусу</string>
     <string name="black_theme_variant">Варіант темної теми</string>
+    <string name="random">Випадкове</string>
 </resources>
