@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -12,18 +13,13 @@ import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.MediaCharacter
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class MediaDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -31,7 +27,7 @@ class MediaDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<MediaDetailsUiState>(), MediaDetailsEvent {
 
-    private val mediaId = savedStateHandle.getStateFlow<Int?>(NavArgument.MediaId.name, null)
+    private val arguments = savedStateHandle.toRoute<MediaDetails>()
 
     override val initialState = MediaDetailsUiState()
 
@@ -91,11 +87,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchCharactersAndStaff() {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaCharactersAndStaff(mediaId)
-            }
+        mediaRepository.getMediaCharactersAndStaff(mediaId = arguments.id)
             .onEach { result ->
                 if (result is DataResult.Success) {
                     mutableUiState.update { uiState ->
@@ -110,11 +102,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchRelationsAndRecommendations() {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaRelationsAndRecommendations(mediaId)
-            }
+        mediaRepository.getMediaRelationsAndRecommendations(mediaId = arguments.id)
             .onEach { result ->
                 if (result is DataResult.Success) {
                     mutableUiState.update {
@@ -128,11 +116,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchStats() {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaStats(mediaId)
-            }
+        mediaRepository.getMediaStats(mediaId = arguments.id)
             .onEach { result ->
                 if (result is DataResult.Success) {
                     mutableUiState.update { uiState ->
@@ -151,11 +135,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchThreads() {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaThreadsPage(mediaId, page = 1)
-            }
+        mediaRepository.getMediaThreadsPage(mediaId = arguments.id, page = 1)
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
@@ -174,11 +154,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchReviews() {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaReviewsPage(mediaId, page = 1)
-            }
+        mediaRepository.getMediaReviewsPage(mediaId = arguments.id, page = 1)
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
@@ -210,11 +186,7 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     init {
-        mediaId
-            .filterNotNull()
-            .flatMapLatest { mediaId ->
-                mediaRepository.getMediaDetails(mediaId)
-            }
+        mediaRepository.getMediaDetails(mediaId = arguments.id)
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {

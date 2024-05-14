@@ -26,6 +26,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -56,6 +57,7 @@ import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.ui.common.navigation.TriBoolean
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
@@ -74,13 +76,23 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchStatu
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearChip
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class Search(
+    val mediaType: String? = null,
+    val mediaSort: String? = null,
+    val genre: String? = null,
+    val tag: String? = null,
+    val onList: Int = TriBoolean.NONE.value,
+    val focus: Boolean = false,
+)
 
 @Composable
 fun SearchView(
+    arguments: Search,
     modifier: Modifier = Modifier,
-    initialGenre: String? = null,
-    initialTag: String? = null,
-    initialFocus: Boolean = false,
     navActionManager: NavActionManager,
 ) {
     val viewModel: SearchViewModel = hiltViewModel()
@@ -90,8 +102,8 @@ fun SearchView(
     val performSearch = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(initialFocus) {
-        if (initialFocus) focusRequester.requestFocus()
+    LaunchedEffect(arguments.focus) {
+        if (arguments.focus) focusRequester.requestFocus()
     }
 
     Surface(
@@ -142,8 +154,8 @@ fun SearchView(
             SearchContentView(
                 query = query,
                 performSearch = performSearch,
-                initialGenre = initialGenre,
-                initialTag = initialTag,
+                initialGenre = arguments.genre,
+                initialTag = arguments.tag,
                 uiState = uiState,
                 event = viewModel,
                 navActionManager = navActionManager,

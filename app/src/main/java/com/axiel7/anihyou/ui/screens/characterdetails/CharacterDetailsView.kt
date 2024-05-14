@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -38,6 +39,11 @@ import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.ui.screens.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class CharacterDetails(val id: Int)
 
 @Composable
 fun CharacterDetailsView(

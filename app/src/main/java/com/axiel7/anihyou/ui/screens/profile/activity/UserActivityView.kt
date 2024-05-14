@@ -141,7 +141,7 @@ fun UserActivityViewPreview() {
         Surface {
             UserActivityView(
                 activities = emptyList(),
-                uiState = ProfileUiState(),
+                uiState = ProfileUiState(isMyProfile = false),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )

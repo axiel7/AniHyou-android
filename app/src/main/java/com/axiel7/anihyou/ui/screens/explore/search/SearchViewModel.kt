@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.explore.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.SearchMediaQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
@@ -13,7 +14,6 @@ import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toBoolean
 import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toTriBoolean
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -34,31 +34,22 @@ class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
 
-    private val initialMediaType = savedStateHandle
-        .get<String?>(NavArgument.MediaType.name)?.let { MediaType.valueOf(it) }
-
-    private val initialMediaSort = savedStateHandle
-        .get<String?>(NavArgument.MediaSort.name)?.let { MediaSort.valueOf(it) }
-
-    private val initialGenre: String? = savedStateHandle[NavArgument.Genre.name]
-
-    private val initialTag: String? = savedStateHandle[NavArgument.Tag.name]
-
-    private val initialOnList: Boolean? = savedStateHandle
-        .get<Int?>(NavArgument.OnList.name)?.toTriBoolean()?.toBoolean()
+    private val arguments = savedStateHandle.toRoute<Search>()
+    private val mediaType = arguments.mediaType?.let { MediaType.safeValueOf(it) }
+    private val mediaSort = arguments.mediaSort?.let { MediaSort.safeValueOf(it) }
 
     override val initialState =
         SearchUiState(
-            searchType = if (initialMediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
-            mediaSort = initialMediaSort ?: MediaSort.SEARCH_MATCH,
+            searchType = if (mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
+            mediaSort = mediaSort ?: MediaSort.SEARCH_MATCH,
             genresAndTagsForSearch = GenresAndTagsForSearch(
-                genreIn = initialGenre?.let { listOf(it) } ?: emptyList(),
-                tagIn = initialTag?.let { listOf(it) } ?: emptyList()
+                genreIn = arguments.genre?.let { listOf(it) } ?: emptyList(),
+                tagIn = arguments.tag?.let { listOf(it) } ?: emptyList()
             ),
-            onMyList = initialOnList,
-            hasNextPage = initialGenre != null
-                    || initialTag != null
-                    || initialMediaSort != null
+            onMyList = arguments.onList.toTriBoolean().toBoolean(),
+            hasNextPage = arguments.genre != null
+                    || arguments.tag != null
+                    || arguments.mediaSort != null
         )
 
     override fun setQuery(value: String) = mutableUiState.update {

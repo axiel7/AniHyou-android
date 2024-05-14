@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -56,7 +57,12 @@ import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
+
+@Serializable
+@Immutable
+object Calendar
 
 @Composable
 fun CalendarView(

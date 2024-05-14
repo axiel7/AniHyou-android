@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.apollographql.apollo3") version "4.0.0-beta.7"
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
@@ -156,6 +157,7 @@ dependencies {
     implementation("androidx.hilt:hilt-work:$androidHiltVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

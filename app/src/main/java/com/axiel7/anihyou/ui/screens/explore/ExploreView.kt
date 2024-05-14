@@ -22,6 +22,10 @@ import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.IconCard
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Explore
 
 @Composable
 fun ExploreView(

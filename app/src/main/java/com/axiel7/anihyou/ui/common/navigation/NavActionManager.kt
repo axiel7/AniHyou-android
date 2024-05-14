@@ -11,9 +11,26 @@ import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.utils.NumberUtils.toStringOrZero
-import com.axiel7.anihyou.utils.UTF_8
-import java.net.URLEncoder
+import com.axiel7.anihyou.ui.composables.FullScreenImage
+import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetails
+import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivity
+import com.axiel7.anihyou.ui.screens.calendar.Calendar
+import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetails
+import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
+import com.axiel7.anihyou.ui.screens.explore.search.Search
+import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
+import com.axiel7.anihyou.ui.screens.notifications.Notifications
+import com.axiel7.anihyou.ui.screens.profile.Profile
+import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
+import com.axiel7.anihyou.ui.screens.settings.Settings
+import com.axiel7.anihyou.ui.screens.settings.Translations
+import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettings
+import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetails
+import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetails
+import com.axiel7.anihyou.ui.screens.thread.ThreadDetails
+import com.axiel7.anihyou.ui.screens.thread.publish.PublishComment
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaList
 
 @Immutable
 class NavActionManager(
@@ -24,99 +41,52 @@ class NavActionManager(
     }
 
     fun toMediaDetails(id: Int) {
-        navController.navigate(
-            NavDestination.MediaDetails
-                .putArguments(mapOf(NavArgument.MediaId to id.toString()))
-        )
+        navController.navigate(MediaDetails(id))
     }
 
     fun toCharacterDetails(id: Int) {
-        navController.navigate(
-            NavDestination.CharacterDetails
-                .putArguments(mapOf(NavArgument.CharacterId to id.toString()))
-        )
+        navController.navigate(CharacterDetails(id))
     }
 
     fun toStaffDetails(id: Int) {
-        navController.navigate(
-            NavDestination.StaffDetails
-                .putArguments(mapOf(NavArgument.StaffId to id.toString()))
-        )
+        navController.navigate(StaffDetails(id))
     }
 
     fun toStudioDetails(id: Int) {
-        navController.navigate(
-            NavDestination.StudioDetails
-                .putArguments(mapOf(NavArgument.StudioId to id.toString()))
-        )
+        navController.navigate(StudioDetails(id))
     }
 
     fun toUserDetails(id: Int) {
-        navController.navigate(
-            NavDestination.UserDetails
-                .putArguments(mapOf(NavArgument.UserId to id.toString()))
-        )
+        navController.navigate(Profile(id = id, userName = null))
     }
 
     fun toUserDetails(userId: Int?, username: String?) {
-        navController.navigate(
-            NavDestination.UserDetails.putArguments(
-                mapOf(
-                    NavArgument.UserId to (userId ?: 0).toString(),
-                    NavArgument.UserName to username
-                )
-            )
-        )
+        navController.navigate(Profile(userId ?: 0, username))
     }
 
     fun toActivityDetails(id: Int) {
-        navController.navigate(
-            NavDestination.ActivityDetails
-                .putArguments(mapOf(NavArgument.ActivityId to id.toString()))
-        )
+        navController.navigate(ActivityDetails(id))
     }
 
     fun toThreadDetails(id: Int) {
-        navController.navigate(
-            NavDestination.ThreadDetails.putArguments(
-                mapOf(NavArgument.ThreadId to id.toString())
-            )
-        )
+        navController.navigate(ThreadDetails(id))
     }
 
     fun toReviewDetails(id: Int) {
-        navController.navigate(
-            NavDestination.ReviewDetails.putArguments(
-                mapOf(NavArgument.ReviewId to id.toString())
-            )
-        )
+        navController.navigate(ReviewDetails(id))
     }
 
     fun toFullscreenImage(url: String) {
-        val encodedUrl = URLEncoder.encode(url, UTF_8)
-        navController.navigate(
-            NavDestination.FullscreenImage
-                .putArguments(mapOf(NavArgument.Url to encodedUrl))
-        )
+        navController.navigate(FullScreenImage(url))
     }
 
     fun toSearch() {
-        navController.navigate(
-            NavDestination.Search.putArguments(
-                mapOf(NavArgument.Focus to TriBoolean.TRUE.value.toString())
-            )
-        )
+        navController.navigate(Search(focus = true))
     }
 
     fun toSearchOnMyList(mediaType: MediaType) {
         navController.navigate(
-            NavDestination.Search.putArguments(
-                mapOf(
-                    NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.OnList to TriBoolean.TRUE.value.toString(),
-                    NavArgument.Focus to TriBoolean.TRUE.value.toString()
-                )
-            )
+            Search(mediaType = mediaType.rawValue, onList = TriBoolean.TRUE.value, focus = true)
         )
     }
 
@@ -126,24 +96,13 @@ class NavActionManager(
         tag: String?
     ) {
         navController.navigate(
-            NavDestination.Search.putArguments(
-                mapOf(
-                    NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.Genre to genre,
-                    NavArgument.Tag to tag
-                )
-            )
+            Search(mediaType = mediaType.rawValue, genre = genre, tag = tag)
         )
     }
 
     fun toAnimeSeason(season: AnimeSeason) {
         navController.navigate(
-            NavDestination.SeasonAnime.putArguments(
-                mapOf(
-                    NavArgument.Year to season.year.toString(),
-                    NavArgument.Season to season.season.name
-                )
-            )
+            SeasonAnime(season = season.season.rawValue, year = season.year)
         )
     }
 
@@ -157,35 +116,22 @@ class NavActionManager(
     }
 
     fun toCalendar() {
-        navController.navigate(NavDestination.Calendar.route())
+        navController.navigate(Calendar)
     }
 
     fun toExplore(mediaType: MediaType, mediaSort: MediaSort) {
         navController.navigate(
-            NavDestination.Search.putArguments(
-                mapOf(
-                    NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.MediaSort to mediaSort.rawValue
-                )
-            )
+            Search(mediaType = mediaType.rawValue, mediaSort = mediaSort.rawValue)
         )
     }
 
     fun toNotifications(unread: Int = 0) {
-        navController.navigate(
-            NavDestination.Notifications
-                .putArguments(mapOf(NavArgument.UnreadCount to unread.toString()))
-        )
+        navController.navigate(Notifications(unread))
     }
 
     fun toPublishActivity(id: Int?, text: String?) {
         navController.navigate(
-            NavDestination.PublishActivity.putArguments(
-                mapOf(
-                    NavArgument.ActivityId to id.toStringOrZero(),
-                    NavArgument.Text to text
-                )
-            )
+            PublishActivity(activityId = id ?: 0, text = text)
         )
     }
 
@@ -195,13 +141,7 @@ class NavActionManager(
         text: String?
     ) {
         navController.navigate(
-            NavDestination.PublishActivityReply.putArguments(
-                mapOf(
-                    NavArgument.ActivityId to activityId.toString(),
-                    NavArgument.ReplyId to replyId.toStringOrZero(),
-                    NavArgument.Text to text
-                )
-            )
+            PublishActivity(activityId = activityId, id = replyId ?: 0, text = text)
         )
     }
 
@@ -211,13 +151,7 @@ class NavActionManager(
         text: String?
     ) {
         navController.navigate(
-            NavDestination.PublishThreadComment.putArguments(
-                mapOf(
-                    NavArgument.ThreadId to threadId.toString(),
-                    NavArgument.CommentId to commentId.toStringOrZero(),
-                    NavArgument.Text to text
-                )
-            )
+            PublishComment(threadId = threadId, id = commentId ?: 0, text = text)
         )
     }
 
@@ -227,22 +161,16 @@ class NavActionManager(
         text: String?
     ) {
         navController.navigate(
-            NavDestination.PublishCommentReply.putArguments(
-                mapOf(
-                    NavArgument.ParentCommentId to parentCommentId.toString(),
-                    NavArgument.CommentId to commentId.toStringOrZero(),
-                    NavArgument.Text to text
-                )
+            PublishComment(
+                parentCommentId = parentCommentId,
+                id = commentId ?: 0,
+                text = text
             )
         )
     }
 
     fun toMediaChart(type: ChartType) {
-        navController.navigate(
-            NavDestination.MediaChart.putArguments(
-                mapOf(NavArgument.ChartType to type.name)
-            )
-        )
+        navController.navigate(MediaChartList(type.name))
     }
 
     fun toUserMediaList(
@@ -251,26 +179,24 @@ class NavActionManager(
         scoreFormat: ScoreFormat
     ) {
         navController.navigate(
-            NavDestination.UserMediaList.putArguments(
-                mapOf(
-                    NavArgument.UserId to userId.toString(),
-                    NavArgument.MediaType to mediaType.rawValue,
-                    NavArgument.ScoreFormat to scoreFormat.rawValue
-                )
+            UserMediaList(
+                mediaType = mediaType.rawValue,
+                userId = userId,
+                scoreFormat = scoreFormat.rawValue
             )
         )
     }
 
     fun toSettings() {
-        navController.navigate(NavDestination.Settings.route())
+        navController.navigate(Settings)
     }
 
     fun toListStyleSettings() {
-        navController.navigate(NavDestination.ListStyleSettings.route())
+        navController.navigate(ListStyleSettings)
     }
 
     fun toTranslations() {
-        navController.navigate(NavDestination.Translations.route())
+        navController.navigate(Translations)
     }
 
     companion object {

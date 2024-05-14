@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.staffdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.StaffMediaQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -9,14 +10,11 @@ import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StaffRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -31,7 +29,7 @@ class StaffDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<StaffDetailsUiState>(), StaffDetailsEvent {
 
-    private val staffId = savedStateHandle.getStateFlow<Int?>(NavArgument.StaffId.name, null)
+    private val arguments = savedStateHandle.toRoute<StaffDetails>()
 
     override val initialState = StaffDetailsUiState()
 
@@ -42,25 +40,23 @@ class StaffDetailsViewModel @Inject constructor(
     }
 
     override fun toggleFavorite() {
-        staffId.value?.let { staffId ->
-            favoriteRepository.toggleFavorite(staffId = staffId)
-                .onEach { result ->
-                    if (result is DataResult.Success && result.data != null) {
-                        mutableUiState.update { uiState ->
-                            val newDetails = uiState.details
-                                ?.copy(isFavourite = !uiState.details.isFavourite)
-                                ?.also {
-                                    staffRepository.updateStaffDetailsCache(it)
-                                }
-                            uiState.copy(
-                                isLoading = false,
-                                details = newDetails
-                            )
-                        }
+        favoriteRepository.toggleFavorite(staffId = arguments.id)
+            .onEach { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    mutableUiState.update { uiState ->
+                        val newDetails = uiState.details
+                            ?.copy(isFavourite = !uiState.details.isFavourite)
+                            ?.also {
+                                staffRepository.updateStaffDetailsCache(it)
+                            }
+                        uiState.copy(
+                            isLoading = false,
+                            details = newDetails
+                        )
                     }
                 }
-                .launchIn(viewModelScope)
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
     override fun loadNextPageMedia() {
@@ -115,12 +111,7 @@ class StaffDetailsViewModel @Inject constructor(
     }
 
     init {
-        // staff details
-        staffId
-            .filterNotNull()
-            .flatMapLatest { staffId ->
-                staffRepository.getStaffDetails(staffId)
-            }
+        staffRepository.getStaffDetails(arguments.id)
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
@@ -142,10 +133,9 @@ class StaffDetailsViewModel @Inject constructor(
                 old.pageMedia == new.pageMedia
                         && old.mediaOnMyList == new.mediaOnMyList
             }
-            .combine(staffId.filterNotNull(), ::Pair)
-            .flatMapLatest { (uiState, staffId) ->
+            .flatMapLatest { uiState ->
                 staffRepository.getStaffMediaPage(
-                    staffId = staffId,
+                    staffId = arguments.id,
                     onList = uiState.mediaOnMyList,
                     page = uiState.pageMedia
                 )
@@ -175,10 +165,9 @@ class StaffDetailsViewModel @Inject constructor(
                 old.pageCharacters == new.pageCharacters
                         && old.charactersOnMyList == new.charactersOnMyList
             }
-            .combine(staffId.filterNotNull(), ::Pair)
-            .flatMapLatest { (uiState, staffId) ->
+            .flatMapLatest { uiState ->
                 staffRepository.getStaffCharactersPage(
-                    staffId = staffId,
+                    staffId = arguments.id,
                     onList = uiState.charactersOnMyList,
                     page = uiState.pageCharacters
                 )

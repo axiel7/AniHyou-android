@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -23,6 +24,7 @@ import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.CROWDIN_URL
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
 private val translations = mapOf(
@@ -39,6 +41,10 @@ private val translations = mapOf(
     "tr-TR" to "hsinankirdar",
     "uk-UA" to "Syly_vibes, Sensetivity, magnariuk",
 )
+
+@Serializable
+@Immutable
+object Translations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

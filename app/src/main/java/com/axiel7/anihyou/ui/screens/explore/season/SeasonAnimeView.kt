@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +63,14 @@ import com.axiel7.anihyou.ui.screens.explore.season.composables.SeasonChartFilte
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class SeasonAnime(
+    val season: String,
+    val year: Int,
+)
 
 @Composable
 fun SeasonAnimeView(

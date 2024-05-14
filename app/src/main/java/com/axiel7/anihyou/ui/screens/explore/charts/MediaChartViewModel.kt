@@ -2,18 +2,17 @@ package com.axiel7.anihyou.ui.screens.explore.charts
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,10 +26,13 @@ class MediaChartViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
 ) : PagedUiStateViewModel<MediaChartUiState>(), MediaChartEvent {
 
-    private val initialType =
-        savedStateHandle.getStateFlow<String?>(NavArgument.ChartType.name, null)
+    private val arguments = savedStateHandle.toRoute<MediaChartList>()
+    private val chartType = ChartType.valueOf(arguments.type)
 
-    override val initialState = MediaChartUiState()
+    override val initialState = MediaChartUiState(
+        chartType = chartType,
+        hasNextPage = true
+    )
 
     override fun selectItem(value: MediaChartQuery.Medium?) {
         mutableUiState.update {
@@ -59,19 +61,6 @@ class MediaChartViewModel @Inject constructor(
     }
 
     init {
-        initialType
-            .filterNotNull()
-            .onEach { type ->
-                mutableUiState.update {
-                    it.copy(
-                        chartType = ChartType.valueOf(type),
-                        page = 1,
-                        hasNextPage = true,
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-
         mutableUiState
             .filter { it.hasNextPage && it.chartType != null }
             .distinctUntilChanged { old, new ->

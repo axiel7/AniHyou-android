@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.profile
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.activity.updateLikeStatus
@@ -10,11 +11,9 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -33,10 +32,11 @@ class ProfileViewModel @Inject constructor(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
-    private val userId = savedStateHandle.getStateFlow<Int?>(NavArgument.UserId.name, null)
-    private val userName = savedStateHandle.getStateFlow<String?>(NavArgument.UserName.name, null)
+    private val arguments = savedStateHandle.toRoute<Profile>()
 
-    override val initialState = ProfileUiState()
+    override val initialState = ProfileUiState(
+        isMyProfile = arguments.id == 0 && arguments.userName == null,
+    )
 
     private fun getMyUserInfo() {
         mutableUiState
@@ -136,16 +136,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     init {
-        combine(userId, userName) { id, name ->
-            if (id != 0) id to name
-            else null to name
-        }.onEach { (id, name) ->
-            mutableUiState.update {
-                it.copy(isMyProfile = id == null && name == null)
-            }
-            if (id != null || name != null) getUserInfo(id, name)
-            else getMyUserInfo()
-        }.launchIn(viewModelScope)
+        if (mutableUiState.value.isMyProfile) getMyUserInfo()
+        else getUserInfo(arguments.id, arguments.userName)
 
         // activities
         mutableUiState

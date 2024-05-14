@@ -14,6 +14,7 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -24,10 +25,15 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.utils.ContextUtils.openShareSheet
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class FullScreenImage(val imageUrl: String?)
 
 @Composable
 fun FullScreenImageView(
-    imageUrl: String?,
+    arguments: FullScreenImage,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -40,7 +46,7 @@ fun FullScreenImageView(
         contentAlignment = Alignment.Center
     ) {
         SubcomposeAsyncImage(
-            model = imageUrl,
+            model = arguments.imageUrl,
             contentDescription = "image",
             modifier = Modifier.fillMaxWidth(),
             loading = {
@@ -62,7 +68,7 @@ fun FullScreenImageView(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            FilledTonalIconButton(onClick = { context.openShareSheet(imageUrl.orEmpty()) }) {
+            FilledTonalIconButton(onClick = { context.openShareSheet(arguments.imageUrl.orEmpty()) }) {
                 Icon(
                     painter = painterResource(R.drawable.share_24),
                     contentDescription = stringResource(R.string.share)

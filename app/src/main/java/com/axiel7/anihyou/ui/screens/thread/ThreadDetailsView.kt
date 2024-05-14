@@ -13,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,6 +34,11 @@ import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentView
 import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_THREAD_URL
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class ThreadDetails(val id: Int)
 
 @Composable
 fun ThreadDetailsView(

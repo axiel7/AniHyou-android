@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -31,6 +32,11 @@ import com.axiel7.anihyou.ui.composables.ListPreference
 import com.axiel7.anihyou.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+object ListStyleSettings
 
 @Composable
 fun ListStyleSettingsView(

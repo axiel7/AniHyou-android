@@ -18,38 +18,55 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.ui.common.BottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
-import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getBoolean
-import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getIntArg
-import com.axiel7.anihyou.ui.common.navigation.DestArgument.Companion.getStringArg
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
-import com.axiel7.anihyou.ui.common.navigation.NavDestination
+import com.axiel7.anihyou.ui.composables.FullScreenImage
 import com.axiel7.anihyou.ui.composables.FullScreenImageView
+import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetails
 import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetailsView
+import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivity
 import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivityView
+import com.axiel7.anihyou.ui.screens.calendar.Calendar
 import com.axiel7.anihyou.ui.screens.calendar.CalendarView
+import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetails
 import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
+import com.axiel7.anihyou.ui.screens.explore.Explore
 import com.axiel7.anihyou.ui.screens.explore.ExploreView
+import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
 import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
+import com.axiel7.anihyou.ui.screens.explore.search.Search
 import com.axiel7.anihyou.ui.screens.explore.search.SearchView
+import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
+import com.axiel7.anihyou.ui.screens.home.Home
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.ui.screens.notifications.Notifications
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
+import com.axiel7.anihyou.ui.screens.profile.Profile
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
+import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
+import com.axiel7.anihyou.ui.screens.settings.Settings
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
+import com.axiel7.anihyou.ui.screens.settings.Translations
 import com.axiel7.anihyou.ui.screens.settings.TranslationsView
+import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettings
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
+import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetails
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
+import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetails
 import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
+import com.axiel7.anihyou.ui.screens.thread.ThreadDetails
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
+import com.axiel7.anihyou.ui.screens.thread.publish.PublishComment
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaList
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 
 @Composable
@@ -108,8 +125,7 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = lastTabOpened.toBottomDestinationRoute()
-            ?: NavDestination.HomeTab.route(),
+        startDestination = lastTabOpened.toBottomDestinationRoute() ?: Home,
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
@@ -137,8 +153,7 @@ fun MainNavigation(
             )
         }
     ) {
-        composable(
-            route = BottomDestination.Home.route,
+        composable<Home>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
@@ -154,9 +169,7 @@ fun MainNavigation(
             )
         }
 
-        composable(
-            route = BottomDestination.AnimeList.route,
-            arguments = NavDestination.AnimeTab.namedNavArguments,
+        composable<UserMediaList>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
@@ -173,27 +186,7 @@ fun MainNavigation(
             }
         }
 
-        composable(
-            route = BottomDestination.MangaList.route,
-            arguments = NavDestination.MangaTab.namedNavArguments,
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
-        ) {
-            if (isLoggedIn) {
-                UserMediaListHostView(
-                    isCompactScreen = isCompactScreen,
-                    modifier = Modifier.padding(bottom = bottomPadding),
-                    navActionManager = navActionManager,
-                )
-            } else {
-                LoginView()
-            }
-        }
-
-        composable(
-            route = BottomDestination.Profile.route,
+        composable<Profile>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
@@ -212,8 +205,7 @@ fun MainNavigation(
             }
         }
 
-        composable(
-            route = BottomDestination.Explore.route,
+        composable<Explore>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
@@ -225,40 +217,15 @@ fun MainNavigation(
             )
         }
 
-        composable(
-            route = NavDestination.Search.route(),
-            arguments = NavDestination.Search.namedNavArguments
-        ) { navEntry ->
+        composable<Search> {
             SearchView(
-                modifier = Modifier.padding(bottom = bottomPadding),
-                initialGenre = navEntry.getStringArg(
-                    NavDestination.Search.findDestArgument(NavArgument.Genre)
-                ),
-                initialTag = navEntry.getStringArg(
-                    NavDestination.Search.findDestArgument(NavArgument.Tag)
-                ),
-                initialFocus = navEntry.getBoolean(
-                    NavDestination.Search.findDestArgument(NavArgument.Focus)
-                ) == true,
-                navActionManager = navActionManager,
-            )
-        }
-
-        composable(
-            route = NavDestination.UserMediaList.route(),
-            arguments = NavDestination.UserMediaList.namedNavArguments
-        ) {
-            UserMediaListHostView(
-                isCompactScreen = isCompactScreen,
+                arguments = it.toRoute(),
                 modifier = Modifier.padding(bottom = bottomPadding),
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.Notifications.route(),
-            arguments = NavDestination.Notifications.namedNavArguments
-        ) {
+        composable<Notifications> {
             if (isLoggedIn) {
                 NotificationsView(
                     navActionManager = navActionManager,
@@ -268,157 +235,99 @@ fun MainNavigation(
             }
         }
 
-        composable(
-            route = NavDestination.MediaDetails.route(),
-            arguments = NavDestination.MediaDetails.namedNavArguments,
-        ) {
+        composable<MediaDetails> {
             MediaDetailsView(
                 isLoggedIn = isLoggedIn,
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.MediaChart.route(),
-            arguments = NavDestination.MediaChart.namedNavArguments
-        ) {
+        composable<MediaChartList> {
             MediaChartListView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            NavDestination.SeasonAnime.route(),
-            arguments = NavDestination.SeasonAnime.namedNavArguments
-        ) {
+        composable<SeasonAnime> {
             SeasonAnimeView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(NavDestination.Calendar.route()) {
+        composable<Calendar> {
             CalendarView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.UserDetails.route(),
-            arguments = NavDestination.UserDetails.namedNavArguments
-        ) {
-            ProfileView(
-                modifier = Modifier.padding(bottom = bottomPadding),
-                navActionManager = navActionManager,
-            )
-        }
-
-        composable(
-            route = NavDestination.CharacterDetails.route(),
-            arguments = NavDestination.CharacterDetails.namedNavArguments
-        ) {
+        composable<CharacterDetails> {
             CharacterDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.StaffDetails.route(),
-            arguments = NavDestination.StaffDetails.namedNavArguments
-        ) {
+        composable<StaffDetails> {
             StaffDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.ReviewDetails.route(),
-            arguments = NavDestination.ReviewDetails.namedNavArguments
-        ) {
+        composable<ReviewDetails> {
             ReviewDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.ThreadDetails.route(),
-            arguments = NavDestination.ThreadDetails.namedNavArguments
-        ) { navEntry ->
-            navEntry.getIntArg(
-                NavDestination.ThreadDetails.findDestArgument(NavArgument.ThreadId)
-            )?.let {
-                ThreadDetailsView(
-                    navActionManager = navActionManager,
-                )
-            }
+        composable<ThreadDetails> {
+            ThreadDetailsView(
+                navActionManager = navActionManager,
+            )
         }
 
-        composable(
-            route = NavDestination.StudioDetails.route(),
-            arguments = NavDestination.StudioDetails.namedNavArguments
-        ) {
+        composable<StudioDetails> {
             StudioDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(NavDestination.Settings.route()) {
+        composable<Settings> {
             SettingsView(
                 navActionManager = navActionManager,
             )
         }
-        composable(NavDestination.ListStyleSettings.route()) {
+        composable<ListStyleSettings> {
             ListStyleSettingsView(
                 navActionManager = navActionManager,
             )
         }
-        composable(NavDestination.Translations.route()) {
+        composable<Translations> {
             TranslationsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable(
-            route = NavDestination.FullscreenImage.route(),
-            arguments = NavDestination.FullscreenImage.namedNavArguments,
+        composable<FullScreenImage>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
             popExitTransition = { fadeOut(tween(400)) },
-        ) { navEntry ->
+        ) {
             FullScreenImageView(
-                imageUrl = navEntry.getStringArg(
-                    NavDestination.FullscreenImage.findDestArgument(NavArgument.Url)
-                ),
+                arguments = it.toRoute(),
                 onDismiss = navActionManager::goBack
             )
         }
 
-        composable(
-            route = NavDestination.ActivityDetails.route(),
-            arguments = NavDestination.ActivityDetails.namedNavArguments
-        ) { navEntry ->
-            navEntry.getIntArg(
-                NavDestination.ActivityDetails.findDestArgument(NavArgument.ActivityId)
-            )?.let {
-                ActivityDetailsView(
-                    navActionManager = navActionManager,
-                )
-            }
+        composable<ActivityDetails> {
+            ActivityDetailsView(
+                navActionManager = navActionManager,
+            )
         }
 
-        composable(
-            route = NavDestination.PublishActivity.route(),
-            arguments = NavDestination.PublishActivity.namedNavArguments
-        ) { navEntry ->
+        composable<PublishActivity> {
             if (isLoggedIn) {
-                val id = navEntry.getIntArg(
-                    NavDestination.PublishActivity.findDestArgument(NavArgument.ActivityId)
-                )
                 PublishActivityView(
-                    id = if (id != 0) id else null,
-                    text = navEntry.getStringArg(
-                        NavDestination.PublishActivity.findDestArgument(NavArgument.Text)
-                    ),
+                    arguments = it.toRoute(),
                     navActionManager = navActionManager,
                 )
             } else {
@@ -426,70 +335,10 @@ fun MainNavigation(
             }
         }
 
-        composable(
-            route = NavDestination.PublishActivityReply.route(),
-            arguments = NavDestination.PublishActivityReply.namedNavArguments
-        ) { navEntry ->
+        composable<PublishComment> {
             if (isLoggedIn) {
-                val id = navEntry.getIntArg(
-                    NavDestination.PublishActivityReply.findDestArgument(NavArgument.ReplyId)
-                )
-                PublishActivityView(
-                    activityId = navEntry.getIntArg(
-                        NavDestination.PublishActivityReply.findDestArgument(NavArgument.ActivityId)
-                    ),
-                    id = if (id != 0) id else null,
-                    text = navEntry.getStringArg(
-                        NavDestination.PublishActivityReply.findDestArgument(NavArgument.Text)
-                    ),
-                    navActionManager = navActionManager,
-                )
-            } else {
-                LoginView()
-            }
-        }
-
-        composable(
-            route = NavDestination.PublishThreadComment.route(),
-            arguments = NavDestination.PublishThreadComment.namedNavArguments
-        ) { navEntry ->
-            if (isLoggedIn) {
-                val commentId = navEntry.getIntArg(
-                    NavDestination.PublishThreadComment.findDestArgument(NavArgument.CommentId)
-                )
                 PublishCommentView(
-                    threadId = navEntry.getIntArg(
-                        NavDestination.PublishThreadComment.findDestArgument(NavArgument.ThreadId)
-                    ),
-                    parentCommentId = null,
-                    id = commentId,
-                    text = navEntry.getStringArg(
-                        NavDestination.PublishThreadComment.findDestArgument(NavArgument.Text)
-                    ),
-                    navActionManager = navActionManager,
-                )
-            } else {
-                LoginView()
-            }
-        }
-
-        composable(
-            route = NavDestination.PublishCommentReply.route(),
-            arguments = NavDestination.PublishCommentReply.namedNavArguments
-        ) { navEntry ->
-            if (isLoggedIn) {
-                val commentId = navEntry.getIntArg(
-                    NavDestination.PublishCommentReply.findDestArgument(NavArgument.CommentId)
-                )
-                PublishCommentView(
-                    threadId = null,
-                    parentCommentId = navEntry.getIntArg(
-                        NavDestination.PublishCommentReply.findDestArgument(NavArgument.ParentCommentId)
-                    ),
-                    id = commentId,
-                    text = navEntry.getStringArg(
-                        NavDestination.PublishCommentReply.findDestArgument(NavArgument.Text)
-                    ),
+                    arguments = it.toRoute(),
                     navActionManager = navActionManager,
                 )
             } else {

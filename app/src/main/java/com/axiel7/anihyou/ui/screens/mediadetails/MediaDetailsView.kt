@@ -33,6 +33,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -94,6 +95,12 @@ import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.StringUtils.orUnknown
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
+import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class MediaDetails(val id: Int)
 
 @Composable
 fun MediaDetailsView(

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
@@ -19,13 +20,11 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -51,14 +50,9 @@ class UserMediaListViewModel @Inject constructor(
     private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
-    private val mediaType =
-        savedStateHandle.get<String>(NavArgument.MediaType.name)
-            ?.let { MediaType.safeValueOf(it) } ?: MediaType.UNKNOWN__
-
-    private val userId: StateFlow<Int?> =
-        savedStateHandle.getStateFlow(NavArgument.UserId.name, null)
-
-    private val scoreFormatArg: String? = savedStateHandle[NavArgument.ScoreFormat.name]
+    private val arguments = savedStateHandle.toRoute<UserMediaList>()
+    private val mediaType = MediaType.safeValueOf(arguments.mediaType)
+    private val scoreFormat = arguments.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
 
     private val lastSelectedList =
         (if (mediaType == MediaType.ANIME) listPreferencesRepository.animeListSelected
@@ -67,9 +61,11 @@ class UserMediaListViewModel @Inject constructor(
     override val initialState =
         UserMediaListUiState(
             mediaType = mediaType,
-            scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10,
+            scoreFormat = scoreFormat ?: ScoreFormat.POINT_10,
             selectedListName = lastSelectedList,
-            status = lastSelectedList?.asMediaListStatus()
+            status = lastSelectedList?.asMediaListStatus(),
+            userId = arguments.userId.takeIf { it != 0 },
+            isMyList = arguments.userId == 0
         )
 
     private val myUserId = defaultPreferencesRepository.userId
@@ -284,17 +280,6 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     init {
-        userId
-            .onEach { value ->
-                mutableUiState.update {
-                    it.copy(
-                        userId = value,
-                        isMyList = value == null
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-
         // score format
         uiState
             .distinctUntilChangedBy { it.isMyList }

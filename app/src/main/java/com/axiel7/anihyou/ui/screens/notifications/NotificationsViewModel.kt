@@ -2,10 +2,10 @@ package com.axiel7.anihyou.ui.screens.notifications
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +24,7 @@ class NotificationsViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
 
-    private val initialUnreadCount: Int = savedStateHandle[NavArgument.UnreadCount.name] ?: 0
+    private val arguments = savedStateHandle.toRoute<Notifications>()
 
     override val initialState = NotificationsUiState()
 
@@ -47,7 +47,7 @@ class NotificationsViewModel @Inject constructor(
                 notificationRepository.getNotificationsPage(
                     type = uiState.type,
                     resetCount = resetCount,
-                    initialUnreadCount = initialUnreadCount,
+                    initialUnreadCount = arguments.unreadCount,
                     page = uiState.page
                 ).also {
                     resetCount = false // only reset on first call

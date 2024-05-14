@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,6 +36,11 @@ import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.ui.screens.activitydetails.composables.ActivityTextViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class ActivityDetails(val id: Int)
 
 @Composable
 fun ActivityDetailsView(
@@ -42,10 +48,9 @@ fun ActivityDetailsView(
 ) {
     val viewModel: ActivityDetailsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val activityId by viewModel.activityId.collectAsStateWithLifecycle()
 
     ActivityDetailsContent(
-        activityId = activityId ?: 0,
+        activityId = viewModel.arguments.id,
         uiState = uiState,
         event = viewModel,
         navActionManager = navActionManager,

@@ -2,17 +2,14 @@ package com.axiel7.anihyou.ui.screens.activitydetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.type.LikeableType
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -20,7 +17,6 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ActivityDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -28,29 +24,27 @@ class ActivityDetailsViewModel @Inject constructor(
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>(), ActivityDetailsEvent {
 
-    val activityId = savedStateHandle.getStateFlow<Int?>(NavArgument.ActivityId.name, null)
+    val arguments = savedStateHandle.toRoute<ActivityDetails>()
 
     override val initialState = ActivityDetailsUiState()
 
     override fun toggleLikeActivity() {
         viewModelScope.launch {
-            activityId.value?.let { activityId ->
-                likeRepository.toggleLike(
-                    likeableId = activityId,
-                    type = LikeableType.ACTIVITY
-                ).collect { result ->
-                    if (result is DataResult.Success && result.data != null) {
-                        mutableUiState.update {
-                            it.copy(
-                                details = it.details?.updateLikeStatus(result.data)
-                            )
-                        }
-                    } else if (result !is DataResult.Loading) {
-                        mutableUiState.update {
-                            it.copy(
-                                error = "Like failed",
-                            )
-                        }
+            likeRepository.toggleLike(
+                likeableId = arguments.id,
+                type = LikeableType.ACTIVITY
+            ).collect { result ->
+                if (result is DataResult.Success && result.data != null) {
+                    mutableUiState.update {
+                        it.copy(
+                            details = it.details?.updateLikeStatus(result.data)
+                        )
+                    }
+                } else if (result !is DataResult.Loading) {
+                    mutableUiState.update {
+                        it.copy(
+                            error = "Like failed",
+                        )
                     }
                 }
             }
@@ -87,11 +81,7 @@ class ActivityDetailsViewModel @Inject constructor(
     }
 
     init {
-        activityId
-            .filterNotNull()
-            .flatMapLatest { activityId ->
-                activityRepository.getActivityDetails(activityId = activityId)
-            }
+        activityRepository.getActivityDetails(activityId = arguments.id)
             .onEach { result ->
                 if (result is DataResult.Success) {
                     mutableUiState.updateAndGet {

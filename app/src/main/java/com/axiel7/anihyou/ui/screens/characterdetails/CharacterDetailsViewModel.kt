@@ -2,20 +2,18 @@ package com.axiel7.anihyou.ui.screens.characterdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -31,15 +29,14 @@ class CharacterDetailsViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<CharacterDetailsUiState>(), CharacterDetailsEvent {
 
-    private val characterId =
-        savedStateHandle.getStateFlow<Int?>(NavArgument.CharacterId.name, null)
+    private val arguments = savedStateHandle.toRoute<CharacterDetails>()
 
     override val initialState = CharacterDetailsUiState()
 
     override fun toggleFavorite() {
         viewModelScope.launch {
             favoriteRepository.toggleFavorite(
-                characterId = characterId.value
+                characterId = arguments.id
             ).collect { result ->
                 if (result is DataResult.Success && result.data != null) {
                     mutableUiState.update { state ->
@@ -94,11 +91,7 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     init {
-        characterId
-            .filterNotNull()
-            .flatMapLatest { characterId ->
-                characterRepository.getCharacterDetails(characterId)
-            }
+        characterRepository.getCharacterDetails(arguments.id)
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
@@ -116,10 +109,9 @@ class CharacterDetailsViewModel @Inject constructor(
         mutableUiState
             .filter { it.hasNextPage && it.page != 0 }
             .distinctUntilChangedBy { it.page }
-            .combine(characterId.filterNotNull(), ::Pair)
-            .flatMapLatest { (uiState, characterId) ->
+            .flatMapLatest { uiState ->
                 characterRepository.getCharacterMediaPage(
-                    characterId = characterId,
+                    characterId = arguments.id,
                     page = uiState.page,
                 )
             }

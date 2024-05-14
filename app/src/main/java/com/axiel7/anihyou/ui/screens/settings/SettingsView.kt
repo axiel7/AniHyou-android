@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -59,8 +60,13 @@ import com.axiel7.anihyou.worker.NotificationWorker.Companion.createDefaultNotif
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.serialization.Serializable
 
 private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+
+@Serializable
+@Immutable
+object Settings
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

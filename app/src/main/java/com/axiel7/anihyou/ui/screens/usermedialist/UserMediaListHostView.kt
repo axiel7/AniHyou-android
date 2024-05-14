@@ -56,6 +56,14 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.SortMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserMediaList(
+    val mediaType: String,
+    val userId: Int = 0,
+    val scoreFormat: String? = null,
+)
 
 @Composable
 fun UserMediaListHostView(

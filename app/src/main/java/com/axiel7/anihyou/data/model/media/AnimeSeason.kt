@@ -5,7 +5,9 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.Localizable
 import com.axiel7.anihyou.type.MediaSeason
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AnimeSeason(
     val year: Int,
     val season: MediaSeason

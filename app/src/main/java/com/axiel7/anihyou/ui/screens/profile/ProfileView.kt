@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -61,6 +62,14 @@ import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+data class Profile(
+    val id: Int = 0,
+    val userName: String?
+)
 
 @Composable
 fun ProfileView(
@@ -187,7 +196,7 @@ private fun ProfileContent(
                     }
                 }//:Column
 
-                if (uiState.isMyProfile == true) {
+                if (uiState.isMyProfile) {
                     OutlinedIconButton(
                         onClick = navActionManager::toSettings,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -199,7 +208,7 @@ private fun ProfileContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                } else if (uiState.isMyProfile == false) {
+                } else {
                     if (uiState.userInfo?.isFollowing == true) {
                         OutlinedButton(
                             onClick = { scope.launch { event?.toggleFollow() } },
@@ -289,7 +298,7 @@ fun ProfileViewPreview() {
     AniHyouTheme {
         Surface {
             ProfileContent(
-                uiState = ProfileUiState(),
+                uiState = ProfileUiState(isMyProfile = false),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )

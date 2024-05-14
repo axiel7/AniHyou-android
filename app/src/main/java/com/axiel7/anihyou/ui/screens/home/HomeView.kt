@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,6 +36,11 @@ import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.utils.NumberUtils.format
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Immutable
+object Home
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

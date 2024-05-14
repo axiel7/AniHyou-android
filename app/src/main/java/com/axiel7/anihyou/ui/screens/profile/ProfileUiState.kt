@@ -12,7 +12,7 @@ data class ProfileUiState(
     val userInfo: UserInfo? = null,
     val activities: SnapshotStateList<UserActivityQuery.Activity> = mutableStateListOf(),
     val isLoadingActivity: Boolean = true,
-    val isMyProfile: Boolean? = null,
+    val isMyProfile: Boolean,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,

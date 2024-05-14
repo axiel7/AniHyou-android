@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.explore.season
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
@@ -11,14 +12,11 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.common.ListStyle
-import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -34,11 +32,12 @@ class SeasonAnimeViewModel @Inject constructor(
     private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<SeasonAnimeUiState>(), SeasonAnimeEvent {
 
-    private val initialYear = savedStateHandle.getStateFlow<Int?>(NavArgument.Year.name, null)
-    private val initialSeason =
-        savedStateHandle.getStateFlow<String?>(NavArgument.Season.name, null)
+    private val arguments = savedStateHandle.toRoute<SeasonAnime>()
+    private val season = MediaSeason.safeValueOf(arguments.season)
 
-    override val initialState = SeasonAnimeUiState()
+    override val initialState = SeasonAnimeUiState(
+        season = AnimeSeason(season = season, year = arguments.year)
+    )
 
     override fun setSeason(value: AnimeSeason) {
         mutableUiState.update {
@@ -91,17 +90,6 @@ class SeasonAnimeViewModel @Inject constructor(
                 mutableUiState.update { it.copy(listStyle = value) }
             }
             .launchIn(viewModelScope)
-
-        combine(
-            initialYear.filterNotNull(),
-            initialSeason.filterNotNull()
-        ) { year, season ->
-            mutableUiState.update {
-                it.copy(
-                    season = AnimeSeason(season = MediaSeason.valueOf(season), year = year)
-                )
-            }
-        }.launchIn(viewModelScope)
 
         uiState
             .filter { it.season != null && it.hasNextPage }
