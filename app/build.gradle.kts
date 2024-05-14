@@ -97,7 +97,7 @@ android {
         aaptOptions.cruncherEnabled = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -160,7 +160,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:$androidHiltVersion")
     implementation("androidx.hilt:hilt-work:$androidHiltVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
