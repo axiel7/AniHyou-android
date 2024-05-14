@@ -288,7 +288,7 @@ private fun EditMediaSheetContent(
                     ScoreFormat.POINT_5 -> {
                         FiveStarRatingView(
                             modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
-                            initialRating = uiState.score ?: 0.0,
+                            rating = uiState.score ?: 0.0,
                             onRatingChanged = { event?.onChangeScore(it) }
                         )
                     }
