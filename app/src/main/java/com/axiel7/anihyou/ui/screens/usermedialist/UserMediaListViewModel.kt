@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.axiel7.anihyou.common.firstBlocking
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.common.firstBlocking
