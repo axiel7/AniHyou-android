@@ -4,7 +4,6 @@ extend type Character @typePolicy(keyFields: "id")
 extend type Staff @typePolicy(keyFields: "id")
 extend type Studio @typePolicy(keyFields: "id")
 extend type MediaList @typePolicy(keyFields: "id mediaId")
-extend type MediaListGroup @typePolicy(keyFields: "name")
 
 extend type Query @fieldPolicy(forField: "User", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Media", keyArgs: "id")
