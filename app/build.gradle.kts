@@ -150,7 +150,7 @@ dependencies {
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
-    implementation("com.github.axiel7:compose-markdown:5c1c0662a0")
+    implementation("com.github.axiel7:compose-markdown:92ce641022")
 
     val hiltVersion = "2.51.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
