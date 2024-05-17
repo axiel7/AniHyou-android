@@ -243,6 +243,7 @@
     <string name="score_point_10">10-Punktowy (5/10)</string>
     <string name="score_point_5">5-gwiazdkowy (3/5)</string>
     <string name="score_point_3">3-Punktowe Emotikony :-)</string>
+    <string name="no_media">Brak mediów</string>
     <string name="every_six_hours">Co 6 godzin</string>
     <string name="every_twelve_hours">Co 12 godzin</string>
     <string name="daily">Codziennie</string>
@@ -255,7 +256,10 @@
     <string name="color">Kolor</string>
     <string name="discover">Odkryj</string>
     <string name="default_home_tab">Domyślna główna zakładka</string>
+    <string name="text_status">Status tekstowy</string>
+    <string name="list_progress">Lista postępów</string>
     <string name="all">Wszystkie</string>
+    <string name="global_feed">Globalny</string>
     <string name="format_bold">Pogrubienie</string>
     <string name="format_italic">Kursywa</string>
     <string name="format_strikethrough">Przekreślenie</string>
@@ -263,6 +267,8 @@
     <string name="format_link">Odnośnik</string>
     <string name="format_image">Zdjęcie</string>
     <string name="format_video">Film</string>
+    <string name="format_ol">Lista uporządkowana</string>
+    <string name="format_ul">Lista punktowana</string>
     <string name="format_heading">Nagłówek</string>
     <string name="format_centered">Wyśrodkuj</string>
     <string name="format_quote">Cytat</string>
@@ -336,4 +342,7 @@
     <string name="show_less">Mniej</string>
     <string name="show_more">Więcej</string>
     <string name="continue_watching">Kontynuuj oglądanie</string>
+    <string name="hide_from_status_lists">Ukryj z list statusów</string>
+    <string name="black_theme_variant">Czarny motyw</string>
+    <string name="random">Losowe</string>
 </resources>
