@@ -63,7 +63,7 @@
     <string name="favorites">Ulubionych</string>
     <string name="episode_in_time">Odc. %d za %s</string>
     <string name="airing">Emitowanie</string>
-    <string name="num_episodes_behind">%s odcinki z tyłu</string>
+    <string name="num_episodes_behind">%s zaległe odcinki</string>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
     <string name="start_date">Data rozpoczęcia</string>
