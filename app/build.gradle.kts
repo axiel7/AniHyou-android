@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.apollographql.apollo3") version "4.0.0-beta.6"
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
@@ -95,9 +94,6 @@ android {
     }
     androidResources {
         aaptOptions.cruncherEnabled = false
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
