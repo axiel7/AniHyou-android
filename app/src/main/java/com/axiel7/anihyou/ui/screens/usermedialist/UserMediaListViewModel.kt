@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -55,10 +56,16 @@ class UserMediaListViewModel @Inject constructor(
 
     private val scoreFormatArg: String? = savedStateHandle[NavArgument.ScoreFormat.name]
 
+    private val lastSelectedList =
+        (if (mediaType == MediaType.ANIME) listPreferencesRepository.animeListSelected
+        else listPreferencesRepository.mangaListSelected).firstBlocking()
+
     override val initialState =
         UserMediaListUiState(
             mediaType = mediaType,
-            scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10
+            scoreFormat = scoreFormatArg?.let { ScoreFormat.valueOf(it) } ?: ScoreFormat.POINT_10,
+            selectedListName = lastSelectedList,
+            status = lastSelectedList?.asMediaListStatus()
         )
 
     private val myUserId = defaultPreferencesRepository.userId
@@ -75,13 +82,20 @@ class UserMediaListViewModel @Inject constructor(
     }
 
     override fun onChangeList(listName: String?) {
-        mutableUiState.update {
-            it.entries.clear()
-            it.entries.addAll(it.getEntriesFromListName(listName))
-            it.copy(
-                selectedListName = listName,
-                status = listName?.asMediaListStatus()
-            )
+        viewModelScope.launch {
+            mutableUiState.update {
+                it.entries.clear()
+                it.entries.addAll(it.getEntriesFromListName(listName))
+                it.copy(
+                    selectedListName = listName,
+                    status = listName?.asMediaListStatus()
+                )
+            }
+            if (mediaType == MediaType.ANIME) {
+                listPreferencesRepository.setAnimeListSelected(listName)
+            } else {
+                listPreferencesRepository.setMangaListSelected(listName)
+            }
         }
     }
 

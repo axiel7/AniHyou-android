@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.axiel7.anihyou.di.DataStoreModule.getValue
 import com.axiel7.anihyou.di.DataStoreModule.setValue
 import com.axiel7.anihyou.type.MediaListSort
-import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import kotlinx.coroutines.flow.map
@@ -20,24 +19,16 @@ class ListPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     // default status
-    val animeListStatus = dataStore.getValue(
-        key = ANIME_LIST_STATUS_KEY
-    ).map { value ->
-        value?.let { MediaListStatus.valueOf(it) }
+    val animeListSelected = dataStore.getValue(key = ANIME_LIST_SELECTED_KEY)
+
+    suspend fun setAnimeListSelected(value: String?) {
+        dataStore.setValue(ANIME_LIST_SELECTED_KEY, value)
     }
 
-    suspend fun setAnimeListStatus(value: MediaListStatus?) {
-        dataStore.setValue(ANIME_LIST_STATUS_KEY, value?.name)
-    }
+    val mangaListSelected = dataStore.getValue(key = MANGA_LIST_SELECTED_KEY)
 
-    val mangaListStatus = dataStore.getValue(
-        key = MANGA_LIST_STATUS_KEY
-    ).map { value ->
-        value?.let { MediaListStatus.valueOf(it) }
-    }
-
-    suspend fun setMangaListStatus(value: MediaListStatus?) {
-        dataStore.setValue(MANGA_LIST_STATUS_KEY, value?.name)
+    suspend fun setMangaListSelected(value: String?) {
+        dataStore.setValue(MANGA_LIST_SELECTED_KEY, value)
     }
 
     // list sort
@@ -203,8 +194,8 @@ class ListPreferencesRepository @Inject constructor(
     }
 
     companion object {
-        private val ANIME_LIST_STATUS_KEY = stringPreferencesKey("anime_list_status")
-        private val MANGA_LIST_STATUS_KEY = stringPreferencesKey("manga_list_status")
+        private val ANIME_LIST_SELECTED_KEY = stringPreferencesKey("anime_list_selected")
+        private val MANGA_LIST_SELECTED_KEY = stringPreferencesKey("manga_list_selected")
 
         private val ANIME_LIST_SORT_KEY = stringPreferencesKey("anime_list_sort")
         private val MANGA_LIST_SORT_KEY = stringPreferencesKey("manga_list_sort")
