@@ -23,10 +23,12 @@ import com.axiel7.anihyou.ui.common.BottomDestination
 fun MainNavigationRail(
     navController: NavController,
     onItemSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     NavigationRail(
+        modifier = modifier,
         header = {
             FloatingActionButton(
                 onClick = {

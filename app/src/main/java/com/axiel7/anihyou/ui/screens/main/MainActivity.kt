@@ -8,16 +8,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,7 +28,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -205,11 +201,13 @@ fun MainView(
                 padding = padding,
             )
         } else {
-            val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
-            Row {
+            Row(
+                modifier = Modifier.padding(padding)
+            ) {
                 MainNavigationRail(
                     navController = navController,
-                    onItemSelected = saveLastTab
+                    onItemSelected = saveLastTab,
+                    modifier = Modifier.safeDrawingPadding(),
                 )
                 MainNavigation(
                     navController = navController,
@@ -219,12 +217,6 @@ fun MainView(
                     lastTabOpened = lastTabOpened,
                     deepLink = deepLink,
                     homeTab = homeTab,
-                    padding = PaddingValues(
-                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                        top = padding.calculateTopPadding(),
-                        end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                        bottom = bottomPadding.calculateBottomPadding()
-                    ),
                 )
             }
         }
