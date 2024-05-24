@@ -4,12 +4,6 @@
     <string name="anime">Аніме</string>
     <string name="manga">Манґа</string>
     <string name="explore">Огляд</string>
-    <string name="num_years">%s років</string>
-    <string name="num_months">%s місяців</string>
-    <string name="num_weeks">%s тижнів</string>
-    <string name="num_days">%s днів</string>
-    <string name="hour_abbreviation">%s год</string>
-    <string name="minutes_abbreviation">%s хв</string>
     <string name="unknown">Невідомо</string>
     <string name="airing_soon">Невдовзі вийде</string>
     <string name="mean_score">Середня оцінка</string>
@@ -51,8 +45,6 @@
     <string name="music">Музика</string>
     <string name="novel">Новела</string>
     <string name="one_shot">Ваншот</string>
-    <string name="num_episodes">%s серій</string>
-    <string name="num_chapters">%s розділів</string>
     <string name="finished">Завершено</string>
     <string name="releasing">Реліз</string>
     <string name="not_yet_released">Ще не випущено</string>
@@ -63,7 +55,6 @@
     <string name="favorites">Обране</string>
     <string name="episode_in_time">Еп %d за %s</string>
     <string name="airing">Виходить</string>
-    <string name="num_episodes_behind">%s епізодів позаду</string>
     <string name="information">Відомості</string>
     <string name="duration">Тривалість</string>
     <string name="start_date">Дата початку</string>
@@ -101,7 +92,7 @@
     <string name="characters">Персонажі</string>
     <string name="staff">Персонал</string>
     <string name="users">Користувачі</string>
-    <string name="title_romaji">Ромадзі назва</string>
+    <string name="title_romaji">Романджі назва</string>
     <string name="title_english">Назва англійською</string>
     <string name="title_native">Оригінальна назва</string>
     <string name="sort_type">Тип</string>
@@ -145,7 +136,7 @@
     <string name="account">Обліковий запис</string>
     <string name="github_repository">Репозиторій GitHub</string>
     <string name="version">Версія</string>
-    <string name="developed_by_axiel7">Розробник axiel7</string>
+    <string name="developed_by_axiel7">Розробник — axiel7</string>
     <string name="anilist_account_settings">Налаштування облікового запису AniList</string>
     <string name="logout">Вийти з облікового запису</string>
     <string name="character_media">Медіа</string>
@@ -181,8 +172,8 @@
     <string name="standard">Стандартний</string>
     <string name="compact">Компактний</string>
     <string name="minimal">Мінімальний</string>
-    <string name="list_style">Стиль списку</string>
-    <string name="on_my_list">У моїй бібліотеці</string>
+    <string name="list_style">Стиль каталогу</string>
+    <string name="on_my_list">У моєму каталозі</string>
     <string name="refresh">Оновити</string>
     <string name="display_adult_content">Відображати вміст для дорослих</string>
     <string name="overview">Огляд</string>
@@ -197,7 +188,7 @@
     <string name="standard_deviation">Стандартне відхилення</string>
     <string name="title_count">Кількість назв</string>
     <string name="time_spent">Витрачено часу</string>
-    <string name="format_distribution">Розподіл форматування</string>
+    <string name="format_distribution">Розподіл форматів</string>
     <string name="notes">Примітки</string>
     <string name="calendar">Календар</string>
     <string name="monday">Понеділок</string>
@@ -210,15 +201,15 @@
     <string name="episode_airing_at">Серія %d виходить в %s</string>
     <string name="filter">Фільтр</string>
     <string name="notifications">Сповіщення</string>
-    <string name="threads">Теми</string>
-    <string name="no_threads">Теми відсутні</string>
+    <string name="threads">Обговорення</string>
+    <string name="no_threads">Немає обговорень</string>
     <string name="notifications_all">Усі</string>
     <string name="notifications_airing">Виходить</string>
     <string name="activity">Діяльність</string>
     <string name="forum">Форум</string>
     <string name="notifications_media">Медіа</string>
     <string name="content">Вміст</string>
-    <string name="airing_on_my_list">Виходять у моїй бібліотеці</string>
+    <string name="airing_on_my_list">Виходять у моєму каталозі</string>
     <string name="airing_on_my_list_summary">Показувати тільки ті аніме, які найближчим часом вийдуть і які є у вашій бібліотеці</string>
     <string name="follow">Підписатися</string>
     <string name="follows_you">Підписаний(-а) на вас</string>
@@ -227,7 +218,7 @@
     <string name="upcoming">Незабаром</string>
     <string name="publishing">Публікується</string>
     <string name="grid">Сітка</string>
-    <string name="use_separated_list_styles">Використовувати розділені стилі списку</string>
+    <string name="use_separated_list_styles">Використовувати окремі стилі каталогу</string>
     <string name="changes_will_take_effect_on_app_restart">Зміни набудуть чинності після перезавантаження</string>
     <string name="items_per_row">Елементів у рядку</string>
     <string name="default_setting">Типово</string>
@@ -235,7 +226,7 @@
     <string name="year">Рік</string>
     <string name="episode_aired_ago">Серія %d вийшла %s тому</string>
     <string name="title_language">Мова назви</string>
-    <string name="romaji_western_order">Ромаджі (Західний порядок)</string>
+    <string name="romaji_western_order">Романджі (Західний порядок)</string>
     <string name="staff_character_name_language"><![CDATA[Мова імен персоналу та персонажів]]></string>
     <string name="score_format">Формат оцінки</string>
     <string name="score_point_100">100 балів (55/100)</string>
@@ -257,7 +248,7 @@
     <string name="discover">Огляд</string>
     <string name="default_home_tab">Вкладка за замовчуванням</string>
     <string name="text_status">Статус тексту</string>
-    <string name="list_progress">Список прогресу</string>
+    <string name="list_progress">Прогрес в Каталозі</string>
     <string name="all">Усі</string>
     <string name="global_feed">Загально</string>
     <string name="format_bold">Жирний</string>
@@ -267,8 +258,8 @@
     <string name="format_link">Посилання</string>
     <string name="format_image">Зображення</string>
     <string name="format_video">Відео</string>
-    <string name="format_ol">Впорядкований список</string>
-    <string name="format_ul">Невпорядкований список</string>
+    <string name="format_ol">Впорядкований каталог</string>
+    <string name="format_ul">Невпорядкований каталог</string>
     <string name="format_heading">Заголовок</string>
     <string name="format_centered">По центру</string>
     <string name="format_quote">Цитата</string>
@@ -323,8 +314,8 @@
     <string name="china">Китай</string>
     <string name="taiwan">Тайвань</string>
     <string name="country">Країна</string>
-    <string name="custom_lists">Користувацькі списки</string>
-    <string name="no_custom_lists">Немає користувацьких списків</string>
+    <string name="custom_lists">Користувацькі каталоги</string>
+    <string name="no_custom_lists">Немає користувацьких каталогів</string>
     <string name="hours_watched_format">Кількість годин перегляду: %s</string>
     <string name="chapters_read_format">Прочитані розділи: %s</string>
     <string name="mean_score_format">Середній результат: %s</string>
@@ -336,13 +327,13 @@
     <string name="read_year">Рік читання</string>
     <string name="top_movies">Найпопулярніші фільми</string>
     <string name="progress">Прогрес</string>
-    <string name="list">Список</string>
+    <string name="list">Каталог</string>
     <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
     <string name="show_less">Менше</string>
     <string name="show_more">Більше</string>
     <string name="continue_watching">Продовжити перегляд</string>
-    <string name="hide_from_status_lists">Не показувати в списках статусу</string>
+    <string name="hide_from_status_lists">Приховати з каталогів статусу</string>
     <string name="black_theme_variant">Варіант темної теми</string>
     <string name="random">Випадкове</string>
 </resources>
