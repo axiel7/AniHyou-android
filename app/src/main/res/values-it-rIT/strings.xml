@@ -4,12 +4,6 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Esplora</string>
-    <string name="num_years">%s anni</string>
-    <string name="num_months">%s mesi</string>
-    <string name="num_weeks">%s settimane</string>
-    <string name="num_days">%s giorni</string>
-    <string name="hour_abbreviation">%s h</string>
-    <string name="minutes_abbreviation">%s min</string>
     <string name="unknown">Sconosciuto</string>
     <string name="airing_soon">In arrivo</string>
     <string name="mean_score">Punteggio</string>
@@ -51,8 +45,6 @@
     <string name="music">Musica</string>
     <string name="novel">Romanzo</string>
     <string name="one_shot">One Shot</string>
-    <string name="num_episodes">%s episodi</string>
-    <string name="num_chapters">%s capitoli</string>
     <string name="finished">Completati</string>
     <string name="releasing">In rilascio</string>
     <string name="not_yet_released">Non ancora rilasciato</string>
@@ -63,7 +55,6 @@
     <string name="favorites">Preferiti</string>
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">In onda</string>
-    <string name="num_episodes_behind">%s episodi rimanenti</string>
     <string name="information">Informazioni</string>
     <string name="duration">Durata</string>
     <string name="start_date">Data d\'inizio</string>
