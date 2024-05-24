@@ -93,6 +93,9 @@ fun EditMediaSheet(
 
     LaunchedEffect(listEntry) {
         viewModel.setListEntry(listEntry)
+        if (listEntry == null) {
+            viewModel.fillCustomLists(mediaDetails.type)
+        }
     }
 
     EditMediaSheetContent(

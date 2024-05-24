@@ -9,6 +9,7 @@ import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.millisToLocalDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
@@ -28,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditMediaViewModel @Inject constructor(
     private val mediaListRepository: MediaListRepository,
-    defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : UiStateViewModel<EditMediaUiState>(), EditMediaEvent {
 
     override val initialState = EditMediaUiState()
@@ -54,8 +55,20 @@ class EditMediaViewModel @Inject constructor(
             isPrivate = value?.private,
             isHiddenFromStatusLists = value?.hiddenFromStatusLists,
             notes = value?.notes,
-            customLists = null,
         )
+    }
+
+    fun fillCustomLists(mediaType: MediaType?) {
+        viewModelScope.launch {
+            val customLists = linkedMapOf<String, Boolean>()
+            val savedCustomsLists = if (mediaType == MediaType.ANIME) {
+                defaultPreferencesRepository.animeCustomLists.first()
+            } else {
+                defaultPreferencesRepository.mangaCustomLists.first()
+            }
+            savedCustomsLists?.forEach { customLists[it] = false }
+            mutableUiState.update { it.copy(customLists = customLists) }
+        }
     }
 
     override fun onChangeStatus(value: MediaListStatus) {
