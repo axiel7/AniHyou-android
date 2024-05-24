@@ -4,10 +4,6 @@
     <string name="anime">Animé</string>
     <string name="manga">Manga</string>
     <string name="explore">Parcourir</string>
-    <string name="num_years">%s ans</string>
-    <string name="num_months">%s mois</string>
-    <string name="num_weeks">%s semaines</string>
-    <string name="num_days">%s jours</string>
     <string name="unknown">Inconnue</string>
     <string name="airing_in">Diffusion dans %s</string>
     <string name="winter">Hiver</string>
