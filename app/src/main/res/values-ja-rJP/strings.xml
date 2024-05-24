@@ -4,12 +4,6 @@
     <string name="anime">アニメ</string>
     <string name="manga">マンガ</string>
     <string name="explore">検索</string>
-    <string name="num_years">%s年</string>
-    <string name="num_months">%sヵ月</string>
-    <string name="num_weeks">%s週間</string>
-    <string name="num_days">%s日</string>
-    <string name="hour_abbreviation">%s時間</string>
-    <string name="minutes_abbreviation">%s分</string>
     <string name="unknown">不明</string>
     <string name="airing_soon">まもなく配信中</string>
     <string name="mean_score">スコア</string>
@@ -51,8 +45,6 @@
     <string name="music">音楽</string>
     <string name="novel">小説</string>
     <string name="one_shot">ワンショット</string>
-    <string name="num_episodes">%s話</string>
-    <string name="num_chapters">%s章</string>
     <string name="finished">終了</string>
     <string name="releasing">公開中</string>
     <string name="not_yet_released">未発表</string>
@@ -63,7 +55,6 @@
     <string name="favorites">お気に入り</string>
     <string name="episode_in_time">第%d話は%s後</string>
     <string name="airing">配信中</string>
-    <string name="num_episodes_behind">%s話遅い</string>
     <string name="information">情報</string>
     <string name="duration">放送時間</string>
     <string name="start_date">公開日</string>
