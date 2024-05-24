@@ -19,7 +19,7 @@ android {
         targetSdk = 34
         versionCode = 54
         versionName = "1.2.5-1"
-        archivesName.set("anihyou-$versionName")
+        setProperty("archivesBaseName", "anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.addAll(
