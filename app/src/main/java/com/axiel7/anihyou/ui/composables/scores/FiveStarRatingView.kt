@@ -8,6 +8,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.R
@@ -19,6 +21,7 @@ fun FiveStarRatingView(
     rating: Double = 0.0,
     onRatingChanged: (Double) -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -26,6 +29,7 @@ fun FiveStarRatingView(
         for (i in 1..5) {
             IconButton(
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onRatingChanged(
                         if (rating.toInt() == i) 0.0 else i.toDouble()
                     )

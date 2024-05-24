@@ -20,6 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +45,7 @@ fun RatingView(
     showAsDecimal: Boolean = false,
     onRatingChanged: (Double?) -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
     val decimalLength = remember { if (showAsDecimal) 1 else 0 }
     val increments = remember { if (showAsDecimal) 0.5 else 1.0 }
     var ratingString by remember(rating) {
@@ -118,6 +121,7 @@ fun RatingView(
         Spacer(modifier = Modifier.weight(1f))
         FilledTonalIconButton(
             onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 val newValue = (rating ?: 0.0) - increments
                 if (newValue >= 0) onRatingChanged(newValue)
             }
@@ -129,6 +133,7 @@ fun RatingView(
         }
         FilledTonalIconButton(
             onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 val newValue = (rating ?: 0.0) + increments
                 if (newValue <= maxValue) onRatingChanged(newValue)
             }

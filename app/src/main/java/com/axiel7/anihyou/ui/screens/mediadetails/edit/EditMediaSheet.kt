@@ -34,8 +34,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,6 +123,7 @@ private fun EditMediaSheetContent(
     onDismissed: () -> Unit,
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val datePickerState = rememberDatePickerState()
 
     if (uiState.openDatePicker) {
@@ -227,6 +230,7 @@ private fun EditMediaSheetContent(
                         value = status,
                         selectedValue = uiState.status,
                         onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             event?.onChangeStatus(status)
                         }
                     )

@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.data.model.smileyIcon
@@ -23,6 +25,7 @@ fun SmileyRatingView(
     rating: Double,
     onRatingChanged: (Double) -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -31,6 +34,7 @@ fun SmileyRatingView(
             val rate = rateInt.toDouble()
             IconButton(
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onRatingChanged(
                         if (rating == rate) 0.0 else rate
                     )

@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +41,7 @@ fun EditMediaProgressRow(
     onMinusClick: () -> Unit,
     onPlusClick: () -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -100,13 +103,23 @@ fun EditMediaProgressRow(
             )
         }
 
-        FilledTonalIconButton(onClick = onMinusClick) {
+        FilledTonalIconButton(
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onMinusClick()
+            }
+        ) {
             Icon(
                 painter = painterResource(R.drawable.remove_24),
                 contentDescription = stringResource(R.string.minus_one)
             )
         }
-        FilledTonalIconButton(onClick = onPlusClick) {
+        FilledTonalIconButton(
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onPlusClick()
+            }
+        ) {
             Icon(
                 painter = painterResource(R.drawable.add_24),
                 contentDescription = stringResource(R.string.plus_one)

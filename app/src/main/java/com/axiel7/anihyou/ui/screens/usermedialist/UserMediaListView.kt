@@ -22,10 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ListStyle
@@ -50,6 +53,7 @@ fun UserMediaListView(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(uiState.randomEntryId) {
@@ -64,6 +68,11 @@ fun UserMediaListView(
             Toast.makeText(context, uiState.error, Toast.LENGTH_LONG).show()
             event?.onErrorDisplayed()
         }
+    }
+
+    val onClickPlus: (BasicMediaListEntry) -> Unit = {
+        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        event?.onClickPlusOne(it)
     }
 
     PullToRefreshBox(
@@ -93,6 +102,7 @@ fun UserMediaListView(
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
+                onClickPlus = onClickPlus,
             )
         } else {
             LazyListPhone(
@@ -103,6 +113,7 @@ fun UserMediaListView(
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
+                onClickPlus = onClickPlus,
             )
         }
     }//: Box
@@ -178,6 +189,7 @@ private fun LazyListTablet(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    onClickPlus: (BasicMediaListEntry) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -215,12 +227,8 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
@@ -242,12 +250,8 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
@@ -269,12 +273,8 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
@@ -306,6 +306,7 @@ private fun LazyListPhone(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    onClickPlus: (BasicMediaListEntry) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -339,12 +340,8 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
@@ -366,12 +363,8 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
@@ -393,12 +386,8 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = {
-                            event?.onClickPlusOne(item.basicMediaListEntry)
-                        },
-                        onClickNotes = {
-                            event?.onClickNotes(item)
-                        }
+                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
             }
