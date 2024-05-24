@@ -3,10 +3,6 @@
     <string name="home">Domů</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
-    <string name="num_years">%s let</string>
-    <string name="num_months">%s měsíců</string>
-    <string name="num_weeks">%s týdnů</string>
-    <string name="num_days">%s dnů</string>
     <string name="unknown">Neznámo</string>
     <string name="airing_in">Vysílání za %s</string>
     <string name="winter">Zima</string>

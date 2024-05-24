@@ -4,10 +4,6 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Erkunden</string>
-    <string name="num_years">%s Jahre</string>
-    <string name="num_months">%s Monate</string>
-    <string name="num_weeks">%s Wochen</string>
-    <string name="num_days">%s Tage</string>
     <string name="hour_abbreviation">%s h</string>
     <string name="minutes_abbreviation">%s Min</string>
     <string name="unknown">Unbekannt</string>
@@ -51,8 +47,6 @@
     <string name="music">Musik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">One Shot</string>
-    <string name="num_episodes">%s Folgen</string>
-    <string name="num_chapters">%s Kapitel</string>
     <string name="finished">Abgeschlossen</string>
     <string name="releasing">Wird Veröffentlicht</string>
     <string name="not_yet_released">Nocht nicht veröffentlicht</string>
@@ -63,7 +57,6 @@
     <string name="favorites">Favoriten</string>
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">Am Laufen</string>
-    <string name="num_episodes_behind">%s Episoden nicht gesehen</string>
     <string name="information">Informationen</string>
     <string name="duration">Laufzeit</string>
     <string name="start_date">Startdatum</string>
@@ -96,7 +89,7 @@
     <string name="delete_confirmation">Bist Du sicher, dass Du diesen Eintrag löschen möchtest?</string>
     <string name="tags">Tags</string>
     <string name="show_spoiler">Spoiler anzeigen</string>
-    <string name="hide_spoiler">﻿Spoiler verbergen</string>
+    <string name="hide_spoiler">Spoiler verbergen</string>
     <string name="anime_manga_and_more">Anime, Manga und mehr</string>
     <string name="characters">Charaktere</string>
     <string name="staff">Team</string>

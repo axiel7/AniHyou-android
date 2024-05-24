@@ -101,6 +101,10 @@ class AiringWidget : GlanceAppWidget() {
                                             val timeText = airingIn.secondsToLegibleText(
                                                 buildString = { id, time ->
                                                     LocalContext.current.getString(id, time.format())
+                                                },
+                                                buildPluralString = { id, time ->
+                                                    LocalContext.current.resources
+                                                        .getQuantityString(id, time.toInt(), time)
                                                 }
                                             )
                                             LocalContext.current.getString(
@@ -113,6 +117,10 @@ class AiringWidget : GlanceAppWidget() {
                                                 airingIn.absoluteValue.secondsToLegibleText(
                                                     buildString = { id, time ->
                                                         LocalContext.current.getString(id, time.format())
+                                                    },
+                                                    buildPluralString = { id, time ->
+                                                        LocalContext.current.resources
+                                                            .getQuantityString(id, time.toInt(), time)
                                                     }
                                                 )
                                             LocalContext.current.getString(

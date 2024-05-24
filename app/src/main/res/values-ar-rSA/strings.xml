@@ -4,10 +4,6 @@
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
     <string name="explore">تصفح</string>
-    <string name="num_years">%s سنة</string>
-    <string name="num_months">%s شهور</string>
-    <string name="num_weeks">%s أسابيع</string>
-    <string name="num_days">%s أيام</string>
     <string name="hour_abbreviation">%s ساعة</string>
     <string name="minutes_abbreviation">%s دقيقة</string>
     <string name="unknown">غير معروف</string>
@@ -51,8 +47,6 @@
     <string name="music">موسيقى</string>
     <string name="novel">رواية</string>
     <string name="one_shot">ون شوت</string>
-    <string name="num_episodes">الحلَقات%s</string>
-    <string name="num_chapters">الفصول%s</string>
     <string name="finished">منتهي</string>
     <string name="releasing">مستمر</string>
     <string name="not_yet_released">لم يصدر بعد</string>
@@ -63,7 +57,6 @@
     <string name="favorites">المُفضلات</string>
     <string name="episode_in_time">الحلقة %d بعد %s</string>
     <string name="airing">يبث</string>
-    <string name="num_episodes_behind">حلقات لم أشاهدها بعد %s</string>
     <string name="information">معلومات</string>
     <string name="duration">المدة</string>
     <string name="start_date">تاريخ البدء</string>

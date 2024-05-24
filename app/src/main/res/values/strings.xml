@@ -4,12 +4,24 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Explore</string>
-    <string name="num_years">%s years</string>
-    <string name="num_months">%s months</string>
-    <string name="num_weeks">%s weeks</string>
-    <string name="num_days">%s days</string>
-    <string name="hour_abbreviation">%s h</string>
-    <string name="minutes_abbreviation">%s min</string>
+    <plurals name="num_years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <string name="hour_abbreviation">%d h</string>
+    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Unknown</string>
     <string name="airing_soon">Airing soon</string>
     <string name="mean_score">Mean score</string>
@@ -51,8 +63,14 @@
     <string name="music">Music</string>
     <string name="novel">Novel</string>
     <string name="one_shot">One Shot</string>
-    <string name="num_episodes">%s episodes</string>
-    <string name="num_chapters">%s chapters</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d episode</item>
+        <item quantity="other">%d episodes</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d chapter</item>
+        <item quantity="other">%d chapters</item>
+    </plurals>
     <string name="finished">Finished</string>
     <string name="releasing">Releasing</string>
     <string name="not_yet_released">Not yet released</string>
@@ -64,7 +82,10 @@
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">Airing</string>
     <string name="lorem_ipsun" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
-    <string name="num_episodes_behind">%s episodes behind</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d episode behind</item>
+        <item quantity="other">%d episodes behind</item>
+    </plurals>
     <string name="information">Information</string>
     <string name="duration">Duration</string>
     <string name="start_date">Start date</string>

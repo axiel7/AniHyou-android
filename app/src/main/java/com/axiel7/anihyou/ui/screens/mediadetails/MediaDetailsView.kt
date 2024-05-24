@@ -94,7 +94,6 @@ import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.StringUtils.orUnknown
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
-import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @Composable
 fun MediaDetailsView(
@@ -248,7 +247,8 @@ private fun MediaDetailsContent(
                 )
                 Column {
                     Text(
-                        text = uiState.details?.title?.userPreferred ?: "Loading",
+                        text = uiState.details?.title?.userPreferred
+                            ?: stringResource(R.string.unknown),
                         modifier = Modifier
                             .padding(bottom = 8.dp, end = 8.dp)
                             .defaultPlaceholder(visible = uiState.isLoading)
@@ -263,7 +263,8 @@ private fun MediaDetailsContent(
                         fontWeight = FontWeight.Bold
                     )
                     TextIconHorizontal(
-                        text = uiState.details?.format?.localized() ?: "Loading",
+                        text = uiState.details?.format?.localized()
+                            ?: stringResource(R.string.unknown),
                         icon = if (uiState.details?.basicMediaDetails?.isAnime() == true)
                             R.drawable.live_tv_24
                         else R.drawable.book_24,
@@ -273,7 +274,7 @@ private fun MediaDetailsContent(
                     )
                     TextIconHorizontal(
                         text = uiState.details?.basicMediaDetails?.durationText()
-                            ?: UNKNOWN_CHAR,
+                            ?: stringResource(R.string.unknown),
                         icon = R.drawable.timer_24,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
