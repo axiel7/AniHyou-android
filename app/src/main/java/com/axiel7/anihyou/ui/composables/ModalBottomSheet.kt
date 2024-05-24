@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheetDefaults
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -21,7 +23,8 @@ fun ModalBottomSheet(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     sheetState: SheetState = rememberModalBottomSheetState(),
-    windowInsets: WindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Vertical),
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
+    properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
     content: @Composable (ColumnScope.(dismiss: () -> Unit) -> Unit)
 ) {
     fun dismiss() {
@@ -32,6 +35,7 @@ fun ModalBottomSheet(
         modifier = modifier,
         sheetState = sheetState,
         contentWindowInsets = { windowInsets },
+        properties = properties,
     ) {
         content { dismiss() }
     }

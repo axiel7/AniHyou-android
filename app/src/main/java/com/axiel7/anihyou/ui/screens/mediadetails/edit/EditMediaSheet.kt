@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SheetState
@@ -176,7 +177,8 @@ private fun EditMediaSheetContent(
         onDismissed = onDismissed,
         scope = scope,
         sheetState = sheetState,
-        windowInsets = WindowInsets(0, 0, 0, 0)
+        windowInsets = WindowInsets(0, 0, 0, 0),
+        properties = ModalBottomSheetProperties(shouldDismissOnBackPress = false),
     ) { dismiss ->
         Column(
             modifier = Modifier
