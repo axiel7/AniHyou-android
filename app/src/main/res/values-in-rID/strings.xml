@@ -4,12 +4,6 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Eksplorasi</string>
-    <string name="num_years">%s tahun</string>
-    <string name="num_months">%s bulan</string>
-    <string name="num_weeks">%s minggu</string>
-    <string name="num_days">%s hari</string>
-    <string name="hour_abbreviation">%s j</string>
-    <string name="minutes_abbreviation">%s mnt</string>
     <string name="unknown">Tak diketahui</string>
     <string name="airing_soon">Segera Ditayangkan</string>
     <string name="mean_score">Nilai Rata-rata</string>
@@ -51,8 +45,6 @@
     <string name="music">Musik</string>
     <string name="novel">Novel</string>
     <string name="one_shot">Edisi Tunggal</string>
-    <string name="num_episodes">%s episode</string>
-    <string name="num_chapters">%s chapter</string>
     <string name="finished">Selesai</string>
     <string name="releasing">Dirilis</string>
     <string name="not_yet_released">Belum Dirilis</string>
@@ -63,7 +55,6 @@
     <string name="favorites">Favorit</string>
     <string name="episode_in_time">Ep %d dalam %s</string>
     <string name="airing">Ditayangkan</string>
-    <string name="num_episodes_behind">Tertinggal %s episode</string>
     <string name="information">Informasi</string>
     <string name="duration">Durasi</string>
     <string name="start_date">Tanggal mulai</string>
