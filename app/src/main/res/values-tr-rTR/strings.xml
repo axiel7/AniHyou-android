@@ -4,6 +4,10 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Keşfet</string>
+    <plurals name="num_years">
+        <item quantity="one">%d yıl</item>
+        <item quantity="other">%d yıl</item>
+    </plurals>
     <plurals name="num_months">
         <item quantity="one">%d ay</item>
         <item quantity="other">%d ay</item>
