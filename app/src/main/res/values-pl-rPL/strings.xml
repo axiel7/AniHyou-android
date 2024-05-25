@@ -4,6 +4,32 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Eksploruj</string>
+    <plurals name="num_years">
+        <item quantity="one">%d rok</item>
+        <item quantity="few">%d lata</item>
+        <item quantity="many">%d lat</item>
+        <item quantity="other">%d lat</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d miesiąc</item>
+        <item quantity="few">%d miesiące</item>
+        <item quantity="many">%d miesięcy</item>
+        <item quantity="other">%d miesięcy</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d tydzień</item>
+        <item quantity="few">%d tygodnie</item>
+        <item quantity="many">%d tygodni</item>
+        <item quantity="other">%d tygodni</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d dzień</item>
+        <item quantity="few">%d dni</item>
+        <item quantity="many">%d dni</item>
+        <item quantity="other">%d dni</item>
+    </plurals>
+    <string name="hour_abbreviation">%d godz</string>
+    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Nieznane</string>
     <string name="airing_soon">Emisja wkrótce</string>
     <string name="mean_score">Ocena</string>
@@ -45,6 +71,18 @@
     <string name="music">Muzyka</string>
     <string name="novel">Powieść</string>
     <string name="one_shot">One Shot</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d odcinek</item>
+        <item quantity="few">%d odcinki</item>
+        <item quantity="many">%d odcinków</item>
+        <item quantity="other">%d odcinków</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d rozdział</item>
+        <item quantity="few">%d rozdziały</item>
+        <item quantity="many">%d rozdziałów</item>
+        <item quantity="other">%d rozdziałów</item>
+    </plurals>
     <string name="finished">Ukończone</string>
     <string name="releasing">Wydawane</string>
     <string name="not_yet_released">Jeszcze nie wydany</string>
@@ -55,6 +93,12 @@
     <string name="favorites">Ulubionych</string>
     <string name="episode_in_time">Odc. %d za %s</string>
     <string name="airing">Emitowanie</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d zaległy odcinek</item>
+        <item quantity="few">%d zaległe odcinki</item>
+        <item quantity="many">%d zaległych odcinków</item>
+        <item quantity="other">%d zaległych odcinków</item>
+    </plurals>
     <string name="information">Informacje</string>
     <string name="duration">Czas trwania</string>
     <string name="start_date">Data rozpoczęcia</string>
