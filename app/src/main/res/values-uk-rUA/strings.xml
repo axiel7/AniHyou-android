@@ -4,6 +4,32 @@
     <string name="anime">Аніме</string>
     <string name="manga">Манґа</string>
     <string name="explore">Огляд</string>
+    <plurals name="num_years">
+        <item quantity="one">%d рік</item>
+        <item quantity="few">%d роки</item>
+        <item quantity="many">%d років</item>
+        <item quantity="other">%d років</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d місяць</item>
+        <item quantity="few">%d місяці</item>
+        <item quantity="many">%d місяців</item>
+        <item quantity="other">%d місяців</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d тиждень</item>
+        <item quantity="few">%d тижні</item>
+        <item quantity="many">%d тижнів</item>
+        <item quantity="other">%d тижнів</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d днів</item>
+        <item quantity="other">%d днів</item>
+    </plurals>
+    <string name="hour_abbreviation">%d год</string>
+    <string name="minutes_abbreviation">%d хв</string>
     <string name="unknown">Невідомо</string>
     <string name="airing_soon">Невдовзі вийде</string>
     <string name="mean_score">Середня оцінка</string>
@@ -45,6 +71,18 @@
     <string name="music">Музика</string>
     <string name="novel">Новела</string>
     <string name="one_shot">Ваншот</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d епізод</item>
+        <item quantity="few">%d епізоди</item>
+        <item quantity="many">%d епізодів</item>
+        <item quantity="other">%d епізодів</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d розділ</item>
+        <item quantity="few">%d розділи</item>
+        <item quantity="many">%d розділів</item>
+        <item quantity="other">%d розділів</item>
+    </plurals>
     <string name="finished">Завершено</string>
     <string name="releasing">Реліз</string>
     <string name="not_yet_released">Ще не випущено</string>
@@ -55,6 +93,12 @@
     <string name="favorites">Обране</string>
     <string name="episode_in_time">Еп %d за %s</string>
     <string name="airing">Виходить</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d епізод позаду</item>
+        <item quantity="few">%d епізоди позаду</item>
+        <item quantity="many">%d епізодів позаду</item>
+        <item quantity="other">%d епізодів позаду</item>
+    </plurals>
     <string name="information">Відомості</string>
     <string name="duration">Тривалість</string>
     <string name="start_date">Дата початку</string>
@@ -221,7 +265,7 @@
     <string name="use_separated_list_styles">Використовувати окремі стилі каталогу</string>
     <string name="changes_will_take_effect_on_app_restart">Зміни набудуть чинності після перезавантаження</string>
     <string name="items_per_row">Елементів у рядку</string>
-    <string name="default_setting">Типово</string>
+    <string name="default_setting">За замовчуванням</string>
     <string name="media_status">Статус</string>
     <string name="year">Рік</string>
     <string name="episode_aired_ago">Серія %d вийшла %s тому</string>
@@ -229,11 +273,11 @@
     <string name="romaji_western_order">Романджі (Західний порядок)</string>
     <string name="staff_character_name_language"><![CDATA[Мова імен персоналу та персонажів]]></string>
     <string name="score_format">Формат оцінки</string>
-    <string name="score_point_100">100 балів (55/100)</string>
-    <string name="score_point_10_decimal">10-значний десятковий (5.5/10)</string>
-    <string name="score_point_10">10 балів (5/10)</string>
-    <string name="score_point_5">5 Зірок (3/5)</string>
-    <string name="score_point_3">Смайлик 3 бали :)</string>
+    <string name="score_point_100">100 бальна (55/100)</string>
+    <string name="score_point_10_decimal">10-значна десяткова (5.5/10)</string>
+    <string name="score_point_10">10 бальна (5/10)</string>
+    <string name="score_point_5">5 Зіркова (3/5)</string>
+    <string name="score_point_3">3-бальна посміхашка :)</string>
     <string name="no_media">Немає медіа</string>
     <string name="every_six_hours">Кожні 6 годин</string>
     <string name="every_twelve_hours">Кожні 12 годин</string>
