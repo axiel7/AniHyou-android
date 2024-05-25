@@ -1,22 +1,33 @@
 package com.axiel7.anihyou.ui.screens.explore.search.genretag
 
+import android.content.Context
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
+import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagStringRes
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class GenresTagsViewModel @Inject constructor(
-    searchRepository: SearchRepository
+    searchRepository: SearchRepository,
+    @ApplicationContext context: Context,
 ) : UiStateViewModel<GenresTagsUiState>(), GenresTagsEvent {
 
     override val initialState = GenresTagsUiState()
@@ -35,20 +46,18 @@ class GenresTagsViewModel @Inject constructor(
 
     override fun onFilterChanged(value: String) {
         viewModelScope.launch {
-            mutableUiState.update {
-                it.copy(
-                    filter = value
-                )
-            }
+            mutableUiState.update { it.copy(filter = value) }
         }
     }
 
     override fun onGenreUpdated(value: SelectableGenre) {
         viewModelScope.launch {
             mutableUiState.value.run {
-                val foundIndex = genres.indexOfFirst { it.name == value.name }
-                if (foundIndex != -1) {
-                    genres[foundIndex] = value
+                genres.indexOfFirstOrNull { it.name == value.name }?.let { index ->
+                    genres[index] = value
+                }
+                displayGenres.indexOfFirstOrNull { it.name == value.name }?.let { index ->
+                    displayGenres[index] = value
                 }
             }
         }
@@ -57,9 +66,11 @@ class GenresTagsViewModel @Inject constructor(
     override fun onTagUpdated(value: SelectableGenre) {
         viewModelScope.launch {
             mutableUiState.value.run {
-                val foundIndex = tags.indexOfFirst { it.name == value.name }
-                if (foundIndex != -1) {
-                    tags[foundIndex] = value
+                tags.indexOfFirstOrNull { it.name == value.name }?.let { index ->
+                    tags[index] = value
+                }
+                displayTags.indexOfFirstOrNull { it.name == value.name }?.let { index ->
+                    displayTags[index] = value
                 }
             }
         }
@@ -81,12 +92,19 @@ class GenresTagsViewModel @Inject constructor(
 
     init {
         searchRepository.getGenreTagCollection()
-            .combine(mutableUiState, ::Pair)
+            .combine(
+                mutableUiState
+                    .distinctUntilChanged { old, new ->
+                        old.externalGenre == new.externalGenre
+                                && old.externalTag == new.externalTag
+                    },
+                ::Pair
+            )
             .onEach { (result, latestUiState) ->
                 val externalGenre = latestUiState.externalGenre
                 val externalTag = latestUiState.externalTag
 
-                mutableUiState.updateAndGet { uiState ->
+                mutableUiState.update { uiState ->
                     if (result is DataResult.Success) {
                         uiState.genres.clear()
                         uiState.genres.addAll(
@@ -107,6 +125,8 @@ class GenresTagsViewModel @Inject constructor(
                         )
                         uiState.copy(
                             isLoading = false,
+                            displayGenres = uiState.genres,
+                            displayTags = uiState.tags,
                         )
                     } else {
                         uiState.copy(
@@ -115,5 +135,35 @@ class GenresTagsViewModel @Inject constructor(
                     }
                 }
             }.launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            mutableUiState
+                .distinctUntilChangedBy { it.filter }
+                .debounce(200)
+                .collectLatest { uiState ->
+                    val genresFiltered = if (uiState.filter.isNotBlank()) {
+                        uiState.genres.filter { genre ->
+                            val localizedName = genre.name.genreTagStringRes()
+                                ?.let { context.getString(it) } ?: genre.name
+                            localizedName.contains(uiState.filter, ignoreCase = true)
+                        }
+                    } else {
+                        uiState.genres
+                    }
+
+                    val tagsFiltered = if (uiState.filter.isNotBlank()) {
+                        uiState.tags.filter { it.name.contains(uiState.filter, ignoreCase = true) }
+                    } else {
+                        uiState.tags
+                    }
+
+                    mutableUiState.update {
+                        it.copy(
+                            displayGenres = genresFiltered.toMutableStateList(),
+                            displayTags = tagsFiltered.toMutableStateList()
+                        )
+                    }
+                }
+        }
     }
 }
