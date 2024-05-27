@@ -4,6 +4,32 @@
     <string name="anime">Аниме</string>
     <string name="manga">Манга</string>
     <string name="explore">Исследовать</string>
+    <plurals name="num_years">
+        <item quantity="one">%d год</item>
+        <item quantity="few">%d года</item>
+        <item quantity="many">%d лет</item>
+        <item quantity="other">%d лет</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяца</item>
+        <item quantity="many">%d месяцев</item>
+        <item quantity="other">%d месяцев</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d неделя</item>
+        <item quantity="few">%d недели</item>
+        <item quantity="many">%d недель</item>
+        <item quantity="other">%d недель</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
+    <string name="hour_abbreviation">%d ч.</string>
+    <string name="minutes_abbreviation">%d мин.</string>
     <string name="unknown">Неизвестно</string>
     <string name="airing_soon">Скоро выйдет</string>
     <string name="mean_score">Средний счет</string>
@@ -45,6 +71,18 @@
     <string name="music">Музыка</string>
     <string name="novel">Новелла</string>
     <string name="one_shot">Ваншот</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d эпизод</item>
+        <item quantity="few">%d эпизода</item>
+        <item quantity="many">%d эпизодов</item>
+        <item quantity="other">%d эпизодов</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d глава</item>
+        <item quantity="few">%d главы</item>
+        <item quantity="many">%d глав</item>
+        <item quantity="other">%d глав</item>
+    </plurals>
     <string name="finished">Завершено</string>
     <string name="releasing">Выпускается</string>
     <string name="not_yet_released">Еще не выпущено</string>
@@ -55,6 +93,12 @@
     <string name="favorites">Избранное</string>
     <string name="episode_in_time">Эп %d через %s</string>
     <string name="airing">Выходит</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d эпизод позади</item>
+        <item quantity="few">%d эпизода позади</item>
+        <item quantity="many">%d эпизодов позади</item>
+        <item quantity="other">%d эпизодов позади</item>
+    </plurals>
     <string name="information">Информация</string>
     <string name="duration">Длительность</string>
     <string name="start_date">Дата начала</string>
