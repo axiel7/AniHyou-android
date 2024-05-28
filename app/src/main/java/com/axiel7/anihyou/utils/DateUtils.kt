@@ -10,7 +10,6 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.FuzzyDateInput
 import com.axiel7.anihyou.type.MediaSeason
-import com.axiel7.anihyou.utils.NumberUtils.format
 import java.time.DateTimeException
 import java.time.DayOfWeek
 import java.time.Instant
@@ -136,7 +135,7 @@ object DateUtils {
         maxUnit: ChronoUnit = ChronoUnit.YEARS,
         isFutureDate: Boolean = true,
         buildString: @Composable (id: Int, time: Long) -> String = { id, time ->
-            stringResource(id, time.format().orEmpty())
+            stringResource(id, time)
         },
         buildPluralString: @Composable (id: Int, time: Long) -> String = { id, time ->
             pluralStringResource(id = id, count = time.toInt(), time)
