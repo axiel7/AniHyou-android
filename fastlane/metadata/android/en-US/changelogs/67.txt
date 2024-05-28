@@ -1,0 +1,13 @@
+- Support for custom lists!
+- New UI for editing an entry
+- New seasonal list style with more info
+- Voice actor button in media details
+- Support for opening DeepL when translating
+- Added a subscribe button for threads (#128)
+- Support for opening threads and activities links in-app
+- Added "Hide from status lists" toggle
+- Better support for predictive back gesture
+- Open search when clicking again the Explore tab (#127)
+- Planned list: added random button
+- Added German language
+- Lot of bug fixes and other improvements (#123, #126, #130)
