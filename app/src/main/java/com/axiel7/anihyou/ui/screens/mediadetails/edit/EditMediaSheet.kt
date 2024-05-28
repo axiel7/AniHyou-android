@@ -424,7 +424,8 @@ private fun EditMediaSheetContent(
                             .padding(top = 8.dp, end = 8.dp),
                         label = score,
                         rating = uiState.advancedScores.getOrDefault(score, null),
-                        showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
+                        showAsDecimal = true,
+                        decimalLength = 6,
                         onRatingChanged = { event?.setAdvancedScore(key = score, value = it) }
                     )
                 }
