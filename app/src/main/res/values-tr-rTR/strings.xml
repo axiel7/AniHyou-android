@@ -4,8 +4,24 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Keşfet</string>
-    <string name="hour_abbreviation">%s sa.</string>
-    <string name="minutes_abbreviation">%s dk</string>
+    <plurals name="num_years">
+        <item quantity="one">%d yıl</item>
+        <item quantity="other">%d yıl</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d ay</item>
+        <item quantity="other">%d ay</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d hafta</item>
+        <item quantity="other">%d hafta</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <string name="hour_abbreviation">%d saat</string>
+    <string name="minutes_abbreviation">%d dk</string>
     <string name="unknown">Bilinmiyor</string>
     <string name="airing_soon">Yakında yayınlanacak</string>
     <string name="mean_score">Ortalama Puan</string>
@@ -47,6 +63,14 @@
     <string name="music">Müzik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">Tek Seferlik</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d bölüm</item>
+        <item quantity="other">%d bölüm</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d bölüm</item>
+        <item quantity="other">%d bölüm</item>
+    </plurals>
     <string name="finished">Tamamlandı</string>
     <string name="releasing">Yayımlanıyor</string>
     <string name="not_yet_released">Henüz yayımlanmadı</string>
@@ -57,6 +81,10 @@
     <string name="favorites">Favoriler</string>
     <string name="episode_in_time">Bölüm %d, %s sonra yayında</string>
     <string name="airing">Yayınlanıyor</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d bölüm izlenmeyi bekliyor</item>
+        <item quantity="other">%d bölüm izlenmeyi bekliyor</item>
+    </plurals>
     <string name="information">Bilgilendirme</string>
     <string name="duration">Süre uzunluğu</string>
     <string name="start_date">Başlangıç tarihi</string>

@@ -4,8 +4,24 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Esplora</string>
-    <string name="hour_abbreviation">%s h</string>
-    <string name="minutes_abbreviation">%s min</string>
+    <plurals name="num_years">
+        <item quantity="one">%d anno</item>
+        <item quantity="other">%d anni</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d mese</item>
+        <item quantity="other">%d mesi</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d settimana</item>
+        <item quantity="other">%d settimane</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d giorno</item>
+        <item quantity="other">%d giorni</item>
+    </plurals>
+    <string name="hour_abbreviation">%d h</string>
+    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Sconosciuto</string>
     <string name="airing_soon">In arrivo</string>
     <string name="mean_score">Punteggio</string>
@@ -47,6 +63,14 @@
     <string name="music">Musica</string>
     <string name="novel">Romanzo</string>
     <string name="one_shot">One Shot</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d episodio</item>
+        <item quantity="other">%d episodi</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d capitolo</item>
+        <item quantity="other">%d capitoli</item>
+    </plurals>
     <string name="finished">Completati</string>
     <string name="releasing">In rilascio</string>
     <string name="not_yet_released">Non ancora rilasciato</string>
@@ -57,6 +81,10 @@
     <string name="favorites">Preferiti</string>
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">In onda</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d episodio rimanente</item>
+        <item quantity="other">%d episodi rimanenti</item>
+    </plurals>
     <string name="information">Informazioni</string>
     <string name="duration">Durata</string>
     <string name="start_date">Data d\'inizio</string>
@@ -337,4 +365,5 @@
     <string name="continue_watching">Continua a guardare</string>
     <string name="hide_from_status_lists">Nascondi dalle liste di stato</string>
     <string name="black_theme_variant">Variante tema nero</string>
+    <string name="random">Casuale</string>
 </resources>

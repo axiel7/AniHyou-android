@@ -4,8 +4,24 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Explorar</string>
-    <string name="hour_abbreviation">%s h</string>
-    <string name="minutes_abbreviation">%s min</string>
+    <plurals name="num_years">
+        <item quantity="one">%d año</item>
+        <item quantity="other">%d años</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d mes</item>
+        <item quantity="other">%d meses</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <string name="hour_abbreviation">%d h</string>
+    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Desconocido</string>
     <string name="airing_soon">En emisión</string>
     <string name="mean_score">Puntuación</string>
@@ -47,6 +63,14 @@
     <string name="music">Música</string>
     <string name="novel">Novela</string>
     <string name="one_shot">One Shot</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d episodio</item>
+        <item quantity="other">%d episodios</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d capítulo</item>
+        <item quantity="other">%d capítulos</item>
+    </plurals>
     <string name="finished">Finalizado</string>
     <string name="releasing">Publicándose</string>
     <string name="not_yet_released">Sin publicarse</string>
@@ -57,6 +81,10 @@
     <string name="favorites">Favoritos</string>
     <string name="episode_in_time">Ep %d en %s</string>
     <string name="airing">En emisión</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d episodio atrasado</item>
+        <item quantity="other">%d episodios atrasados</item>
+    </plurals>
     <string name="information">Información</string>
     <string name="duration">Duración</string>
     <string name="start_date">Fecha de inicio</string>
