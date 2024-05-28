@@ -173,7 +173,8 @@ private fun GenresTagsSheetContent(
                             )
                         }
                     }
-                }
+                },
+                singleLine = true,
             )
 
             if (uiState.isLoading) {

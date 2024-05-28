@@ -43,11 +43,11 @@ fun RatingView(
     showIcon: Boolean = false,
     rating: Double? = null,
     showAsDecimal: Boolean = false,
+    decimalLength: Int = if (showAsDecimal) 1 else 0,
+    increments: Double = if (showAsDecimal) 0.5 else 1.0,
     onRatingChanged: (Double?) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    val decimalLength = remember { if (showAsDecimal) 1 else 0 }
-    val increments = remember { if (showAsDecimal) 0.5 else 1.0 }
     var ratingString by remember(rating) {
         mutableStateOf(rating?.format(decimalLength).orEmpty())
     }

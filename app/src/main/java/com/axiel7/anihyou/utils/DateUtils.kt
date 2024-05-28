@@ -2,6 +2,7 @@ package com.axiel7.anihyou.utils
 
 import android.text.format.DateFormat
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.apollographql.apollo3.api.Optional
 import com.axiel7.anihyou.R
@@ -136,6 +137,9 @@ object DateUtils {
         isFutureDate: Boolean = true,
         buildString: @Composable (id: Int, time: Long) -> String = { id, time ->
             stringResource(id, time.format().orEmpty())
+        },
+        buildPluralString: @Composable (id: Int, time: Long) -> String = { id, time ->
+            pluralStringResource(id = id, count = time.toInt(), time)
         }
     ): String {
         val days = this / 86400
@@ -146,17 +150,17 @@ object DateUtils {
                     val months = this / 2629746
                     if (months > 12 && maxUnit >= ChronoUnit.YEARS) {
                         val years = this / 31556952
-                        return buildString(R.string.num_years, years)
+                        return buildPluralString(R.plurals.num_years, years)
                     } else if (maxUnit >= ChronoUnit.MONTHS) {
-                        return buildString(R.string.num_months, months)
+                        return buildPluralString(R.plurals.num_months, months)
                     }
                 } else if (maxUnit >= ChronoUnit.WEEKS) {
-                    return buildString(R.string.num_weeks, weeks)
+                    return buildPluralString(R.plurals.num_weeks, weeks)
                 }
             }
 
             days >= 1 && maxUnit >= ChronoUnit.DAYS -> {
-                return buildString(R.string.num_days, days)
+                return buildPluralString(R.plurals.num_days, days)
             }
 
             else -> {
@@ -179,10 +183,11 @@ object DateUtils {
         val hours = this / 60
         return if (hours >= 1) {
             val minutes = this % 60
-            "${
-                stringResource(R.string.hour_abbreviation, hours.format().orEmpty())
-            } ${stringResource(R.string.minutes_abbreviation, minutes.format().orEmpty())}"
-        } else stringResource(R.string.minutes_abbreviation, this.format().orEmpty())
+            "${stringResource(R.string.hour_abbreviation, hours)} " +
+                    stringResource(R.string.minutes_abbreviation, minutes)
+        } else {
+            stringResource(R.string.minutes_abbreviation, this)
+        }
     }
 
     fun Int.minutesToDays() = this / 1440
