@@ -72,7 +72,9 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun onChangeStatus(value: MediaListStatus) {
-        if (mutableUiState.value.isNewEntry && value == MediaListStatus.CURRENT) {
+        if ((uiState.value.isNewEntry || uiState.value.status == MediaListStatus.PLANNING)
+            && value == MediaListStatus.CURRENT
+        ) {
             mutableUiState.update {
                 it.copy(
                     status = value,
@@ -94,10 +96,13 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun onChangeProgress(value: Int?) {
-        if (canChangeProgressTo(value, uiState.value.mediaDetails?.duration())) {
+        val totalDuration = uiState.value.mediaDetails?.duration()
+        if (canChangeProgressTo(value, totalDuration)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING) {
                     onChangeStatus(MediaListStatus.CURRENT)
+                } else if (totalDuration != null && value != null && value >= totalDuration) {
+                    onChangeStatus(MediaListStatus.COMPLETED)
                 }
                 it.copy(progress = value)
             }
@@ -105,10 +110,13 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun onChangeVolumeProgress(value: Int?) {
-        if (canChangeProgressTo(value, uiState.value.mediaDetails?.volumes)) {
+        val totalVolumes = uiState.value.mediaDetails?.volumes
+        if (canChangeProgressTo(value, totalVolumes)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING) {
                     onChangeStatus(MediaListStatus.CURRENT)
+                } else if (totalVolumes != null && value != null && value >= totalVolumes) {
+                    onChangeStatus(MediaListStatus.COMPLETED)
                 }
                 it.copy(volumeProgress = value)
             }
