@@ -126,6 +126,16 @@ class UserMediaListViewModel @Inject constructor(
             } else if (mediaType == MediaType.MANGA) {
                 listPreferencesRepository.setMangaListSort(sort)
             }
+            when (sort) {
+                MediaListSort.MEDIA_TITLE_ROMAJI,
+                MediaListSort.MEDIA_TITLE_ROMAJI_DESC,
+                MediaListSort.MEDIA_POPULARITY,
+                MediaListSort.MEDIA_POPULARITY_DESC -> "Experimental"
+
+                else -> null
+            }?.let { message ->
+                mutableUiState.update { it.copy(error = message) }
+            }
         }
     }
 
