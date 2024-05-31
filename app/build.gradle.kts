@@ -125,11 +125,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    val materialVersion = "1.3.0-beta01"
+    val materialVersion = "1.3.0-beta02"
     implementation("androidx.compose.material3:material3:$materialVersion")
     implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
 
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta01")
+    implementation("androidx.navigation:navigation-compose:2.8.0-beta02")
     implementation("androidx.glance:glance-appwidget:1.0.0")
 
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
