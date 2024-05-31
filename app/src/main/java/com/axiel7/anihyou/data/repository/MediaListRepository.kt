@@ -35,16 +35,6 @@ class MediaListRepository @Inject constructor(
             it.MediaListCollection?.lists.orEmpty()
         }
 
-    fun updateEntryProgress(
-        entryId: Int,
-        progress: Int
-    ) = api
-        .updateEntryProgressMutation(entryId, progress)
-        .toFlow()
-        .asDataResult {
-            it.SaveMediaListEntry
-        }
-
     fun updateEntry(
         oldEntry: BasicMediaListEntry? = null,
         mediaId: Int,

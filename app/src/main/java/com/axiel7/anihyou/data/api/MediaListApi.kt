@@ -10,7 +10,6 @@ import com.axiel7.anihyou.DeleteMediaListMutation
 import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.MediaListIdsQuery
 import com.axiel7.anihyou.UpdateEntryMutation
-import com.axiel7.anihyou.UpdateEntryProgressMutation
 import com.axiel7.anihyou.UserListCollectionQuery
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.BasicMediaListEntryImpl
@@ -52,17 +51,6 @@ class MediaListApi @Inject constructor(
                 fragmentData = data,
             )
     }
-
-    fun updateEntryProgressMutation(
-        entryId: Int,
-        progress: Int
-    ) = client
-        .mutation(
-            UpdateEntryProgressMutation(
-                saveMediaListEntryId = Optional.present(entryId),
-                progress = Optional.present(progress)
-            )
-        )
 
     fun updateEntryMutation(
         mediaId: Int,

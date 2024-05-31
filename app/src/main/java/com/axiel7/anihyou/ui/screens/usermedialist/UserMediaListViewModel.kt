@@ -8,6 +8,7 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.data.model.media.asMediaListStatus
+import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
@@ -20,6 +21,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +38,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -158,26 +161,33 @@ class UserMediaListViewModel @Inject constructor(
         }
     }
 
-    override fun updateEntryProgress(entryId: Int, progress: Int) {
+    private fun updateEntryProgress(
+        mediaId: Int,
+        progress: Int,
+        status: MediaListStatus? = null,
+        startDate: LocalDate? = null,
+        endDate: LocalDate? = null,
+    ) {
         if (mutableUiState.value.isLoading) return
-        mediaListRepository.updateEntryProgress(
-            entryId = entryId,
+        mediaListRepository.updateEntry(
+            mediaId = mediaId,
             progress = progress,
+            status = status,
+            startedAt = startDate?.toFuzzyDate(),
+            completedAt = endDate?.toFuzzyDate(),
         ).onEach { result ->
             mutableUiState.update { uiState ->
                 if (result is DataResult.Success
                     && result.data != null
                     && uiState.selectedListName != null
                 ) {
-                    uiState.entries.indexOfFirstOrNull { it.id == entryId }?.let { foundIndex ->
-                        val oldValue = uiState.entries[foundIndex]
-                        if (result.data.status != oldValue.basicMediaListEntry.status) {
-                            uiState.entries.removeAt(foundIndex)
+                    uiState.entries.indexOfFirstOrNull { it.mediaId == mediaId }?.let { index ->
+                        val oldValue = uiState.entries[index]
+                        if (result.data.basicMediaListEntry.status != oldValue.basicMediaListEntry.status) {
+                            uiState.entries.removeAt(index)
                         } else {
-                            uiState.entries[foundIndex] = oldValue.copy(
-                                basicMediaListEntry = oldValue.basicMediaListEntry.copy(
-                                    progress = progress
-                                )
+                            uiState.entries[index] = oldValue.copy(
+                                basicMediaListEntry = result.data.basicMediaListEntry
                             )
                         }
                         uiState.lists[uiState.selectedListName] = uiState.entries
@@ -188,10 +198,19 @@ class UserMediaListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    override fun onClickPlusOne(entry: BasicMediaListEntry) {
-        if (!mutableUiState.value.isLoading) {
-            super.onClickPlusOne(entry)
-        }
+    override fun onClickPlusOne(entry: CommonMediaListEntry) {
+        val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
+        val totalDuration = entry.media?.basicMediaDetails?.duration()
+        val isMaxProgress = totalDuration != null && newProgress >= totalDuration
+        updateEntryProgress(
+            mediaId = entry.mediaId,
+            progress = newProgress,
+            status = MediaListStatus.COMPLETED.takeIf { isMaxProgress },
+            startDate = LocalDate.now().takeIf {
+                entry.basicMediaListEntry.status == MediaListStatus.PLANNING
+            },
+            endDate = LocalDate.now().takeIf { isMaxProgress },
+        )
     }
 
     override fun selectItem(value: CommonMediaListEntry?) {

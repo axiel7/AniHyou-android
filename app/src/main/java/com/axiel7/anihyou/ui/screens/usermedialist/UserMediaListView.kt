@@ -28,7 +28,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.common.ListStyle
@@ -70,7 +69,7 @@ fun UserMediaListView(
         }
     }
 
-    val onClickPlus: (BasicMediaListEntry) -> Unit = {
+    val onClickPlus: (CommonMediaListEntry) -> Unit = {
         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         event?.onClickPlusOne(it)
     }
@@ -189,7 +188,7 @@ private fun LazyListTablet(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
-    onClickPlus: (BasicMediaListEntry) -> Unit,
+    onClickPlus: (CommonMediaListEntry) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -227,7 +226,7 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
@@ -250,7 +249,7 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
@@ -273,7 +272,7 @@ private fun LazyListTablet(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
@@ -306,7 +305,7 @@ private fun LazyListPhone(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
-    onClickPlus: (BasicMediaListEntry) -> Unit,
+    onClickPlus: (CommonMediaListEntry) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -340,7 +339,7 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
@@ -363,7 +362,7 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }
@@ -386,7 +385,7 @@ private fun LazyListPhone(
                         isMyList = uiState.isMyList,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item.basicMediaListEntry) },
+                        onClickPlus = { onClickPlus(item) },
                         onClickNotes = { event?.onClickNotes(item) }
                     )
                 }

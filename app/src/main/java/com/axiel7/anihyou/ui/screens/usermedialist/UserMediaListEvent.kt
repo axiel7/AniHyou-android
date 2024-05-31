@@ -25,14 +25,7 @@ interface UserMediaListEvent : PagedEvent, UiEvent {
 
     fun refreshList()
 
-    fun updateEntryProgress(entryId: Int, progress: Int)
-
-    fun onClickPlusOne(entry: BasicMediaListEntry) {
-        updateEntryProgress(
-            entryId = entry.id,
-            progress = (entry.progress ?: 0) + 1
-        )
-    }
+    fun onClickPlusOne(entry: CommonMediaListEntry)
 
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
 
