@@ -22,6 +22,8 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.common.GlobalVariables
+import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
@@ -33,6 +35,7 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import kotlin.math.absoluteValue
 
 class AiringWidget : GlanceAppWidget() {
@@ -40,13 +43,17 @@ class AiringWidget : GlanceAppWidget() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface AiringWidgetEntryPoint {
+        val globalVariables: GlobalVariables
         val mediaRepository: MediaRepository
+        val defaultPreferencesRepository: DefaultPreferencesRepository
     }
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val appContext = context.applicationContext ?: throw IllegalStateException()
         val hiltEntryPoint =
             EntryPointAccessors.fromApplication(appContext, AiringWidgetEntryPoint::class.java)
+        hiltEntryPoint.globalVariables.accessToken =
+            hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
 
         val animeList = getAiringAnime(hiltEntryPoint)
 
