@@ -46,3 +46,20 @@ fun <D : Operation.Data, R> Flow<ApolloResponse<D>>.asDataResult(
     }
 
 fun <D : Operation.Data> Flow<ApolloResponse<D>>.asDataResult() = asDataResult { it }
+
+fun <D : Operation.Data, R> ApolloResponse<D>.asDataResult(
+    transform: (D) -> R
+) = when {
+    data != null -> DataResult.Success(transform(data!!))
+
+    hasErrors() -> {
+        Log.e("AniHyou", "Apollo error: ${errors?.joinToString()}")
+        DataResult.Error(
+            message = errors?.joinToString() ?: "Unknown error"
+        )
+    }
+
+    else -> DataResult.Error(message = exception?.localizedMessage ?: "Unknown error")
+}
+
+fun <D : Operation.Data> ApolloResponse<D>.asDataResult() = asDataResult { it }

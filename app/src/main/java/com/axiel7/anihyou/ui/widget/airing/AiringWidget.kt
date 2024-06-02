@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.widget.airing
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -23,6 +24,7 @@ import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.common.GlobalVariables
+import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
@@ -30,7 +32,6 @@ import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.currentTimeSeconds
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
-import com.axiel7.anihyou.utils.NumberUtils.format
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -55,111 +56,107 @@ class AiringWidget : GlanceAppWidget() {
         hiltEntryPoint.globalVariables.accessToken =
             hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
 
-        val animeList = getAiringAnime(hiltEntryPoint)
+        val result = hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
 
         provideContent {
             GlanceTheme {
-                if (animeList.isNullOrEmpty()) {
+                if (result is DataResult.Success) {
+                    AppWidgetColumn {
+                        LazyColumn {
+                            items(result.data) { item ->
+                                ItemView(item = item)
+                            }
+                        }
+                    }
+                } else {
+                    val message = (result as? DataResult.Error)?.message
                     AppWidgetColumn(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = glanceStringResource(R.string.no_information),
+                            text = message ?: glanceStringResource(R.string.no_information),
                             modifier = GlanceModifier.padding(bottom = 8.dp),
                             style = TextStyle(
                                 color = GlanceTheme.colors.onSurface
                             )
                         )
-                    }//: Column
-                } else {
-                    AppWidgetColumn {
-                        LazyColumn {
-                            items(animeList) { item ->
-                                Column(
-                                    modifier = GlanceModifier
-                                        .padding(bottom = 8.dp)
-                                        .fillMaxWidth()
-                                        .clickable(actionStartActivity(
-                                            Intent(
-                                                LocalContext.current,
-                                                MainActivity::class.java
-                                            ).apply {
-                                                action = "media_details"
-                                                putExtra("media_id", item.id)
-                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                                addCategory(item.id.toString())
-                                            }
-                                        ))
-                                ) {
-                                    Text(
-                                        text = item.title?.userPreferred.orEmpty(),
-                                        style = TextStyle(
-                                            color = GlanceTheme.colors.onSurfaceVariant
-                                        ),
-                                        maxLines = 1
-                                    )
-
-                                    item.nextAiringEpisode?.let { nextAiringEpisode ->
-                                        val airingIn =
-                                            nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
-                                        val airingText = if (airingIn > 0) {
-                                            val timeText = airingIn.secondsToLegibleText(
-                                                buildString = { id, time ->
-                                                    LocalContext.current.getString(id, time.format())
-                                                },
-                                                buildPluralString = { id, time ->
-                                                    LocalContext.current.resources
-                                                        .getQuantityString(id, time.toInt(), time)
-                                                }
-                                            )
-                                            LocalContext.current.getString(
-                                                R.string.episode_in_time,
-                                                nextAiringEpisode.episode,
-                                                timeText
-                                            )
-                                        } else {
-                                            val timeText =
-                                                airingIn.absoluteValue.secondsToLegibleText(
-                                                    buildString = { id, time ->
-                                                        LocalContext.current.getString(id, time.format())
-                                                    },
-                                                    buildPluralString = { id, time ->
-                                                        LocalContext.current.resources
-                                                            .getQuantityString(id, time.toInt(), time)
-                                                    }
-                                                )
-                                            LocalContext.current.getString(
-                                                R.string.episode_aired_ago,
-                                                nextAiringEpisode.episode,
-                                                timeText
-                                            )
-                                        }
-                                        Text(
-                                            text = airingText,
-                                            style = TextStyle(
-                                                color = GlanceTheme.colors.onPrimaryContainer
-                                            ),
-                                            maxLines = 1
-                                        )
-                                    }
-                                }
-                            }
-                        }//: LazyColumn
-                    }//: Column
+                    }
                 }
             }
         }
     }
 
-    private suspend fun getAiringAnime(
-        hiltEntryPoint: AiringWidgetEntryPoint
-    ): List<AiringWidgetQuery.Medium>? {
-        return try {
-            hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 25)
-        } catch (e: Exception) {
-            null
+    @Composable
+    private fun ItemView(item: AiringWidgetQuery.Medium) {
+        Column(
+            modifier = GlanceModifier
+                .padding(bottom = 8.dp)
+                .fillMaxWidth()
+                .clickable(actionStartActivity(
+                    Intent(
+                        LocalContext.current,
+                        MainActivity::class.java
+                    ).apply {
+                        action = "media_details"
+                        putExtra("media_id", item.id)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        addCategory(item.id.toString())
+                    }
+                ))
+        ) {
+            Text(
+                text = item.title?.userPreferred.orEmpty(),
+                style = TextStyle(
+                    color = GlanceTheme.colors.onSurface
+                ),
+                maxLines = 1
+            )
+
+            item.nextAiringEpisode?.let { nextAiringEpisode ->
+                val airingIn =
+                    nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
+                val airingText = if (airingIn > 0) {
+                    val timeText = airingIn.secondsToLegibleText(
+                        buildString = { id, time ->
+                            LocalContext.current.getString(id, time)
+                        },
+                        buildPluralString = { id, time ->
+                            LocalContext.current.resources
+                                .getQuantityString(id, time.toInt(), time)
+                        }
+                    )
+                    LocalContext.current.getString(
+                        R.string.episode_in_time,
+                        nextAiringEpisode.episode,
+                        timeText
+                    )
+                } else {
+                    val timeText =
+                        airingIn.absoluteValue.secondsToLegibleText(
+                            buildString = { id, time ->
+                                LocalContext.current.getString(id, time)
+                            },
+                            buildPluralString = { id, time ->
+                                LocalContext.current.resources
+                                    .getQuantityString(id, time.toInt(), time)
+                            }
+                        )
+                    LocalContext.current.getString(
+                        R.string.episode_aired_ago,
+                        nextAiringEpisode.episode,
+                        timeText
+                    )
+                }
+                Text(
+                    text = airingText,
+                    style = TextStyle(
+                        color = GlanceTheme.colors.onPrimaryContainer
+                    ),
+                    maxLines = 1
+                )
+            }
         }
     }
 }

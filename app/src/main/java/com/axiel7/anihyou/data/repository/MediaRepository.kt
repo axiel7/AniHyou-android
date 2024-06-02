@@ -2,7 +2,6 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.AiringAnimesQuery
-import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.asDataResult
@@ -172,19 +171,16 @@ class MediaRepository @Inject constructor(
     suspend fun getAiringWidgetData(
         page: Int,
         perPage: Int = 25,
-    ): List<AiringWidgetQuery.Medium>? {
-        val response = api.airingWidgetQuery(page, perPage).execute()
-        return if (response.hasErrors()) null
-        else {
-            response.data?.Page?.media?.filterNotNull()?.let { mediaList ->
-                return mediaList
-                    .filter {
+    ) = api
+        .airingWidgetQuery(page, perPage)
+        .execute()
+        .asDataResult { data ->
+            data.Page?.media?.filterNotNull()
+                ?.filter {
                         it.nextAiringEpisode != null
                                 && it.mediaListEntry?.status?.isActive() == true
                     }
-                    .sortedBy { it.nextAiringEpisode?.timeUntilAiring }
-            }
-            return null
+                ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
+                .orEmpty()
         }
-    }
 }
