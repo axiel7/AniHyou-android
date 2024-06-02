@@ -17,8 +17,8 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 67
-        versionName = "1.3.0"
+        versionCode = 70
+        versionName = "1.3.1"
         setProperty("archivesBaseName", "anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
