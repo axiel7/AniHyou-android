@@ -10,6 +10,9 @@ enum class NotificationInterval(
     val value: Long,
     val timeUnit: TimeUnit
 ) : Localizable {
+    FIVE_TEEN_MINUTES(15, TimeUnit.MINUTES),
+    THIRTY_MINUTES(30, TimeUnit.MINUTES),
+    ONE_HOUR(1, TimeUnit.HOURS),
     SIX_HOURS(6, TimeUnit.HOURS),
     TWELVE_HOURS(12, TimeUnit.HOURS),
     DAILY(1, TimeUnit.DAYS),
@@ -19,6 +22,9 @@ enum class NotificationInterval(
 
     val stringRes
         get() = when (this) {
+            FIVE_TEEN_MINUTES -> R.string.every_five_teen_minutes
+            THIRTY_MINUTES -> R.string.every_thirty_minutes
+            ONE_HOUR -> R.string.every_hour
             SIX_HOURS -> R.string.every_six_hours
             TWELVE_HOURS -> R.string.every_twelve_hours
             DAILY -> R.string.daily

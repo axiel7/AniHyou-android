@@ -381,4 +381,7 @@
     <string name="hide_from_status_lists">Hide from status lists</string>
     <string name="black_theme_variant">Black theme variant</string>
     <string name="random">Random</string>
+    <string name="every_five_teen_minutes">Every 15 minutes</string>
+    <string name="every_thirty_minutes">Every 30 minutes</string>
+    <string name="every_hour">Every hour</string>
 </resources>
