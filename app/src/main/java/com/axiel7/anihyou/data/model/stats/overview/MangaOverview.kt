@@ -6,14 +6,13 @@ import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.utils.NumberUtils.format
 
 fun UserStatsMangaOverviewQuery.Manga.toOverviewStats(scoreFormat: ScoreFormat) =
     OverviewStats(
         count = count,
         episodeOrChapterCount = chaptersRead,
-        daysOrVolumes = volumesRead.minutesToDays(),
+        daysOrVolumes = volumesRead,
         plannedCount = planned()?.chaptersRead ?: 0,
         meanScore = meanScore,
         scoreFormat = scoreFormat,
