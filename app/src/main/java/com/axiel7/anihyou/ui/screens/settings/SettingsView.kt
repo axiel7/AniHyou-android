@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.settings
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -88,10 +90,17 @@ private fun SettingsContent(
     navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
+    val isDarkTheme = isSystemInDarkTheme()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+
+    LaunchedEffect(isDarkTheme) {
+        if (!isDarkTheme && uiState.useBlackColors) {
+            event?.setUseBlackColors(false)
+        }
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
@@ -123,11 +132,13 @@ private fun SettingsContent(
                 onValueChange = { event?.setTheme(it) }
             )
 
-            SwitchPreference(
-                title = stringResource(R.string.black_theme_variant),
-                preferenceValue = uiState.useBlackColors,
-                onValueChange = { event?.setUseBlackColors(it) }
-            )
+            if (isDarkTheme) {
+                SwitchPreference(
+                    title = stringResource(R.string.black_theme_variant),
+                    preferenceValue = uiState.useBlackColors,
+                    onValueChange = { event?.setUseBlackColors(it) }
+                )
+            }
 
             if (uiState.isLoggedIn) {
                 ListPreference(
