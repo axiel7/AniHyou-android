@@ -7,8 +7,6 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-android.buildFeatures.buildConfig = true
-
 android {
     namespace = "com.axiel7.anihyou"
     compileSdk = 34
@@ -88,6 +86,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
         aidl = false
         renderScript = false
         shaders = false
