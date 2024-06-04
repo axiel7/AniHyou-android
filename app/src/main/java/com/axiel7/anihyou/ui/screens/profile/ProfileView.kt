@@ -106,7 +106,8 @@ private fun ProfileContent(
                     ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
                 ),
                 scrollBehavior = topAppBarScrollBehavior
             )
