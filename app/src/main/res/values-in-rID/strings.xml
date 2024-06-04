@@ -359,4 +359,7 @@
     <string name="hide_from_status_lists">Sembunyikan dari daftar status</string>
     <string name="black_theme_variant">Variasi tema hitam</string>
     <string name="random">Random</string>
+    <string name="every_five_teen_minutes">Setiap 15 menit</string>
+    <string name="every_thirty_minutes">Setiap 30 menit</string>
+    <string name="every_hour">Setiap jam</string>
 </resources>
