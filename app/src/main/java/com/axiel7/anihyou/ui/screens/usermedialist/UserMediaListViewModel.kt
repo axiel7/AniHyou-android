@@ -22,6 +22,7 @@ import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.navigation.NavArgument
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
+import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
@@ -202,12 +203,18 @@ class UserMediaListViewModel @Inject constructor(
         val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
         val totalDuration = entry.media?.basicMediaDetails?.duration()
         val isMaxProgress = totalDuration != null && newProgress >= totalDuration
+        val isPlanning = entry.basicMediaListEntry.status == MediaListStatus.PLANNING
+        val newStatus = when {
+            isMaxProgress -> MediaListStatus.COMPLETED
+            isPlanning -> MediaListStatus.CURRENT
+            else -> null
+        }
         updateEntryProgress(
             mediaId = entry.mediaId,
             progress = newProgress,
-            status = MediaListStatus.COMPLETED.takeIf { isMaxProgress },
+            status = newStatus,
             startDate = LocalDate.now().takeIf {
-                entry.basicMediaListEntry.status == MediaListStatus.PLANNING
+                isPlanning || !entry.basicMediaListEntry.progress.isGreaterThanZero()
             },
             endDate = LocalDate.now().takeIf { isMaxProgress },
         )

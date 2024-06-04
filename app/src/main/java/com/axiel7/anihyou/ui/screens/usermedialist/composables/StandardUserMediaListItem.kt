@@ -34,6 +34,7 @@ import com.axiel7.anihyou.data.model.media.calculateProgressBarValue
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleBasicMediaListEntry
 import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.data.model.media.isActive
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
@@ -141,9 +142,7 @@ fun StandardUserMediaListItem(
                                     modifier = Modifier.padding(bottom = 2.dp),
                                 )
                             }
-                            if (isMyList && (status == MediaListStatus.CURRENT
-                                        || status == MediaListStatus.REPEATING)
-                            ) {
+                            if (isMyList && status?.isActive() == true) {
                                 FilledTonalButton(onClick = onClickPlus) {
                                     Text(text = stringResource(R.string.plus_one))
                                 }
@@ -189,7 +188,7 @@ fun StandardUserMediaListItemPreview() {
                     item = exampleCommonMediaListEntry.copy(
                         basicMediaListEntry = exampleBasicMediaListEntry.copy(
                             score = 3.0,
-                            status = MediaListStatus.PLANNING
+                            status = MediaListStatus.COMPLETED
                         )
                     ),
                     listStatus = null,
