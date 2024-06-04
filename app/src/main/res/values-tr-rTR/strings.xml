@@ -368,4 +368,7 @@
     <string name="hide_from_status_lists">Durum listelerinden gizle</string>
     <string name="black_theme_variant">Siyah tema varyantı</string>
     <string name="random">Rastgele</string>
+    <string name="every_five_teen_minutes">15 dakikada bir</string>
+    <string name="every_thirty_minutes">30 dakikada bir</string>
+    <string name="every_hour">Her saat</string>
 </resources>
