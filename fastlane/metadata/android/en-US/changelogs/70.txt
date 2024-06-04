@@ -1,0 +1,4 @@
+- Auto set status/dates when updating progress
+- Fix completed list not loading for some users
+- Fix widget not working
+- Show warning when sorting by title/popularity
