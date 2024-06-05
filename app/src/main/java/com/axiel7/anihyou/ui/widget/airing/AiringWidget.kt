@@ -30,14 +30,12 @@ import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
-import com.axiel7.anihyou.utils.DateUtils.currentTimeSeconds
-import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
-import kotlin.math.absoluteValue
 
 class AiringWidget : GlanceAppWidget() {
 
@@ -114,43 +112,11 @@ class AiringWidget : GlanceAppWidget() {
                 maxLines = 1
             )
 
-            item.nextAiringEpisode?.let { nextAiringEpisode ->
-                val airingIn =
-                    nextAiringEpisode.airingAt.toLong() - currentTimeSeconds()
-                val airingText = if (airingIn > 0) {
-                    val timeText = airingIn.secondsToLegibleText(
-                        buildString = { id, time ->
-                            LocalContext.current.getString(id, time)
-                        },
-                        buildPluralString = { id, time ->
-                            LocalContext.current.resources
-                                .getQuantityString(id, time.toInt(), time)
-                        }
-                    )
-                    LocalContext.current.getString(
-                        R.string.episode_in_time,
-                        nextAiringEpisode.episode,
-                        timeText
-                    )
-                } else {
-                    val timeText =
-                        airingIn.absoluteValue.secondsToLegibleText(
-                            buildString = { id, time ->
-                                LocalContext.current.getString(id, time)
-                            },
-                            buildPluralString = { id, time ->
-                                LocalContext.current.resources
-                                    .getQuantityString(id, time.toInt(), time)
-                            }
-                        )
-                    LocalContext.current.getString(
-                        R.string.episode_aired_ago,
-                        nextAiringEpisode.episode,
-                        timeText
-                    )
-                }
+            item.nextAiringEpisode?.airingAt?.toLong()?.timestampToDateString(
+                format = "EE, d MMM HH:mm"
+            )?.let { airingDate ->
                 Text(
-                    text = airingText,
+                    text = airingDate,
                     style = TextStyle(
                         color = GlanceTheme.colors.onPrimaryContainer
                     ),
