@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.MediaDetailsQuery
@@ -173,6 +175,7 @@ class MediaRepository @Inject constructor(
         perPage: Int = 25,
     ) = api
         .airingWidgetQuery(page, perPage)
+        .fetchPolicy(FetchPolicy.NetworkFirst)
         .execute()
         .asDataResult { data ->
             data.Page?.media?.filterNotNull()
