@@ -22,6 +22,7 @@ data class EditMediaUiState(
     val progress: Int? = null,
     val volumeProgress: Int? = null,
     val score: Double? = null,
+    val advancedScoresNames: List<String> = emptyList(),
     val advancedScores: SnapshotStateMap<String, Double> = mutableStateMapOf(),
     val startedAt: LocalDate? = null,
     val completedAt: LocalDate? = null,

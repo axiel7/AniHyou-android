@@ -48,7 +48,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.canUseAdvancedScoring
 import com.axiel7.anihyou.data.model.maxValue
-import com.axiel7.anihyou.data.model.media.advancedScoreNames
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.isAnime
@@ -417,7 +416,7 @@ private fun EditMediaSheetContent(
             }
 
             if (uiState.scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
-                uiState.listEntry?.advancedScoreNames()?.forEach { score ->
+                uiState.advancedScoresNames.forEach { score ->
                     RatingView(
                         maxValue = uiState.scoreFormat.maxValue(),
                         modifier = Modifier

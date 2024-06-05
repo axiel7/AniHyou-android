@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.model.media.advancedScoreNames
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
@@ -49,6 +50,7 @@ class EditMediaViewModel @Inject constructor(
             progress = value?.progress,
             volumeProgress = value?.progressVolumes,
             score = value?.score,
+            advancedScoresNames = value?.advancedScoreNames()?.toList().orEmpty(),
             startedAt = value?.startedAt?.fuzzyDate?.toLocalDate(),
             completedAt = value?.completedAt?.fuzzyDate?.toLocalDate(),
             repeatCount = value?.repeat,
@@ -195,7 +197,8 @@ class EditMediaViewModel @Inject constructor(
                 mediaId = mediaDetails!!.id,
                 status = status,
                 score = score,
-                advancedScores = advancedScores.values.takeIf { advancedScores.isNotEmpty() },
+                advancedScores = advancedScoresNames.mapNotNull { advancedScores[it] }
+                    .takeIf { advancedScores.isNotEmpty() },
                 progress = progress,
                 progressVolumes = volumeProgress,
                 startedAt = startedAt?.toFuzzyDate(),
