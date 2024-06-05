@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("com.apollographql.apollo3") version "4.0.0-beta.6"
+    id("com.apollographql.apollo3") version "4.0.0-beta.7"
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -141,7 +141,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-gif:$coilVersion")
     implementation("io.coil-kt.coil3:coil-network-okhttp:$coilVersion")
 
-    val apolloVersion = "4.0.0-beta.6"
+    val apolloVersion = "4.0.0-beta.7"
     implementation("com.apollographql.apollo3:apollo-runtime:$apolloVersion")
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apolloVersion")
 
