@@ -36,6 +36,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
+import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,11 +67,13 @@ fun GridUserMediaListItem(
                         .height(MEDIA_POSTER_MEDIUM_HEIGHT.dp)
                 )
 
-                BadgeScoreIndicator(
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    score = item.basicMediaListEntry.score,
-                    scoreFormat = scoreFormat
-                )
+                if (item.basicMediaListEntry.score?.isGreaterThanZero() == true) {
+                    BadgeScoreIndicator(
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        score = item.basicMediaListEntry.score,
+                        scoreFormat = scoreFormat
+                    )
+                }
 
                 if (listStatus == null && status != null) {
                     ListStatusBadgeIndicator(

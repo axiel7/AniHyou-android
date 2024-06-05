@@ -82,11 +82,13 @@ fun CompactUserMediaListItem(
                     )
                 }
 
-                BadgeScoreIndicator(
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    score = item.basicMediaListEntry.score,
-                    scoreFormat = scoreFormat
-                )
+                if (item.basicMediaListEntry.score?.isGreaterThanZero() == true) {
+                    BadgeScoreIndicator(
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        score = item.basicMediaListEntry.score,
+                        scoreFormat = scoreFormat
+                    )
+                }
             }//: Box
 
             Column(

@@ -98,10 +98,12 @@ fun MinimalUserMediaListItem(
                         fontSize = 15.sp,
                         maxLines = 1
                     )
-                    MinimalScoreIndicator(
-                        score = item.basicMediaListEntry.score,
-                        scoreFormat = scoreFormat
-                    )
+                    if (item.basicMediaListEntry.score?.isGreaterThanZero() == true) {
+                        MinimalScoreIndicator(
+                            score = item.basicMediaListEntry.score,
+                            scoreFormat = scoreFormat
+                        )
+                    }
                     if (listStatus == null && status != null) {
                         Icon(
                             painter = painterResource(status.icon()),
