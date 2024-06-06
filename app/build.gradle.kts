@@ -133,7 +133,7 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
-    implementation("io.github.fornewid:placeholder-material3:1.1.3")
+    implementation("io.github.fornewid:placeholder-material3:2.0.0")
     implementation("com.materialkolor:material-kolor:1.6.2")
 
     val coilVersion = "3.0.0-alpha06"
