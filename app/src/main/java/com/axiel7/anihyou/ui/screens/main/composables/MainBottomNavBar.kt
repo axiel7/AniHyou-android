@@ -16,7 +16,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.axiel7.anihyou.ui.common.BottomDestination
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestination
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 
 @Composable
@@ -26,16 +25,10 @@ fun MainBottomNavBar(
     navActionManager: NavActionManager,
     onItemSelected: (Int) -> Unit,
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentBottomDestination by remember {
-        derivedStateOf { navBackStackEntry?.toBottomDestination() }
-    }
     val isVisible by remember {
         derivedStateOf {
             when {
                 navBackStackEntry?.destination?.route == null -> true
-
-                currentBottomDestination != null -> true
 
                 else -> false
             }
