@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -15,48 +16,42 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
+import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
+import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
-import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
+import java.io.File
 
 class AiringWidget : GlanceAppWidget() {
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface AiringWidgetEntryPoint {
-        val globalVariables: GlobalVariables
-        val mediaRepository: MediaRepository
-        val defaultPreferencesRepository: DefaultPreferencesRepository
-    }
+    override val stateDefinition: GlanceStateDefinition<DataResult<List<AiringWidgetQuery.Medium>>>
+        get() = object : GlanceStateDefinition<DataResult<List<AiringWidgetQuery.Medium>>> {
+            override suspend fun getDataStore(
+                context: Context,
+                fileKey: String
+            ): DataStore<DataResult<List<AiringWidgetQuery.Medium>>> {
+                return AiringAnimeDataStore(context)
+            }
+
+            override fun getLocation(context: Context, fileKey: String): File {
+                throw NotImplementedError()
+            }
+        }
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val appContext = context.applicationContext ?: throw IllegalStateException()
-        val hiltEntryPoint =
-            EntryPointAccessors.fromApplication(appContext, AiringWidgetEntryPoint::class.java)
-        hiltEntryPoint.globalVariables.accessToken =
-            hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
-
-        val result = hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
-
         provideContent {
+            val result: DataResult<List<AiringWidgetQuery.Medium>> = currentState()
             GlanceTheme {
                 if (result is DataResult.Success) {
                     AppWidgetColumn {

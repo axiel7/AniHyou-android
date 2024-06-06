@@ -170,13 +170,13 @@ class MediaRepository @Inject constructor(
 
     // widget
 
-    suspend fun getAiringWidgetData(
+    fun getAiringWidgetData(
         page: Int,
         perPage: Int = 25,
     ) = api
         .airingWidgetQuery(page, perPage)
         .fetchPolicy(FetchPolicy.NetworkFirst)
-        .execute()
+        .toFlow()
         .asDataResult { data ->
             data.Page?.media?.filterNotNull()
                 ?.filter {
