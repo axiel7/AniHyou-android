@@ -3,11 +3,14 @@ package com.axiel7.anihyou.ui.widget.airing
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -19,6 +22,7 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.state.GlanceStateDefinition
@@ -31,6 +35,7 @@ import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
 import com.axiel7.anihyou.utils.DateUtils.timestampToDateString
+import kotlinx.coroutines.launch
 import java.io.File
 
 class AiringWidget : GlanceAppWidget() {
@@ -51,6 +56,7 @@ class AiringWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            val scope = rememberCoroutineScope()
             val result: DataResult<List<AiringWidgetQuery.Medium>> = currentState()
             GlanceTheme {
                 if (result is DataResult.Success) {
@@ -58,6 +64,13 @@ class AiringWidget : GlanceAppWidget() {
                         LazyColumn {
                             items(result.data) { item ->
                                 ItemView(item = item)
+                            }
+                            item {
+                                RefreshButton(
+                                    onClick = {
+                                        scope.launch { update(context, id) }
+                                    }
+                                )
                             }
                         }
                     }
@@ -118,6 +131,29 @@ class AiringWidget : GlanceAppWidget() {
                     maxLines = 1
                 )
             }
+        }
+    }
+
+    @Composable
+    private fun RefreshButton(onClick: () -> Unit) {
+        Row(
+            modifier = GlanceModifier
+                .padding(bottom = 8.dp)
+                .fillMaxWidth()
+                .clickable(onClick),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                provider = ImageProvider(R.drawable.replay_20),
+                contentDescription = glanceStringResource(R.string.refresh),
+                modifier = GlanceModifier.padding(end = 8.dp)
+            )
+            Text(
+                text = glanceStringResource(R.string.refresh),
+                style = TextStyle(
+                    color = GlanceTheme.colors.onSurface
+                ),
+            )
         }
     }
 }
