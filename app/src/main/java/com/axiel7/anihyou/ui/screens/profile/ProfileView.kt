@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -91,6 +92,16 @@ private fun ProfileContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+
+    val profileColor = remember(uiState.userInfo) {
+        colorFromHex(uiState.userInfo?.hexColor())
+    }
+
+    LaunchedEffect(profileColor) {
+        if (profileColor != null) {
+            event?.setColor(profileColor)
+        }
+    }
 
     Scaffold(
         modifier = modifier,

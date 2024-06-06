@@ -25,20 +25,24 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.ui.common.navigation.NavDestination
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
@@ -81,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
                 initialValue = initialAppColorMode
             )
+            val currentUserColor by viewModel.currentUserColor.collectAsStateWithLifecycle(null)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
             DisposableEffect(isDark) {
@@ -102,6 +107,7 @@ class MainActivity : AppCompatActivity() {
                 blackColors = useBlackColors,
                 appColor = appColor,
                 appColorMode = appColorMode,
+                currentUserColor = currentUserColor,
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -111,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                         windowSizeClass = windowSizeClass,
                         isLoggedIn = isLoggedIn,
                         lastTabOpened = lastTabOpened,
-                        saveLastTab = viewModel::saveLastTab,
+                        currentUserColor = currentUserColor,
+                        event = viewModel,
                         homeTab = homeTab,
                         deepLink = deepLink,
                     )
@@ -168,21 +175,32 @@ fun MainView(
     windowSizeClass: WindowSizeClass,
     isLoggedIn: Boolean,
     lastTabOpened: Int,
-    saveLastTab: (Int) -> Unit,
+    currentUserColor: Color?,
+    event: MainEvent?,
     homeTab: HomeTab,
     deepLink: DeepLink?,
 ) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val navActionManager = NavActionManager.rememberNavActionManager(navController)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+    LaunchedEffect(navBackStackEntry) {
+        if (currentUserColor != null
+            && navBackStackEntry?.destination?.route != NavDestination.UserDetails.route()
+        ) {
+            event?.restoreAppColor()
+        }
+    }
 
     Scaffold(
         bottomBar = {
             if (isCompactScreen) {
                 MainBottomNavBar(
                     navController = navController,
+                    navBackStackEntry = navBackStackEntry,
                     navActionManager = navActionManager,
-                    onItemSelected = saveLastTab
+                    onItemSelected = { event?.saveLastTab(it) }
                 )
             }
         },
@@ -206,7 +224,8 @@ fun MainView(
             ) {
                 MainNavigationRail(
                     navController = navController,
-                    onItemSelected = saveLastTab,
+                    navBackStackEntry = navBackStackEntry,
+                    onItemSelected = { event?.saveLastTab(it) },
                     modifier = Modifier.safeDrawingPadding(),
                 )
                 MainNavigation(
@@ -234,7 +253,8 @@ fun MainPreview() {
             ),
             isLoggedIn = false,
             lastTabOpened = 0,
-            saveLastTab = {},
+            currentUserColor = null,
+            event = null,
             homeTab = HomeTab.DISCOVER,
             deepLink = null
         )

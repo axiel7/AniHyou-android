@@ -10,23 +10,21 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.axiel7.anihyou.ui.common.BottomDestination
 
 @Composable
 fun MainNavigationRail(
     navController: NavController,
+    navBackStackEntry: NavBackStackEntry?,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
     NavigationRail(
         modifier = modifier,
         header = {

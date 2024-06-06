@@ -206,6 +206,14 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(APP_COLOR_KEY, value?.toArgb()?.hexToString())
     }
 
+    val currentUserColor = dataStore.getValue(CURRENT_USER_COLOR_KEY).map {
+        if (it != null) colorFromHex(it) else null
+    }
+
+    suspend fun setCurrentUserColor(value: Color?) {
+        dataStore.setValue(CURRENT_USER_COLOR_KEY, value?.toArgb()?.hexToString())
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -232,5 +240,6 @@ class DefaultPreferencesRepository @Inject constructor(
 
         private val APP_COLOR_MODE_KEY = stringPreferencesKey("app_color_mode")
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
+        private val CURRENT_USER_COLOR_KEY = stringPreferencesKey("current_user_color")
     }
 }

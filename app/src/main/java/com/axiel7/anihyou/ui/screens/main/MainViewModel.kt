@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
     private val globalVariables: GlobalVariables,
     private val loginRepository: LoginRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
-) : ViewModel() {
+) : ViewModel(), MainEvent {
 
     fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
         if (data?.scheme == ANIHYOU_SCHEME) {
@@ -42,8 +42,18 @@ class MainViewModel @Inject constructor(
 
     val appColorMode = defaultPreferencesRepository.appColorMode
 
-    fun saveLastTab(index: Int) = viewModelScope.launch {
-        defaultPreferencesRepository.setLastTab(index)
+    val currentUserColor = defaultPreferencesRepository.currentUserColor
+
+    override fun restoreAppColor() {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setCurrentUserColor(null)
+        }
+    }
+
+    override fun saveLastTab(index: Int) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setLastTab(index)
+        }
     }
 
     init {

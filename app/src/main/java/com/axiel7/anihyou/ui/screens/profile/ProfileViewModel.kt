@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.profile
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.data.model.DataResult
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -124,6 +126,12 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    override fun setColor(color: Color) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setCurrentUserColor(color)
         }
     }
 
