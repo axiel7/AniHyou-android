@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.model.DeepLink
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.FullScreenImage
@@ -50,6 +51,7 @@ import com.axiel7.anihyou.ui.screens.notifications.Notifications
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.profile.Profile
 import com.axiel7.anihyou.ui.screens.profile.ProfileView
+import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.ui.screens.settings.Settings
@@ -66,6 +68,8 @@ import com.axiel7.anihyou.ui.screens.thread.ThreadDetails
 import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishComment
 import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
+import com.axiel7.anihyou.ui.screens.usermedialist.AnimeTab
+import com.axiel7.anihyou.ui.screens.usermedialist.MangaTab
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaList
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
 
@@ -169,7 +173,7 @@ fun MainNavigation(
             )
         }
 
-        composable<UserMediaList>(
+        composable<AnimeTab>(
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(400)) },
             popEnterTransition = { fadeIn(tween(400)) },
@@ -177,6 +181,25 @@ fun MainNavigation(
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
+                    mediaType = MediaType.ANIME,
+                    isCompactScreen = isCompactScreen,
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                    navActionManager = navActionManager,
+                )
+            } else {
+                LoginView()
+            }
+        }
+
+        composable<MangaTab>(
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(400)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(400)) },
+        ) {
+            if (isLoggedIn) {
+                UserMediaListHostView(
+                    mediaType = MediaType.MANGA,
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navActionManager = navActionManager,
@@ -213,6 +236,22 @@ fun MainNavigation(
         ) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
+                navActionManager = navActionManager,
+            )
+        }
+
+        composable<UserDetails> {
+            ProfileView(
+                navActionManager = navActionManager,
+            )
+        }
+
+        composable<UserMediaList> {
+            val arguments = it.toRoute<UserMediaList>()
+            UserMediaListHostView(
+                mediaType = MediaType.safeValueOf(arguments.mediaType),
+                isCompactScreen = isCompactScreen,
+                modifier = Modifier.padding(bottom = bottomPadding),
                 navActionManager = navActionManager,
             )
         }

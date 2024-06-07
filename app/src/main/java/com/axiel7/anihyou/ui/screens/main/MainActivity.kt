@@ -26,7 +26,9 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -35,17 +37,20 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.data.model.DeepLink
+import com.axiel7.anihyou.ui.common.BottomDestination.Companion.isBottomDestination
 import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.common.navigation.NavDestination
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
+import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
@@ -182,12 +187,17 @@ fun MainView(
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val isBottomDestination by remember {
+        derivedStateOf { navBackStackEntry?.isBottomDestination() == true }
+    }
     val navActionManager = NavActionManager.rememberNavActionManager(navController)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     LaunchedEffect(navBackStackEntry) {
         if (currentUserColor != null
-            && navBackStackEntry?.destination?.route != NavDestination.UserDetails.route()
+            && navBackStackEntry?.destination?.hierarchy?.any {
+                it.hasRoute(UserDetails::class)
+            } == true
         ) {
             event?.restoreAppColor()
         }
@@ -200,6 +210,7 @@ fun MainView(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
                     navActionManager = navActionManager,
+                    isVisible = isBottomDestination,
                     onItemSelected = { event?.saveLastTab(it) }
                 )
             }

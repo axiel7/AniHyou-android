@@ -6,14 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaList
+import com.axiel7.anihyou.ui.screens.usermedialist.AnimeTab
+import com.axiel7.anihyou.ui.screens.usermedialist.MangaTab
 
 sealed class BottomDestination(
     val index: Int,
     val route: Any,
-    val routeName: String,
     @StringRes val title: Int,
     @DrawableRes val icon: Int,
     @DrawableRes val iconSelected: Int,
@@ -21,7 +22,6 @@ sealed class BottomDestination(
     data object Home : BottomDestination(
         index = 0,
         route = com.axiel7.anihyou.ui.screens.home.Home,
-        routeName = "Home",
         title = R.string.home,
         icon = R.drawable.home_24,
         iconSelected = R.drawable.home_filled_24
@@ -29,8 +29,7 @@ sealed class BottomDestination(
 
     data object AnimeList : BottomDestination(
         index = 1,
-        route = UserMediaList(mediaType = MediaType.ANIME.rawValue),
-        routeName = "UserAnimeList",
+        route = AnimeTab,
         title = R.string.anime,
         icon = R.drawable.live_tv_24,
         iconSelected = R.drawable.live_tv_filled_24
@@ -38,8 +37,7 @@ sealed class BottomDestination(
 
     data object MangaList : BottomDestination(
         index = 2,
-        route = UserMediaList(mediaType = MediaType.MANGA.rawValue),
-        routeName = "UserMangaList",
+        route = MangaTab,
         title = R.string.manga,
         icon = R.drawable.book_24,
         iconSelected = R.drawable.book_filled_24
@@ -47,8 +45,7 @@ sealed class BottomDestination(
 
     data object Profile : BottomDestination(
         index = 3,
-        route = com.axiel7.anihyou.ui.screens.profile.Profile(id = 0, userName = null),
-        routeName = "Profile",
+        route = com.axiel7.anihyou.ui.screens.profile.Profile,
         title = R.string.profile,
         icon = R.drawable.person_24,
         iconSelected = R.drawable.person_filled_24
@@ -57,7 +54,6 @@ sealed class BottomDestination(
     data object Explore : BottomDestination(
         index = 4,
         route = com.axiel7.anihyou.ui.screens.explore.Explore,
-        routeName = "Explore",
         title = R.string.explore,
         icon = R.drawable.explore_24,
         iconSelected = R.drawable.explore_filled_24
@@ -80,22 +76,9 @@ sealed class BottomDestination(
 
         fun Int.toBottomDestinationRoute() = values.find { it.index == this }?.route
 
-        fun NavBackStackEntry.toBottomDestination() =
-            destination.route?.split(".")?.last()?.let { routeName ->
-                val bottomDestination = values.find { routeName.startsWith(it.routeName) }
-                when (bottomDestination) {
-                    AnimeList, MangaList -> {
-                        val mediaType =
-                            arguments?.getString("mediaType")?.let { MediaType.safeValueOf(it) }
-                        when (mediaType) {
-                            MediaType.ANIME -> AnimeList
-                            MediaType.MANGA -> MangaList
-                            else -> bottomDestination
-                        }
-                    }
-
-                    else -> bottomDestination
-                }
+        fun NavBackStackEntry.isBottomDestination() =
+            destination.hierarchy.any { dest ->
+                values.any { value -> dest.hasRoute(value.route::class) }
             }
     }
 }

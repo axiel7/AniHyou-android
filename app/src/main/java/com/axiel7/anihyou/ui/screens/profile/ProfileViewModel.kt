@@ -32,10 +32,10 @@ class ProfileViewModel @Inject constructor(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
-    private val arguments = savedStateHandle.toRoute<Profile>()
+    private val arguments = runCatching { savedStateHandle.toRoute<UserDetails>() }.getOrNull()
 
     override val initialState = ProfileUiState(
-        isMyProfile = arguments.id == 0 && arguments.userName == null,
+        isMyProfile = arguments == null || arguments.id == 0 && arguments.userName == null,
     )
 
     private fun getMyUserInfo() {
@@ -137,7 +137,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         if (mutableUiState.value.isMyProfile) getMyUserInfo()
-        else getUserInfo(arguments.id, arguments.userName)
+        else getUserInfo(arguments?.id, arguments?.userName)
 
         // activities
         mutableUiState

@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -59,6 +60,15 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Immutable
+object AnimeTab
+
+@Serializable
+@Immutable
+object MangaTab
+
+@Serializable
+@Immutable
 data class UserMediaList(
     val mediaType: String,
     val userId: Int = 0,
@@ -67,11 +77,14 @@ data class UserMediaList(
 
 @Composable
 fun UserMediaListHostView(
+    mediaType: MediaType,
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserMediaListViewModel = hiltViewModel()
+    val viewModel = hiltViewModel<UserMediaListViewModel, UserMediaListViewModel.Factory> {
+        it.create(mediaType)
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(isCompactScreen) {

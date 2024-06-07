@@ -66,7 +66,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Immutable
-data class Profile(
+object Profile
+
+@Serializable
+@Immutable
+data class UserDetails(
     val id: Int = 0,
     val userName: String?
 )

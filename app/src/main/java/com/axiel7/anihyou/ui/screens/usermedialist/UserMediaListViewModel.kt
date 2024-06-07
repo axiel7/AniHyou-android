@@ -27,6 +27,9 @@ import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -43,20 +46,24 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class UserMediaListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = UserMediaListViewModel.Factory::class)
+class UserMediaListViewModel @AssistedInject constructor(
+    @Assisted private val mediaType: MediaType,
     savedStateHandle: SavedStateHandle,
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
-    private val arguments = savedStateHandle.toRoute<UserMediaList>()
-    private val mediaType = MediaType.safeValueOf(arguments.mediaType)
-    private val scoreFormat = arguments.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
+    @AssistedFactory
+    interface Factory {
+        fun create(mediaType: MediaType): UserMediaListViewModel
+    }
+
+    private val arguments = runCatching { savedStateHandle.toRoute<UserMediaList>() }.getOrNull()
+    private val scoreFormat = arguments?.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
 
     private val lastSelectedList =
         (if (mediaType == MediaType.ANIME) listPreferencesRepository.animeListSelected
@@ -68,8 +75,8 @@ class UserMediaListViewModel @Inject constructor(
             scoreFormat = scoreFormat ?: ScoreFormat.POINT_10,
             selectedListName = lastSelectedList,
             status = lastSelectedList?.asMediaListStatus(),
-            userId = arguments.userId.takeIf { it != 0 },
-            isMyList = arguments.userId == 0
+            userId = arguments?.userId.takeIf { it != 0 },
+            isMyList = arguments == null || arguments.userId == 0
         )
 
     private val myUserId = defaultPreferencesRepository.userId

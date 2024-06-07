@@ -7,16 +7,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.axiel7.anihyou.ui.common.BottomDestination
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestination
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 
 @Composable
@@ -24,20 +22,9 @@ fun MainBottomNavBar(
     navController: NavController,
     navBackStackEntry: NavBackStackEntry?,
     navActionManager: NavActionManager,
+    isVisible: Boolean,
     onItemSelected: (Int) -> Unit,
 ) {
-    val isVisible by remember {
-        derivedStateOf {
-            when {
-                BottomDestination.values.map { it.route }
-                    .contains(navBackStackEntry?.destination?.route) -> true
-
-                navBackStackEntry?.destination?.route == null -> true
-                else -> false
-            }
-        }
-    }
-
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -45,7 +32,9 @@ fun MainBottomNavBar(
     ) {
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
-                val isSelected = navBackStackEntry?.destination?.route == dest.route
+                val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
+                    it.hasRoute(dest.route::class)
+                } == true
                 NavigationBarItem(
                     icon = {
                         dest.Icon(selected = isSelected)

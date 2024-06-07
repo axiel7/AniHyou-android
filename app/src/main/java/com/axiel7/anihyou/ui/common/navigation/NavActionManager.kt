@@ -21,7 +21,7 @@ import com.axiel7.anihyou.ui.screens.explore.search.Search
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
 import com.axiel7.anihyou.ui.screens.notifications.Notifications
-import com.axiel7.anihyou.ui.screens.profile.Profile
+import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
 import com.axiel7.anihyou.ui.screens.settings.Settings
 import com.axiel7.anihyou.ui.screens.settings.Translations
@@ -57,11 +57,11 @@ class NavActionManager(
     }
 
     fun toUserDetails(id: Int) {
-        navController.navigate(Profile(id = id, userName = null))
+        navController.navigate(UserDetails(id = id, userName = null))
     }
 
     fun toUserDetails(userId: Int?, username: String?) {
-        navController.navigate(Profile(userId ?: 0, username))
+        navController.navigate(UserDetails(userId ?: 0, username))
     }
 
     fun toActivityDetails(id: Int) {
