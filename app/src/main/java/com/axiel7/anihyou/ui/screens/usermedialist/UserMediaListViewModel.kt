@@ -4,8 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.common.firstBlocking
-import androidx.navigation.toRoute
-import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
@@ -23,8 +21,6 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
-import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
-import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import dagger.assisted.Assisted
