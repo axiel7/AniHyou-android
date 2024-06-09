@@ -4,6 +4,38 @@
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
     <string name="explore">تصفح</string>
+    <plurals name="num_years">
+        <item quantity="zero">%dلا توجد أعوام</item>
+        <item quantity="one">%d عام واحد</item>
+        <item quantity="two">%d عامان</item>
+        <item quantity="few">%d بضع أعوام</item>
+        <item quantity="many">أعوام عديدة %d</item>
+        <item quantity="other">%d أعوام كثيرة</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="zero">%d لاتوجد شهور</item>
+        <item quantity="one">%dشهر واحد</item>
+        <item quantity="two">%dشهران</item>
+        <item quantity="few">%d بضع شهور</item>
+        <item quantity="many">%d أشهر عديدة</item>
+        <item quantity="other">%d اشهر كثيرة</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="zero">%dلا توجد أسابيع</item>
+        <item quantity="one">%d أسبوع واحد</item>
+        <item quantity="two">%d أسبوعان</item>
+        <item quantity="few">%d بضع الأسابيع</item>
+        <item quantity="many">%d عدة أسابيع</item>
+        <item quantity="other">%dأسابيع كثيرة</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="zero">%dلا توجد أيام</item>
+        <item quantity="one">%d يوم واحد</item>
+        <item quantity="two">%dيومان</item>
+        <item quantity="few">%d بضع أيام</item>
+        <item quantity="many">%dعدة أيام</item>
+        <item quantity="other">%d أيام كثيرة</item>
+    </plurals>
     <string name="hour_abbreviation">%d ساعة</string>
     <string name="minutes_abbreviation">%d دقيقة</string>
     <string name="unknown">غير معروف</string>
@@ -47,6 +79,22 @@
     <string name="music">موسيقى</string>
     <string name="novel">رواية</string>
     <string name="one_shot">ون شوت</string>
+    <plurals name="num_episodes">
+        <item quantity="zero">%d لاتوجد حلقات</item>
+        <item quantity="one">%dحلقة واحدة</item>
+        <item quantity="two">%dحلقتان</item>
+        <item quantity="few">%dبضع حلقات</item>
+        <item quantity="many">%dعدة حلقات</item>
+        <item quantity="other">%dحلقات كثيرة</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="zero">%dلا توجد فصول</item>
+        <item quantity="one">%dفصل واحد</item>
+        <item quantity="two">%dفصلان</item>
+        <item quantity="few">%dبضع فصول</item>
+        <item quantity="many">%dعدة فصول</item>
+        <item quantity="other">%dفصول كثيرة</item>
+    </plurals>
     <string name="finished">منتهي</string>
     <string name="releasing">مستمر</string>
     <string name="not_yet_released">لم يصدر بعد</string>
@@ -57,6 +105,14 @@
     <string name="favorites">المُفضلات</string>
     <string name="episode_in_time">الحلقة %d بعد %s</string>
     <string name="airing">يبث</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="zero">%d لا توجد حلقات لم أشاهدها</item>
+        <item quantity="one">%dحلقة واحدة لم اشاهدها</item>
+        <item quantity="two">%dحلقتين لم أشاهدها</item>
+        <item quantity="few">%dبضع حلقات لم اشاهدها</item>
+        <item quantity="many">%dعدة حلقات لم اشاهدها</item>
+        <item quantity="other">%dحلقات كثيرة لم اشاهدها</item>
+    </plurals>
     <string name="information">معلومات</string>
     <string name="duration">المدة</string>
     <string name="start_date">تاريخ البدء</string>
@@ -340,4 +396,7 @@
     <string name="hide_from_status_lists">عدم الظهور في قائمة الحالة</string>
     <string name="black_theme_variant">المظهر الأسود</string>
     <string name="random">عشوائي</string>
+    <string name="every_five_teen_minutes">كل 15 دقيقة</string>
+    <string name="every_thirty_minutes">كل 30 دقيقة</string>
+    <string name="every_hour">كل ساعة</string>
 </resources>
