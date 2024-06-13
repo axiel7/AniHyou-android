@@ -1,0 +1,8 @@
+- Add more check intervals for push notifications
+- Show +1 in planning list
+- Only show score badge when set
+- Added refresh button to widget
+- Fixed widget (again)
+- Fix volumes count in manga stats
+- Fix advances scores not updating correctly
+- Other fixes
