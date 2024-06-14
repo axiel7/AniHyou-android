@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.ui.common.AppColorMode
 import com.materialkolor.dynamicColorScheme
@@ -80,8 +81,12 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private fun ColorScheme.toBlackScheme() = this.copy(
-    background = md_theme_black_background,
-    surface = md_theme_black_background,
+    background = Color.Black,
+    surface = Color.Black,
+    surfaceVariant = surfaceVariant.copy(alpha = 0.4f).compositeOver(Color.Black),
+    surfaceContainer = Color.Black,
+    surfaceContainerHigh = surfaceContainerHigh.copy(alpha = 0.5f).compositeOver(Color.Black),
+    surfaceContainerHighest = surfaceContainerHighest.copy(alpha = 0.6f).compositeOver(Color.Black)
 )
 
 @Composable
@@ -98,7 +103,8 @@ fun AniHyouTheme(
         appColorMode == AppColorMode.PROFILE || currentUserColor != null -> {
             val scheme = dynamicColorScheme(
                 seedColor = currentUserColor ?: appColor ?: seed,
-                isDark = darkTheme
+                isDark = darkTheme,
+                isAmoled = false
             )
             if (blackColors) scheme.toBlackScheme()
             else scheme
