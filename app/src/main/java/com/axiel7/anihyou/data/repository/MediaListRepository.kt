@@ -26,8 +26,8 @@ class MediaListRepository @Inject constructor(
         mediaType: MediaType,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
-        chunk: Int,
-        perChunk: Int,
+        chunk: Int?,
+        perChunk: Int?,
     ) = api
         .mediaListCollection(userId, mediaType, sort, fetchFromNetwork, chunk, perChunk)
         .watch()

@@ -29,16 +29,16 @@ class MediaListApi @Inject constructor(
         mediaType: MediaType,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean,
-        chunk: Int,
-        perChunk: Int
+        chunk: Int?,
+        perChunk: Int?
     ) = client
         .query(
             UserListCollectionQuery(
                 userId = Optional.present(userId),
                 type = Optional.present(mediaType),
                 sort = Optional.present(sort),
-                chunk = Optional.present(chunk),
-                perChunk = Optional.present(perChunk)
+                chunk = Optional.presentIfNotNull(chunk),
+                perChunk = Optional.presentIfNotNull(perChunk)
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)

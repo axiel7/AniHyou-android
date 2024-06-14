@@ -366,13 +366,16 @@ class UserMediaListViewModel @AssistedInject constructor(
             }
             .flatMapLatest { uiState ->
                 val listUserId = uiState.userId ?: myUserId.first()
+                val loadByChunk = uiState.sort == MediaListSort.UPDATED_TIME_DESC
+                val chunk = uiState.page.takeIf { loadByChunk }
+                val perChunk = (100).takeIf { loadByChunk }
                 mediaListRepository.getMediaListCollection(
                     userId = listUserId,
                     mediaType = mediaType,
                     sort = listOf(uiState.sort),
                     fetchFromNetwork = uiState.fetchFromNetwork,
-                    chunk = uiState.page,
-                    perChunk = 100
+                    chunk = chunk,
+                    perChunk = perChunk
                 )
             }
             .onEach { result ->
