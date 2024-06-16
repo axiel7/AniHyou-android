@@ -34,6 +34,7 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 import com.axiel7.anihyou.utils.NumberUtils.toDoubleLocaleInvariant
+import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 
 @Composable
 fun RatingView(
@@ -79,7 +80,7 @@ fun RatingView(
                     ratingString = value
                 } else {
                     val doubleValue = value.toDoubleLocaleInvariant()
-                    if (doubleValue != null && doubleValue > 0) {
+                    if (doubleValue != null) {
                         val doubleValueRoundedString = doubleValue.format(decimalLength)
                         val doubleValueRounded = doubleValueRoundedString?.toDoubleLocaleInvariant()
                         if (doubleValueRounded != null && doubleValueRounded <= maxValue) {
@@ -103,7 +104,7 @@ fun RatingView(
                 ) {
                     if (ratingString.isEmpty()) {
                         Text(
-                            text = "0",
+                            text = UNKNOWN_CHAR,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
