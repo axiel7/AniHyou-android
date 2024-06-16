@@ -32,6 +32,7 @@ data class UserMediaListUiState(
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
+    val openSetScoreDialog: Boolean = false,
     val plannedEntriesIds: List<Int> = emptyList(),
     val randomEntryId: Int? = null,
     override val page: Int = 1,

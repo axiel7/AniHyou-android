@@ -31,6 +31,10 @@ interface UserMediaListEvent : PagedEvent, UiEvent {
 
     fun selectItem(value: CommonMediaListEntry?)
 
+    fun setScore(score: Double?)
+
+    fun toggleScoreDialog(open: Boolean)
+
     fun getRandomPlannedEntry(chunk: Int = 1)
 
     fun onRandomEntryOpened()

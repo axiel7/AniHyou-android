@@ -63,14 +63,13 @@ import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
-import com.axiel7.anihyou.ui.composables.scores.FiveStarRatingView
 import com.axiel7.anihyou.ui.composables.scores.RatingView
-import com.axiel7.anihyou.ui.composables.scores.SmileyRatingView
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.CustomListsDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDateField
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDatePicker
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaProgressRow
+import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.ScoreView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.showToast
 import com.axiel7.anihyou.utils.DateUtils.toEpochMillis
@@ -279,38 +278,18 @@ private fun EditMediaSheetContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                when (uiState.scoreFormat) {
-                    ScoreFormat.POINT_10,
-                    ScoreFormat.POINT_10_DECIMAL,
-                    ScoreFormat.POINT_100 -> {
-                        RatingView(
-                            maxValue = uiState.scoreFormat.maxValue(),
-                            modifier = Modifier.padding(top = 8.dp, end = 16.dp),
-                            showIcon = true,
-                            rating = uiState.score,
-                            showAsDecimal = uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL,
-                            onRatingChanged = { event?.onChangeScore(it) }
-                        )
-                    }
+                ScoreView(
+                    format = uiState.scoreFormat,
+                    rating = uiState.score,
+                    onRatingChanged = { event?.onChangeScore(it) },
+                    modifier = when (uiState.scoreFormat) {
+                        ScoreFormat.POINT_10,
+                        ScoreFormat.POINT_10_DECIMAL,
+                        ScoreFormat.POINT_100 -> Modifier.padding(top = 8.dp, end = 16.dp)
 
-                    ScoreFormat.POINT_5 -> {
-                        FiveStarRatingView(
-                            modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
-                            rating = uiState.score ?: 0.0,
-                            onRatingChanged = { event?.onChangeScore(it) }
-                        )
+                        else -> Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp)
                     }
-
-                    ScoreFormat.POINT_3 -> {
-                        SmileyRatingView(
-                            modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp),
-                            rating = uiState.score ?: 0.0,
-                            onRatingChanged = { event?.onChangeScore(it) }
-                        )
-                    }
-
-                    else -> {}
-                }
+                )
             }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))

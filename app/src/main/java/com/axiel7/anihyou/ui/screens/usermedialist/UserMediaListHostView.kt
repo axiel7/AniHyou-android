@@ -55,6 +55,7 @@ import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.NotesDialog
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.SetScoreDialog
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.SortMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.serialization.Serializable
@@ -127,6 +128,14 @@ private fun UserMediaListHostContent(
         NotesDialog(
             note = uiState.selectedItem?.basicMediaListEntry?.notes.orEmpty(),
             onDismiss = { event?.toggleNotesDialog(false) }
+        )
+    }
+
+    if (uiState.openSetScoreDialog) {
+        SetScoreDialog(
+            onDismiss = { event?.toggleScoreDialog(false) },
+            onConfirm = { event?.setScore(it) },
+            scoreFormat = uiState.scoreFormat,
         )
     }
 

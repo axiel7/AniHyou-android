@@ -26,6 +26,7 @@ import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
+import com.axiel7.anihyou.utils.NumberUtils.isNullOrZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -160,62 +161,55 @@ class UserMediaListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun updateEntryProgress(
+    private suspend fun updateEntry(
         mediaId: Int,
-        progress: Int,
+        progress: Int? = null,
         status: MediaListStatus? = null,
         startDate: LocalDate? = null,
         endDate: LocalDate? = null,
+        score: Double? = null,
+        isFromScoreDialog: Boolean = false,
     ) {
         if (mutableUiState.value.isLoading) return
         mediaListRepository.updateEntry(
             mediaId = mediaId,
             progress = progress,
             status = status,
+            score = score,
             startedAt = startDate?.toFuzzyDate(),
             completedAt = endDate?.toFuzzyDate(),
-        ).onEach { result ->
-            mutableUiState.update { uiState ->
-                if (result is DataResult.Success
-                    && result.data != null
-                    && uiState.selectedListName != null
-                ) {
-                    uiState.entries.indexOfFirstOrNull { it.mediaId == mediaId }?.let { index ->
-                        val oldValue = uiState.entries[index]
-                        if (result.data.basicMediaListEntry.status != oldValue.basicMediaListEntry.status) {
-                            uiState.entries.removeAt(index)
-                        } else {
-                            uiState.entries[index] = oldValue.copy(
-                                basicMediaListEntry = result.data.basicMediaListEntry
-                            )
-                        }
-                        uiState.lists[uiState.selectedListName] = uiState.entries
-                    }
+        ).collectLatest { result ->
+            mutableUiState.update {
+                if (result is DataResult.Success && result.data != null && !isFromScoreDialog) {
+                    onUpdateListEntry(result.data.basicMediaListEntry)
                 }
                 result.toUiState()
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     override fun onClickPlusOne(entry: CommonMediaListEntry) {
-        val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
-        val totalDuration = entry.media?.basicMediaDetails?.duration()
-        val isMaxProgress = totalDuration != null && newProgress >= totalDuration
-        val isPlanning = entry.basicMediaListEntry.status == MediaListStatus.PLANNING
-        val newStatus = when {
-            isMaxProgress -> MediaListStatus.COMPLETED
-            isPlanning -> MediaListStatus.CURRENT
-            else -> null
+        viewModelScope.launch {
+            mutableUiState.update { it.copy(selectedItem = entry) }
+            val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
+            val totalDuration = entry.media?.basicMediaDetails?.duration()
+            val isMaxProgress = totalDuration != null && newProgress >= totalDuration
+            val isPlanning = entry.basicMediaListEntry.status == MediaListStatus.PLANNING
+            val newStatus = when {
+                isMaxProgress -> MediaListStatus.COMPLETED
+                isPlanning -> MediaListStatus.CURRENT
+                else -> null
+            }
+            updateEntry(
+                mediaId = entry.mediaId,
+                progress = newProgress,
+                status = newStatus,
+                startDate = LocalDate.now().takeIf {
+                    isPlanning || !entry.basicMediaListEntry.progress.isGreaterThanZero()
+                },
+                endDate = LocalDate.now().takeIf { isMaxProgress },
+            )
         }
-        updateEntryProgress(
-            mediaId = entry.mediaId,
-            progress = newProgress,
-            status = newStatus,
-            startDate = LocalDate.now().takeIf {
-                isPlanning || !entry.basicMediaListEntry.progress.isGreaterThanZero()
-            },
-            endDate = LocalDate.now().takeIf { isMaxProgress },
-        )
     }
 
     override fun selectItem(value: CommonMediaListEntry?) {
@@ -226,12 +220,19 @@ class UserMediaListViewModel @AssistedInject constructor(
         mutableUiState.value.run {
             selectedItem?.let { selectedItem ->
                 if (selectedItem.basicMediaListEntry != newListEntry) {
-                    if (newListEntry != null
-                        && newListEntry.status == selectedItem.basicMediaListEntry.status
-                    ) {
-                        val index = entries.indexOf(selectedItem)
-                        if (index != -1) {
-                            entries[index] = selectedItem.copy(basicMediaListEntry = newListEntry)
+                    if (newListEntry != null) {
+                        entries.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }?.let { index ->
+                            val oldValue = entries[index]
+                            if (newListEntry.status != oldValue.basicMediaListEntry.status) {
+                                entries.removeAt(index)
+                                if (newListEntry.status == MediaListStatus.COMPLETED
+                                    && newListEntry.score.isNullOrZero()
+                                ) {
+                                    mutableUiState.update { it.copy(openSetScoreDialog = true) }
+                                }
+                            } else {
+                                entries[index] = oldValue.copy(basicMediaListEntry = newListEntry)
+                            }
                         }
                     } else {
                         entries.remove(selectedItem)
@@ -242,6 +243,23 @@ class UserMediaListViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    override fun setScore(score: Double?) {
+        viewModelScope.launch {
+            mutableUiState.value.selectedItem?.mediaId?.let { mediaId ->
+                updateEntry(
+                    mediaId = mediaId,
+                    score = score,
+                    isFromScoreDialog = true,
+                )
+            }
+            toggleScoreDialog(false)
+        }
+    }
+
+    override fun toggleScoreDialog(open: Boolean) {
+        mutableUiState.update { it.copy(openSetScoreDialog = open) }
     }
 
     override fun getRandomPlannedEntry(chunk: Int) {
@@ -283,7 +301,7 @@ class UserMediaListViewModel @AssistedInject constructor(
 
     init {
         // score format
-        uiState
+        mutableUiState
             .distinctUntilChangedBy { it.isMyList }
             .flatMapLatest {
                 if (it.isMyList) {
@@ -303,7 +321,7 @@ class UserMediaListViewModel @AssistedInject constructor(
             if (useGeneral) {
                 mutableUiState.update { it.copy(listStyle = generalStyle) }
             } else {
-                uiState
+                mutableUiState
                     .distinctUntilChangedBy { it.status }
                     .collectLatest { uiState ->
                         ListType(uiState.status ?: MediaListStatus.CURRENT, mediaType)
