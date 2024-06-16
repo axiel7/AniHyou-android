@@ -2,7 +2,6 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.MediaListApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -30,7 +29,7 @@ class MediaListRepository @Inject constructor(
         perChunk: Int?,
     ) = api
         .mediaListCollection(userId, mediaType, sort, fetchFromNetwork, chunk, perChunk)
-        .watch()
+        .toFlow()
         .asPagedResult(page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }) {
             it.MediaListCollection?.lists.orEmpty()
         }
