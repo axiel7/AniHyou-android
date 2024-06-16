@@ -42,10 +42,6 @@ enum class UserMediaListSort(
     REPEAT(
         asc = MediaListSort.REPEAT,
         desc = MediaListSort.REPEAT_DESC
-    ),
-    POPULARITY(
-        asc = MediaListSort.MEDIA_POPULARITY,
-        desc = MediaListSort.MEDIA_POPULARITY_DESC
     );
 
     @Composable
@@ -58,7 +54,6 @@ enum class UserMediaListSort(
         STARTED -> stringResource(R.string.start_date)
         FINISHED -> stringResource(R.string.end_date)
         REPEAT -> stringResource(R.string.repeat_count)
-        POPULARITY -> stringResource(R.string.popularity)
     }
 
     companion object {
