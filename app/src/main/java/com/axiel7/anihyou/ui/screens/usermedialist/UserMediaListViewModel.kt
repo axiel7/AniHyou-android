@@ -10,6 +10,9 @@ import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.data.model.media.duration
+import com.axiel7.anihyou.data.model.media.isDescending
+import com.axiel7.anihyou.data.model.media.isTitle
+import com.axiel7.anihyou.data.model.media.titleComparator
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
@@ -27,6 +30,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -41,6 +45,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -132,16 +137,6 @@ class UserMediaListViewModel @AssistedInject constructor(
                 listPreferencesRepository.setAnimeListSort(sort)
             } else if (mediaType == MediaType.MANGA) {
                 listPreferencesRepository.setMangaListSort(sort)
-            }
-            when (sort) {
-                MediaListSort.MEDIA_TITLE_ROMAJI,
-                MediaListSort.MEDIA_TITLE_ROMAJI_DESC,
-                MediaListSort.MEDIA_POPULARITY,
-                MediaListSort.MEDIA_POPULARITY_DESC -> "Experimental"
-
-                else -> null
-            }?.let { message ->
-                mutableUiState.update { it.copy(error = message) }
             }
         }
     }
@@ -366,13 +361,18 @@ class UserMediaListViewModel @AssistedInject constructor(
             }
             .flatMapLatest { uiState ->
                 val listUserId = uiState.userId ?: myUserId.first()
+                val sort = if (uiState.sort.isTitle()) {
+                    listOf(MediaListSort.MEDIA_ID)
+                } else {
+                    listOf(uiState.sort)
+                }
                 val loadByChunk = uiState.sort == MediaListSort.UPDATED_TIME_DESC
                 val chunk = uiState.page.takeIf { loadByChunk }
                 val perChunk = (100).takeIf { loadByChunk }
                 mediaListRepository.getMediaListCollection(
                     userId = listUserId,
                     mediaType = mediaType,
-                    sort = listOf(uiState.sort),
+                    sort = sort,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     chunk = chunk,
                     perChunk = perChunk
@@ -388,8 +388,15 @@ class UserMediaListViewModel @AssistedInject constructor(
                         val newEntries = mutableListOf<CommonMediaListEntry>()
                         result.list.forEach { list ->
                             list?.name?.let { name ->
-                                val entries = list.entries?.mapNotNull { it?.commonMediaListEntry }
+                                var entries = list.entries?.mapNotNull { it?.commonMediaListEntry }
                                     .orEmpty()
+                                if (uiState.sort.isTitle()) {
+                                    withContext(Dispatchers.IO) {
+                                        entries = entries.sortedWith(
+                                            titleComparator(desc = uiState.sort.isDescending())
+                                        )
+                                    }
+                                }
                                 uiState.lists[name] = uiState.lists[name].orEmpty() + entries
                                 if (uiState.selectedListName == null && list.isCustomList == false) {
                                     newEntries.addAll(entries)
