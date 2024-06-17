@@ -197,7 +197,7 @@ fun MainView(
         if (currentUserColor != null
             && navBackStackEntry?.destination?.hierarchy?.any {
                 it.hasRoute(UserDetails::class)
-            } == true
+            } == false
         ) {
             event?.restoreAppColor()
         }
