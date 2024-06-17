@@ -192,7 +192,7 @@ class UserMediaListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             mutableUiState.update { it.copy(selectedItem = entry) }
             val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
-            val totalDuration = entry.media?.basicMediaDetails?.duration()
+            val totalDuration = entry.media?.basicMediaDetails?.duration().takeIf { it != 0 }
             val isMaxProgress = totalDuration != null && newProgress >= totalDuration
             val isPlanning = entry.basicMediaListEntry.status == MediaListStatus.PLANNING
             val newStatus = when {
