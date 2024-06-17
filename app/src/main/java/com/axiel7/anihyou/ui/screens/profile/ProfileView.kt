@@ -122,7 +122,7 @@ private fun ProfileContent(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    if (uiState.isMyProfile == false) {
+                    if (!uiState.isMyProfile) {
                         BackIconButton(onClick = navActionManager::goBack)
                     }
                 },
