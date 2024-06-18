@@ -4,6 +4,24 @@
     <string name="anime">Anime</string>
     <string name="manga">Mangá</string>
     <string name="explore">Explorar</string>
+    <plurals name="num_years">
+        <item quantity="one">%d ano</item>
+        <item quantity="other">%d anos</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d mês</item>
+        <item quantity="other">%d meses</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d dia</item>
+        <item quantity="other">%d dias</item>
+    </plurals>
+    <string name="hour_abbreviation">%d h</string>
+    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Desconhecido</string>
     <string name="airing_soon">Em breve</string>
     <string name="mean_score">Nota</string>
@@ -45,6 +63,14 @@
     <string name="music">Música</string>
     <string name="novel">Novel</string>
     <string name="one_shot">One Shot</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d episódio</item>
+        <item quantity="other">%d episódios</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d capítulo</item>
+        <item quantity="other">%d capítulos</item>
+    </plurals>
     <string name="finished">Finalizado</string>
     <string name="releasing">Lançando</string>
     <string name="not_yet_released">Ainda não lançado</string>
@@ -55,6 +81,10 @@
     <string name="favorites">Favoritos</string>
     <string name="episode_in_time">Ep %d em %s</string>
     <string name="airing">Em Exibição</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d episódio atrasado</item>
+        <item quantity="other">%d episódios atrasados</item>
+    </plurals>
     <string name="information">Informações</string>
     <string name="duration">Duração</string>
     <string name="start_date">Data de início</string>
@@ -334,4 +364,10 @@
     <string name="show_less">Menos</string>
     <string name="show_more">Mais</string>
     <string name="continue_watching">Continuar assistindo</string>
+    <string name="hide_from_status_lists">Ocultar de listas de status</string>
+    <string name="black_theme_variant">Variação de tema preto</string>
+    <string name="random">Aleatório</string>
+    <string name="every_five_teen_minutes">Cada 15 minutos</string>
+    <string name="every_thirty_minutes">Cada 30 minutos</string>
+    <string name="every_hour">De hora em hora</string>
 </resources>
