@@ -111,7 +111,7 @@ private fun ProfileContent(
     }
 
     LaunchedEffect(profileColor) {
-        if (profileColor != null) {
+        if (profileColor != null && !uiState.isMyProfile) {
             event?.setColor(profileColor)
         }
     }
