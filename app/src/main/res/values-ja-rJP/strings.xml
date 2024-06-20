@@ -350,4 +350,5 @@
     <string name="every_five_teen_minutes">１５分毎</string>
     <string name="every_thirty_minutes">３０分毎</string>
     <string name="every_hour">１時間毎</string>
+    <string name="custom_color">カスタムカラー</string>
 </resources>
