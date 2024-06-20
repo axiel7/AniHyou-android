@@ -12,8 +12,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -44,6 +44,7 @@ import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.screens.home.HomeTab
+import com.axiel7.anihyou.ui.screens.settings.composables.CustomColorPreference
 import com.axiel7.anihyou.ui.screens.settings.composables.LanguagePreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ANILIST_ACCOUNT_SETTINGS_URL
@@ -146,13 +147,17 @@ private fun SettingsContent(
                 )
             }
 
-            if (uiState.isLoggedIn) {
-                ListPreference(
-                    title = stringResource(R.string.color),
-                    entriesValues = AppColorMode.entriesLocalized,
-                    preferenceValue = uiState.appColorMode,
-                    icon = R.drawable.colors_24,
-                    onValueChange = { event?.setAppColorMode(it) }
+            ListPreference(
+                title = stringResource(R.string.color),
+                entriesValues = AppColorMode.entriesLocalized,
+                preferenceValue = uiState.appColorMode,
+                icon = R.drawable.colors_24,
+                onValueChange = { event?.setAppColorMode(it) }
+            )
+            if (uiState.appColorMode == AppColorMode.CUSTOM) {
+                CustomColorPreference(
+                    color = uiState.appColor,
+                    onColorChanged = { event?.setCustomAppColor(it) }
                 )
             }
 

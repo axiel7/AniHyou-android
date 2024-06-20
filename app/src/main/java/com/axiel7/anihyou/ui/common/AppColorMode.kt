@@ -7,8 +7,8 @@ import com.axiel7.anihyou.data.model.base.Localizable
 
 enum class AppColorMode : Localizable {
     DEFAULT,
-    PROFILE;
-    //TODO: CUSTOM,
+    PROFILE,
+    CUSTOM;
 
     @Composable
     override fun localized() = stringResource(stringRes)
@@ -17,6 +17,7 @@ enum class AppColorMode : Localizable {
         get() = when (this) {
             DEFAULT -> R.string.default_setting
             PROFILE -> R.string.profile
+            CUSTOM -> R.string.custom_color
         }
 
     companion object {

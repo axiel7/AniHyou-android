@@ -71,7 +71,14 @@ class SettingsViewModel @Inject constructor(
                 AppColorMode.PROFILE -> {
                     profileColor.firstOrNull()?.let { setAppColor(it) }
                 }
+                AppColorMode.CUSTOM -> {}
             }
+        }
+    }
+
+    override fun setCustomAppColor(color: Color) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setAppColor(color)
         }
     }
 
@@ -247,6 +254,12 @@ class SettingsViewModel @Inject constructor(
         defaultPreferencesRepository.appColorMode
             .onEach { value ->
                 mutableUiState.update { it.copy(appColorMode = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.appColor
+            .onEach { value ->
+                mutableUiState.update { it.copy(appColor = value) }
             }
             .launchIn(viewModelScope)
 

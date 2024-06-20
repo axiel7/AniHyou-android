@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.settings
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.fragment.UserSettings
 import com.axiel7.anihyou.type.ScoreFormat
@@ -16,6 +17,7 @@ data class SettingsUiState(
     val theme: Theme? = null,
     val useBlackColors: Boolean = false,
     val appColorMode: AppColorMode? = null,
+    val appColor: Color? = null,
     val useGeneralListStyle: Boolean? = null,
     val generalListStyle: ListStyle? = null,
     val gridItemsPerRow: ItemsPerRow? = null,

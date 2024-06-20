@@ -384,4 +384,5 @@
     <string name="every_five_teen_minutes">Every 15 minutes</string>
     <string name="every_thirty_minutes">Every 30 minutes</string>
     <string name="every_hour">Every hour</string>
+    <string name="custom_color">Custom color</string>
 </resources>

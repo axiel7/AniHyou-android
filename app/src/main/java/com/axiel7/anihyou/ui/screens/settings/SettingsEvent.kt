@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.settings
 
+import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
@@ -19,6 +20,8 @@ interface SettingsEvent {
     fun setUseBlackColors(value: Boolean)
 
     fun setAppColorMode(value: AppColorMode)
+
+    fun setCustomAppColor(color: Color)
 
     fun setUseGeneralListStyle(value: Boolean)
 

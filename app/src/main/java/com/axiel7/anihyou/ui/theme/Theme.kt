@@ -99,7 +99,7 @@ fun AniHyouTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        appColorMode == AppColorMode.PROFILE -> {
+        appColorMode == AppColorMode.PROFILE || appColorMode == AppColorMode.CUSTOM -> {
             val scheme = dynamicColorScheme(
                 seedColor = appColor ?: seed,
                 isDark = darkTheme,
