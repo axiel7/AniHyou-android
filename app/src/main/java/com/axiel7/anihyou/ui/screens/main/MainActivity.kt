@@ -25,20 +25,16 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.axiel7.anihyou.common.firstBlocking
@@ -50,7 +46,6 @@ import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
-import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
@@ -90,7 +85,6 @@ class MainActivity : AppCompatActivity() {
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
                 initialValue = initialAppColorMode
             )
-            val currentUserColor by viewModel.currentUserColor.collectAsStateWithLifecycle(null)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
             DisposableEffect(isDark) {
@@ -112,7 +106,6 @@ class MainActivity : AppCompatActivity() {
                 blackColors = useBlackColors,
                 appColor = appColor,
                 appColorMode = appColorMode,
-                currentUserColor = currentUserColor,
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -122,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                         windowSizeClass = windowSizeClass,
                         isLoggedIn = isLoggedIn,
                         lastTabOpened = lastTabOpened,
-                        currentUserColor = currentUserColor,
                         event = viewModel,
                         homeTab = homeTab,
                         deepLink = deepLink,
@@ -180,7 +172,6 @@ fun MainView(
     windowSizeClass: WindowSizeClass,
     isLoggedIn: Boolean,
     lastTabOpened: Int,
-    currentUserColor: Color?,
     event: MainEvent?,
     homeTab: HomeTab,
     deepLink: DeepLink?,
@@ -192,16 +183,6 @@ fun MainView(
     }
     val navActionManager = NavActionManager.rememberNavActionManager(navController)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-
-    LaunchedEffect(navBackStackEntry) {
-        if (currentUserColor != null
-            && navBackStackEntry?.destination?.hierarchy?.any {
-                it.hasRoute(UserDetails::class)
-            } == false
-        ) {
-            event?.restoreAppColor()
-        }
-    }
 
     Scaffold(
         bottomBar = {
@@ -264,7 +245,6 @@ fun MainPreview() {
             ),
             isLoggedIn = false,
             lastTabOpened = 0,
-            currentUserColor = null,
             event = null,
             homeTab = HomeTab.DISCOVER,
             deepLink = null

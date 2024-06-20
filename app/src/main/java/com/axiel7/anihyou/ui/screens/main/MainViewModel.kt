@@ -42,14 +42,6 @@ class MainViewModel @Inject constructor(
 
     val appColorMode = defaultPreferencesRepository.appColorMode
 
-    val currentUserColor = defaultPreferencesRepository.currentUserColor
-
-    override fun restoreAppColor() {
-        viewModelScope.launch {
-            defaultPreferencesRepository.setCurrentUserColor(null)
-        }
-    }
-
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {
             defaultPreferencesRepository.setLastTab(index)
