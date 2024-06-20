@@ -362,4 +362,5 @@
     <string name="every_five_teen_minutes">Setiap 15 menit</string>
     <string name="every_thirty_minutes">Setiap 30 menit</string>
     <string name="every_hour">Setiap jam</string>
+    <string name="custom_color">Kostum warna</string>
 </resources>
