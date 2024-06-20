@@ -371,4 +371,5 @@
     <string name="every_five_teen_minutes">15 dakikada bir</string>
     <string name="every_thirty_minutes">30 dakikada bir</string>
     <string name="every_hour">Her saat</string>
+    <string name="custom_color">Özel renk</string>
 </resources>
