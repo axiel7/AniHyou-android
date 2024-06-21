@@ -352,7 +352,7 @@ class UserMediaListViewModel @AssistedInject constructor(
             .distinctUntilChanged()
             .onEach { sort ->
                 mutableUiState.update {
-                    it.copy(sort = sort, page = 1, hasNextPage = true)
+                    it.copy(sort = sort, page = 1, hasNextPage = true, isLoading = true)
                 }
             }
             .launchIn(viewModelScope)
@@ -424,15 +424,18 @@ class UserMediaListViewModel @AssistedInject constructor(
                             }
                         }
                         uiState.entries.addAll(newEntries)
+                        val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
-                            page = if (newEntries.isEmpty() && result.hasNextPage) uiState.page + 1
-                            else uiState.page,
+                            page = if (loadMore) uiState.page + 1 else uiState.page,
                             hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
-                            isLoading = false,
+                            isLoading = loadMore,
                         )
                     } else {
-                        result.toUiState(loadingWhen = uiState.page == 1)
+                        result.toUiState(
+                            loadingWhen = uiState.page == 1
+                                    || (uiState.entries.isEmpty() && uiState.hasNextPage)
+                        )
                     }
                 }
             }
