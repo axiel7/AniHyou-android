@@ -7,7 +7,6 @@ import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.PagedResult
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.ThreadRepository
-import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,12 +32,11 @@ class ThreadDetailsViewModel @Inject constructor(
     override val initialState = ThreadDetailsUiState()
 
     override fun toggleLikeThread() {
-        likeRepository.toggleLike(
-            likeableId = arguments.id,
-            type = LikeableType.THREAD
+        likeRepository.toggleThreadLike(
+            id = arguments.id
         ).onEach { result ->
             if (result is DataResult.Success && result.data != null) {
-                mutableUiState.update { it.copy(isLiked = result.data) }
+                mutableUiState.update { it.copy(isLiked = result.data.isLiked == true) }
             }
         }.launchIn(viewModelScope)
     }
@@ -56,9 +54,8 @@ class ThreadDetailsViewModel @Inject constructor(
     override suspend fun toggleLikeComment(id: Int): Boolean {
         var liked = false
         runBlocking {
-            likeRepository.toggleLike(
-                likeableId = id,
-                type = LikeableType.THREAD_COMMENT
+            likeRepository.toggleThreadCommentLike(
+                id = id
             ).onEach { result ->
                 if (result is DataResult.Success && result.data != null) {
                     //TODO: update child comment

@@ -12,7 +12,7 @@ fragment BasicThreadDetails on Thread {
     likeCount
     isLiked
     isSubscribed
-    replyCount
+    totalReplies: replyCount
     isLocked
     user {
         id

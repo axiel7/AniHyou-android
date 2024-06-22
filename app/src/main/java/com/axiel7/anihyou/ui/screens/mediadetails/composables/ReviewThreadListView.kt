@@ -75,7 +75,7 @@ fun ReviewThreadListView(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 TextIconHorizontal(
-                                    text = item.basicThreadDetails.replyCount?.format().orEmpty(),
+                                    text = item.basicThreadDetails.totalReplies?.format().orEmpty(),
                                     icon = R.drawable.chat_bubble_24,
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
                                     fontSize = 15.sp

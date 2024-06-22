@@ -143,7 +143,7 @@ fun ParentThreadViewPreview() {
         title = "[Spoilers] Oshi no Ko - Episode 8 Discussion",
         body = "Great episode as expected. Reality Dating arc near to end and Akane was full on fire dem full of confidence and new personality. That kissing scene was soo good. But for sec i feel bad for Arima. Also finally we have 3rd member of b-komachi group i love to see new b-komachi on stage very hyped for that.",
         viewCount = 102,
-        replyCount = 12,
+        totalReplies = 12,
         likeCount = 17,
         isLiked = false,
         isSubscribed = false,
@@ -156,7 +156,8 @@ fun ParentThreadViewPreview() {
             ),
             __typename = "User"
         ),
-        createdAt = 1293823000
+        createdAt = 1293823000,
+        __typename = ""
     )
     AniHyouTheme {
         Surface {
