@@ -1,6 +1,10 @@
 mutation UpdateTextActivity($id: Int, $text: String) {
     SaveTextActivity(id: $id, text: $text) {
-        id
-        createdAt
+        ... on TextActivity {
+            ...TextActivityFragment
+            replies {
+                ...ActivityReplyFragment
+            }
+        }
     }
 }

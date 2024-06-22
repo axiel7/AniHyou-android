@@ -1,24 +1,19 @@
 mutation ToggleLike($likeableId: Int, $type: LikeableType) {
     ToggleLikeV2(id: $likeableId, type: $type) {
         ... on ListActivity {
-            id
-            isLiked
+            ...ListActivityFragment
         }
         ... on TextActivity {
-            id
-            isLiked
+            ...TextActivityFragment
         }
         ... on MessageActivity {
-            id
-            isLiked
+            ...MessageActivityFragment
         }
         ... on ActivityReply {
-            id
-            isLiked
+            ...ActivityReplyFragment
         }
         ... on Thread {
-            id
-            isLiked
+            ...BasicThreadDetails
         }
         ... on ThreadComment {
             id

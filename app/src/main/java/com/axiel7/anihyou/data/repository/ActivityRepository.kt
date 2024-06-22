@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.repository
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
+import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.data.api.ActivityApi
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.data.model.asDataResult
@@ -45,6 +46,11 @@ class ActivityRepository @Inject constructor(
             it.Activity
         }
 
+    suspend fun updateActivityDetailsCache(
+        id: Int,
+        activity: ActivityDetailsQuery.Activity,
+    ) = api.updateActivityDetailsCache(id, activity)
+
     fun updateTextActivity(
         id: Int? = null,
         text: String
@@ -52,7 +58,7 @@ class ActivityRepository @Inject constructor(
         .updateTextActivityMutation(id, text)
         .toFlow()
         .asDataResult {
-            it.SaveTextActivity
+            it.SaveTextActivity?.onTextActivity
         }
 
     fun updateActivityReply(
@@ -63,6 +69,6 @@ class ActivityRepository @Inject constructor(
         .updateActivityReplyMutation(activityId, id, text)
         .toFlow()
         .asDataResult {
-            it.SaveActivityReply
+            it.SaveActivityReply?.activityReplyFragment
         }
 }

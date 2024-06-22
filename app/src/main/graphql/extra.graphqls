@@ -1,9 +1,19 @@
+extend schema
+@link(
+    url: "https://specs.apollo.dev/kotlin_labs/v0.3",
+    import: ["@typePolicy", "@fieldPolicy"]
+)
+
 extend type User @typePolicy(keyFields: "id")
 extend type Media @typePolicy(keyFields: "id")
 extend type Character @typePolicy(keyFields: "id")
 extend type Staff @typePolicy(keyFields: "id")
 extend type Studio @typePolicy(keyFields: "id")
 extend type MediaList @typePolicy(keyFields: "id mediaId")
+extend type TextActivity @typePolicy(keyFields: "id")
+extend type MessageActivity @typePolicy(keyFields: "id")
+extend type ListActivity @typePolicy(keyFields: "id")
+extend type ActivityReply @typePolicy(keyFields: "id")
 
 extend type Query @fieldPolicy(forField: "User", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Media", keyArgs: "id")

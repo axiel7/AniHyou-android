@@ -9,7 +9,6 @@ import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.UserRepository
-import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -99,10 +98,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun toggleLikeActivity(id: Int) {
-        likeRepository.toggleLike(
-            likeableId = id,
-            type = LikeableType.ACTIVITY
-        ).onEach { result ->
+        likeRepository.toggleListActivityLike(id).onEach { result ->
             if (result is DataResult.Success && result.data != null) {
                 mutableUiState.value.run {
                     val foundIndex = activities.indexOfFirst {
@@ -114,11 +110,11 @@ class ProfileViewModel @Inject constructor(
                         activities[foundIndex] = oldItem.copy(
                             onTextActivity = oldItem.onTextActivity?.copy(
                                 textActivityFragment = oldItem.onTextActivity.textActivityFragment
-                                    .updateLikeStatus(result.data)
+                                    .updateLikeStatus(result.data.isLiked == true)
                             ),
                             onListActivity = oldItem.onListActivity?.copy(
                                 listActivityFragment = oldItem.onListActivity.listActivityFragment
-                                    .updateLikeStatus(result.data)
+                                    .updateLikeStatus(result.data.isLiked == true)
                             )
                         )
                     }

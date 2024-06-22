@@ -7,7 +7,7 @@ import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.data.model.activity.updateLikeStatus
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
-import com.axiel7.anihyou.type.LikeableType
+import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,17 +48,23 @@ class ActivityFeedViewModel @Inject constructor(
     }
 
     override fun toggleLikeActivity(id: Int) {
+        val foundItem = mutableUiState.value.activities.find {
+            it.onListActivity?.listActivityFragment?.id == id
+                    || it.onTextActivity?.textActivityFragment?.id == id
+        } ?: return
+        val type = when {
+            foundItem.onTextActivity != null -> ActivityType.TEXT
+            foundItem.onMessageActivity != null -> ActivityType.MESSAGE
+            else -> ActivityType.MEDIA_LIST
+        }
         viewModelScope.launch {
-            likeRepository.toggleLike(
-                likeableId = id,
-                type = LikeableType.ACTIVITY
+            likeRepository.toggleActivityLike(
+                id = id,
+                type = type
             ).collect { result ->
-                if (result is DataResult.Success && result.data != null) {
+                if (result is DataResult.Success) {
                     mutableUiState.value.run {
-                        val foundIndex = activities.indexOfFirst {
-                            it.onListActivity?.listActivityFragment?.id == id
-                                    || it.onTextActivity?.textActivityFragment?.id == id
-                        }
+                        val foundIndex = activities.indexOf(foundItem)
                         if (foundIndex != -1) {
                             val oldItem = activities[foundIndex]
                             activities[foundIndex] = oldItem.copy(
@@ -68,6 +74,10 @@ class ActivityFeedViewModel @Inject constructor(
                                 ),
                                 onListActivity = oldItem.onListActivity?.copy(
                                     listActivityFragment = oldItem.onListActivity.listActivityFragment
+                                        .updateLikeStatus(result.data)
+                                ),
+                                onMessageActivity = oldItem.onMessageActivity?.copy(
+                                    messageActivityFragment = oldItem.onMessageActivity.messageActivityFragment
                                         .updateLikeStatus(result.data)
                                 )
                             )

@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.api
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
@@ -39,6 +40,22 @@ class ActivityApi @Inject constructor(
                 activityId = Optional.present(activityId)
             )
         )
+
+    suspend fun updateActivityDetailsCache(
+        id: Int,
+        activity: ActivityDetailsQuery.Activity,
+    ) {
+        val result = client.apolloStore
+            .writeOperation(
+                operation = ActivityDetailsQuery(
+                    activityId = Optional.present(id)
+                ),
+                operationData = ActivityDetailsQuery.Data(
+                    Activity = activity
+                )
+            )
+        client.apolloStore.publish(result)
+    }
 
     fun updateTextActivityMutation(
         id: Int?,

@@ -13,6 +13,9 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
                     }
                 }
             }
+            ... on MessageActivity {
+                ...MessageActivityFragment
+            }
         }
         pageInfo {
             ...CommonPage

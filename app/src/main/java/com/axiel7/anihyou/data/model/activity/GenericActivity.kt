@@ -3,10 +3,12 @@ package com.axiel7.anihyou.data.model.activity
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
+import com.axiel7.anihyou.type.ActivityType
 
 @Immutable
 data class GenericActivity(
     val id: Int,
+    val type: ActivityType,
     val createdAt: Int,
     val text: String?,
     val isLiked: Boolean?,
@@ -25,6 +27,7 @@ data class GenericActivity(
 
 fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     id = textActivityFragment.id,
+    type = ActivityType.TEXT,
     createdAt = textActivityFragment.createdAt,
     text = textActivityFragment.text,
     isLiked = textActivityFragment.isLiked,
@@ -38,6 +41,7 @@ fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
 
 fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     id = listActivityFragment.id,
+    type = ActivityType.MEDIA_LIST,
     createdAt = listActivityFragment.createdAt,
     text = listActivityFragment.text(),
     isLiked = listActivityFragment.isLiked,
@@ -51,6 +55,7 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
 
 fun ActivityDetailsQuery.OnMessageActivity.toGenericActivity() = GenericActivity(
     id = messageActivityFragment.id,
+    type = ActivityType.MESSAGE,
     createdAt = messageActivityFragment.createdAt,
     text = messageActivityFragment.message,
     isLiked = messageActivityFragment.isLiked,

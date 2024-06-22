@@ -3,11 +3,12 @@ package com.axiel7.anihyou.ui.screens.activitydetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
-import com.axiel7.anihyou.type.LikeableType
+import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,31 +25,78 @@ import javax.inject.Inject
 @HiltViewModel
 class ActivityDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    activityRepository: ActivityRepository,
+    private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>(), ActivityDetailsEvent {
 
     val arguments = savedStateHandle.toRoute<ActivityDetails>()
 
+    private var detailsQueryData: ActivityDetailsQuery.Activity? = null
+
     override val initialState = ActivityDetailsUiState()
 
     override fun toggleLikeActivity() {
+        val details = mutableUiState.value.details ?: return
+        val queryData = detailsQueryData ?: return
         viewModelScope.launch {
-            likeRepository.toggleLike(
-                likeableId = arguments.id,
-                type = LikeableType.ACTIVITY
-            ).collect { result ->
-                if (result is DataResult.Success && result.data != null) {
-                    mutableUiState.update {
-                        it.copy(
-                            details = it.details?.updateLikeStatus(result.data)
-                        )
+            when (details.type) {
+                ActivityType.TEXT -> {
+                    likeRepository.toggleTextActivityLike(details.id).collect { result ->
+                        if (result is DataResult.Success && result.data != null) {
+                            activityRepository.updateActivityDetailsCache(
+                                id = details.id,
+                                activity = queryData.copy(
+                                    onTextActivity = queryData.onTextActivity?.copy(
+                                        textActivityFragment = result.data
+                                    )
+                                )
+                            )
+                        } else if (result !is DataResult.Loading) {
+                            mutableUiState.update {
+                                it.copy(error = "Like failed")
+                            }
+                        }
                     }
-                } else if (result !is DataResult.Loading) {
-                    mutableUiState.update {
-                        it.copy(
-                            error = "Like failed",
-                        )
+                }
+
+                ActivityType.MESSAGE -> {
+                    likeRepository.toggleMessageActivityLike(details.id).collect { result ->
+                        if (result is DataResult.Success && result.data != null) {
+                            activityRepository.updateActivityDetailsCache(
+                                id = details.id,
+                                activity = queryData.copy(
+                                    onMessageActivity = queryData.onMessageActivity?.copy(
+                                        messageActivityFragment = result.data
+                                    )
+                                )
+                            )
+                        } else if (result !is DataResult.Loading) {
+                            mutableUiState.update {
+                                it.copy(error = "Like failed")
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    likeRepository.toggleListActivityLike(details.id).collect { result ->
+                        if (result is DataResult.Success && result.data != null) {
+                            activityRepository.updateActivityDetailsCache(
+                                id = details.id,
+                                activity = queryData.copy(
+                                    onListActivity = queryData.onListActivity?.copy(
+                                        listActivityFragment = result.data.copy(
+                                            // for some reason the API returns null media
+                                            media = queryData.onListActivity.listActivityFragment.media
+                                        )
+                                    )
+                                )
+                            )
+                        } else if (result !is DataResult.Loading) {
+                            mutableUiState.update {
+                                it.copy(error = "Like failed")
+                            }
+                        }
                     }
                 }
             }
@@ -57,27 +105,17 @@ class ActivityDetailsViewModel @Inject constructor(
 
     override fun toggleLikeReply(id: Int) {
         viewModelScope.launch {
-            likeRepository.toggleLike(
-                likeableId = id,
-                type = LikeableType.ACTIVITY_REPLY
-            ).collect { result ->
+            likeRepository.toggleActivityReplyLike(id).collect { result ->
                 if (result is DataResult.Success && result.data != null) {
                     mutableUiState.value.run {
                         val foundIndex = replies.indexOfFirst { it.id == id }
                         if (foundIndex != -1) {
-                            val oldItem = replies[foundIndex]
-                            replies[foundIndex] = oldItem.copy(
-                                isLiked = result.data,
-                                likeCount = if (result.data) oldItem.likeCount + 1
-                                else oldItem.likeCount - 1
-                            )
+                            replies[foundIndex] = result.data
                         }
                     }
                 } else if (result !is DataResult.Loading) {
                     mutableUiState.update {
-                        it.copy(
-                            error = "Like failed",
-                        )
+                        it.copy(error = "Like failed")
                     }
                 }
             }
@@ -99,6 +137,7 @@ class ActivityDetailsViewModel @Inject constructor(
             }
             .onEach { result ->
                 if (result is DataResult.Success) {
+                    detailsQueryData = result.data
                     mutableUiState.updateAndGet {
                         it.copy(
                             isLoading = false,
@@ -108,7 +147,7 @@ class ActivityDetailsViewModel @Inject constructor(
                                 ?: result.data?.onMessageActivity?.toGenericActivity()
                         )
                     }.also {
-                        it.replies.addAll(it.details?.replies.orEmpty())
+                        if (it.replies.isEmpty()) it.replies.addAll(it.details?.replies.orEmpty())
                     }
                 } else {
                     mutableUiState.update { result.toUiState() }
