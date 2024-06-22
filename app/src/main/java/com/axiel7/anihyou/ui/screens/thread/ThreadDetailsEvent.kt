@@ -6,4 +6,5 @@ interface ThreadDetailsEvent : PagedEvent {
     fun toggleLikeThread()
     fun subscribeToThread(subscribe: Boolean)
     suspend fun toggleLikeComment(id: Int): Boolean
+    fun refresh()
 }

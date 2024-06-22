@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.ThreadApi
 import com.axiel7.anihyou.data.model.asDataResult
@@ -29,10 +31,12 @@ class ThreadRepository @Inject constructor(
 
     fun getThreadCommentsPage(
         threadId: Int,
+        fetchFromNetwork: Boolean = false,
         page: Int,
         perPage: Int = 25,
     ) = api
         .childCommentsQuery(threadId, page, perPage)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .watch()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.threadComments?.filterNotNull().orEmpty().map { it.toChildComment() }

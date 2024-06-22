@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.thread
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -83,71 +85,77 @@ private fun ThreadDetailsContent(
         },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(
-                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                    top = padding.calculateTopPadding(),
-                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
-                )
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            contentPadding = PaddingValues(
-                bottom = padding.calculateBottomPadding()
-            )
+        PullToRefreshBox(
+            isRefreshing = uiState.fetchFromNetwork,
+            onRefresh = { event?.refresh() },
+            modifier = Modifier.fillMaxSize(),
         ) {
-            item(
-                contentType = uiState.details
-            ) {
-                if (uiState.details != null) {
-                    ParentThreadView(
-                        thread = uiState.details.basicThreadDetails,
-                        isLiked = uiState.isLiked,
-                        onClickLike = { event?.toggleLikeThread() },
-                        onClickReply = {
-                            navActionManager.toPublishThreadComment(
-                                threadId = uiState.details.basicThreadDetails.id,
-                                commentId = null,
-                                text = null
-                            )
-                        },
-                        navigateToUserDetails = navActionManager::toUserDetails,
-                        navigateToFullscreenImage = navActionManager::toFullscreenImage,
+            LazyColumn(
+                modifier = Modifier
+                    .padding(
+                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                        top = padding.calculateTopPadding(),
+                        end = padding.calculateEndPadding(LocalLayoutDirection.current)
                     )
-                } else {
-                    ParentThreadViewPlaceholder()
-                }
-                HorizontalDivider()
-            }
-            items(
-                items = uiState.comments,
-                contentType = { it }
-            ) { item ->
-                ThreadCommentView(
-                    id = item.id,
-                    body = item.comment.orEmpty(),
-                    username = item.user?.name.orEmpty(),
-                    avatarUrl = item.user?.avatar?.medium,
-                    likeCount = item.likeCount,
-                    isLiked = item.isLiked == true,
-                    isLocked = item.isLocked,
-                    createdAt = item.createdAt,
-                    childComments = item.childComments,
-                    toggleLike = { event?.toggleLikeComment(item.id) ?: false },
-                    navigateToUserDetails = {
-                        navActionManager.toUserDetails(item.user!!.id)
-                    },
-                    navigateToPublishReply = navActionManager::toPublishCommentReply,
-                    navigateToFullscreenImage = navActionManager::toFullscreenImage
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                contentPadding = PaddingValues(
+                    bottom = padding.calculateBottomPadding()
                 )
-                HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
-            }
-            if (uiState.isLoading) {
-                items(10) {
-                    ThreadCommentViewPlaceholder()
+            ) {
+                item(
+                    contentType = uiState.details
+                ) {
+                    if (uiState.details != null) {
+                        ParentThreadView(
+                            thread = uiState.details.basicThreadDetails,
+                            isLiked = uiState.isLiked,
+                            onClickLike = { event?.toggleLikeThread() },
+                            onClickReply = {
+                                navActionManager.toPublishThreadComment(
+                                    threadId = uiState.details.basicThreadDetails.id,
+                                    commentId = null,
+                                    text = null
+                                )
+                            },
+                            navigateToUserDetails = navActionManager::toUserDetails,
+                            navigateToFullscreenImage = navActionManager::toFullscreenImage,
+                        )
+                    } else {
+                        ParentThreadViewPlaceholder()
+                    }
                     HorizontalDivider()
                 }
-            }
-        }//: LazyColumn
+                items(
+                    items = uiState.comments,
+                    contentType = { it }
+                ) { item ->
+                    ThreadCommentView(
+                        id = item.id,
+                        body = item.comment.orEmpty(),
+                        username = item.user?.name.orEmpty(),
+                        avatarUrl = item.user?.avatar?.medium,
+                        likeCount = item.likeCount,
+                        isLiked = item.isLiked == true,
+                        isLocked = item.isLocked,
+                        createdAt = item.createdAt,
+                        childComments = item.childComments,
+                        toggleLike = { event?.toggleLikeComment(item.id) ?: false },
+                        navigateToUserDetails = {
+                            navActionManager.toUserDetails(item.user!!.id)
+                        },
+                        navigateToPublishReply = navActionManager::toPublishCommentReply,
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
+                }
+                if (uiState.isLoading) {
+                    items(10) {
+                        ThreadCommentViewPlaceholder()
+                        HorizontalDivider()
+                    }
+                }
+            }//: LazyColumn
+        }
     }//: Scaffold
 }
 

@@ -10,7 +10,7 @@ import com.axiel7.anihyou.data.repository.ThreadRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -68,9 +68,12 @@ class ThreadDetailsViewModel @Inject constructor(
         return liked
     }
 
+    override fun refresh() {
+        mutableUiState.update { it.copy(fetchFromNetwork = true) }
+    }
+
     init {
         // details
-        // TODO: also get first comments page with this call
         threadRepository.getThreadDetails(arguments.id)
             .onEach { result ->
                 mutableUiState.update {
@@ -90,10 +93,14 @@ class ThreadDetailsViewModel @Inject constructor(
         // comments
         mutableUiState
             .filter { it.hasNextPage }
-            .distinctUntilChangedBy { it.page }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && !new.fetchFromNetwork
+            }
             .flatMapLatest { uiState ->
                 threadRepository.getThreadCommentsPage(
                     threadId = arguments.id,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page
                 )
             }
@@ -103,7 +110,8 @@ class ThreadDetailsViewModel @Inject constructor(
                         it.comments.addAll(result.list)
                         it.copy(
                             isLoading = false,
-                            hasNextPage = result.hasNextPage
+                            hasNextPage = result.hasNextPage,
+                            fetchFromNetwork = false,
                         )
                     } else {
                         result.toUiState()
