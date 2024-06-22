@@ -366,4 +366,7 @@
     <string name="hide_from_status_lists">Nascondi dalle liste di stato</string>
     <string name="black_theme_variant">Variante tema nero</string>
     <string name="random">Casuale</string>
+    <string name="every_five_teen_minutes">Ogni 15 minuti</string>
+    <string name="every_thirty_minutes">Ogni 30 minuti</string>
+    <string name="every_hour">Ogni ora</string>
 </resources>

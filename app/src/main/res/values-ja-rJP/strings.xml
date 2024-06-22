@@ -347,4 +347,8 @@
     <string name="show_more">すべてを表示</string>
     <string name="continue_watching">視聴を続ける</string>
     <string name="hide_from_status_lists">ステータスリストから隠す</string>
+    <string name="every_five_teen_minutes">１５分毎</string>
+    <string name="every_thirty_minutes">３０分毎</string>
+    <string name="every_hour">１時間毎</string>
+    <string name="custom_color">カスタムカラー</string>
 </resources>

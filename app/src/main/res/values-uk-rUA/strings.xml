@@ -380,4 +380,8 @@
     <string name="hide_from_status_lists">Приховати з каталогів статусу</string>
     <string name="black_theme_variant">Варіант темної теми</string>
     <string name="random">Випадкове</string>
+    <string name="every_five_teen_minutes">Кожні 15 хвилин</string>
+    <string name="every_thirty_minutes">Кожні 30 хвилин</string>
+    <string name="every_hour">Щогодини</string>
+    <string name="custom_color">Користувацький колір</string>
 </resources>

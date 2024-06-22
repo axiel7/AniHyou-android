@@ -380,4 +380,5 @@
     <string name="hide_from_status_lists">Ukryj z list statusów</string>
     <string name="black_theme_variant">Czarny motyw</string>
     <string name="random">Losowe</string>
+    <string name="custom_color">Własny kolor</string>
 </resources>

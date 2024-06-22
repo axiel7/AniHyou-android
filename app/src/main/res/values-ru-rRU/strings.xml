@@ -382,4 +382,5 @@
     <string name="hide_from_status_lists">Скрыть из списка статусов</string>
     <string name="black_theme_variant">Черный вариант темы</string>
     <string name="random">Случайное</string>
+    <string name="custom_color">Пользовательский цвет</string>
 </resources>
