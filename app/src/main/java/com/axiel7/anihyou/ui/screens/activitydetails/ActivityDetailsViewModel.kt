@@ -10,6 +10,9 @@ import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.type.LikeableType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -17,6 +20,7 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ActivityDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -80,13 +84,25 @@ class ActivityDetailsViewModel @Inject constructor(
         }
     }
 
+    override fun refresh() {
+        mutableUiState.update { it.copy(fetchFromNetwork = true) }
+    }
+
     init {
-        activityRepository.getActivityDetails(activityId = arguments.id)
+        mutableUiState
+            .distinctUntilChanged { _, new -> !new.fetchFromNetwork }
+            .flatMapLatest { uiState ->
+                activityRepository.getActivityDetails(
+                    activityId = arguments.id,
+                    fetchFromNetwork = uiState.fetchFromNetwork
+                )
+            }
             .onEach { result ->
                 if (result is DataResult.Success) {
                     mutableUiState.updateAndGet {
                         it.copy(
                             isLoading = false,
+                            fetchFromNetwork = false,
                             details = result.data?.onTextActivity?.toGenericActivity()
                                 ?: result.data?.onListActivity?.toGenericActivity()
                                 ?: result.data?.onMessageActivity?.toGenericActivity()

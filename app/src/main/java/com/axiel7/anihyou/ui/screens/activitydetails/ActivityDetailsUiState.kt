@@ -11,6 +11,7 @@ import com.axiel7.anihyou.ui.common.state.UiState
 data class ActivityDetailsUiState(
     val details: GenericActivity? = null,
     val replies: SnapshotStateList<ActivityReplyFragment> = mutableStateListOf(),
+    val fetchFromNetwork: Boolean = false,
     override val isLoading: Boolean = true,
     override val error: String? = null,
 ) : UiState() {

@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.data.repository
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import com.axiel7.anihyou.data.api.ActivityApi
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
@@ -32,8 +34,12 @@ class ActivityRepository @Inject constructor(
             it.Page?.activities?.filterNotNull().orEmpty()
         }
 
-    fun getActivityDetails(activityId: Int) = api
+    fun getActivityDetails(
+        activityId: Int,
+        fetchFromNetwork: Boolean = false
+    ) = api
         .activityDetailsQuery(activityId)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .watch()
         .asDataResult {
             it.Activity

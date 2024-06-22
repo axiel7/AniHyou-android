@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.activitydetails
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -95,60 +97,66 @@ private fun ActivityDetailsContent(
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
-            contentPadding = PaddingValues(
-                start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                top = padding.calculateTopPadding(),
-                end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                bottom = padding.calculateBottomPadding() + 88.dp
-            )
+        PullToRefreshBox(
+            isRefreshing = uiState.fetchFromNetwork,
+            onRefresh = { event?.refresh() },
+            modifier = Modifier.fillMaxSize(),
         ) {
-            item {
-                if (uiState.details != null) {
+            LazyColumn(
+                modifier = Modifier
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                state = listState,
+                contentPadding = PaddingValues(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current),
+                    bottom = padding.calculateBottomPadding() + 88.dp
+                )
+            ) {
+                item {
+                    if (uiState.details != null) {
+                        ActivityTextView(
+                            text = uiState.details.text.orEmpty(),
+                            username = uiState.details.username,
+                            avatarUrl = uiState.details.avatarUrl,
+                            createdAt = uiState.details.createdAt,
+                            replyCount = uiState.details.replyCount,
+                            likeCount = uiState.details.likeCount,
+                            isLiked = uiState.details.isLiked,
+                            onClickUser = {
+                                uiState.details.userId?.let(navActionManager::toUserDetails)
+                            },
+                            onClickLike = {
+                                event?.toggleLikeActivity()
+                            },
+                            navigateToFullscreenImage = navActionManager::toFullscreenImage
+                        )
+                    } else {
+                        ActivityTextViewPlaceholder()
+                    }
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+                }
+                items(
+                    items = uiState.replies,
+                    contentType = { it }
+                ) { item ->
                     ActivityTextView(
-                        text = uiState.details.text.orEmpty(),
-                        username = uiState.details.username,
-                        avatarUrl = uiState.details.avatarUrl,
-                        createdAt = uiState.details.createdAt,
-                        replyCount = uiState.details.replyCount,
-                        likeCount = uiState.details.likeCount,
-                        isLiked = uiState.details.isLiked,
+                        text = item.text.orEmpty(),
+                        username = item.user?.name,
+                        avatarUrl = item.user?.avatar?.medium,
+                        createdAt = item.createdAt,
+                        replyCount = null,
+                        likeCount = item.likeCount,
+                        isLiked = item.isLiked,
                         onClickUser = {
-                            uiState.details.userId?.let(navActionManager::toUserDetails)
+                            item.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            event?.toggleLikeActivity()
+                            event?.toggleLikeReply(item.id)
                         },
                         navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
-                } else {
-                    ActivityTextViewPlaceholder()
                 }
-                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
-            }
-            items(
-                items = uiState.replies,
-                contentType = { it }
-            ) { item ->
-                ActivityTextView(
-                    text = item.text.orEmpty(),
-                    username = item.user?.name,
-                    avatarUrl = item.user?.avatar?.medium,
-                    createdAt = item.createdAt,
-                    replyCount = null,
-                    likeCount = item.likeCount,
-                    isLiked = item.isLiked,
-                    onClickUser = {
-                        item.userId?.let(navActionManager::toUserDetails)
-                    },
-                    onClickLike = {
-                        event?.toggleLikeReply(item.id)
-                    },
-                    navigateToFullscreenImage = navActionManager::toFullscreenImage
-                )
             }
         }
     }
