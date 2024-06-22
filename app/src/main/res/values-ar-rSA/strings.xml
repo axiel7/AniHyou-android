@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home">الصفحة الرئيسية</string>
+    <string name="home">الرئيسية</string>
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
     <string name="explore">تصفح</string>
@@ -399,4 +399,5 @@
     <string name="every_five_teen_minutes">كل 15 دقيقة</string>
     <string name="every_thirty_minutes">كل 30 دقيقة</string>
     <string name="every_hour">كل ساعة</string>
+    <string name="custom_color">ألوان مُخصصة</string>
 </resources>
