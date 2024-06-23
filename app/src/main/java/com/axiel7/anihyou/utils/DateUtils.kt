@@ -165,10 +165,10 @@ object DateUtils {
             else -> {
                 val hours = this / 3600
                 if (hours >= 1 && maxUnit >= ChronoUnit.HOURS) {
-                    return buildString(R.string.hour_abbreviation, hours)
+                    return buildPluralString(R.plurals.hour_abbreviation, hours)
                 } else if (maxUnit >= ChronoUnit.MINUTES) {
                     val minutes = (this % 3600) / 60
-                    return buildString(R.string.minutes_abbreviation, minutes)
+                    return buildPluralString(R.plurals.minutes_abbreviation, minutes)
                 }
             }
         }
@@ -179,13 +179,21 @@ object DateUtils {
 
     @Composable
     fun Long.minutesToLegibleText(): String {
-        val hours = this / 60
+        val hours = (this / 60).toInt()
         return if (hours >= 1) {
-            val minutes = this % 60
-            "${stringResource(R.string.hour_abbreviation, hours)} " +
-                    stringResource(R.string.minutes_abbreviation, minutes)
+            val minutes = (this % 60).toInt()
+            pluralStringResource(
+                id = R.plurals.hour_abbreviation,
+                count = hours,
+                hours
+            ) + " " +
+                    pluralStringResource(
+                        id = R.plurals.minutes_abbreviation,
+                        count = minutes,
+                        minutes
+                    )
         } else {
-            stringResource(R.string.minutes_abbreviation, this)
+            pluralStringResource(id = R.plurals.minutes_abbreviation, this.toInt(), this.toInt())
         }
     }
 

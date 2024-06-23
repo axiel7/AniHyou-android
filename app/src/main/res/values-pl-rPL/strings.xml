@@ -28,8 +28,6 @@
         <item quantity="many">%d dni</item>
         <item quantity="other">%d dni</item>
     </plurals>
-    <string name="hour_abbreviation">%d godz</string>
-    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Nieznane</string>
     <string name="airing_soon">Emisja wkrótce</string>
     <string name="mean_score">Ocena</string>
