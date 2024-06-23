@@ -36,8 +36,6 @@
         <item quantity="many">%dعدة أيام</item>
         <item quantity="other">%d أيام كثيرة</item>
     </plurals>
-    <string name="hour_abbreviation">%d ساعة</string>
-    <string name="minutes_abbreviation">%d دقيقة</string>
     <string name="unknown">غير معروف</string>
     <string name="airing_soon">يبث قريبًا</string>
     <string name="mean_score">الدرجة</string>
