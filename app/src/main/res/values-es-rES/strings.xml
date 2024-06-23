@@ -20,8 +20,6 @@
         <item quantity="one">%d día</item>
         <item quantity="other">%d días</item>
     </plurals>
-    <string name="hour_abbreviation">%d h</string>
-    <string name="minutes_abbreviation">%d min</string>
     <string name="unknown">Desconocido</string>
     <string name="airing_soon">En emisión</string>
     <string name="mean_score">Puntuación</string>
