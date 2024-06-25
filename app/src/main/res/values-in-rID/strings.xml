@@ -361,4 +361,10 @@
     <string name="every_thirty_minutes">Setiap 30 menit</string>
     <string name="every_hour">Setiap jam</string>
     <string name="custom_color">Kostum warna</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="other">%d j</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="other">%d mnt</item>
+    </plurals>
 </resources>
