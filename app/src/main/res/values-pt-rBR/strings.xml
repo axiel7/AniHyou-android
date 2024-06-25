@@ -369,4 +369,12 @@
     <string name="every_thirty_minutes">Cada 30 minutos</string>
     <string name="every_hour">De hora em hora</string>
     <string name="custom_color">Cor customizada</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d h</item>
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>
