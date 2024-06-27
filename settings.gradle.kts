@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AniHyou"
 include(":app")
+include(":baselineprofile")

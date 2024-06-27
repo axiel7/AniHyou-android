@@ -6,6 +6,7 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-beta.7"
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("androidx.baselineprofile")
 }
 
 android {
@@ -103,6 +104,9 @@ android {
     dependenciesInfo {
         includeInApk = false
     }
+    baselineProfile {
+        dexLayoutOptimization = true
+    }
 }
 
 dependencies {
@@ -168,6 +172,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    "baselineProfile"(project(":baselineprofile"))
 }
 
 apollo {
