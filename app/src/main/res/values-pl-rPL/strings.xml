@@ -378,5 +378,8 @@
     <string name="hide_from_status_lists">Ukryj z list statusów</string>
     <string name="black_theme_variant">Czarny motyw</string>
     <string name="random">Losowe</string>
+    <string name="every_five_teen_minutes">Co 15 minut</string>
+    <string name="every_thirty_minutes">Co 30 minut</string>
+    <string name="every_hour">Co godzinę</string>
     <string name="custom_color">Własny kolor</string>
 </resources>

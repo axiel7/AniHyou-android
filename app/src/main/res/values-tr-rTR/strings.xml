@@ -370,4 +370,12 @@
     <string name="every_thirty_minutes">30 dakikada bir</string>
     <string name="every_hour">Her saat</string>
     <string name="custom_color">Özel renk</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d saat</item>
+        <item quantity="other">%d saat</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d dk</item>
+        <item quantity="other">%d dk</item>
+    </plurals>
 </resources>

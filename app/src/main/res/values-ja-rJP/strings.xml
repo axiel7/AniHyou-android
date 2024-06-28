@@ -349,4 +349,10 @@
     <string name="every_thirty_minutes">３０分毎</string>
     <string name="every_hour">１時間毎</string>
     <string name="custom_color">カスタムカラー</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="other">%d分</item>
+    </plurals>
 </resources>
