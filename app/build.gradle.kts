@@ -17,7 +17,7 @@ android {
         applicationId = "com.axiel7.anihyou"
         minSdk = 23
         targetSdk = 34
-        versionCode = 72
+        versionCode = 75
         versionName = "1.3.3"
         setProperty("archivesBaseName", "anihyou-$versionName")
 

@@ -1,0 +1,7 @@
+- Fixed sorting by title!
+- Initial support for custom app color!
+- Ask for score after completing
+- Improved black theme
+- Added pull to refresh to activity and thread details
+- Improved app startup time
+- Fix unable to remove score
