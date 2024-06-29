@@ -383,6 +383,7 @@
     <string name="every_thirty_minutes">Every 30 minutes</string>
     <string name="every_hour">Every hour</string>
     <string name="custom_color">Custom color</string>
+    <string name="mark_all_as_read">Mark all as read</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

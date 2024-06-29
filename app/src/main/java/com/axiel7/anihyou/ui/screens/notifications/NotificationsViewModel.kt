@@ -36,6 +36,18 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    override fun markAllAsRead() {
+        if (arguments.unreadCount > 0) {
+            mutableUiState.value.run {
+                val updatedItems = notifications
+                    .take(arguments.unreadCount)
+                    .map { it.copy(isUnread = false) }
+                notifications.removeRange(0, arguments.unreadCount + 1)
+                notifications.addAll(0, updatedItems)
+            }
+        }
+    }
+
     init {
         mutableUiState
             .filter { it.hasNextPage }
