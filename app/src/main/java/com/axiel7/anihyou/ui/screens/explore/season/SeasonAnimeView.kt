@@ -285,6 +285,9 @@ private fun SeasonalList(
                     }
                 },
                 subtitle2 = {
+                    if (item.meanScore != null) {
+                        SmallScoreIndicator(score = item.meanScore)
+                    }
                     if (!item.genres.isNullOrEmpty()) {
                         Text(
                             text = item.genres.take(3)
@@ -294,9 +297,12 @@ private fun SeasonalList(
                         )
                     }
                 },
-                badgeContent = {
-                    if (item.meanScore != null) {
-                        Text(text = "${item.meanScore}%")
+                badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                    {
+                        Icon(
+                            painter = painterResource(status.icon()),
+                            contentDescription = status.localized()
+                        )
                     }
                 },
                 onClick = { onClickItem(item) },
