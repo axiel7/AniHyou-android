@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.ui.common.TabRowItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T : Any> TabRowWithPager(
     tabs: Array<TabRowItem<T>>,

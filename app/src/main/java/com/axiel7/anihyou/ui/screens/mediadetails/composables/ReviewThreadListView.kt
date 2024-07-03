@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,7 +36,6 @@ import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.NumberUtils.format
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReviewThreadListView(
     mediaThreads: List<MediaThreadsQuery.Thread>,
