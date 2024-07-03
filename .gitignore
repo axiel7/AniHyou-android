@@ -10,3 +10,4 @@
 .cxx
 local.properties
 /fastlane/report.xml
+.kotlin
