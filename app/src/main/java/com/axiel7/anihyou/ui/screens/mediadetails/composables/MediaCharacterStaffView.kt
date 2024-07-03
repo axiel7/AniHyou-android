@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -41,6 +44,9 @@ fun MediaCharacterStaffView(
     navigateToStaffDetails: (Int) -> Unit,
     showVoiceActorsSheet: (MediaCharacter) -> Unit,
 ) {
+    val staffListState = rememberLazyGridState()
+    val charactersListState = rememberLazyGridState()
+
     LaunchedEffect(uiState.staff) {
         if (uiState.staff == null) fetchData()
     }
@@ -58,7 +64,12 @@ fun MediaCharacterStaffView(
                     .height(GRID_HEIGHT.dp)
             ) {
                 LazyHorizontalGrid(
-                    rows = GridCells.Fixed(2)
+                    rows = GridCells.Fixed(2),
+                    state = staffListState,
+                    flingBehavior = rememberSnapFlingBehavior(
+                        lazyGridState = staffListState,
+                        snapPosition = SnapPosition.Start
+                    )
                 ) {
                     if (isLoadingStaff) {
                         items(6) {
@@ -92,7 +103,12 @@ fun MediaCharacterStaffView(
                     .height(GRID_HEIGHT.dp)
             ) {
                 LazyHorizontalGrid(
-                    rows = GridCells.Fixed(2)
+                    rows = GridCells.Fixed(2),
+                    state = charactersListState,
+                    flingBehavior = rememberSnapFlingBehavior(
+                        lazyGridState = charactersListState,
+                        snapPosition = SnapPosition.Start
+                    )
                 ) {
                     if (isLoadingCharacters) {
                         items(6) {
