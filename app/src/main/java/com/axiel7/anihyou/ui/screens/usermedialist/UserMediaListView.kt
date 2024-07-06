@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.ui.screens.usermedialist
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,6 +39,7 @@ import com.axiel7.anihyou.ui.screens.usermedialist.composables.GridUserMediaList
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.RandomEntryButton
 import com.axiel7.anihyou.ui.screens.usermedialist.composables.StandardUserMediaListItem
+import com.axiel7.anihyou.utils.ContextUtils.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,8 +64,8 @@ fun UserMediaListView(
 
     LaunchedEffect(uiState.error) {
         if (uiState.error != null) {
-            Toast.makeText(context, uiState.error, Toast.LENGTH_LONG).show()
             event?.onErrorDisplayed()
+            context.showToast(uiState.error)
         }
     }
 

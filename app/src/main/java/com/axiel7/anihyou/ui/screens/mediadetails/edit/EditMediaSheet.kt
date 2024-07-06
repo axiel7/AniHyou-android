@@ -161,8 +161,8 @@ private fun EditMediaSheetContent(
 
     LaunchedEffect(uiState.error) {
         if (uiState.error != null) {
-            context.showToast(uiState.error)
             event?.onErrorDisplayed()
+            context.showToast(uiState.error)
         }
     }
 
