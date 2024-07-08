@@ -72,28 +72,29 @@ fun CharacterInfoView(
                 showShadow = true
             )
 
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = uiState.character?.name?.userPreferred ?: "Loading",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .defaultPlaceholder(visible = uiState.isLoading)
-                        .combinedClickable(
-                            onLongClick = {
-                                uiState.character?.name?.userPreferred?.let {
-                                    context.copyToClipBoard(it)
-                                }
-                            },
-                            onClick = {}
-                        ),
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+            SelectionContainer {
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = uiState.character?.name?.userPreferred ?: "Loading",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .combinedClickable(
+                                onLongClick = {
+                                    uiState.character?.name?.userPreferred?.let {
+                                        context.copyToClipBoard(it)
+                                    }
+                                },
+                                onClick = {}
+                            ),
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
 
-                SelectionContainer {
+
                     if (!uiState.character?.name?.native.isNullOrBlank() || uiState.isLoading) {
                         Text(
                             text = uiState.character?.name?.native ?: "Loading...",
@@ -121,8 +122,8 @@ fun CharacterInfoView(
                                 .clickable { showSpoiler = !showSpoiler }
                         )
                     }
-                }
-            }//: Column
+                }//: Column
+            }
         }//: Row
 
         InfoItemView(
