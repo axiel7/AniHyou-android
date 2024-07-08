@@ -15,9 +15,11 @@ import com.axiel7.anihyou.fragment.MediaCharacter
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,22 +118,32 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
     override fun fetchStats() {
-        mediaRepository.getMediaStats(mediaId = arguments.id)
-            .onEach { result ->
-                if (result is DataResult.Success) {
-                    mutableUiState.update { uiState ->
-                        uiState.copy(
-                            isSuccessStats = true,
-                            mediaStatusDistribution = result.data?.stats?.statusDistribution
-                                ?.mapNotNull { it?.asStat() }.orEmpty(),
-                            mediaScoreDistribution = result.data?.stats?.scoreDistribution
-                                ?.mapNotNull { it?.asStat() }.orEmpty(),
-                            mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
-                        )
+        viewModelScope.launch {
+            mediaRepository.getMediaStats(mediaId = arguments.id)
+                .collectLatest { result ->
+                    if (result is DataResult.Success) {
+                        mutableUiState.update { uiState ->
+                            uiState.copy(
+                                isSuccessStats = true,
+                                mediaStatusDistribution = result.data?.stats?.statusDistribution
+                                    ?.mapNotNull { it?.asStat() }.orEmpty(),
+                                mediaScoreDistribution = result.data?.stats?.scoreDistribution
+                                    ?.mapNotNull { it?.asStat() }.orEmpty(),
+                                mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
+                            )
+                        }
                     }
                 }
-            }
-            .launchIn(viewModelScope)
+
+            mediaRepository.getMediaFollowing(mediaId = arguments.id, page = 1)
+                .collectLatest { result ->
+                    if (result is PagedResult.Success) {
+                        mutableUiState.update { uiState ->
+                            uiState.copy(following = result.list)
+                        }
+                    }
+                }
+        }
     }
 
     override fun fetchThreads() {

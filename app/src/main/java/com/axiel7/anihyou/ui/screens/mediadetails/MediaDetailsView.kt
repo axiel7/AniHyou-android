@@ -95,7 +95,6 @@ import com.axiel7.anihyou.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.utils.StringUtils.orUnknown
 import com.axiel7.anihyou.utils.StringUtils.toAnnotatedString
-import com.axiel7.anihyou.utils.UNKNOWN_CHAR
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -500,7 +499,8 @@ fun MediaInfoTabs(
             MediaDetailsType.STATS ->
                 MediaStatsView(
                     uiState = uiState,
-                    fetchData = { event?.fetchStats() }
+                    fetchData = { event?.fetchStats() },
+                    navigateToUserDetails = navActionManager::toUserDetails
                 )
 
             MediaDetailsType.REVIEWS -> {

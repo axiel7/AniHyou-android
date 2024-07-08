@@ -146,6 +146,17 @@ class MediaRepository @Inject constructor(
         .toFlow()
         .asDataResult { it.Media }
 
+    fun getMediaFollowing(
+        mediaId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaFollowingQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.mediaList?.filterNotNull().orEmpty()
+        }
+
     fun getMediaReviewsPage(
         mediaId: Int,
         page: Int,

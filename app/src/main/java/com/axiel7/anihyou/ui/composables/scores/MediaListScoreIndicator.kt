@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.composables.scores
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +29,7 @@ import com.axiel7.anihyou.data.model.smileyPrimaryColor
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.utils.NumberUtils.formatPositiveValueOrUnknown
 import com.axiel7.anihyou.utils.UNKNOWN_CHAR
+import java.util.Locale
 
 @Composable
 fun BadgeScoreIndicator(
@@ -104,9 +106,11 @@ fun BadgeScoreIndicator(
 fun MinimalScoreIndicator(
     score: Double?,
     scoreFormat: ScoreFormat,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (scoreFormat) {
@@ -119,6 +123,7 @@ fun MinimalScoreIndicator(
                 )
                 Text(
                     text = if (score != null && score != 0.0) String.format(
+                        Locale.getDefault(),
                         "%.0f",
                         score
                     ) else UNKNOWN_CHAR,

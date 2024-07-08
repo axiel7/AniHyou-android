@@ -10,6 +10,7 @@ import com.axiel7.anihyou.GenreTagCollectionQuery
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.MediaDetailsQuery
+import com.axiel7.anihyou.MediaFollowingQuery
 import com.axiel7.anihyou.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaSortedQuery
@@ -196,6 +197,19 @@ class MediaApi @Inject constructor(
         .query(
             MediaStatsQuery(
                 mediaId = Optional.present(mediaId)
+            )
+        )
+
+    fun mediaFollowingQuery(
+        mediaId: Int,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            MediaFollowingQuery(
+                id = Optional.present(mediaId),
+                page = Optional.present(page),
+                perPage = Optional.present(perPage)
             )
         )
 

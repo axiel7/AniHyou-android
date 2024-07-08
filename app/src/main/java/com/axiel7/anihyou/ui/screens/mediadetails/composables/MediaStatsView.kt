@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +24,9 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.color
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaRankType
+import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.stats.HorizontalStatsBar
@@ -36,6 +39,7 @@ import com.axiel7.anihyou.utils.NumberUtils.format
 fun MediaStatsView(
     uiState: MediaDetailsUiState,
     fetchData: () -> Unit,
+    navigateToUserDetails: (Int) -> Unit,
 ) {
     val isLoading = !uiState.isSuccessStats
     LaunchedEffect(uiState.isSuccessStats) {
@@ -114,6 +118,24 @@ fun MediaStatsView(
             modifier = Modifier.padding(8.dp),
             isLoading = isLoading
         )
+
+        // Following
+        if (uiState.following.isNotEmpty()) {
+            InfoTitle(text = stringResource(R.string.following))
+            uiState.following.forEach { item ->
+                FollowingUserItem(
+                    mediaType = uiState.details?.basicMediaDetails?.type ?: MediaType.UNKNOWN__,
+                    avatarUrl = item.user?.avatar?.medium,
+                    username = item.user?.name.orEmpty(),
+                    status = item.status ?: MediaListStatus.UNKNOWN__,
+                    score = item.score,
+                    scoreFormat = item.user?.mediaListOptions?.scoreFormat,
+                    modifier = Modifier.clickable {
+                        item.user?.id?.let(navigateToUserDetails)
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -124,7 +146,8 @@ fun MediaStatsViewPreview() {
         Surface {
             MediaStatsView(
                 uiState = MediaDetailsUiState(),
-                fetchData = {}
+                fetchData = {},
+                navigateToUserDetails = {}
             )
         }
     }

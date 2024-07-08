@@ -2,6 +2,7 @@ package com.axiel7.anihyou.ui.screens.mediadetails
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.MediaDetailsQuery
+import com.axiel7.anihyou.MediaFollowingQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
@@ -31,6 +32,7 @@ data class MediaDetailsUiState(
     val mediaStatusDistribution: List<Stat<StatusDistribution>> = emptyList(),
     val mediaScoreDistribution: List<Stat<ScoreDistribution>> = emptyList(),
     val mediaRankings: List<MediaStatsQuery.Ranking> = emptyList(),
+    val following: List<MediaFollowingQuery.MediaList> = emptyList(),
 
     val isLoadingThreads: Boolean = true,
     val threads: List<MediaThreadsQuery.Thread> = emptyList(),
