@@ -147,7 +147,7 @@ private fun ProfileContent(
                 actions = {
                     ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
                 },
-                expandedHeight = 250.dp,
+                expandedHeight = 264.dp,
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     scrolledContainerColor = Color.Transparent,
