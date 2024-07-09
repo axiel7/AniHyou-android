@@ -2,7 +2,9 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.data.api.MediaListApi
+import com.axiel7.anihyou.data.model.DataResult
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
@@ -12,7 +14,11 @@ import com.axiel7.anihyou.fragment.FuzzyDate
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
+import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
+import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
+import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,6 +39,45 @@ class MediaListRepository @Inject constructor(
         .asPagedResult(page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }) {
             it.MediaListCollection?.lists.orEmpty()
         }
+
+    fun getUserMediaList(
+        userId: Int,
+        mediaType: MediaType,
+        status: MediaListStatus?,
+        sort: List<MediaListSort>,
+        fetchFromNetwork: Boolean = false,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .userMediaList(userId, mediaType, status, sort, fetchFromNetwork, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+        }
+
+    fun incrementOneProgress(
+        entry: BasicMediaListEntry,
+        total: Int?
+    ): Flow<DataResult<UpdateEntryMutation.SaveMediaListEntry?>> {
+        val newProgress = (entry.progress ?: 0) + 1
+        val totalDuration = total.takeIf { it != 0 }
+        val isMaxProgress = totalDuration != null && newProgress >= totalDuration
+        val isPlanning = entry.status == MediaListStatus.PLANNING
+        val newStatus = when {
+            isMaxProgress -> MediaListStatus.COMPLETED
+            isPlanning -> MediaListStatus.CURRENT
+            else -> null
+        }
+        return updateEntry(
+            mediaId = entry.mediaId,
+            progress = newProgress,
+            status = newStatus,
+            startedAt = LocalDate.now().takeIf {
+                isPlanning || !entry.progress.isGreaterThanZero()
+            }?.toFuzzyDate(),
+            completedAt = LocalDate.now().takeIf { isMaxProgress }?.toFuzzyDate(),
+        )
+    }
 
     fun updateEntry(
         oldEntry: BasicMediaListEntry? = null,

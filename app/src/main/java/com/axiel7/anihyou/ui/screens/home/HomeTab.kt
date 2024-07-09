@@ -8,7 +8,8 @@ import com.axiel7.anihyou.data.model.base.Localizable
 
 enum class HomeTab : Localizable {
     DISCOVER,
-    ACTIVITY_FEED;
+    ACTIVITY_FEED,
+    CURRENT;
 
     @Composable
     override fun localized() = stringResource(stringRes)
@@ -18,6 +19,7 @@ enum class HomeTab : Localizable {
         get() = when (this) {
             DISCOVER -> R.string.discover
             ACTIVITY_FEED -> R.string.activity
+            CURRENT -> R.string.current
         }
 
     companion object {

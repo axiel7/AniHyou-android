@@ -11,6 +11,7 @@ import com.axiel7.anihyou.MediaListCustomListsQuery
 import com.axiel7.anihyou.MediaListIdsQuery
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.UserListCollectionQuery
+import com.axiel7.anihyou.UserMediaListQuery
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.BasicMediaListEntryImpl
 import com.axiel7.anihyou.type.FuzzyDateInput
@@ -39,6 +40,27 @@ class MediaListApi @Inject constructor(
                 sort = Optional.present(sort),
                 chunk = Optional.presentIfNotNull(chunk),
                 perChunk = Optional.presentIfNotNull(perChunk)
+            )
+        )
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+
+    fun userMediaList(
+        userId: Int,
+        mediaType: MediaType,
+        status: MediaListStatus?,
+        sort: List<MediaListSort>,
+        fetchFromNetwork: Boolean,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            UserMediaListQuery(
+                userId = Optional.present(userId),
+                type = Optional.present(mediaType),
+                status = Optional.presentIfNotNull(status),
+                sort = Optional.present(sort),
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)

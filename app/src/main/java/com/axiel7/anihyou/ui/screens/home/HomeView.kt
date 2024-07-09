@@ -33,6 +33,7 @@ import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.IconButtonWithBadge
 import com.axiel7.anihyou.ui.screens.home.activity.ActivityFeedView
+import com.axiel7.anihyou.ui.screens.home.current.CurrentView
 import com.axiel7.anihyou.ui.screens.home.discover.DiscoverView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.utils.NumberUtils.format
@@ -118,6 +119,17 @@ fun HomeView(
                         ActivityFeedView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             navActionManager = navActionManager,
+                        )
+                    } else {
+                        LoginView()
+                    }
+                }
+
+                HomeTab.CURRENT -> {
+                    if (isLoggedIn) {
+                        CurrentView(
+                            navActionManager = navActionManager,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         )
                     } else {
                         LoginView()

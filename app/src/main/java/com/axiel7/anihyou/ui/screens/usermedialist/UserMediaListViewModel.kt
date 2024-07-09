@@ -25,7 +25,6 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
-import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.utils.NumberUtils.isNullOrZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -191,24 +190,17 @@ class UserMediaListViewModel @AssistedInject constructor(
     override fun onClickPlusOne(entry: CommonMediaListEntry) {
         viewModelScope.launch {
             mutableUiState.update { it.copy(selectedItem = entry) }
-            val newProgress = (entry.basicMediaListEntry.progress ?: 0) + 1
-            val totalDuration = entry.media?.basicMediaDetails?.duration().takeIf { it != 0 }
-            val isMaxProgress = totalDuration != null && newProgress >= totalDuration
-            val isPlanning = entry.basicMediaListEntry.status == MediaListStatus.PLANNING
-            val newStatus = when {
-                isMaxProgress -> MediaListStatus.COMPLETED
-                isPlanning -> MediaListStatus.CURRENT
-                else -> null
+            mediaListRepository.incrementOneProgress(
+                entry = entry.basicMediaListEntry,
+                total = entry.media?.basicMediaDetails?.duration()
+            ).collectLatest { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success && result.data != null) {
+                        onUpdateListEntry(result.data.basicMediaListEntry)
+                    }
+                    result.toUiState()
+                }
             }
-            updateEntry(
-                mediaId = entry.mediaId,
-                progress = newProgress,
-                status = newStatus,
-                startDate = LocalDate.now().takeIf {
-                    isPlanning || !entry.basicMediaListEntry.progress.isGreaterThanZero()
-                },
-                endDate = LocalDate.now().takeIf { isMaxProgress },
-            )
         }
     }
 
