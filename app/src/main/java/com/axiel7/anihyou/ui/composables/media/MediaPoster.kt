@@ -19,7 +19,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 const val MEDIA_POSTER_TINY_HEIGHT = 80
 const val MEDIA_POSTER_TINY_WIDTH = 80
 
-const val MEDIA_POSTER_COMPACT_HEIGHT = 110
+const val MEDIA_POSTER_COMPACT_HEIGHT = 115
 const val MEDIA_POSTER_COMPACT_WIDTH = 80
 
 const val MEDIA_POSTER_SMALL_HEIGHT = 140
