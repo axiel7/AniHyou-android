@@ -151,7 +151,7 @@ class CurrentViewModel @Inject constructor(
                         is PagedResult.Success -> {
                             val airingList = result.list
                                 .filter { it.media?.status == MediaStatus.RELEASING }
-                                .sortedBy { it.media?.nextAiringEpisode?.timeUntilAiring }
+                                .sortedWith(compareBy(nullsLast()) { it.media?.nextAiringEpisode?.timeUntilAiring })
                             val animeList = result.list
                                 .filter { it.media?.status != MediaStatus.RELEASING }
                             uiState.airingList.clear()
