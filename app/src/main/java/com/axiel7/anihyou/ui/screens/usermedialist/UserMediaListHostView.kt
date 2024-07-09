@@ -151,10 +151,10 @@ private fun UserMediaListHostContent(
         )
     }
 
-    if (showEditSheet && uiState.isMyList && uiState.selectedItem != null) {
+    if (showEditSheet && uiState.isMyList && uiState.selectedItem?.media != null) {
         EditMediaSheet(
-            mediaDetails = uiState.selectedItem!!.media!!.basicMediaDetails,
-            listEntry = uiState.selectedItem!!.basicMediaListEntry,
+            mediaDetails = uiState.selectedItem.media.basicMediaDetails,
+            listEntry = uiState.selectedItem.basicMediaListEntry,
             bottomPadding = bottomBarPadding,
             scope = scope,
             onEntryUpdated = {

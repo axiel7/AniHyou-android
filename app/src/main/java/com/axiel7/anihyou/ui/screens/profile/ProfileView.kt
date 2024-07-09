@@ -180,7 +180,7 @@ private fun ProfileContent(
                             aboutHtml = uiState.userInfo.about,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             isLoading = uiState.isLoading,
-                            navigateToUserMediaList = if (uiState.isMyProfile == false) {
+                            navigateToUserMediaList = if (!uiState.isMyProfile) {
                                 { mediaType ->
                                     navActionManager.toUserMediaList(
                                         mediaType,
