@@ -87,7 +87,7 @@ class CurrentViewModel @Inject constructor(
                                     if (newListEntry.status == MediaListStatus.COMPLETED
                                         && newListEntry.score.isNullOrZero()
                                     ) {
-                                        //TODO: set score dialog
+                                        toggleSetScoreDialog(true)
                                     }
                                 } else {
                                     list[index] = oldValue.copy(basicMediaListEntry = newListEntry)
@@ -103,6 +103,23 @@ class CurrentViewModel @Inject constructor(
 
     override fun selectItem(item: CommonMediaListEntry, type: CurrentUiState.Companion.ListType) {
         mutableUiState.update { it.copy(selectedItem = item, selectedType = type) }
+    }
+
+    override fun toggleSetScoreDialog(open: Boolean) {
+        mutableUiState.update { it.copy(openSetScoreDialog = open) }
+    }
+
+    override fun setScore(score: Double?) {
+        viewModelScope.launch {
+            mutableUiState.value.selectedItem?.let { item ->
+                mediaListRepository.updateEntry(
+                    mediaId = item.mediaId,
+                    score = score,
+                ).collectLatest {
+                    if (it is DataResult.Success) toggleSetScoreDialog(false)
+                }
+            }
+        }
     }
 
     init {

@@ -49,6 +49,7 @@ import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListT
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItemPlaceholder
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
+import com.axiel7.anihyou.ui.screens.usermedialist.composables.SetScoreDialog
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 @Composable
@@ -90,6 +91,14 @@ private fun CurrentContent(
                 event?.onUpdateListEntry(it, uiState.selectedType)
             },
             onDismissed = { showEditSheet = false }
+        )
+    }
+
+    if (uiState.openSetScoreDialog) {
+        SetScoreDialog(
+            onDismiss = { event?.toggleSetScoreDialog(false) },
+            onConfirm = { event?.setScore(it) },
+            scoreFormat = uiState.scoreFormat,
         )
     }
 

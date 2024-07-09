@@ -19,6 +19,7 @@ data class CurrentUiState(
     val mangaList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val selectedItem: CommonMediaListEntry? = null,
     val selectedType: ListType? = null,
+    val openSetScoreDialog: Boolean = false,
     val fetchFromNetwork: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = true

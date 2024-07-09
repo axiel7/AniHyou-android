@@ -14,4 +14,8 @@ interface CurrentEvent {
     )
 
     fun selectItem(item: CommonMediaListEntry, type: CurrentUiState.Companion.ListType)
+
+    fun toggleSetScoreDialog(open: Boolean)
+
+    fun setScore(score: Double?)
 }
