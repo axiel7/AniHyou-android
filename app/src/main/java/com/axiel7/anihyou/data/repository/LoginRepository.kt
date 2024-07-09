@@ -2,9 +2,9 @@ package com.axiel7.anihyou.data.repository
 
 import android.net.Uri
 import androidx.work.WorkManager
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.cache.normalized.FetchPolicy
+import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ViewerOptionsQuery
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
 import javax.inject.Inject

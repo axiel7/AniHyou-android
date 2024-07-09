@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.di
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo3.cache.normalized.normalizedCache
-import com.apollographql.apollo3.network.okHttpClient
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
+import com.apollographql.apollo.cache.normalized.normalizedCache
+import com.apollographql.apollo.network.okHttpClient
 import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.utils.ANILIST_GRAPHQL_URL
 import dagger.Module

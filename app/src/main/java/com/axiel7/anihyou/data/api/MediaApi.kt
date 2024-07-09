@@ -1,8 +1,8 @@
 package com.axiel7.anihyou.data.api
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.normalized.apolloStore
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.cache.normalized.apolloStore
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.AiringWidgetQuery
@@ -164,7 +164,7 @@ class MediaApi @Inject constructor(
             )
         )
 
-    fun updateMediaDetailsCache(data: MediaDetailsQuery.Data) {
+    suspend fun updateMediaDetailsCache(data: MediaDetailsQuery.Data) {
         data.Media?.id?.let { mediaId ->
             try {
                 client.apolloStore

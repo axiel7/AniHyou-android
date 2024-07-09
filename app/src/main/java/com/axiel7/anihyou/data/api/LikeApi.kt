@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.data.api
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
 import com.axiel7.anihyou.ToggleLikeMutation
 import com.axiel7.anihyou.type.LikeableType
 import javax.inject.Inject

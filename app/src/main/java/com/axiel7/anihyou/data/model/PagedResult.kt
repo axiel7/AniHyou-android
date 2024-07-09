@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.data.model
 
 import android.util.Log
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Operation
-import com.apollographql.apollo3.exception.ApolloHttpException
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.Operation
+import com.apollographql.apollo.exception.ApolloHttpException
 import com.axiel7.anihyou.fragment.CommonPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

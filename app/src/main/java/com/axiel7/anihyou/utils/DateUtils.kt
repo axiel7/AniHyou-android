@@ -4,7 +4,7 @@ import android.text.format.DateFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.api.Optional
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.fragment.FuzzyDate

@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.refetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
+import com.apollographql.apollo.cache.normalized.FetchPolicy
+import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.apollo.cache.normalized.refetchPolicy
+import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.data.api.UserApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult

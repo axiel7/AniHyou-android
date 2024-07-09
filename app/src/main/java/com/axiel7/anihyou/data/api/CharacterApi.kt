@@ -1,8 +1,8 @@
 package com.axiel7.anihyou.data.api
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.normalized.apolloStore
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.cache.normalized.apolloStore
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.SearchCharacterQuery

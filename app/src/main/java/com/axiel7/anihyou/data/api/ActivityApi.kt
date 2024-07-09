@@ -1,10 +1,10 @@
 package com.axiel7.anihyou.data.api
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.apolloStore
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.cache.normalized.FetchPolicy
+import com.apollographql.apollo.cache.normalized.apolloStore
+import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
 import com.axiel7.anihyou.UpdateActivityReplyMutation

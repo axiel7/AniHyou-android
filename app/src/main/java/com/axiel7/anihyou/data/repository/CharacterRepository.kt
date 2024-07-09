@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.data.repository
 
-import com.apollographql.apollo3.cache.normalized.watch
+import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.CharacterDetailsQuery
 import com.axiel7.anihyou.data.api.CharacterApi
 import com.axiel7.anihyou.data.model.asDataResult
