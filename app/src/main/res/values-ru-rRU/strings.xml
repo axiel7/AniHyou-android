@@ -380,5 +380,21 @@
     <string name="hide_from_status_lists">Скрыть из списка статусов</string>
     <string name="black_theme_variant">Черный вариант темы</string>
     <string name="random">Случайное</string>
+    <string name="every_five_teen_minutes">Каждые 15 минут</string>
+    <string name="every_thirty_minutes">Каждые 30 минут</string>
+    <string name="every_hour">Каждый час</string>
     <string name="custom_color">Пользовательский цвет</string>
+    <string name="mark_all_as_read" comment="mark all notifications as read">Отметить всё как прочитанное</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d ч.</item>
+        <item quantity="few">%d ч.</item>
+        <item quantity="many">%d ч.</item>
+        <item quantity="other">%d ч.</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d мин.</item>
+        <item quantity="few">%d мин.</item>
+        <item quantity="many">%d мин.</item>
+        <item quantity="other">%d мин.</item>
+    </plurals>
 </resources>

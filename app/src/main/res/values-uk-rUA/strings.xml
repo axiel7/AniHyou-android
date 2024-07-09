@@ -382,4 +382,17 @@
     <string name="every_thirty_minutes">Кожні 30 хвилин</string>
     <string name="every_hour">Щогодини</string>
     <string name="custom_color">Користувацький колір</string>
+    <string name="mark_all_as_read" comment="mark all notifications as read">Позначити все, як прочитане</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d год</item>
+        <item quantity="few">%d год</item>
+        <item quantity="many">%d год</item>
+        <item quantity="other">%d год</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d хв</item>
+        <item quantity="few">%d хв</item>
+        <item quantity="many">%d хв</item>
+        <item quantity="other">%d хв</item>
+    </plurals>
 </resources>
