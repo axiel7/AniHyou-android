@@ -80,7 +80,7 @@ fun SeasonAnimeContent(
         }
         if (seasonAnime.isEmpty()) {
             item {
-                Text(text = "No anime :(")
+                Text(text = stringResource(R.string.no_information))
             }
         }
     }//:LazyRow

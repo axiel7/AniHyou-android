@@ -21,6 +21,8 @@ data class DiscoverUiState(
     val trendingAnime: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
     val nextSeasonAnime: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
     val trendingManga: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
+    val newlyAnime: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
+    val newlyManga: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
     val nowAnimeSeason: AnimeSeason,
     val nextAnimeSeason: AnimeSeason,
     val airingOnMyList: Boolean? = null,
@@ -31,6 +33,8 @@ data class DiscoverUiState(
     val isLoadingTrendingAnime: Boolean = true,
     val isLoadingNextSeason: Boolean = true,
     val isLoadingTrendingManga: Boolean = true,
+    val isLoadingNewlyAnime: Boolean = true,
+    val isLoadingNewlyManga: Boolean = true,
     override val error: String? = null,
     override val isLoading: Boolean = false,
 ) : UiState() {

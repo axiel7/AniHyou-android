@@ -15,15 +15,18 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.R
+import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.screens.home.discover.content.AiringContent
+import com.axiel7.anihyou.ui.screens.home.discover.content.DiscoverMediaContent
 import com.axiel7.anihyou.ui.screens.home.discover.content.SeasonAnimeContent
-import com.axiel7.anihyou.ui.screens.home.discover.content.TrendingMediaContent
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
@@ -36,6 +39,8 @@ enum class DiscoverInfo {
     TRENDING_ANIME,
     NEXT_SEASON,
     TRENDING_MANGA,
+    NEWLY_ANIME,
+    NEWLY_MANGA,
 }
 
 @Composable
@@ -138,9 +143,9 @@ private fun DiscoverContent(
                     LaunchedEffect(MediaType.ANIME) {
                         event?.fetchTrendingAnime()
                     }
-                    TrendingMediaContent(
-                        mediaType = MediaType.ANIME,
-                        trendingMedia = uiState.trendingAnime,
+                    DiscoverMediaContent(
+                        title = stringResource(R.string.trending_now),
+                        media = uiState.trendingAnime,
                         isLoading = uiState.isLoadingTrendingAnime,
                         onLongClickItem = {
                             event?.selectItem(
@@ -149,7 +154,9 @@ private fun DiscoverContent(
                             )
                             showEditSheetAction()
                         },
-                        navigateToExplore = navActionManager::toExplore,
+                        onClickHeader = {
+                            navActionManager.toExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
+                        },
                         navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }
@@ -179,10 +186,10 @@ private fun DiscoverContent(
                     LaunchedEffect(MediaType.MANGA) {
                         event?.fetchTrendingManga()
                     }
-                    TrendingMediaContent(
-                        mediaType = MediaType.MANGA,
-                        trendingMedia = uiState.trendingManga,
-                        isLoading = uiState.isLoadingTrendingManga,
+                    DiscoverMediaContent(
+                        title = stringResource(R.string.trending_manga),
+                        media = uiState.trendingManga,
+                        isLoading = uiState.isLoadingTrendingAnime,
                         onLongClickItem = {
                             event?.selectItem(
                                 details = it.basicMediaDetails,
@@ -190,7 +197,53 @@ private fun DiscoverContent(
                             )
                             showEditSheetAction()
                         },
-                        navigateToExplore = navActionManager::toExplore,
+                        onClickHeader = {
+                            navActionManager.toExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
+                        },
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
+                    )
+                }
+
+                DiscoverInfo.NEWLY_ANIME -> {
+                    LaunchedEffect(MediaType.ANIME) {
+                        event?.fetchNewlyAnime()
+                    }
+                    DiscoverMediaContent(
+                        title = stringResource(R.string.newly_anime),
+                        media = uiState.newlyAnime,
+                        isLoading = uiState.isLoadingNewlyAnime,
+                        onLongClickItem = {
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
+                        },
+                        onClickHeader = {
+                            navActionManager.toExplore(MediaType.ANIME, MediaSort.ID_DESC)
+                        },
+                        navigateToMediaDetails = navActionManager::toMediaDetails,
+                    )
+                }
+
+                DiscoverInfo.NEWLY_MANGA -> {
+                    LaunchedEffect(MediaType.MANGA) {
+                        event?.fetchNewlyManga()
+                    }
+                    DiscoverMediaContent(
+                        title = stringResource(R.string.newly_manga),
+                        media = uiState.newlyManga,
+                        isLoading = uiState.isLoadingNewlyManga,
+                        onLongClickItem = {
+                            event?.selectItem(
+                                details = it.basicMediaDetails,
+                                listEntry = it.mediaListEntry?.basicMediaListEntry
+                            )
+                            showEditSheetAction()
+                        },
+                        onClickHeader = {
+                            navActionManager.toExplore(MediaType.MANGA, MediaSort.ID_DESC)
+                        },
                         navigateToMediaDetails = navActionManager::toMediaDetails,
                     )
                 }

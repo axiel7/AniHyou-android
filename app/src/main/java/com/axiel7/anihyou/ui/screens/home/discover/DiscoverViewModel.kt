@@ -161,6 +161,46 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
+    override fun fetchNewlyAnime() {
+        if (mutableUiState.value.newlyAnime.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.ID_DESC),
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.newlyAnime.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingNewlyAnime = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun fetchNewlyManga() {
+        if (mutableUiState.value.newlyManga.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.MANGA,
+                sort = listOf(MediaSort.ID_DESC),
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.newlyManga.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingNewlyManga = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
     override fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
         mutableUiState.update {
             it.copy(

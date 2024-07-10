@@ -15,8 +15,6 @@ import com.axiel7.anihyou.MediaSortedQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -25,28 +23,23 @@ import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 
 @Composable
-fun TrendingMediaContent(
-    mediaType: MediaType,
-    trendingMedia: List<MediaSortedQuery.Medium>,
+fun DiscoverMediaContent(
+    title: String,
+    media: List<MediaSortedQuery.Medium>,
     isLoading: Boolean,
     onLongClickItem: (MediaSortedQuery.Medium) -> Unit,
-    navigateToExplore: (MediaType, MediaSort) -> Unit,
+    onClickHeader: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
     HorizontalListHeader(
-        text = stringResource(
-            if (mediaType == MediaType.MANGA) R.string.trending_manga
-            else R.string.trending_now
-        ),
-        onClick = {
-            navigateToExplore(mediaType, MediaSort.TRENDING_DESC)
-        }
+        text = title,
+        onClick = onClickHeader
     )
     DiscoverLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         items(
-            items = trendingMedia,
+            items = media,
             contentType = { it }
         ) { item ->
             MediaItemVertical(
@@ -80,9 +73,9 @@ fun TrendingMediaContent(
                 )
             }
         }
-        if (trendingMedia.isEmpty()) {
+        if (media.isEmpty()) {
             item {
-                Text(text = "No ${mediaType.localized()} :(")
+                Text(text = stringResource(R.string.no_information))
             }
         }
     }//:LazyRow

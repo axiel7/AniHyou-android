@@ -21,7 +21,7 @@
         <item quantity="other">%d days</item>
     </plurals>
     <string name="unknown">Unknown</string>
-    <string name="airing_soon">Airing soon</string>
+    <string name="airing_soon">Airing Soon</string>
     <string name="mean_score">Mean score</string>
     <string name="airing_in">Airing in %s</string>
     <string name="winter">Winter</string>
@@ -384,6 +384,8 @@
     <string name="every_hour">Every hour</string>
     <string name="custom_color">Custom color</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="newly_manga">Newly Added Manga</string>
+    <string name="newly_anime">Newly Added Anime</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

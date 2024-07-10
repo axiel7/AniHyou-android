@@ -36,7 +36,7 @@ fun AiringContent(
     navigateToMediaDetails: (mediaId: Int) -> Unit
 ) {
     HorizontalListHeader(
-        text = stringResource(R.string.airing),
+        text = stringResource(R.string.airing_soon),
         onClick = navigateToCalendar
     )
     when (airingOnMyList) {
@@ -128,7 +128,7 @@ fun AiringContent(
                 }
                 if (airingAnime.isEmpty()) {
                     item {
-                        Text(text = stringResource(R.string.no_media))
+                        Text(text = stringResource(R.string.no_information))
                     }
                 }
             }//:LazyRow
