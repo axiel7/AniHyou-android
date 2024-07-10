@@ -133,6 +133,9 @@ private fun MediaDetailsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
+    val isTopAppBarScrolled by remember {
+        derivedStateOf { topAppBarScrollBehavior.state.overlappedFraction == 1f }
+    }
     var showEditSheet by remember { mutableStateOf(false) }
 
     var isSynopsisExpanded by remember { mutableStateOf(false) }
@@ -176,7 +179,15 @@ private fun MediaDetailsContent(
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = {},
+                title = {
+                    if (isTopAppBarScrolled) {
+                        Text(
+                            text = uiState.details?.title?.userPreferred.orEmpty(),
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                    }
+                },
                 navigationIcon = {
                     BackIconButton(onClick = navActionManager::goBack)
                 },
