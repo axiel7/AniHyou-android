@@ -17,7 +17,6 @@
         <item quantity="other">%d日</item>
     </plurals>
     <string name="unknown">不明</string>
-    <string name="airing_soon">まもなく配信中</string>
     <string name="mean_score">スコア</string>
     <string name="airing_in">%sで配信中</string>
     <string name="winter">冬</string>
