@@ -29,7 +29,6 @@
         <item quantity="other">%d днів</item>
     </plurals>
     <string name="unknown">Невідомо</string>
-    <string name="airing_soon">Невдовзі вийде</string>
     <string name="mean_score">Середня оцінка</string>
     <string name="airing_in">Трансляція через %s</string>
     <string name="winter">Зима</string>
@@ -382,7 +381,7 @@
     <string name="every_thirty_minutes">Кожні 30 хвилин</string>
     <string name="every_hour">Щогодини</string>
     <string name="custom_color">Користувацький колір</string>
-    <string name="mark_all_as_read" comment="mark all notifications as read">Позначити все, як прочитане</string>
+    <string name="mark_all_as_read">Позначити все, як прочитане</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>
