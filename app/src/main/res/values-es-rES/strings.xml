@@ -21,7 +21,6 @@
         <item quantity="other">%d días</item>
     </plurals>
     <string name="unknown">Desconocido</string>
-    <string name="airing_soon">En emisión</string>
     <string name="mean_score">Puntuación</string>
     <string name="airing_in">Emisión en %s</string>
     <string name="winter">Invierno</string>
@@ -371,7 +370,7 @@
     <string name="every_thirty_minutes">Cada 30 minutos</string>
     <string name="every_hour">Cada hora</string>
     <string name="custom_color">Color personalizado</string>
-    <string name="mark_all_as_read" comment="mark all notifications as read">Marcar todo como leído</string>
+    <string name="mark_all_as_read">Marcar todo como leído</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
