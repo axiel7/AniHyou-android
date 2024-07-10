@@ -21,7 +21,6 @@
         <item quantity="other">%d giorni</item>
     </plurals>
     <string name="unknown">Sconosciuto</string>
-    <string name="airing_soon">In arrivo</string>
     <string name="mean_score">Punteggio</string>
     <string name="airing_in">In arrivo in %s</string>
     <string name="winter">Inverno</string>
