@@ -29,7 +29,6 @@
         <item quantity="other">%d dni</item>
     </plurals>
     <string name="unknown">Nieznane</string>
-    <string name="airing_soon">Emisja wkrótce</string>
     <string name="mean_score">Ocena</string>
     <string name="airing_in">Odcinek za %s</string>
     <string name="winter">Zima</string>
