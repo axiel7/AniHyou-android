@@ -21,6 +21,7 @@
         <item quantity="other">%d giorni</item>
     </plurals>
     <string name="unknown">Sconosciuto</string>
+    <string name="airing_soon">In arrivo</string>
     <string name="mean_score">Punteggio</string>
     <string name="airing_in">In arrivo in %s</string>
     <string name="winter">Inverno</string>
@@ -367,6 +368,9 @@
     <string name="every_thirty_minutes">Ogni 30 minuti</string>
     <string name="every_hour">Ogni ora</string>
     <string name="custom_color">Colore personalizzato</string>
+    <string name="mark_all_as_read">Segna tutto come letto</string>
+    <string name="newly_manga">Manga appena aggiunti</string>
+    <string name="newly_anime">Anime appena aggiunti</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d o</item>
         <item quantity="other">%d o</item>
