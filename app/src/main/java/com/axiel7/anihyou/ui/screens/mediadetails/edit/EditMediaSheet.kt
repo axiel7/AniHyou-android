@@ -1,13 +1,16 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +41,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -109,7 +113,7 @@ fun EditMediaSheet(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun EditMediaSheetContent(
     uiState: EditMediaUiState,
@@ -123,6 +127,8 @@ private fun EditMediaSheetContent(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val datePickerState = rememberDatePickerState()
+    val isKeyboardVisible = WindowInsets.isImeVisible
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     if (uiState.openDatePicker) {
         EditMediaDatePicker(
@@ -181,6 +187,10 @@ private fun EditMediaSheetContent(
         windowInsets = WindowInsets(0, 0, 0, 0),
         properties = ModalBottomSheetProperties(shouldDismissOnBackPress = false),
     ) { dismiss ->
+        BackHandler(enabled = true) {
+            if (isKeyboardVisible) keyboardController?.hide()
+            else dismiss()
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
