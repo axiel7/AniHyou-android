@@ -21,6 +21,7 @@
         <item quantity="other">%d gün</item>
     </plurals>
     <string name="unknown">Bilinmiyor</string>
+    <string name="airing_soon">Yakında yayınlanacak</string>
     <string name="mean_score">Ortalama Puan</string>
     <string name="airing_in">%s sonra yayınlanacak</string>
     <string name="winter">Kış</string>
@@ -370,6 +371,8 @@
     <string name="every_hour">Her saat</string>
     <string name="custom_color">Özel renk</string>
     <string name="mark_all_as_read">Tümünü okundu olarak işaretle</string>
+    <string name="newly_manga">Yeni Eklenen Manga</string>
+    <string name="newly_anime">Yeni Eklenen Anime</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d saat</item>
         <item quantity="other">%d saat</item>
