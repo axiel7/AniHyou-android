@@ -12,7 +12,8 @@ import com.axiel7.anihyou.utils.LocaleUtils.getCurrentLanguageTag
 object TranslateUtils {
 
     fun Context.openTranslator(text: String) {
-        if (!openInDeepLMini(text)
+        if (!openInTranslateYou(text)
+            && !openInDeepLMini(text)
             && !openInDeepL(text)
             && !openInGoogleTranslateMini(text)
             && !openInGoogleTranslate(text)
@@ -93,6 +94,23 @@ object TranslateUtils {
             true
         } catch (e: Exception) {
             Log.d("translate", e.toString())
+            false
+        }
+    }
+
+    private fun Context.openInTranslateYou(text: String): Boolean {
+        return try {
+            Intent(Intent.ACTION_PROCESS_TEXT).apply {
+                component = ComponentName(
+                    "com.bnyro.translate",
+                    "com.bnyro.translate.ui.ShareActivity"
+                )
+                type = "text/plain"
+                putExtra(Intent.EXTRA_PROCESS_TEXT, text)
+                startActivity(this)
+            }
+            true
+        } catch (e: Exception) {
             false
         }
     }
