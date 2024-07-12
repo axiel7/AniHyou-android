@@ -8,8 +8,8 @@ import com.axiel7.anihyou.data.model.base.Localizable
 
 enum class HomeTab : Localizable {
     DISCOVER,
-    ACTIVITY_FEED,
-    CURRENT;
+    CURRENT,
+    ACTIVITY_FEED;
 
     @Composable
     override fun localized() = stringResource(stringRes)

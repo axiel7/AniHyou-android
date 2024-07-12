@@ -9,7 +9,6 @@ import com.axiel7.anihyou.ui.common.AppColorMode
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
-import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 
@@ -28,8 +27,6 @@ interface SettingsEvent {
     fun setGeneralListStyle(value: ListStyle)
 
     fun setGridItemsPerRow(value: ItemsPerRow)
-
-    fun setDefaultHomeTab(value: HomeTab)
 
     fun setAiringOnMyList(value: Boolean)
 

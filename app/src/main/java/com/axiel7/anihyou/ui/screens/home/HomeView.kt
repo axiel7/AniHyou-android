@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,6 +59,10 @@ fun HomeView(
         rememberTopAppBarState()
     )
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab.ordinal) }
+
+    LaunchedEffect(selectedTabIndex) {
+        viewModel.saveHomeTab(selectedTabIndex)
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),

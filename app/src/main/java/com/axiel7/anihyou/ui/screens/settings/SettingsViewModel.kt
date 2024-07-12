@@ -17,7 +17,6 @@ import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.scheduleNotificationWork
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -101,12 +100,6 @@ class SettingsViewModel @Inject constructor(
     override fun setGridItemsPerRow(value: ItemsPerRow) {
         viewModelScope.launch {
             listPreferencesRepository.setGridItemsPerRow(value)
-        }
-    }
-
-    override fun setDefaultHomeTab(value: HomeTab) {
-        viewModelScope.launch {
-            defaultPreferencesRepository.setDefaultHomeTab(value)
         }
     }
 
@@ -278,12 +271,6 @@ class SettingsViewModel @Inject constructor(
         listPreferencesRepository.gridItemsPerRow
             .onEach { value ->
                 mutableUiState.update { it.copy(gridItemsPerRow = value) }
-            }
-            .launchIn(viewModelScope)
-
-        defaultPreferencesRepository.defaultHomeTab
-            .onEach { value ->
-                mutableUiState.update { it.copy(defaultHomeTab = value) }
             }
             .launchIn(viewModelScope)
 

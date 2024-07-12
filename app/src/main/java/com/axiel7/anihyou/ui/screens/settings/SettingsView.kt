@@ -43,7 +43,6 @@ import com.axiel7.anihyou.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
-import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.settings.composables.CustomColorPreference
 import com.axiel7.anihyou.ui.screens.settings.composables.LanguagePreference
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -193,15 +192,6 @@ private fun SettingsContent(
                     icon = R.drawable.star_24,
                     onValueChange = { event?.setScoreFormat(it) }
                 )
-
-                ListPreference(
-                    title = stringResource(R.string.default_home_tab),
-                    entriesValues = HomeTab.entriesLocalized,
-                    preferenceValue = uiState.defaultHomeTab,
-                    icon = R.drawable.home_24,
-                    onValueChange = { event?.setDefaultHomeTab(it) }
-                )
-
 
                 PreferencesTitle(text = stringResource(R.string.list))
 

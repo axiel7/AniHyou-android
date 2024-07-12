@@ -10,7 +10,6 @@ import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.common.state.UiState
-import com.axiel7.anihyou.ui.screens.home.HomeTab
 
 @Immutable
 data class SettingsUiState(
@@ -21,7 +20,6 @@ data class SettingsUiState(
     val useGeneralListStyle: Boolean? = null,
     val generalListStyle: ListStyle? = null,
     val gridItemsPerRow: ItemsPerRow? = null,
-    val defaultHomeTab: HomeTab? = null,
     val airingOnMyList: Boolean? = null,
     val scoreFormat: ScoreFormat? = null,
     val isNotificationsEnabled: Boolean? = null,
