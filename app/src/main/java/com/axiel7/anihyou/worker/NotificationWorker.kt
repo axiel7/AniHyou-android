@@ -7,7 +7,6 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -89,18 +88,15 @@ class NotificationWorker @AssistedInject constructor(
                     if (it.type == NotificationType.AIRING
                         || NotificationTypeGroup.MEDIA.values?.contains(it.type) == true
                     ) {
-                        pendingIntent = TaskStackBuilder.create(applicationContext).run {
-                            addNextIntentWithParentStack(
-                                Intent(applicationContext, MainActivity::class.java).apply {
-                                    action = "media_details"
-                                    putExtra("media_id", it.contentId)
-                                }
-                            )
-                            getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                            )
+                        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+                            action = "media_details"
+                            putExtra("media_id", it.contentId)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         }
+                        pendingIntent = PendingIntent.getActivity(
+                            applicationContext, it.id, intent,
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
                     }
                     applicationContext.showNotification(
                         notificationId = it.id,
