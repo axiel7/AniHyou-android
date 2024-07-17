@@ -27,12 +27,12 @@ fun MediaListStatus.localized(
 }
 
 fun String.asMediaListStatus() = when (this) {
-    "Watching", "Reading" -> MediaListStatus.CURRENT
+    "Current", "Watching", "Reading" -> MediaListStatus.CURRENT
     "Planning" -> MediaListStatus.PLANNING
     "Completed" -> MediaListStatus.COMPLETED
     "Dropped" -> MediaListStatus.DROPPED
     "Paused" -> MediaListStatus.PAUSED
-    "Repeating" -> MediaListStatus.REPEATING
+    "Repeating", "Rewatching", "Rereading" -> MediaListStatus.REPEATING
     else -> null
 }
 
@@ -47,12 +47,16 @@ fun MediaListStatus?.listName(mediaType: MediaType) = when (this) {
     MediaListStatus.COMPLETED -> "Completed"
     MediaListStatus.DROPPED -> "Dropped"
     MediaListStatus.PAUSED -> "Paused"
-    MediaListStatus.REPEATING -> "Repeating"
+    MediaListStatus.REPEATING -> when (mediaType) {
+        MediaType.ANIME -> "Rewatching"
+        MediaType.MANGA -> "Rereading"
+        MediaType.UNKNOWN__ -> null
+    }
     else -> null
 }
 
 val mediaListStatusNames =
-    arrayOf("Watching", "Reading", "Planning", "Completed", "Dropped", "Paused", "Repeating")
+    arrayOf("Watching", "Reading", "Planning", "Completed", "Dropped", "Paused", "Rewatching", "Rereading")
 
 /**
  * Returns if this is a status considered as active.
