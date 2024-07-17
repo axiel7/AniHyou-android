@@ -141,9 +141,7 @@ private fun UserMediaListHostContent(
 
     if (showListsSheet) {
         ListSelectSheet(
-            selectedListName = uiState.selectedListName,
-            mediaType = uiState.mediaType,
-            customLists = uiState.customLists,
+            uiState = uiState,
             scope = scope,
             bottomPadding = bottomBarPadding,
             onListChanged = { event?.onChangeList(it) },

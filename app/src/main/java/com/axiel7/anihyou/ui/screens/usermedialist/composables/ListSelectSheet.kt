@@ -16,10 +16,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
@@ -27,16 +29,15 @@ import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.listName
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaListStatus
-import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.ModalBottomSheet
+import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListUiState
+import com.axiel7.anihyou.utils.NumberUtils.format
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListSelectSheet(
-    selectedListName: String?,
-    mediaType: MediaType,
-    customLists: List<String>,
+    uiState: UserMediaListUiState,
     scope: CoroutineScope,
     bottomPadding: Dp,
     onListChanged: (String?) -> Unit,
@@ -52,31 +53,37 @@ fun ListSelectSheet(
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 8.dp + bottomPadding)
         ) {
+            val totalCount = remember(uiState.lists) { uiState.lists.values.sumOf { it.size } }
             StatusItem(
                 name = stringResource(R.string.all),
                 icon = R.drawable.list_alt_24,
-                isSelected = selectedListName == null,
+                count = totalCount,
+                isSelected = uiState.selectedListName == null,
                 onClick = {
                     onListChanged(null)
                     onDismiss()
                 }
             )
             MediaListStatus.knownEntries.forEach { status ->
-                val name = status.listName(mediaType)
+                val name = remember(status) { status.listName(uiState.mediaType) }
+                val count = remember(name) { uiState.lists[name]?.size ?: 0 }
                 StatusItem(
-                    name = status.localized(mediaType),
+                    name = status.localized(uiState.mediaType),
                     icon = status.icon(),
-                    isSelected = selectedListName == name,
+                    count = count,
+                    isSelected = uiState.selectedListName == name,
                     onClick = {
                         onListChanged(name)
                         onDismiss()
                     }
                 )
             }
-            customLists.forEach { name ->
+            uiState.customLists.forEach { name ->
+                val count = remember(name) { uiState.lists[name]?.size ?: 0 }
                 StatusItem(
                     name = name,
-                    isSelected = selectedListName == name,
+                    count = count,
+                    isSelected = uiState.selectedListName == name,
                     onClick = {
                         onListChanged(name)
                         onDismiss()
@@ -91,9 +98,12 @@ fun ListSelectSheet(
 private fun StatusItem(
     name: String,
     @DrawableRes icon: Int? = null,
+    count: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
+    val tint = if (isSelected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,8 +115,7 @@ private fun StatusItem(
             Icon(
                 painter = painterResource(icon),
                 contentDescription = name,
-                tint = if (isSelected) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                tint = tint
             )
         } else {
             Spacer(modifier = Modifier.size(24.dp))
@@ -115,8 +124,16 @@ private fun StatusItem(
         Text(
             text = name,
             modifier = Modifier.padding(start = 8.dp),
-            color = if (isSelected) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onSurfaceVariant
+            color = tint
         )
+        Spacer(modifier = Modifier.weight(1f))
+        if (count > 0) {
+            Text(
+                text = count.format() ?: count.toString(),
+                modifier = Modifier.padding(end = 8.dp),
+                color = tint,
+                textAlign = TextAlign.End,
+            )
+        }
     }
 }
