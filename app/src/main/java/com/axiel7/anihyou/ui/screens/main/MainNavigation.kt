@@ -1,8 +1,9 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
@@ -136,32 +137,35 @@ fun MainNavigation(
             end = padding.calculateEndPadding(LocalLayoutDirection.current),
         ),
         enterTransition = {
+            fadeIn() +
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                animationSpec = tween(300)
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         exitTransition = {
+            fadeOut() +
             slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.End,
-                animationSpec = tween(350)
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         popEnterTransition = {
-            fadeIn(tween(300))
+            fadeIn()
         },
         popExitTransition = {
+            fadeOut() +
             slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.End,
-                animationSpec = tween(350)
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         }
     ) {
         composable<Home>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             HomeView(
                 isLoggedIn = isLoggedIn,
@@ -174,10 +178,10 @@ fun MainNavigation(
         }
 
         composable<AnimeTab>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -192,10 +196,10 @@ fun MainNavigation(
         }
 
         composable<MangaTab>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
@@ -210,10 +214,10 @@ fun MainNavigation(
         }
 
         composable<Profile>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             if (isLoggedIn) {
                 ProfileView(
@@ -229,10 +233,10 @@ fun MainNavigation(
         }
 
         composable<Explore>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             ExploreView(
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
@@ -346,10 +350,10 @@ fun MainNavigation(
         }
 
         composable<FullScreenImage>(
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(400)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(400)) },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
         ) {
             FullScreenImageView(
                 arguments = it.toRoute(),
