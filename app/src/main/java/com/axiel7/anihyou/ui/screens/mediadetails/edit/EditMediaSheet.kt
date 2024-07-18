@@ -191,6 +191,27 @@ private fun EditMediaSheetContent(
             if (isKeyboardVisible) keyboardController?.hide()
             else dismiss()
         }
+        // Cancel / Save buttons
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(onClick = { dismiss() }) {
+                Text(text = stringResource(R.string.cancel))
+            }
+
+            Button(onClick = { event?.updateListEntry() }) {
+                if (uiState.isLoading) {
+                    SmallCircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text(text = stringResource(R.string.save))
+                }
+            }
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -199,28 +220,6 @@ private fun EditMediaSheetContent(
                 .padding(bottom = 32.dp + bottomPadding),
             horizontalAlignment = Alignment.Start
         ) {
-            // Cancel / Save buttons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(onClick = { dismiss() }) {
-                    Text(text = stringResource(R.string.cancel))
-                }
-
-                Button(onClick = { event?.updateListEntry() }) {
-                    if (uiState.isLoading) {
-                        SmallCircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    } else {
-                        Text(text = stringResource(R.string.save))
-                    }
-                }
-            }
-
             // Status
             Row(
                 modifier = Modifier
