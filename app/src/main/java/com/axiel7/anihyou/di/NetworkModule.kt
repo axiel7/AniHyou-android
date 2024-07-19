@@ -4,6 +4,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
 import com.apollographql.apollo.cache.normalized.normalizedCache
 import com.apollographql.apollo.network.okHttpClient
+import com.axiel7.anihyou.BuildConfig
 import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.utils.ANILIST_GRAPHQL_URL
 import dagger.Module
@@ -58,5 +59,20 @@ object NetworkModule {
         globalVariables: GlobalVariables
     ): AuthorizationInterceptor {
         return AuthorizationInterceptor(globalVariables)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient()
+            .newBuilder()
+            .addInterceptor {
+                it.proceed(
+                    it.request().newBuilder()
+                        .addHeader("X-MAL-CLIENT-ID", BuildConfig.MAL_CLIENT_ID)
+                        .build()
+                )
+            }
+            .build()
     }
 }

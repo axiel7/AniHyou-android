@@ -5,6 +5,7 @@ import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.MediaDetailsQuery
+import com.axiel7.anihyou.data.api.MalApi
 import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.data.model.asPagedResult
@@ -16,12 +17,15 @@ import com.axiel7.anihyou.data.model.media.isActive
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MediaRepository @Inject constructor(
     private val api: MediaApi,
+    private val malApi: MalApi,
 ) {
 
     fun getAiringAnimesPage(
@@ -197,4 +201,10 @@ class MediaRepository @Inject constructor(
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
                 .orEmpty()
         }
+
+    // MyAnimeList endpoints
+
+    suspend fun getAnimeThemes(idMal: Int) = withContext(Dispatchers.IO) {
+        malApi.getAnimeThemes(idMal)
+    }
 }

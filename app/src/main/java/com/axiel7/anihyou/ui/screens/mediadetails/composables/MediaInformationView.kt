@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,6 +48,8 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
+import com.axiel7.anihyou.utils.StringUtils.buildQueryFromThemeText
+import com.axiel7.anihyou.utils.YOUTUBE_QUERY_URL
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -287,6 +290,41 @@ fun MediaInformationView(
                         )
                     }
                 }
+            }
+        }
+
+        if (!uiState.openings.isNullOrEmpty()) {
+            InfoTitle(text = stringResource(R.string.openings))
+
+            uiState.openings.forEach { theme ->
+                Text(
+                    text = theme.text,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                        .clickable {
+                            context.openActionView(
+                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
+                            )
+                        },
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
+        if (!uiState.endings.isNullOrEmpty()) {
+            InfoTitle(text = stringResource(R.string.endings))
+
+            uiState.endings.forEach { theme ->
+                Text(
+                    text = theme.text,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                        .clickable {
+                            context.openActionView(
+                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
+                            )
+                        },
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }//: Column

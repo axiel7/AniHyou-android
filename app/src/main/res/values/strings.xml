@@ -386,6 +386,8 @@
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="newly_manga">Newly Added Manga</string>
     <string name="newly_anime">Newly Added Anime</string>
+    <string name="openings">Openings</string>
+    <string name="endings">Endings</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

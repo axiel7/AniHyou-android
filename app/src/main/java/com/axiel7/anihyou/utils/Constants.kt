@@ -19,7 +19,10 @@ const val ANILIST_MANGA_URL = "$ANILIST_URL/manga/"
 const val ANILIST_THREAD_URL = "$ANILIST_URL/forum/thread/"
 const val ANILIST_REVIEW_URL = "$ANILIST_URL/review/"
 
+const val MAL_API_URL = "https://api.myanimelist.net/v2/"
+
 const val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="
+const val YOUTUBE_QUERY_URL = "https://www.youtube.com/results?search_query="
 const val DAILYMOTION_VIDEO_URL = "https://www.dailymotion.com/video/"
 
 const val ANILIST_ACCOUNT_SETTINGS_URL = "https://anilist.co/settings/account"

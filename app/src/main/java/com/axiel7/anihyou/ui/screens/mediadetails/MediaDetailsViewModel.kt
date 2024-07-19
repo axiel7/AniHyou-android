@@ -197,11 +197,26 @@ class MediaDetailsViewModel @Inject constructor(
         mutableUiState.update { it.copy(showVoiceActorsSheet = false) }
     }
 
+    private suspend fun fetchAnimeThemes(idMal: Int) {
+        mediaRepository.getAnimeThemes(idMal = idMal)?.let {
+            mutableUiState.update { state ->
+                state.copy(
+                    openings = it.openingThemes.orEmpty(),
+                    endings = it.endingThemes.orEmpty(),
+                )
+            }
+        }
+    }
+
     init {
         mediaRepository.getMediaDetails(mediaId = arguments.id)
             .onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
+                        result.data?.idMal?.let { idMal ->
+                            if (result.data.basicMediaDetails.type == MediaType.ANIME)
+                                fetchAnimeThemes(idMal)
+                        }
                         it.copy(
                             isLoading = false,
                             details = result.data

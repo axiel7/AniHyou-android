@@ -59,4 +59,14 @@ object StringUtils {
             }
         }
     }
+
+    /**
+     * Format the opening/ending text from MAL to use it on YouTube search
+     */
+    fun String.buildQueryFromThemeText() = this
+        .replace(" ", "+")
+        .replace("\"", "")
+        .replaceFirst(Regex("#?\\w+:"), "") // theme number
+        .replace(Regex("\\(ep.*\\)"), "") // episodes
+        .trim()
 }

@@ -1,6 +1,7 @@
 query MediaDetails($mediaId: Int) {
     Media(id: $mediaId) {
         ...BasicMediaDetails
+        idMal
         title {
             userPreferred
             romaji

@@ -6,6 +6,7 @@ import com.axiel7.anihyou.MediaFollowingQuery
 import com.axiel7.anihyou.MediaReviewsQuery
 import com.axiel7.anihyou.MediaStatsQuery
 import com.axiel7.anihyou.MediaThreadsQuery
+import com.axiel7.anihyou.data.model.media.AnimeThemes
 import com.axiel7.anihyou.data.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution
@@ -20,6 +21,8 @@ data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
 
     val details: MediaDetailsQuery.Media? = null,
+    val openings: List<AnimeThemes.Theme>? = null,
+    val endings: List<AnimeThemes.Theme>? = null,
 
     val staff: List<MediaStaff>? = null,
     val characters: List<MediaCharacter>? = null,

@@ -46,6 +46,7 @@ android {
 
     buildTypes {
         val clientId = "8527"
+        val malClientId = "\"9d64c3963e0f5de53083571d45016565\""
 
         debug {
             applicationIdSuffix = ".debug"
@@ -58,6 +59,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("int", "CLIENT_ID", clientId)
+            buildConfigField("String", "MAL_CLIENT_ID", malClientId)
         }
         release {
             isDebuggable = false
@@ -68,6 +70,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("int", "CLIENT_ID", clientId)
+            buildConfigField("String", "MAL_CLIENT_ID", malClientId)
         }
     }
     splits {
