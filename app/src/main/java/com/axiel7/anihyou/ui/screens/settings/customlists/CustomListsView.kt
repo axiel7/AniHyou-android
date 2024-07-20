@@ -69,7 +69,6 @@ fun CustomListsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    var openDialog by remember { mutableStateOf(false) }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.custom_lists),
@@ -95,6 +94,7 @@ fun CustomListsContent(
                 .padding(padding)
         ) {
             MediaType.knownEntries.forEach { mediaType ->
+                var openDialog by remember { mutableStateOf(false) }
                 PreferencesTitle(text = mediaType.localized())
 
                 uiState.customLists(mediaType)?.forEach { list ->
