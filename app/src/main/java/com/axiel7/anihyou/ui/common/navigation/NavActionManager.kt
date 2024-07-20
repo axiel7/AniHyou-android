@@ -25,6 +25,7 @@ import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
 import com.axiel7.anihyou.ui.screens.settings.Settings
 import com.axiel7.anihyou.ui.screens.settings.Translations
+import com.axiel7.anihyou.ui.screens.settings.customlists.CustomLists
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettings
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetails
 import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetails
@@ -193,6 +194,10 @@ class NavActionManager(
 
     fun toListStyleSettings() {
         navController.navigate(ListStyleSettings)
+    }
+
+    fun toCustomLists() {
+        navController.navigate(CustomLists)
     }
 
     fun toTranslations() {

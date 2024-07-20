@@ -227,6 +227,11 @@ private fun SettingsContent(
                         onValueChange = { event?.setGridItemsPerRow(it) }
                     )
                 }
+                PlainPreference(
+                    title = stringResource(R.string.custom_lists),
+                    icon = R.drawable.playlist_add_24,
+                    onClick = navActionManager::toCustomLists
+                )
 
                 PreferencesTitle(text = stringResource(R.string.content))
 
@@ -355,7 +360,7 @@ fun SettingsViewPreview() {
     AniHyouTheme {
         Surface {
             SettingsContent(
-                uiState = SettingsUiState(),
+                uiState = SettingsUiState(isLoggedIn = true),
                 event = null,
                 notificationPermission = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

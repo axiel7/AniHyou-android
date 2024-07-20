@@ -59,6 +59,8 @@ import com.axiel7.anihyou.ui.screens.settings.Settings
 import com.axiel7.anihyou.ui.screens.settings.SettingsView
 import com.axiel7.anihyou.ui.screens.settings.Translations
 import com.axiel7.anihyou.ui.screens.settings.TranslationsView
+import com.axiel7.anihyou.ui.screens.settings.customlists.CustomLists
+import com.axiel7.anihyou.ui.screens.settings.customlists.CustomListsView
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettings
 import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetails
@@ -340,6 +342,11 @@ fun MainNavigation(
         }
         composable<ListStyleSettings> {
             ListStyleSettingsView(
+                navActionManager = navActionManager,
+            )
+        }
+        composable<CustomLists> {
+            CustomListsView(
                 navActionManager = navActionManager,
             )
         }

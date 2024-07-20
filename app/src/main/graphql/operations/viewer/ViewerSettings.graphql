@@ -1,6 +1,5 @@
 query ViewerSettings {
     Viewer {
-        id
         ...UserSettings
     }
 }
@@ -18,10 +17,12 @@ fragment UserSettings on User {
         animeList {
             advancedScoringEnabled
             advancedScoring
+            customLists
         }
         mangaList {
             advancedScoringEnabled
             advancedScoring
+            customLists
         }
     }
 }

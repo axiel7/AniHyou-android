@@ -118,19 +118,37 @@ class DefaultPreferencesRepository @Inject constructor(
         this[SCORE_FORMAT_KEY] = options.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
         this[ADVANCED_SCORING_KEY] = options.animeList?.advancedScoringEnabled == true
         options.animeList?.customLists?.let { customLists ->
-            this[ANIME_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
+            if (customLists.isNotEmpty())
+                this[ANIME_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
         }
         options.mangaList?.customLists?.let { customLists ->
-            this[MANGA_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
+            if (customLists.isNotEmpty())
+                this[MANGA_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
         }
     }
 
     val animeCustomLists = dataStore.getValue(ANIME_CUSTOM_LISTS_KEY).map {
-        it?.split(",")
+        if (it?.isEmpty() == true) emptyList()
+        else it?.split(",")
     }
 
     val mangaCustomLists = dataStore.getValue(MANGA_CUSTOM_LISTS_KEY).map {
-        it?.split(",")
+        if (it?.isEmpty() == true) emptyList()
+        else it?.split(",")
+    }
+
+    suspend fun saveAnimeCustomLists(value: List<String>) {
+        dataStore.setValue(
+            key = ANIME_CUSTOM_LISTS_KEY,
+            value = value.joinToString(",").takeIf { value.isNotEmpty() }
+        )
+    }
+
+    suspend fun saveMangaCustomLists(value: List<String>) {
+        dataStore.setValue(
+            key = MANGA_CUSTOM_LISTS_KEY,
+            value = value.joinToString(",").takeIf { value.isNotEmpty() }
+        )
     }
 
     // app
