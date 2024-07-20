@@ -29,6 +29,7 @@
         <item quantity="other">%d дней</item>
     </plurals>
     <string name="unknown">Неизвестно</string>
+    <string name="airing_soon">Скоро выйдет</string>
     <string name="mean_score">Средний счет</string>
     <string name="airing_in">Выйдет через %s</string>
     <string name="winter">Зима</string>
