@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -211,18 +212,19 @@ class MediaDetailsViewModel @Inject constructor(
     init {
         mediaRepository.getMediaDetails(mediaId = arguments.id)
             .onEach { result ->
-                mutableUiState.update {
+                mutableUiState.updateAndGet {
                     if (result is DataResult.Success) {
-                        result.data?.idMal?.let { idMal ->
-                            if (result.data.basicMediaDetails.type == MediaType.ANIME)
-                                fetchAnimeThemes(idMal)
-                        }
                         it.copy(
                             isLoading = false,
                             details = result.data
                         )
                     } else {
                         result.toUiState()
+                    }
+                }.also {
+                    it.details?.idMal?.let { idMal ->
+                        if (it.details.basicMediaDetails.type == MediaType.ANIME)
+                            fetchAnimeThemes(idMal)
                     }
                 }
             }
