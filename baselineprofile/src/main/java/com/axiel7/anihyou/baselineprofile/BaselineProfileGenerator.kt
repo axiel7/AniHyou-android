@@ -4,6 +4,9 @@ import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Direction
+import androidx.test.uiautomator.UiDevice
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,14 +58,19 @@ class BaselineProfileGenerator {
             pressHome()
             startActivityAndWait()
 
-            // TODO Write more interactions to optimize advanced journeys of your app.
-            // For example:
-            // 1. Wait until the content is asynchronously loaded
-            // 2. Scroll the feed content
-            // 3. Navigate to detail screen
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-            // Check UiAutomator documentation for more information how to interact with the app.
-            // https://d.android.com/training/testing/other-components/ui-automator
+            device.findObject(By.res("HomeTab"))?.apply { click() }
+
+            device.findObject(By.text("Discover"))?.apply { click() }
+
+            device.findObject(By.scrollable(true))?.apply {
+                scroll(Direction.DOWN, 40f)
+            }
+
+            device.findObject(By.res("MediaItem"))?.apply {
+                click()
+            }
         }
     }
 }

@@ -7,7 +7,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -15,8 +20,10 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.axiel7.anihyou.ui.common.BottomDestination
+import com.axiel7.anihyou.ui.common.BottomDestination.Companion.testTag
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainBottomNavBar(
     navController: NavController,
@@ -38,6 +45,10 @@ fun MainBottomNavBar(
                 NavigationBarItem(
                     icon = {
                         dest.Icon(selected = isSelected)
+                    },
+                    modifier = Modifier.semantics {
+                        testTagsAsResourceId = true
+                        testTag = dest.testTag
                     },
                     label = {
                         Text(

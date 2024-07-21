@@ -7,9 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.MediaSortedQuery
 import com.axiel7.anihyou.R
@@ -22,6 +26,7 @@ import com.axiel7.anihyou.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.screens.home.discover.composables.DiscoverLazyRow
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DiscoverMediaContent(
     title: String,
@@ -45,7 +50,12 @@ fun DiscoverMediaContent(
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .semantics {
+                        testTagsAsResourceId = true
+                        testTag = "MediaItem"
+                    },
                 subtitle = {
                     if (item.meanScore != null) {
                         SmallScoreIndicator(score = item.meanScore)

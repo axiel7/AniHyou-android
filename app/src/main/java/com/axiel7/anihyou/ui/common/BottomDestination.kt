@@ -80,5 +80,14 @@ sealed class BottomDestination(
             destination.hierarchy.any { dest ->
                 values.any { value -> dest.hasRoute(value.route::class) }
             }
+
+        val BottomDestination.testTag
+            get() = when (this) {
+                is Home -> "HomeTab"
+                is AnimeList -> "AnimeListTab"
+                is MangaList -> "MangaListTab"
+                is Profile -> "ProfileTab"
+                is Explore -> "ExploreTab"
+            }
     }
 }
