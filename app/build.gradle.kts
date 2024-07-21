@@ -60,6 +60,7 @@ android {
             )
             buildConfigField("int", "CLIENT_ID", clientId)
             buildConfigField("String", "MAL_CLIENT_ID", malClientId)
+            resValue("string", "app_name", "AniHyou Debug")
         }
         release {
             isDebuggable = false
