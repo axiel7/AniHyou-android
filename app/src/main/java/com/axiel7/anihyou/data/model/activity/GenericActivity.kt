@@ -17,6 +17,8 @@ data class GenericActivity(
     val userId: Int?,
     val username: String?,
     val avatarUrl: String?,
+    val mediaId: Int? = null,
+    val mediaCoverUrl: String? = null,
     val replies: List<ActivityReplyFragment>?,
 ) {
     fun updateLikeStatus(isLiked: Boolean) = copy(
@@ -50,6 +52,8 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     userId = user?.id,
     username = user?.name,
     avatarUrl = user?.avatar?.medium,
+    mediaId = listActivityFragment.media?.id,
+    mediaCoverUrl = listActivityFragment.media?.coverImage?.medium,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment }
 )
 

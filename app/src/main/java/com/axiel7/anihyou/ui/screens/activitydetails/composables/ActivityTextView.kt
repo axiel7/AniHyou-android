@@ -1,10 +1,12 @@
 package com.axiel7.anihyou.ui.screens.activitydetails.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
+import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.ui.screens.thread.composables.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -31,18 +35,18 @@ fun ActivityTextView(
     text: String,
     username: String?,
     avatarUrl: String?,
+    mediaCoverUrl: String? = null,
     createdAt: Int,
     replyCount: Int?,
     likeCount: Int,
     isLiked: Boolean?,
     onClickUser: () -> Unit,
+    onClickMedia: () -> Unit = {},
     onClickLike: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -64,12 +68,27 @@ fun ActivityTextView(
             )
         }
 
-        DefaultMarkdownText(
-            markdown = text,
-            modifier = Modifier.padding(vertical = 8.dp),
-            fontSize = 17.sp,
-            navigateToFullscreenImage = navigateToFullscreenImage,
-        )
+        Row(
+            modifier = Modifier.padding(
+                top = if (mediaCoverUrl != null) 16.dp else 8.dp,
+                bottom = 8.dp
+            ),
+        ) {
+            if (mediaCoverUrl != null) {
+                MediaPoster(
+                    url = mediaCoverUrl,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(MEDIA_POSTER_TINY_HEIGHT.dp)
+                        .clickable(onClick = onClickMedia)
+                )
+            }
+            DefaultMarkdownText(
+                markdown = text,
+                fontSize = 17.sp,
+                navigateToFullscreenImage = navigateToFullscreenImage,
+            )
+        }
 
         Row(
             modifier = Modifier.align(Alignment.End),
@@ -111,6 +130,7 @@ fun ActivityTextViewPreview() {
                 text = "I just watched the latest season of __Kanojo, Okarishimasu__ and I want to kms",
                 username = "axiel7",
                 avatarUrl = null,
+                mediaCoverUrl = "",
                 createdAt = 12312321,
                 replyCount = 999,
                 likeCount = 999,

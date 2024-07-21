@@ -116,15 +116,20 @@ private fun ActivityDetailsContent(
                 item {
                     if (uiState.details != null) {
                         ActivityTextView(
+                            modifier = Modifier.padding(16.dp),
                             text = uiState.details.text.orEmpty(),
                             username = uiState.details.username,
                             avatarUrl = uiState.details.avatarUrl,
+                            mediaCoverUrl = uiState.details.mediaCoverUrl,
                             createdAt = uiState.details.createdAt,
                             replyCount = uiState.details.replyCount,
                             likeCount = uiState.details.likeCount,
                             isLiked = uiState.details.isLiked,
                             onClickUser = {
                                 uiState.details.userId?.let(navActionManager::toUserDetails)
+                            },
+                            onClickMedia = {
+                                uiState.details.mediaId?.let(navActionManager::toMediaDetails)
                             },
                             onClickLike = {
                                 event?.toggleLikeActivity()
@@ -141,6 +146,8 @@ private fun ActivityDetailsContent(
                     contentType = { it }
                 ) { item ->
                     ActivityTextView(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 4.dp),
                         text = item.text.orEmpty(),
                         username = item.user?.name,
                         avatarUrl = item.user?.avatar?.medium,
