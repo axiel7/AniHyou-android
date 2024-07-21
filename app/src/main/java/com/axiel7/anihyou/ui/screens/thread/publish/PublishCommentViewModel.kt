@@ -28,9 +28,9 @@ class PublishCommentViewModel @Inject constructor(
         text: String
     ) {
         threadRepository.updateThreadComment(
-            threadId = threadId,
-            parentCommentId = parentCommentId,
-            id = id,
+            threadId = threadId.takeIf { it != 0 },
+            parentCommentId = parentCommentId.takeIf { it != 0 },
+            id = id.takeIf { it != 0 },
             text = text
         ).onEach { result ->
             mutableUiState.update {

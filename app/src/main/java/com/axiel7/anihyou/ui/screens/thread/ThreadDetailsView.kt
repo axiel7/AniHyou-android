@@ -143,7 +143,14 @@ private fun ThreadDetailsContent(
                         navigateToUserDetails = {
                             navActionManager.toUserDetails(item.user!!.id)
                         },
-                        navigateToPublishReply = navActionManager::toPublishCommentReply,
+                        navigateToPublishReply = { parentCommentId, id, text ->
+                            navActionManager.toPublishCommentReply(
+                                threadId = uiState.details!!.id,
+                                parentCommentId = parentCommentId,
+                                commentId = id,
+                                text = text,
+                            )
+                        },
                         navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
                     HorizontalDivider(modifier = Modifier.padding(top = 16.dp))

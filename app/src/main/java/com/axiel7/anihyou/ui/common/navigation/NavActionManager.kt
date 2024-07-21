@@ -157,12 +157,14 @@ class NavActionManager(
     }
 
     fun toPublishCommentReply(
+        threadId: Int,
         parentCommentId: Int,
         commentId: Int?,
         text: String?
     ) {
         navController.navigate(
             PublishComment(
+                threadId = threadId,
                 parentCommentId = parentCommentId,
                 id = commentId ?: 0,
                 text = text
