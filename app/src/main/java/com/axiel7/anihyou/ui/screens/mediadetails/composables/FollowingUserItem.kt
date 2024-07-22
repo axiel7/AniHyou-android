@@ -56,7 +56,7 @@ fun FollowingUserItem(
         )
         Row(
             modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -67,12 +67,10 @@ fun FollowingUserItem(
                 MinimalScoreIndicator(
                     score = score,
                     scoreFormat = scoreFormat,
-                    modifier = Modifier
-                        .width(64.dp)
-                        .padding(start = 8.dp)
+                    modifier = Modifier.width(68.dp)
                 )
             } else {
-                Spacer(modifier = Modifier.width(64.dp))
+                Spacer(modifier = Modifier.width(68.dp))
             }
         }
     }
