@@ -185,6 +185,12 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(AIRING_ON_MY_LIST_KEY, value)
     }
 
+    // calendar
+    val calendarOnMyList = dataStore.getValue(key = CALENDAR_ON_MY_LIST_KEY)
+    suspend fun setCalendarOnMyList(value: Boolean?) {
+        dataStore.setValue(CALENDAR_ON_MY_LIST_KEY, value)
+    }
+
     // notifications
     val isNotificationsEnabled =
         dataStore.getValue(key = NOTIFICATIONS_ENABLED_KEY, default = false)
@@ -242,6 +248,7 @@ class DefaultPreferencesRepository @Inject constructor(
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")
+        private val CALENDAR_ON_MY_LIST_KEY = booleanPreferencesKey("calendar_on_my_list")
 
         private val NOTIFICATIONS_ENABLED_KEY = booleanPreferencesKey("enabled_notifications")
         private val NOTIFICATION_INTERVAL_KEY = stringPreferencesKey("notification_interval")

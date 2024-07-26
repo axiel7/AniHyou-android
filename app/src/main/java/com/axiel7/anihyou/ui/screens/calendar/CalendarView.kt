@@ -26,8 +26,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -68,7 +66,12 @@ object Calendar
 fun CalendarView(
     navActionManager: NavActionManager
 ) {
+    val viewModel: CalendarHostViewModel = hiltViewModel()
+    val onMyList by viewModel.onMyList.collectAsStateWithLifecycle(initialValue = null)
+
     CalendarViewContent(
+        onMyList = onMyList,
+        onMyListChanged = viewModel::onMyListChanged,
         navActionManager = navActionManager
     )
 }
@@ -76,10 +79,10 @@ fun CalendarView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarViewContent(
+    onMyList: Boolean?,
+    onMyListChanged: (Boolean?) -> Unit,
     navActionManager: NavActionManager
 ) {
-    var onMyList by rememberSaveable { mutableStateOf<Boolean?>(null) }
-
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -92,7 +95,7 @@ private fun CalendarViewContent(
             TriFilterChip(
                 text = stringResource(R.string.on_my_list),
                 value = onMyList,
-                onValueChanged = { onMyList = it },
+                onValueChanged = onMyListChanged,
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
         },
