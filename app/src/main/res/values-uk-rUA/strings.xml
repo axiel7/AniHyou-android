@@ -382,7 +382,9 @@
     <string name="every_thirty_minutes">Кожні 30 хвилин</string>
     <string name="every_hour">Щогодини</string>
     <string name="custom_color">Користувацький колір</string>
-    <string name="mark_all_as_read" comment="mark all notifications as read">Позначити все, як прочитане</string>
+    <string name="mark_all_as_read">Позначити все, як прочитане</string>
+    <string name="newly_manga">Нещодавно додана Манґа</string>
+    <string name="newly_anime">Нещодавно додане Аніме</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>

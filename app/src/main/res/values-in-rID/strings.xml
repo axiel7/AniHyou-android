@@ -17,7 +17,7 @@
         <item quantity="other">%d hari</item>
     </plurals>
     <string name="unknown">Tak diketahui</string>
-    <string name="airing_soon">Segera Ditayangkan</string>
+    <string name="airing_soon">Segera Tayang</string>
     <string name="mean_score">Nilai Rata-rata</string>
     <string name="airing_in">Ditayangkan pada %s</string>
     <string name="winter">Musim Dingin</string>
@@ -361,6 +361,9 @@
     <string name="every_thirty_minutes">Setiap 30 menit</string>
     <string name="every_hour">Setiap jam</string>
     <string name="custom_color">Kostum warna</string>
+    <string name="mark_all_as_read">Tandai semua sudah dibaca</string>
+    <string name="newly_manga">Manga Baru Ditambahkan</string>
+    <string name="newly_anime">Anime Baru Ditambahkan</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d j</item>
     </plurals>

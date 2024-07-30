@@ -345,10 +345,14 @@
     <string name="show_more">すべてを表示</string>
     <string name="continue_watching">視聴を続ける</string>
     <string name="hide_from_status_lists">ステータスリストから隠す</string>
+    <string name="black_theme_variant">黒いテーマ</string>
+    <string name="random">ランダム</string>
     <string name="every_five_teen_minutes">１５分毎</string>
     <string name="every_thirty_minutes">３０分毎</string>
     <string name="every_hour">１時間毎</string>
     <string name="custom_color">カスタムカラー</string>
+    <string name="newly_manga">新着マンガ</string>
+    <string name="newly_anime">新着アニメ</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d時間</item>
     </plurals>

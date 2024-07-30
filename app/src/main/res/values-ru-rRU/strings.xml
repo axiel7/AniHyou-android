@@ -384,7 +384,7 @@
     <string name="every_thirty_minutes">Каждые 30 минут</string>
     <string name="every_hour">Каждый час</string>
     <string name="custom_color">Пользовательский цвет</string>
-    <string name="mark_all_as_read" comment="mark all notifications as read">Отметить всё как прочитанное</string>
+    <string name="mark_all_as_read">Отметить всё как прочитанное</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d ч.</item>
         <item quantity="few">%d ч.</item>

@@ -382,4 +382,22 @@
     <string name="every_thirty_minutes">Co 30 minut</string>
     <string name="every_hour">Co godzinę</string>
     <string name="custom_color">Własny kolor</string>
+    <string name="mark_all_as_read">Oznacz wszystkie jako przeczytane</string>
+    <string name="newly_manga">Nowo Dodana Manga</string>
+    <string name="newly_anime">Nowo Dodane Anime</string>
+    <string name="openings">Czołówki</string>
+    <string name="endings">Endingi</string>
+    <string name="list_name" comment="custom list name text field label">Nazwa listy</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d godz</item>
+        <item quantity="few">%d godz</item>
+        <item quantity="many">%d godz</item>
+        <item quantity="other">%d godz</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d min</item>
+        <item quantity="few">%d min</item>
+        <item quantity="many">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>

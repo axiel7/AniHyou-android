@@ -37,7 +37,7 @@
         <item quantity="other">%d أيام كثيرة</item>
     </plurals>
     <string name="unknown">غير معروف</string>
-    <string name="airing_soon">يبث قريبًا</string>
+    <string name="airing_soon">يُبث قريبًا</string>
     <string name="mean_score">الدرجة</string>
     <string name="airing_in">سيبث في %s</string>
     <string name="winter">الشتاء</string>
@@ -398,7 +398,9 @@
     <string name="every_thirty_minutes">كل 30 دقيقة</string>
     <string name="every_hour">كل ساعة</string>
     <string name="custom_color">ألوان مُخصصة</string>
-    <string name="mark_all_as_read" comment="mark all notifications as read">تحديد الكل كمقروءة</string>
+    <string name="mark_all_as_read">تحديد الكل كمقروءة</string>
+    <string name="newly_manga">المانجا المضافة حديثاً</string>
+    <string name="newly_anime">الأنمي المضاف حديثاً</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>
         <item quantity="one">%dساعة واحدة</item>
