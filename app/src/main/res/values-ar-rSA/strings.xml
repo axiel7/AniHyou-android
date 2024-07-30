@@ -401,6 +401,9 @@
     <string name="mark_all_as_read">تحديد الكل كمقروءة</string>
     <string name="newly_manga">المانجا المضافة حديثاً</string>
     <string name="newly_anime">الأنمي المضاف حديثاً</string>
+    <string name="openings" comment="In some languages it may be left unstranslated as the otaku culture understands the english version">شارة البداية</string>
+    <string name="endings" comment="In some languages it may be left unstranslated as the otaku culture understands the english version">شارة النهاية</string>
+    <string name="list_name" comment="custom list name text field label">أسم القائمة</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>
         <item quantity="one">%dساعة واحدة</item>
