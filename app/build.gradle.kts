@@ -1,20 +1,22 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.apollographql.apollo") version "4.0.0"
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-    id("androidx.baselineprofile")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.apollo)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.google.dagger.hilt.android)
+    alias(libs.plugins.androidx.baselineprofile)
 }
 
+val appPackageName = "com.axiel7.anihyou"
+
 android {
-    namespace = "com.axiel7.anihyou"
+    namespace = appPackageName
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.axiel7.anihyou"
+        applicationId = appPackageName
         minSdk = 23
         targetSdk = 34
         versionCode = 78
@@ -119,76 +121,69 @@ composeCompiler {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.activity:activity-compose:1.9.1")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.compose)
 
-    val lifecycleVersion = "2.8.4"
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("androidx.work:work-runtime:2.9.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.core.splashscreen)
 
-    val composeBomVersion = "2024.06.00"
-    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
 
-    val materialVersion = "1.3.0-beta05"
-    implementation("androidx.compose.material3:material3:$materialVersion")
-    implementation("androidx.compose.material3:material3-window-size-class:$materialVersion")
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.window.sizeclass)
 
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
-    implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.glance.appwidget)
 
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation(libs.accompanist.permissions)
 
-    implementation("io.github.fornewid:placeholder-material3:2.0.0")
-    implementation("com.materialkolor:material-kolor:1.7.0")
+    implementation(libs.placeholder.material3)
+    implementation(libs.material.kolor)
 
-    val coilVersion = "3.0.0-alpha09"
-    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
-    implementation("io.coil-kt.coil3:coil-gif:$coilVersion")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:$coilVersion")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.network.okhttp)
 
-    val apolloVersion = "4.0.0"
-    implementation("com.apollographql.apollo:apollo-runtime:$apolloVersion")
-    implementation("com.apollographql.apollo:apollo-normalized-cache:$apolloVersion")
+    implementation(libs.apollo.runtime)
+    implementation(libs.apollo.normalized.cache)
 
-    implementation("com.github.axiel7:compose-markdown:92ce641022")
+    implementation(libs.compose.markdown)
 
-    val hiltVersion = "2.51.1"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    val androidHiltVersion = "1.2.0"
-    ksp("androidx.hilt:hilt-compiler:$androidHiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:$androidHiltVersion")
-    implementation("androidx.hilt:hilt-work:$androidHiltVersion")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.work)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    implementation(libs.androidx.profileinstaller)
     "baselineProfile"(project(":baselineprofile"))
 }
 
 apollo {
     generateSourcesDuringGradleSync.set(false)
     service("service") {
-        packageName.set("com.axiel7.anihyou")
+        packageName.set(appPackageName)
         generateFragmentImplementations.set(true)
         mapScalarToKotlinInt("FuzzyDateInt")
         mapScalar(

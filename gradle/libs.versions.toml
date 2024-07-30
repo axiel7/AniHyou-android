@@ -1,0 +1,89 @@
+[versions]
+accompanistPermissions = "0.34.0"
+agp = "8.5.1"
+androidHilt = "1.2.0"
+apollo = "4.0.0"
+appcompat = "1.7.0"
+benchmarkMacroJunit4 = "1.2.4"
+coilVersion = "3.0.0-alpha09"
+composeMarkdown = "92ce641022"
+coreSplashscreen = "1.0.1"
+datastorePreferences = "1.1.1"
+desugar_jdk_libs = "2.0.4"
+glanceAppwidget = "1.1.0"
+hilt = "2.51.1"
+kotlin = "2.0.0"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitAndroid = "1.2.1"
+espressoCore = "3.6.1"
+kotlinxCoroutinesCore = "1.8.1"
+lifecycleRuntimeKtx = "2.8.4"
+activityCompose = "1.9.1"
+composeBom = "2024.06.00"
+material3 = "1.3.0-beta05"
+materialKolor = "1.7.0"
+navigation = "2.8.0-beta06"
+kotlinxSerialization = "1.7.1"
+placeholderMaterial3 = "2.0.0"
+profileinstaller = "1.3.1"
+uiautomator = "2.3.0"
+workRuntime = "2.9.0"
+ksp = "2.0.0-1.0.22"
+daggerHilt = "2.51.1"
+baselineprofile = "1.2.4"
+
+[libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidHilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidHilt" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "androidHilt" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleRuntimeKtx" }
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+apollo-normalized-cache = { module = "com.apollographql.apollo:apollo-normalized-cache", version.ref = "apollo" }
+apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilVersion" }
+coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coilVersion" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
+compose-markdown = { module = "com.github.axiel7:compose-markdown", version.ref = "composeMarkdown" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroid" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-material3-window-sizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+placeholder-material3 = { module = "io.github.fornewid:placeholder-material3", version.ref = "placeholderMaterial3" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-test = { id = "com.android.test", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
