@@ -1,0 +1,12 @@
+- Home: New "Current" section
+- Details: Added openings and endings
+- Details: Added "Following" section
+- Seasonal: Show status indicator
+- Notifications: mark all as read button
+- MediaList: show lists total count
+- Discover: Newly added anime/manga
+- Details: support for translating using TranslateYou
+- Details: show media title on scroll
+- Home: use last tab as the default
+- Settings: add/remove custom lists
+- Other fixes and improvements
