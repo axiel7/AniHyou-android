@@ -13,12 +13,12 @@ val appPackageName = "com.axiel7.anihyou"
 
 android {
     namespace = appPackageName
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = appPackageName
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 78
         versionName = "1.3.4"
         setProperty("archivesBaseName", "anihyou-$versionName")
