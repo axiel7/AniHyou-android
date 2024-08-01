@@ -42,7 +42,7 @@ class NotificationsViewModel @Inject constructor(
                 val updatedItems = notifications
                     .take(arguments.unreadCount)
                     .map { it.copy(isUnread = false) }
-                notifications.removeRange(0, arguments.unreadCount + 1)
+                notifications.removeRange(0, arguments.unreadCount)
                 notifications.addAll(0, updatedItems)
             }
         }
