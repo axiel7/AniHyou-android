@@ -2,15 +2,14 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.data.api.FavoriteApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FavoriteRepository @Inject constructor(
-    private val api: FavoriteApi
-) {
+    private val api: FavoriteApi,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun toggleFavorite(
         animeId: Int? = null,

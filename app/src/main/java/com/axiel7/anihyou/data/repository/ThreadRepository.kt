@@ -4,8 +4,6 @@ import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.data.api.ThreadApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.thread.ChildComment.Companion.toChildComment
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +11,8 @@ import javax.inject.Singleton
 @Singleton
 class ThreadRepository @Inject constructor(
     private val api: ThreadApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun getThreadDetails(threadId: Int) = api
         .threadDetailsQuery(threadId)

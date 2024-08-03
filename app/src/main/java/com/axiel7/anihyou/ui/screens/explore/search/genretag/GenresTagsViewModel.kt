@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.common.indexOfFirstOrNull
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagStringRes
 import com.axiel7.anihyou.data.repository.SearchRepository

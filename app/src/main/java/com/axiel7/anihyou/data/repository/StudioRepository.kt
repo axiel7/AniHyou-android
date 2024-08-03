@@ -3,15 +3,14 @@ package com.axiel7.anihyou.data.repository
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.StudioDetailsQuery
 import com.axiel7.anihyou.data.api.StudioApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class StudioRepository @Inject constructor(
     private val api: StudioApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun getStudioDetails(
         studioId: Int,

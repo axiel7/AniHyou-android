@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.MediaDetailsQuery
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution.Companion.asStat
 import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.data.repository.FavoriteRepository

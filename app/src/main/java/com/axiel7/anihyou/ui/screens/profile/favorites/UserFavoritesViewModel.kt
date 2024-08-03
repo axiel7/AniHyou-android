@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.profile.favorites
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

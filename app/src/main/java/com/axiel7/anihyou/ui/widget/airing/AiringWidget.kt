@@ -30,7 +30,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource

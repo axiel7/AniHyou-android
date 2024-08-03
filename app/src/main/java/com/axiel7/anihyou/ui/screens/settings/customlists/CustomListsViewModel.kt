@@ -2,7 +2,7 @@ package com.axiel7.anihyou.ui.screens.settings.customlists
 
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Optional
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaListOptionsInput

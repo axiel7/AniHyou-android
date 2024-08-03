@@ -7,8 +7,6 @@ import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.MediaDetailsQuery
 import com.axiel7.anihyou.data.api.MalApi
 import com.axiel7.anihyou.data.api.MediaApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.model.media.MediaCharactersAndStaff
@@ -26,7 +24,8 @@ import javax.inject.Singleton
 class MediaRepository @Inject constructor(
     private val api: MediaApi,
     private val malApi: MalApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun getAiringAnimesPage(
         airingAtGreater: Long? = null,

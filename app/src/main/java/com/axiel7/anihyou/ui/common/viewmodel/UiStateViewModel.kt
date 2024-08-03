@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.common.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.ui.common.event.UiEvent
 import com.axiel7.anihyou.ui.common.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow

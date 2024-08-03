@@ -2,8 +2,8 @@ package com.axiel7.anihyou.ui.screens.home.current
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.common.indexOfFirstOrNull
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository

@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.mediadetails.edit
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.media.advancedScoreNames
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.data.model.media.duration

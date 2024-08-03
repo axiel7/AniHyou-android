@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.data.repository
 
 import com.axiel7.anihyou.data.api.LikeApi
-import com.axiel7.anihyou.data.model.asDataResult
 import com.axiel7.anihyou.fragment.ListActivityFragment
 import com.axiel7.anihyou.fragment.MessageActivityFragment
 import com.axiel7.anihyou.fragment.TextActivityFragment
@@ -12,8 +11,9 @@ import javax.inject.Singleton
 
 @Singleton
 class LikeRepository @Inject constructor(
-    private val api: LikeApi
-) {
+    private val api: LikeApi,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun toggleActivityLike(id: Int, type: ActivityType) = when (type) {
         ActivityType.TEXT -> toggleTextActivityLike(id) { it?.isLiked == true }

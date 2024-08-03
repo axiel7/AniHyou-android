@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.ui.common.viewmodel
 
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.ui.common.event.PagedEvent
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 import kotlinx.coroutines.flow.update
