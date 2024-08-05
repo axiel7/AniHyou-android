@@ -1,11 +1,13 @@
 package com.axiel7.anihyou.data.repository
 
 import android.net.Uri
+import android.util.Log
 import androidx.work.WorkManager
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ViewerOptionsQuery
+import com.axiel7.anihyou.data.api.response.errorString
 import com.axiel7.anihyou.worker.NotificationWorker.Companion.cancelNotificationWork
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +36,8 @@ class LoginRepository @Inject constructor(
             response.data?.Viewer?.let { viewer ->
                 defaultPreferencesRepository.saveViewerInfo(viewer)
             }
+        } else {
+            Log.e("AniHyou", "Error saving user data: ${response.errorString}")
         }
     }
 
