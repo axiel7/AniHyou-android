@@ -32,7 +32,7 @@ jobs:
           java-version: 17
           distribution: adopt
 
-      - if: ${{ inputs.single_apk = true }}
+      - if: ${{ inputs.single_apk == true }}
         run: sed -i -e '/isEnable/s/true/false/' app/build.gradle.kts
 
       - name: Build Android release
