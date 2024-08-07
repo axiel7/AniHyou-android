@@ -361,7 +361,6 @@
     <string name="every_thirty_minutes">Setiap 30 menit</string>
     <string name="every_hour">Setiap jam</string>
     <string name="custom_color">Kostum warna</string>
-    <string name="mark_all_as_read">Tandai semua sudah dibaca</string>
     <string name="newly_manga">Manga Baru Ditambahkan</string>
     <string name="newly_anime">Anime Baru Ditambahkan</string>
     <plurals name="hour_abbreviation">
