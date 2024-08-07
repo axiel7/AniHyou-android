@@ -7,10 +7,14 @@ import com.apollographql.apollo.exception.ApolloHttpException
 import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.api.response.errorString
+import com.axiel7.anihyou.data.model.ErrorResponse
 import com.axiel7.anihyou.fragment.CommonPage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 abstract class BaseNetworkRepository(
     protected val defaultPreferencesRepository: DefaultPreferencesRepository
@@ -32,9 +36,12 @@ abstract class BaseNetworkRepository(
                 }
 
                 response.exception is ApolloHttpException -> {
-                    Log.e("AniHyou", "Network error: ${response.errorString}")
-                    onError(response)
-                    DataResult.Error(message = response.errorString)
+                    val exception = response.exception as ApolloHttpException
+                    val errorResponse = exception.parseBodyToErrorResponse()
+                    errorResponse?.let { onError(it) } ?: onError(response)
+                    val message = errorResponse?.errors?.joinToString { it.message } ?: response.errorString
+                    Log.e("AniHyou", "Network error: $message")
+                    DataResult.Error(message = message)
                 }
 
                 else -> DataResult.Loading
@@ -66,9 +73,12 @@ abstract class BaseNetworkRepository(
                 }
 
                 response.exception is ApolloHttpException -> {
-                    Log.e("AniHyou", "Network error: ${response.errorString}")
-                    onError(response)
-                    PagedResult.Error(message = response.errorString)
+                    val exception = response.exception as ApolloHttpException
+                    val errorResponse = exception.parseBodyToErrorResponse()
+                    errorResponse?.let { onError(it) } ?: onError(response)
+                    val message = errorResponse?.errors?.joinToString { it.message } ?: response.errorString
+                    Log.e("AniHyou", "Network error: $message")
+                    PagedResult.Error(message = message)
                 }
 
                 else -> PagedResult.Loading
@@ -78,6 +88,23 @@ abstract class BaseNetworkRepository(
     private suspend fun <D: Operation.Data> onError(response: ApolloResponse<D>) {
         if (response.errors?.any { it.message == "Invalid token" } == true) {
             onInvalidToken()
+        }
+    }
+
+    private suspend fun onError(error: ErrorResponse) {
+        if (error.errors.any { it.message == "Invalid token" }) {
+            onInvalidToken()
+        }
+    }
+
+    private suspend fun ApolloHttpException.parseBodyToErrorResponse(): ErrorResponse? {
+        val body = body ?: return null
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val bodyString = body.readUtf8()
+                body.close()
+                Json.decodeFromString<ErrorResponse>(bodyString)
+            }.getOrNull()
         }
     }
 

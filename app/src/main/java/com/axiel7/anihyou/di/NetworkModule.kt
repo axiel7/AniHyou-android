@@ -35,6 +35,7 @@ object NetworkModule {
             .serverUrl(ANILIST_GRAPHQL_URL)
             .okHttpClient(okHttpClient)
             .normalizedCache(cacheFactory)
+            .httpExposeErrorBody(true)
             .build()
     }
 
