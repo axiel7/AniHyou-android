@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
+import androidx.datastore.dataStoreFile
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -50,7 +51,7 @@ class AiringWidget : GlanceAppWidget() {
             }
 
             override fun getLocation(context: Context, fileKey: String): File {
-                throw NotImplementedError()
+                return context.dataStoreFile("AiringWidgetDataStore")
             }
         }
 

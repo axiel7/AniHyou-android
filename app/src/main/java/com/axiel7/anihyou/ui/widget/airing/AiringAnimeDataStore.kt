@@ -32,7 +32,7 @@ class AiringAnimeDataStore(
     override suspend fun updateData(
         transform: suspend (t: DataResult<List<AiringWidgetQuery.Medium>>) -> DataResult<List<AiringWidgetQuery.Medium>>
     ): DataResult<List<AiringWidgetQuery.Medium>> {
-        throw NotImplementedError()
+        return transform(data.first())
     }
 
     @EntryPoint
