@@ -13,10 +13,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserStatisticsSort
 import com.axiel7.anihyou.type.UserTitleLanguage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,17 +24,13 @@ class UserRepository @Inject constructor(
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun getUnreadNotificationCount() = defaultPreferencesRepository.accessToken
-        .filterNotNull()
-        .flatMapLatest {
-            api.unreadNotificationCountQuery()
-                .fetchPolicy(FetchPolicy.NetworkOnly)
-                .refetchPolicy(FetchPolicy.NetworkFirst)
-                .watch()
-                .map {
-                    it.data?.Viewer?.unreadNotificationCount
-                }
+    fun getUnreadNotificationCount() = api
+        .unreadNotificationCountQuery()
+        .fetchPolicy(FetchPolicy.NetworkOnly)
+        .refetchPolicy(FetchPolicy.NetworkFirst)
+        .watch()
+        .map {
+            it.data?.Viewer?.unreadNotificationCount
         }
 
     fun getViewerSettings() = api

@@ -370,7 +370,6 @@
     <string name="every_thirty_minutes">30 dakikada bir</string>
     <string name="every_hour">Her saat</string>
     <string name="custom_color">Özel renk</string>
-    <string name="mark_all_as_read">Tümünü okundu olarak işaretle</string>
     <string name="newly_manga">Yeni Eklenen Manga</string>
     <string name="newly_anime">Yeni Eklenen Anime</string>
     <string name="openings" comment="In some languages it may be left unstranslated as the otaku culture understands the english version">Açılış müzikleri</string>

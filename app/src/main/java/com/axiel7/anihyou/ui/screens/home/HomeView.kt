@@ -80,18 +80,22 @@ fun HomeView(
             }
         },
         actions = {
-            val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
-            IconButtonWithBadge(
-                icon = R.drawable.notifications_24,
-                badge = {
-                    if (unreadNotificationCount > 0) {
-                        Badge {
-                            Text(text = unreadNotificationCount.format().orEmpty())
+            if (isLoggedIn) {
+                val unreadNotificationCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle(
+                    initialValue = 0
+                )
+                IconButtonWithBadge(
+                    icon = R.drawable.notifications_24,
+                    badge = {
+                        if (unreadNotificationCount > 0) {
+                            Badge {
+                                Text(text = unreadNotificationCount.format().orEmpty())
+                            }
                         }
-                    }
-                },
-                onClick = { navActionManager.toNotifications(unreadNotificationCount) }
-            )
+                    },
+                    onClick = { navActionManager.toNotifications(unreadNotificationCount) }
+                )
+            }
         },
         scrollBehavior = topAppBarScrollBehavior,
         contentWindowInsets = WindowInsets.systemBars

@@ -368,7 +368,6 @@
     <string name="every_thirty_minutes">Ogni 30 minuti</string>
     <string name="every_hour">Ogni ora</string>
     <string name="custom_color">Colore personalizzato</string>
-    <string name="mark_all_as_read">Segna tutto come letto</string>
     <string name="newly_manga">Manga appena aggiunti</string>
     <string name="newly_anime">Anime appena aggiunti</string>
     <plurals name="hour_abbreviation">
