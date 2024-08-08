@@ -388,6 +388,7 @@
     <string name="openings">Openings</string>
     <string name="endings">Endings</string>
     <string name="list_name">List name</string>
+    <string name="anime_behind">Anime Behind</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

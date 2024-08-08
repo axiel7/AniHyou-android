@@ -45,6 +45,7 @@ import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.AIRING
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.ANIME
+import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.BEHIND
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.MANGA
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItemPlaceholder
@@ -116,6 +117,7 @@ private fun CurrentContent(
             CurrentUiState.Companion.ListType.entries.forEach { type ->
                 val list = when (type) {
                     AIRING -> uiState.airingList
+                    BEHIND -> uiState.behindList
                     ANIME -> uiState.animeList
                     MANGA -> uiState.mangaList
                 }
@@ -216,6 +218,7 @@ private fun CurrentViewPreview() {
                     airingList = remember {
                         mutableStateListOf(exampleCommonMediaListEntry)
                     },
+                    behindList = exampleList,
                     animeList = exampleList,
                     mangaList = exampleList
                 ),

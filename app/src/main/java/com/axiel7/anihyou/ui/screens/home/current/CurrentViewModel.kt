@@ -5,6 +5,8 @@ import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.media.duration
+import com.axiel7.anihyou.data.model.media.episodesBehind
+import com.axiel7.anihyou.data.model.media.isBehind
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaListRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
@@ -16,6 +18,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.AIRING
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.ANIME
+import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.BEHIND
 import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.MANGA
 import com.axiel7.anihyou.utils.NumberUtils.isNullOrZero
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,6 +78,7 @@ class CurrentViewModel @Inject constructor(
                 if (selectedItem.basicMediaListEntry != newListEntry) {
                     val list = when (type) {
                         AIRING -> airingList
+                        BEHIND -> behindList
                         ANIME -> animeList
                         MANGA -> mangaList
                     }
@@ -91,6 +95,12 @@ class CurrentViewModel @Inject constructor(
                                     }
                                 } else {
                                     list[index] = oldValue.copy(basicMediaListEntry = newListEntry)
+                                }
+                                if (type == BEHIND
+                                    && !newListEntry.isBehind(oldValue.media?.nextAiringEpisode?.episode ?: 0)
+                                ) {
+                                    airingList.add(list[index])
+                                    list.removeAt(index)
                                 }
                             }
                     } else {
@@ -150,12 +160,23 @@ class CurrentViewModel @Inject constructor(
                     when (result) {
                         is PagedResult.Success -> {
                             val airingList = result.list
-                                .filter { it.media?.status == MediaStatus.RELEASING }
-                                .sortedWith(compareBy(nullsLast()) { it.media?.nextAiringEpisode?.timeUntilAiring })
+                                .filter {
+                                    it.media?.status == MediaStatus.RELEASING && !it.isBehind()
+                                }
+                                .sortedWith(
+                                    compareBy(nullsLast()) { it.media?.nextAiringEpisode?.timeUntilAiring }
+                                )
+                            val behindList = result.list
+                                .filter {
+                                    it.media?.status == MediaStatus.RELEASING && it.isBehind()
+                                }
+                                .sortedBy { it.episodesBehind() }
                             val animeList = result.list
                                 .filter { it.media?.status != MediaStatus.RELEASING }
                             uiState.airingList.clear()
                             uiState.airingList.addAll(airingList)
+                            uiState.behindList.clear()
+                            uiState.behindList.addAll(behindList)
                             uiState.animeList.clear()
                             uiState.animeList.addAll(animeList)
                             uiState.copy(

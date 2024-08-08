@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.episodesBehind
 import com.axiel7.anihyou.data.model.media.isBehind
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
@@ -21,12 +22,11 @@ fun AiringScheduleText(
     textAlign: TextAlign? = null,
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
-        val isBehind =
-            item.basicMediaListEntry.isBehind(nextAiringEpisode = nextAiringEpisode.episode)
+        val isBehind = item.isBehind()
         Text(
             text =
             if (isBehind) {
-                val episodes = (nextAiringEpisode.episode - 1) - (item.basicMediaListEntry.progress ?: 0)
+                val episodes = item.episodesBehind()
                 pluralStringResource(
                     id = R.plurals.num_episodes_behind,
                     count = episodes,
