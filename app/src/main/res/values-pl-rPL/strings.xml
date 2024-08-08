@@ -387,6 +387,7 @@
     <string name="openings">Czołówki</string>
     <string name="endings">Endingi</string>
     <string name="list_name">Nazwa listy</string>
+    <string name="anime_behind">Zaległe Anime</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d godz</item>
         <item quantity="few">%d godz</item>
