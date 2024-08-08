@@ -375,6 +375,7 @@
     <string name="openings">Açılış müzikleri</string>
     <string name="endings">Kapanış müzikleri</string>
     <string name="list_name">Liste adı</string>
+    <string name="anime_behind">Bekleyen Anime</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d saat</item>
         <item quantity="other">%d saat</item>
