@@ -13,6 +13,17 @@ data class GenericNotification(
     val createdAt: Int?,
     val isUnread: Boolean = false,
 ) {
+    val isMedia
+        get() = when (type) {
+            NotificationType.AIRING,
+            NotificationType.RELATED_MEDIA_ADDITION,
+            NotificationType.MEDIA_DATA_CHANGE,
+            NotificationType.MEDIA_MERGE,
+            NotificationType.MEDIA_DELETION -> true
+
+            else -> false
+        }
+
     companion object {
         fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
             val tempList = mutableListOf<GenericNotification>()

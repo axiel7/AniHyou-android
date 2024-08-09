@@ -27,6 +27,7 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.screens.main.MainActivity
+import com.axiel7.anihyou.utils.ImageUtils.getBitmapFromUrl
 import com.axiel7.anihyou.utils.NotificationUtils.createNotificationChannel
 import com.axiel7.anihyou.utils.NotificationUtils.showNotification
 import dagger.assisted.Assisted
@@ -98,11 +99,18 @@ class NotificationWorker @AssistedInject constructor(
                             PendingIntent.FLAG_IMMUTABLE
                         )
                     }
+
+                    val image = it.imageUrl?.let { url ->
+                        applicationContext.getBitmapFromUrl(url)
+                    }
+
                     applicationContext.showNotification(
                         notificationId = it.id,
                         channelId = DEFAULT_CHANNEL_ID,
                         title = it.text,
                         text = "",
+                        largeIcon = image,
+                        bigPicture = image.takeIf { _ -> it.isMedia },
                         pendingIntent = pendingIntent,
                         group = "default"
                     )
