@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - '*'
+    paths:
+      - 'version.properties'
   workflow_dispatch:
     inputs:
       single_apk:
