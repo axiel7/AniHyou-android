@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -10,6 +12,9 @@ plugins {
 }
 
 val appPackageName = "com.axiel7.anihyou"
+val versionProps = Properties().also {
+    it.load(project.rootProject.file("version.properties").reader())
+}
 
 android {
     namespace = appPackageName
@@ -19,8 +24,8 @@ android {
         applicationId = appPackageName
         minSdk = 23
         targetSdk = 35
-        versionCode = 78
-        versionName = "1.3.4"
+        versionCode = versionProps.getProperty("code").toInt()
+        versionName = versionProps.getProperty("name")
         setProperty("archivesBaseName", "anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
