@@ -14,8 +14,6 @@ import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toBoolean
-import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toTriBoolean
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +44,7 @@ class SearchViewModel @Inject constructor(
                 genreIn = arguments.genre?.let { listOf(it) } ?: emptyList(),
                 tagIn = arguments.tag?.let { listOf(it) } ?: emptyList()
             ),
-            onMyList = arguments.onList.toTriBoolean().toBoolean(),
+            onMyList = arguments.onList,
             hasNextPage = arguments.genre != null
                     || arguments.tag != null
                     || arguments.mediaSort != null

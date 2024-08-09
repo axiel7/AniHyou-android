@@ -87,7 +87,7 @@ class NavActionManager(
 
     fun toSearchOnMyList(mediaType: MediaType) {
         navController.navigate(
-            Search(mediaType = mediaType.rawValue, onList = TriBoolean.TRUE.value, focus = true)
+            Search(mediaType = mediaType.rawValue, onList = true, focus = true)
         )
     }
 

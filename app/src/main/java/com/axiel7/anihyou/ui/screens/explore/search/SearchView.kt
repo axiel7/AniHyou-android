@@ -57,7 +57,6 @@ import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.common.navigation.TriBoolean
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.ui.composables.common.FilterSelectionChip
@@ -85,7 +84,7 @@ data class Search(
     val mediaSort: String? = null,
     val genre: String? = null,
     val tag: String? = null,
-    val onList: Int = TriBoolean.NONE.value,
+    val onList: Boolean? = null,
     val focus: Boolean = false,
 )
 
