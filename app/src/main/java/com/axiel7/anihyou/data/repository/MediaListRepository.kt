@@ -4,9 +4,7 @@ import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.data.api.MediaListApi
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonPage
@@ -24,8 +22,9 @@ import javax.inject.Singleton
 
 @Singleton
 class MediaListRepository @Inject constructor(
-    private val api: MediaListApi
-) {
+    private val api: MediaListApi,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
     fun getMediaListCollection(
         userId: Int,
         mediaType: MediaType,

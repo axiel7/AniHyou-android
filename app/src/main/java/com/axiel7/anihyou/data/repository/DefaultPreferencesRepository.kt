@@ -34,7 +34,7 @@ class DefaultPreferencesRepository @Inject constructor(
 
     // user credentials
     val accessToken = dataStore.getValue(ACCESS_TOKEN_KEY)
-    suspend fun setAccessToken(value: String) {
+    suspend fun setAccessToken(value: String?) {
         dataStore.setValue(ACCESS_TOKEN_KEY, value)
     }
 

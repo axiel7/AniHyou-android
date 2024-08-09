@@ -3,8 +3,8 @@ package com.axiel7.anihyou.ui.screens.studiodetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.data.repository.StudioRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel

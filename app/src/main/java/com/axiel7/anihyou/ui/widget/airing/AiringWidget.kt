@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
+import androidx.datastore.dataStoreFile
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -30,7 +31,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
@@ -50,7 +51,7 @@ class AiringWidget : GlanceAppWidget() {
             }
 
             override fun getLocation(context: Context, fileKey: String): File {
-                throw NotImplementedError()
+                return context.dataStoreFile("AiringWidgetDataStore")
             }
         }
 

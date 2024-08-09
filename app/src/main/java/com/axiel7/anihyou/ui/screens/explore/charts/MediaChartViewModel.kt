@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.MediaChartQuery
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.media.ChartType
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry

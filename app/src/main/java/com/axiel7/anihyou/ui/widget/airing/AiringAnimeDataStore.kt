@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.common.GlobalVariables
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import dagger.hilt.EntryPoint
@@ -32,7 +32,7 @@ class AiringAnimeDataStore(
     override suspend fun updateData(
         transform: suspend (t: DataResult<List<AiringWidgetQuery.Medium>>) -> DataResult<List<AiringWidgetQuery.Medium>>
     ): DataResult<List<AiringWidgetQuery.Medium>> {
-        throw NotImplementedError()
+        return transform(data.first())
     }
 
     @EntryPoint

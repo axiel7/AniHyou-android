@@ -6,15 +6,14 @@ import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.data.api.ActivityApi
 import com.axiel7.anihyou.data.model.activity.ActivityTypeGrouped
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActivityRepository @Inject constructor(
     private val api: ActivityApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun getActivityFeed(
         isFollowing: Boolean,

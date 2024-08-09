@@ -5,8 +5,6 @@ import com.axiel7.anihyou.data.api.MediaApi
 import com.axiel7.anihyou.data.api.StaffApi
 import com.axiel7.anihyou.data.api.StudioApi
 import com.axiel7.anihyou.data.api.UserApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.genre.GenresAndTags
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
@@ -24,7 +22,8 @@ class SearchRepository @Inject constructor(
     private val staffApi: StaffApi,
     private val studioApi: StudioApi,
     private val userApi: UserApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun searchMedia(
         mediaType: MediaType,

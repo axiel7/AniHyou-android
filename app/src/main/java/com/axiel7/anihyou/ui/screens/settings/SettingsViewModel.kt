@@ -3,7 +3,7 @@ package com.axiel7.anihyou.ui.screens.settings
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.notification.NotificationInterval
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.ListPreferencesRepository

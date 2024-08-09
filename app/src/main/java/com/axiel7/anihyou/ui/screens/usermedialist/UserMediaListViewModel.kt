@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.common.firstBlocking
 import com.axiel7.anihyou.common.indexOfFirstOrNull
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.media.ListType
 import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.data.model.media.duration

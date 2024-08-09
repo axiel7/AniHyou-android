@@ -15,6 +15,7 @@ import com.axiel7.anihyou.ui.common.state.UiState
 data class CurrentUiState(
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10_DECIMAL,
     val airingList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val behindList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val animeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val mangaList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val selectedItem: CommonMediaListEntry? = null,
@@ -29,21 +30,25 @@ data class CurrentUiState(
 
     private val hasAiring get() = airingList.isNotEmpty()
 
+    private val hasBehind get() = behindList.isNotEmpty()
+
     private val hasAnime get() = animeList.isNotEmpty()
 
     private val hasManga get() = mangaList.isNotEmpty()
 
-    val hasNothing get() = !hasAiring && !hasAnime && !hasManga
+    val hasNothing get() = !hasAiring && !hasBehind && !hasAnime && !hasManga
 
     companion object {
         enum class ListType: Localizable {
             AIRING,
+            BEHIND,
             ANIME,
             MANGA;
 
             @Composable
             override fun localized() = when (this) {
                 AIRING -> stringResource(R.string.airing)
+                BEHIND -> stringResource(R.string.anime_behind)
                 ANIME -> stringResource(R.string.watching)
                 MANGA -> stringResource(R.string.reading)
             }

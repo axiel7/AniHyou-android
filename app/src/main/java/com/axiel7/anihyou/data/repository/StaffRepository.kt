@@ -3,8 +3,6 @@ package com.axiel7.anihyou.data.repository
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.StaffDetailsQuery
 import com.axiel7.anihyou.data.api.StaffApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.staff.StaffMediaGrouped
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +10,8 @@ import javax.inject.Singleton
 @Singleton
 class StaffRepository @Inject constructor(
     private val api: StaffApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
     fun getStaffDetails(staffId: Int) = api
         .staffDetailsQuery(staffId)

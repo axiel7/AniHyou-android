@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.CharacterMediaQuery
-import com.axiel7.anihyou.data.model.DataResult
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.repository.CharacterRepository
 import com.axiel7.anihyou.data.repository.FavoriteRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry

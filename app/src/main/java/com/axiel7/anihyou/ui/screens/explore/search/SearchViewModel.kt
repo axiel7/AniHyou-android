@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.SearchMediaQuery
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin

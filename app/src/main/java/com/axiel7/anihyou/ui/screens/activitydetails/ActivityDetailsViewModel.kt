@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.axiel7.anihyou.ActivityDetailsQuery
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.activity.toGenericActivity
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.LikeRepository

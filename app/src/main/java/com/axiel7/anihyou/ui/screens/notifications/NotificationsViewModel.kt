@@ -3,7 +3,7 @@ package com.axiel7.anihyou.ui.screens.notifications
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.data.repository.NotificationRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -33,18 +33,6 @@ class NotificationsViewModel @Inject constructor(
     override fun setType(value: NotificationTypeGroup) {
         mutableUiState.update {
             it.copy(type = value, page = 1, hasNextPage = true)
-        }
-    }
-
-    override fun markAllAsRead() {
-        if (arguments.unreadCount > 0) {
-            mutableUiState.value.run {
-                val updatedItems = notifications
-                    .take(arguments.unreadCount)
-                    .map { it.copy(isUnread = false) }
-                notifications.removeRange(0, arguments.unreadCount + 1)
-                notifications.addAll(0, updatedItems)
-            }
         }
     }
 

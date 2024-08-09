@@ -2,7 +2,6 @@ package com.axiel7.anihyou.data.repository
 
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.data.api.NotificationsApi
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.notification.GenericNotification.Companion.toGenericNotifications
 import com.axiel7.anihyou.data.model.notification.NotificationTypeGroup
 import javax.inject.Inject
@@ -11,7 +10,8 @@ import javax.inject.Singleton
 @Singleton
 class NotificationRepository @Inject constructor(
     private val api: NotificationsApi,
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
     fun getNotificationsPage(
         type: NotificationTypeGroup,
         resetCount: Boolean,

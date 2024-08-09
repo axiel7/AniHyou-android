@@ -2,7 +2,7 @@ package com.axiel7.anihyou.ui.screens.home.discover
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.PagedResult
+import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.MediaRepository
 import com.axiel7.anihyou.fragment.BasicMediaDetails

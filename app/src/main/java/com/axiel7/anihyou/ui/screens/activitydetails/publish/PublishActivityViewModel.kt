@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.activitydetails.publish
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

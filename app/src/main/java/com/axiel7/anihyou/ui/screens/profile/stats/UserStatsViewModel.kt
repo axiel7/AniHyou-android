@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.ui.screens.profile.stats
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.data.model.DataResult
+import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.stats.StatDistributionType
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.MediaType

@@ -14,7 +14,13 @@ fun CommonMediaListEntry.calculateProgressBarValue(): Float {
     else (basicMediaListEntry.progress ?: 0).div(total.toFloat())
 }
 
+fun CommonMediaListEntry.isBehind() =
+    (basicMediaListEntry.progress ?: 0) < (media?.nextAiringEpisode?.episode?.minus(1) ?: 0)
+
 fun BasicMediaListEntry.isBehind(nextAiringEpisode: Int) = (progress ?: 0) < (nextAiringEpisode - 1)
+
+fun CommonMediaListEntry.episodesBehind() =
+    (media?.nextAiringEpisode?.episode?.minus(1) ?: 0) - (basicMediaListEntry.progress ?: 0)
 
 @Suppress("UNCHECKED_CAST")
 fun BasicMediaListEntry.advancedScoreNames() = (advancedScores as? LinkedHashMap<String, Any>)?.keys

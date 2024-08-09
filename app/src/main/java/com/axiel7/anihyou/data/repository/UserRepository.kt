@@ -5,8 +5,6 @@ import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.refetchPolicy
 import com.apollographql.apollo.cache.normalized.watch
 import com.axiel7.anihyou.data.api.UserApi
-import com.axiel7.anihyou.data.model.asDataResult
-import com.axiel7.anihyou.data.model.asPagedResult
 import com.axiel7.anihyou.data.model.stats.overview.toOverviewStats
 import com.axiel7.anihyou.type.ActivitySort
 import com.axiel7.anihyou.type.MediaListOptionsInput
@@ -15,10 +13,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserStatisticsSort
 import com.axiel7.anihyou.type.UserTitleLanguage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,20 +21,16 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     private val api: UserApi,
-    private val defaultPreferencesRepository: DefaultPreferencesRepository
-) {
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : BaseNetworkRepository(defaultPreferencesRepository) {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun getUnreadNotificationCount() = defaultPreferencesRepository.accessToken
-        .filterNotNull()
-        .flatMapLatest {
-            api.unreadNotificationCountQuery()
-                .fetchPolicy(FetchPolicy.NetworkOnly)
-                .refetchPolicy(FetchPolicy.NetworkFirst)
-                .watch()
-                .map {
-                    it.data?.Viewer?.unreadNotificationCount
-                }
+    fun getUnreadNotificationCount() = api
+        .unreadNotificationCountQuery()
+        .fetchPolicy(FetchPolicy.NetworkOnly)
+        .refetchPolicy(FetchPolicy.NetworkFirst)
+        .watch()
+        .map {
+            it.data?.Viewer?.unreadNotificationCount
         }
 
     fun getViewerSettings() = api
