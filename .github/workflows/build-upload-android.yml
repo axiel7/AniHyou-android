@@ -2,8 +2,6 @@ name: Android Build Release APK
 
 on:
   push:
-    tags:
-      - '*'
     paths:
       - 'version.properties'
   workflow_dispatch:
