@@ -88,6 +88,11 @@ class AiringWidget : GlanceAppWidget() {
                                 color = GlanceTheme.colors.onSurface
                             )
                         )
+                        RefreshButton(
+                            onClick = {
+                                scope.launch { update(context, id) }
+                            }
+                        )
                     }
                 }
             }
