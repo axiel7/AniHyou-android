@@ -384,6 +384,9 @@
     <string name="custom_color">Користувацький колір</string>
     <string name="newly_manga">Нещодавно додана Манґа</string>
     <string name="newly_anime">Нещодавно додане Аніме</string>
+    <string name="openings">Опенінґи</string>
+    <string name="endings">Ендінґи</string>
+    <string name="list_name">Назва списку</string>
     <string name="anime_behind">Аніме позаду</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
