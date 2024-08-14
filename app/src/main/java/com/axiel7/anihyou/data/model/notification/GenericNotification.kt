@@ -216,7 +216,7 @@ data class GenericNotification(
                     tempList.add(
                         GenericNotification(
                             id = noti.id,
-                            text = "${noti.media?.title?.userPreferred}${noti.context}",
+                            text = "${noti.media?.title?.userPreferred}${noti.context}\n${noti.reason}",
                             imageUrl = noti.media?.coverImage?.medium,
                             contentId = noti.mediaId,
                             type = noti.type,

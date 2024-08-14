@@ -219,6 +219,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                 id
                 context
                 mediaId
+                reason
                 media {
                     title {
                         userPreferred
