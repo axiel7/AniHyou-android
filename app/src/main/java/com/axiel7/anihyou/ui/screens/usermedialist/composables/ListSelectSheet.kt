@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -124,7 +125,8 @@ private fun StatusItem(
         Text(
             text = name,
             modifier = Modifier.padding(start = 8.dp),
-            color = tint
+            color = tint,
+            fontWeight = FontWeight.SemiBold.takeIf { isSelected },
         )
         Spacer(modifier = Modifier.weight(1f))
         if (count > 0) {
@@ -132,6 +134,7 @@ private fun StatusItem(
                 text = count.format() ?: count.toString(),
                 modifier = Modifier.padding(end = 8.dp),
                 color = tint,
+                fontWeight = FontWeight.SemiBold.takeIf { isSelected },
                 textAlign = TextAlign.End,
             )
         }
