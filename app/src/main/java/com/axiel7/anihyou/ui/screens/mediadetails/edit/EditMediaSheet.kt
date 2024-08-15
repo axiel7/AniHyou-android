@@ -62,12 +62,12 @@ import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.type.ScoreFormat
-import com.axiel7.anihyou.ui.composables.ModalBottomSheet
 import com.axiel7.anihyou.ui.composables.PlainPreference
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.ui.composables.SwitchPreference
 import com.axiel7.anihyou.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.ui.composables.scores.RatingView
+import com.axiel7.anihyou.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.CustomListsDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.composables.EditMediaDateField

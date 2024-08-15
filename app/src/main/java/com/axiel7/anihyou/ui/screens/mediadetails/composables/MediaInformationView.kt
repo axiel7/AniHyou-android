@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -48,8 +51,6 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
-import com.axiel7.anihyou.utils.StringUtils.buildQueryFromThemeText
-import com.axiel7.anihyou.utils.YOUTUBE_QUERY_URL
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -293,6 +294,21 @@ fun MediaInformationView(
             }
         }
 
+        // Openings/Endings
+        var showMusicSheet by remember { mutableStateOf(false) }
+        var selectedSong by remember { mutableStateOf<String?>(null) }
+
+        if (showMusicSheet && selectedSong != null) {
+            MusicStreamingSheet(
+                songTitle = selectedSong.orEmpty(),
+                bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+                    .calculateBottomPadding(),
+                onDismiss = {
+                    showMusicSheet = false
+                    selectedSong = null
+                }
+            )
+        }
         if (!uiState.openings.isNullOrEmpty()) {
             InfoTitle(text = stringResource(R.string.openings))
 
@@ -302,9 +318,8 @@ fun MediaInformationView(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                         .clickable {
-                            context.openActionView(
-                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                            )
+                            selectedSong = theme.text
+                            showMusicSheet = true
                         },
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -319,9 +334,8 @@ fun MediaInformationView(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                         .clickable {
-                            context.openActionView(
-                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                            )
+                            selectedSong = theme.text
+                            showMusicSheet = true
                         },
                     color = MaterialTheme.colorScheme.primary
                 )

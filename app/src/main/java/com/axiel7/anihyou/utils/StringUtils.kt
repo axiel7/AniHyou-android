@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.utils
 
 import android.graphics.Typeface
+import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -60,13 +61,15 @@ object StringUtils {
         }
     }
 
+    fun String.urlEncode(): String? = Uri.encode(this)
+
     /**
      * Format the opening/ending text from MAL to use it on YouTube search
      */
     fun String.buildQueryFromThemeText() = this
-        .replace(" ", "+")
         .replace("\"", "")
         .replaceFirst(Regex("#?\\w+:"), "") // theme number
         .replace(Regex("\\(ep.*\\)"), "") // episodes
         .trim()
+        .urlEncode()
 }
