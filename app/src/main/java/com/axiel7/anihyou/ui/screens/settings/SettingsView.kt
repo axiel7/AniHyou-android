@@ -96,7 +96,8 @@ private fun SettingsContent(
     navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = (uiState.theme == Theme.FOLLOW_SYSTEM && isSystemInDarkTheme())
+            || uiState.theme == Theme.DARK
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
