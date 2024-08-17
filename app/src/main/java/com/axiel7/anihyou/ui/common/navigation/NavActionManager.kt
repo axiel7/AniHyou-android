@@ -20,6 +20,7 @@ import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
 import com.axiel7.anihyou.ui.screens.explore.search.Search
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
+import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivity
 import com.axiel7.anihyou.ui.screens.notifications.Notifications
 import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
@@ -43,6 +44,10 @@ class NavActionManager(
 
     fun toMediaDetails(id: Int) {
         navController.navigate(MediaDetails(id))
+    }
+
+    fun toMediaActivity(mediaId: Int) {
+        navController.navigate(MediaActivity(mediaId))
     }
 
     fun toCharacterDetails(id: Int) {

@@ -157,7 +157,9 @@ fun ReviewThreadListView(
         if (uiState.activity.isNotEmpty()) {
             HorizontalListHeader(
                 text = stringResource(R.string.activity),
-                onClick = {}
+                onClick = {
+                    uiState.details?.id?.let(navActionManager::toMediaActivity)
+                }
             )
             LazyRow(
                 modifier = Modifier

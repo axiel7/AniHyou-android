@@ -24,6 +24,7 @@ fragment ListActivityFragment on ListActivity {
     likeCount
     replyCount
     isLocked
+    type
     progress
     status
     userId

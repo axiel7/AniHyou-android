@@ -111,31 +111,10 @@ fun ActivityItem(
                         maxLines = 3
                     )
                 }
-                Box(
-                    modifier = Modifier
-                        .wrapContentSize(Alignment.TopEnd)
-                        .align(Alignment.Top)
-                ) {
-                    var moreExpanded by remember { mutableStateOf(false) }
-                    IconButton(onClick = { moreExpanded = !moreExpanded }) {
-                        Icon(
-                            painter = painterResource(R.drawable.more_vert_24),
-                            contentDescription = stringResource(R.string.show_more),
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = moreExpanded,
-                        onDismissRequest = { moreExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(R.string.delete)) },
-                            onClick = {
-                                moreExpanded = false
-                                onClickDelete()
-                            },
-                        )
-                    }
-                }
+                ActivityMenu(
+                    modifier = Modifier.align(Alignment.Top),
+                    onClickDelete = onClickDelete
+                )
             }
 
             Row(
@@ -169,6 +148,34 @@ fun ActivityItem(
                     iconSize = 20.dp,
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ActivityMenu(
+    modifier: Modifier = Modifier,
+    onClickDelete: () -> Unit,
+) {
+    Box(modifier = modifier.wrapContentSize(Alignment.TopEnd)) {
+        var moreExpanded by remember { mutableStateOf(false) }
+        IconButton(onClick = { moreExpanded = !moreExpanded }) {
+            Icon(
+                painter = painterResource(R.drawable.more_vert_24),
+                contentDescription = stringResource(R.string.show_more),
+            )
+        }
+        DropdownMenu(
+            expanded = moreExpanded,
+            onDismissRequest = { moreExpanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.delete)) },
+                onClick = {
+                    moreExpanded = false
+                    onClickDelete()
+                },
+            )
         }
     }
 }
