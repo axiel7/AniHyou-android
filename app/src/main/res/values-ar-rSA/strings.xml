@@ -4,14 +4,6 @@
     <string name="anime">الأنمي</string>
     <string name="manga">المانجا</string>
     <string name="explore">تصفح</string>
-    <plurals name="num_years">
-        <item quantity="zero">%dلا توجد أعوام</item>
-        <item quantity="one">%d عام واحد</item>
-        <item quantity="two">%d عامان</item>
-        <item quantity="few">%d بضع أعوام</item>
-        <item quantity="many">أعوام عديدة %d</item>
-        <item quantity="other">%d أعوام كثيرة</item>
-    </plurals>
     <plurals name="num_months">
         <item quantity="zero">%d لاتوجد شهور</item>
         <item quantity="one">%dشهر واحد</item>
