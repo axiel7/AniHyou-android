@@ -39,7 +39,9 @@ fun <T> HorizontalStatsBar(
     showTotal: Boolean = true,
     isLoading: Boolean = false,
 ) where T : Localizable, T : Colorable {
-    val totalValue = stats.map { it.value }.sum()
+    val totalValue = remember(stats) {
+        stats.map { it.value }.sum()
+    }
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
