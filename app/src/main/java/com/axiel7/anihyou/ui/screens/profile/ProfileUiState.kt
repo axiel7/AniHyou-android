@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.UserActivityQuery
+import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.ui.common.state.PagedUiState
 
@@ -22,4 +23,10 @@ data class ProfileUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
+
+    fun findActivityIndex(id: Int) = activities.indexOfFirstOrNull {
+        it.onListActivity?.listActivityFragment?.id == id
+                || it.onTextActivity?.textActivityFragment?.id == id
+                || it.onMessageActivity?.messageActivityFragment?.id == id
+    }
 }

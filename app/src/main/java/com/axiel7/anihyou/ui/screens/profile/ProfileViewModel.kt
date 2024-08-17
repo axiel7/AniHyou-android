@@ -6,6 +6,7 @@ import androidx.navigation.toRoute
 import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.api.response.PagedResult
 import com.axiel7.anihyou.data.model.activity.updateLikeStatus
+import com.axiel7.anihyou.data.repository.ActivityRepository
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LikeRepository
 import com.axiel7.anihyou.data.repository.UserRepository
@@ -26,6 +27,7 @@ class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
+    private val activityRepository: ActivityRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
@@ -101,11 +103,7 @@ class ProfileViewModel @Inject constructor(
         likeRepository.toggleListActivityLike(id).onEach { result ->
             if (result is DataResult.Success && result.data != null) {
                 mutableUiState.value.run {
-                    val foundIndex = activities.indexOfFirst {
-                        it.onListActivity?.listActivityFragment?.id == id
-                                || it.onTextActivity?.textActivityFragment?.id == id
-                    }
-                    if (foundIndex != -1) {
+                    findActivityIndex(id)?.let { foundIndex ->
                         val oldItem = activities[foundIndex]
                         activities[foundIndex] = oldItem.copy(
                             onTextActivity = oldItem.onTextActivity?.copy(
@@ -120,7 +118,21 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
-        }
+        }.launchIn(viewModelScope)
+    }
+
+    override fun deleteActivity(id: Int) {
+        activityRepository.deleteActivity(id).onEach { result ->
+            if (result is DataResult.Success && result.data == true) {
+                mutableUiState.value.run {
+                    findActivityIndex(id)?.let { foundIndex ->
+                        activities.removeAt(foundIndex)
+                    }
+                }
+            } else if (result is DataResult.Error) {
+                mutableUiState.update { it.copy(error = result.message) }
+            }
+        }.launchIn(viewModelScope)
     }
 
     init {

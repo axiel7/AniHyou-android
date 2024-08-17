@@ -71,6 +71,9 @@ fun UserActivityView(
                     },
                     onClickLike = {
                         event?.toggleLikeActivity(activity.id)
+                    },
+                    onClickDelete = {
+                        event?.deleteActivity(activity.id)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
@@ -97,6 +100,9 @@ fun UserActivityView(
                     },
                     onClickLike = {
                         event?.toggleLikeActivity(activity.id)
+                    },
+                    onClickDelete = {
+                        event?.deleteActivity(activity.id)
                     },
                     navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
@@ -125,6 +131,9 @@ fun UserActivityView(
                     },
                     onClickLike = {
                         event?.toggleLikeActivity(activity.id)
+                    },
+                    onClickDelete = {
+                        event?.deleteActivity(activity.id)
                     },
                     navigateToFullscreenImage = navActionManager::toFullscreenImage
                 )
