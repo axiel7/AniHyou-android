@@ -1,0 +1,16 @@
+query MediaActivity($mediaId: Int, $userId: Int, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        activities(mediaId: $mediaId, userId: $userId, sort: [ID_DESC]) {
+            ...ListActivityFragment
+            ... on MessageActivity {
+                id
+            }
+            ... on TextActivity {
+                id
+            }
+        }
+        pageInfo {
+            ...CommonPage
+        }
+    }
+}

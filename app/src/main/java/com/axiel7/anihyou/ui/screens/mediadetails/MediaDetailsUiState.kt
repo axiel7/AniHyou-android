@@ -12,6 +12,7 @@ import com.axiel7.anihyou.data.model.stats.Stat
 import com.axiel7.anihyou.data.model.stats.overview.ScoreDistribution
 import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution
 import com.axiel7.anihyou.fragment.CommonVoiceActor
+import com.axiel7.anihyou.fragment.ListActivityFragment
 import com.axiel7.anihyou.fragment.MediaCharacter
 import com.axiel7.anihyou.fragment.MediaStaff
 import com.axiel7.anihyou.ui.common.state.UiState
@@ -42,6 +43,9 @@ data class MediaDetailsUiState(
 
     val isLoadingReviews: Boolean = true,
     val reviews: List<MediaReviewsQuery.Node> = emptyList(),
+
+    val isLoadingActivity: Boolean = true,
+    val activity: List<ListActivityFragment> = emptyList(),
 
     override val error: String? = null,
     override val isLoading: Boolean = true,

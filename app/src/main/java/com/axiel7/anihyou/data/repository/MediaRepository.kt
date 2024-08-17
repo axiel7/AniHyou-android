@@ -182,6 +182,18 @@ class MediaRepository @Inject constructor(
             it.Page?.threads?.filterNotNull().orEmpty()
         }
 
+    fun getMediaActivityPage(
+        mediaId: Int,
+        userId: Int? = null,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaActivityQuery(mediaId, userId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.activities?.mapNotNull { it?.listActivityFragment }.orEmpty()
+        }
+
     // widget
 
     fun getAiringWidgetData(

@@ -11,6 +11,7 @@ interface MediaDetailsEvent {
     fun fetchStats()
     fun fetchThreads()
     fun fetchReviews()
+    fun fetchActivity()
     fun showVoiceActorsSheet(character: MediaCharacter)
     fun hideVoiceActorSheet()
 }

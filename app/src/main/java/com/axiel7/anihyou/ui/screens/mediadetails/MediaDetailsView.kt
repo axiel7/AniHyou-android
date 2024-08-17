@@ -519,15 +519,12 @@ fun MediaInfoTabs(
                     if (uiState.threads.isEmpty() && uiState.reviews.isEmpty()) {
                         event?.fetchThreads()
                         event?.fetchReviews()
+                        event?.fetchActivity()
                     }
                 }
                 ReviewThreadListView(
-                    mediaThreads = uiState.threads,
-                    mediaReviews = uiState.reviews,
-                    isLoadingThreads = uiState.isLoadingThreads,
-                    isLoadingReviews = uiState.isLoadingReviews,
-                    navigateToReviewDetails = navActionManager::toReviewDetails,
-                    navigateToThreadDetails = navActionManager::toThreadDetails,
+                    uiState = uiState,
+                    navActionManager = navActionManager,
                 )
             }
         }

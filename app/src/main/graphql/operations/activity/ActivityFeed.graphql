@@ -6,12 +6,6 @@ query ActivityFeed($page: Int, $perPage: Int, $isFollowing: Boolean, $typeIn: [A
             }
             ... on ListActivity {
                 ...ListActivityFragment
-                user {
-                    name
-                    avatar {
-                        medium
-                    }
-                }
             }
             ... on MessageActivity {
                 ...MessageActivityFragment
@@ -30,10 +24,15 @@ fragment ListActivityFragment on ListActivity {
     likeCount
     replyCount
     isLocked
-    type
     progress
     status
     userId
+    user {
+        name
+        avatar {
+            medium
+        }
+    }
     media {
         id
         title {

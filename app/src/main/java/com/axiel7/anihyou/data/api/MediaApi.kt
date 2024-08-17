@@ -7,6 +7,7 @@ import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.GenreTagCollectionQuery
+import com.axiel7.anihyou.MediaActivityQuery
 import com.axiel7.anihyou.MediaCharactersAndStaffQuery
 import com.axiel7.anihyou.MediaChartQuery
 import com.axiel7.anihyou.MediaDetailsQuery
@@ -228,8 +229,8 @@ class MediaApi @Inject constructor(
 
     fun mediaThreadsQuery(
         mediaId: Int,
-        page: Int = 1,
-        perPage: Int = 25,
+        page: Int,
+        perPage: Int,
     ) = client
         .query(
             MediaThreadsQuery(
@@ -237,6 +238,21 @@ class MediaApi @Inject constructor(
                 perPage = Optional.present(perPage),
                 mediaCategoryId = Optional.present(mediaId),
                 sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
+            )
+        )
+
+    fun mediaActivityQuery(
+        mediaId: Int,
+        userId: Int?,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            MediaActivityQuery(
+                mediaId = Optional.present(mediaId),
+                userId = Optional.presentIfNotNull(userId),
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
             )
         )
 

@@ -93,29 +93,29 @@ private fun ActivityFeedContent(
                 items = uiState.activities,
                 contentType = { it }
             ) { item ->
-                item.onListActivity?.let {
+                item.onListActivity?.listActivityFragment?.let {
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         type = ActivityType.MEDIA_LIST,
                         username = it.user?.name,
                         avatarUrl = it.user?.avatar?.medium,
-                        createdAt = it.listActivityFragment.createdAt,
-                        text = it.listActivityFragment.text(),
-                        replyCount = it.listActivityFragment.replyCount,
-                        likeCount = it.listActivityFragment.likeCount,
-                        isLiked = it.listActivityFragment.isLiked,
-                        mediaCoverUrl = it.listActivityFragment.media?.coverImage?.medium,
+                        createdAt = it.createdAt,
+                        text = it.text(),
+                        replyCount = it.replyCount,
+                        likeCount = it.likeCount,
+                        isLiked = it.isLiked,
+                        mediaCoverUrl = it.media?.coverImage?.medium,
                         onClick = {
-                            navActionManager.toActivityDetails(it.listActivityFragment.id)
+                            navActionManager.toActivityDetails(it.id)
                         },
                         onClickUser = {
-                            it.listActivityFragment.userId?.let(navActionManager::toUserDetails)
+                            it.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            event?.toggleLikeActivity(it.listActivityFragment.id)
+                            event?.toggleLikeActivity(it.id)
                         },
                         onClickMedia = {
-                            it.listActivityFragment.media?.id?.let(navActionManager::toMediaDetails)
+                            it.media?.id?.let(navActionManager::toMediaDetails)
                         }
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
