@@ -11,7 +11,9 @@ Another unofficial Android AniList client
 
 iOS version [here](https://github.com/axiel7/AniHyou-iOS)
 
-Get early beta versions and follow the development on the official Discord server:
+Get latest beta version from [nightly.link](https://nightly.link/axiel7/AniHyou-android/workflows/build-upload-android/develop?preview)
+
+Follow the development on the official Discord server:
 
 [![Discord Banner 3](https://discordapp.com/api/guilds/741059285122940928/widget.png?style=banner2)](https://discord.gg/CTv3WdfxHh)
 
