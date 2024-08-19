@@ -76,7 +76,7 @@ fun RatingView(
                 if (value.isEmpty()) {
                     ratingString = value
                     onRatingChanged(null)
-                } else if (value.endsWith('.')) {
+                } else if (value.endsWith('.') || value.endsWith(',')) {
                     ratingString = value
                 } else {
                     val doubleValue = value.toDoubleLocaleInvariant()
