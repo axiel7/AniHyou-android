@@ -42,6 +42,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoClickableItemView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.composables.common.MoreLessButton
 import com.axiel7.anihyou.ui.composables.common.SpoilerTagChip
 import com.axiel7.anihyou.ui.composables.common.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -51,6 +52,8 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
+
+private const val TagLimit = 10
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -62,6 +65,7 @@ fun MediaInformationView(
 ) {
     val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
+    var showAllTags by remember { mutableStateOf(false) }
     val isAnime = uiState.details?.basicMediaDetails?.isAnime() == true
 
     Column(
@@ -163,7 +167,9 @@ fun MediaInformationView(
                 .padding(horizontal = 8.dp)
                 .animateContentSize()
         ) {
-            uiState.details?.tags?.forEach { tag ->
+            val tags = if (showAllTags) uiState.details?.tags
+            else uiState.details?.tags?.take(TagLimit)
+            tags?.forEach { tag ->
                 if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
                         TagChip(
@@ -171,7 +177,7 @@ fun MediaInformationView(
                             description = tag.description,
                             rank = tag.rank,
                             onClick = {
-                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                uiState.details?.basicMediaDetails?.type?.let { mediaType ->
                                     navigateToGenreTag(mediaType, null, tag.name)
                                 }
                             }
@@ -183,7 +189,7 @@ fun MediaInformationView(
                             rank = tag.rank,
                             visible = showSpoiler,
                             onClick = {
-                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                uiState.details?.basicMediaDetails?.type?.let { mediaType ->
                                     navigateToGenreTag(mediaType, null, tag.name)
                                 }
                             }
@@ -192,6 +198,14 @@ fun MediaInformationView(
                 }
             }
         }//: FlowRow
+
+        if ((uiState.details?.tags?.size ?: 0) > TagLimit) {
+            MoreLessButton(
+                isExpanded = showAllTags,
+                onClick = { showAllTags = !showAllTags },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
 
         // Trailer
         uiState.details?.trailer?.let { trailer ->
