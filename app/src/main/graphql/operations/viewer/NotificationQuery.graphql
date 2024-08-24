@@ -12,6 +12,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -210,6 +211,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -226,6 +228,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -242,6 +245,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type

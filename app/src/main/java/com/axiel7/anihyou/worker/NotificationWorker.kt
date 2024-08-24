@@ -100,7 +100,7 @@ class NotificationWorker @AssistedInject constructor(
                         )
                     }
 
-                    val image = it.imageUrl?.let { url ->
+                    val image = (it.largeImageUrl ?: it.imageUrl)?.let { url ->
                         applicationContext.getBitmapFromUrl(url)
                     }
 
