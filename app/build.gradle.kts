@@ -120,10 +120,6 @@ android {
     }
 }
 
-composeCompiler {
-    enableStrongSkippingMode = true
-}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
