@@ -11,6 +11,7 @@ import androidx.compose.material3.ChipElevation
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
@@ -78,6 +79,18 @@ fun TriFilterChip(
             } else if (value == false) {
                 Icon(painter = painterResource(R.drawable.close_24), contentDescription = "close")
             }
+        },
+        colors = if (value == false) {
+            FilterChipDefaults.filterChipColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                labelColor = MaterialTheme.colorScheme.onErrorContainer,
+                iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                selectedContainerColor = MaterialTheme.colorScheme.errorContainer,
+                selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer,
+                selectedLeadingIconColor = MaterialTheme.colorScheme.onErrorContainer,
+            )
+        } else {
+            FilterChipDefaults.filterChipColors()
         }
     )
 }
