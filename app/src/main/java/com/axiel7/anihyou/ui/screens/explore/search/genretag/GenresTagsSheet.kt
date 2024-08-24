@@ -44,11 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
-import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.ui.composables.common.ErrorTextButton
@@ -59,28 +55,21 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GenresTagsSheet(
+    uiState: GenresTagsUiState,
+    event: GenresTagsEvent?,
     sheetState: SheetState,
     bottomPadding: Dp = 0.dp,
-    externalGenre: SelectableGenre?,
-    externalTag: SelectableGenre?,
-    onDismiss: (GenresAndTagsForSearch) -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    val viewModel: GenresTagsViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // TODO: pass these by savedStateHandle?
-    LaunchedEffect(externalGenre) {
-        if (uiState.externalGenre == null)
-            viewModel.setExternalGenre(externalGenre)
-    }
-    LaunchedEffect(externalTag) {
-        if (uiState.externalTag == null)
-            viewModel.setExternalTag(externalTag)
+    LaunchedEffect(uiState) {
+        if (uiState.genres.isEmpty()) {
+            event?.fetchGenreTagCollection()
+        }
     }
 
     GenresTagsSheetContent(
         uiState = uiState,
-        event = viewModel,
+        event = event,
         sheetState = sheetState,
         bottomPadding = bottomPadding,
         onDismiss = onDismiss,
@@ -94,7 +83,7 @@ private fun GenresTagsSheetContent(
     event: GenresTagsEvent?,
     sheetState: SheetState,
     bottomPadding: Dp = 0.dp,
-    onDismiss: (GenresAndTagsForSearch) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -107,9 +96,7 @@ private fun GenresTagsSheetContent(
     }
 
     ModalBottomSheet(
-        onDismissRequest = {
-            onDismiss(uiState.genresAndTagsForSearch())
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
     ) {
@@ -130,9 +117,7 @@ private fun GenresTagsSheetContent(
                 )
 
                 TextButton(
-                    onClick = {
-                        onDismiss(uiState.genresAndTagsForSearch())
-                    },
+                    onClick = onDismiss,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(text = stringResource(R.string.close))

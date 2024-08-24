@@ -14,19 +14,22 @@ import androidx.compose.material3.InputChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.ui.composables.common.InputChipError
 import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsSheet
+import com.axiel7.anihyou.ui.screens.explore.search.genretag.GenresTagsViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -36,49 +39,39 @@ fun MediaSearchGenresChips(
     externalTag: SelectableGenre?,
     onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {
+    val viewModel: GenresTagsViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    val selectedGenres = remember {
-        if (externalGenre != null) mutableStateListOf(externalGenre.name)
-        else mutableStateListOf()
+    // TODO: pass these by savedStateHandle?
+    LaunchedEffect(externalGenre) {
+        if (uiState.externalGenre == null && externalGenre != null)
+            viewModel.setExternalGenre(externalGenre)
     }
-    val excludedGenres = remember { mutableStateListOf<String>() }
-    val selectedTags = remember {
-        if (externalTag != null) mutableStateListOf(externalTag.name)
-        else mutableStateListOf()
+    LaunchedEffect(externalTag) {
+        if (uiState.externalTag == null && externalTag != null)
+            viewModel.setExternalTag(externalTag)
     }
-    val excludedTags = remember { mutableStateListOf<String>() }
 
-    fun getGenresAndTagsForSearch() =
-        GenresAndTagsForSearch(
-            genreIn = selectedGenres,
-            genreNot = excludedGenres,
-            tagIn = selectedTags,
-            tagNot = excludedTags,
-        )
+    val selectedGenres = uiState.genresAndTagsForSearch.genreIn
+    val excludedGenres = uiState.genresAndTagsForSearch.genreNot
+    val selectedTags = uiState.genresAndTagsForSearch.tagIn
+    val excludedTags = uiState.genresAndTagsForSearch.tagNot
 
     if (sheetState.isVisible) {
         GenresTagsSheet(
+            uiState = uiState,
+            event = viewModel,
             sheetState = sheetState,
             bottomPadding = bottomBarPadding,
-            externalGenre = externalGenre,
-            externalTag = externalTag,
             onDismiss = {
                 scope.launch {
-                    selectedGenres.clear()
-                    selectedGenres.addAll(it.genreIn)
-                    excludedGenres.clear()
-                    excludedGenres.addAll(it.genreNot)
-
-                    selectedTags.clear()
-                    selectedTags.addAll(it.tagIn)
-                    excludedTags.clear()
-                    excludedTags.addAll(it.tagNot)
-
+                    viewModel.onDismissSheet()
                     sheetState.hide()
-                    onGenreTagStateChanged(it)
+                    onGenreTagStateChanged(uiState.genresAndTagsForSearch)
                 }
             }
         )
@@ -92,8 +85,11 @@ fun MediaSearchGenresChips(
             InputChip(
                 selected = true,
                 onClick = {
-                    selectedGenres.remove(genre)
-                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                    scope.launch {
+                        onGenreTagStateChanged(
+                            viewModel.onGenreRemoved(genre)
+                        )
+                    }
                 },
                 label = { Text(text = genre.genreTagLocalized()) },
                 trailingIcon = {
@@ -108,8 +104,11 @@ fun MediaSearchGenresChips(
             InputChipError(
                 selected = true,
                 onClick = {
-                    excludedGenres.remove(genre)
-                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                    scope.launch {
+                        onGenreTagStateChanged(
+                            viewModel.onGenreRemoved(genre)
+                        )
+                    }
                 },
                 text = genre.genreTagLocalized(),
                 icon = R.drawable.close_20,
@@ -120,8 +119,11 @@ fun MediaSearchGenresChips(
             InputChip(
                 selected = true,
                 onClick = {
-                    selectedTags.remove(tag)
-                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                    scope.launch {
+                        onGenreTagStateChanged(
+                            viewModel.onTagRemoved(tag)
+                        )
+                    }
                 },
                 label = { Text(text = tag) },
                 trailingIcon = {
@@ -136,8 +138,11 @@ fun MediaSearchGenresChips(
             InputChipError(
                 selected = true,
                 onClick = {
-                    excludedTags.remove(tag)
-                    onGenreTagStateChanged(getGenresAndTagsForSearch())
+                    scope.launch {
+                        onGenreTagStateChanged(
+                            viewModel.onTagRemoved(tag)
+                        )
+                    }
                 },
                 text = tag,
                 icon = R.drawable.close_20,
