@@ -207,7 +207,12 @@ fun InputChipError(
             }
         },
         colors = InputChipDefaults.inputChipColors(
-            labelColor = MaterialTheme.colorScheme.error
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            labelColor = MaterialTheme.colorScheme.onErrorContainer,
+            trailingIconColor = MaterialTheme.colorScheme.onErrorContainer,
+            selectedContainerColor = MaterialTheme.colorScheme.errorContainer,
+            selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer,
+            selectedTrailingIconColor = MaterialTheme.colorScheme.onErrorContainer,
         )
     )
 }
