@@ -50,8 +50,16 @@ class SearchViewModel @Inject constructor(
                     || arguments.mediaSort != null
         )
 
-    override fun setQuery(value: String) = mutableUiState.update {
-        it.copy(query = value, page = 1, hasNextPage = true, isLoading = true)
+    override fun setQuery(value: String) {
+        mutableUiState.update {
+            val shouldLoad = it.hasFiltersApplied || value.isNotBlank()
+            it.copy(
+                query = value,
+                page = if (shouldLoad) 1 else it.page,
+                hasNextPage = shouldLoad,
+                isLoading = shouldLoad,
+            )
+        }
     }
 
     override fun setSearchType(value: SearchType) = mutableUiState.update {

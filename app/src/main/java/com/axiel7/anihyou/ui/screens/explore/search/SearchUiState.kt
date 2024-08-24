@@ -61,7 +61,7 @@ data class SearchUiState(
 
     private val hasYearFilter = startYear != null || endYear != null
 
-    private val hasFiltersApplied = hasGenreOrTagFilter
+    val hasFiltersApplied = hasGenreOrTagFilter
             || hasMediaFormatFilter
             || hasMediaStatusFilter
             || hasYearFilter
