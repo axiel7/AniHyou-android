@@ -34,7 +34,7 @@ class ProfileViewModel @Inject constructor(
     private val arguments = runCatching { savedStateHandle.toRoute<UserDetails>() }.getOrNull()
 
     override val initialState = ProfileUiState(
-        isMyProfile = arguments == null || arguments.id == 0 && arguments.userName == null,
+        isMyProfile = arguments == null || (arguments.id == null && arguments.userName == null),
     )
 
     private fun getMyUserInfo() {

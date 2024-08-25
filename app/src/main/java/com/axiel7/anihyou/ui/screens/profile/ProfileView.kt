@@ -78,7 +78,7 @@ object Profile
 @Serializable
 @Immutable
 data class UserDetails(
-    val id: Int = 0,
+    val id: Int?,
     val userName: String?
 )
 

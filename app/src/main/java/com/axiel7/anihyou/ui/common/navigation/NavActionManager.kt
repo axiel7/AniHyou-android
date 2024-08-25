@@ -67,7 +67,7 @@ class NavActionManager(
     }
 
     fun toUserDetails(userId: Int?, username: String?) {
-        navController.navigate(UserDetails(userId ?: 0, username))
+        navController.navigate(UserDetails(userId, username))
     }
 
     fun toActivityDetails(id: Int) {
