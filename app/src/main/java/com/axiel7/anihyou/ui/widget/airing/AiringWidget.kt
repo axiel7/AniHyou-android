@@ -14,6 +14,7 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
+import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity
@@ -76,18 +77,22 @@ class AiringWidget : GlanceAppWidget() {
                         }
                     }
                 } else {
-                    val message = (result as? DataResult.Error)?.message
                     AppWidgetColumn(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = message ?: glanceStringResource(R.string.no_information),
-                            modifier = GlanceModifier.padding(bottom = 8.dp),
-                            style = TextStyle(
-                                color = GlanceTheme.colors.onSurface
+                        if (result is DataResult.Loading) {
+                            CircularProgressIndicator()
+                        } else if (result is DataResult.Error) {
+                            val message = result.message
+                            Text(
+                                text = message,
+                                modifier = GlanceModifier.padding(bottom = 8.dp),
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.onSurface
+                                )
                             )
-                        )
+                        }
                         RefreshButton(
                             onClick = {
                                 scope.launch { update(context, id) }

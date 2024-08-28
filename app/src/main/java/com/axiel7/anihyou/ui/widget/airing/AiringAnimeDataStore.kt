@@ -29,7 +29,9 @@ class AiringAnimeDataStore(
                 hiltEntryPoint.globalVariables.accessToken = runBlocking {
                     hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
                 }
-                return hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
+                return runBlocking {
+                    flowOf(hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50))
+                }
             } catch (e: Exception) {
                 return flowOf(DataResult.Error(e.message ?: "Unknown error"))
             }
