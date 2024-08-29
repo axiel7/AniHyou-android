@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.core.text.HtmlCompat
+import java.text.Normalizer
 
 object StringUtils {
 
@@ -22,6 +23,13 @@ object StringUtils {
     fun String.htmlStripped() = replace(Regex("<[^>]+>"), "")
 
     fun String.htmlDecoded() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
+
+    fun String.slugify() = Normalizer
+        .normalize(this, Normalizer.Form.NFD)
+        .replace(Regex("[^\\p{ASCII}]"), "")
+        .replace(Regex("[^a-zA-Z0-9\\s]+"), "")
+        .trim()
+        .replace(Regex("\\s+"), "-")
 
     /**
      * Converts a [Spanned] into an [AnnotatedString] trying to keep as much formatting as possible.

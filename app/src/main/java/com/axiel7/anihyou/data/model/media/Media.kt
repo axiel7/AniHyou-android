@@ -8,6 +8,7 @@ import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.type.ExternalLinkType
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DAILYMOTION_VIDEO_URL
+import com.axiel7.anihyou.utils.StringUtils.slugify
 import com.axiel7.anihyou.utils.YOUTUBE_VIDEO_URL
 
 // TODO: consider volumes
@@ -40,6 +41,9 @@ fun BasicMediaDetails.durationText() = when (this.type) {
 
     else -> null
 }
+
+fun MediaDetailsQuery.Media.siteUrlWithTitle() =
+    siteUrl.orEmpty() + "/" + basicMediaDetails.title?.userPreferred?.slugify().orEmpty()
 
 @Composable
 fun MediaDetailsQuery.Media.seasonAndYear(): String? {
