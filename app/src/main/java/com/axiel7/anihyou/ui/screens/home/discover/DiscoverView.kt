@@ -1,10 +1,13 @@
 package com.axiel7.anihyou.ui.screens.home.discover
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -61,6 +64,7 @@ fun DiscoverView(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiscoverContent(
     uiState: DiscoverUiState,
@@ -92,164 +96,170 @@ private fun DiscoverContent(
         )
     }
 
-    LazyColumn(
-        modifier = modifier,
-        state = listState,
-        contentPadding = contentPadding
+    PullToRefreshBox(
+        isRefreshing = uiState.isLoading,
+        onRefresh = { event?.refresh() },
+        modifier = Modifier.fillMaxSize(),
     ) {
-        items(uiState.infos) { item ->
-            when (item) {
-                DiscoverInfo.AIRING -> {
-                    LaunchedEffect(uiState.airingOnMyList) {
-                        if (uiState.airingOnMyList == true) event?.fetchAiringAnimeOnMyList()
-                        else if (uiState.airingOnMyList == false) event?.fetchAiringAnime()
+        LazyColumn(
+            modifier = modifier,
+            state = listState,
+            contentPadding = contentPadding
+        ) {
+            items(uiState.infos) { item ->
+                when (item) {
+                    DiscoverInfo.AIRING -> {
+                        LaunchedEffect(uiState.airingOnMyList) {
+                            if (uiState.airingOnMyList == true) event?.fetchAiringAnimeOnMyList()
+                            else if (uiState.airingOnMyList == false) event?.fetchAiringAnime()
+                        }
+                        AiringContent(
+                            airingOnMyList = uiState.airingOnMyList,
+                            airingAnime = uiState.airingAnime,
+                            airingAnimeOnMyList = uiState.airingAnimeOnMyList,
+                            isLoading = uiState.isLoadingAiring,
+                            onLongClickItem = { details, listEntry ->
+                                event?.selectItem(details, listEntry)
+                                showEditSheetAction()
+                            },
+                            navigateToCalendar = navActionManager::toCalendar,
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    AiringContent(
-                        airingOnMyList = uiState.airingOnMyList,
-                        airingAnime = uiState.airingAnime,
-                        airingAnimeOnMyList = uiState.airingAnimeOnMyList,
-                        isLoading = uiState.isLoadingAiring,
-                        onLongClickItem = { details, listEntry ->
-                            event?.selectItem(details, listEntry)
-                            showEditSheetAction()
-                        },
-                        navigateToCalendar = navActionManager::toCalendar,
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.THIS_SEASON -> {
-                    LaunchedEffect(uiState.nowAnimeSeason) {
-                        event?.fetchThisSeasonAnime()
+                    DiscoverInfo.THIS_SEASON -> {
+                        LaunchedEffect(uiState.nowAnimeSeason) {
+                            event?.fetchThisSeasonAnime()
+                        }
+                        SeasonAnimeContent(
+                            animeSeason = uiState.nowAnimeSeason,
+                            seasonAnime = uiState.thisSeasonAnime,
+                            isLoading = uiState.isLoadingThisSeason,
+                            isNextSeason = false,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            navigateToAnimeSeason = navActionManager::toAnimeSeason,
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    SeasonAnimeContent(
-                        animeSeason = uiState.nowAnimeSeason,
-                        seasonAnime = uiState.thisSeasonAnime,
-                        isLoading = uiState.isLoadingThisSeason,
-                        isNextSeason = false,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        navigateToAnimeSeason = navActionManager::toAnimeSeason,
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.TRENDING_ANIME -> {
-                    LaunchedEffect(MediaType.ANIME) {
-                        event?.fetchTrendingAnime()
+                    DiscoverInfo.TRENDING_ANIME -> {
+                        LaunchedEffect(MediaType.ANIME) {
+                            event?.fetchTrendingAnime()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.trending_now),
+                            media = uiState.trendingAnime,
+                            isLoading = uiState.isLoadingTrendingAnime,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    DiscoverMediaContent(
-                        title = stringResource(R.string.trending_now),
-                        media = uiState.trendingAnime,
-                        isLoading = uiState.isLoadingTrendingAnime,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        onClickHeader = {
-                            navActionManager.toExplore(MediaType.ANIME, MediaSort.TRENDING_DESC)
-                        },
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.NEXT_SEASON -> {
-                    LaunchedEffect(uiState.nextAnimeSeason) {
-                        event?.fetchNextSeasonAnime()
+                    DiscoverInfo.NEXT_SEASON -> {
+                        LaunchedEffect(uiState.nextAnimeSeason) {
+                            event?.fetchNextSeasonAnime()
+                        }
+                        SeasonAnimeContent(
+                            animeSeason = uiState.nextAnimeSeason,
+                            seasonAnime = uiState.nextSeasonAnime,
+                            isLoading = uiState.isLoadingNextSeason,
+                            isNextSeason = true,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            navigateToAnimeSeason = navActionManager::toAnimeSeason,
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    SeasonAnimeContent(
-                        animeSeason = uiState.nextAnimeSeason,
-                        seasonAnime = uiState.nextSeasonAnime,
-                        isLoading = uiState.isLoadingNextSeason,
-                        isNextSeason = true,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        navigateToAnimeSeason = navActionManager::toAnimeSeason,
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.TRENDING_MANGA -> {
-                    LaunchedEffect(MediaType.MANGA) {
-                        event?.fetchTrendingManga()
+                    DiscoverInfo.TRENDING_MANGA -> {
+                        LaunchedEffect(MediaType.MANGA) {
+                            event?.fetchTrendingManga()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.trending_manga),
+                            media = uiState.trendingManga,
+                            isLoading = uiState.isLoadingTrendingAnime,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    DiscoverMediaContent(
-                        title = stringResource(R.string.trending_manga),
-                        media = uiState.trendingManga,
-                        isLoading = uiState.isLoadingTrendingAnime,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        onClickHeader = {
-                            navActionManager.toExplore(MediaType.MANGA, MediaSort.TRENDING_DESC)
-                        },
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.NEWLY_ANIME -> {
-                    LaunchedEffect(MediaType.ANIME) {
-                        event?.fetchNewlyAnime()
+                    DiscoverInfo.NEWLY_ANIME -> {
+                        LaunchedEffect(MediaType.ANIME) {
+                            event?.fetchNewlyAnime()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.newly_anime),
+                            media = uiState.newlyAnime,
+                            isLoading = uiState.isLoadingNewlyAnime,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.ANIME, MediaSort.ID_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    DiscoverMediaContent(
-                        title = stringResource(R.string.newly_anime),
-                        media = uiState.newlyAnime,
-                        isLoading = uiState.isLoadingNewlyAnime,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        onClickHeader = {
-                            navActionManager.toExplore(MediaType.ANIME, MediaSort.ID_DESC)
-                        },
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
-                }
 
-                DiscoverInfo.NEWLY_MANGA -> {
-                    LaunchedEffect(MediaType.MANGA) {
-                        event?.fetchNewlyManga()
+                    DiscoverInfo.NEWLY_MANGA -> {
+                        LaunchedEffect(MediaType.MANGA) {
+                            event?.fetchNewlyManga()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.newly_manga),
+                            media = uiState.newlyManga,
+                            isLoading = uiState.isLoadingNewlyManga,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.MANGA, MediaSort.ID_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
                     }
-                    DiscoverMediaContent(
-                        title = stringResource(R.string.newly_manga),
-                        media = uiState.newlyManga,
-                        isLoading = uiState.isLoadingNewlyManga,
-                        onLongClickItem = {
-                            event?.selectItem(
-                                details = it.basicMediaDetails,
-                                listEntry = it.mediaListEntry?.basicMediaListEntry
-                            )
-                            showEditSheetAction()
-                        },
-                        onClickHeader = {
-                            navActionManager.toExplore(MediaType.MANGA, MediaSort.ID_DESC)
-                        },
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                    )
                 }
             }
-        }
-    }//: LazyColumn
+        }//: LazyColumn
+    }
 }
 
 @Preview
