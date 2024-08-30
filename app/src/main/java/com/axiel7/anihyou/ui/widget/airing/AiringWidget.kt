@@ -27,12 +27,15 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.model.media.exampleAiringWidgetEntry
 import com.axiel7.anihyou.ui.screens.main.MainActivity
 import com.axiel7.anihyou.ui.theme.AppWidgetColumn
 import com.axiel7.anihyou.ui.theme.glanceStringResource
@@ -61,47 +64,52 @@ class AiringWidget : GlanceAppWidget() {
             val scope = rememberCoroutineScope()
             val result: DataResult<List<AiringWidgetQuery.Medium>> = currentState()
             GlanceTheme {
-                if (result is DataResult.Success) {
-                    AppWidgetColumn {
-                        LazyColumn {
-                            items(result.data) { item ->
-                                ItemView(item = item)
-                            }
-                            item {
-                                RefreshButton(
-                                    onClick = {
-                                        scope.launch { update(context, id) }
-                                    }
-                                )
-                            }
-                        }
+                Content(
+                    result = result,
+                    onRefresh = {
+                        scope.launch { update(context, id) }
                     }
-                } else {
-                    AppWidgetColumn(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        if (result is DataResult.Loading) {
-                            CircularProgressIndicator(
-                                color = GlanceTheme.colors.primary
-                            )
-                        } else if (result is DataResult.Error) {
-                            val message = result.message
-                            Text(
-                                text = message,
-                                modifier = GlanceModifier.padding(bottom = 8.dp),
-                                style = TextStyle(
-                                    color = GlanceTheme.colors.onSurface
-                                )
-                            )
-                        }
-                        RefreshButton(
-                            onClick = {
-                                scope.launch { update(context, id) }
-                            }
-                        )
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun Content(
+        result: DataResult<List<AiringWidgetQuery.Medium>>,
+        onRefresh: () -> Unit,
+    ) {
+        if (result is DataResult.Success) {
+            AppWidgetColumn {
+                LazyColumn {
+                    items(result.data) { item ->
+                        ItemView(item = item)
+                    }
+                    item {
+                        RefreshButton(onClick = onRefresh)
                     }
                 }
+            }
+        } else {
+            AppWidgetColumn(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (result is DataResult.Loading) {
+                    CircularProgressIndicator(
+                        color = GlanceTheme.colors.primary
+                    )
+                } else if (result is DataResult.Error) {
+                    val message = result.message
+                    Text(
+                        text = message,
+                        modifier = GlanceModifier.padding(bottom = 8.dp),
+                        style = TextStyle(
+                            color = GlanceTheme.colors.onSurface
+                        )
+                    )
+                }
+                RefreshButton(onClick = onRefresh)
             }
         }
     }
@@ -166,6 +174,25 @@ class AiringWidget : GlanceAppWidget() {
                 style = TextStyle(
                     color = GlanceTheme.colors.onSurface
                 ),
+            )
+        }
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 255, heightDp = 150)
+    @Composable
+    private fun Preview() {
+        GlanceTheme {
+            Content(
+                result = DataResult.Success(
+                    data = listOf(
+                        exampleAiringWidgetEntry,
+                        exampleAiringWidgetEntry,
+                        exampleAiringWidgetEntry,
+                        exampleAiringWidgetEntry,
+                    )
+                ),
+                onRefresh = {}
             )
         }
     }

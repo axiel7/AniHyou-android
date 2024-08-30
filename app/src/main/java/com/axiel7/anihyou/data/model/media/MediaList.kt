@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.data.model.media
 
+import com.axiel7.anihyou.AiringWidgetQuery
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
@@ -70,4 +71,23 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
     ),
     id = 1,
     basicMediaListEntry = exampleBasicMediaListEntry
+)
+
+val exampleAiringWidgetEntry = AiringWidgetQuery.Medium(
+    __typename = "",
+    id = 1,
+    title = AiringWidgetQuery.Title(
+        userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"
+    ),
+    nextAiringEpisode = AiringWidgetQuery.NextAiringEpisode(
+        episode = 3,
+        airingAt = 1725018922,
+        timeUntilAiring = 1203239
+    ),
+    mediaListEntry = AiringWidgetQuery.MediaListEntry(
+        __typename = "",
+        id = 1,
+        mediaId = 1,
+        status = MediaListStatus.CURRENT,
+    ),
 )

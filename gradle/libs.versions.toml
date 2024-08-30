@@ -11,6 +11,7 @@ coreSplashscreen = "1.2.0-alpha01"
 datastorePreferences = "1.1.1"
 desugar_jdk_libs = "2.1.1"
 glanceAppwidget = "1.1.0"
+glancePreview = "1.1.0"
 hilt = "2.52"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
@@ -66,6 +67,8 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-glance-preview = {group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-material3-window-sizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
