@@ -82,7 +82,9 @@ class AiringWidget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (result is DataResult.Loading) {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                color = GlanceTheme.colors.primary
+                            )
                         } else if (result is DataResult.Error) {
                             val message = result.message
                             Text(
