@@ -138,11 +138,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.glance.appwidget.preview)
+
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.sizeclass)
 
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.glance.appwidget)
 
     implementation(libs.accompanist.permissions)
 
@@ -175,8 +178,6 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-    debugImplementation(libs.androidx.glance.preview)
-    debugImplementation(libs.androidx.glance.appwidget.preview)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
