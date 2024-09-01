@@ -274,7 +274,8 @@ class UserMediaListViewModel @AssistedInject constructor(
                             val newList = it.plannedEntriesIds + result.list
                             it.copy(
                                 plannedEntriesIds = newList,
-                                randomEntryId = if (!result.hasNextPage) newList.random() else null,
+                                randomEntryId = if (!result.hasNextPage && newList.isNotEmpty())
+                                    newList.random() else null,
                                 isLoading = result.hasNextPage
                             )
                         } else result.toUiState()
