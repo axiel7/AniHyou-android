@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val deepLink = findDeepLink()
 
         //get necessary preferences while on splashscreen
+        viewModel.setToken(viewModel.accessToken.firstBlocking())
         val initialIsLoggedIn = viewModel.isLoggedIn.firstBlocking()
         val initialTheme = viewModel.theme.firstBlocking()
         val initialUseBlackColors = viewModel.useBlackColors.firstBlocking()

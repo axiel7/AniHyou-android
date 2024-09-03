@@ -20,13 +20,7 @@ class MainViewModel @Inject constructor(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : ViewModel(), MainEvent {
 
-    fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
-        if (data?.scheme == ANIHYOU_SCHEME) {
-            loginRepository.parseRedirectUri(data)
-        }
-    }
-
-    private val accessToken = defaultPreferencesRepository.accessToken
+    val accessToken = defaultPreferencesRepository.accessToken
 
     val isLoggedIn = defaultPreferencesRepository.isLoggedIn
 
@@ -48,11 +42,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun setToken(token: String?) {
+        globalVariables.accessToken = token
+    }
+
+    fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
+        if (data?.scheme == ANIHYOU_SCHEME) {
+            loginRepository.parseRedirectUri(data)
+        }
+    }
+
     init {
         accessToken
-            .onEach {
-                globalVariables.accessToken = it
-            }
+            .onEach { setToken(it) }
             .launchIn(viewModelScope)
     }
 }
