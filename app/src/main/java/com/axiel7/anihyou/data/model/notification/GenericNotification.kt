@@ -25,6 +25,18 @@ data class GenericNotification(
             else -> false
         }
 
+    fun mediaTitle(): String? = if (type == NotificationType.AIRING) {
+        "of(.+)aired".toRegex().find(text)?.run {
+            return groupValues.getOrNull(1)?.trim()
+        }
+    } else null
+
+    fun numEpisode(): Int? = if (type == NotificationType.AIRING) {
+        "Episode (\\d+)".toRegex().find(text)?.run {
+            return groupValues.getOrNull(1)?.toIntOrNull()
+        }
+    } else null
+
     companion object {
         fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
             val tempList = mutableListOf<GenericNotification>()

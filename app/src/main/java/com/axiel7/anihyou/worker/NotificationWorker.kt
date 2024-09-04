@@ -104,11 +104,19 @@ class NotificationWorker @AssistedInject constructor(
                         applicationContext.getBitmapFromUrl(url)
                     }
 
+                    val title = if (it.type == NotificationType.AIRING) {
+                        it.mediaTitle() ?: it.text
+                    } else it.text
+
+                    val text = if (it.type == NotificationType.AIRING) {
+                        it.numEpisode()?.let { ep -> "Episode $ep aired" }.orEmpty()
+                    } else ""
+
                     applicationContext.showNotification(
                         notificationId = it.id,
                         channelId = DEFAULT_CHANNEL_ID,
-                        title = it.text,
-                        text = "",
+                        title = title,
+                        text = text,
                         largeIcon = image,
                         bigPicture = image.takeIf { _ -> it.isMedia },
                         pendingIntent = pendingIntent,
