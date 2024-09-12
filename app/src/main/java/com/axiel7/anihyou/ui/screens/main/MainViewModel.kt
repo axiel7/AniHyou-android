@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,8 +26,6 @@ class MainViewModel @Inject constructor(
 
     val isLoggedIn = defaultPreferencesRepository.isLoggedIn
 
-    val startTab = defaultPreferencesRepository.lastTab
-
     val homeTab = defaultPreferencesRepository.defaultHomeTab
 
     val theme = defaultPreferencesRepository.theme
@@ -39,6 +39,15 @@ class MainViewModel @Inject constructor(
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {
             defaultPreferencesRepository.setLastTab(index)
+        }
+    }
+
+    suspend fun getStartTab(): Int {
+        val defaultTab = defaultPreferencesRepository.defaultTab.first()
+        return if (defaultTab == null || defaultTab == DefaultTab.LAST_USED) {
+            defaultPreferencesRepository.lastTab.first()
+        } else {
+            defaultTab.ordinal - 1
         }
     }
 

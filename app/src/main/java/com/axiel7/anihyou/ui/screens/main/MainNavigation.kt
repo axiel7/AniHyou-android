@@ -84,7 +84,7 @@ fun MainNavigation(
     navActionManager: NavActionManager,
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
-    lastTabOpened: Int,
+    tabToOpen: Int,
     homeTab: HomeTab,
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
@@ -134,7 +134,7 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = lastTabOpened.toBottomDestinationRoute() ?: Home,
+        startDestination = tabToOpen.toBottomDestinationRoute() ?: Home,
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
