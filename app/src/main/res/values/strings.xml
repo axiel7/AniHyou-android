@@ -297,7 +297,7 @@
     <string name="format_spoiler">Spoiler</string>
     <string name="format_link">Link</string>
     <string name="format_image">Image</string>
-    <string name="format_youtube">YouTube</string>
+    <string name="format_youtube" translatable="false">YouTube</string>
     <string name="format_video">Video</string>
     <string name="format_ol">Ordered list</string>
     <string name="format_ul">Unordered list</string>
