@@ -399,5 +399,4 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
-
 </resources>
