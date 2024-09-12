@@ -1,6 +1,8 @@
 name: Crowdin Action
 
 on:
+  schedule:
+    - cron: 0 0 * * 0
   push:
     paths:
       - 'app/src/main/res/values/strings.xml'
