@@ -145,7 +145,7 @@ class NotificationWorker @AssistedInject constructor(
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             0,
-            NotificationCompat.Builder(applicationContext, DEFAULT_CHANNEL_ID)
+            NotificationCompat.Builder(applicationContext, SYNC_CHANNEL_ID)
                 .setContentTitle(applicationContext.getString(R.string.notifications))
                 .setSmallIcon(R.drawable.anihyou_24)
                 .setAutoCancel(true)
@@ -169,15 +169,21 @@ class NotificationWorker @AssistedInject constructor(
 
     companion object {
         private const val TAG = "NotificationWorker"
-        const val DEFAULT_CHANNEL_ID = "default_channel_id"
         private const val WORK_NAME = "default_notifications"
+
+        const val DEFAULT_CHANNEL_ID = "default_channel_id"
+        const val SYNC_CHANNEL_ID = "sync_channel_id"
 
         fun Context.createDefaultNotificationChannels() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // TODO: create different channels for every NotificationType?
                 createNotificationChannel(
                     id = DEFAULT_CHANNEL_ID,
-                    name = "Default"
+                    name = getString(R.string.default_setting)
+                )
+                createNotificationChannel(
+                    id = SYNC_CHANNEL_ID,
+                    name = getString(R.string.update_interval)
                 )
             }
         }
