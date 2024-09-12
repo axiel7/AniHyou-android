@@ -363,6 +363,10 @@
     <string name="custom_color">Kostum warna</string>
     <string name="newly_manga">Manga Baru Ditambahkan</string>
     <string name="newly_anime">Anime Baru Ditambahkan</string>
+    <string name="openings">Opening</string>
+    <string name="endings">Ending</string>
+    <string name="list_name">Daftar nama</string>
+    <string name="anime_behind">Anime Tertinggal</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d j</item>
     </plurals>

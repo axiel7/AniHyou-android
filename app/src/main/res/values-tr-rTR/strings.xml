@@ -372,9 +372,10 @@
     <string name="custom_color">Özel renk</string>
     <string name="newly_manga">Yeni Eklenen Manga</string>
     <string name="newly_anime">Yeni Eklenen Anime</string>
-    <string name="openings" comment="In some languages it may be left unstranslated as the otaku culture understands the english version">Açılış müzikleri</string>
-    <string name="endings" comment="In some languages it may be left unstranslated as the otaku culture understands the english version">Kapanış müzikleri</string>
-    <string name="list_name" comment="custom list name text field label">Liste adı</string>
+    <string name="openings">Açılış müzikleri</string>
+    <string name="endings">Kapanış müzikleri</string>
+    <string name="list_name">Liste adı</string>
+    <string name="anime_behind">Bekleyen Anime</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d saat</item>
         <item quantity="other">%d saat</item>

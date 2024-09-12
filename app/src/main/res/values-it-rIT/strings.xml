@@ -370,6 +370,9 @@
     <string name="custom_color">Colore personalizzato</string>
     <string name="newly_manga">Manga appena aggiunti</string>
     <string name="newly_anime">Anime appena aggiunti</string>
+    <string name="openings">Sigle</string>
+    <string name="endings">Sigle di chiusura</string>
+    <string name="list_name">Nome lista</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d o</item>
         <item quantity="other">%d o</item>
