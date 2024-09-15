@@ -27,7 +27,7 @@
     <string name="profile">プロフ</string>
     <string name="trending_now">今のトレンド</string>
     <string name="next_season">次のシーズン</string>
-    <string name="trending_manga"> トレンド漫画</string>
+    <string name="trending_manga">人気のマンガ</string>
     <string name="not_logged_text">この機能を使用するには、ログインしてください。</string>
     <string name="login">ログイン</string>
     <string name="current">今時</string>
@@ -101,7 +101,7 @@
     <string name="native_title">ネイティブ</string>
     <string name="save">保存</string>
     <string name="episodes">話</string>
-    <string name="chapters">章</string>
+    <string name="chapters">話</string>
     <string name="volumes">単行本</string>
     <string name="repeat_count">繰り返し回数</string>
     <string name="delete">削除する</string>
@@ -138,6 +138,7 @@
     <string name="side_story">サイドストーリー</string>
     <string name="relation_character">キャラクター</string>
     <string name="relation_summary">摘要</string>
+    <string name="spin_off">スピンオフ</string>
     <string name="relation_other">他</string>
     <string name="relation_source">原作</string>
     <string name="relation_compilation">コンパイル</string>
@@ -353,7 +354,10 @@
     <string name="custom_color">カスタムカラー</string>
     <string name="newly_manga">新着マンガ</string>
     <string name="newly_anime">新着アニメ</string>
+    <string name="openings">オープニング</string>
+    <string name="endings">エンディング</string>
     <string name="anime_behind">遅いなアニメ</string>
+    <string name="last_used">前回使用</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d時間</item>
     </plurals>

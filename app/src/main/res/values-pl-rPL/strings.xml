@@ -371,7 +371,6 @@
     <string name="progress">Postęp</string>
     <string name="list">Lista</string>
     <string name="minus_one">-1</string>
-    <string name="plus_one">+1</string>
     <string name="show_less">Mniej</string>
     <string name="show_more">Więcej</string>
     <string name="continue_watching">Kontynuuj oglądanie</string>
@@ -388,6 +387,7 @@
     <string name="endings">Endingi</string>
     <string name="list_name">Nazwa listy</string>
     <string name="anime_behind">Zaległe Anime</string>
+    <string name="last_used">Ostatnio używane</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d godz</item>
         <item quantity="few">%d godz</item>

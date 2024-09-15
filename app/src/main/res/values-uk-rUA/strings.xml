@@ -241,7 +241,7 @@
     <string name="saturday">Субота</string>
     <string name="sunday">Неділя</string>
     <string name="episode_airing_at">Серія %d виходить в %s</string>
-    <string name="filter">Фільтр</string>
+    <string name="filter">Фільтри</string>
     <string name="notifications">Сповіщення</string>
     <string name="threads">Обговорення</string>
     <string name="no_threads">Немає обговорень</string>
@@ -252,7 +252,7 @@
     <string name="notifications_media">Медіа</string>
     <string name="content">Вміст</string>
     <string name="airing_on_my_list">Виходять у моєму каталозі</string>
-    <string name="airing_on_my_list_summary">Показувати тільки ті аніме, які найближчим часом вийдуть і які є у вашій бібліотеці</string>
+    <string name="airing_on_my_list_summary">Показувати тільки ті аніме, що вийдуть найближчим часом та додані до вашого каталогу</string>
     <string name="follow">Підписатися</string>
     <string name="follows_you">Підписаний(-а) на вас</string>
     <string name="view_anime_list">Переглянути перелік аніме</string>
@@ -263,7 +263,7 @@
     <string name="use_separated_list_styles">Використовувати окремі стилі каталогу</string>
     <string name="changes_will_take_effect_on_app_restart">Зміни набудуть чинності після перезавантаження</string>
     <string name="items_per_row">Елементів у рядку</string>
-    <string name="default_setting">За замовчуванням</string>
+    <string name="default_setting">Типово</string>
     <string name="media_status">Статус</string>
     <string name="year">Рік</string>
     <string name="episode_aired_ago">Серія %d вийшла %s тому</string>
@@ -349,7 +349,7 @@
     <string name="from_year">Від року</string>
     <string name="to_year">До року</string>
     <string name="hide_filters">Приховати фільтри</string>
-    <string name="more_filters">Розширені фільтри</string>
+    <string name="more_filters">Більше фільтрів</string>
     <string name="is_adult">Для дорослих</string>
     <string name="japan">Японія</string>
     <string name="south_korea">Південна Корея</string>
@@ -388,6 +388,8 @@
     <string name="endings">Ендінґи</string>
     <string name="list_name">Назва списку</string>
     <string name="anime_behind">Аніме позаду</string>
+    <string name="default_tab">Вкладка за замовчуванням</string>
+    <string name="last_used">Використано востаннє</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>

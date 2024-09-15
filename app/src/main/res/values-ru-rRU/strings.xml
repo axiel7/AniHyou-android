@@ -30,7 +30,7 @@
     </plurals>
     <string name="unknown">Неизвестно</string>
     <string name="airing_soon">Скоро выйдет</string>
-    <string name="mean_score">Средний счет</string>
+    <string name="mean_score">Счет</string>
     <string name="airing_in">Выйдет через %s</string>
     <string name="winter">Зима</string>
     <string name="spring">Весна</string>
@@ -385,6 +385,7 @@
     <string name="every_hour">Каждый час</string>
     <string name="custom_color">Пользовательский цвет</string>
     <string name="anime_behind">Аниме позади</string>
+    <string name="last_used">Последнее использование</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d ч.</item>
         <item quantity="few">%d ч.</item>
