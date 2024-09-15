@@ -97,12 +97,17 @@ class UserMediaListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             mutableUiState.update {
                 it.entries.clear()
-                it.entries.addAll(it.getEntriesFromListName(listName))
+                if (listName != null) {
+                    it.entries.addAll(it.lists[listName].orEmpty())
+                } else {
+                    it.entries.addAll(it.lists.values.flatten())
+                }
                 it.copy(
                     selectedListName = listName,
                     status = listName?.asMediaListStatus()
                 )
             }
+
             if (mediaType == MediaType.ANIME) {
                 listPreferencesRepository.setAnimeListSelected(listName)
             } else {

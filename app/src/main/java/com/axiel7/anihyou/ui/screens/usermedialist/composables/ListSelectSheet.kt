@@ -5,10 +5,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.asMediaListStatus
 import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.listName
-import com.axiel7.anihyou.data.model.media.localized
-import com.axiel7.anihyou.type.MediaListStatus
+import com.axiel7.anihyou.data.model.media.localizedListStatus
 import com.axiel7.anihyou.ui.composables.sheet.SelectionSheet
 import com.axiel7.anihyou.ui.composables.sheet.SelectionSheetItem
 import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListUiState
@@ -38,24 +37,11 @@ fun ListSelectSheet(
                 onDismiss()
             }
         )
-        MediaListStatus.knownEntries.forEach { status ->
-            val name = remember(status) { status.listName(uiState.mediaType) }
+        uiState.lists.keys.forEach { name ->
             val count = remember(name) { uiState.lists[name]?.size ?: 0 }
             SelectionSheetItem(
-                name = status.localized(uiState.mediaType),
-                icon = status.icon(),
-                count = count,
-                isSelected = uiState.selectedListName == name,
-                onClick = {
-                    onListChanged(name)
-                    onDismiss()
-                }
-            )
-        }
-        uiState.customLists.forEach { name ->
-            val count = remember(name) { uiState.lists[name]?.size ?: 0 }
-            SelectionSheetItem(
-                name = name,
+                name = name.localizedListStatus(),
+                icon = name.asMediaListStatus()?.icon(),
                 count = count,
                 isSelected = uiState.selectedListName == name,
                 onClick = {

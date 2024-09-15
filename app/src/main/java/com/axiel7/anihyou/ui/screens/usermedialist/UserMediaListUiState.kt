@@ -3,7 +3,6 @@ package com.axiel7.anihyou.ui.screens.usermedialist
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.axiel7.anihyou.data.model.media.mediaListStatusNames
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
@@ -44,13 +43,4 @@ data class UserMediaListUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
-
-    fun getEntriesFromListName(name: String?) = if (name != null) {
-        lists[name].orEmpty()
-    } else {
-        lists.keys
-            .filter { mediaListStatusNames.contains(it) } // filter custom list entries
-            .mapNotNull { lists[it] }
-            .flatten()
-    }
 }

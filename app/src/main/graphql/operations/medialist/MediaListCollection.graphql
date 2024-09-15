@@ -10,8 +10,7 @@ query UserListCollection(
         type: $type,
         sort: $sort,
         chunk: $chunk,
-        perChunk: $perChunk,
-        forceSingleCompletedList: true
+        perChunk: $perChunk
     ) {
         lists {
             name
