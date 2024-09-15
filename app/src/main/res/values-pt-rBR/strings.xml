@@ -133,7 +133,7 @@
     <string name="apply">Aplicar</string>
     <string name="sort_default">Padrão</string>
     <string name="descending">Decrescente</string>
-    <string name="ascending">Ascendente</string>
+    <string name="ascending">Crescente</string>
     <string name="role_main">Principal</string>
     <string name="role_supporting">Coadjuvante</string>
     <string name="role_background">Contexto</string>
@@ -143,7 +143,7 @@
     <string name="sequel">Sequência</string>
     <string name="relation_parent">Parente</string>
     <string name="side_story">História paralela</string>
-    <string name="relation_character">Caráter</string>
+    <string name="relation_character">Personagem</string>
     <string name="relation_summary">Resumo</string>
     <string name="relation_alternative">Alternativo</string>
     <string name="spin_off">Spin Off</string>
@@ -171,7 +171,7 @@
     <string name="birthday">Aniversário</string>
     <string name="age">Idade</string>
     <string name="gender">Gênero</string>
-    <string name="blood_type">Tipo Sanguíneo</string>
+    <string name="blood_type">Tipo sanguíneo</string>
     <string name="years_active">Anos de atividade</string>
     <string name="present">Presente</string>
     <string name="hometown">Cidade natal</string>
@@ -369,7 +369,14 @@
     <string name="every_thirty_minutes">Cada 30 minutos</string>
     <string name="every_hour">De hora em hora</string>
     <string name="custom_color">Cor customizada</string>
+    <string name="newly_manga">Manga Recém-Adicionado</string>
+    <string name="newly_anime">Anime Recém-Adicionado</string>
+    <string name="openings">Aberturas</string>
+    <string name="endings">Encerramentos</string>
+    <string name="list_name">Nome da lista</string>
     <string name="anime_behind">Animes Atrasados</string>
+    <string name="default_tab">Aba padrão</string>
+    <string name="last_used">Último usado</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

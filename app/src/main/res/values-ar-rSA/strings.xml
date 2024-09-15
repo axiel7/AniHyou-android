@@ -387,7 +387,7 @@
     <string name="progress">التقدم</string>
     <string name="list">قائمة</string>
     <string name="minus_one">-1</string>
-    <string name="plus_one">+1</string>
+    <string name="plus_one">1+</string>
     <string name="show_less">أقل</string>
     <string name="show_more">أكثر</string>
     <string name="continue_watching">استمر بالمشاهدة</string>
@@ -397,13 +397,14 @@
     <string name="every_five_teen_minutes">كل 15 دقيقة</string>
     <string name="every_thirty_minutes">كل 30 دقيقة</string>
     <string name="every_hour">كل ساعة</string>
-    <string name="custom_color">ألوان مُخصصة</string>
+    <string name="custom_color">لون مخصص</string>
     <string name="newly_manga">المانجا المضافة حديثاً</string>
     <string name="newly_anime">الأنمي المضاف حديثاً</string>
     <string name="openings">شارة البداية</string>
     <string name="endings">شارة النهاية</string>
     <string name="list_name">أسم القائمة</string>
     <string name="anime_behind">أنمي في الخلف</string>
+    <string name="last_used">المستخدم أخيراً</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>
         <item quantity="one">%dساعة واحدة</item>

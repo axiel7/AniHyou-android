@@ -302,7 +302,7 @@
     <string name="expand">Selengkapnya</string>
     <string name="copy">Salin</string>
     <string name="translate">Terjemahkan</string>
-    <string name="genre_action">Aksi</string>
+    <string name="genre_action">Tindakan</string>
     <string name="genre_adventure">Petualangan</string>
     <string name="genre_comedy">Komedi</string>
     <string name="genre_drama">Drama</string>
@@ -367,6 +367,8 @@
     <string name="endings">Ending</string>
     <string name="list_name">Daftar nama</string>
     <string name="anime_behind">Anime Tertinggal</string>
+    <string name="default_tab">Tab default</string>
+    <string name="last_used">Terakhir digunakan</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d j</item>
     </plurals>
