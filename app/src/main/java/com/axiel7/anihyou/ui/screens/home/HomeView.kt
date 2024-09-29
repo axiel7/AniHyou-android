@@ -70,7 +70,7 @@ fun HomeView(
         floatingActionButton = {
             if (selectedTabIndex == HomeTab.ACTIVITY_FEED.ordinal && isLoggedIn) {
                 FloatingActionButton(
-                    onClick = { navActionManager.toPublishActivity(null, null) }
+                    onClick = { navActionManager.toPublishNewActivity() }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add_24),

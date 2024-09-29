@@ -135,9 +135,9 @@ class NavActionManager(
         navController.navigate(Notifications(unread))
     }
 
-    fun toPublishActivity(id: Int?, text: String?) {
+    fun toPublishNewActivity() {
         navController.navigate(
-            PublishActivity(activityId = id ?: 0, text = text)
+            PublishActivity(activityId = null, id = null, text = null)
         )
     }
 
@@ -147,7 +147,7 @@ class NavActionManager(
         text: String?
     ) {
         navController.navigate(
-            PublishActivity(activityId = activityId, id = replyId ?: 0, text = text)
+            PublishActivity(activityId = activityId, id = replyId, text = text)
         )
     }
 
