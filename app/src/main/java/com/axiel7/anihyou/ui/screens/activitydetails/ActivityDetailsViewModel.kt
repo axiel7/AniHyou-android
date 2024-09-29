@@ -147,7 +147,8 @@ class ActivityDetailsViewModel @Inject constructor(
                                 ?: result.data?.onMessageActivity?.toGenericActivity()
                         )
                     }.also {
-                        if (it.replies.isEmpty()) it.replies.addAll(it.details?.replies.orEmpty())
+                        it.replies.clear()
+                        it.replies.addAll(it.details?.replies.orEmpty())
                     }
                 } else {
                     mutableUiState.update { result.toUiState() }

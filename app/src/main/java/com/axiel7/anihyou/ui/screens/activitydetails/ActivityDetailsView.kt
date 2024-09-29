@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
@@ -75,6 +76,13 @@ private fun ActivityDetailsContent(
         derivedStateOf {
             listState.firstVisibleItemIndex == 0
         }
+    }
+
+    LifecycleResumeEffect(Unit) {
+        if (!uiState.isLoading) {
+            event?.refresh()
+        }
+        onPauseOrDispose {  }
     }
 
     DefaultScaffoldWithSmallTopAppBar(
