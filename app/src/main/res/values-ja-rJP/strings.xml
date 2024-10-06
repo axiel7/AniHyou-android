@@ -357,7 +357,6 @@
     <string name="openings">オープニング</string>
     <string name="endings">エンディング</string>
     <string name="anime_behind">遅いなアニメ</string>
-    <string name="last_used">前回使用</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d時間</item>
     </plurals>
