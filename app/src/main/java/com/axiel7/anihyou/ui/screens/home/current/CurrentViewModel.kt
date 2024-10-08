@@ -152,7 +152,8 @@ class CurrentViewModel @Inject constructor(
                     status = MediaListStatus.CURRENT,
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
-                    page = 1
+                    page = null,
+                    perPage = null,
                 )
             }
             .onEach { result ->

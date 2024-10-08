@@ -45,8 +45,8 @@ class MediaListRepository @Inject constructor(
         status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
-        page: Int,
-        perPage: Int = 25,
+        page: Int?,
+        perPage: Int? = 25,
     ) = api
         .userMediaList(userId, mediaType, status, sort, fetchFromNetwork, page, perPage)
         .toFlow()

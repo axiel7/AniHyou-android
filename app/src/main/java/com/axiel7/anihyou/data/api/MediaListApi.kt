@@ -50,8 +50,8 @@ class MediaListApi @Inject constructor(
         status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean,
-        page: Int,
-        perPage: Int,
+        page: Int?,
+        perPage: Int?,
     ) = client
         .query(
             UserMediaListQuery(
@@ -59,8 +59,8 @@ class MediaListApi @Inject constructor(
                 type = Optional.present(mediaType),
                 status = Optional.presentIfNotNull(status),
                 sort = Optional.present(sort),
-                page = Optional.present(page),
-                perPage = Optional.present(perPage),
+                page = Optional.presentIfNotNull(page),
+                perPage = Optional.presentIfNotNull(perPage),
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
