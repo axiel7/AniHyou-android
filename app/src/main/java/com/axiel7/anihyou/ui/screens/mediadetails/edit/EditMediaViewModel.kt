@@ -212,9 +212,6 @@ class EditMediaViewModel @Inject constructor(
             ).onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
-                        if (result.data != null) {
-                            mediaListRepository.updateMediaListCache(result.data.basicMediaListEntry)
-                        }
                         it.copy(
                             isLoading = false,
                             listEntry = result.data?.basicMediaListEntry ?: it.listEntry,

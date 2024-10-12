@@ -66,13 +66,12 @@ class MediaListApi @Inject constructor(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 
     suspend fun updateMediaListCache(data: BasicMediaListEntry) {
-        val result = client.apolloStore
+        client.apolloStore
             .writeFragment(
                 fragment = BasicMediaListEntryImpl(),
                 cacheKey = CacheKey("${data.__typename}:${data.id} ${data.mediaId}"),
                 fragmentData = data,
             )
-        client.apolloStore.publish(result)
     }
 
     fun updateEntryMutation(
