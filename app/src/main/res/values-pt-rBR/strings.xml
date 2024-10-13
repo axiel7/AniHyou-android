@@ -376,7 +376,6 @@
     <string name="list_name">Nome da lista</string>
     <string name="anime_behind">Animes Atrasados</string>
     <string name="default_tab">Aba padrão</string>
-    <string name="last_used">Último usado</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
