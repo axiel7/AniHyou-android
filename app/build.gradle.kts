@@ -43,7 +43,8 @@ android {
                 "uk-rUA",
                 "pl-rPL",
                 "az-rAZ",
-                "de-rDE"
+                "de-rDE",
+                "zh"
             )
         )
         vectorDrawables {
