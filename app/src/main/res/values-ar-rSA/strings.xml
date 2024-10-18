@@ -404,6 +404,7 @@
     <string name="endings">شارة النهاية</string>
     <string name="list_name">أسم القائمة</string>
     <string name="anime_behind">أنمي في الخلف</string>
+    <string name="default_tab">علامة التبويب الافتراضية</string>
     <string name="last_used">المستخدم أخيراً</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>

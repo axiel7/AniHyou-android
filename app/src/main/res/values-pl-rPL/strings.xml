@@ -387,6 +387,7 @@
     <string name="endings">Endingi</string>
     <string name="list_name">Nazwa listy</string>
     <string name="anime_behind">Zaległe Anime</string>
+    <string name="default_tab">Karta domyślna</string>
     <string name="last_used">Ostatnio używane</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d godz</item>
