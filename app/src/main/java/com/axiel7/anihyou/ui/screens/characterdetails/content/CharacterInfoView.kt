@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.character.genderLocalized
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.ui.composables.common.singleClick
@@ -138,7 +139,7 @@ fun CharacterInfoView(
         )
         InfoItemView(
             title = stringResource(R.string.gender),
-            info = uiState.character?.gender,
+            info = uiState.character?.genderLocalized(),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(
