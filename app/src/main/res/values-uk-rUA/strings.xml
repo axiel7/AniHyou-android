@@ -388,8 +388,11 @@
     <string name="endings">Ендінґи</string>
     <string name="list_name">Назва списку</string>
     <string name="anime_behind">Аніме позаду</string>
-    <string name="default_tab">Вкладка за замовчуванням</string>
-    <string name="last_used">Використано востаннє</string>
+    <string name="default_tab">Початкове меню</string>
+    <string name="last_used">Останнє використане</string>
+    <string name="male">Чоловічий</string>
+    <string name="female">Жіночий</string>
+    <string name="non_binary">Небінарний</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>
