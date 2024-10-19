@@ -44,7 +44,7 @@ android {
                 "pl-rPL",
                 "az-rAZ",
                 "de-rDE",
-                "zh"
+                "zh-rCN"
             )
         )
         vectorDrawables {
