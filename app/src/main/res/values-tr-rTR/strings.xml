@@ -378,6 +378,9 @@
     <string name="anime_behind">Bekleyen Anime</string>
     <string name="default_tab">Varsayılan sekme</string>
     <string name="last_used">Son kullanım</string>
+    <string name="male">Erkek</string>
+    <string name="female">Kadın</string>
+    <string name="non_binary">Non-binary</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d saat</item>
         <item quantity="other">%d saat</item>

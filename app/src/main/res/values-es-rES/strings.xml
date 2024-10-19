@@ -378,6 +378,9 @@
     <string name="anime_behind">Anime Atrasado</string>
     <string name="default_tab">Pestaña por defecto</string>
     <string name="last_used">Último usado</string>
+    <string name="male">Masculino</string>
+    <string name="female">Femenino</string>
+    <string name="non_binary">No binario</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
