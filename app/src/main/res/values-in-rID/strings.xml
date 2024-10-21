@@ -327,6 +327,8 @@
     <string name="translations">Penerjemahan</string>
     <string name="from_year">Dari tahun</string>
     <string name="to_year">Ke tahun</string>
+    <string name="staff_role_music">Musik</string>
+    <string name="staff_role_planning">Rencana</string>
     <string name="hide_filters">Sembunyikan filter</string>
     <string name="more_filters">Filter lainnya</string>
     <string name="is_adult">Dewasa</string>
@@ -369,6 +371,9 @@
     <string name="anime_behind">Anime Tertinggal</string>
     <string name="default_tab">Tab default</string>
     <string name="last_used">Terakhir digunakan</string>
+    <string name="male">Pria</string>
+    <string name="female">Wanita</string>
+    <string name="non_binary">Non-biner</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d j</item>
     </plurals>

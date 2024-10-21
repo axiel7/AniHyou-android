@@ -362,8 +362,9 @@
     <string name="translations">المترجمون</string>
     <string name="from_year">من عام</string>
     <string name="to_year">إلى العام</string>
-    <string name="staff_role_a_and_r_producer"><![CDATA[منتج موسيقي]]></string>
     <string name="staff_role_adr_director">مدير الصوتيات</string>
+    <string name="staff_role_music">موسيقى</string>
+    <string name="staff_role_planning">أرغب بمشاهدة</string>
     <string name="hide_filters">إخفاء الفلاتر</string>
     <string name="more_filters">المزيد من الفلاتر</string>
     <string name="is_adult">للكبار</string>
@@ -404,8 +405,6 @@
     <string name="endings">شارة النهاية</string>
     <string name="list_name">أسم القائمة</string>
     <string name="anime_behind">أنمي في الخلف</string>
-    <string name="default_tab">علامة التبويب الافتراضية</string>
-    <string name="last_used">المستخدم أخيراً</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>
         <item quantity="one">%dساعة واحدة</item>

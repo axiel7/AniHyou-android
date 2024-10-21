@@ -304,6 +304,8 @@
     <string name="translations">Übersetzungen</string>
     <string name="from_year">Ab Jahr</string>
     <string name="to_year">Bis Jahr</string>
+    <string name="staff_role_music">Musik</string>
+    <string name="staff_role_planning">Geplant</string>
     <string name="hide_filters">Filter ausblenden</string>
     <string name="more_filters">Weitere Filter</string>
     <string name="is_adult">Erwachsene</string>
@@ -331,5 +333,4 @@
     <string name="continue_watching">Weiterschauen</string>
     <string name="hide_from_status_lists">Aus Statuslisten ausblenden</string>
     <string name="black_theme_variant">Schwarze Themenvariante</string>
-    <string name="last_used">Zuletzt verwendet</string>
 </resources>

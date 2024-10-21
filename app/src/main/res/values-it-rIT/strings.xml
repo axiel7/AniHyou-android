@@ -334,8 +334,9 @@
     <string name="translations">Traduzioni</string>
     <string name="from_year">Anno d\'inizio</string>
     <string name="to_year">Anno di fine</string>
-    <string name="staff_role_a_and_r_producer"><![CDATA[Produttore A&R]]></string>
     <string name="staff_role_adr_director">Direttore ADR</string>
+    <string name="staff_role_music">Musica</string>
+    <string name="staff_role_planning">In pianificazione</string>
     <string name="hide_filters">Nascondi filtri</string>
     <string name="more_filters">Altri filtri</string>
     <string name="is_adult">Adulto</string>
