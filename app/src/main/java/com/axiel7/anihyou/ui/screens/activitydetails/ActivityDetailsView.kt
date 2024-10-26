@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.activity.text
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.ui.composables.common.BackIconButton
@@ -125,7 +126,8 @@ private fun ActivityDetailsContent(
                     if (uiState.details != null) {
                         ActivityTextView(
                             modifier = Modifier.padding(16.dp),
-                            text = uiState.details.text.orEmpty(),
+                            text = uiState.details.text
+                                ?: uiState.details.listActivityFragment?.text().orEmpty(),
                             username = uiState.details.username,
                             avatarUrl = uiState.details.avatarUrl,
                             mediaCoverUrl = uiState.details.mediaCoverUrl,
