@@ -137,5 +137,10 @@
     <string name="reading">Lendo</string>
     <string name="synonyms">Sinónimos</string>
     <string name="translations">Traduções</string>
+    <string name="staff_role_music">Música</string>
+    <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
+    <string name="show_more">Mais</string>
+    <string name="random">Aleatório</string>
+    <string name="last_used">Último usado</string>
 </resources>

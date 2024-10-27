@@ -348,8 +348,9 @@
     <string name="translations">Переводы</string>
     <string name="from_year">За год</string>
     <string name="to_year">В год</string>
-    <string name="staff_role_a_and_r_producer"><![CDATA[А&Р Продюсер]]></string>
     <string name="staff_role_adr_director">Директор дублирования</string>
+    <string name="staff_role_music">Музыка</string>
+    <string name="staff_role_planning">Планируется</string>
     <string name="hide_filters">Скрыть фильтры</string>
     <string name="more_filters">Больше фильтров</string>
     <string name="is_adult">Взрослый</string>

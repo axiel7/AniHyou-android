@@ -320,8 +320,9 @@
     <string name="translations">翻訳</string>
     <string name="from_year">年から</string>
     <string name="to_year">年まで</string>
-    <string name="staff_role_a_and_r_producer"><![CDATA[A&R プロデューサー]]></string>
     <string name="staff_role_adr_director">ADR ディレクター</string>
+    <string name="staff_role_music">音楽</string>
+    <string name="staff_role_planning">視聴予定</string>
     <string name="hide_filters">フィルターを非表示</string>
     <string name="more_filters">その他のフィルター</string>
     <string name="is_adult">アダルト</string>
