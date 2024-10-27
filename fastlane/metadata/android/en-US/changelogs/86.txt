@@ -1,0 +1,16 @@
+- MediaDetails: music streaming service chooser for op/ed
+- MediaDetails: recent activity
+- MediaDetails: collapsable tags
+- Current: split anime with behind episodes
+- Home: mark notifications as read automatically
+- MediaList: support for split completed lists
+- MediaList: auto change to current when paused
+- Settings: default tab
+- Activity: option to delete your activity
+- Notifications: add reason for media data changes
+- Added preview image to system notifications
+- Login: fix session expiration after ~1 year
+- Target SDK 35 (Android 15)
+- Chinese (Simplified) translations
+- Localized staff roles
+- Lots of other fixes and improvements
