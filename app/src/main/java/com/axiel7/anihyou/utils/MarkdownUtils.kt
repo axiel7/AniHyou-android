@@ -9,7 +9,7 @@ object MarkdownUtils {
     private const val ANIHYOU_SPOILER_SCHEME = "anihyouspoiler://"
 
     private val imageRegex = Regex("(img\\d*%*)\\((.*)\\)")
-    private val spoilerRegex = Regex("~!(.*)!~")
+    private val spoilerRegex = Regex("~!(.*?)!~", RegexOption.DOT_MATCHES_ALL)
     private val centerRegex = Regex("~~~(.*)~~~", RegexOption.DOT_MATCHES_ALL)
 
     fun String.formatCompatibleMarkdown() = this
