@@ -33,30 +33,33 @@ fun String.asMediaListStatus() = when (this) {
     "Dropped" -> MediaListStatus.DROPPED
     "Paused" -> MediaListStatus.PAUSED
     "Repeating", "Rewatching", "Rereading" -> MediaListStatus.REPEATING
-    else -> null
+    else -> {
+        if (startsWith("Completed")) {
+            MediaListStatus.COMPLETED
+        } else {
+            null
+        }
+    }
 }
 
-fun MediaListStatus?.listName(mediaType: MediaType) = when (this) {
-    MediaListStatus.CURRENT -> when (mediaType) {
-        MediaType.ANIME -> "Watching"
-        MediaType.MANGA -> "Reading"
-        MediaType.UNKNOWN__ -> null
+@Composable
+fun String.localizedListStatus() = when (this) {
+    "Watching" -> stringResource(R.string.watching)
+    "Reading" -> stringResource(R.string.reading)
+    "Current" -> stringResource(R.string.current)
+    "Planning" -> stringResource(R.string.planning)
+    "Completed" -> stringResource(R.string.completed)
+    "Dropped" -> stringResource(R.string.dropped)
+    "Paused" -> stringResource(R.string.paused)
+    "Repeating", "Rewatching", "Rereading" -> stringResource(R.string.repeating)
+    else -> {
+        if (startsWith("Completed")) {
+            stringResource(R.string.completed) + replaceFirst("Completed", "")
+        } else {
+            this
+        }
     }
-
-    MediaListStatus.PLANNING -> "Planning"
-    MediaListStatus.COMPLETED -> "Completed"
-    MediaListStatus.DROPPED -> "Dropped"
-    MediaListStatus.PAUSED -> "Paused"
-    MediaListStatus.REPEATING -> when (mediaType) {
-        MediaType.ANIME -> "Rewatching"
-        MediaType.MANGA -> "Rereading"
-        MediaType.UNKNOWN__ -> null
-    }
-    else -> null
 }
-
-val mediaListStatusNames =
-    arrayOf("Watching", "Reading", "Planning", "Completed", "Dropped", "Paused", "Rewatching", "Rereading")
 
 /**
  * Returns if this is a status considered as active.

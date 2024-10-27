@@ -4,6 +4,22 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Erkunden</string>
+    <plurals name="num_years">
+        <item quantity="one">%d Jahr</item>
+        <item quantity="other">%d Jahre</item>
+    </plurals>
+    <plurals name="num_months">
+        <item quantity="one">%d Monat</item>
+        <item quantity="other">%d Monate</item>
+    </plurals>
+    <plurals name="num_weeks">
+        <item quantity="one">%d Woche</item>
+        <item quantity="other">%d Wochen</item>
+    </plurals>
+    <plurals name="num_days">
+        <item quantity="one">%d Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
     <string name="unknown">Unbekannt</string>
     <string name="mean_score">Durchschnitt</string>
     <string name="airing_in">Ausstrahlung in %s</string>
@@ -205,7 +221,7 @@
     <string name="notifications_airing">Am Laufen</string>
     <string name="activity">Aktivität</string>
     <string name="forum">Forum</string>
-    <string name="notifications_media">Media</string>
+    <string name="notifications_media">Medien</string>
     <string name="content">Inhalt</string>
     <string name="airing_on_my_list">Veröffentlicht auf meiner Liste</string>
     <string name="airing_on_my_list_summary">Zeige nur bald ausgestrahlte Anime, die in deiner Liste stehen</string>
@@ -304,6 +320,8 @@
     <string name="translations">Übersetzungen</string>
     <string name="from_year">Ab Jahr</string>
     <string name="to_year">Bis Jahr</string>
+    <string name="staff_role_music">Musik</string>
+    <string name="staff_role_planning">Geplant</string>
     <string name="hide_filters">Filter ausblenden</string>
     <string name="more_filters">Weitere Filter</string>
     <string name="is_adult">Erwachsene</string>
@@ -332,4 +350,14 @@
     <string name="continue_watching">Weiterschauen</string>
     <string name="hide_from_status_lists">Aus Statuslisten ausblenden</string>
     <string name="black_theme_variant">Schwarze Themenvariante</string>
+    <string name="random">Zufall</string>
+    <string name="last_used">Zuletzt verwendet</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%d h</item>
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Min</item>
+    </plurals>
 </resources>

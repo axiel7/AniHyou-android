@@ -43,7 +43,9 @@ android {
                 "uk-rUA",
                 "pl-rPL",
                 "az-rAZ",
-                "de-rDE"
+                "de-rDE",
+                "zh-rCN",
+                "fr-rFR"
             )
         )
         vectorDrawables {
@@ -120,10 +122,6 @@ android {
     }
 }
 
-composeCompiler {
-    enableStrongSkippingMode = true
-}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -142,11 +140,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.glance.appwidget.preview)
+
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.sizeclass)
 
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.glance.appwidget)
 
     implementation(libs.accompanist.permissions)
 

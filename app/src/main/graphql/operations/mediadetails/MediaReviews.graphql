@@ -8,6 +8,9 @@ query MediaReviews($mediaId: Int, $page: Int, $perPage: Int) {
                 rating
                 user {
                     name
+                    avatar {
+                        medium
+                    }
                 }
             }
             pageInfo {

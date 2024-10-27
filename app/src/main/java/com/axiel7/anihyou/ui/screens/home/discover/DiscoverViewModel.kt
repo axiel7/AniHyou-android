@@ -13,10 +13,12 @@ import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.utils.DateUtils.currentAnimeSeason
 import com.axiel7.anihyou.utils.DateUtils.nextAnimeSeason
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -198,6 +200,29 @@ class DiscoverViewModel @Inject constructor(
                     )
                 }
             }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun refresh() {
+        mutableUiState.update { it.copy(isLoading = true) }
+        mutableUiState.value.run {
+            airingAnime.clear()
+            airingAnimeOnMyList.clear()
+            thisSeasonAnime.clear()
+            trendingAnime.clear()
+            nextSeasonAnime.clear()
+            trendingManga.clear()
+            newlyAnime.clear()
+            newlyManga.clear()
+            if (airingOnMyList == true) fetchAiringAnimeOnMyList()
+            else fetchAiringAnime()
+            fetchThisSeasonAnime()
+            fetchTrendingAnime()
+        }
+        viewModelScope.launch {
+            // PullToRefresh needs a min delay when changing the isRefreshing state
+            delay(1000)
+            mutableUiState.update { it.copy(isLoading = false) }
         }
     }
 

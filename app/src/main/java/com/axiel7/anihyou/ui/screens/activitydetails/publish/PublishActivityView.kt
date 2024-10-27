@@ -18,8 +18,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Immutable
 data class PublishActivity(
-    val activityId: Int = 0,
-    val id: Int = 0,
+    val activityId: Int?,
+    val id: Int?,
     val text: String? = null
 )
 
@@ -61,7 +61,7 @@ private fun PublishActivityContent(
 
     PublishMarkdownView(
         onPublish = { finalText ->
-            if (arguments.activityId != 0) {
+            if (arguments.activityId != null) {
                 event?.publishActivityReply(arguments.activityId, arguments.id, finalText)
             } else {
                 event?.publishActivity(arguments.id, finalText)
@@ -79,7 +79,11 @@ fun PublishActivityViewPreview() {
     AniHyouTheme {
         Surface {
             PublishActivityContent(
-                arguments = PublishActivity(text = "This is a preview"),
+                arguments = PublishActivity(
+                    activityId = null,
+                    id = 1,
+                    text = "This is a preview"
+                ),
                 uiState = PublishActivityUiState(),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()

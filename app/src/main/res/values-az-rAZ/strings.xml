@@ -306,6 +306,8 @@
     <string name="translations">Tərcümələr</string>
     <string name="from_year">Ildən</string>
     <string name="to_year">Ilə</string>
+    <string name="staff_role_music">Musiqi</string>
+    <string name="staff_role_planning">Planladığım</string>
     <string name="hide_filters">Filtrləri gizlə</string>
     <string name="more_filters">Daha çox filtrlər</string>
     <string name="is_adult">Yetkin</string>
@@ -335,4 +337,12 @@
     <string name="continue_watching">İzləməyə davam et</string>
     <string name="custom_color">Özəl rəng</string>
     <string name="anime_behind">Arxadakı Anime</string>
+    <plurals name="hour_abbreviation">
+        <item quantity="one">%dsaat</item>
+        <item quantity="other">%dsaat</item>
+    </plurals>
+    <plurals name="minutes_abbreviation">
+        <item quantity="one">%ddəqiqə</item>
+        <item quantity="other">%ddəqiqə</item>
+    </plurals>
 </resources>

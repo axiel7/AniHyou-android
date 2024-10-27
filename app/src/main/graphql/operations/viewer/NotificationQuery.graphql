@@ -12,6 +12,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -210,6 +211,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -219,12 +221,14 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                 id
                 context
                 mediaId
+                reason
                 media {
                     title {
                         userPreferred
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type
@@ -241,6 +245,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                     }
                     coverImage {
                         medium
+                        large
                     }
                 }
                 type

@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -66,6 +67,7 @@ import com.axiel7.anihyou.ui.screens.profile.social.UserSocialView
 import com.axiel7.anihyou.ui.screens.profile.stats.UserStatsView
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
+import com.axiel7.anihyou.utils.ContextUtils.showToast
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -76,7 +78,7 @@ object Profile
 @Serializable
 @Immutable
 data class UserDetails(
-    val id: Int = 0,
+    val id: Int?,
     val userName: String?
 )
 
@@ -104,6 +106,7 @@ private fun ProfileContent(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
+    val context = LocalContext.current
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -112,6 +115,13 @@ private fun ProfileContent(
         derivedStateOf { topAppBarScrollBehavior.state.collapsedFraction }
     }
     val statusBarPadding = WindowInsets.statusBars.asPaddingValues()
+
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            event?.onErrorDisplayed()
+            context.showToast(uiState.error)
+        }
+    }
 
     Scaffold(
         modifier = modifier,

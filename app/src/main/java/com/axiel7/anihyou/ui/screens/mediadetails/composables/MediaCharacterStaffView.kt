@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
+import com.axiel7.anihyou.data.model.staff.roleLocalized
 import com.axiel7.anihyou.fragment.MediaCharacter
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
@@ -83,7 +84,7 @@ fun MediaCharacterStaffView(
                         PersonItemHorizontal(
                             title = item.node?.name?.userPreferred.orEmpty(),
                             imageUrl = item.node?.image?.medium,
-                            subtitle = item.role,
+                            subtitle = item.roleLocalized(),
                             onClick = {
                                 navigateToStaffDetails(item.node!!.id)
                             }

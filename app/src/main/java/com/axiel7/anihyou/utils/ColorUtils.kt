@@ -21,4 +21,14 @@ object ColorUtils {
             val b: Int = (blue * 255).toInt()
             return java.lang.String.format(Locale.getDefault(), "%02X%02X%02X%02X", a, r, g, b)
         }
+
+    val Color.isBlack: Boolean
+        inline get() {
+            return red == 0.0f && green == 0.0f && blue == 0.0f
+        }
+
+    val Color.isWhite: Boolean
+        inline get() {
+            return red == 1.0f && green == 1.0f && blue == 1.0f
+        }
 }

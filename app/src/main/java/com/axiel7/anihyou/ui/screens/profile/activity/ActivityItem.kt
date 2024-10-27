@@ -8,18 +8,30 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.R
 import com.axiel7.anihyou.type.ActivityType
 import com.axiel7.anihyou.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
@@ -50,6 +62,7 @@ fun ActivityItem(
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
     onClickLike: () -> Unit,
+    onClickDelete: () -> Unit,
     navigateToFullscreenImage: (String) -> Unit = {},
 ) {
     Row(
@@ -71,27 +84,36 @@ fun ActivityItem(
         Column(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (type == ActivityType.TEXT || type == ActivityType.MESSAGE) {
-                PersonItemSmall(
-                    avatarUrl = imageUrl,
-                    username = username,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    isPrivate = isPrivate,
-                    isLocked = isLocked,
-                    onClick = onClickImage
-                )
-                DefaultMarkdownText(
-                    markdown = text,
-                    lineHeight = 20.sp,
-                    navigateToFullscreenImage = navigateToFullscreenImage
-                )
-            } else {
-                Text(
-                    text = text,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    lineHeight = 20.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3
+            Row {
+                if (type == ActivityType.TEXT || type == ActivityType.MESSAGE) {
+                    PersonItemSmall(
+                        avatarUrl = imageUrl,
+                        username = username,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        isPrivate = isPrivate,
+                        isLocked = isLocked,
+                        onClick = onClickImage
+                    )
+                    DefaultMarkdownText(
+                        markdown = text,
+                        modifier = Modifier.weight(1f),
+                        lineHeight = 20.sp,
+                        navigateToFullscreenImage = navigateToFullscreenImage
+                    )
+                } else {
+                    Text(
+                        text = text,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .weight(1f),
+                        lineHeight = 20.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 3
+                    )
+                }
+                ActivityMenu(
+                    modifier = Modifier.align(Alignment.Top),
+                    onClickDelete = onClickDelete
                 )
             }
 
@@ -126,6 +148,34 @@ fun ActivityItem(
                     iconSize = 20.dp,
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ActivityMenu(
+    modifier: Modifier = Modifier,
+    onClickDelete: () -> Unit,
+) {
+    Box(modifier = modifier.wrapContentSize(Alignment.TopEnd)) {
+        var moreExpanded by remember { mutableStateOf(false) }
+        IconButton(onClick = { moreExpanded = !moreExpanded }) {
+            Icon(
+                painter = painterResource(R.drawable.more_vert_24),
+                contentDescription = stringResource(R.string.show_more),
+            )
+        }
+        DropdownMenu(
+            expanded = moreExpanded,
+            onDismissRequest = { moreExpanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.delete)) },
+                onClick = {
+                    moreExpanded = false
+                    onClickDelete()
+                },
+            )
         }
     }
 }
@@ -181,7 +231,8 @@ fun ActivityItemPreview() {
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
                     onClick = {},
-                    onClickLike = {}
+                    onClickLike = {},
+                    onClickDelete = {},
                 )
                 ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)

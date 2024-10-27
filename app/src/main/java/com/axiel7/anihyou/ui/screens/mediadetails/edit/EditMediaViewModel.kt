@@ -101,7 +101,9 @@ class EditMediaViewModel @Inject constructor(
         val totalDuration = uiState.value.mediaDetails?.duration()
         if (canChangeProgressTo(value, totalDuration)) {
             mutableUiState.update {
-                if (it.status == null || it.status == MediaListStatus.PLANNING) {
+                if (it.status == null || it.status == MediaListStatus.PLANNING
+                    || it.status == MediaListStatus.PAUSED
+                ) {
                     onChangeStatus(MediaListStatus.CURRENT)
                 } else if (totalDuration != null && value != null && value >= totalDuration) {
                     onChangeStatus(MediaListStatus.COMPLETED)
@@ -210,9 +212,6 @@ class EditMediaViewModel @Inject constructor(
             ).onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
-                        if (result.data != null) {
-                            mediaListRepository.updateMediaListCache(result.data.basicMediaListEntry)
-                        }
                         it.copy(
                             isLoading = false,
                             listEntry = result.data?.basicMediaListEntry ?: it.listEntry,

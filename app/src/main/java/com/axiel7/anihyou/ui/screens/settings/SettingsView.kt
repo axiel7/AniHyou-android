@@ -32,6 +32,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
@@ -96,7 +97,8 @@ private fun SettingsContent(
     navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = (uiState.theme == Theme.FOLLOW_SYSTEM && isSystemInDarkTheme())
+            || uiState.theme == Theme.DARK
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -191,6 +193,14 @@ private fun SettingsContent(
                     preferenceValue = uiState.scoreFormat,
                     icon = R.drawable.star_24,
                     onValueChange = { event?.setScoreFormat(it) }
+                )
+
+                ListPreference(
+                    title = stringResource(R.string.default_tab),
+                    entriesValues = DefaultTab.entriesLocalized,
+                    preferenceValue = uiState.defaultTab,
+                    icon = R.drawable.home_24,
+                    onValueChange = { event?.setDefaultTab(it) }
                 )
 
                 PreferencesTitle(text = stringResource(R.string.list))

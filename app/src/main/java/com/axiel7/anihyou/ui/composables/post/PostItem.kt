@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
+import com.axiel7.anihyou.ui.composables.person.PersonImage
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val POST_ITEM_HEIGHT = 144
@@ -33,6 +34,7 @@ const val POST_ITEM_WIDTH = 300
 fun PostItem(
     title: String,
     author: String,
+    avatarUrl: String,
     modifier: Modifier = Modifier,
     subtitle: @Composable () -> Unit = {},
     onClick: () -> Unit,
@@ -59,16 +61,25 @@ fun PostItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 subtitle()
 
-                Text(
-                    text = author,
-                    fontSize = 15.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
+                Row {
+                    PersonImage(
+                        url = avatarUrl,
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                            .size(24.dp)
+                    )
+                    Text(
+                        text = author,
+                        fontSize = 15.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
             }
         }
     }
@@ -128,6 +139,7 @@ fun PostItemPreview() {
                 PostItem(
                     title = "Love letter to art, culture, and excellence: the Manga. And some more text to test this view",
                     author = "thisisaverylargeusername",
+                    avatarUrl = "",
                     modifier = Modifier.padding(16.dp),
                     subtitle = {
                         Row(

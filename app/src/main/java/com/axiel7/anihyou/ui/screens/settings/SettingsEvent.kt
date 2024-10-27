@@ -6,6 +6,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
@@ -46,6 +47,8 @@ interface SettingsEvent {
     fun setStaffNameLanguage(value: UserStaffNameLanguage)
 
     fun setScoreFormat(value: ScoreFormat)
+
+    fun setDefaultTab(value: DefaultTab)
 
     fun setAiringNotification(value: Boolean)
 

@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.common.GlobalVariables
 import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.LoginRepository
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -20,17 +22,9 @@ class MainViewModel @Inject constructor(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : ViewModel(), MainEvent {
 
-    fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
-        if (data?.scheme == ANIHYOU_SCHEME) {
-            loginRepository.parseRedirectUri(data)
-        }
-    }
-
-    private val accessToken = defaultPreferencesRepository.accessToken
+    val accessToken = defaultPreferencesRepository.accessToken
 
     val isLoggedIn = defaultPreferencesRepository.isLoggedIn
-
-    val startTab = defaultPreferencesRepository.lastTab
 
     val homeTab = defaultPreferencesRepository.defaultHomeTab
 
@@ -48,11 +42,28 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    suspend fun getStartTab(): Int {
+        val defaultTab = defaultPreferencesRepository.defaultTab.first()
+        return if (defaultTab == null || defaultTab == DefaultTab.LAST_USED) {
+            defaultPreferencesRepository.lastTab.first()
+        } else {
+            defaultTab.ordinal - 1
+        }
+    }
+
+    fun setToken(token: String?) {
+        globalVariables.accessToken = token
+    }
+
+    fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
+        if (data?.scheme == ANIHYOU_SCHEME) {
+            loginRepository.parseRedirectUri(data)
+        }
+    }
+
     init {
         accessToken
-            .onEach {
-                globalVariables.accessToken = it
-            }
+            .onEach { setToken(it) }
             .launchIn(viewModelScope)
     }
 }

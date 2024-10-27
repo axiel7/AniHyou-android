@@ -22,37 +22,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.MediaReviewsQuery
-import com.axiel7.anihyou.MediaThreadsQuery
 import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.activity.text
+import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.InfoTitle
 import com.axiel7.anihyou.ui.composables.TextIconHorizontal
+import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.ui.composables.post.PostItem
 import com.axiel7.anihyou.ui.composables.post.PostItemPlaceholder
+import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsUiState
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.utils.NumberUtils.format
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun ReviewThreadListView(
-    mediaThreads: List<MediaThreadsQuery.Thread>,
-    mediaReviews: List<MediaReviewsQuery.Node>,
-    isLoadingThreads: Boolean,
-    isLoadingReviews: Boolean,
-    navigateToReviewDetails: (Int) -> Unit,
-    navigateToThreadDetails: (Int) -> Unit,
+    uiState: MediaDetailsUiState,
+    navActionManager: NavActionManager,
 ) {
     val reviewsListState = rememberLazyGridState()
     val threadsListState = rememberLazyListState()
+    val activityListState = rememberLazyListState()
 
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
         InfoTitle(text = stringResource(R.string.threads))
-        if (isLoadingThreads || mediaThreads.isNotEmpty()) {
+        if (uiState.isLoadingThreads || uiState.threads.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 16.dp),
@@ -62,12 +65,13 @@ fun ReviewThreadListView(
                 flingBehavior = rememberSnapFlingBehavior(lazyListState = threadsListState),
             ) {
                 items(
-                    items = mediaThreads,
+                    items = uiState.threads,
                     contentType = { it }
                 ) { item ->
                     PostItem(
                         title = item.basicThreadDetails.title.orEmpty(),
                         author = item.basicThreadDetails.user?.name.orEmpty(),
+                        avatarUrl = item.basicThreadDetails.user?.avatar?.medium.orEmpty(),
                         subtitle = {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -88,11 +92,11 @@ fun ReviewThreadListView(
                             }
                         },
                         onClick = {
-                            navigateToThreadDetails(item.basicThreadDetails.id)
+                            navActionManager.toThreadDetails(item.basicThreadDetails.id)
                         }
                     )
                 }
-                if (isLoadingThreads) {
+                if (uiState.isLoadingThreads) {
                     items(2) {
                         PostItemPlaceholder()
                     }
@@ -109,8 +113,8 @@ fun ReviewThreadListView(
             }
         }
 
-        InfoTitle(text = stringResource(R.string.reviews))
-        if (isLoadingReviews || mediaReviews.isNotEmpty()) {
+        if (uiState.isLoadingReviews || uiState.reviews.isNotEmpty()) {
+            InfoTitle(text = stringResource(R.string.reviews))
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(2),
                 modifier = Modifier
@@ -122,12 +126,13 @@ fun ReviewThreadListView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
-                    items = mediaReviews,
+                    items = uiState.reviews,
                     contentType = { it }
                 ) { item ->
                     PostItem(
                         title = item.summary.orEmpty(),
                         author = item.user?.name.orEmpty(),
+                        avatarUrl = item.user?.avatar?.medium.orEmpty(),
                         subtitle = {
                             TextIconHorizontal(
                                 text = item.score?.format().orEmpty(),
@@ -137,24 +142,58 @@ fun ReviewThreadListView(
                             )
                         },
                         onClick = {
-                            navigateToReviewDetails(item.id)
+                            navActionManager.toReviewDetails(item.id)
                         }
                     )
                 }
-                if (isLoadingReviews) {
+                if (uiState.isLoadingReviews) {
                     items(4) {
                         PostItemPlaceholder()
                     }
                 }
             }
-        } else {
-            Box(
+        }
+
+        if (uiState.activity.isNotEmpty()) {
+            HorizontalListHeader(
+                text = stringResource(R.string.activity),
+                onClick = {
+                    uiState.details?.id?.let(navActionManager::toMediaActivity)
+                }
+            )
+            LazyRow(
                 modifier = Modifier
-                    .height(POST_ITEM_HEIGHT.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                    .padding(top = 8.dp, bottom = 16.dp),
+                state = activityListState,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                flingBehavior = rememberSnapFlingBehavior(lazyListState = activityListState),
             ) {
-                Text(text = stringResource(R.string.no_reviews))
+                items(
+                    items = uiState.activity,
+                    contentType = { it }
+                ) { item ->
+                    PostItem(
+                        title = item.text(),
+                        author = item.user?.name.orEmpty(),
+                        avatarUrl = item.user?.avatar?.medium.orEmpty(),
+                        subtitle = {
+                            Text(
+                                text = item.createdAt.toLong().timestampIntervalSinceNow()
+                                    .secondsToLegibleText(
+                                        maxUnit = ChronoUnit.WEEKS,
+                                        isFutureDate = false
+                                    ),
+                                fontSize = 15.sp,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                            )
+                        },
+                        onClick = {
+                            navActionManager.toActivityDetails(item.id)
+                        }
+                    )
+                }
             }
         }
     }//: Column
@@ -166,12 +205,11 @@ fun ReviewThreadListViewPreview() {
     AniHyouTheme {
         Surface {
             ReviewThreadListView(
-                mediaReviews = emptyList(),
-                mediaThreads = emptyList(),
-                isLoadingThreads = true,
-                isLoadingReviews = true,
-                navigateToReviewDetails = {},
-                navigateToThreadDetails = {}
+                uiState = MediaDetailsUiState(
+                    isLoadingReviews = true,
+                    isLoadingThreads = true
+                ),
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

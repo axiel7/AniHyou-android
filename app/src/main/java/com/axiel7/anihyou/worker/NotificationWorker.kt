@@ -27,6 +27,7 @@ import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.type.NotificationType
 import com.axiel7.anihyou.ui.screens.main.MainActivity
+import com.axiel7.anihyou.utils.ImageUtils.getBitmapFromUrl
 import com.axiel7.anihyou.utils.NotificationUtils.createNotificationChannel
 import com.axiel7.anihyou.utils.NotificationUtils.showNotification
 import dagger.assisted.Assisted
@@ -98,11 +99,26 @@ class NotificationWorker @AssistedInject constructor(
                             PendingIntent.FLAG_IMMUTABLE
                         )
                     }
+
+                    val image = (it.largeImageUrl ?: it.imageUrl)?.let { url ->
+                        applicationContext.getBitmapFromUrl(url)
+                    }
+
+                    val title = if (it.type == NotificationType.AIRING) {
+                        it.mediaTitle() ?: it.text
+                    } else it.text
+
+                    val text = if (it.type == NotificationType.AIRING) {
+                        it.numEpisode()?.let { ep -> "Episode $ep aired" }.orEmpty()
+                    } else ""
+
                     applicationContext.showNotification(
                         notificationId = it.id,
                         channelId = DEFAULT_CHANNEL_ID,
-                        title = it.text,
-                        text = "",
+                        title = title,
+                        text = text,
+                        largeIcon = image,
+                        bigPicture = image.takeIf { _ -> it.isMedia },
                         pendingIntent = pendingIntent,
                         group = "default"
                     )
@@ -129,7 +145,7 @@ class NotificationWorker @AssistedInject constructor(
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             0,
-            NotificationCompat.Builder(applicationContext, DEFAULT_CHANNEL_ID)
+            NotificationCompat.Builder(applicationContext, SYNC_CHANNEL_ID)
                 .setContentTitle(applicationContext.getString(R.string.notifications))
                 .setSmallIcon(R.drawable.anihyou_24)
                 .setAutoCancel(true)
@@ -153,15 +169,21 @@ class NotificationWorker @AssistedInject constructor(
 
     companion object {
         private const val TAG = "NotificationWorker"
-        const val DEFAULT_CHANNEL_ID = "default_channel_id"
         private const val WORK_NAME = "default_notifications"
+
+        const val DEFAULT_CHANNEL_ID = "default_channel_id"
+        const val SYNC_CHANNEL_ID = "sync_channel_id"
 
         fun Context.createDefaultNotificationChannels() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // TODO: create different channels for every NotificationType?
                 createNotificationChannel(
                     id = DEFAULT_CHANNEL_ID,
-                    name = "Default"
+                    name = getString(R.string.default_setting)
+                )
+                createNotificationChannel(
+                    id = SYNC_CHANNEL_ID,
+                    name = getString(R.string.update_interval)
                 )
             }
         }

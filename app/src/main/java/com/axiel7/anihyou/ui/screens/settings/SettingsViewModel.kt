@@ -13,6 +13,7 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserStaffNameLanguage
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.ui.common.ItemsPerRow
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.Theme
@@ -26,6 +27,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -169,6 +171,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    override fun setDefaultTab(value: DefaultTab) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setDefaultTab(value)
+        }
+    }
+
     override fun setAiringNotification(value: Boolean) {
         viewModelScope.launch {
             updateUser(airingNotifications = value).collect()
@@ -253,6 +261,13 @@ class SettingsViewModel @Inject constructor(
         defaultPreferencesRepository.appColor
             .onEach { value ->
                 mutableUiState.update { it.copy(appColor = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.defaultTab
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(defaultTab = value) }
             }
             .launchIn(viewModelScope)
 

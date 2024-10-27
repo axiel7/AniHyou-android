@@ -41,8 +41,8 @@ import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
-import com.axiel7.anihyou.ui.composables.ModalBottomSheet
 import com.axiel7.anihyou.ui.composables.SelectableIconToggleButton
+import com.axiel7.anihyou.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.utils.DateUtils
 import kotlinx.coroutines.CoroutineScope
 

@@ -25,6 +25,7 @@ import com.axiel7.anihyou.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.person.PersonItemSmall
+import com.axiel7.anihyou.ui.screens.profile.activity.ActivityMenu
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
 import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
@@ -42,10 +43,12 @@ fun ActivityFeedItem(
     likeCount: Int,
     isLiked: Boolean?,
     mediaCoverUrl: String? = null,
+    showMenu: Boolean = false,
     onClick: () -> Unit,
     onClickUser: () -> Unit,
     onClickLike: () -> Unit,
     onClickMedia: () -> Unit = {},
+    onClickDelete: () -> Unit = {},
     navigateToFullscreenImage: (String) -> Unit = {},
 ) {
     Row(
@@ -107,6 +110,7 @@ fun ActivityFeedItem(
             }
             Row(
                 modifier = Modifier.align(Alignment.End),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CommentIconButton(
@@ -124,6 +128,11 @@ fun ActivityFeedItem(
                     fontSize = 14.sp,
                     iconSize = 20.dp,
                 )
+                if (showMenu) {
+                    ActivityMenu(
+                        onClickDelete = onClickDelete
+                    )
+                }
             }
         }//:Column
     }//Row
@@ -144,6 +153,7 @@ fun MediaActivityItemPreview() {
                 likeCount = 999,
                 isLiked = false,
                 mediaCoverUrl = "",
+                showMenu = true,
                 onClick = {},
                 onClickUser = {},
                 onClickLike = {},

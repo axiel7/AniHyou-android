@@ -14,8 +14,6 @@ import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toBoolean
-import com.axiel7.anihyou.ui.common.navigation.TriBoolean.Companion.toTriBoolean
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,14 +44,22 @@ class SearchViewModel @Inject constructor(
                 genreIn = arguments.genre?.let { listOf(it) } ?: emptyList(),
                 tagIn = arguments.tag?.let { listOf(it) } ?: emptyList()
             ),
-            onMyList = arguments.onList.toTriBoolean().toBoolean(),
+            onMyList = arguments.onList,
             hasNextPage = arguments.genre != null
                     || arguments.tag != null
                     || arguments.mediaSort != null
         )
 
-    override fun setQuery(value: String) = mutableUiState.update {
-        it.copy(query = value, page = 1, hasNextPage = true, isLoading = true)
+    override fun setQuery(value: String) {
+        mutableUiState.update {
+            val shouldLoad = it.hasFiltersApplied || value.isNotBlank()
+            it.copy(
+                query = value,
+                page = if (shouldLoad) 1 else it.page,
+                hasNextPage = shouldLoad,
+                isLoading = shouldLoad,
+            )
+        }
     }
 
     override fun setSearchType(value: SearchType) = mutableUiState.update {

@@ -13,6 +13,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 
 class AiringAnimeDataStore(
@@ -20,19 +21,30 @@ class AiringAnimeDataStore(
 ) : DataStore<DataResult<List<AiringWidgetQuery.Medium>>> {
     override val data: Flow<DataResult<List<AiringWidgetQuery.Medium>>>
         get() {
-            val appContext = context.applicationContext ?: throw IllegalStateException()
-            val hiltEntryPoint =
-                EntryPointAccessors.fromApplication(appContext, AiringAnimeEntryPoint::class.java)
-            hiltEntryPoint.globalVariables.accessToken = runBlocking {
-                hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
+            val appContext = context.applicationContext
+                ?: return flowOf(DataResult.Error("Invalid application context"))
+            try {
+                val hiltEntryPoint =
+                    EntryPointAccessors.fromApplication(appContext, AiringAnimeEntryPoint::class.java)
+                hiltEntryPoint.globalVariables.accessToken = runBlocking {
+                    hiltEntryPoint.defaultPreferencesRepository.accessToken.first()
+                }
+                return runBlocking {
+                    flowOf(hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50))
+                }
+            } catch (e: Exception) {
+                return flowOf(DataResult.Error(e.message ?: "Unknown error"))
             }
-            return hiltEntryPoint.mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
         }
 
     override suspend fun updateData(
         transform: suspend (t: DataResult<List<AiringWidgetQuery.Medium>>) -> DataResult<List<AiringWidgetQuery.Medium>>
     ): DataResult<List<AiringWidgetQuery.Medium>> {
-        return transform(data.first())
+        return try {
+            transform(data.first())
+        } catch (e: Exception) {
+            DataResult.Error(e.message ?: "Unknown error")
+        }
     }
 
     @EntryPoint

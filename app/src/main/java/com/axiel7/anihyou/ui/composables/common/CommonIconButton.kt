@@ -49,8 +49,13 @@ fun BackIconButton(
 
 @Composable
 fun ShareIconButton(url: String) {
+    ShareIconButton(url = { url })
+}
+
+@Composable
+fun ShareIconButton(url: () -> String) {
     val context = LocalContext.current
-    IconButton(onClick = { context.openShareSheet(url) }) {
+    IconButton(onClick = { context.openShareSheet(url()) }) {
         Icon(
             painter = painterResource(R.drawable.share_24),
             contentDescription = stringResource(R.string.share)

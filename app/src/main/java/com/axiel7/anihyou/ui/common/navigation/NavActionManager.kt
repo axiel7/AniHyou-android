@@ -20,6 +20,7 @@ import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
 import com.axiel7.anihyou.ui.screens.explore.search.Search
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
+import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivity
 import com.axiel7.anihyou.ui.screens.notifications.Notifications
 import com.axiel7.anihyou.ui.screens.profile.UserDetails
 import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
@@ -45,6 +46,10 @@ class NavActionManager(
         navController.navigate(MediaDetails(id))
     }
 
+    fun toMediaActivity(mediaId: Int) {
+        navController.navigate(MediaActivity(mediaId))
+    }
+
     fun toCharacterDetails(id: Int) {
         navController.navigate(CharacterDetails(id))
     }
@@ -62,7 +67,7 @@ class NavActionManager(
     }
 
     fun toUserDetails(userId: Int?, username: String?) {
-        navController.navigate(UserDetails(userId ?: 0, username))
+        navController.navigate(UserDetails(userId, username))
     }
 
     fun toActivityDetails(id: Int) {
@@ -87,7 +92,7 @@ class NavActionManager(
 
     fun toSearchOnMyList(mediaType: MediaType) {
         navController.navigate(
-            Search(mediaType = mediaType.rawValue, onList = TriBoolean.TRUE.value, focus = true)
+            Search(mediaType = mediaType.rawValue, onList = true, focus = true)
         )
     }
 
@@ -130,9 +135,9 @@ class NavActionManager(
         navController.navigate(Notifications(unread))
     }
 
-    fun toPublishActivity(id: Int?, text: String?) {
+    fun toPublishNewActivity() {
         navController.navigate(
-            PublishActivity(activityId = id ?: 0, text = text)
+            PublishActivity(activityId = null, id = null, text = null)
         )
     }
 
@@ -142,7 +147,7 @@ class NavActionManager(
         text: String?
     ) {
         navController.navigate(
-            PublishActivity(activityId = activityId, id = replyId ?: 0, text = text)
+            PublishActivity(activityId = activityId, id = replyId, text = text)
         )
     }
 

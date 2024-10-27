@@ -7,12 +7,36 @@ data class GenericNotification(
     val id: Int,
     val text: String,
     val imageUrl: String?,
+    val largeImageUrl: String? = null,
     val contentId: Int,
     val secondaryContentId: Int? = null,
     val type: NotificationType?,
     val createdAt: Int?,
     val isUnread: Boolean = false,
 ) {
+    val isMedia
+        get() = when (type) {
+            NotificationType.AIRING,
+            NotificationType.RELATED_MEDIA_ADDITION,
+            NotificationType.MEDIA_DATA_CHANGE,
+            NotificationType.MEDIA_MERGE,
+            NotificationType.MEDIA_DELETION -> true
+
+            else -> false
+        }
+
+    fun mediaTitle(): String? = if (type == NotificationType.AIRING) {
+        "of(.+)aired".toRegex().find(text)?.run {
+            return groupValues.getOrNull(1)?.trim()
+        }
+    } else null
+
+    fun numEpisode(): Int? = if (type == NotificationType.AIRING) {
+        "Episode (\\d+)".toRegex().find(text)?.run {
+            return groupValues.getOrNull(1)?.toIntOrNull()
+        }
+    } else null
+
     companion object {
         fun List<NotificationsQuery.Notification>.toGenericNotifications(): List<GenericNotification> {
             val tempList = mutableListOf<GenericNotification>()
@@ -28,6 +52,7 @@ data class GenericNotification(
                             id = noti.id,
                             text = text,
                             imageUrl = noti.media?.coverImage?.medium,
+                            largeImageUrl = noti.media?.coverImage?.large,
                             contentId = noti.animeId,
                             type = noti.type,
                             createdAt = noti.createdAt,
@@ -195,6 +220,7 @@ data class GenericNotification(
                             id = noti.id,
                             text = "${noti.media?.title?.userPreferred}${noti.context}",
                             imageUrl = noti.media?.coverImage?.medium,
+                            largeImageUrl = noti.media?.coverImage?.large,
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,
@@ -205,8 +231,9 @@ data class GenericNotification(
                     tempList.add(
                         GenericNotification(
                             id = noti.id,
-                            text = "${noti.media?.title?.userPreferred}${noti.context}",
+                            text = "${noti.media?.title?.userPreferred}${noti.context}\n${noti.reason}",
                             imageUrl = noti.media?.coverImage?.medium,
+                            largeImageUrl = noti.media?.coverImage?.large,
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,
@@ -219,6 +246,7 @@ data class GenericNotification(
                             id = noti.id,
                             text = "${noti.media?.title?.userPreferred}${noti.context}",
                             imageUrl = noti.media?.coverImage?.medium,
+                            largeImageUrl = noti.media?.coverImage?.large,
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,

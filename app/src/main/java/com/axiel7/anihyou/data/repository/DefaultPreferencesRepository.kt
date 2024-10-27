@@ -19,6 +19,7 @@ import com.axiel7.anihyou.fragment.UserInfo
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.type.UserTitleLanguage
 import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.ui.common.DefaultTab
 import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
@@ -171,6 +172,14 @@ class DefaultPreferencesRepository @Inject constructor(
         dataStore.setValue(LAST_TAB_KEY, value)
     }
 
+    val defaultTab =
+        dataStore.getValue(key = DEFAULT_TAB_KEY, default = DefaultTab.LAST_USED.ordinal)
+            .map { DefaultTab.valueOf(it) }
+
+    suspend fun setDefaultTab(value: DefaultTab) {
+        dataStore.setValue(DEFAULT_TAB_KEY, value.ordinal)
+    }
+
     // home
     val defaultHomeTab =
         dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.ordinal)
@@ -245,6 +254,7 @@ class DefaultPreferencesRepository @Inject constructor(
         private val THEME_KEY = stringPreferencesKey("theme")
         private val USE_BLACK_COLORS_KEY = booleanPreferencesKey("use_black_colors")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
+        private val DEFAULT_TAB_KEY = intPreferencesKey("default_tab")
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")

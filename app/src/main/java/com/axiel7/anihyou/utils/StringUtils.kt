@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.utils
 
 import android.graphics.Typeface
+import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -13,6 +14,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.core.text.HtmlCompat
+import java.text.Normalizer
 
 object StringUtils {
 
@@ -21,6 +23,13 @@ object StringUtils {
     fun String.htmlStripped() = replace(Regex("<[^>]+>"), "")
 
     fun String.htmlDecoded() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
+
+    fun String.slugify() = Normalizer
+        .normalize(this, Normalizer.Form.NFD)
+        .replace(Regex("[^\\p{ASCII}]"), "")
+        .replace(Regex("[^a-zA-Z0-9\\s]+"), "")
+        .trim()
+        .replace(Regex("\\s+"), "-")
 
     /**
      * Converts a [Spanned] into an [AnnotatedString] trying to keep as much formatting as possible.
@@ -60,13 +69,15 @@ object StringUtils {
         }
     }
 
+    fun String.urlEncode(): String? = Uri.encode(this)
+
     /**
      * Format the opening/ending text from MAL to use it on YouTube search
      */
     fun String.buildQueryFromThemeText() = this
-        .replace(" ", "+")
         .replace("\"", "")
         .replaceFirst(Regex("#?\\w+:"), "") // theme number
         .replace(Regex("\\(ep.*\\)"), "") // episodes
         .trim()
+        .urlEncode()
 }

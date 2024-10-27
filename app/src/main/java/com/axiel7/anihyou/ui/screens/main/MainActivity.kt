@@ -51,6 +51,7 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.theme.dark_scrim
 import com.axiel7.anihyou.ui.theme.light_scrim
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @AndroidEntryPoint
@@ -65,14 +66,15 @@ class MainActivity : AppCompatActivity() {
         val deepLink = findDeepLink()
 
         //get necessary preferences while on splashscreen
+        viewModel.setToken(viewModel.accessToken.firstBlocking())
         val initialIsLoggedIn = viewModel.isLoggedIn.firstBlocking()
         val initialTheme = viewModel.theme.firstBlocking()
         val initialUseBlackColors = viewModel.useBlackColors.firstBlocking()
         val initialAppColor = viewModel.appColor.firstBlocking()
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
-        val startTab = viewModel.startTab.firstBlocking()
+        val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
-        val lastTabOpened = intent.action?.toBottomDestinationIndex() ?: startTab
+        val tabToOpen = intent.action?.toBottomDestinationIndex() ?: startTab
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     MainView(
                         windowSizeClass = windowSizeClass,
                         isLoggedIn = isLoggedIn,
-                        lastTabOpened = lastTabOpened,
+                        tabToOpen = tabToOpen,
                         event = viewModel,
                         homeTab = homeTab,
                         deepLink = deepLink,
@@ -172,7 +174,7 @@ class MainActivity : AppCompatActivity() {
 fun MainView(
     windowSizeClass: WindowSizeClass,
     isLoggedIn: Boolean,
-    lastTabOpened: Int,
+    tabToOpen: Int,
     event: MainEvent?,
     homeTab: HomeTab,
     deepLink: DeepLink?,
@@ -206,7 +208,7 @@ fun MainView(
                 navActionManager = navActionManager,
                 isCompactScreen = true,
                 isLoggedIn = isLoggedIn,
-                lastTabOpened = lastTabOpened,
+                tabToOpen = tabToOpen,
                 deepLink = deepLink,
                 homeTab = homeTab,
                 padding = padding,
@@ -226,7 +228,7 @@ fun MainView(
                     navActionManager = navActionManager,
                     isCompactScreen = false,
                     isLoggedIn = isLoggedIn,
-                    lastTabOpened = lastTabOpened,
+                    tabToOpen = tabToOpen,
                     deepLink = deepLink,
                     homeTab = homeTab,
                 )
@@ -246,7 +248,7 @@ fun MainPreview() {
                 DpSize(width = 1280.dp, height = 1920.dp)
             ),
             isLoggedIn = false,
-            lastTabOpened = 0,
+            tabToOpen = 0,
             event = null,
             homeTab = HomeTab.DISCOVER,
             deepLink = null

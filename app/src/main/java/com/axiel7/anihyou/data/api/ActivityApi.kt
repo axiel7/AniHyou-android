@@ -7,6 +7,7 @@ import com.apollographql.apollo.cache.normalized.apolloStore
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.ActivityFeedQuery
+import com.axiel7.anihyou.DeleteActivityMutation
 import com.axiel7.anihyou.UpdateActivityReplyMutation
 import com.axiel7.anihyou.UpdateTextActivityMutation
 import com.axiel7.anihyou.type.ActivityType
@@ -80,4 +81,7 @@ class ActivityApi @Inject constructor(
                 text = Optional.present(text)
             )
         )
+
+    fun deleteActivityMutation(id: Int) = client
+        .mutation(DeleteActivityMutation(id = Optional.present(id)))
 }

@@ -16,6 +16,7 @@ import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,8 +46,8 @@ class MediaListRepository @Inject constructor(
         status: MediaListStatus?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
-        page: Int,
-        perPage: Int = 25,
+        page: Int?,
+        perPage: Int? = 25,
     ) = api
         .userMediaList(userId, mediaType, status, sort, fetchFromNetwork, page, perPage)
         .toFlow()
@@ -115,13 +116,14 @@ class MediaListRepository @Inject constructor(
             customLists = customLists,
         )
         .toFlow()
+        .onEach {
+            it.data?.SaveMediaListEntry?.basicMediaListEntry?.let { entry ->
+                api.updateMediaListCache(entry)
+            }
+        }
         .asDataResult {
             it.SaveMediaListEntry
         }
-
-    suspend fun updateMediaListCache(data: BasicMediaListEntry) {
-        api.updateMediaListCache(data)
-    }
 
     fun deleteEntry(id: Int) = api
         .deleteMediaListMutation(id)

@@ -1,37 +1,38 @@
 [versions]
-accompanist = "0.34.0"
-agp = "8.5.2"
+accompanist = "0.36.0"
+agp = "8.7.1"
 androidHilt = "1.2.0"
-apollo = "4.0.0"
+apollo = "4.0.1"
 appcompat = "1.7.0"
-benchmarkMacroJunit4 = "1.2.4"
-coil = "3.0.0-alpha10"
+benchmarkMacroJunit4 = "1.3.3"
+coil = "3.0.0-rc01"
 composeMarkdown = "92ce641022"
-coreSplashscreen = "1.2.0-alpha01"
+coreSplashscreen = "1.2.0-alpha02"
 datastorePreferences = "1.1.1"
-desugar_jdk_libs = "2.0.4"
-glanceAppwidget = "1.1.0"
+desugar_jdk_libs = "2.1.2"
+glanceAppwidget = "1.1.1"
+glancePreview = "1.1.1"
 hilt = "2.52"
-kotlin = "2.0.0"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitAndroid = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxCoroutines = "1.8.1"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-composeBom = "2024.06.00"
-material3 = "1.3.0-beta05"
-materialKolor = "1.7.0"
-navigation = "2.8.0-beta06"
-kotlinxSerialization = "1.7.1"
+kotlinxCoroutines = "1.9.0"
+lifecycleRuntimeKtx = "2.8.6"
+activityCompose = "1.9.3"
+material3 = "1.3.0"
+composeBom = "2024.10.00"
+materialKolor = "2.0.0"
+navigation = "2.8.3"
+kotlinxSerialization = "1.7.3"
 placeholderMaterial3 = "2.0.0"
-profileinstaller = "1.3.1"
+profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
-workRuntime = "2.9.0"
-ksp = "2.0.0-1.0.24"
-daggerHilt = "2.51.1"
-baselineprofile = "1.2.4"
+workRuntime = "2.9.1"
+ksp = "2.0.21-1.0.26"
+daggerHilt = "2.52"
+baselineprofile = "1.3.3"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
@@ -66,6 +67,8 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-glance-preview = {group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-material3-window-sizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }

@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -39,6 +42,7 @@ import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.composables.InfoClickableItemView
 import com.axiel7.anihyou.ui.composables.InfoItemView
 import com.axiel7.anihyou.ui.composables.InfoTitle
+import com.axiel7.anihyou.ui.composables.common.MoreLessButton
 import com.axiel7.anihyou.ui.composables.common.SpoilerTagChip
 import com.axiel7.anihyou.ui.composables.common.TagChip
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
@@ -48,8 +52,8 @@ import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.utils.DateUtils.formatted
 import com.axiel7.anihyou.utils.DateUtils.minutesToLegibleText
-import com.axiel7.anihyou.utils.StringUtils.buildQueryFromThemeText
-import com.axiel7.anihyou.utils.YOUTUBE_QUERY_URL
+
+private const val TagLimit = 10
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -61,6 +65,7 @@ fun MediaInformationView(
 ) {
     val context = LocalContext.current
     var showSpoiler by remember { mutableStateOf(false) }
+    var showAllTags by remember { mutableStateOf(false) }
     val isAnime = uiState.details?.basicMediaDetails?.isAnime() == true
 
     Column(
@@ -162,7 +167,9 @@ fun MediaInformationView(
                 .padding(horizontal = 8.dp)
                 .animateContentSize()
         ) {
-            uiState.details?.tags?.forEach { tag ->
+            val tags = if (showAllTags) uiState.details?.tags
+            else uiState.details?.tags?.take(TagLimit)
+            tags?.forEach { tag ->
                 if (tag != null) {
                     if (tag.isMediaSpoiler == false) {
                         TagChip(
@@ -170,7 +177,7 @@ fun MediaInformationView(
                             description = tag.description,
                             rank = tag.rank,
                             onClick = {
-                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                uiState.details?.basicMediaDetails?.type?.let { mediaType ->
                                     navigateToGenreTag(mediaType, null, tag.name)
                                 }
                             }
@@ -182,7 +189,7 @@ fun MediaInformationView(
                             rank = tag.rank,
                             visible = showSpoiler,
                             onClick = {
-                                uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                uiState.details?.basicMediaDetails?.type?.let { mediaType ->
                                     navigateToGenreTag(mediaType, null, tag.name)
                                 }
                             }
@@ -191,6 +198,14 @@ fun MediaInformationView(
                 }
             }
         }//: FlowRow
+
+        if ((uiState.details?.tags?.size ?: 0) > TagLimit) {
+            MoreLessButton(
+                isExpanded = showAllTags,
+                onClick = { showAllTags = !showAllTags },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
 
         // Trailer
         uiState.details?.trailer?.let { trailer ->
@@ -293,6 +308,21 @@ fun MediaInformationView(
             }
         }
 
+        // Openings/Endings
+        var showMusicSheet by remember { mutableStateOf(false) }
+        var selectedSong by remember { mutableStateOf<String?>(null) }
+
+        if (showMusicSheet && selectedSong != null) {
+            MusicStreamingSheet(
+                songTitle = selectedSong.orEmpty(),
+                bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+                    .calculateBottomPadding(),
+                onDismiss = {
+                    showMusicSheet = false
+                    selectedSong = null
+                }
+            )
+        }
         if (!uiState.openings.isNullOrEmpty()) {
             InfoTitle(text = stringResource(R.string.openings))
 
@@ -302,9 +332,8 @@ fun MediaInformationView(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                         .clickable {
-                            context.openActionView(
-                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                            )
+                            selectedSong = theme.text
+                            showMusicSheet = true
                         },
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -319,9 +348,8 @@ fun MediaInformationView(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                         .clickable {
-                            context.openActionView(
-                                YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                            )
+                            selectedSong = theme.text
+                            showMusicSheet = true
                         },
                     color = MaterialTheme.colorScheme.primary
                 )

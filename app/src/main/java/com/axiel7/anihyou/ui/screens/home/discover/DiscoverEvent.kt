@@ -13,5 +13,6 @@ interface DiscoverEvent {
     fun fetchTrendingManga()
     fun fetchNewlyAnime()
     fun fetchNewlyManga()
+    fun refresh()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
 }

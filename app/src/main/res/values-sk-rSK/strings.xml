@@ -134,5 +134,10 @@
     <string name="reading">Čítanie</string>
     <string name="synonyms">Synonymá</string>
     <string name="translations">Prekladatelia</string>
+    <string name="staff_role_music">Hudba</string>
+    <string name="minus_one">-1</string>
     <string name="plus_one">+1</string>
+    <string name="show_more">Viac</string>
+    <string name="random">Náhodné</string>
+    <string name="last_used">Naposledy použité</string>
 </resources>

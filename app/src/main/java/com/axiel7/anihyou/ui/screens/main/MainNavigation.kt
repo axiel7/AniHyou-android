@@ -48,6 +48,8 @@ import com.axiel7.anihyou.ui.screens.home.HomeView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivity
+import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivityView
 import com.axiel7.anihyou.ui.screens.notifications.Notifications
 import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
 import com.axiel7.anihyou.ui.screens.profile.Profile
@@ -82,7 +84,7 @@ fun MainNavigation(
     navActionManager: NavActionManager,
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
-    lastTabOpened: Int,
+    tabToOpen: Int,
     homeTab: HomeTab,
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
@@ -132,7 +134,7 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = lastTabOpened.toBottomDestinationRoute() ?: Home,
+        startDestination = tabToOpen.toBottomDestinationRoute() ?: Home,
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
@@ -394,6 +396,12 @@ fun MainNavigation(
             } else {
                 LoginView()
             }
+        }
+
+        composable<MediaActivity> {
+            MediaActivityView(
+                navActionManager = navActionManager
+            )
         }
     }
 }

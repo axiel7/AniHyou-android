@@ -63,6 +63,7 @@ import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLoc
 import com.axiel7.anihyou.data.model.media.durationText
 import com.axiel7.anihyou.data.model.media.isAnime
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.media.siteUrlWithTitle
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.SegmentedButtons
@@ -200,7 +201,9 @@ private fun MediaDetailsContent(
                             }
                         )
                     }
-                    ShareIconButton(url = uiState.details?.siteUrl.orEmpty())
+                    ShareIconButton(
+                        url = { uiState.details?.siteUrlWithTitle().orEmpty() }
+                    )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
@@ -519,15 +522,12 @@ fun MediaInfoTabs(
                     if (uiState.threads.isEmpty() && uiState.reviews.isEmpty()) {
                         event?.fetchThreads()
                         event?.fetchReviews()
+                        event?.fetchActivity()
                     }
                 }
                 ReviewThreadListView(
-                    mediaThreads = uiState.threads,
-                    mediaReviews = uiState.reviews,
-                    isLoadingThreads = uiState.isLoadingThreads,
-                    isLoadingReviews = uiState.isLoadingReviews,
-                    navigateToReviewDetails = navActionManager::toReviewDetails,
-                    navigateToThreadDetails = navActionManager::toThreadDetails,
+                    uiState = uiState,
+                    navActionManager = navActionManager,
                 )
             }
         }

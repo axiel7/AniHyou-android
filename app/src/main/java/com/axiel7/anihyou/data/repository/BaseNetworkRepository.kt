@@ -19,34 +19,36 @@ import kotlinx.serialization.json.Json
 abstract class BaseNetworkRepository(
     protected val defaultPreferencesRepository: DefaultPreferencesRepository
 ) {
+    protected suspend fun <D : Operation.Data, R> ApolloResponse<D>.asDataResult(
+        transform: (D) -> R
+    ) = when {
+        data != null -> DataResult.Success(transform(data!!))
+
+        hasErrors() -> {
+            Log.e("AniHyou", "Apollo error: $errorString")
+            onError(this)
+            DataResult.Error(errorString)
+        }
+
+        exception is ApolloHttpException -> {
+            val exception = exception as ApolloHttpException
+            val errorResponse = exception.parseBodyToErrorResponse()
+            errorResponse?.let { onError(it) } ?: onError(this)
+            val message = errorResponse?.errors?.joinToString { it.message } ?: errorString
+            Log.e("AniHyou", "Network error: $message")
+            DataResult.Error(message = message)
+        }
+
+        else -> DataResult.Loading
+    }
+
+    protected suspend fun <D : Operation.Data, R> ApolloResponse<D>.asDataResult() =
+        this.asDataResult { it }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     protected fun <D : Operation.Data, R> Flow<ApolloResponse<D>>.asDataResult(
         transform: (D) -> R
-    ) = this
-        .mapLatest { response ->
-            when {
-                response.data != null -> {
-                    DataResult.Success(transform(response.data!!))
-                }
-
-                response.hasErrors() -> {
-                    Log.e("AniHyou", "Apollo error: ${response.errorString}")
-                    onError(response)
-                    DataResult.Error(message = response.errorString)
-                }
-
-                response.exception is ApolloHttpException -> {
-                    val exception = response.exception as ApolloHttpException
-                    val errorResponse = exception.parseBodyToErrorResponse()
-                    errorResponse?.let { onError(it) } ?: onError(response)
-                    val message = errorResponse?.errors?.joinToString { it.message } ?: response.errorString
-                    Log.e("AniHyou", "Network error: $message")
-                    DataResult.Error(message = message)
-                }
-
-                else -> DataResult.Loading
-            }
-        }
+    ) = mapLatest { it.asDataResult(transform) }
 
     protected fun <D : Operation.Data> Flow<ApolloResponse<D>>.asDataResult() = asDataResult { it }
 

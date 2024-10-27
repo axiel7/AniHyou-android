@@ -42,7 +42,7 @@ class App : Application(), Configuration.Provider, SingletonImageLoader.Factory 
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.02)
+                    .maxSizePercent(0.15)
                     .build()
             }
             .crossfade(true)

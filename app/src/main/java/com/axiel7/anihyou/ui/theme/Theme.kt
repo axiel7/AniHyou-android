@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import com.axiel7.anihyou.ui.common.AppColorMode
+import com.axiel7.anihyou.utils.ColorUtils.isBlack
+import com.axiel7.anihyou.utils.ColorUtils.isWhite
 import com.materialkolor.dynamicColorScheme
 
 private val LightColorScheme = lightColorScheme(
@@ -80,6 +82,62 @@ private val DarkColorScheme = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private val BlackAccentColorScheme = lightColorScheme(
+    primary = Color.Black,
+    onPrimary = Color.White,
+    primaryContainer = Color.White,
+    onPrimaryContainer = Color.Black,
+    secondary = Color.Black,
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFE0E0E0),
+    onSecondaryContainer = Color.Black,
+    tertiary = Color.Black,
+    onTertiary = Color.White,
+    tertiaryContainer = Color.White,
+    onTertiaryContainer = Color.Black,
+    background = Color.White,
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black,
+    surfaceVariant = Color.White,
+    onSurfaceVariant = Color.Black,
+    inverseSurface = Color.Black,
+    inverseOnSurface = Color.White,
+    surfaceContainer = Color(0xFFEEEEEE),
+    surfaceContainerHigh = Color(0xFFEEEEEE),
+    surfaceContainerHighest = Color(0xFFF5F5F5),
+    surfaceContainerLow = Color(0xFFE0E0E0),
+    surfaceContainerLowest = Color(0xFFBDBDBD),
+)
+
+private val LightAccentColorScheme = darkColorScheme(
+    primary = Color.White,
+    onPrimary = Color.Black,
+    primaryContainer = Color.Black,
+    onPrimaryContainer = Color.White,
+    secondary = Color.White,
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFF262626),
+    onSecondaryContainer = Color.White,
+    tertiary = Color.White,
+    onTertiary = Color.Black,
+    tertiaryContainer = Color.Black,
+    onTertiaryContainer = Color.White,
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
+    surfaceVariant = Color.Black,
+    onSurfaceVariant = Color.White,
+    inverseSurface = Color.White,
+    inverseOnSurface = Color.Black,
+    surfaceContainer = Color(0xFF0D0D0D),
+    surfaceContainerHigh = Color(0xFF1A1A1A),
+    surfaceContainerHighest = Color(0xFF262626),
+    surfaceContainerLow = Color(0xFF2B2B2B),
+    surfaceContainerLowest = Color(0xFF333333),
+)
+
 private fun ColorScheme.toBlackScheme() = this.copy(
     background = Color.Black,
     surface = Color.Black,
@@ -100,13 +158,18 @@ fun AniHyouTheme(
 ) {
     val colorScheme = when {
         appColorMode == AppColorMode.PROFILE || appColorMode == AppColorMode.CUSTOM -> {
-            val scheme = dynamicColorScheme(
-                seedColor = appColor ?: seed,
-                isDark = darkTheme,
-                isAmoled = false
-            )
-            if (blackColors) scheme.toBlackScheme()
-            else scheme
+            val isMonochrome = appColor != null && (appColor.isBlack || appColor.isWhite)
+            if (isMonochrome) {
+                if (darkTheme) LightAccentColorScheme else BlackAccentColorScheme
+            } else {
+                val scheme = dynamicColorScheme(
+                    seedColor = appColor ?: seed,
+                    isDark = darkTheme,
+                    isAmoled = false
+                )
+                if (blackColors) scheme.toBlackScheme()
+                else scheme
+            }
         }
 
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

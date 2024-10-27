@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -33,6 +34,8 @@ object NotificationUtils {
         channelId: String,
         title: String,
         text: String,
+        largeIcon: Bitmap? = null,
+        bigPicture: Bitmap? = null,
         pendingIntent: PendingIntent? = null,
         group: String? = null,
         isGroupSummary: Boolean = false,
@@ -45,6 +48,14 @@ object NotificationUtils {
             .setContentIntent(pendingIntent)
             .setGroup(group)
             .setGroupSummary(isGroupSummary)
+            .setLargeIcon(largeIcon)
+
+        bigPicture?.let {
+            builder.setStyle(NotificationCompat.BigPictureStyle()
+                .bigPicture(bigPicture)
+                .bigLargeIcon(null as Bitmap?)
+            )
+        }
 
         with(NotificationManagerCompat.from(applicationContext)) {
             if (ActivityCompat.checkSelfPermission(

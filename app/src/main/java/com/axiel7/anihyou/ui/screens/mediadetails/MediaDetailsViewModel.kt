@@ -185,6 +185,25 @@ class MediaDetailsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    override fun fetchActivity() {
+        mediaRepository.getMediaActivityPage(mediaId = arguments.id, page = 1)
+            .onEach { result ->
+                mutableUiState.update { uiState ->
+                    if (result is PagedResult.Success) {
+                        uiState.copy(
+                            isLoadingActivity = false,
+                            activity = result.list
+                        )
+                    } else {
+                        uiState.copy(
+                            isLoadingActivity = result is PagedResult.Loading,
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     override fun showVoiceActorsSheet(character: MediaCharacter) {
         mutableUiState.update { uiState ->
             uiState.copy(

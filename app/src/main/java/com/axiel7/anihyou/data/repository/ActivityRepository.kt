@@ -70,4 +70,9 @@ class ActivityRepository @Inject constructor(
         .asDataResult {
             it.SaveActivityReply?.activityReplyFragment
         }
+
+    fun deleteActivity(id: Int) = api
+        .deleteActivityMutation(id)
+        .toFlow()
+        .asDataResult { it.DeleteActivity?.deleted }
 }

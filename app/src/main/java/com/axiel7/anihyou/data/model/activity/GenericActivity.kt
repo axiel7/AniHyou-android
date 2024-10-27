@@ -3,6 +3,7 @@ package com.axiel7.anihyou.data.model.activity
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.ActivityDetailsQuery
 import com.axiel7.anihyou.fragment.ActivityReplyFragment
+import com.axiel7.anihyou.fragment.ListActivityFragment
 import com.axiel7.anihyou.type.ActivityType
 
 @Immutable
@@ -20,6 +21,7 @@ data class GenericActivity(
     val mediaId: Int? = null,
     val mediaCoverUrl: String? = null,
     val replies: List<ActivityReplyFragment>?,
+    val listActivityFragment: ListActivityFragment? = null,
 ) {
     fun updateLikeStatus(isLiked: Boolean) = copy(
         isLiked = isLiked,
@@ -45,7 +47,7 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     id = listActivityFragment.id,
     type = ActivityType.MEDIA_LIST,
     createdAt = listActivityFragment.createdAt,
-    text = listActivityFragment.text(),
+    text = null,
     isLiked = listActivityFragment.isLiked,
     likeCount = listActivityFragment.likeCount,
     replyCount = listActivityFragment.replyCount,
@@ -54,7 +56,8 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     avatarUrl = user?.avatar?.medium,
     mediaId = listActivityFragment.media?.id,
     mediaCoverUrl = listActivityFragment.media?.coverImage?.medium,
-    replies = replies?.filterNotNull()?.map { it.activityReplyFragment }
+    replies = replies?.filterNotNull()?.map { it.activityReplyFragment },
+    listActivityFragment = listActivityFragment,
 )
 
 fun ActivityDetailsQuery.OnMessageActivity.toGenericActivity() = GenericActivity(

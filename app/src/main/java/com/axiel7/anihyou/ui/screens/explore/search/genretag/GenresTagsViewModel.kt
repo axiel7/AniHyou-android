@@ -3,8 +3,8 @@ package com.axiel7.anihyou.ui.screens.explore.search.genretag
 import android.content.Context
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.common.indexOfFirstOrNull
 import com.axiel7.anihyou.data.api.response.DataResult
+import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagStringRes
 import com.axiel7.anihyou.data.repository.SearchRepository
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -26,21 +27,33 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class GenresTagsViewModel @Inject constructor(
-    searchRepository: SearchRepository,
+    private val searchRepository: SearchRepository,
     @ApplicationContext context: Context,
 ) : UiStateViewModel<GenresTagsUiState>(), GenresTagsEvent {
 
     override val initialState = GenresTagsUiState()
 
-    override fun setExternalGenre(value: SelectableGenre?) {
+    override fun setExternalGenre(value: SelectableGenre) {
         mutableUiState.update {
-            it.copy(externalGenre = value)
+            it.genres.add(value)
+            it.copy(
+                externalGenre = value,
+                genresAndTagsForSearch = it.genresAndTagsForSearch.copy(
+                    genreIn = it.genresAndTagsForSearch.genreIn + value.name
+                )
+            )
         }
     }
 
-    override fun setExternalTag(value: SelectableGenre?) {
+    override fun setExternalTag(value: SelectableGenre) {
         mutableUiState.update {
-            it.copy(externalTag = value)
+            it.tags.add(value)
+            it.copy(
+                externalTag = value,
+                genresAndTagsForSearch = it.genresAndTagsForSearch.copy(
+                    tagIn = it.genresAndTagsForSearch.tagIn + value.name
+                )
+            )
         }
     }
 
@@ -52,28 +65,40 @@ class GenresTagsViewModel @Inject constructor(
 
     override fun onGenreUpdated(value: SelectableGenre) {
         viewModelScope.launch {
-            mutableUiState.value.run {
-                genres.indexOfFirstOrNull { it.name == value.name }?.let { index ->
-                    genres[index] = value
-                }
-                displayGenres.indexOfFirstOrNull { it.name == value.name }?.let { index ->
-                    displayGenres[index] = value
-                }
-            }
+            mutableUiState.first().updateGenre(value)
         }
+    }
+
+    override suspend fun onGenreRemoved(name: String): GenresAndTagsForSearch {
+        val uiState = mutableUiState.first()
+        uiState.genres.find { it.name == name }?.let { genre ->
+            uiState.updateGenre(genre.copy(state = SelectableGenre.State.NONE))
+            val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
+            mutableUiState.emit(
+                uiState.copy(genresAndTagsForSearch = genresAndTagsForSearch)
+            )
+            return genresAndTagsForSearch
+        }
+        return uiState.genresAndTagsForSearch
     }
 
     override fun onTagUpdated(value: SelectableGenre) {
         viewModelScope.launch {
-            mutableUiState.value.run {
-                tags.indexOfFirstOrNull { it.name == value.name }?.let { index ->
-                    tags[index] = value
-                }
-                displayTags.indexOfFirstOrNull { it.name == value.name }?.let { index ->
-                    displayTags[index] = value
-                }
-            }
+            mutableUiState.first().updateTag(value)
         }
+    }
+
+    override suspend fun onTagRemoved(name: String): GenresAndTagsForSearch {
+        val uiState = mutableUiState.first()
+        uiState.tags.find { it.name == name }?.let { tag ->
+            uiState.updateTag(tag.copy(state = SelectableGenre.State.NONE))
+            val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
+            mutableUiState.emit(
+                uiState.copy(genresAndTagsForSearch = genresAndTagsForSearch)
+            )
+            return genresAndTagsForSearch
+        }
+        return uiState.genresAndTagsForSearch
     }
 
     override fun unselectAllGenresAndTags() {
@@ -90,7 +115,14 @@ class GenresTagsViewModel @Inject constructor(
         }
     }
 
-    init {
+    override suspend fun onDismissSheet() {
+        val state = mutableUiState.first()
+        mutableUiState.emit(
+            state.copy(genresAndTagsForSearch = state.genresAndTagsForSearch())
+        )
+    }
+
+    override fun fetchGenreTagCollection() {
         searchRepository.getGenreTagCollection()
             .combine(
                 mutableUiState
@@ -134,8 +166,11 @@ class GenresTagsViewModel @Inject constructor(
                         )
                     }
                 }
-            }.launchIn(viewModelScope)
+            }
+            .launchIn(viewModelScope)
+    }
 
+    init {
         viewModelScope.launch {
             mutableUiState
                 .distinctUntilChangedBy { it.filter }
