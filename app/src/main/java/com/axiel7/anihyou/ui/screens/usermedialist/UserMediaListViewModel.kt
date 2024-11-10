@@ -430,6 +430,9 @@ class UserMediaListViewModel @AssistedInject constructor(
                         result.toUiState(
                             loadingWhen = uiState.page == 1
                                     || (uiState.entries.isEmpty() && uiState.hasNextPage)
+                        ).copy(
+                            hasNextPage = if (result is PagedResult.Error) false
+                            else uiState.hasNextPage
                         )
                     }
                 }
