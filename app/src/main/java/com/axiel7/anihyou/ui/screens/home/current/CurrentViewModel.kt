@@ -57,7 +57,7 @@ class CurrentViewModel @Inject constructor(
             mutableUiState.update { it.copy(selectedItem = item, selectedType = type) }
             mediaListRepository.incrementOneProgress(
                 entry = item.basicMediaListEntry,
-                total = item.media?.basicMediaDetails?.duration()
+                total = item.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success && result.data != null) {

@@ -197,7 +197,7 @@ class UserMediaListViewModel @AssistedInject constructor(
             mutableUiState.update { it.copy(selectedItem = entry) }
             mediaListRepository.incrementOneProgress(
                 entry = entry.basicMediaListEntry,
-                total = entry.media?.basicMediaDetails?.duration()
+                total = entry.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success && result.data != null) {

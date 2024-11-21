@@ -8,12 +8,31 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 
+/**
+ * @return `episodes`, `chapters` or `volumes` depending on the current user entry progress.
+ */
+fun CommonMediaListEntry.duration(): Int? =
+    when (media?.basicMediaDetails?.type) {
+        MediaType.ANIME -> media.basicMediaDetails.episodes
+        MediaType.MANGA -> {
+            if (basicMediaListEntry.isUsingVolumeProgress()) media.basicMediaDetails.volumes
+            else media.basicMediaDetails.chapters
+        }
+
+        else -> null
+    }
+
 fun CommonMediaListEntry.calculateProgressBarValue(): Float {
-    val total = media?.basicMediaDetails?.duration() ?: 0
+    val total = duration() ?: 0
     return if (total == 0) 0f
-    //TODO: volume progress
-    else (basicMediaListEntry.progress ?: 0).div(total.toFloat())
+    else (basicMediaListEntry.progressOrVolumes() ?: 0).div(total.toFloat())
 }
+
+fun BasicMediaListEntry.progressOrVolumes() =
+    if (isUsingVolumeProgress()) progressVolumes else progress
+
+fun BasicMediaListEntry.isUsingVolumeProgress() = progressVolumes != null && progressVolumes > 0
+        && (progress == null || progress == 0)
 
 fun CommonMediaListEntry.isBehind() =
     (basicMediaListEntry.progress ?: 0) < (media?.nextAiringEpisode?.episode?.minus(1) ?: 0)
