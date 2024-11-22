@@ -75,6 +75,10 @@ enum class MediaSortSearch(
     START_DATE(
         asc = MediaSort.START_DATE,
         desc = MediaSort.START_DATE_DESC,
+    ),
+    END_DATE(
+        asc = MediaSort.END_DATE,
+        desc = MediaSort.END_DATE_DESC,
     );
 
     @Composable
