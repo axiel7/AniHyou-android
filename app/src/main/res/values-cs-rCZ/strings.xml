@@ -142,4 +142,5 @@
     <string name="plus_one">+1</string>
     <string name="show_more">Více</string>
     <string name="random">Náhodné</string>
+    <string name="last_used">Naposledy použité</string>
 </resources>
