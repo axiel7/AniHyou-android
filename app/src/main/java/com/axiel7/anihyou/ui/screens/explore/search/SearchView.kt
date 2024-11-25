@@ -274,6 +274,7 @@ fun SearchContentView(
                         MediaSearchGenresChips(
                             externalGenre = initialGenre?.let { SelectableGenre(name = it) },
                             externalTag = initialTag?.let { SelectableGenre(name = it) },
+                            clearedFilters = uiState.clearedFilters,
                             onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
                         )
                         Row(

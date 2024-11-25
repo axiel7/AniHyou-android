@@ -40,6 +40,7 @@ data class SearchUiState(
     val isAdult: Boolean? = null,
     val country: CountryOfOrigin? = null,
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
+    val clearedFilters: Boolean = false,
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,

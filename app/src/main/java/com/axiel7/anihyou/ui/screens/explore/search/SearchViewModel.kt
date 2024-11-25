@@ -128,6 +128,7 @@ class SearchViewModel @Inject constructor(
     override fun clearFilters() = mutableUiState.update {
         it.copy(
             genresAndTagsForSearch = GenresAndTagsForSearch(),
+            genresOrTagsChanged = true,
             selectedMediaFormats = emptyList(),
             selectedMediaStatuses = emptyList(),
             startYear = null,
@@ -136,6 +137,7 @@ class SearchViewModel @Inject constructor(
             isDoujin = null,
             isAdult = null,
             country = null,
+            clearedFilters = true,
             page = 1,
             hasNextPage = true,
             isLoading = true
@@ -216,6 +218,7 @@ class SearchViewModel @Inject constructor(
                             genresOrTagsChanged = false,
                             mediaFormatsChanged = false,
                             mediaStatusesChanged = false,
+                            clearedFilters = false,
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)

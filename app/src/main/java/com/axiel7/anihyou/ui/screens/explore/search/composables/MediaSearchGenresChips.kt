@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 fun MediaSearchGenresChips(
     externalGenre: SelectableGenre?,
     externalTag: SelectableGenre?,
+    clearedFilters: Boolean,
     onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {
     val viewModel: GenresTagsViewModel = hiltViewModel()
@@ -54,6 +55,10 @@ fun MediaSearchGenresChips(
     LaunchedEffect(externalTag) {
         if (uiState.externalTag == null && externalTag != null)
             viewModel.setExternalTag(externalTag)
+    }
+
+    LaunchedEffect(clearedFilters) {
+        if (clearedFilters) viewModel.resetData()
     }
 
     val selectedGenres = uiState.genresAndTagsForSearch.genreIn
