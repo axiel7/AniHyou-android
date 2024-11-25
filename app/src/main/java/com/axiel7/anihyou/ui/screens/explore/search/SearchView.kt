@@ -1,11 +1,17 @@
 package com.axiel7.anihyou.ui.screens.explore.search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +23,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,9 +37,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -75,6 +85,7 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchStatu
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearChip
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -173,9 +184,15 @@ fun SearchContentView(
     event: SearchEvent?,
     navActionManager: NavActionManager,
 ) {
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
+    }
+    val isAtTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
     }
 
     var showMoreFilters by rememberSaveable { mutableStateOf(false) }
@@ -202,243 +219,269 @@ fun SearchContentView(
         )
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight(),
-        state = listState
-    ) {
-        item(contentType = 0) {
-            Column(
-                modifier = Modifier
-                    .animateContentSize()
+    Scaffold(
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = !isAtTop,
+                enter = fadeIn() + scaleIn(),
+                exit = scaleOut() + fadeOut(),
             ) {
-                Row(
-                    modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .padding(start = 16.dp, top = 8.dp, end = 8.dp)
+                FloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    },
                 ) {
-                    SearchType.entries.forEach {
-                        FilterSelectionChip(
-                            selected = uiState.searchType == it,
-                            text = it.localized(),
-                            onClick = {
-                                event?.setSearchType(it)
-                            },
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                    }
-                }
-                if (uiState.searchType.isSearchMedia) {
-                    MediaSearchSortChip(
-                        mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
-                            ?: MediaSortSearch.SEARCH_MATCH,
-                        onSortChanged = {
-                            event?.setMediaSort(it)
-                        }
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_upward_24),
+                        contentDescription = null,
                     )
-                    if (showMoreFilters) {
-                        Row(
-                            modifier = Modifier
-                                .horizontalScroll(rememberScrollState())
-                                .padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            MediaSearchFormatChip(
-                                mediaType = uiState.mediaType ?: MediaType.ANIME,
-                                selectedMediaFormats = uiState.selectedMediaFormats,
-                                onMediaFormatsChanged = { event?.setMediaFormats(it) }
-                            )
-
-                            MediaSearchStatusChip(
-                                selectedMediaStatuses = uiState.selectedMediaStatuses,
-                                onMediaStatusesChanged = { event?.setMediaStatuses(it) }
-                            )
-
-                            TriFilterChip(
-                                text = stringResource(R.string.on_my_list),
-                                value = uiState.onMyList,
-                                onValueChanged = { event?.setOnMyList(it) },
-                            )
-
-                            MediaSearchCountryChip(
-                                value = uiState.country,
-                                onValueChanged = { event?.setCountry(it) }
-                            )
-                        }
-                        MediaSearchYearChip(
-                            startYear = uiState.startYear,
-                            endYear = uiState.endYear,
-                            onStartYearChanged = { event?.setStartYear(it) },
-                            onEndYearChanged = { event?.setEndYear(it) }
-                        )
-                        MediaSearchGenresChips(
-                            externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-                            externalTag = initialTag?.let { SelectableGenre(name = it) },
-                            clearedFilters = uiState.clearedFilters,
-                            onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
-                        )
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            TriFilterChip(
-                                text = stringResource(R.string.doujinshi),
-                                value = uiState.isDoujin,
-                                onValueChanged = { event?.setIsDoujin(it) }
-                            )
-                            TriFilterChip(
-                                text = stringResource(R.string.is_adult),
-                                value = uiState.isAdult,
-                                onValueChanged = { event?.setIsAdult(it) }
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
-                            Text(
-                                text = stringResource(
-                                    if (showMoreFilters) R.string.hide_filters
-                                    else R.string.more_filters
-                                )
-                            )
-                        }
-                        ErrorTextButton(
-                            text = stringResource(R.string.clear),
-                            onClick = { event?.clearFilters() }
-                        )
-                    }
-                }//:media filters
-            }//:Column
-        }
-        when (uiState.searchType) {
-            SearchType.ANIME, SearchType.MANGA -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
                 }
-                items(
-                    items = uiState.media,
-                    contentType = { it }
-                ) { item ->
-                    MediaItemHorizontal(
-                        title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                        imageUrl = item.coverImage?.large,
-                        score = item.meanScore ?: 0,
-                        format = item.format ?: MediaFormat.UNKNOWN__,
-                        year = item.startDate?.year,
-                        onClick = {
-                            navActionManager.toMediaDetails(item.id)
-                        },
-                        onLongClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            event?.selectMediaItem(item)
-                            showEditSheet = true
-                        },
-                        badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                            {
-                                Icon(
-                                    painter = painterResource(status.icon()),
-                                    contentDescription = status.localized()
+            }
+        },
+        containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0)
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxHeight(),
+            state = listState
+        ) {
+            item(contentType = 0) {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState())
+                            .padding(start = 16.dp, top = 8.dp, end = 8.dp)
+                    ) {
+                        SearchType.entries.forEach {
+                            FilterSelectionChip(
+                                selected = uiState.searchType == it,
+                                text = it.localized(),
+                                onClick = {
+                                    event?.setSearchType(it)
+                                },
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        }
+                    }
+                    if (uiState.searchType.isSearchMedia) {
+                        MediaSearchSortChip(
+                            mediaSortSearch = MediaSortSearch.valueOf(uiState.mediaSort)
+                                ?: MediaSortSearch.SEARCH_MATCH,
+                            onSortChanged = {
+                                event?.setMediaSort(it)
+                            }
+                        )
+                        if (showMoreFilters) {
+                            Row(
+                                modifier = Modifier
+                                    .horizontalScroll(rememberScrollState())
+                                    .padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                MediaSearchFormatChip(
+                                    mediaType = uiState.mediaType ?: MediaType.ANIME,
+                                    selectedMediaFormats = uiState.selectedMediaFormats,
+                                    onMediaFormatsChanged = { event?.setMediaFormats(it) }
+                                )
+
+                                MediaSearchStatusChip(
+                                    selectedMediaStatuses = uiState.selectedMediaStatuses,
+                                    onMediaStatusesChanged = { event?.setMediaStatuses(it) }
+                                )
+
+                                TriFilterChip(
+                                    text = stringResource(R.string.on_my_list),
+                                    value = uiState.onMyList,
+                                    onValueChanged = { event?.setOnMyList(it) },
+                                )
+
+                                MediaSearchCountryChip(
+                                    value = uiState.country,
+                                    onValueChanged = { event?.setCountry(it) }
+                                )
+                            }
+                            MediaSearchYearChip(
+                                startYear = uiState.startYear,
+                                endYear = uiState.endYear,
+                                onStartYearChanged = { event?.setStartYear(it) },
+                                onEndYearChanged = { event?.setEndYear(it) }
+                            )
+                            MediaSearchGenresChips(
+                                externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+                                externalTag = initialTag?.let { SelectableGenre(name = it) },
+                                clearedFilters = uiState.clearedFilters,
+                                onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                TriFilterChip(
+                                    text = stringResource(R.string.doujinshi),
+                                    value = uiState.isDoujin,
+                                    onValueChanged = { event?.setIsDoujin(it) }
+                                )
+                                TriFilterChip(
+                                    text = stringResource(R.string.is_adult),
+                                    value = uiState.isAdult,
+                                    onValueChanged = { event?.setIsAdult(it) }
                                 )
                             }
                         }
-                    )
-                }
-            }
-
-            SearchType.CHARACTER -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
-                items(
-                    items = uiState.characters,
-                    contentType = { it }
-                ) { item ->
-                    PersonItemHorizontal(
-                        title = item.name?.userPreferred.orEmpty(),
-                        modifier = Modifier.fillMaxWidth(),
-                        imageUrl = item.image?.medium,
-                        onClick = {
-                            navActionManager.toCharacterDetails(item.id)
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            TextButton(onClick = { showMoreFilters = !showMoreFilters }) {
+                                Text(
+                                    text = stringResource(
+                                        if (showMoreFilters) R.string.hide_filters
+                                        else R.string.more_filters
+                                    )
+                                )
+                            }
+                            ErrorTextButton(
+                                text = stringResource(R.string.clear),
+                                onClick = { event?.clearFilters() }
+                            )
                         }
-                    )
-                }
+                    }//:media filters
+                }//:Column
             }
-
-            SearchType.STAFF -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
-                    }
-                }
-                items(
-                    items = uiState.staff,
-                    contentType = { it }
-                ) { item ->
-                    PersonItemHorizontal(
-                        title = item.name?.userPreferred.orEmpty(),
-                        modifier = Modifier.fillMaxWidth(),
-                        imageUrl = item.image?.medium,
-                        onClick = {
-                            navActionManager.toStaffDetails(item.id)
+            when (uiState.searchType) {
+                SearchType.ANIME, SearchType.MANGA -> {
+                    if (uiState.isLoading) {
+                        items(10) {
+                            MediaItemHorizontalPlaceholder()
                         }
-                    )
-                }
-            }
-
-            SearchType.STUDIO -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        Text(
-                            text = "Loading placeholder",
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .defaultPlaceholder(visible = true)
+                    }
+                    items(
+                        items = uiState.media,
+                        contentType = { it }
+                    ) { item ->
+                        MediaItemHorizontal(
+                            title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
+                            imageUrl = item.coverImage?.large,
+                            score = item.meanScore ?: 0,
+                            format = item.format ?: MediaFormat.UNKNOWN__,
+                            year = item.startDate?.year,
+                            onClick = {
+                                navActionManager.toMediaDetails(item.id)
+                            },
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                event?.selectMediaItem(item)
+                                showEditSheet = true
+                            },
+                            badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
+                                {
+                                    Icon(
+                                        painter = painterResource(status.icon()),
+                                        contentDescription = status.localized()
+                                    )
+                                }
+                            }
                         )
                     }
                 }
-                items(
-                    items = uiState.studios,
-                    contentType = { it }
-                ) { item ->
-                    Text(
-                        text = item.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { navActionManager.toStudioDetails(item.id) }
-                            .padding(16.dp)
-                    )
-                }
-            }
 
-            SearchType.USER -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        PersonItemHorizontalPlaceholder()
+                SearchType.CHARACTER -> {
+                    if (uiState.isLoading) {
+                        items(10) {
+                            PersonItemHorizontalPlaceholder()
+                        }
+                    }
+                    items(
+                        items = uiState.characters,
+                        contentType = { it }
+                    ) { item ->
+                        PersonItemHorizontal(
+                            title = item.name?.userPreferred.orEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            imageUrl = item.image?.medium,
+                            onClick = {
+                                navActionManager.toCharacterDetails(item.id)
+                            }
+                        )
                     }
                 }
-                items(
-                    items = uiState.users,
-                    contentType = { it }
-                ) { item ->
-                    PersonItemHorizontal(
-                        title = item.name,
-                        modifier = Modifier.fillMaxWidth(),
-                        imageUrl = item.avatar?.medium,
-                        onClick = {
-                            navActionManager.toUserDetails(item.id)
+
+                SearchType.STAFF -> {
+                    if (uiState.isLoading) {
+                        items(10) {
+                            PersonItemHorizontalPlaceholder()
                         }
-                    )
+                    }
+                    items(
+                        items = uiState.staff,
+                        contentType = { it }
+                    ) { item ->
+                        PersonItemHorizontal(
+                            title = item.name?.userPreferred.orEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            imageUrl = item.image?.medium,
+                            onClick = {
+                                navActionManager.toStaffDetails(item.id)
+                            }
+                        )
+                    }
+                }
+
+                SearchType.STUDIO -> {
+                    if (uiState.isLoading) {
+                        items(10) {
+                            Text(
+                                text = "Loading placeholder",
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .defaultPlaceholder(visible = true)
+                            )
+                        }
+                    }
+                    items(
+                        items = uiState.studios,
+                        contentType = { it }
+                    ) { item ->
+                        Text(
+                            text = item.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navActionManager.toStudioDetails(item.id) }
+                                .padding(16.dp)
+                        )
+                    }
+                }
+
+                SearchType.USER -> {
+                    if (uiState.isLoading) {
+                        items(10) {
+                            PersonItemHorizontalPlaceholder()
+                        }
+                    }
+                    items(
+                        items = uiState.users,
+                        contentType = { it }
+                    ) { item ->
+                        PersonItemHorizontal(
+                            title = item.name,
+                            modifier = Modifier.fillMaxWidth(),
+                            imageUrl = item.avatar?.medium,
+                            onClick = {
+                                navActionManager.toUserDetails(item.id)
+                            }
+                        )
+                    }
                 }
             }
-        }
-    }//: LazyColumn
+        }//: LazyColumn
+    }
 }
 
 @Preview
