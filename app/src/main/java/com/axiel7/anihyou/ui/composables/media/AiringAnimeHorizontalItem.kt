@@ -6,16 +6,17 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,7 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -35,7 +39,7 @@ fun AiringAnimeHorizontalItem(
     subtitle: String,
     imageUrl: String?,
     score: Int? = null,
-    badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    status: MediaListStatus? = null,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -59,16 +63,25 @@ fun AiringAnimeHorizontalItem(
                 showShadow = false,
                 modifier = posterSizeModifier
             )
-            if (badgeContent != null) {
+            if (status != null) {
+                val statusStat = remember(status) { status.asStat() }
                 Row(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .background(
+                            color = statusStat?.primaryColor()
+                                ?: MaterialTheme.colorScheme.secondaryContainer
+                        )
                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    content = badgeContent
-                )
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(status.icon()),
+                        contentDescription = status.localized(),
+                        tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                    )
+                }
             }
         }
 
@@ -148,12 +161,7 @@ fun AiringAnimeHorizontalItemPreview() {
                 subtitle = "Airing in 12 min",
                 imageUrl = null,
                 score = 79,
-                badgeContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.check_circle_24),
-                        contentDescription = ""
-                    )
-                },
+                status = MediaListStatus.COMPLETED,
                 onClick = { }
             )
         }

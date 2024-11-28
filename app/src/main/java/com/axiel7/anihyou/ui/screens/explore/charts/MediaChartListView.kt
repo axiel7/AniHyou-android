@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,12 +24,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
@@ -127,14 +123,7 @@ private fun MediaChartListContent(
                         event?.selectItem(item)
                         showEditSheet = true
                     },
-                    badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                        {
-                            Icon(
-                                painter = painterResource(status.icon()),
-                                contentDescription = status.localized()
-                            )
-                        }
-                    },
+                    status = item.mediaListEntry?.basicMediaListEntry?.status,
                     topBadgeContent = {
                         Text(
                             text = "#${(index + 1).format()}",

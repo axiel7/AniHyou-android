@@ -70,6 +70,16 @@ enum class StatusDistribution(
     companion object {
         fun valueOf(rawValue: String?) = entries.find { it.status.rawValue == rawValue }
 
+        fun MediaListStatus.asStat() = when (this) {
+            MediaListStatus.CURRENT -> CURRENT
+            MediaListStatus.PLANNING -> PLANNING
+            MediaListStatus.COMPLETED -> COMPLETED
+            MediaListStatus.DROPPED -> DROPPED
+            MediaListStatus.PAUSED -> PAUSED
+            MediaListStatus.REPEATING -> CURRENT
+            MediaListStatus.UNKNOWN__ -> null
+        }
+
         fun MediaStatsQuery.StatusDistribution.asStat(): StatLocalizableAndColorable<StatusDistribution>? {
             val status = valueOf(status?.rawValue)
             return if (status != null) {

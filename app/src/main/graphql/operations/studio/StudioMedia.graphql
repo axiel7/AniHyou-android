@@ -21,5 +21,9 @@ fragment CommonStudioMedia on MediaConnection {
         startDate {
             year
         }
+        mediaListEntry {
+            id
+            status
+        }
     }
 }

@@ -3,18 +3,14 @@ package com.axiel7.anihyou.ui.screens.home.discover.content
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.AiringAnimesQuery
 import com.axiel7.anihyou.AiringOnMyListQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.fragment.BasicMediaDetails
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
@@ -57,14 +53,7 @@ fun AiringContent(
                         ),
                         imageUrl = item.coverImage?.large,
                         score = item.meanScore,
-                        badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                            {
-                                Icon(
-                                    painter = painterResource(status.icon()),
-                                    contentDescription = status.localized()
-                                )
-                            }
-                        },
+                        status = item.mediaListEntry?.basicMediaListEntry?.status,
                         onClick = {
                             navigateToMediaDetails(item.id)
                         },
@@ -100,14 +89,7 @@ fun AiringContent(
                         ),
                         imageUrl = item.media?.coverImage?.large,
                         score = item.media?.meanScore,
-                        badgeContent = item.media?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                            {
-                                Icon(
-                                    painter = painterResource(status.icon()),
-                                    contentDescription = status.localized()
-                                )
-                            }
-                        },
+                        status = item.media?.mediaListEntry?.basicMediaListEntry?.status,
                         onClick = {
                             navigateToMediaDetails(item.media!!.id)
                         },

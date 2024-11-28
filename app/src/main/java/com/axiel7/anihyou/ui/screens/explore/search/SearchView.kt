@@ -61,8 +61,6 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.SearchType
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.MediaSortSearch
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaFormat
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
@@ -380,14 +378,7 @@ fun SearchContentView(
                                 event?.selectMediaItem(item)
                                 showEditSheet = true
                             },
-                            badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                                {
-                                    Icon(
-                                        painter = painterResource(status.icon()),
-                                        contentDescription = status.localized()
-                                    )
-                                }
-                            }
+                            status = item.mediaListEntry?.basicMediaListEntry?.status,
                         )
                     }
                 }
