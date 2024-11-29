@@ -378,6 +378,15 @@
     <string name="anime_behind">Animes Atrasados</string>
     <string name="default_tab">Aba padrão</string>
     <string name="last_used">Último usado</string>
+    <string name="watched_episode_of">Assistiu ao episódio %1$s de %2$s</string>
+    <string name="rewatched_episode_of">Reassistiu episódio %1$s de %2$s</string>
+    <string name="read_chapter_of">Leu o capítulo %1$s de %2$s</string>
+    <string name="reread_chapter_of">Releu capítulo %1$s de %2$s</string>
+    <string name="plans_to_watch_anime">Planejado assistir %s</string>
+    <string name="plans_to_read_manga">Planejado ler %s</string>
+    <string name="completed_media">Completou %s</string>
+    <string name="dropped_media">Dropou %s</string>
+    <string name="paused_media">Pausado %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
