@@ -15,7 +15,8 @@ private const val rereadStatus = "reread chapter"
 private const val plansToReadStatus = "plans to read"
 private const val completedStatus = "completed"
 private const val droppedStatus = "dropped"
-private const val pausedStatus = "paused"
+private const val pausedWatchingStatus = "paused watching"
+private const val pausedReadingStatus = "paused reading"
 
 @Composable
 fun ListActivityFragment.text(): String {
@@ -34,7 +35,7 @@ fun ListActivityFragment.text(): String {
             plansToReadStatus -> stringResource(R.string.plans_to_read_manga, mediaTitle)
             completedStatus -> stringResource(R.string.completed_media, mediaTitle)
             droppedStatus -> stringResource(R.string.dropped_media, mediaTitle)
-            pausedStatus -> stringResource(R.string.paused_media, mediaTitle)
+            pausedWatchingStatus, pausedReadingStatus -> stringResource(R.string.paused_media, mediaTitle)
             else -> "${status?.capitalize(Locale.current)} $mediaTitle"
         }
     }
