@@ -355,19 +355,6 @@ class UserMediaListViewModel @AssistedInject constructor(
             }
             .launchIn(viewModelScope)
 
-        // custom lists
-        when (mediaType) {
-            MediaType.ANIME -> defaultPreferencesRepository.animeCustomLists
-            MediaType.MANGA -> defaultPreferencesRepository.mangaCustomLists
-            else -> emptyFlow()
-        }
-            .filterNotNull()
-            .distinctUntilChanged()
-            .onEach { customLists ->
-                mutableUiState.update { it.copy(customLists = customLists) }
-            }
-            .launchIn(viewModelScope)
-
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->

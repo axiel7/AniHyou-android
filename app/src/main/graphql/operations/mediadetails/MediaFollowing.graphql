@@ -4,7 +4,6 @@ query MediaFollowing($id: Int, $page: Int, $perPage: Int) {
             id
             status
             score
-            progress
             user {
                 id
                 name

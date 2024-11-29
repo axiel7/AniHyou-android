@@ -106,7 +106,7 @@ fun ActivityTextView(
             }
             FavoriteIconButton(
                 modifier = Modifier.width(78.dp),
-                isFavorite = isLiked ?: false,
+                isFavorite = isLiked == true,
                 favoritesCount = likeCount,
                 onClick = onClickLike,
                 fontSize = 14.sp,

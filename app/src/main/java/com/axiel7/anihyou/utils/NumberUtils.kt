@@ -23,7 +23,7 @@ object NumberUtils {
 
     fun Number.format(): String? = try {
         defaultNumberFormat.format(this)
-    } catch (e: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         null
     }
 
@@ -36,9 +36,9 @@ object NumberUtils {
         return try {
             defaultDecimalFormat.applyPattern(pattern)
             defaultDecimalFormat.format(this)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             null
-        } catch (e: ArithmeticException) {
+        } catch (_: ArithmeticException) {
             null
         }
     }
@@ -46,7 +46,7 @@ object NumberUtils {
     fun Int.abbreviated(): String? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         try {
             defaultCompactDecimalFormat.format(this)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             null
         }
     } else {
@@ -65,7 +65,7 @@ object NumberUtils {
      */
     fun String.toDoubleLocaleInvariant() = try {
         defaultNumberFormat.parse(this)?.toDouble()
-    } catch (e: ParseException) {
+    } catch (_: ParseException) {
         null
     }
 
@@ -76,7 +76,7 @@ object NumberUtils {
      */
     fun String.toFloatLocaleInvariant() = try {
         defaultNumberFormat.parse(this)?.toFloat()
-    } catch (e: ParseException) {
+    } catch (_: ParseException) {
         null
     }
 

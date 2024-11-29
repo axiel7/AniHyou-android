@@ -29,12 +29,12 @@ fun WebView(
         // it's layoutParams. We convert from Compose Modifier to
         // layout params here.
         val width =
-            if (constraints.hasFixedWidth)
+            if (this.constraints.hasFixedWidth)
                 ViewGroup.LayoutParams.MATCH_PARENT
             else
                 ViewGroup.LayoutParams.WRAP_CONTENT
         val height =
-            if (constraints.hasFixedHeight)
+            if (this.constraints.hasFixedHeight)
                 ViewGroup.LayoutParams.MATCH_PARENT
             else
                 ViewGroup.LayoutParams.WRAP_CONTENT

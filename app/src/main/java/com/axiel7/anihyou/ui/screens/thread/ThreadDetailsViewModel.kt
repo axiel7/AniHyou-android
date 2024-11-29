@@ -80,8 +80,8 @@ class ThreadDetailsViewModel @Inject constructor(
                     if (result is DataResult.Success) {
                         it.copy(
                             details = result.data,
-                            isLiked = result.data?.basicThreadDetails?.isLiked ?: false,
-                            isSubscribed = result.data?.basicThreadDetails?.isSubscribed ?: false
+                            isLiked = result.data?.basicThreadDetails?.isLiked == true,
+                            isSubscribed = result.data?.basicThreadDetails?.isSubscribed == true
                         )
                     } else {
                         result.toUiState()

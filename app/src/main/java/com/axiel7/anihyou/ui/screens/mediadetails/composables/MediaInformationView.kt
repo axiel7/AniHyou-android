@@ -91,9 +91,9 @@ fun MediaInformationView(
         if (isAnime) {
             InfoItemView(
                 title = stringResource(R.string.season),
-                info = uiState.details?.seasonAndYear(),
+                info = uiState.details.seasonAndYear(),
                 modifier = Modifier.clickable {
-                    uiState.details?.season?.let { season ->
+                    uiState.details.season?.let { season ->
                         uiState.details.seasonYear?.let { year ->
                             navigateToAnimeSeason(AnimeSeason(year, season))
                         }
@@ -124,7 +124,7 @@ fun MediaInformationView(
         if (!uiState.details?.synonyms.isNullOrEmpty()) {
             InfoItemView(
                 title = stringResource(R.string.synonyms),
-                info = uiState.details?.synonyms?.joinToString("\n"),
+                info = uiState.details.synonyms.joinToString("\n"),
                 modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
             )
         }
@@ -222,10 +222,10 @@ fun MediaInformationView(
         // Streaming episodes
         if (!uiState.details?.streamingEpisodes.isNullOrEmpty()) {
             // Next episode to watch
-            uiState.details?.mediaListEntry?.basicMediaListEntry?.progress?.let { progress ->
+            uiState.details.mediaListEntry?.basicMediaListEntry?.progress?.let { progress ->
                 if (progress > 0) {
                     uiState.details.streamingEpisodes
-                        ?.find { it?.episodeNumber() == progress + 1 }
+                        .find { it?.episodeNumber() == progress + 1 }
                         ?.let { nextEpisode ->
                             InfoTitle(text = stringResource(R.string.continue_watching))
                             EpisodeItem(
@@ -243,7 +243,7 @@ fun MediaInformationView(
                 modifier = Modifier.padding(bottom = 4.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(uiState.details?.streamingEpisodes.orEmpty()) { item ->
+                items(uiState.details.streamingEpisodes) { item ->
                     EpisodeItem(
                         item = item,
                         onClick = {

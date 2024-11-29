@@ -7,7 +7,7 @@ object ColorUtils {
 
     fun colorFromHex(color: String?) = if (!color.isNullOrEmpty()) try {
         Color(android.graphics.Color.parseColor(color))
-    } catch (e: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         null
     } else null
 

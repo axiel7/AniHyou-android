@@ -53,10 +53,9 @@ fun BadgeScoreIndicator(
                     tint = score.scoreOnPrimaryColor(format = scoreFormat)
                 )
                 Text(
-                    text = if (score != null && score != 0.0) String.format(
-                        "%.0f",
-                        score
-                    ) else UNKNOWN_CHAR,
+                    text = if (score != null && score != 0.0)
+                        String.format(Locale.getDefault(), "%.0f", score)
+                    else UNKNOWN_CHAR,
                     color = score.scoreOnPrimaryColor(format = scoreFormat),
                     fontSize = 14.sp
                 )
