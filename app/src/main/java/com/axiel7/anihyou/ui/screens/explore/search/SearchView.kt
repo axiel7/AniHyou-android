@@ -80,7 +80,7 @@ import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchForma
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchStatusChip
-import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchYearChip
+import com.axiel7.anihyou.ui.screens.explore.search.composables.MediaSearchDateChip
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
@@ -305,11 +305,12 @@ fun SearchContentView(
                                     onValueChanged = { event?.setCountry(it) }
                                 )
                             }
-                            MediaSearchYearChip(
+                            MediaSearchDateChip(
                                 startYear = uiState.startYear,
                                 endYear = uiState.endYear,
                                 onStartYearChanged = { event?.setStartYear(it) },
-                                onEndYearChanged = { event?.setEndYear(it) }
+                                onEndYearChanged = { event?.setEndYear(it) },
+                                onSeasonChanged = { event?.setSeason(it) },
                             )
                             MediaSearchGenresChips(
                                 externalGenre = initialGenre?.let { SelectableGenre(name = it) },

@@ -9,6 +9,7 @@ import com.axiel7.anihyou.data.model.genre.GenresAndTags
 import com.axiel7.anihyou.data.model.genre.SelectableGenre
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
@@ -37,6 +38,7 @@ class SearchRepository @Inject constructor(
         statusIn: List<MediaStatus>? = null,
         startYear: Int? = null,
         endYear: Int? = null,
+        season: MediaSeason? = null,
         onList: Boolean? = null,
         isLicensed: Boolean? = null,
         isAdult: Boolean? = null,
@@ -56,6 +58,7 @@ class SearchRepository @Inject constructor(
             statusIn,
             startYear,
             endYear,
+            season,
             onList,
             isLicensed,
             isAdult,

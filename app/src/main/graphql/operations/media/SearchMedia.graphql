@@ -1,13 +1,13 @@
 query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, $sort: [MediaSort],
     $genre_in: [String], $genre_not_in: [String], $tag_in: [String], $tag_not_in: [String],
     $format_in: [MediaFormat], $status_in: [MediaStatus],
-    $startDateGreater: FuzzyDateInt, $startDateLesser: FuzzyDateInt, $onList: Boolean,
-    $isLicensed: Boolean, $isAdult: Boolean, $country: CountryCode
+    $startDateGreater: FuzzyDateInt, $startDateLesser: FuzzyDateInt, $season: MediaSeason,
+    $onList: Boolean, $isLicensed: Boolean, $isAdult: Boolean, $country: CountryCode
 ) {
     Page(page: $page, perPage: $perPage) {
         media(search: $search, type: $type, sort: $sort,
             genre_in: $genre_in, genre_not_in: $genre_not_in, tag_in: $tag_in, tag_not_in: $tag_not_in,
-            format_in: $format_in, status_in: $status_in, startDate_greater: $startDateGreater,
+            format_in: $format_in, status_in: $status_in, season: $season, startDate_greater: $startDateGreater,
             startDate_lesser: $startDateLesser, onList: $onList, isLicensed: $isLicensed, isAdult: $isAdult,
             countryOfOrigin: $country
         ) {
