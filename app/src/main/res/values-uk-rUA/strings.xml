@@ -437,6 +437,15 @@
     <string name="male">Чоловічий</string>
     <string name="female">Жіночий</string>
     <string name="non_binary">Небінарний</string>
+    <string name="watched_episode_of">Переглянута серія %1$s з %2$s</string>
+    <string name="rewatched_episode_of">Повторно переглянуто епізод %1$s з %2$s</string>
+    <string name="read_chapter_of">Прочитати розділ %1$s в %2$s</string>
+    <string name="reread_chapter_of">Перечитано розділ %1$s з %2$s</string>
+    <string name="plans_to_watch_anime">Плани на перегляд %s</string>
+    <string name="plans_to_read_manga">У планах прочитати %s</string>
+    <string name="completed_media">Завершено %s</string>
+    <string name="dropped_media">Випущено %s</string>
+    <string name="paused_media">Зупинено %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>

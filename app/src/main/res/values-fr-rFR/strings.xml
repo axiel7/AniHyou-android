@@ -606,6 +606,15 @@
     <string name="male">Homme</string>
     <string name="female">Femme</string>
     <string name="non_binary">Non-binaire</string>
+    <string name="watched_episode_of">A regardé l\'épisode %1$s de %2$s</string>
+    <string name="rewatched_episode_of">A regardé à nouveau l\'épisode %1$s de %2$s</string>
+    <string name="read_chapter_of">A lu le chapitre %1$s de %2$s</string>
+    <string name="reread_chapter_of">A relu le chapitre %1$s de %2$s</string>
+    <string name="plans_to_watch_anime">Planifie de regarder %s</string>
+    <string name="plans_to_read_manga">Planifie de lire %s</string>
+    <string name="completed_media">A complété %s</string>
+    <string name="dropped_media">A abandonné %s</string>
+    <string name="paused_media">A mis en pause %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

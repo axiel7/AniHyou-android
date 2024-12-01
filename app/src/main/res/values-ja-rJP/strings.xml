@@ -138,6 +138,7 @@
     <string name="side_story">サイドストーリー</string>
     <string name="relation_character">キャラクター</string>
     <string name="relation_summary">摘要</string>
+    <string name="relation_alternative">オルタナティブ</string>
     <string name="spin_off">スピンオフ</string>
     <string name="relation_other">他</string>
     <string name="relation_source">原作</string>
@@ -216,6 +217,7 @@
     <string name="friday">金曜日</string>
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
+    <string name="episode_airing_at">第%d話は%sに配信中</string>
     <string name="filter">検索</string>
     <string name="notifications">通知</string>
     <string name="threads">スレッド</string>
@@ -359,6 +361,13 @@
     <string name="endings">エンディング</string>
     <string name="anime_behind">遅いなアニメ</string>
     <string name="last_used">前回使用</string>
+    <string name="watched_episode_of">%2$sの第%1$s話を見ました</string>
+    <string name="read_chapter_of">%2$sの第%1$s話を読みました</string>
+    <string name="plans_to_watch_anime">%sを見る予定</string>
+    <string name="plans_to_read_manga">%sを読む予定</string>
+    <string name="completed_media">%sを完了しました</string>
+    <string name="dropped_media">%sを視聴を中断しました</string>
+    <string name="paused_media">%sを保留しました</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d時間</item>
     </plurals>
