@@ -89,7 +89,7 @@ class EditMediaViewModel @Inject constructor(
                     status = value,
                     progress = uiState.mediaHasDuration() ?: uiState.progress,
                     volumeProgress = uiState.mediaHasVolumes() ?: uiState.volumeProgress,
-                    completedAt = LocalDate.now()
+                    completedAt = uiState.completedAt ?: LocalDate.now()
                 )
             }
         } else {
