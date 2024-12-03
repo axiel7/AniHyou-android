@@ -15,6 +15,7 @@ import com.axiel7.anihyou.type.MediaListSort
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDate
+import com.axiel7.anihyou.utils.DateUtils.isNull
 import com.axiel7.anihyou.utils.DateUtils.toFuzzyDateInput
 import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 import kotlinx.coroutines.flow.Flow
@@ -65,6 +66,8 @@ class MediaListRepository @Inject constructor(
         val totalDuration = total.takeIf { it != 0 }
         val isMaxProgress = totalDuration != null && newProgress >= totalDuration
         val isPlanning = entry.status == MediaListStatus.PLANNING
+        val isRepeating = entry.status == MediaListStatus.REPEATING
+
         val newStatus = when {
             isMaxProgress -> MediaListStatus.COMPLETED
             isPlanning -> MediaListStatus.CURRENT
@@ -76,9 +79,12 @@ class MediaListRepository @Inject constructor(
             progressVolumes = newProgress.takeIf { entry.isUsingVolumeProgress() },
             status = newStatus,
             startedAt = LocalDate.now().takeIf {
-                isPlanning || !entry.progress.isGreaterThanZero()
+                (!isRepeating || entry.startedAt?.fuzzyDate?.isNull() ?: true) &&
+                (isPlanning || !entry.progress.isGreaterThanZero())
             }?.toFuzzyDate(),
-            completedAt = LocalDate.now().takeIf { isMaxProgress }?.toFuzzyDate(),
+            completedAt = LocalDate.now().takeIf {
+                (!isRepeating || entry.completedAt?.fuzzyDate?.isNull() ?: true) && isMaxProgress
+            }?.toFuzzyDate(),
         )
     }
 

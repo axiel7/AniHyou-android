@@ -238,6 +238,10 @@ object DateUtils {
         }
     }
 
+    fun FuzzyDate?.isNull(): Boolean {
+        return this == null || (day == null && month == null && year == null)
+    }
+
     fun FuzzyDate.toLocalDate(): LocalDate? {
         return if (day != null && month != null && year != null)
             LocalDate.of(year, month, day)
