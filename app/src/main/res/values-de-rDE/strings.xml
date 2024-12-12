@@ -102,7 +102,7 @@
     <string name="delete_confirmation">Bist Du sicher, dass Du diesen Eintrag löschen möchtest?</string>
     <string name="tags">Tags</string>
     <string name="show_spoiler">Spoiler anzeigen</string>
-    <string name="hide_spoiler">Spoiler verbergen</string>
+    <string name="hide_spoiler">﻿Spoiler verbergen</string>
     <string name="anime_manga_and_more">Anime, Manga und mehr</string>
     <string name="characters">Charaktere</string>
     <string name="staff">Team</string>
