@@ -74,21 +74,24 @@ class EditMediaViewModel @Inject constructor(
     }
 
     override fun onChangeStatus(value: MediaListStatus) {
-        if ((uiState.value.isNewEntry || uiState.value.status == MediaListStatus.PLANNING)
-            && value == MediaListStatus.CURRENT
-        ) {
+        val prevStatus = uiState.value.status
+        val hasStarted = (uiState.value.isNewEntry || prevStatus == MediaListStatus.PLANNING)
+                && value == MediaListStatus.CURRENT
+        val hasCompleted = value == MediaListStatus.COMPLETED
+        if (hasStarted) {
             mutableUiState.update {
                 it.copy(
                     status = value,
                     startedAt = LocalDate.now()
                 )
             }
-        } else if (value == MediaListStatus.COMPLETED) {
+        } else if (hasCompleted) {
             mutableUiState.update { uiState ->
                 uiState.copy(
                     status = value,
                     progress = uiState.mediaHasDuration() ?: uiState.progress,
                     volumeProgress = uiState.mediaHasVolumes() ?: uiState.volumeProgress,
+                    startedAt = uiState.startedAt ?: LocalDate.now(),
                     completedAt = uiState.completedAt ?: LocalDate.now()
                 )
             }
