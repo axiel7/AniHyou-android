@@ -387,6 +387,15 @@
     <string name="custom_color">Пользовательский цвет</string>
     <string name="anime_behind">Аниме позади</string>
     <string name="last_used">Последнее использование</string>
+    <string name="watched_episode_of">Просмотрен эпизод %1$s из %2$s</string>
+    <string name="rewatched_episode_of">Пересмотреть эпизод %1$s из %2$s</string>
+    <string name="read_chapter_of">Читает главу %1$s из %2$s</string>
+    <string name="reread_chapter_of">Перечитать главу %1$s из %2$s</string>
+    <string name="plans_to_watch_anime">Планы для просмотра %s</string>
+    <string name="plans_to_read_manga">Планы для чтения %s</string>
+    <string name="completed_media">Завершен %s</string>
+    <string name="dropped_media">Выпущен %s</string>
+    <string name="paused_media">На паузе %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d ч.</item>
         <item quantity="few">%d ч.</item>

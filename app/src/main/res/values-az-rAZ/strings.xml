@@ -337,6 +337,13 @@
     <string name="continue_watching">İzləməyə davam et</string>
     <string name="custom_color">Özəl rəng</string>
     <string name="anime_behind">Arxadakı Anime</string>
+    <string name="watched_episode_of">%2$s\'dən bölüm %1$s baxıldı</string>
+    <string name="read_chapter_of">Bölmə %1$s %2$s ilə oxu</string>
+    <string name="plans_to_watch_anime">İzləmək planlanılır %s</string>
+    <string name="plans_to_read_manga">Oxumaq planlanılır %s</string>
+    <string name="completed_media">Bitirdiyim %s</string>
+    <string name="dropped_media">Yarıda Buraxdığım %s</string>
+    <string name="paused_media">Durdurulub %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%dsaat</item>
         <item quantity="other">%dsaat</item>
