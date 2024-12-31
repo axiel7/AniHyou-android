@@ -46,13 +46,13 @@ class MediaListRepository @Inject constructor(
     fun getUserMediaList(
         userId: Int,
         mediaType: MediaType,
-        status: MediaListStatus?,
+        statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
         page: Int?,
         perPage: Int? = 25,
     ) = api
-        .userMediaList(userId, mediaType, status, sort, fetchFromNetwork, page, perPage)
+        .userMediaList(userId, mediaType, statusIn, sort, fetchFromNetwork, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()

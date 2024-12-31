@@ -149,7 +149,7 @@ class CurrentViewModel @Inject constructor(
                 mediaListRepository.getUserMediaList(
                     userId = myUserId.first(),
                     mediaType = MediaType.ANIME,
-                    status = MediaListStatus.CURRENT,
+                    statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = null,
@@ -209,7 +209,7 @@ class CurrentViewModel @Inject constructor(
                 mediaListRepository.getUserMediaList(
                     userId = myUserId.first(),
                     mediaType = MediaType.MANGA,
-                    status = MediaListStatus.CURRENT,
+                    statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = 1

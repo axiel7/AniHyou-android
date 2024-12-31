@@ -1,6 +1,6 @@
-query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
+query UserMediaList($page: Int, $perPage: Int, $userId: Int, $type: MediaType, $statusIn: [MediaListStatus], $sort: [MediaListSort]) {
     Page(page: $page, perPage: $perPage) {
-        mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
+        mediaList(userId: $userId, type: $type, status_in: $statusIn, sort: $sort) {
             ...CommonMediaListEntry
         }
         pageInfo {
