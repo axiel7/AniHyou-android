@@ -139,7 +139,7 @@
     <string name="relation_character">角色</string>
     <string name="relation_summary">总集篇</string>
     <string name="relation_alternative">另类</string>
-    <string name="spin_off">衍生作品</string>
+    <string name="spin_off">衍生</string>
     <string name="relation_other">其他</string>
     <string name="relation_source">原作</string>
     <string name="relation_compilation">合辑</string>
@@ -268,7 +268,7 @@
     <string name="color">颜色</string>
     <string name="discover">发现</string>
     <string name="default_home_tab">默认主页</string>
-    <string name="text_status">文本状态</string>
+    <string name="text_status">用户动态</string>
     <string name="list_progress">列表进度</string>
     <string name="all">全部</string>
     <string name="global_feed">全站</string>
@@ -569,7 +569,7 @@
     <string name="mean_score_format">平均评分：%s</string>
     <string name="episode_count">剧集数</string>
     <string name="chapter_count">章节数</string>
-    <string name="country_distribution">国家分布</string>
+    <string name="country_distribution">国家/地区分布</string>
     <string name="release_year">发布年份</string>
     <string name="watch_year">观看年份</string>
     <string name="read_year">阅读年份</string>
