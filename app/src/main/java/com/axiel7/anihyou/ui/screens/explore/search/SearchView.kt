@@ -308,6 +308,7 @@ fun SearchContentView(
                             MediaSearchDateChip(
                                 startYear = uiState.startYear,
                                 endYear = uiState.endYear,
+                                season = uiState.season,
                                 onStartYearChanged = { event?.setStartYear(it) },
                                 onEndYearChanged = { event?.setEndYear(it) },
                                 onSeasonChanged = { event?.setSeason(it) },

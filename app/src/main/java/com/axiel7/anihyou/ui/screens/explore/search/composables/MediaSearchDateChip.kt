@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.GenericLocalizable
+import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
@@ -35,6 +36,7 @@ import com.axiel7.anihyou.utils.DateUtils
 fun MediaSearchDateChip(
     startYear: Int?,
     endYear: Int?,
+    season: MediaSeason?,
     onStartYearChanged: (Int?) -> Unit,
     onEndYearChanged: (Int?) -> Unit,
     onSeasonChanged: (MediaSeason?) -> Unit,
@@ -99,7 +101,7 @@ fun MediaSearchDateChip(
         ) {
             AssistChip(
                 onClick = { openSeasonMenu = !openSeasonMenu },
-                label = { Text(text = stringResource(R.string.season)) },
+                label = { Text(text = season?.localized() ?: stringResource(R.string.season)) },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.arrow_drop_down_24),
@@ -116,9 +118,17 @@ fun MediaSearchDateChip(
                     DropdownMenuItem(
                         text = { Text(text = it.localized()) },
                         onClick = {
-                            onSeasonChanged(it)
+                            onSeasonChanged(it.takeIf { it != season })
                             openSeasonMenu = false
                         },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (season == it) R.drawable.check_24 else it.icon()
+                                ),
+                                contentDescription = null
+                            )
+                        }
                     )
                 }
             }
@@ -134,6 +144,7 @@ fun MediaSearchYearChipPreview() {
             MediaSearchDateChip(
                 startYear = null,
                 endYear = null,
+                season = null,
                 onStartYearChanged = {},
                 onEndYearChanged = {},
                 onSeasonChanged = {},
