@@ -79,7 +79,8 @@ class MediaApi @Inject constructor(
                     Optional.present(startYear * 10000)
                 else Optional.absent(),
                 startDateLesser = if (endYear != null)
-                    Optional.present(endYear * 10000)
+                // The entire year until december 31th
+                    Optional.present("${endYear}1231".toInt())
                 else Optional.absent(),
                 season = Optional.presentIfNotNull(season),
                 onList = Optional.presentIfNotNull(onList),
