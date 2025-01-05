@@ -23,7 +23,7 @@ private const val pausedReadingStatus = "paused reading"
 @Composable
 fun ListActivityFragment.text(): String {
     val mediaTitle = media?.title?.userPreferred.orEmpty()
-    return if (progress != null) {
+    return if (progress != null && progress != "0") {
         when (status) {
             watchedStatus -> stringResource(R.string.watched_episode_of, progress, mediaTitle)
             rewatchedEpisodeStatus -> stringResource(R.string.rewatched_episode_of, progress, mediaTitle)
