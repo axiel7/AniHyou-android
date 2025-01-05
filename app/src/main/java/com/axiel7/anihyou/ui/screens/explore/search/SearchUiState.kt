@@ -13,6 +13,7 @@ import com.axiel7.anihyou.data.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.state.PagedUiState
@@ -35,11 +36,13 @@ data class SearchUiState(
     val mediaStatusesChanged: Boolean = false,
     val startYear: Int? = null,
     val endYear: Int? = null,
+    val season: MediaSeason? = null,
     val onMyList: Boolean? = null,
     val isDoujin: Boolean? = null,
     val isAdult: Boolean? = null,
     val country: CountryOfOrigin? = null,
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
+    val clearedFilters: Boolean = false,
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,
@@ -59,12 +62,12 @@ data class SearchUiState(
 
     private val hasMediaStatusFilter = selectedMediaStatuses.isNotEmpty()
 
-    private val hasYearFilter = startYear != null || endYear != null
+    private val hasDateFilter = startYear != null || endYear != null || season != null
 
     val hasFiltersApplied = hasGenreOrTagFilter
             || hasMediaFormatFilter
             || hasMediaStatusFilter
-            || hasYearFilter
+            || hasDateFilter
 
     val mediaSortForSearch = if (mediaSort == MediaSort.SEARCH_MATCH && hasFiltersApplied) {
         MediaSort.POPULARITY_DESC

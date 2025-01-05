@@ -46,8 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.SeasonalAnimeQuery
 import com.axiel7.anihyou.data.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.common.ListStyle
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.DefaultScaffoldWithMediumTopAppBar
@@ -229,14 +227,7 @@ private fun SeasonalGrid(
                         SmallScoreIndicator(score = item.meanScore)
                     }
                 },
-                badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                    {
-                        Icon(
-                            painter = painterResource(status.icon()),
-                            contentDescription = status.localized()
-                        )
-                    }
-                },
+                status = item.mediaListEntry?.basicMediaListEntry?.status,
                 minLines = 2,
                 onClick = { onClickItem(item) },
                 onLongClick = { onLongClickItem(item) }
@@ -297,14 +288,7 @@ private fun SeasonalList(
                         )
                     }
                 },
-                badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                    {
-                        Icon(
-                            painter = painterResource(status.icon()),
-                            contentDescription = status.localized()
-                        )
-                    }
-                },
+                status = item.mediaListEntry?.basicMediaListEntry?.status,
                 onClick = { onClickItem(item) },
                 onLongClick = { onLongClickItem(item) },
             )

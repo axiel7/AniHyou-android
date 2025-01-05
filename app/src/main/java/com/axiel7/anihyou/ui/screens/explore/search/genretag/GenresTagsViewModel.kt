@@ -115,6 +115,20 @@ class GenresTagsViewModel @Inject constructor(
         }
     }
 
+    override fun resetData() {
+        mutableUiState.update {
+            val unselectedGenres = it.genres.map { it.copy(state = SelectableGenre.State.NONE) }
+            it.genres.clear()
+            it.genres.addAll(unselectedGenres)
+
+            val unselectedTags = it.tags.map { it.copy(state = SelectableGenre.State.NONE) }
+            it.tags.clear()
+            it.tags.addAll(unselectedTags)
+
+            it.copy(genresAndTagsForSearch = it.genresAndTagsForSearch())
+        }
+    }
+
     override suspend fun onDismissSheet() {
         val state = mutableUiState.first()
         mutableUiState.emit(

@@ -46,7 +46,7 @@ fun ChildCommentView(
     navigateToFullscreenImage: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    var isLiked by remember { mutableStateOf(comment.isLiked ?: false) }
+    var isLiked by remember { mutableStateOf(comment.isLiked == true) }
     var showChildComments by remember { mutableStateOf(false) }
     Row(
         modifier = modifier

@@ -198,7 +198,7 @@ private fun DiscoverContent(
                         DiscoverMediaContent(
                             title = stringResource(R.string.trending_manga),
                             media = uiState.trendingManga,
-                            isLoading = uiState.isLoadingTrendingAnime,
+                            isLoading = uiState.isLoadingTrendingManga,
                             onLongClickItem = {
                                 event?.selectItem(
                                     details = it.basicMediaDetails,

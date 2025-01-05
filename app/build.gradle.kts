@@ -45,6 +45,7 @@ android {
                 "az-rAZ",
                 "de-rDE",
                 "zh-rCN",
+                "zh-rTW",
                 "fr-rFR"
             )
         )

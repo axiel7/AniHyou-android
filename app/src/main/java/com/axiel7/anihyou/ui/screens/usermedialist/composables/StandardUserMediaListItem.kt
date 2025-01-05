@@ -35,6 +35,7 @@ import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleBasicMediaListEntry
 import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.data.model.media.isActive
+import com.axiel7.anihyou.data.model.media.progressOrVolumes
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
@@ -125,8 +126,8 @@ fun StandardUserMediaListItem(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
-                        val progress = item.basicMediaListEntry.progress?.format() ?: 0
-                        val duration = item.media?.basicMediaDetails?.duration()?.format()
+                        val progress = item.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
+                        val duration = item.duration()?.format()
                         Text(
                             text = if (duration != null) "$progress/$duration" else "$progress",
                             fontSize = 16.sp

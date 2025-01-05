@@ -8,14 +8,17 @@ import com.axiel7.anihyou.R
 import com.axiel7.anihyou.fragment.ListActivityFragment
 
 private const val watchedStatus = "watched episode"
-private const val rewatchedStatus = "rewatched episode"
+private const val rewatchedEpisodeStatus = "rewatched episode"
+private const val rewatchedStatus = "rewatched"
 private const val plansToWatchStatus = "plans to watch"
 private const val readStatus = "read chapter"
-private const val rereadStatus = "reread chapter"
+private const val rereadChapterStatus = "reread chapter"
+private const val rereadStatus = "reread"
 private const val plansToReadStatus = "plans to read"
 private const val completedStatus = "completed"
 private const val droppedStatus = "dropped"
-private const val pausedStatus = "paused"
+private const val pausedWatchingStatus = "paused watching"
+private const val pausedReadingStatus = "paused reading"
 
 @Composable
 fun ListActivityFragment.text(): String {
@@ -23,9 +26,11 @@ fun ListActivityFragment.text(): String {
     return if (progress != null) {
         when (status) {
             watchedStatus -> stringResource(R.string.watched_episode_of, progress, mediaTitle)
-            rewatchedStatus -> stringResource(R.string.rewatched_episode_of, progress, mediaTitle)
+            rewatchedEpisodeStatus -> stringResource(R.string.rewatched_episode_of, progress, mediaTitle)
+            rewatchedStatus -> stringResource(R.string.rewatched_media, mediaTitle)
             readStatus -> stringResource(R.string.read_chapter_of, progress, mediaTitle)
-            rereadStatus -> stringResource(R.string.reread_chapter_of, progress, mediaTitle)
+            rereadChapterStatus -> stringResource(R.string.reread_chapter_of, progress, mediaTitle)
+            rereadStatus -> stringResource(R.string.reread_media, mediaTitle)
             else -> "${status?.capitalize(Locale.current)} $progress of $mediaTitle"
         }
     } else {
@@ -34,7 +39,7 @@ fun ListActivityFragment.text(): String {
             plansToReadStatus -> stringResource(R.string.plans_to_read_manga, mediaTitle)
             completedStatus -> stringResource(R.string.completed_media, mediaTitle)
             droppedStatus -> stringResource(R.string.dropped_media, mediaTitle)
-            pausedStatus -> stringResource(R.string.paused_media, mediaTitle)
+            pausedWatchingStatus, pausedReadingStatus -> stringResource(R.string.paused_media, mediaTitle)
             else -> "${status?.capitalize(Locale.current)} $mediaTitle"
         }
     }

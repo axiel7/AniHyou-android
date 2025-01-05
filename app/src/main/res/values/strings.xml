@@ -630,6 +630,8 @@
     <string name="completed_media">Completed %s</string>
     <string name="dropped_media">Dropped %s</string>
     <string name="paused_media">Paused %s</string>
+    <string name="rewatched_media">Rewatched %s</string>
+    <string name="reread_media">Reread %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>

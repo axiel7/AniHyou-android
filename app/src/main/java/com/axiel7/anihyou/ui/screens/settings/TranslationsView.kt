@@ -31,6 +31,7 @@ private val translations = mapOf(
     "ar-SA" to "Hussain889, Hussain69o, WhiteCanvas, eyadalomar, sakugaky, Comikazie, mlvin, bobteen1",
     "az-AZ" to "oolyvi",
     "zh-Hans" to "hualiong, MareDevi, Andypsl8, bengerlorf",
+    "zh-Hant" to "hualiong, jhih_yu_lin, web790709",
     "fr-FR" to "0xybo, mamanamgae, frosqh, Eria78, nesquick",
     "de-DE" to "LittleFreak, Secresa, MaximilianGT500",
     "in-ID" to "Clxf12",
@@ -41,7 +42,7 @@ private val translations = mapOf(
     "ru-RU" to "Ronner231, grin3671",
     "es-ES" to "axiel7",
     "tr-TR" to "hsinankirdar",
-    "uk-UA" to "Syly_vibes, Sensetivity, magnariuk",
+    "uk-UA" to "Syly_vibes, Sensetivity, magnariuk, DanielleTlumach",
 )
 
 @Serializable

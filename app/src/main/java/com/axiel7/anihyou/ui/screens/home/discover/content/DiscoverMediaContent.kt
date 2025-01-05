@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -17,8 +15,6 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.MediaSortedQuery
 import com.axiel7.anihyou.R
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.ui.composables.media.MediaItemVertical
@@ -63,14 +59,7 @@ fun DiscoverMediaContent(
                         Spacer(modifier = Modifier.size(20.dp))
                     }
                 },
-                badgeContent = item.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                    {
-                        Icon(
-                            painter = painterResource(status.icon()),
-                            contentDescription = status.localized()
-                        )
-                    }
-                },
+                status = item.mediaListEntry?.basicMediaListEntry?.status,
                 minLines = 2,
                 onClick = { navigateToMediaDetails(item.id) },
                 onLongClick = { onLongClickItem(item) }

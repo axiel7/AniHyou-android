@@ -20,8 +20,6 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.CharacterMediaQuery
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.character.localized
-import com.axiel7.anihyou.data.model.media.icon
-import com.axiel7.anihyou.data.model.media.localized
 import com.axiel7.anihyou.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -74,14 +72,7 @@ fun CharacterMediaView(
                         }
                     }
                 },
-                badgeContent = item.node?.mediaListEntry?.basicMediaListEntry?.status?.let { status ->
-                    {
-                        Icon(
-                            painter = painterResource(status.icon()),
-                            contentDescription = status.localized()
-                        )
-                    }
-                },
+                status = item.node?.mediaListEntry?.basicMediaListEntry?.status,
                 onClick = {
                     navigateToMediaDetails(item.node?.id!!)
                 },

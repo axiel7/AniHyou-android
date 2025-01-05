@@ -7,6 +7,7 @@ import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.ui.common.event.PagedEvent
 
@@ -18,6 +19,7 @@ interface SearchEvent : PagedEvent {
     fun setMediaStatuses(values: List<MediaStatusLocalizable>)
     fun setStartYear(value: Int?)
     fun setEndYear(value: Int?)
+    fun setSeason(value: MediaSeason?)
     fun setOnMyList(value: Boolean?)
     fun setIsDoujin(value: Boolean?)
     fun setIsAdult(value: Boolean?)

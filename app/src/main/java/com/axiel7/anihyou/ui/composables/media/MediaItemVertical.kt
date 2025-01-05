@@ -13,24 +13,64 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
+import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 
 const val MEDIA_ITEM_VERTICAL_HEIGHT = 200
+
+@Composable
+fun MediaItemVertical(
+    title: String,
+    imageUrl: String?,
+    subtitle: @Composable (() -> Unit)? = null,
+    status: MediaListStatus?,
+    modifier: Modifier = Modifier,
+    minLines: Int = 1,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
+) {
+    val statusStat = remember(status) { status?.asStat() }
+    MediaItemVertical(
+        title = title,
+        imageUrl = imageUrl,
+        modifier = modifier,
+        subtitle = subtitle,
+        badgeContent = status?.let {
+            {
+                Icon(
+                    painter = painterResource(status.icon()),
+                    contentDescription = status.localized(),
+                    tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                )
+            }
+        },
+        badgeBackgroundColor = statusStat?.primaryColor()
+            ?: MaterialTheme.colorScheme.secondaryContainer,
+        minLines = minLines,
+        onClick = onClick,
+        onLongClick = onLongClick,
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -40,6 +80,7 @@ fun MediaItemVertical(
     modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    badgeBackgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     minLines: Int = 1,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -72,7 +113,7 @@ fun MediaItemVertical(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .background(badgeBackgroundColor)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     content = badgeContent
@@ -144,17 +185,9 @@ fun MediaItemVerticalPreview() {
                 title = "This is a very large anime title that should serve as a preview example",
                 imageUrl = null,
                 subtitle = {
-                    SmallScoreIndicator(
-                        score = 83,
-                        fontSize = 13.sp
-                    )
+                    SmallScoreIndicator(score = 83)
                 },
-                badgeContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.check_circle_24),
-                        contentDescription = ""
-                    )
-                },
+                status = MediaListStatus.COMPLETED,
                 onClick = {}
             )
         }

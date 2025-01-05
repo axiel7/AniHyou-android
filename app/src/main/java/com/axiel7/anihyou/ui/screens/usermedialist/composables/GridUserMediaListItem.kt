@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.data.model.media.duration
 import com.axiel7.anihyou.data.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.data.model.media.progressOrVolumes
 import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
@@ -113,8 +114,8 @@ fun GridUserMediaListItem(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val progress = item.basicMediaListEntry.progress?.format() ?: 0
-                val duration = item.media?.basicMediaDetails?.duration()?.format() ?: UNKNOWN_CHAR
+                val progress = item.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
+                val duration = item.duration()?.format() ?: UNKNOWN_CHAR
                 Text(
                     text = "$progress/$duration",
                     fontSize = 15.sp,

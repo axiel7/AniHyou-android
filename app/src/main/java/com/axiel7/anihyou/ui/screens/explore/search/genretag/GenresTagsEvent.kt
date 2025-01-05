@@ -12,6 +12,7 @@ interface GenresTagsEvent {
     fun onTagUpdated(value: SelectableGenre)
     suspend fun onTagRemoved(name: String): GenresAndTagsForSearch
     fun unselectAllGenresAndTags()
+    fun resetData()
     suspend fun onDismissSheet()
     fun fetchGenreTagCollection()
 }

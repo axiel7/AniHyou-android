@@ -44,7 +44,7 @@ object DateUtils {
         style: FormatStyle = FormatStyle.MEDIUM
     ): String? = try {
         this.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
-    } catch (e: DateTimeException) {
+    } catch (_: DateTimeException) {
         null
     }
 
@@ -52,7 +52,7 @@ object DateUtils {
         style: FormatStyle = FormatStyle.MEDIUM
     ): String? = try {
         this.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
-    } catch (e: DateTimeException) {
+    } catch (_: DateTimeException) {
         null
     }
 
@@ -128,15 +128,12 @@ object DateUtils {
      * Depending if there is enough time.
      * Eg. If days greater than 1 and less than 6, returns "x days"
      * @param maxUnit maximum time unit to display, if the time exceed the limit then it is showed as a date
-     * @param buildString optional parameter to use in Glance. By default it uses compose [stringResource]
+     * @param buildPluralString optional parameter to use in Glance. By default it uses compose [pluralStringResource]
      */
     @Composable
     fun Long.secondsToLegibleText(
         maxUnit: ChronoUnit = ChronoUnit.YEARS,
         isFutureDate: Boolean = true,
-        buildString: @Composable (id: Int, time: Long) -> String = { id, time ->
-            stringResource(id, time)
-        },
         buildPluralString: @Composable (id: Int, time: Long) -> String = { id, time ->
             pluralStringResource(id = id, count = time.toInt(), time)
         }
@@ -272,27 +269,39 @@ object DateUtils {
     @Composable
     fun FuzzyDate.formatted(): String = when {
         month != null && year != null && day != null -> {
-            LocalDate.of(year, month, day).format(
-                DateTimeFormatter.ofPattern(
-                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM yyyy")
+            try {
+                LocalDate.of(year, month, day).format(
+                    DateTimeFormatter.ofPattern(
+                        DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM yyyy")
+                    )
                 )
-            )
+            } catch (_: DateTimeException) {
+                "$year-$month-$day"
+            }
         }
 
         month != null && year != null -> {
-            LocalDate.of(year, month, 1).format(
-                DateTimeFormatter.ofPattern(
-                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMM yyyy")
+            try {
+                LocalDate.of(year, month, 1).format(
+                    DateTimeFormatter.ofPattern(
+                        DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMM yyyy")
+                    )
                 )
-            )
+            } catch (_: DateTimeException) {
+                "$year-$month"
+            }
         }
 
         month != null && day != null -> {
-            LocalDate.of(currentYear, month, day).format(
-                DateTimeFormatter.ofPattern(
-                    DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM")
+            try {
+                LocalDate.of(currentYear, month, day).format(
+                    DateTimeFormatter.ofPattern(
+                        DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM")
+                    )
                 )
-            )
+            } catch (_: DateTimeException) {
+                "$month-$day"
+            }
         }
 
         year != null -> "$year"

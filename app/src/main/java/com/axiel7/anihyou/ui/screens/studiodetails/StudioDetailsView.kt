@@ -120,6 +120,7 @@ private fun StudioDetailsContent(
                             color = MaterialTheme.colorScheme.outline
                         )
                     },
+                    status = item.mediaListEntry?.status,
                     minLines = 2,
                     onClick = {
                         navActionManager.toMediaDetails(item.id)

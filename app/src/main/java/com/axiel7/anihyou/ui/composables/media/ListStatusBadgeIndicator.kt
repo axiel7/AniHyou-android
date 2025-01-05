@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.type.MediaListStatus
 
 @Composable
@@ -22,6 +25,7 @@ fun BoxScope.ListStatusBadgeIndicator(
     alignment: Alignment,
     status: MediaListStatus,
 ) {
+    val statusStat = remember(status) { status.asStat() }
     val shape = when (alignment) {
         Alignment.TopStart -> RoundedCornerShape(topStart = 8.dp, bottomEnd = 16.dp)
         Alignment.BottomEnd -> RoundedCornerShape(topStart = 16.dp, bottomEnd = 8.dp)
@@ -33,13 +37,14 @@ fun BoxScope.ListStatusBadgeIndicator(
         modifier = Modifier
             .align(alignment)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(statusStat?.primaryColor() ?: MaterialTheme.colorScheme.secondaryContainer)
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(status.icon()),
-            contentDescription = status.localized()
+            contentDescription = status.localized(),
+            tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
         )
     }
 }

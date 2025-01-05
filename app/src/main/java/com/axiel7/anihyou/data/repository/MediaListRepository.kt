@@ -6,6 +6,8 @@ import com.axiel7.anihyou.UpdateEntryMutation
 import com.axiel7.anihyou.data.api.MediaListApi
 import com.axiel7.anihyou.data.api.response.DataResult
 import com.axiel7.anihyou.data.model.media.advancedScoresMap
+import com.axiel7.anihyou.data.model.media.isUsingVolumeProgress
+import com.axiel7.anihyou.data.model.media.progressOrVolumes
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.fragment.CommonPage
 import com.axiel7.anihyou.fragment.FuzzyDate
@@ -44,13 +46,13 @@ class MediaListRepository @Inject constructor(
     fun getUserMediaList(
         userId: Int,
         mediaType: MediaType,
-        status: MediaListStatus?,
+        statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
         fetchFromNetwork: Boolean = false,
         page: Int?,
         perPage: Int? = 25,
     ) = api
-        .userMediaList(userId, mediaType, status, sort, fetchFromNetwork, page, perPage)
+        .userMediaList(userId, mediaType, statusIn, sort, fetchFromNetwork, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
@@ -60,7 +62,7 @@ class MediaListRepository @Inject constructor(
         entry: BasicMediaListEntry,
         total: Int?
     ): Flow<DataResult<UpdateEntryMutation.SaveMediaListEntry?>> {
-        val newProgress = (entry.progress ?: 0) + 1
+        val newProgress = (entry.progressOrVolumes() ?: 0) + 1
         val totalDuration = total.takeIf { it != 0 }
         val isMaxProgress = totalDuration != null && newProgress >= totalDuration
         val isPlanning = entry.status == MediaListStatus.PLANNING
@@ -73,7 +75,8 @@ class MediaListRepository @Inject constructor(
         }
         return updateEntry(
             mediaId = entry.mediaId,
-            progress = newProgress,
+            progress = newProgress.takeIf { !entry.isUsingVolumeProgress() },
+            progressVolumes = newProgress.takeIf { entry.isUsingVolumeProgress() },
             status = newStatus,
             startedAt = LocalDate.now().takeIf {
                 (!isRepeating || entry.startedAt?.fuzzyDate?.isNull() ?: true) &&

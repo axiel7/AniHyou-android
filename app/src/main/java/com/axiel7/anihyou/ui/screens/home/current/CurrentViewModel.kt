@@ -57,7 +57,7 @@ class CurrentViewModel @Inject constructor(
             mutableUiState.update { it.copy(selectedItem = item, selectedType = type) }
             mediaListRepository.incrementOneProgress(
                 entry = item.basicMediaListEntry,
-                total = item.media?.basicMediaDetails?.duration()
+                total = item.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success && result.data != null) {
@@ -149,7 +149,7 @@ class CurrentViewModel @Inject constructor(
                 mediaListRepository.getUserMediaList(
                     userId = myUserId.first(),
                     mediaType = MediaType.ANIME,
-                    status = MediaListStatus.CURRENT,
+                    statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = null,
@@ -209,7 +209,7 @@ class CurrentViewModel @Inject constructor(
                 mediaListRepository.getUserMediaList(
                     userId = myUserId.first(),
                     mediaType = MediaType.MANGA,
-                    status = MediaListStatus.CURRENT,
+                    statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = 1

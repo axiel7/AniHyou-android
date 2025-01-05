@@ -197,7 +197,7 @@ class UserMediaListViewModel @AssistedInject constructor(
             mutableUiState.update { it.copy(selectedItem = entry) }
             mediaListRepository.incrementOneProgress(
                 entry = entry.basicMediaListEntry,
-                total = entry.media?.basicMediaDetails?.duration()
+                total = entry.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success && result.data != null) {
@@ -355,19 +355,6 @@ class UserMediaListViewModel @AssistedInject constructor(
             }
             .launchIn(viewModelScope)
 
-        // custom lists
-        when (mediaType) {
-            MediaType.ANIME -> defaultPreferencesRepository.animeCustomLists
-            MediaType.MANGA -> defaultPreferencesRepository.mangaCustomLists
-            else -> emptyFlow()
-        }
-            .filterNotNull()
-            .distinctUntilChanged()
-            .onEach { customLists ->
-                mutableUiState.update { it.copy(customLists = customLists) }
-            }
-            .launchIn(viewModelScope)
-
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
@@ -430,6 +417,9 @@ class UserMediaListViewModel @AssistedInject constructor(
                         result.toUiState(
                             loadingWhen = uiState.page == 1
                                     || (uiState.entries.isEmpty() && uiState.hasNextPage)
+                        ).copy(
+                            hasNextPage = if (result is PagedResult.Error) false
+                            else uiState.hasNextPage
                         )
                     }
                 }

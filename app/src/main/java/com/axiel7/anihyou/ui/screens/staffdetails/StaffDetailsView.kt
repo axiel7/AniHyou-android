@@ -90,7 +90,7 @@ private fun StaffDetailsContent(
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             FavoriteIconButton(
-                isFavorite = uiState.details?.isFavourite ?: false,
+                isFavorite = uiState.details?.isFavourite == true,
                 favoritesCount = uiState.details?.favourites ?: 0,
                 onClick = {
                     event?.toggleFavorite()

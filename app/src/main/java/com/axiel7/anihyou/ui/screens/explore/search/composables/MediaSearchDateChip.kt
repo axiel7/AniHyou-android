@@ -1,8 +1,15 @@
 package com.axiel7.anihyou.ui.screens.explore.search.composables
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,27 +19,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.R
 import com.axiel7.anihyou.data.model.base.GenericLocalizable
+import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.utils.DateUtils
 
 @Composable
-fun MediaSearchYearChip(
+fun MediaSearchDateChip(
     startYear: Int?,
     endYear: Int?,
     onStartYearChanged: (Int?) -> Unit,
     onEndYearChanged: (Int?) -> Unit,
+    onSeasonChanged: (MediaSeason?) -> Unit,
 ) {
     val years = remember {
         DateUtils.seasonYears.map { GenericLocalizable(it) }.toTypedArray()
     }
     var openStartDialog by remember { mutableStateOf(false) }
     var openEndDialog by remember { mutableStateOf(false) }
+    var openSeasonMenu by remember { mutableStateOf(false) }
 
     if (openStartDialog || openEndDialog) {
         val year = if (openStartDialog) startYear else endYear
@@ -79,6 +91,38 @@ fun MediaSearchYearChip(
                 Text(text = endYear?.toString() ?: stringResource(R.string.to_year))
             }
         )
+
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .wrapContentSize(Alignment.TopStart)
+        ) {
+            AssistChip(
+                onClick = { openSeasonMenu = !openSeasonMenu },
+                label = { Text(text = stringResource(R.string.season)) },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_drop_down_24),
+                        contentDescription = "dropdown",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            )
+            DropdownMenu(
+                expanded = openSeasonMenu,
+                onDismissRequest = { openSeasonMenu = false }
+            ) {
+                MediaSeason.knownEntries.forEach {
+                    DropdownMenuItem(
+                        text = { Text(text = it.localized()) },
+                        onClick = {
+                            onSeasonChanged(it)
+                            openSeasonMenu = false
+                        },
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -87,11 +131,12 @@ fun MediaSearchYearChip(
 fun MediaSearchYearChipPreview() {
     AniHyouTheme {
         Surface {
-            MediaSearchYearChip(
+            MediaSearchDateChip(
                 startYear = null,
                 endYear = null,
                 onStartYearChanged = {},
-                onEndYearChanged = {}
+                onEndYearChanged = {},
+                onSeasonChanged = {},
             )
         }
     }

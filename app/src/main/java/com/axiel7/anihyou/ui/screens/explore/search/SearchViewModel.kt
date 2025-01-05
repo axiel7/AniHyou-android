@@ -12,6 +12,7 @@ import com.axiel7.anihyou.data.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.data.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.data.repository.SearchRepository
 import com.axiel7.anihyou.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
@@ -98,6 +99,10 @@ class SearchViewModel @Inject constructor(
         it.copy(endYear = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    override fun setSeason(value: MediaSeason?) = mutableUiState.update {
+        it.copy(season = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+
     override fun setOnMyList(value: Boolean?) = mutableUiState.update {
         it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
     }
@@ -128,6 +133,7 @@ class SearchViewModel @Inject constructor(
     override fun clearFilters() = mutableUiState.update {
         it.copy(
             genresAndTagsForSearch = GenresAndTagsForSearch(),
+            genresOrTagsChanged = true,
             selectedMediaFormats = emptyList(),
             selectedMediaStatuses = emptyList(),
             startYear = null,
@@ -136,6 +142,7 @@ class SearchViewModel @Inject constructor(
             isDoujin = null,
             isAdult = null,
             country = null,
+            clearedFilters = true,
             page = 1,
             hasNextPage = true,
             isLoading = true
@@ -177,6 +184,7 @@ class SearchViewModel @Inject constructor(
                         && old.mediaSort == new.mediaSort
                         && old.startYear == new.startYear
                         && old.endYear == new.endYear
+                        && old.season == new.season
                         && old.onMyList == new.onMyList
                         && old.isDoujin == new.isDoujin
                         && old.isAdult == new.isAdult
@@ -216,6 +224,7 @@ class SearchViewModel @Inject constructor(
                             genresOrTagsChanged = false,
                             mediaFormatsChanged = false,
                             mediaStatusesChanged = false,
+                            clearedFilters = false,
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)

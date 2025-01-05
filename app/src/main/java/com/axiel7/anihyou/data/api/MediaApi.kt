@@ -23,6 +23,7 @@ import com.axiel7.anihyou.data.model.media.AnimeSeason
 import com.axiel7.anihyou.data.model.media.CountryOfOrigin
 import com.axiel7.anihyou.type.AiringSort
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.type.MediaSeason
 import com.axiel7.anihyou.type.MediaSort
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
@@ -46,6 +47,7 @@ class MediaApi @Inject constructor(
         statusIn: List<MediaStatus>?,
         startYear: Int?,
         endYear: Int?,
+        season: MediaSeason?,
         onList: Boolean?,
         isLicensed: Boolean?,
         isAdult: Boolean?,
@@ -79,6 +81,7 @@ class MediaApi @Inject constructor(
                 startDateLesser = if (endYear != null)
                     Optional.present(endYear * 10000)
                 else Optional.absent(),
+                season = Optional.presentIfNotNull(season),
                 onList = Optional.presentIfNotNull(onList),
                 isLicensed = Optional.presentIfNotNull(isLicensed),
                 isAdult = Optional.presentIfNotNull(isAdult),

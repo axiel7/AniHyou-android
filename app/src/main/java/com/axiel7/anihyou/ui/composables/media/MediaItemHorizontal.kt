@@ -16,24 +16,63 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.R
+import com.axiel7.anihyou.data.model.media.icon
 import com.axiel7.anihyou.data.model.media.localized
+import com.axiel7.anihyou.data.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.type.MediaFormat
+import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
+
+@Composable
+fun MediaItemHorizontal(
+    title: String,
+    imageUrl: String?,
+    subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
+    subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
+    status: MediaListStatus? = null,
+    topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
+) {
+    val statusStat = remember(status) { status?.asStat() }
+    MediaItemHorizontal(
+        title = title,
+        imageUrl = imageUrl,
+        subtitle1 = subtitle1,
+        subtitle2 = subtitle2,
+        badgeContent = status?.let {
+            {
+                Icon(
+                    painter = painterResource(status.icon()),
+                    contentDescription = status.localized(),
+                    tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                )
+            }
+        },
+        badgeBackgroundColor = statusStat?.primaryColor()
+            ?: MaterialTheme.colorScheme.secondaryContainer,
+        topBadgeContent = topBadgeContent,
+        onClick = onClick,
+        onLongClick = onLongClick,
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +82,9 @@ fun MediaItemHorizontal(
     subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    badgeBackgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
+    topBadgeBackgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -73,7 +114,7 @@ fun MediaItemHorizontal(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .background(badgeBackgroundColor)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     content = badgeContent
@@ -84,7 +125,7 @@ fun MediaItemHorizontal(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .clip(RoundedCornerShape(topStart = 8.dp, bottomEnd = 16.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .background(topBadgeBackgroundColor)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     content = topBadgeContent
@@ -121,9 +162,10 @@ fun MediaItemHorizontal(
     year: Int?,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
-    badgeContent: @Composable (RowScope.() -> Unit)? = null,
+    status: MediaListStatus? = null,
     topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
+    val statusStat = remember(status) { status?.asStat() }
     MediaItemHorizontal(
         title = title,
         imageUrl = imageUrl,
@@ -142,7 +184,17 @@ fun MediaItemHorizontal(
                 fontSize = 15.sp
             )
         },
-        badgeContent = badgeContent,
+        badgeContent = status?.let {
+            {
+                Icon(
+                    painter = painterResource(status.icon()),
+                    contentDescription = status.localized(),
+                    tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                )
+            }
+        },
+        badgeBackgroundColor = statusStat?.primaryColor()
+            ?: MaterialTheme.colorScheme.secondaryContainer,
         topBadgeContent = topBadgeContent,
         onClick = onClick,
         onLongClick = onLongClick,
@@ -200,12 +252,7 @@ fun MediaItemHorizontalPreview() {
                 MediaItemHorizontal(
                     title = "This is a very large anime title that should serve as a preview example",
                     imageUrl = null,
-                    badgeContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.check_circle_24),
-                            contentDescription = ""
-                        )
-                    },
+                    status = MediaListStatus.COMPLETED,
                     topBadgeContent = {
                         Text(text = "#1")
                     },
