@@ -41,7 +41,7 @@ fun MediaSearchDateChip(
     onEndYearChanged: (Int?) -> Unit,
     onSeasonChanged: (MediaSeason?) -> Unit,
 ) {
-    val years = remember {
+    val seasonYears = remember {
         DateUtils.seasonYears.map { GenericLocalizable(it) }.toTypedArray()
     }
     var openStartDialog by remember { mutableStateOf(false) }
@@ -50,6 +50,11 @@ fun MediaSearchDateChip(
 
     if (openStartDialog || openEndDialog) {
         val year = if (openStartDialog) startYear else endYear
+        val years = remember(startYear, openEndDialog) {
+            if (startYear != null && openEndDialog) {
+                seasonYears.filter { it.value >= startYear }.toTypedArray()
+            } else seasonYears
+        }
         DialogWithRadioSelection(
             values = years,
             defaultValue = year?.let { GenericLocalizable(year) },
