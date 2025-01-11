@@ -39,16 +39,18 @@ fun ListSelectSheet(
         )
         uiState.lists.keys.forEach { name ->
             val count = remember(name) { uiState.lists[name]?.size ?: 0 }
-            SelectionSheetItem(
-                name = name.localizedListStatus(),
-                icon = name.asMediaListStatus()?.icon(),
-                count = count,
-                isSelected = uiState.selectedListName == name,
-                onClick = {
-                    onListChanged(name)
-                    onDismiss()
-                }
-            )
+            if (count > 0) {
+                SelectionSheetItem(
+                    name = name.localizedListStatus(),
+                    icon = name.asMediaListStatus()?.icon(),
+                    count = count,
+                    isSelected = uiState.selectedListName == name,
+                    onClick = {
+                        onListChanged(name)
+                        onDismiss()
+                    }
+                )
+            }
         }
     }
 }
