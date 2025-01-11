@@ -37,7 +37,7 @@ fun ListSelectSheet(
                 onDismiss()
             }
         )
-        uiState.lists.keys.forEach { name ->
+        uiState.orderedListNames.forEach { name ->
             val count = remember(name) { uiState.lists[name]?.size ?: 0 }
             if (count > 0) {
                 SelectionSheetItem(

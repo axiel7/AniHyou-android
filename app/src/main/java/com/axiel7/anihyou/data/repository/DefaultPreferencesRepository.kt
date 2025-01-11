@@ -24,6 +24,7 @@ import com.axiel7.anihyou.ui.common.Theme
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.utils.ColorUtils.colorFromHex
 import com.axiel7.anihyou.utils.ColorUtils.hexToString
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -69,6 +70,10 @@ class DefaultPreferencesRepository @Inject constructor(
             it.remove(ADVANCED_SCORING_KEY)
             it.remove(TITLE_LANGUAGE_KEY)
             it.remove(NOTIFICATIONS_ENABLED_KEY)
+            it.remove(ANIME_SECTION_ORDER_KEY)
+            it.remove(ANIME_CUSTOM_LISTS_KEY)
+            it.remove(MANGA_SECTION_ORDER_KEY)
+            it.remove(MANGA_CUSTOM_LISTS_KEY)
         }
     }
 
@@ -118,9 +123,15 @@ class DefaultPreferencesRepository @Inject constructor(
     private fun MutablePreferences.saveUserMediaListOption(options: CommonMediaListOptions) {
         this[SCORE_FORMAT_KEY] = options.scoreFormat?.rawValue ?: ScoreFormat.POINT_10.rawValue
         this[ADVANCED_SCORING_KEY] = options.animeList?.advancedScoringEnabled == true
+        options.animeList?.sectionOrder?.let { sectionOrder ->
+            this[ANIME_SECTION_ORDER_KEY] = sectionOrder.joinToString(",")
+        }
         options.animeList?.customLists?.let { customLists ->
             if (customLists.isNotEmpty())
                 this[ANIME_CUSTOM_LISTS_KEY] = customLists.joinToString(",")
+        }
+        options.mangaList?.sectionOrder?.let { sectionOrder ->
+            this[MANGA_SECTION_ORDER_KEY] = sectionOrder.joinToString(",")
         }
         options.mangaList?.customLists?.let { customLists ->
             if (customLists.isNotEmpty())
@@ -128,7 +139,21 @@ class DefaultPreferencesRepository @Inject constructor(
         }
     }
 
+    val animeSectionOrder = dataStore.getValue(ANIME_SECTION_ORDER_KEY).map {
+        if (it?.isEmpty() == true) emptyList()
+        else it?.split(",")
+    }
+
     val animeCustomLists = dataStore.getValue(ANIME_CUSTOM_LISTS_KEY).map {
+        if (it?.isEmpty() == true) emptyList()
+        else it?.split(",")
+    }
+
+    val animeLists = animeSectionOrder.combine(animeCustomLists) { sectionOrder, customLists ->
+        joinSectionOrderWithCustomLists(sectionOrder.orEmpty(), customLists.orEmpty())
+    }
+
+    val mangaSectionOrder = dataStore.getValue(MANGA_SECTION_ORDER_KEY).map {
         if (it?.isEmpty() == true) emptyList()
         else it?.split(",")
     }
@@ -136,6 +161,23 @@ class DefaultPreferencesRepository @Inject constructor(
     val mangaCustomLists = dataStore.getValue(MANGA_CUSTOM_LISTS_KEY).map {
         if (it?.isEmpty() == true) emptyList()
         else it?.split(",")
+    }
+
+    val mangaLists = mangaSectionOrder.combine(mangaCustomLists) { sectionOrder, customLists ->
+        joinSectionOrderWithCustomLists(sectionOrder.orEmpty(), customLists.orEmpty())
+    }
+
+    // for some reason if the user is using the default order
+    // custom lists aren't included in `sectionOrder`
+    private fun joinSectionOrderWithCustomLists(
+        sectionOrder: List<String>,
+        customLists: List<String>
+    ): List<String> {
+        return if (customLists.isEmpty()) sectionOrder
+        else {
+            if (sectionOrder.containsAll(customLists)) sectionOrder
+            else sectionOrder + customLists
+        }
     }
 
     suspend fun saveAnimeCustomLists(value: List<String>) {
@@ -248,6 +290,8 @@ class DefaultPreferencesRepository @Inject constructor(
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
+        private val ANIME_SECTION_ORDER_KEY = stringPreferencesKey("anime_section_order")
+        private val MANGA_SECTION_ORDER_KEY = stringPreferencesKey("manga_section_order")
         private val ANIME_CUSTOM_LISTS_KEY = stringPreferencesKey("anime_custom_lists")
         private val MANGA_CUSTOM_LISTS_KEY = stringPreferencesKey("manga_custom_lists")
 

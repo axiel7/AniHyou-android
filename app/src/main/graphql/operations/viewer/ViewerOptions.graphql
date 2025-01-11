@@ -16,9 +16,11 @@ fragment CommonMediaListOptions on MediaListOptions {
     scoreFormat
     animeList {
         advancedScoringEnabled # shared between animeList and mangaList
+        sectionOrder
         customLists
     }
     mangaList {
+        sectionOrder
         customLists
     }
 }

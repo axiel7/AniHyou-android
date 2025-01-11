@@ -16,6 +16,7 @@ import com.axiel7.anihyou.ui.common.state.PagedUiState
 data class UserMediaListUiState(
     val mediaType: MediaType,
     val lists: MutableMap<String, List<CommonMediaListEntry>> = mutableMapOf(),
+    val orderedListNames: List<String> = emptyList(),
     val selectedListName: String? = null,
     val entries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val status: MediaListStatus? = null,
