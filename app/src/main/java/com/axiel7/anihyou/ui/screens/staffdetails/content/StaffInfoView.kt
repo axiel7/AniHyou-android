@@ -89,8 +89,8 @@ fun StaffInfoView(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                SelectionContainer {
-                    if (!uiState.details?.name?.native.isNullOrBlank() || uiState.isLoading) {
+                if (!uiState.details?.name?.native.isNullOrBlank() || uiState.isLoading) {
+                    SelectionContainer {
                         Text(
                             text = uiState.details?.name?.native ?: "Loading...",
                             modifier = Modifier
@@ -98,9 +98,11 @@ fun StaffInfoView(
                                 .defaultPlaceholder(visible = uiState.isLoading),
                         )
                     }
-                    if (!uiState.details?.name?.alternative.isNullOrEmpty()) {
+                }
+                if (!uiState.details?.name?.alternative.isNullOrEmpty()) {
+                    SelectionContainer {
                         Text(
-                            text = uiState.details?.name?.alternative?.joinToString().orEmpty(),
+                            text = uiState.details.name.alternative.joinToString(),
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
                     }

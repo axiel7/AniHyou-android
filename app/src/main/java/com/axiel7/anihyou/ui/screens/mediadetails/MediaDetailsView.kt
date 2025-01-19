@@ -169,7 +169,10 @@ private fun MediaDetailsContent(
         CharacterVoiceActorsSheet(
             voiceActors = uiState.selectedCharacterVoiceActors.orEmpty(),
             scope = scope,
-            navigateToStaffDetails = navActionManager::toStaffDetails,
+            navigateToStaffDetails = {
+                event?.hideVoiceActorSheet()
+                navActionManager.toStaffDetails(it)
+            },
             onDismiss = {
                 event?.hideVoiceActorSheet()
             }
@@ -380,8 +383,7 @@ private fun MediaDetailsContent(
                         append(stringResource(R.string.no_description))
                     }
 
-                    else -> uiState.details?.description?.htmlDecoded()?.toAnnotatedString()
-                        ?: buildAnnotatedString { append(stringResource(R.string.no_description)) }
+                    else -> uiState.details.description.htmlDecoded().toAnnotatedString()
                 },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
