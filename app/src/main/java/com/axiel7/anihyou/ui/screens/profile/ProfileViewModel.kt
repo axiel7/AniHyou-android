@@ -13,12 +13,14 @@ import com.axiel7.anihyou.data.repository.UserRepository
 import com.axiel7.anihyou.ui.common.viewmodel.PagedUiStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,48 +40,44 @@ class ProfileViewModel @Inject constructor(
     )
 
     private fun getMyUserInfo() {
-        mutableUiState
-            .filter { it.userInfo == null }
-            .flatMapLatest {
-                userRepository.getMyUserInfo()
-            }
-            .onEach { result ->
-                mutableUiState.update {
-                    if (result is DataResult.Success && result.data != null) {
-                        // refresh user options
-                        defaultPreferencesRepository.saveProfileInfo(result.data)
-                        it.copy(
-                            userInfo = result.data,
-                            isLoading = false
-                        )
-                    } else {
-                        result.toUiState()
+        viewModelScope.launch {
+            userRepository.getMyUserInfo()
+                .collectLatest { result ->
+                    mutableUiState.update {
+                        if (result is DataResult.Success && result.data != null) {
+                            // refresh user options
+                            defaultPreferencesRepository.saveProfileInfo(result.data)
+                            it.copy(
+                                userInfo = result.data,
+                                isLoading = false
+                            )
+                        } else {
+                            result.toUiState()
+                        }
                     }
                 }
-            }
-            .launchIn(viewModelScope)
+        }
     }
 
     private fun getUserInfo(
         userId: Int? = null,
         username: String? = null,
     ) {
-        mutableUiState
-            .filter { it.userInfo == null }
-            .flatMapLatest { userRepository.getUserInfo(userId, username) }
-            .onEach { result ->
-                mutableUiState.update {
-                    if (result is DataResult.Success) {
-                        it.copy(
-                            userInfo = result.data,
-                            isLoading = false,
-                        )
-                    } else {
-                        result.toUiState()
+        viewModelScope.launch {
+            userRepository.getUserInfo(userId, username)
+                .collectLatest { result ->
+                    mutableUiState.update {
+                        if (result is DataResult.Success) {
+                            it.copy(
+                                userInfo = result.data,
+                                isLoading = false,
+                            )
+                        } else {
+                            result.toUiState()
+                        }
                     }
                 }
-            }
-            .launchIn(viewModelScope)
+        }
     }
 
     override fun toggleFollow() {
