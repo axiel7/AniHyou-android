@@ -33,7 +33,7 @@ private val translations = mapOf(
     "zh-Hans" to "hualiong, MareDevi, Andypsl8, bengerlorf",
     "zh-Hant" to "hualiong, jhih_yu_lin, web790709",
     "fr-FR" to "0xybo, mamanamgae, frosqh, Eria78, nesquick",
-    "de-DE" to "LittleFreak, Secresa, MaximilianGT500",
+    "de-DE" to "LittleFreak, Secresa, MaximilianGT500, notsakin",
     "in-ID" to "Clxf12",
     "it-IT" to "maicol07, DomeF",
     "ja-JP" to "axiel7",
