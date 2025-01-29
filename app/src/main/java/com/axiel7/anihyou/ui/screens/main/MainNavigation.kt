@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
@@ -141,29 +143,26 @@ fun MainNavigation(
             end = padding.calculateEndPadding(LocalLayoutDirection.current),
         ),
         enterTransition = {
-            fadeIn() +
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+            fadeIn(
+                animationSpec = tween(220, easing = LinearEasing)
+            ) + slideIntoContainer(
+                animationSpec = tween(220, easing = EaseIn),
+                towards = AnimatedContentTransitionScope.SlideDirection.Start
             )
         },
         exitTransition = {
-            fadeOut() +
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.End,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+            fadeOut(
+                animationSpec = tween(280, easing = LinearEasing)
+            ) + slideOutOfContainer(
+                animationSpec = tween(280, easing = EaseOut),
+                towards = AnimatedContentTransitionScope.SlideDirection.End
             )
         },
         popEnterTransition = {
-            fadeIn()
-        },
-        popExitTransition = {
-            fadeOut() +
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.End,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+            fadeIn(
+                animationSpec = tween(220, easing = LinearEasing)
             )
-        }
+        },
     ) {
         composable<Home>(
             enterTransition = { fadeIn() },
