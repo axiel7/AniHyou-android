@@ -26,7 +26,10 @@ android {
         targetSdk = 35
         versionCode = versionProps.getProperty("code").toInt()
         versionName = versionProps.getProperty("name")
-        setProperty("archivesBaseName", "anihyou-$versionName")
+
+        base {
+            archivesName = "anihyou-$versionName"
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
