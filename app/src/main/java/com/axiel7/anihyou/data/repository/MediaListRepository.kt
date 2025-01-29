@@ -96,8 +96,8 @@ class MediaListRepository @Inject constructor(
         advancedScores: Collection<Double>? = null,
         progress: Int? = null,
         progressVolumes: Int? = null,
-        startedAt: FuzzyDate? = null,
-        completedAt: FuzzyDate? = null,
+        startedAt: FuzzyDate? = oldEntry?.startedAt?.fuzzyDate,
+        completedAt: FuzzyDate? = oldEntry?.completedAt?.fuzzyDate,
         repeat: Int? = null,
         private: Boolean? = null,
         hiddenFromStatusLists: Boolean? = null,
@@ -112,11 +112,8 @@ class MediaListRepository @Inject constructor(
                 .takeIf { oldEntry?.advancedScoresMap()?.values != advancedScores },
             progress = progress.takeIf { progress != oldEntry?.progress },
             progressVolumes = progressVolumes.takeIf { progressVolumes != oldEntry?.progressVolumes },
-            startedAt =
-            startedAt?.toFuzzyDateInput().takeIf { startedAt != oldEntry?.startedAt?.fuzzyDate },
-            completedAt =
-            completedAt?.toFuzzyDateInput()
-                .takeIf { completedAt != oldEntry?.completedAt?.fuzzyDate },
+            startedAt = startedAt?.toFuzzyDateInput(),
+            completedAt = completedAt?.toFuzzyDateInput(),
             repeat = repeat.takeIf { repeat != oldEntry?.repeat },
             private = private.takeIf { private != oldEntry?.private },
             hiddenFromStatusLists = hiddenFromStatusLists
