@@ -29,29 +29,30 @@ android {
         setProperty("archivesBaseName", "anihyou-$versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations.addAll(
-            listOf(
-                "en",
-                "ja-rJP",
-                "ru-rRU",
-                "es-rES",
-                "tr-rTR",
-                "pt-rBR",
-                "ar-rSA",
-                "in-rID",
-                "it-rIT",
-                "uk-rUA",
-                "pl-rPL",
-                "az-rAZ",
-                "de-rDE",
-                "zh-rCN",
-                "zh-rTW",
-                "fr-rFR"
-            )
-        )
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    androidResources {
+        localeFilters += listOf(
+            "en",
+            "ja-rJP",
+            "ru-rRU",
+            "es-rES",
+            "tr-rTR",
+            "pt-rBR",
+            "ar-rSA",
+            "in-rID",
+            "it-rIT",
+            "uk-rUA",
+            "pl-rPL",
+            "az-rAZ",
+            "de-rDE",
+            "zh-rCN",
+            "zh-rTW",
+            "fr-rFR"
+        )
     }
 
     buildTypes {
