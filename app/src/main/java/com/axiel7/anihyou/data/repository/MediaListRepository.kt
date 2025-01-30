@@ -79,11 +79,11 @@ class MediaListRepository @Inject constructor(
             progressVolumes = newProgress.takeIf { entry.isUsingVolumeProgress() },
             status = newStatus,
             startedAt = LocalDate.now().takeIf {
-                (!isRepeating || entry.startedAt?.fuzzyDate?.isNull() ?: true) &&
+                (!isRepeating || entry.startedAt?.fuzzyDate?.isNull() != false) &&
                 (isPlanning || !entry.progress.isGreaterThanZero())
             }?.toFuzzyDate(),
             completedAt = LocalDate.now().takeIf {
-                (!isRepeating || entry.completedAt?.fuzzyDate?.isNull() ?: true) && isMaxProgress
+                (!isRepeating || entry.completedAt?.fuzzyDate?.isNull() != false) && isMaxProgress
             }?.toFuzzyDate(),
         )
     }
