@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.axiel7.anihyou.baselineprofile"
-    compileSdk = 34
+    compileSdk = 35
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
