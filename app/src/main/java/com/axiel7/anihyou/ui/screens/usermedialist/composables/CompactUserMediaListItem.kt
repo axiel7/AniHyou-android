@@ -10,9 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +35,7 @@ import com.axiel7.anihyou.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.composables.media.ListStatusBadgeIndicator
-import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
+import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.ui.theme.AniHyouTheme
@@ -65,15 +64,17 @@ fun CompactUserMediaListItem(
         Row(
             modifier = Modifier.height(IntrinsicSize.Max)
         ) {
-            Box {
+            Box(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
                     showShadow = false,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .heightIn(min = MEDIA_POSTER_SMALL_WIDTH.dp)
-                        .fillMaxHeight()
-                        .width(MEDIA_POSTER_SMALL_WIDTH.dp)
+                    modifier = Modifier.size(
+                        width = MEDIA_POSTER_COMPACT_WIDTH.dp,
+                        height = (MEDIA_POSTER_COMPACT_WIDTH + 8).dp
+                    )
                 )
 
                 if (listStatus == null && status != null) {
