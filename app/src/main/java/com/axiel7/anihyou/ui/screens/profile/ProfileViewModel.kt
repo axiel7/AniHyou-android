@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -34,6 +35,8 @@ class ProfileViewModel @Inject constructor(
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
     private val arguments = runCatching { savedStateHandle.toRoute<UserDetails>() }.getOrNull()
+
+    private val myUserId = defaultPreferencesRepository.userId
 
     override val initialState = ProfileUiState(
         isMyProfile = arguments == null || (arguments.id == null && arguments.userName == null),
@@ -70,6 +73,7 @@ class ProfileViewModel @Inject constructor(
                         if (result is DataResult.Success) {
                             it.copy(
                                 userInfo = result.data,
+                                isMyProfile = result.data?.id == myUserId.first(),
                                 isLoading = false,
                             )
                         } else {
