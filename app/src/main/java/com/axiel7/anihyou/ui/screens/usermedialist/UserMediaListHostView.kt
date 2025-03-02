@@ -168,7 +168,7 @@ private fun UserMediaListHostContent(
         modifier = modifier,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = isFabVisible,
+                visible = isFabVisible && uiState.orderedListNames.isNotEmpty(),
                 modifier = Modifier.sizeIn(minWidth = 80.dp, minHeight = 56.dp),
                 enter = slideInVertically(initialOffsetY = { it * 2 }),
                 exit = slideOutVertically(targetOffsetY = { it * 2 }),
