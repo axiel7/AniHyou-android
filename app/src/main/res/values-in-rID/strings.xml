@@ -600,9 +600,9 @@
     <string name="female">Wanita</string>
     <string name="non_binary">Non-biner</string>
     <string name="watched_episode_of">Menonton episode %1$s dari %2$s</string>
-    <string name="rewatched_episode_of">Tonton ulang episode %1$s dari %2$s</string>
+    <string name="rewatched_episode_of">Ditonton ulang episode %1$s dari %2$s</string>
     <string name="read_chapter_of">Baca chapter %1$s dari %2$s</string>
-    <string name="reread_chapter_of">Baca ulang chapter %1$s dari %2$s</string>
+    <string name="reread_chapter_of">Dibaca ulang chapter %1$s dari %2$s</string>
     <string name="plans_to_watch_anime">Rencana untuk Ditonton %s</string>
     <string name="plans_to_read_manga">Rencana untuk Dibaca %s</string>
     <string name="completed_media">Selesai %s</string>
