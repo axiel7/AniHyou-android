@@ -47,6 +47,8 @@ import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.ui.screens.home.Home
 import com.axiel7.anihyou.ui.screens.home.HomeTab
 import com.axiel7.anihyou.ui.screens.home.HomeView
+import com.axiel7.anihyou.ui.screens.home.current.fulllist.CurrentFullList
+import com.axiel7.anihyou.ui.screens.home.current.fulllist.CurrentFullListView
 import com.axiel7.anihyou.ui.screens.login.LoginView
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
@@ -400,6 +402,13 @@ fun MainNavigation(
         composable<MediaActivity> {
             MediaActivityView(
                 navActionManager = navActionManager
+            )
+        }
+
+        composable<CurrentFullList> {
+            CurrentFullListView(
+                listType = it.toRoute<CurrentFullList>().listType,
+                navActionManager = navActionManager,
             )
         }
     }

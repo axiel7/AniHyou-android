@@ -19,7 +19,7 @@ data class CurrentUiState(
     val animeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val mangaList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val selectedItem: CommonMediaListEntry? = null,
-    val selectedType: ListType? = null,
+    val selectedType: CurrentListType? = null,
     val openSetScoreDialog: Boolean = false,
     val isLoadingPlusOne: Boolean = false,
     val fetchFromNetwork: Boolean = false,
@@ -38,21 +38,4 @@ data class CurrentUiState(
     private val hasManga get() = mangaList.isNotEmpty()
 
     val hasNothing get() = !hasAiring && !hasBehind && !hasAnime && !hasManga
-
-    companion object {
-        enum class ListType: Localizable {
-            AIRING,
-            BEHIND,
-            ANIME,
-            MANGA;
-
-            @Composable
-            override fun localized() = when (this) {
-                AIRING -> stringResource(R.string.airing)
-                BEHIND -> stringResource(R.string.anime_behind)
-                ANIME -> stringResource(R.string.watching)
-                MANGA -> stringResource(R.string.reading)
-            }
-        }
-    }
 }

@@ -19,6 +19,8 @@ import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetails
 import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
 import com.axiel7.anihyou.ui.screens.explore.search.Search
 import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
+import com.axiel7.anihyou.ui.screens.home.current.CurrentListType
+import com.axiel7.anihyou.ui.screens.home.current.fulllist.CurrentFullList
 import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
 import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivity
 import com.axiel7.anihyou.ui.screens.notifications.Notifications
@@ -123,6 +125,10 @@ class NavActionManager(
 
     fun toCalendar() {
         navController.navigate(Calendar)
+    }
+
+    fun toCurrentFullList(listType: CurrentListType) {
+        navController.navigate(CurrentFullList(listType = listType))
     }
 
     fun toExplore(mediaType: MediaType, mediaSort: MediaSort) {

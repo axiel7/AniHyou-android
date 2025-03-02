@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -43,10 +44,6 @@ import com.axiel7.anihyou.type.ScoreFormat
 import com.axiel7.anihyou.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.AIRING
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.ANIME
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.BEHIND
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.MANGA
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.ui.screens.home.current.composables.CurrentListItemPlaceholder
 import com.axiel7.anihyou.ui.screens.mediadetails.edit.EditMediaSheet
@@ -114,17 +111,17 @@ private fun CurrentContent(
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 16.dp)
         ) {
-            CurrentUiState.Companion.ListType.entries.forEach { type ->
+            CurrentListType.entries.forEach { type ->
                 val list = when (type) {
-                    AIRING -> uiState.airingList
-                    BEHIND -> uiState.behindList
-                    ANIME -> uiState.animeList
-                    MANGA -> uiState.mangaList
+                    CurrentListType.AIRING -> uiState.airingList
+                    CurrentListType.BEHIND -> uiState.behindList
+                    CurrentListType.ANIME -> uiState.animeList
+                    CurrentListType.MANGA -> uiState.mangaList
                 }
                 if (list.isNotEmpty()) {
                     HorizontalListHeader(
                         text = type.localized(),
-                        onClick = { /*TODO*/ }
+                        onClick = { navActionManager.toCurrentFullList(type) }
                     )
 
                     CurrentLazyGrid(
@@ -189,6 +186,7 @@ private fun CurrentLazyGrid(
             contentType = { it }
         ) { item ->
             CurrentListItem(
+                modifier = Modifier.width(350.dp),
                 item = item,
                 scoreFormat = scoreFormat,
                 isPlusEnabled = isPlusEnabled,

@@ -16,10 +16,6 @@ import com.axiel7.anihyou.type.MediaListStatus
 import com.axiel7.anihyou.type.MediaStatus
 import com.axiel7.anihyou.type.MediaType
 import com.axiel7.anihyou.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.AIRING
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.ANIME
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.BEHIND
-import com.axiel7.anihyou.ui.screens.home.current.CurrentUiState.Companion.ListType.MANGA
 import com.axiel7.anihyou.utils.NumberUtils.isNullOrZero
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +47,7 @@ class CurrentViewModel @Inject constructor(
 
     override fun onClickPlusOne(
         item: CommonMediaListEntry,
-        type: CurrentUiState.Companion.ListType
+        type: CurrentListType
     ) {
         viewModelScope.launch {
             mutableUiState.update {
@@ -77,16 +73,16 @@ class CurrentViewModel @Inject constructor(
 
     override fun onUpdateListEntry(
         newListEntry: BasicMediaListEntry?,
-        type: CurrentUiState.Companion.ListType
+        type: CurrentListType
     ) {
         mutableUiState.value.run {
             selectedItem?.let { selectedItem ->
                 if (selectedItem.basicMediaListEntry != newListEntry) {
                     val list = when (type) {
-                        AIRING -> airingList
-                        BEHIND -> behindList
-                        ANIME -> animeList
-                        MANGA -> mangaList
+                        CurrentListType.AIRING -> airingList
+                        CurrentListType.BEHIND -> behindList
+                        CurrentListType.ANIME -> animeList
+                        CurrentListType.MANGA -> mangaList
                     }
                     if (newListEntry != null) {
                         list.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }
@@ -102,7 +98,7 @@ class CurrentViewModel @Inject constructor(
                                 } else {
                                     list[index] = oldValue.copy(basicMediaListEntry = newListEntry)
                                 }
-                                if (type == BEHIND
+                                if (type == CurrentListType.BEHIND
                                     && !newListEntry.isBehind(oldValue.media?.nextAiringEpisode?.episode ?: 0)
                                 ) {
                                     airingList.add(list[index])
@@ -117,7 +113,7 @@ class CurrentViewModel @Inject constructor(
         }
     }
 
-    override fun selectItem(item: CommonMediaListEntry, type: CurrentUiState.Companion.ListType) {
+    override fun selectItem(item: CommonMediaListEntry, type: CurrentListType) {
         mutableUiState.update { it.copy(selectedItem = item, selectedType = type) }
     }
 

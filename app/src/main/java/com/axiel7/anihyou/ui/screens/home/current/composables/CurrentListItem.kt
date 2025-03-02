@@ -47,6 +47,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CurrentListItem(
+    modifier: Modifier = Modifier,
     item: CommonMediaListEntry,
     scoreFormat: ScoreFormat,
     isPlusEnabled: Boolean,
@@ -55,8 +56,7 @@ fun CurrentListItem(
     onClickPlus: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .width(350.dp)
+        modifier = modifier
             .height(IntrinsicSize.Max)
             .padding(start = 16.dp, end = 0.dp, top = 8.dp, bottom = 8.dp)
             .clip(RoundedCornerShape(8.dp))

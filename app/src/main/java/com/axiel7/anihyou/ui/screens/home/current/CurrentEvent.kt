@@ -6,14 +6,14 @@ import com.axiel7.anihyou.fragment.CommonMediaListEntry
 interface CurrentEvent {
     fun refresh()
 
-    fun onClickPlusOne(item: CommonMediaListEntry, type: CurrentUiState.Companion.ListType)
+    fun onClickPlusOne(item: CommonMediaListEntry, type: CurrentListType)
 
     fun onUpdateListEntry(
         newListEntry: BasicMediaListEntry?,
-        type: CurrentUiState.Companion.ListType
+        type: CurrentListType
     )
 
-    fun selectItem(item: CommonMediaListEntry, type: CurrentUiState.Companion.ListType)
+    fun selectItem(item: CommonMediaListEntry, type: CurrentListType)
 
     fun toggleSetScoreDialog(open: Boolean)
 
