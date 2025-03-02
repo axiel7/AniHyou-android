@@ -54,7 +54,13 @@ class CurrentViewModel @Inject constructor(
         type: CurrentUiState.Companion.ListType
     ) {
         viewModelScope.launch {
-            mutableUiState.update { it.copy(selectedItem = item, selectedType = type) }
+            mutableUiState.update {
+                it.copy(
+                    selectedItem = item,
+                    selectedType = type,
+                    isLoadingPlusOne = true
+                )
+            }
             mediaListRepository.incrementOneProgress(
                 entry = item.basicMediaListEntry,
                 total = item.duration()
@@ -63,7 +69,7 @@ class CurrentViewModel @Inject constructor(
                     if (result is DataResult.Success && result.data != null) {
                         onUpdateListEntry(result.data.basicMediaListEntry, type)
                     }
-                    result.toUiState()
+                    result.toUiState().copy(isLoadingPlusOne = result is DataResult.Loading)
                 }
             }
         }

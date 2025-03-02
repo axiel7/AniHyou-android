@@ -49,6 +49,7 @@ import com.axiel7.anihyou.utils.NumberUtils.isGreaterThanZero
 fun CurrentListItem(
     item: CommonMediaListEntry,
     scoreFormat: ScoreFormat,
+    isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -114,7 +115,10 @@ fun CurrentListItem(
                     fontSize = 15.sp,
                 )
 
-                FilledTonalButton(onClick = onClickPlus) {
+                FilledTonalButton(
+                    onClick = onClickPlus,
+                    enabled = isPlusEnabled,
+                ) {
                     Text(text = stringResource(R.string.plus_one))
                 }
             }//:Row
@@ -178,6 +182,7 @@ fun CurrentListItemPreview() {
                 CurrentListItem(
                     item = exampleCommonMediaListEntry,
                     scoreFormat = ScoreFormat.POINT_10_DECIMAL,
+                    isPlusEnabled = true,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

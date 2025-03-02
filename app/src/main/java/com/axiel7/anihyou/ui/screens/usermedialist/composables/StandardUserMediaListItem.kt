@@ -55,6 +55,7 @@ fun StandardUserMediaListItem(
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
+    isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -146,7 +147,10 @@ fun StandardUserMediaListItem(
                                 )
                             }
                             if (isMyList && status?.isActive() == true) {
-                                FilledTonalButton(onClick = onClickPlus) {
+                                FilledTonalButton(
+                                    onClick = onClickPlus,
+                                    enabled = isPlusEnabled,
+                                ) {
                                     Text(text = stringResource(R.string.plus_one))
                                 }
                             }
@@ -182,6 +186,7 @@ fun StandardUserMediaListItemPreview() {
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },
@@ -197,6 +202,7 @@ fun StandardUserMediaListItemPreview() {
                     listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },

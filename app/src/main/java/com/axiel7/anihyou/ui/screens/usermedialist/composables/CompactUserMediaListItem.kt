@@ -49,6 +49,7 @@ fun CompactUserMediaListItem(
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
+    isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -143,7 +144,10 @@ fun CompactUserMediaListItem(
                         if (isMyList && (status == MediaListStatus.CURRENT
                                     || status == MediaListStatus.REPEATING)
                         ) {
-                            FilledTonalButton(onClick = onClickPlus) {
+                            FilledTonalButton(
+                                onClick = onClickPlus,
+                                enabled = isPlusEnabled,
+                            ) {
                                 Text(text = stringResource(R.string.plus_one))
                             }
                         }
@@ -168,6 +172,7 @@ fun CompactUserMediaListItemPreview() {
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },
@@ -183,6 +188,7 @@ fun CompactUserMediaListItemPreview() {
                     listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },

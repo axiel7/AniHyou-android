@@ -49,6 +49,7 @@ fun MinimalUserMediaListItem(
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
+    isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: () -> Unit,
@@ -125,7 +126,10 @@ fun MinimalUserMediaListItem(
             if (isMyList && (status == MediaListStatus.CURRENT
                         || status == MediaListStatus.REPEATING)
             ) {
-                FilledTonalButton(onClick = onClickPlus) {
+                FilledTonalButton(
+                    onClick = onClickPlus,
+                    enabled = isPlusEnabled,
+                ) {
                     Text(text = stringResource(R.string.plus_one))
                 }
             }
@@ -147,6 +151,7 @@ fun MinimalUserMediaListItemPreview() {
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },
@@ -162,6 +167,7 @@ fun MinimalUserMediaListItemPreview() {
                     listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
+                    isPlusEnabled = true,
                     onClick = { },
                     onLongClick = { },
                     onClickPlus = { },

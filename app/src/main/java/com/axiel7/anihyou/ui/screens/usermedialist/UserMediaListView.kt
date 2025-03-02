@@ -70,8 +70,10 @@ fun UserMediaListView(
     }
 
     val onClickPlus: (CommonMediaListEntry) -> Unit = {
-        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-        event?.onClickPlusOne(it)
+        if (!uiState.isLoadingPlusOne) {
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            event?.onClickPlusOne(it)
+        }
     }
 
     PullToRefreshBox(
@@ -224,6 +226,7 @@ private fun LazyListTablet(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },
@@ -247,6 +250,7 @@ private fun LazyListTablet(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },
@@ -270,6 +274,7 @@ private fun LazyListTablet(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },
@@ -337,6 +342,7 @@ private fun LazyListPhone(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },
@@ -360,6 +366,7 @@ private fun LazyListPhone(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },
@@ -383,6 +390,7 @@ private fun LazyListPhone(
                         listStatus = uiState.status,
                         scoreFormat = uiState.scoreFormat,
                         isMyList = uiState.isMyList,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
                         onClickPlus = { onClickPlus(item) },

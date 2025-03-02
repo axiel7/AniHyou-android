@@ -194,7 +194,7 @@ class UserMediaListViewModel @AssistedInject constructor(
 
     override fun onClickPlusOne(entry: CommonMediaListEntry) {
         viewModelScope.launch {
-            mutableUiState.update { it.copy(selectedItem = entry) }
+            mutableUiState.update { it.copy(selectedItem = entry, isLoadingPlusOne = true) }
             mediaListRepository.incrementOneProgress(
                 entry = entry.basicMediaListEntry,
                 total = entry.duration()
@@ -203,7 +203,7 @@ class UserMediaListViewModel @AssistedInject constructor(
                     if (result is DataResult.Success && result.data != null) {
                         onUpdateListEntry(result.data.basicMediaListEntry)
                     }
-                    result.toUiState()
+                    result.toUiState().copy(isLoadingPlusOne = result is DataResult.Loading)
                 }
             }
         }

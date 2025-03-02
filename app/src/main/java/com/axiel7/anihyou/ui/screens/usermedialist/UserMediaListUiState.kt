@@ -34,6 +34,7 @@ data class UserMediaListUiState(
     val openSetScoreDialog: Boolean = false,
     val plannedEntriesIds: List<Int> = emptyList(),
     val randomEntryId: Int? = null,
+    val isLoadingPlusOne: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,

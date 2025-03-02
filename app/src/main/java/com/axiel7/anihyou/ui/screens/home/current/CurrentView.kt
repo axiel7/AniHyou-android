@@ -131,10 +131,13 @@ private fun CurrentContent(
                         items = list,
                         scoreFormat = uiState.scoreFormat,
                         isLoading = uiState.isLoading,
+                        isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(it.mediaId) },
                         onClickPlus = {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            event?.onClickPlusOne(it, type)
+                            if (!uiState.isLoadingPlusOne) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                event?.onClickPlusOne(it, type)
+                            }
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -161,6 +164,7 @@ private fun CurrentLazyGrid(
     items: List<CommonMediaListEntry>,
     scoreFormat: ScoreFormat,
     isLoading: Boolean,
+    isPlusEnabled: Boolean,
     onClick: (CommonMediaListEntry) -> Unit,
     onLongClick: (CommonMediaListEntry) -> Unit,
     onClickPlus: (CommonMediaListEntry) -> Unit,
@@ -187,6 +191,7 @@ private fun CurrentLazyGrid(
             CurrentListItem(
                 item = item,
                 scoreFormat = scoreFormat,
+                isPlusEnabled = isPlusEnabled,
                 onClick = { onClick(item) },
                 onLongClick = { onLongClick(item) },
                 onClickPlus = { onClickPlus(item) },
