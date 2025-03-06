@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.37.2"
-agp = "8.8.2"
+agp = "8.9.0"
 androidHilt = "1.2.0"
 apollo = "4.1.1"
 appcompat = "1.7.0"
