@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose)
-    //alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.androidx.baselineprofile)
 }
 
@@ -154,16 +153,10 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
 
-    //implementation(libs.androidx.lifecycle.runtime.compose)
-    //implementation(libs.androidx.lifecycle.viewmodel.savedstate)
-
-    //implementation(libs.androidx.datastore.preferences)
-    //implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.core.splashscreen)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
-    //implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
     implementation(libs.androidx.material3)
@@ -173,24 +166,14 @@ dependencies {
 
     implementation(libs.accompanist.permissions)
 
-    //implementation(libs.material.kolor)
-
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
     implementation(libs.coil.network.okhttp)
-
-    //implementation(libs.apollo.normalized.cache)
-
-    //implementation(libs.compose.markdown)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.compose)
     implementation(libs.koin.workmanager)
     implementation(libs.koin.startup)
-
-    //implementation(libs.kotlinx.coroutines.core)
-    //implementation(libs.kotlinx.coroutines.android)
-    //implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
