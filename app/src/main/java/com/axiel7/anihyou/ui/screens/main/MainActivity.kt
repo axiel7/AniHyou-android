@@ -6,7 +6,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
@@ -38,25 +37,25 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.axiel7.anihyou.common.firstBlocking
-import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.isBottomDestination
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationIndex
-import com.axiel7.anihyou.ui.common.Theme
-import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.screens.home.HomeTab
+import com.axiel7.anihyou.core.common.extensions.firstBlocking
+import com.axiel7.anihyou.core.model.DeepLink
+import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.resources.dark_scrim
+import com.axiel7.anihyou.core.resources.light_scrim
+import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.isBottomDestination
+import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationIndex
+import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
-import com.axiel7.anihyou.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.ui.theme.dark_scrim
-import com.axiel7.anihyou.ui.theme.light_scrim
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
+import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -77,51 +76,53 @@ class MainActivity : AppCompatActivity() {
         val tabToOpen = intent.action?.toBottomDestinationIndex() ?: startTab
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
-            val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
-            val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
-            else theme == Theme.DARK
-            val useBlackColors by viewModel.useBlackColors.collectAsStateWithLifecycle(
-                initialValue = initialUseBlackColors
-            )
-            val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
-            val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
-                initialValue = initialAppColorMode
-            )
-            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
-
-            DisposableEffect(isDark) {
-                enableEdgeToEdge(
-                    statusBarStyle = SystemBarStyle.auto(
-                        android.graphics.Color.TRANSPARENT,
-                        android.graphics.Color.TRANSPARENT,
-                    ) { isDark },
-                    navigationBarStyle = SystemBarStyle.auto(
-                        light_scrim.toArgb(),
-                        dark_scrim.toArgb(),
-                    ) { isDark },
+            KoinAndroidContext {
+                val windowSizeClass = calculateWindowSizeClass(this)
+                val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
+                val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+                else theme == Theme.DARK
+                val useBlackColors by viewModel.useBlackColors.collectAsStateWithLifecycle(
+                    initialValue = initialUseBlackColors
                 )
-                onDispose {}
-            }
+                val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
+                val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
+                    initialValue = initialAppColorMode
+                )
+                val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
-            AniHyouTheme(
-                darkTheme = isDark,
-                blackColors = useBlackColors,
-                appColor = appColor,
-                appColorMode = appColorMode,
-            ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainView(
-                        windowSizeClass = windowSizeClass,
-                        isLoggedIn = isLoggedIn,
-                        tabToOpen = tabToOpen,
-                        event = viewModel,
-                        homeTab = homeTab,
-                        deepLink = deepLink,
+                DisposableEffect(isDark) {
+                    enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.auto(
+                            android.graphics.Color.TRANSPARENT,
+                            android.graphics.Color.TRANSPARENT,
+                        ) { isDark },
+                        navigationBarStyle = SystemBarStyle.auto(
+                            light_scrim.toArgb(),
+                            dark_scrim.toArgb(),
+                        ) { isDark },
                     )
+                    onDispose {}
+                }
+
+                AniHyouTheme(
+                    darkTheme = isDark,
+                    blackColors = useBlackColors,
+                    appColor = appColor,
+                    appColorMode = appColorMode,
+                ) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        MainView(
+                            windowSizeClass = windowSizeClass,
+                            isLoggedIn = isLoggedIn,
+                            tabToOpen = tabToOpen,
+                            event = viewModel,
+                            homeTab = homeTab,
+                            deepLink = deepLink,
+                        )
+                    }
                 }
             }
         }

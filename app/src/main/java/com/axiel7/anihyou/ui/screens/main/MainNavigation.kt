@@ -22,65 +22,39 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.axiel7.anihyou.data.model.DeepLink
-import com.axiel7.anihyou.type.MediaType
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.toBottomDestinationRoute
-import com.axiel7.anihyou.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.ui.composables.FullScreenImage
-import com.axiel7.anihyou.ui.composables.FullScreenImageView
-import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetails
-import com.axiel7.anihyou.ui.screens.activitydetails.ActivityDetailsView
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivity
-import com.axiel7.anihyou.ui.screens.activitydetails.publish.PublishActivityView
-import com.axiel7.anihyou.ui.screens.calendar.Calendar
-import com.axiel7.anihyou.ui.screens.calendar.CalendarView
-import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetails
-import com.axiel7.anihyou.ui.screens.characterdetails.CharacterDetailsView
-import com.axiel7.anihyou.ui.screens.explore.Explore
-import com.axiel7.anihyou.ui.screens.explore.ExploreView
-import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartList
-import com.axiel7.anihyou.ui.screens.explore.charts.MediaChartListView
-import com.axiel7.anihyou.ui.screens.explore.search.Search
-import com.axiel7.anihyou.ui.screens.explore.search.SearchView
-import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnime
-import com.axiel7.anihyou.ui.screens.explore.season.SeasonAnimeView
-import com.axiel7.anihyou.ui.screens.home.Home
-import com.axiel7.anihyou.ui.screens.home.HomeTab
-import com.axiel7.anihyou.ui.screens.home.HomeView
-import com.axiel7.anihyou.ui.screens.home.current.fulllist.CurrentFullList
-import com.axiel7.anihyou.ui.screens.home.current.fulllist.CurrentFullListView
-import com.axiel7.anihyou.ui.screens.login.LoginView
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetails
-import com.axiel7.anihyou.ui.screens.mediadetails.MediaDetailsView
-import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivity
-import com.axiel7.anihyou.ui.screens.mediadetails.activity.MediaActivityView
-import com.axiel7.anihyou.ui.screens.notifications.Notifications
-import com.axiel7.anihyou.ui.screens.notifications.NotificationsView
-import com.axiel7.anihyou.ui.screens.profile.Profile
-import com.axiel7.anihyou.ui.screens.profile.ProfileView
-import com.axiel7.anihyou.ui.screens.profile.UserDetails
-import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetails
-import com.axiel7.anihyou.ui.screens.reviewdetails.ReviewDetailsView
-import com.axiel7.anihyou.ui.screens.settings.Settings
-import com.axiel7.anihyou.ui.screens.settings.SettingsView
-import com.axiel7.anihyou.ui.screens.settings.Translations
-import com.axiel7.anihyou.ui.screens.settings.TranslationsView
-import com.axiel7.anihyou.ui.screens.settings.customlists.CustomLists
-import com.axiel7.anihyou.ui.screens.settings.customlists.CustomListsView
-import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettings
-import com.axiel7.anihyou.ui.screens.settings.liststyle.ListStyleSettingsView
-import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetails
-import com.axiel7.anihyou.ui.screens.staffdetails.StaffDetailsView
-import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetails
-import com.axiel7.anihyou.ui.screens.studiodetails.StudioDetailsView
-import com.axiel7.anihyou.ui.screens.thread.ThreadDetails
-import com.axiel7.anihyou.ui.screens.thread.ThreadDetailsView
-import com.axiel7.anihyou.ui.screens.thread.publish.PublishComment
-import com.axiel7.anihyou.ui.screens.thread.publish.PublishCommentView
-import com.axiel7.anihyou.ui.screens.usermedialist.AnimeTab
-import com.axiel7.anihyou.ui.screens.usermedialist.MangaTab
-import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaList
-import com.axiel7.anihyou.ui.screens.usermedialist.UserMediaListHostView
+import com.axiel7.anihyou.core.model.DeepLink
+import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.ui.common.BottomDestination
+import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.composables.FullScreenImageView
+import com.axiel7.anihyou.feature.activitydetails.ActivityDetailsView
+import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityView
+import com.axiel7.anihyou.feature.calendar.CalendarView
+import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsView
+import com.axiel7.anihyou.feature.explore.ExploreView
+import com.axiel7.anihyou.feature.explore.charts.MediaChartListView
+import com.axiel7.anihyou.feature.explore.search.SearchView
+import com.axiel7.anihyou.feature.explore.season.SeasonAnimeView
+import com.axiel7.anihyou.feature.home.HomeView
+import com.axiel7.anihyou.feature.home.current.fulllist.CurrentFullListView
+import com.axiel7.anihyou.feature.login.LoginView
+import com.axiel7.anihyou.feature.mediadetails.MediaDetailsView
+import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityView
+import com.axiel7.anihyou.feature.notifications.NotificationsView
+import com.axiel7.anihyou.feature.profile.ProfileView
+import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsView
+import com.axiel7.anihyou.feature.settings.SettingsView
+import com.axiel7.anihyou.feature.settings.TranslationsView
+import com.axiel7.anihyou.feature.settings.customlists.CustomListsView
+import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsView
+import com.axiel7.anihyou.feature.staffdetails.StaffDetailsView
+import com.axiel7.anihyou.feature.studiodetails.StudioDetailsView
+import com.axiel7.anihyou.feature.thread.ThreadDetailsView
+import com.axiel7.anihyou.feature.thread.publish.PublishCommentView
+import com.axiel7.anihyou.feature.usermedialist.UserMediaListHostView
 
 @Composable
 fun MainNavigation(
@@ -129,6 +103,7 @@ fun MainNavigation(
                 DeepLink.Type.THREAD -> {
                     deepLink.id.toIntOrNull()?.let { navActionManager.toThreadDetails(it) }
                 }
+
                 DeepLink.Type.ACTIVITY -> {
                     deepLink.id.toIntOrNull()?.let { navActionManager.toActivityDetails(it) }
                 }
@@ -138,7 +113,7 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = tabToOpen.toBottomDestinationRoute() ?: Home,
+        startDestination = tabToOpen.toBottomDestinationRoute() ?: BottomDestination.Home,
         modifier = Modifier.padding(
             start = padding.calculateStartPadding(LocalLayoutDirection.current),
             top = padding.calculateTopPadding(),
@@ -166,7 +141,7 @@ fun MainNavigation(
             )
         },
     ) {
-        composable<Home>(
+        composable<Routes.Home>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -182,7 +157,7 @@ fun MainNavigation(
             )
         }
 
-        composable<AnimeTab>(
+        composable<Routes.AnimeTab>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -200,7 +175,7 @@ fun MainNavigation(
             }
         }
 
-        composable<MangaTab>(
+        composable<Routes.MangaTab>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -218,7 +193,7 @@ fun MainNavigation(
             }
         }
 
-        composable<Profile>(
+        composable<Routes.Profile>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -237,7 +212,7 @@ fun MainNavigation(
             }
         }
 
-        composable<Explore>(
+        composable<Routes.Explore>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -249,14 +224,14 @@ fun MainNavigation(
             )
         }
 
-        composable<UserDetails> {
+        composable<Routes.UserDetails> {
             ProfileView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<UserMediaList> {
-            val arguments = it.toRoute<UserMediaList>()
+        composable<Routes.UserMediaList> {
+            val arguments = it.toRoute<Routes.UserMediaList>()
             UserMediaListHostView(
                 mediaType = MediaType.safeValueOf(arguments.mediaType),
                 isCompactScreen = isCompactScreen,
@@ -265,7 +240,7 @@ fun MainNavigation(
             )
         }
 
-        composable<Search> {
+        composable<Routes.Search> {
             SearchView(
                 arguments = it.toRoute(),
                 modifier = Modifier.padding(bottom = bottomPadding),
@@ -273,7 +248,7 @@ fun MainNavigation(
             )
         }
 
-        composable<Notifications> {
+        composable<Routes.Notifications> {
             if (isLoggedIn) {
                 NotificationsView(
                     navActionManager = navActionManager,
@@ -283,83 +258,83 @@ fun MainNavigation(
             }
         }
 
-        composable<MediaDetails> {
+        composable<Routes.MediaDetails> {
             MediaDetailsView(
                 isLoggedIn = isLoggedIn,
                 navActionManager = navActionManager,
             )
         }
 
-        composable<MediaChartList> {
+        composable<Routes.MediaChartList> {
             MediaChartListView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<SeasonAnime> {
+        composable<Routes.SeasonAnime> {
             SeasonAnimeView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<Calendar> {
+        composable<Routes.Calendar> {
             CalendarView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<CharacterDetails> {
+        composable<Routes.CharacterDetails> {
             CharacterDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<StaffDetails> {
+        composable<Routes.StaffDetails> {
             StaffDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<ReviewDetails> {
+        composable<Routes.ReviewDetails> {
             ReviewDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<ThreadDetails> {
+        composable<Routes.ThreadDetails> {
             ThreadDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<StudioDetails> {
+        composable<Routes.StudioDetails> {
             StudioDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<Settings> {
+        composable<Routes.Settings> {
             SettingsView(
                 navActionManager = navActionManager,
             )
         }
-        composable<ListStyleSettings> {
+        composable<Routes.ListStyleSettings> {
             ListStyleSettingsView(
                 navActionManager = navActionManager,
             )
         }
-        composable<CustomLists> {
+        composable<Routes.CustomLists> {
             CustomListsView(
                 navActionManager = navActionManager,
             )
         }
-        composable<Translations> {
+        composable<Routes.Translations> {
             TranslationsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<FullScreenImage>(
+        composable<Routes.FullScreenImage>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
@@ -371,13 +346,13 @@ fun MainNavigation(
             )
         }
 
-        composable<ActivityDetails> {
+        composable<Routes.ActivityDetails> {
             ActivityDetailsView(
                 navActionManager = navActionManager,
             )
         }
 
-        composable<PublishActivity> {
+        composable<Routes.PublishActivity> {
             if (isLoggedIn) {
                 PublishActivityView(
                     arguments = it.toRoute(),
@@ -388,7 +363,7 @@ fun MainNavigation(
             }
         }
 
-        composable<PublishComment> {
+        composable<Routes.PublishComment> {
             if (isLoggedIn) {
                 PublishCommentView(
                     arguments = it.toRoute(),
@@ -399,15 +374,15 @@ fun MainNavigation(
             }
         }
 
-        composable<MediaActivity> {
+        composable<Routes.MediaActivity> {
             MediaActivityView(
                 navActionManager = navActionManager
             )
         }
 
-        composable<CurrentFullList> {
+        composable<Routes.CurrentFullList> {
             CurrentFullListView(
-                listType = it.toRoute<CurrentFullList>().listType,
+                listType = it.toRoute<Routes.CurrentFullList>().listType,
                 navActionManager = navActionManager,
             )
         }

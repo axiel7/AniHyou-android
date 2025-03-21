@@ -3,21 +3,18 @@ package com.axiel7.anihyou.ui.screens.main
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.common.GlobalVariables
-import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
-import com.axiel7.anihyou.data.repository.LoginRepository
-import com.axiel7.anihyou.ui.common.DefaultTab
-import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.axiel7.anihyou.core.common.ANIHYOU_SCHEME
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.LoginRepository
+import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.network.NetworkVariables
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    private val globalVariables: GlobalVariables,
+class MainViewModel(
+    private val networkVariables: NetworkVariables,
     private val loginRepository: LoginRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : ViewModel(), MainEvent {
@@ -52,7 +49,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setToken(token: String?) {
-        globalVariables.accessToken = token
+        networkVariables.accessToken = token
     }
 
     fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {

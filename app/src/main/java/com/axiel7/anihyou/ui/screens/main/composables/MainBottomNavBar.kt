@@ -19,9 +19,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.axiel7.anihyou.ui.common.BottomDestination
-import com.axiel7.anihyou.ui.common.BottomDestination.Companion.testTag
-import com.axiel7.anihyou.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.BottomDestination
+import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.testTag
+import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

@@ -154,7 +154,7 @@
         </activity>
 
         <receiver
-            android:name=".ui.widget.airing.AiringWidgetReceiver"
+            android:name=".widget.AiringWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="false">
             <intent-filter>

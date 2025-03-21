@@ -4,9 +4,13 @@ plugins {
     alias(libs.plugins.androidx.baselineprofile)
 }
 
+val appPackageName: String by rootProject.extra
+val sdkVersion: Int by rootProject.extra
+val minSdkVersion: Int by rootProject.extra
+
 android {
-    namespace = "com.axiel7.anihyou.baselineprofile"
-    compileSdk = 35
+    namespace = "$appPackageName.baselineprofile"
+    compileSdk = sdkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -18,8 +22,8 @@ android {
     }
 
     defaultConfig {
-        minSdk = 28
-        targetSdk = 35
+        minSdk = minSdkVersion
+        targetSdk = sdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
