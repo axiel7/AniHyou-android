@@ -17,10 +17,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.common.ANIHYOU_AUTH_URL
+import com.axiel7.anihyou.core.base.ANIHYOU_AUTH_URL
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 
 @Composable
 fun LoginView(

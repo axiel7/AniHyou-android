@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.network.type.MediaListStatus
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update

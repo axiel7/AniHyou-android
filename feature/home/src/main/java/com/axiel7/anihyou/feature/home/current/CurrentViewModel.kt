@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.feature.home.current
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.DataResult
-import com.axiel7.anihyou.core.common.PagedResult
-import com.axiel7.anihyou.core.common.extensions.indexOfFirstOrNull
+import com.axiel7.anihyou.core.base.DataResult
+import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isNullOrZero
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
@@ -17,7 +17,7 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged

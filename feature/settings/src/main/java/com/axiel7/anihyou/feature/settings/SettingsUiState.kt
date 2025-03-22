@@ -10,7 +10,7 @@ import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.fragment.UserSettings
 import com.axiel7.anihyou.core.network.type.ScoreFormat
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 @Immutable
 data class SettingsUiState(

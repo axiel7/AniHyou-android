@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toDrawable
 import com.axiel7.anihyou.core.resources.ColorUtils.hexToString
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 
 @Composable
 fun HtmlWebView(

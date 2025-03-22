@@ -3,12 +3,12 @@ package com.axiel7.anihyou.feature.thread
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.axiel7.anihyou.core.common.DataResult
-import com.axiel7.anihyou.core.common.PagedResult
+import com.axiel7.anihyou.core.base.DataResult
+import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.domain.repository.ThreadRepository
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
-import com.axiel7.anihyou.core.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter

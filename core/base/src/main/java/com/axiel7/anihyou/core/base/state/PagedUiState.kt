@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.ui.common.state
+package com.axiel7.anihyou.core.base.state
 
 abstract class PagedUiState : UiState() {
     // We use abstract instead of open to force them to be in the data class declaration

@@ -2,8 +2,8 @@ package com.axiel7.anihyou.core.model.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
-import com.axiel7.anihyou.core.common.DAILYMOTION_VIDEO_URL
-import com.axiel7.anihyou.core.common.YOUTUBE_VIDEO_URL
+import com.axiel7.anihyou.core.base.DAILYMOTION_VIDEO_URL
+import com.axiel7.anihyou.core.base.YOUTUBE_VIDEO_URL
 import com.axiel7.anihyou.core.common.utils.StringUtils.slugify
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails

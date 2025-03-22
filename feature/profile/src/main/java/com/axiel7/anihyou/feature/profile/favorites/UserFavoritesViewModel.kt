@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.feature.profile.favorites
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.PagedResult
+import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
-import com.axiel7.anihyou.core.ui.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow

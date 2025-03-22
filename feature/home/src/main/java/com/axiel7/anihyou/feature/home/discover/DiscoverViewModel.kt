@@ -2,16 +2,16 @@ package com.axiel7.anihyou.feature.home.discover
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.PagedResult
+import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
-import com.axiel7.anihyou.core.ui.utils.DateUtils.currentAnimeSeason
-import com.axiel7.anihyou.core.ui.utils.DateUtils.nextAnimeSeason
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.model.media.currentAnimeSeason
+import com.axiel7.anihyou.core.model.media.nextAnimeSeason
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn

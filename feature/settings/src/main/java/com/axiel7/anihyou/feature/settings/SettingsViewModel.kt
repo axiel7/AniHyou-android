@@ -3,7 +3,7 @@ package com.axiel7.anihyou.feature.settings
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
-import com.axiel7.anihyou.core.common.DataResult
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
@@ -17,7 +17,7 @@ import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.feature.worker.NotificationWorker.Companion.cancelNotificationWork
 import com.axiel7.anihyou.feature.worker.NotificationWorker.Companion.scheduleNotificationWork
 import com.google.accompanist.permissions.ExperimentalPermissionsApi

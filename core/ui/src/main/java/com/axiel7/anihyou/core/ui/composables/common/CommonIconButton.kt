@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openLink
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openShareSheet
-import com.axiel7.anihyou.core.ui.utils.NumberUtils.abbreviated
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
+import com.axiel7.anihyou.core.common.utils.NumberUtils.abbreviated
 import com.axiel7.anihyou.core.ui.utils.TranslateUtils.openTranslator
 
 fun singleClick(onClick: () -> Unit): () -> Unit {

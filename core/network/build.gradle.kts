@@ -17,7 +17,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:common"))
+    implementation(project(":core:base"))
 
     implementation(libs.apollo.runtime)
     implementation(libs.apollo.normalized.cache)

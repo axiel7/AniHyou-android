@@ -3,10 +3,10 @@ package com.axiel7.anihyou.feature.profile
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.axiel7.anihyou.core.common.extensions.indexOfFirstOrNull
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.network.UserActivityQuery
 import com.axiel7.anihyou.core.network.fragment.UserInfo
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class ProfileUiState(

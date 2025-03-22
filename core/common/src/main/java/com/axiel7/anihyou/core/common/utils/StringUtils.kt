@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.core.common.utils
 
-import com.axiel7.anihyou.core.common.UNKNOWN_CHAR
+import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import java.text.Normalizer
 
 object StringUtils {

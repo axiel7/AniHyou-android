@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Routes.FullScreenImage
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openShareSheet
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 
 @Composable
 fun FullScreenImageView(

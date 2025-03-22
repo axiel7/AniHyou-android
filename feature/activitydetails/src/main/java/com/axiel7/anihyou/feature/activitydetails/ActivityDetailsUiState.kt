@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.activity.GenericActivity
 
 @Stable

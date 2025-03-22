@@ -68,8 +68,8 @@ import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndica
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.showToast
-import com.axiel7.anihyou.core.ui.utils.DateUtils.toEpochMillis
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.feature.editmedia.composables.CustomListsDialog
 import com.axiel7.anihyou.feature.editmedia.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDateField

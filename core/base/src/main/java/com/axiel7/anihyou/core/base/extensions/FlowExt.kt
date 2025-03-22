@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.common.extensions
+package com.axiel7.anihyou.core.base.extensions
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

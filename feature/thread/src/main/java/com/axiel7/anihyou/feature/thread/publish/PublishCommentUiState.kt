@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.feature.thread.publish
 
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 data class PublishCommentUiState(
     val wasPublished: Boolean? = null,

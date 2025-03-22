@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.feature.reviewdetails
 
 import com.axiel7.anihyou.core.network.ReviewDetailsQuery
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 data class ReviewDetailsUiState(
     val details: ReviewDetailsQuery.Review? = null,

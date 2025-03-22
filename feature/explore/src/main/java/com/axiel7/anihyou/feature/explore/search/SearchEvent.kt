@@ -9,7 +9,7 @@ import com.axiel7.anihyou.core.network.SearchMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
-import com.axiel7.anihyou.core.ui.common.event.PagedEvent
+import com.axiel7.anihyou.core.base.event.PagedEvent
 
 interface SearchEvent : PagedEvent {
     fun setQuery(value: String)

@@ -1,8 +1,8 @@
-package com.axiel7.anihyou.core.ui.common.viewmodel
+package com.axiel7.anihyou.core.common.viewmodel
 
-import com.axiel7.anihyou.core.common.PagedResult
-import com.axiel7.anihyou.core.ui.common.event.PagedEvent
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.event.PagedEvent
+import com.axiel7.anihyou.core.base.state.PagedUiState
 import kotlinx.coroutines.flow.update
 
 @Suppress("UNCHECKED_CAST")

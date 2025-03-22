@@ -29,6 +29,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:base"))
     implementation(project(":core:common"))
     implementation(project(":core:network"))
     implementation(project(":core:model"))

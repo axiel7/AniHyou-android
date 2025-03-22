@@ -15,7 +15,7 @@ import com.axiel7.anihyou.core.network.fragment.CommonVoiceActor
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.fragment.MediaStaff
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 @Immutable
 data class MediaDetailsUiState(

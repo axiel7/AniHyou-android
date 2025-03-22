@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.ui.utils
+package com.axiel7.anihyou.core.common.utils
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -16,7 +16,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
-import com.axiel7.anihyou.core.common.APP_PACKAGE_NAME
+import com.axiel7.anihyou.core.base.APP_PACKAGE_NAME
 import com.axiel7.anihyou.core.resources.R
 
 object ContextUtils {
@@ -35,7 +35,7 @@ object ContextUtils {
             Intent(Intent.ACTION_VIEW, uri).apply {
                 startActivity(this)
             }
-        } catch (e: ActivityNotFoundException) {
+        } catch (_: ActivityNotFoundException) {
             showToast(getString(R.string.no_app_found_for_this_action))
         }
     }
@@ -78,7 +78,7 @@ object ContextUtils {
                 try {
                     setPackage(defaultBrowser.activityInfo.packageName)
                     startActivity(this)
-                } catch (e: ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     startActivity(Intent.createChooser(this, null))
                 }
             } else {

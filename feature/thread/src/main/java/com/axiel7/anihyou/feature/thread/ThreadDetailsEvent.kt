@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.feature.thread
 
-import com.axiel7.anihyou.core.ui.common.event.PagedEvent
+import com.axiel7.anihyou.core.base.event.PagedEvent
 
 interface ThreadDetailsEvent : PagedEvent {
     fun toggleLikeThread()

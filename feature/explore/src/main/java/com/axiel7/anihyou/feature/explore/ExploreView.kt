@@ -15,13 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.core.common.utils.DateUtils
 import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.IconCard
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.DateUtils
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils
 
 @Composable
 fun ExploreView(

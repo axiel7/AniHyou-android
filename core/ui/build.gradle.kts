@@ -35,6 +35,7 @@ kotlin {
 }
 
 dependencies {
+    api(project(":core:base"))
     api(project(":core:common"))
     api(project(":core:resources"))
     api(project(":core:model"))

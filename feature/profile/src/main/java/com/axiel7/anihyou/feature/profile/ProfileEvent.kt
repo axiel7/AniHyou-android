@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.feature.profile
 
-import com.axiel7.anihyou.core.ui.common.event.PagedEvent
-import com.axiel7.anihyou.core.ui.common.event.UiEvent
+import com.axiel7.anihyou.core.base.event.PagedEvent
+import com.axiel7.anihyou.core.base.event.UiEvent
 
 interface ProfileEvent : UiEvent, PagedEvent {
     fun toggleFollow()

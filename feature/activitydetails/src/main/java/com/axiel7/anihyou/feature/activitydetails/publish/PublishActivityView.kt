@@ -11,7 +11,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Routes.PublishActivity
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.common.extensions
+package com.axiel7.anihyou.core.base.extensions
 
 /**
  * Returns index of the first element matching the given [predicate], or `null` if the list does not contain such element.

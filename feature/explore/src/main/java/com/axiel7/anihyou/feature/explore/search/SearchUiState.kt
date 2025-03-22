@@ -16,7 +16,7 @@ import com.axiel7.anihyou.core.network.SearchUserQuery
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class SearchUiState(

@@ -23,9 +23,10 @@ dependencyResolutionManagement {
 rootProject.name = "AniHyou"
 include(":app")
 include(":baselineprofile")
+include(":core:base")
+include(":core:common")
 include(":core:network")
 include(":core:resources")
-include(":core:common")
 include(":core:model")
 include(":core:ui")
 include(":core:domain")

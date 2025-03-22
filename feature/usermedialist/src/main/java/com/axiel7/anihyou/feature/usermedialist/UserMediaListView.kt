@@ -34,7 +34,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.feature.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.MinimalUserMediaListItem

@@ -60,7 +60,7 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.feature.profile.about.UserAboutView
 import com.axiel7.anihyou.feature.profile.activity.UserActivityView
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesView

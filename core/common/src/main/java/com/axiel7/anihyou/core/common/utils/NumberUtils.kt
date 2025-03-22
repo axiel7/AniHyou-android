@@ -1,14 +1,26 @@
 package com.axiel7.anihyou.core.common.utils
 
-import com.axiel7.anihyou.core.common.UNKNOWN_CHAR
+import android.icu.text.CompactDecimalFormat
+import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
+import java.util.Locale
 
 object NumberUtils {
     private val defaultNumberFormat: NumberFormat = NumberFormat.getInstance()
 
     private val defaultDecimalFormat = DecimalFormat()
+
+    private val defaultCompactDecimalFormat
+        get() = CompactDecimalFormat.getInstance(
+            Locale.getDefault(),
+            CompactDecimalFormat.CompactStyle.SHORT
+        )
+
+    fun Int.abbreviated(): String? = runCatching {
+        defaultCompactDecimalFormat.format(this)
+    }.getOrNull()
 
     fun Number.format(): String? = try {
         defaultNumberFormat.format(this)

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.axiel7.anihyou.core.common
+package com.axiel7.anihyou.core.base
 
 private const val CLIENT_ID = "8527"
 

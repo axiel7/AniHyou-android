@@ -2,7 +2,7 @@ package com.axiel7.anihyou.feature.settings.liststyle
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.model.ListStyle
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 @Immutable
 data class ListStyleSettingsUiState(

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.network.ActivityFeedQuery
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class ActivityFeedUiState(

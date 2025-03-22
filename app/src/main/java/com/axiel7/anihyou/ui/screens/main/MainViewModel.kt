@@ -3,7 +3,7 @@ package com.axiel7.anihyou.ui.screens.main
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.ANIHYOU_SCHEME
+import com.axiel7.anihyou.core.base.ANIHYOU_SCHEME
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.model.DefaultTab

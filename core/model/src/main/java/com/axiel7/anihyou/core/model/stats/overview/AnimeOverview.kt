@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.core.model.stats.overview
 
-import com.axiel7.anihyou.core.common.utils.UnitUtils.minutesToDays
+import com.axiel7.anihyou.core.common.utils.DateUtils.minutesToDays
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.network.UserStatsAnimeOverviewQuery
 import com.axiel7.anihyou.core.network.type.MediaListStatus

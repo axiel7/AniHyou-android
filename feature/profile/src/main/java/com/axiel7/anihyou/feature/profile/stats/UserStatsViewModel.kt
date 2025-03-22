@@ -1,11 +1,11 @@
 package com.axiel7.anihyou.feature.profile.stats
 
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.DataResult
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.stats.StatDistributionType
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter

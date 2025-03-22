@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.network.StudioDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.CommonStudioMedia
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class StudioDetailsUiState(

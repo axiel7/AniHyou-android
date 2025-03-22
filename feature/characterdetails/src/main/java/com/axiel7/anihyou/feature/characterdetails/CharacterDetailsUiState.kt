@@ -6,7 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.network.CharacterDetailsQuery
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.CommonVoiceActor
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class CharacterDetailsUiState(

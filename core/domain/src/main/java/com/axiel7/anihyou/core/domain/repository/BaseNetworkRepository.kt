@@ -3,8 +3,8 @@ package com.axiel7.anihyou.core.domain.repository
 import com.apollographql.apollo.api.ApolloResponse
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.exception.ApolloHttpException
-import com.axiel7.anihyou.core.common.DataResult
-import com.axiel7.anihyou.core.common.PagedResult
+import com.axiel7.anihyou.core.base.DataResult
+import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.network.api.response.ErrorResponse
 import com.axiel7.anihyou.core.network.api.response.errorString
 import com.axiel7.anihyou.core.network.fragment.CommonPage

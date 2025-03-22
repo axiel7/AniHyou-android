@@ -6,7 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffCharacterQuery
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 @Stable
 data class StaffDetailsUiState(

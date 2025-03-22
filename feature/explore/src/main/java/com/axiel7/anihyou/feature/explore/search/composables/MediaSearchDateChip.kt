@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.core.common.utils.DateUtils
 import com.axiel7.anihyou.core.model.base.GenericLocalizable
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
@@ -30,7 +31,7 @@ import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.DialogWithRadioSelection
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.DateUtils
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils
 
 @Composable
 fun MediaSearchDateChip(

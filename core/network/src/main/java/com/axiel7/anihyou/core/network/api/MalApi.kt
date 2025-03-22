@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.core.network.api
 
-import com.axiel7.anihyou.core.common.MAL_API_URL
+import com.axiel7.anihyou.core.base.MAL_API_URL
 import com.axiel7.anihyou.core.network.api.model.AnimeThemesDto
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient

@@ -17,4 +17,10 @@
         <item name="android:padding">16dp</item>
         <item name="android:background">@drawable/widget_background</item>
     </style>
+
+    <style name="WearActivityTheme.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@android:style/Theme.DeviceDefault</item>
+    </style>
 </resources>

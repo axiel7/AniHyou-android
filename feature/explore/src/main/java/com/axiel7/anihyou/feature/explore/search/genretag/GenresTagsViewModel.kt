@@ -3,12 +3,12 @@ package com.axiel7.anihyou.feature.explore.search.genretag
 import android.content.Context
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.core.common.DataResult
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.genre.SelectableGenre
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagStringRes
-import com.axiel7.anihyou.core.ui.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine

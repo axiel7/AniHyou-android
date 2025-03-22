@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.common
+package com.axiel7.anihyou.core.base
 
 sealed interface PagedResult<out T> {
     data object Loading : PagedResult<Nothing>

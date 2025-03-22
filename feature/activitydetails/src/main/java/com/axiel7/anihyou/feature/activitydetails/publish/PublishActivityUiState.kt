@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.feature.activitydetails.publish
 
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 data class PublishActivityUiState(
     val wasPublished: Boolean? = null,

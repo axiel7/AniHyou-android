@@ -48,9 +48,9 @@ import com.axiel7.anihyou.core.ui.composables.common.TagChip
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.VideoThumbnailItem
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openActionView
-import com.axiel7.anihyou.core.ui.utils.DateUtils.formatted
-import com.axiel7.anihyou.core.ui.utils.DateUtils.minutesToLegibleText
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
 
 private const val TagLimit = 10

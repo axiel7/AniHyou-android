@@ -4,8 +4,8 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.ScoreFormat
-import com.axiel7.anihyou.core.ui.common.event.PagedEvent
-import com.axiel7.anihyou.core.ui.common.event.UiEvent
+import com.axiel7.anihyou.core.base.event.PagedEvent
+import com.axiel7.anihyou.core.base.event.UiEvent
 
 interface UserMediaListEvent : PagedEvent, UiEvent {
     fun setScoreFormat(value: ScoreFormat)

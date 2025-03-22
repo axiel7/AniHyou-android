@@ -9,7 +9,7 @@ import com.axiel7.anihyou.core.network.fragment.StudioStat
 import com.axiel7.anihyou.core.network.fragment.TagStat
 import com.axiel7.anihyou.core.network.fragment.VoiceActorStat
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.state.UiState
+import com.axiel7.anihyou.core.base.state.UiState
 
 @Immutable
 data class UserStatsUiState(

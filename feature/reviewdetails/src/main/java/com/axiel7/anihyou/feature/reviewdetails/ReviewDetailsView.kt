@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.common.ANILIST_REVIEW_URL
+import com.axiel7.anihyou.core.base.ANILIST_REVIEW_URL
 import com.axiel7.anihyou.core.model.review.userRatingsString
 import com.axiel7.anihyou.core.network.type.ReviewRating
 import com.axiel7.anihyou.core.resources.R

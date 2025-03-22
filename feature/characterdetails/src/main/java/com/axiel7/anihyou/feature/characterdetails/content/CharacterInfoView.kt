@@ -35,8 +35,8 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.copyToClipBoard
-import com.axiel7.anihyou.core.ui.utils.DateUtils.formatted
+import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsUiState
 

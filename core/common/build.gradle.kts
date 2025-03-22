@@ -1,11 +1,25 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+val appPackageName: String by rootProject.extra
+val sdkVersion: Int by rootProject.extra
+val minSdkVersion: Int by rootProject.extra
+
+android {
+    namespace = "$appPackageName.core.common"
+    compileSdk = sdkVersion
+
+    defaultConfig {
+        minSdk = minSdkVersion
+    }
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 }
 
 kotlin {
@@ -15,5 +29,12 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(project(":core:base"))
+    implementation(project(":core:resources"))
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.lifecycle.viewmodel)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

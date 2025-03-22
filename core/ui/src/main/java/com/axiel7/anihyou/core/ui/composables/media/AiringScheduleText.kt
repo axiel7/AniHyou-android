@@ -12,7 +12,7 @@ import com.axiel7.anihyou.core.model.media.episodesBehind
 import com.axiel7.anihyou.core.model.media.isBehind
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 
 @Composable
 fun AiringScheduleText(

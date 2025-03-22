@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.TextUnit
 import coil.imageLoader
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.ui.utils.MarkdownUtils.formatCompatibleMarkdown
 import com.axiel7.anihyou.core.ui.utils.MarkdownUtils.onMarkdownLinkClicked
 import dev.jeziellago.compose.markdowntext.MarkdownText

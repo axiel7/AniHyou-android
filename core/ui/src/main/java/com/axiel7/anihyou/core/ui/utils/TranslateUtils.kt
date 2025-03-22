@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.copyToClipBoard
-import com.axiel7.anihyou.core.ui.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 
 object TranslateUtils {
 

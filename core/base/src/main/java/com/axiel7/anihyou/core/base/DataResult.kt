@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.core.common
+package com.axiel7.anihyou.core.base
 
 sealed interface DataResult<out T> {
     data object Loading : DataResult<Nothing>

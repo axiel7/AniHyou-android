@@ -17,8 +17,8 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.axiel7.anihyou.core.common.APP_PACKAGE_NAME
-import com.axiel7.anihyou.core.common.DataResult
+import com.axiel7.anihyou.core.base.APP_PACKAGE_NAME
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository

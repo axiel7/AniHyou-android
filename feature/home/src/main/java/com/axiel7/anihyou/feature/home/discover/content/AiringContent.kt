@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.common.UNKNOWN_CHAR
+import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
@@ -18,7 +18,7 @@ import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.core.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
-import com.axiel7.anihyou.core.ui.utils.DateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
 
 @Composable

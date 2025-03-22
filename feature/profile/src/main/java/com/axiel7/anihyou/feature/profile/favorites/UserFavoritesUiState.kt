@@ -8,7 +8,7 @@ import com.axiel7.anihyou.core.network.UserFavoritesCharacterQuery
 import com.axiel7.anihyou.core.network.UserFavoritesMangaQuery
 import com.axiel7.anihyou.core.network.UserFavoritesStaffQuery
 import com.axiel7.anihyou.core.network.UserFavoritesStudioQuery
-import com.axiel7.anihyou.core.ui.common.state.PagedUiState
+import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class UserFavoritesUiState(
