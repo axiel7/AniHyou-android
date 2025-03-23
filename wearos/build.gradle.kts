@@ -11,16 +11,17 @@ val versionProps = Properties().also {
 }
 
 val appPackageName: String by rootProject.extra
-val sdkVersion: Int by rootProject.extra
+val wearSdkVersion: Int by rootProject.extra
+val wearMinSdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.wear"
-    compileSdk = sdkVersion
+    compileSdk = wearSdkVersion
 
     defaultConfig {
         applicationId = appPackageName
-        minSdk = 25
-        targetSdk = sdkVersion
+        minSdk = wearMinSdkVersion
+        targetSdk = wearSdkVersion
         versionCode = 1
         versionName = "1.0"
     }
