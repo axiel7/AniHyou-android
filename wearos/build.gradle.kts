@@ -23,7 +23,7 @@ android {
         applicationId = appPackageName
         minSdk = wearMinSdkVersion
         targetSdk = wearSdkVersion
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
     }
 
