@@ -18,7 +18,7 @@ android {
     compileSdk = sdkVersion
 
     defaultConfig {
-        applicationId = "$appPackageName.wear"
+        applicationId = appPackageName
         minSdk = 25
         targetSdk = sdkVersion
         versionCode = 1
