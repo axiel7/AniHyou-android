@@ -72,7 +72,10 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
     media = CommonMediaListEntry.Media(
         __typename = "",
         id = 1,
-        coverImage = null,
+        coverImage = CommonMediaListEntry.CoverImage(
+            large = null,
+            color = "#f55442"
+        ),
         nextAiringEpisode = CommonMediaListEntry.NextAiringEpisode(
             episode = 3,
             timeUntilAiring = 1203239

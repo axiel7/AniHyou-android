@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 val appPackageName by extra { "com.axiel7.anihyou" }
 val sdkVersion by extra { 35 }
-val minSdkVersion by extra { 24 }
+val minSdkVersion by extra { 23 }
 
 plugins {
     alias(libs.plugins.android.application) apply false

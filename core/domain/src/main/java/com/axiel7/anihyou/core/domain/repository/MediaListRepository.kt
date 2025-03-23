@@ -19,6 +19,8 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 
@@ -26,6 +28,10 @@ class MediaListRepository (
     private val api: MediaListApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
+
+    private val _lastUpdatedEntry = MutableStateFlow<BasicMediaListEntry?>(null)
+    val lastUpdatedEntry = _lastUpdatedEntry.asStateFlow()
+
     fun getMediaListCollection(
         userId: Int,
         mediaType: MediaType,
@@ -121,6 +127,7 @@ class MediaListRepository (
         .toFlow()
         .onEach {
             it.data?.SaveMediaListEntry?.basicMediaListEntry?.let { entry ->
+                _lastUpdatedEntry.emit(entry)
                 api.updateMediaListCache(entry)
             }
         }

@@ -58,7 +58,7 @@ android {
     }
 
     buildTypes {
-        val clientId = "8527"
+        val clientId = versionProps.getProperty("client_id")
 
         debug {
             applicationIdSuffix = ".debug"
@@ -160,6 +160,8 @@ dependencies {
     implementation(libs.androidx.material3.window.sizeclass)
 
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.wear.remote.interactions)
 
     implementation(libs.accompanist.permissions)
 

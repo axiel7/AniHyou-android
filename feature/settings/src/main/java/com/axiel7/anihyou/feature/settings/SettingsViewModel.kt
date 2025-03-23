@@ -183,6 +183,7 @@ class SettingsViewModel(
     override fun logOut(recreate: () -> Unit) {
         viewModelScope.launch {
             loginRepository.logOut()
+            workManager.cancelNotificationWork()
             recreate()
         }
     }

@@ -1,0 +1,7 @@
+query BasicMediaDetails($mediaId: Int) {
+    Media(id: $mediaId) {
+        mediaListEntry {
+            ...CommonMediaListEntry
+        }
+    }
+}

@@ -49,6 +49,7 @@ fragment CommonMediaListEntry on MediaList {
         ...BasicMediaDetails
         coverImage {
             large
+            color
         }
         nextAiringEpisode {
             episode

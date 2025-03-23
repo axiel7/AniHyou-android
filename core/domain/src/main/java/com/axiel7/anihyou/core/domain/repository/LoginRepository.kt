@@ -7,20 +7,24 @@ import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ViewerOptionsQuery
 import com.axiel7.anihyou.core.network.api.response.errorString
+import androidx.core.net.toUri
 
 class LoginRepository (
     private val client: ApolloClient,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
-    //private val workManager: WorkManager,
 ) {
 
     // login
     suspend fun parseRedirectUri(uri: Uri) {
-        val dummyUrl = Uri.parse("http://dummyurl.com?${uri.fragment}")
+        val dummyUrl = "http://dummyurl.com?${uri.fragment}".toUri()
         dummyUrl.getQueryParameter("access_token")?.let { token ->
-            defaultPreferencesRepository.setAccessToken(token)
-            refreshUserIdAndOptions()
+            onNewToken(token)
         }
+    }
+
+    suspend fun onNewToken(token: String) {
+        defaultPreferencesRepository.setAccessToken(token)
+        refreshUserIdAndOptions()
     }
 
     private suspend fun refreshUserIdAndOptions() {
@@ -38,6 +42,5 @@ class LoginRepository (
 
     suspend fun logOut() {
         defaultPreferencesRepository.removeViewerInfo()
-        //workManager.cancelNotificationWork()
     }
 }

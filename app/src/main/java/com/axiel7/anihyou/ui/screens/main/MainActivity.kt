@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        viewModel.onIntentDataReceived(intent.data)
+        viewModel.onIntentDataReceived(this, intent.data)
     }
 
     private fun findDeepLink(): DeepLink? {
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             }
             // Login intent or anilist link
             intent.data != null -> {
-                viewModel.onIntentDataReceived(intent.data)
+                viewModel.onIntentDataReceived(this, intent.data)
                 // Manually handle deep links because the uri pattern in the compose navigation
                 // matches this -> https://anilist.co/manga/41514/
                 // but not this -> https://anilist.co/manga/41514/Otoyomegatari/

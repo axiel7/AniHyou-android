@@ -6,6 +6,7 @@ import com.apollographql.apollo.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
+import com.axiel7.anihyou.core.network.BasicMediaDetailsQuery
 import com.axiel7.anihyou.core.network.GenreTagCollectionQuery
 import com.axiel7.anihyou.core.network.MediaActivityQuery
 import com.axiel7.anihyou.core.network.MediaCharactersAndStaffQuery
@@ -273,6 +274,13 @@ class MediaApi(
                 type = Optional.present(type),
                 status = Optional.presentIfNotNull(status),
                 format = Optional.presentIfNotNull(format),
+            )
+        )
+
+    fun basicMediaDetails(mediaId: Int) = client
+        .query(
+            BasicMediaDetailsQuery(
+                mediaId = Optional.present(mediaId)
             )
         )
 }

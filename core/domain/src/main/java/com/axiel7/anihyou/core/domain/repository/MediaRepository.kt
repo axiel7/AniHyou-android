@@ -193,6 +193,11 @@ class MediaRepository (
             data.Page?.activities?.mapNotNull { it?.listActivityFragment }.orEmpty()
         }
 
+    fun getBasicMediaDetails(mediaId: Int) = api
+        .basicMediaDetails(mediaId)
+        .toFlow()
+        .asDataResult { it.Media?.mediaListEntry?.commonMediaListEntry }
+
     // widget
 
     suspend fun getAiringWidgetData(
