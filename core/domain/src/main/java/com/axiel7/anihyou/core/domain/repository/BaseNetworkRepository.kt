@@ -29,10 +29,7 @@ abstract class BaseNetworkRepository(
         }
 
         exception is ApolloHttpException -> {
-            val exception = exception as ApolloHttpException
-            val errorResponse = exception.parseBodyToErrorResponse()
-            errorResponse?.let { onError(it) } ?: onError(this)
-            val message = errorResponse?.errors?.joinToString { it.message } ?: errorString
+            val message = onHttpException(this)
             DataResult.Error(message = message)
         }
 
@@ -71,16 +68,20 @@ abstract class BaseNetworkRepository(
                 }
 
                 response.exception is ApolloHttpException -> {
-                    val exception = response.exception as ApolloHttpException
-                    val errorResponse = exception.parseBodyToErrorResponse()
-                    errorResponse?.let { onError(it) } ?: onError(response)
-                    val message = errorResponse?.errors?.joinToString { it.message } ?: response.errorString
+                    val message = onHttpException(response)
                     PagedResult.Error(message = message)
                 }
 
                 else -> PagedResult.Loading
             }
         }
+
+    private suspend fun <D: Operation.Data> onHttpException(response: ApolloResponse<D>): String {
+        val exception = response.exception as ApolloHttpException
+        val errorResponse = exception.parseBodyToErrorResponse()
+        errorResponse?.let { onError(it) } ?: onError(response)
+        return errorResponse?.errors?.joinToString { it.message } ?: response.errorString
+    }
 
     private suspend fun <D: Operation.Data> onError(response: ApolloResponse<D>) {
         if (response.errors?.any { it.message == "Invalid token" } == true) {
@@ -100,7 +101,11 @@ abstract class BaseNetworkRepository(
             runCatching {
                 val bodyString = body.readUtf8()
                 body.close()
-                Json.decodeFromString<ErrorResponse>(bodyString)
+                runCatching {
+                    Json.decodeFromString<ErrorResponse>(bodyString)
+                }.getOrElse {
+                    ErrorResponse(errors = listOf(ErrorResponse.Error(message = bodyString)))
+                }
             }.getOrNull()
         }
     }
