@@ -67,7 +67,6 @@ fun WearApp(
     uiState: MainUiState,
     event: MainEvent?,
 ) {
-    val context = LocalContext.current
     val navController = rememberSwipeDismissableNavController()
 
     AniHyouTheme {
@@ -82,9 +81,7 @@ fun WearApp(
                 startDestination = if (uiState.isLoggedIn) Routes.MEDIA_LIST else Routes.LOGIN
             ) {
                 composable(Routes.LOGIN) {
-                    LoginView(
-                        onLoginClick = { event?.launchLoginIntent(context) }
-                    )
+                    LoginView()
                 }
 
                 composable(Routes.MEDIA_LIST) {

@@ -1,14 +1,8 @@
 package com.axiel7.anihyou.wear.ui.screens.main
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
-import androidx.wear.activity.ConfirmationActivity
-import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.axiel7.anihyou.core.base.ANIHYOU_SCHEME
-import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_CALLBACK_URL
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
@@ -26,25 +20,6 @@ class MainViewModel(
 ) : UiStateViewModel<MainUiState>(), MainEvent {
 
     override val initialState = MainUiState()
-
-    override fun launchLoginIntent(context: Context) {
-        viewModelScope.launch {
-            try {
-                RemoteActivityHelper(context).startRemoteActivity(
-                    Intent(Intent.ACTION_VIEW)
-                        .addCategory(Intent.CATEGORY_BROWSABLE)
-                        .setData(ANIHYOU_WEAR_CALLBACK_URL.toUri()),
-                )
-                context.startActivity(
-                    Intent(context, ConfirmationActivity::class.java)
-                        .putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.OPEN_ON_PHONE_ANIMATION)
-                )
-            } catch (e: RemoteActivityHelper.RemoteIntentException) {
-                mutableUiState.update { it.setError(e.message) }
-            }
-        }
-
-    }
 
     override fun onIntentDataReceived(data: Uri?) {
         viewModelScope.launch {

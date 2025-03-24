@@ -23,7 +23,7 @@ android {
         applicationId = appPackageName
         minSdk = wearMinSdkVersion
         targetSdk = wearSdkVersion
-        versionCode = 2
+        versionCode = 3
         versionName = "1.0"
     }
 
@@ -84,6 +84,7 @@ dependencies {
 
     implementation(libs.androidx.wear)
     implementation(libs.androidx.wear.remote.interactions)
+    implementation(libs.androidx.wear.phone.interactions)
     implementation(libs.androidx.wear.compose.material)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.navigation)
@@ -93,6 +94,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.gms.wearable)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

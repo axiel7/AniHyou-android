@@ -16,6 +16,7 @@ const val ANIHYOU_AUTH_RESPONSE = "auth-response"
 const val ANIHYOU_WEAR_AUTH = "wear-auth"
 const val ANILIST_CALLBACK_URL = "$ANIHYOU_SCHEME://$ANIHYOU_AUTH_RESPONSE"
 const val ANIHYOU_WEAR_CALLBACK_URL = "$ANIHYOU_SCHEME://$ANIHYOU_WEAR_AUTH"
+const val ANIHYOU_MARKET_URI = "market://details?id=$APP_PACKAGE_NAME"
 const val ANILIST_GRAPHQL = "https://graphql.anilist.co/graphql"
 
 const val ANILIST_ANIME_URL = "$ANILIST_URL/anime/"
