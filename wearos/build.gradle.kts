@@ -23,8 +23,8 @@ android {
         applicationId = appPackageName
         minSdk = wearMinSdkVersion
         targetSdk = wearSdkVersion
-        versionCode = 3
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.1"
     }
 
     buildTypes {
