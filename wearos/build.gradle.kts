@@ -23,8 +23,8 @@ android {
         applicationId = appPackageName
         minSdk = wearMinSdkVersion
         targetSdk = wearSdkVersion
-        versionCode = 4
-        versionName = "1.1"
+        versionCode = versionProps.getProperty("code").toInt()
+        versionName = "1.1-wear"
     }
 
     buildTypes {
