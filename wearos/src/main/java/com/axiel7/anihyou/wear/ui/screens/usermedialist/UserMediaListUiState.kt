@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.network.type.MediaType
 data class UserMediaListUiState(
     val mediaType: MediaType,
     val entries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,

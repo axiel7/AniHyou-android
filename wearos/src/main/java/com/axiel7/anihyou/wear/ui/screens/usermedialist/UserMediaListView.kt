@@ -1,5 +1,11 @@
 package com.axiel7.anihyou.wear.ui.screens.usermedialist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -9,14 +15,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +37,9 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.CardDefaults
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.OutlinedCompactChip
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -43,6 +55,7 @@ import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.OnBottomReached
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
 import org.koin.androidx.compose.koinViewModel
@@ -80,6 +93,10 @@ private fun UserMediaListContent(
         event?.onLoadMore()
     }
 
+    val canScrollUp by remember {
+        derivedStateOf { listState.canScrollBackward }
+    }
+
     Scaffold(
         modifier = modifier,
         vignette = {
@@ -91,22 +108,52 @@ private fun UserMediaListContent(
             )
         },
     ) {
-        ScalingLazyColumn(
+        Box(
             modifier = Modifier.fillMaxSize(),
-            state = listState,
+            contentAlignment = Alignment.Center,
         ) {
-            item {
-                Text(
-                    text = uiState.mediaType.localized(),
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    style = MaterialTheme.typography.title3
-                )
-            }
-            items(uiState.entries) { item ->
-                ItemView(
-                    item = item,
-                    onClick = { goToEditMedia(item.mediaId) }
-                )
+            ScalingLazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = listState,
+            ) {
+                item {
+                    Box(modifier = Modifier.height(48.dp)) {
+                        AnimatedVisibility(
+                            visible = !canScrollUp,
+                            enter = fadeIn() + slideInVertically(tween(100)),
+                            exit = fadeOut() + slideOutVertically(tween(100)),
+                        ) {
+                            OutlinedCompactChip(
+                                onClick = { event?.refreshList() },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.refresh_24),
+                                        contentDescription = stringResource(R.string.refresh)
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+                item {
+                    LaunchedEffect(uiState.entries) {
+                        if (uiState.entries.isEmpty()) {
+                            listState.scrollToItem(index = 1, scrollOffset = 50)
+                        }
+                    }
+                    Text(
+                        text = uiState.mediaType.localized(),
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        style = MaterialTheme.typography.title3
+                    )
+                }
+                items(uiState.entries) { item ->
+                    ItemView(
+                        item = item,
+                        onClick = { goToEditMedia(item.mediaId) }
+                    )
+                }
             }
         }
     }
@@ -145,7 +192,7 @@ private fun ItemView(
                             CardDefaults.cardBackgroundPainter(
                                 startBackgroundColor = (colorFromHex(item.media?.coverImage?.color)
                                     ?: MaterialTheme.colors.primary.copy(alpha = 0.50f))
-                                        .compositeOver(MaterialTheme.colors.background),
+                                    .compositeOver(MaterialTheme.colors.background),
                                 endBackgroundColor = MaterialTheme.colors.background.copy(
                                     alpha = 0.50f
                                 )

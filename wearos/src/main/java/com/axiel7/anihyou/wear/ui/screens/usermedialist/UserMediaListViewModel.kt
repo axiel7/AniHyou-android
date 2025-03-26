@@ -33,11 +33,23 @@ class UserMediaListViewModel(
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
 
+    override fun refreshList() {
+        mutableUiState.update {
+            it.copy(
+                fetchFromNetwork = true,
+                page = 1,
+                hasNextPage = true,
+                isLoading = true
+            )
+        }
+    }
+
     init {
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
+                        && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
                 mediaListRepository.getUserMediaList(
@@ -45,6 +57,7 @@ class UserMediaListViewModel(
                     mediaType = uiState.mediaType,
                     statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                    fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page,
                     perPage = 50,
                 )
@@ -52,10 +65,13 @@ class UserMediaListViewModel(
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
+                        if (uiState.fetchFromNetwork) uiState.entries.clear()
                         uiState.entries.addAll(result.list)
 
                         uiState.copy(
                             hasNextPage = result.hasNextPage,
+                            fetchFromNetwork = false,
+                            isLoading = false,
                         )
                     }
                     else {
