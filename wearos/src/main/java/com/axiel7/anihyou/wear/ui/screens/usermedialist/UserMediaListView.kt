@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -37,6 +39,7 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.CardDefaults
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.OutlinedCompactChip
@@ -45,6 +48,9 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
+import androidx.wear.compose.material.placeholder
+import androidx.wear.compose.material.placeholderShimmer
+import androidx.wear.compose.material.rememberPlaceholderState
 import androidx.wear.tooling.preview.devices.WearDevices
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
@@ -154,6 +160,11 @@ private fun UserMediaListContent(
                         onClick = { goToEditMedia(item.mediaId) }
                     )
                 }
+                if (uiState.isLoading) {
+                    items(10) {
+                        ItemPlaceholder()
+                    }
+                }
             }
         }
     }
@@ -218,6 +229,33 @@ private fun ItemView(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalWearMaterialApi::class)
+@Composable
+private fun ItemPlaceholder(modifier: Modifier = Modifier) {
+    val placeholderState = rememberPlaceholderState { false }
+    LaunchedEffect(placeholderState) {
+        placeholderState.startPlaceholderAnimation()
+    }
+    Card(
+        onClick = {},
+        modifier = modifier.placeholderShimmer(placeholderState)
+    ) {
+        Text(
+            text = "Loading...",
+            modifier = Modifier
+                .placeholder(placeholderState)
+                .padding(horizontal = 2.dp, vertical = 1.dp)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Loading",
+            modifier = Modifier
+                .placeholder(placeholderState)
+                .padding(horizontal = 2.dp, vertical = 1.dp)
+        )
     }
 }
 
