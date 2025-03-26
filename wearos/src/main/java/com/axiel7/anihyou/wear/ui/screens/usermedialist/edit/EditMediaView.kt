@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.OutlinedButton
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -31,6 +33,7 @@ import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.ScrollableColumn
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
 import org.koin.androidx.compose.koinViewModel
@@ -66,6 +69,9 @@ fun EditMediaContent(
         timeText = { TimeText() }
     ) {
         uiState.entry?.let { entry ->
+            val accentColor = (colorFromHex(entry.media?.coverImage?.color)
+                ?: MaterialTheme.colors.primary).compositeOver(MaterialTheme.colors.background)
+
             ScrollableColumn(
                 scrollState = scrollState,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -87,14 +93,23 @@ fun EditMediaContent(
 
                 Button(
                     onClick = { event?.onClickPlusOne() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    colors = ButtonDefaults.primaryButtonColors(
-                        backgroundColor = (colorFromHex(entry.media?.coverImage?.color)
-                            ?: MaterialTheme.colors.primary)
-                            .compositeOver(MaterialTheme.colors.background)
-                    )
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 4.dp),
+                    colors = ButtonDefaults.primaryButtonColors(backgroundColor = accentColor)
                 ) {
-                    Text(text = "+1")
+                    Text(text = stringResource(R.string.plus_one))
+                }
+
+                OutlinedButton(
+                    onClick = { event?.onClickMinusOne() },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 4.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = accentColor),
+                    border = ButtonDefaults.outlinedButtonBorder(borderColor = accentColor),
+                ) {
+                    Text(text = stringResource(R.string.minus_one))
                 }
             }
         } ?: run {

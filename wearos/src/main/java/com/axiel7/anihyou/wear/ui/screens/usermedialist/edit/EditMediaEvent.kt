@@ -4,4 +4,5 @@ import com.axiel7.anihyou.core.base.event.UiEvent
 
 interface EditMediaEvent: UiEvent {
     fun onClickPlusOne()
+    fun onClickMinusOne()
 }
