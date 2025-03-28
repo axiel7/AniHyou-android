@@ -84,7 +84,9 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
         basicMediaDetails = BasicMediaDetails(
             __typename = "",
             id = 1,
-            title = BasicMediaDetails.Title(userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"),
+            title = BasicMediaDetails.Title(
+                userPreferred = "Guild no Uketsukejou desu ga, Zangyou wa Iya nanode Boss wo Solo Toubatsu Shiyou to Omoimasu"
+            ),
             episodes = 1095,
             chapters = null,
             volumes = null,

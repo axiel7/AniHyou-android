@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.androidx.wear.compose.navigation)
 
     implementation(libs.androidx.wear.tooling.preview)
+    implementation(libs.androidx.wear.compose.ui.tooling)
 
     implementation(libs.androidx.activity.compose)
 

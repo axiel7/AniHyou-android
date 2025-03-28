@@ -12,14 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
-import androidx.wear.tooling.preview.devices.WearDevices
+import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
+import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.ScrollableColumn
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
@@ -54,7 +54,7 @@ private fun LoginContent(
     ) {
         ScrollableColumn(
             scrollState = scrollState,
-            modifier = modifier.padding(8.dp),
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -74,7 +74,8 @@ private fun LoginContent(
     }
 }
 
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
+@WearPreviewDevices
+@WearPreviewFontScales
 @Composable
 private fun LoginPreview() {
     AniHyouTheme {
