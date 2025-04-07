@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home">Startseite</string>
+    <string name="home">Start</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="explore">Erkunden</string>
@@ -21,6 +21,7 @@
         <item quantity="other">%d Tage</item>
     </plurals>
     <string name="unknown">Unbekannt</string>
+    <string name="airing_soon">Bald Ausstrahlend</string>
     <string name="mean_score">Durchschnitt</string>
     <string name="airing_in">Ausstrahlung in %s</string>
     <string name="winter">Winter</string>
@@ -60,6 +61,14 @@
     <string name="music">Musik</string>
     <string name="novel">Roman</string>
     <string name="one_shot">One Shot</string>
+    <plurals name="num_episodes">
+        <item quantity="one">%d Folge</item>
+        <item quantity="other">%d Folgen</item>
+    </plurals>
+    <plurals name="num_chapters">
+        <item quantity="one">%d Kapitel</item>
+        <item quantity="other">%d Kapitel</item>
+    </plurals>
     <string name="finished">Abgeschlossen</string>
     <string name="releasing">Wird Veröffentlicht</string>
     <string name="not_yet_released">Nocht nicht veröffentlicht</string>
@@ -70,6 +79,10 @@
     <string name="favorites">Favoriten</string>
     <string name="episode_in_time">Ep %d in %s</string>
     <string name="airing">Am Laufen</string>
+    <plurals name="num_episodes_behind">
+        <item quantity="one">%d Episode ausstehend</item>
+        <item quantity="other">%d Episoden ausstehend</item>
+    </plurals>
     <string name="information">Informationen</string>
     <string name="duration">Laufzeit</string>
     <string name="start_date">Startdatum</string>
@@ -125,7 +138,7 @@
     <string name="role_supporting">Sekundäres</string>
     <string name="role_background">Kontext</string>
     <string name="related">Verwandt</string>
-    <string name="relation_adaptation">Anpassung</string>
+    <string name="relation_adaptation">Adaption</string>
     <string name="prequel">Prequel</string>
     <string name="sequel">Sequel</string>
     <string name="relation_parent">Übergeordnete Geschichte</string>
@@ -172,6 +185,7 @@
     <string name="no_description">Beschreibung fehlt</string>
     <string name="reviews">Rezensionen</string>
     <string name="loading">Lädt</string>
+    <string name="users_likes">Benutzer gefällt</string>
     <string name="no_reviews">Keine Rezensionen</string>
     <string name="close">Schließen</string>
     <string name="genres">Genres</string>
@@ -320,8 +334,50 @@
     <string name="translations">Übersetzungen</string>
     <string name="from_year">Ab Jahr</string>
     <string name="to_year">Bis Jahr</string>
+    <string name="staff_role_a_and_r_producer">A&amp;R Produzent</string>
+    <string name="staff_role_accessory_design">Accessoire-Design</string>
+    <string name="staff_role_action_animator">Action-Animator</string>
+    <string name="staff_role_action_director">Action Regisseur</string>
+    <string name="staff_role_action_animation_director">Action-Animations-Regisseur</string>
+    <string name="staff_role_action_animation_supervisor">Action-Animations-Aufsicht</string>
+    <string name="staff_role_advertising">Werbung</string>
+    <string name="staff_role_advertising_producer">Werbe-Produzent</string>
+    <string name="staff_role_animation_director">Animationsregisseur</string>
+    <string name="staff_role_animation_producer">Animationsproduzent</string>
+    <string name="staff_role_animation_production_assistance">Assistenz Animationsproduktion</string>
+    <string name="staff_role_animation_supervisor">Animationsaufsicht</string>
+    <string name="staff_role_animation">Animation</string>
+    <string name="staff_role_art">Kunst</string>
+    <string name="staff_role_assistant_animation_director">Assistent Animation Direktor</string>
+    <string name="staff_role_background_art">Hintergrundbild</string>
+    <string name="staff_role_3dcg">3DCG</string>
+    <string name="staff_role_3d_art">3D-Kunst</string>
+    <string name="staff_role_3d_works">3D-Arbeiten</string>
+    <string name="staff_role_2d_design">2D-Design</string>
+    <string name="staff_role_2d_works">2D-Arbeiten</string>
+    <string name="staff_role_digital_art">Digitale Kunst</string>
+    <string name="staff_role_director">Direktor</string>
+    <string name="staff_role_2d_effects">2D-Effekte</string>
+    <string name="staff_role_1st_key_animation">1. Key Animation Regisseur</string>
+    <string name="staff_role_1st_key_assistant">1. Key Animation Regieassistenz</string>
+    <string name="staff_role_2nd_key_animation">2. Key Animation</string>
     <string name="staff_role_music">Musik</string>
-    <string name="staff_role_planning">Geplant</string>
+    <string name="staff_role_photography_manager">Fotografie Manager</string>
+    <string name="staff_role_photography">Fotografie</string>
+    <string name="staff_role_planning">Planer</string>
+    <string name="staff_role_producer">Produzent</string>
+    <string name="staff_role_production_assistance">Produktionsassistenz</string>
+    <string name="staff_role_production_assistant">Produktionsassistent</string>
+    <string name="staff_role_production_committee">Produktionsausschuss</string>
+    <string name="staff_role_production_design">Produktionsdesign</string>
+    <string name="staff_role_production_desk">Produktionstisch</string>
+    <string name="staff_role_production">Produktion</string>
+    <string name="staff_role_prop_design">Requisiten-Design</string>
+    <string name="staff_role_video_editing">Videobearbeitung</string>
+    <string name="staff_role_visual_director">Visueller Direktor</string>
+    <string name="staff_role_visual_effects">Visuelle Effekte</string>
+    <string name="staff_role_world_design">Weltdesign</string>
+    <string name="staff_role_weapon_design">Waffendesign</string>
     <string name="hide_filters">Filter ausblenden</string>
     <string name="more_filters">Weitere Filter</string>
     <string name="is_adult">Erwachsene</string>
@@ -339,6 +395,7 @@
     <string name="chapter_count">Anzahl der Kapitel</string>
     <string name="country_distribution">Länderverteilung</string>
     <string name="release_year">Erscheinungsjahr</string>
+    <string name="watch_year">Schau-Jahr</string>
     <string name="read_year">Lese-Jahr</string>
     <string name="top_movies">Top Filme</string>
     <string name="progress">Fortschritt</string>
@@ -351,7 +408,30 @@
     <string name="hide_from_status_lists">Aus Statuslisten ausblenden</string>
     <string name="black_theme_variant">Schwarze Themenvariante</string>
     <string name="random">Zufall</string>
+    <string name="every_five_teen_minutes">Alle 15 Minuten</string>
+    <string name="every_thirty_minutes">Alle 30 Minuten</string>
+    <string name="every_hour">Stündlich</string>
+    <string name="custom_color">Eigene Farbe</string>
+    <string name="newly_manga">Neu hinzugefügte Manga</string>
+    <string name="newly_anime">Neu hinzugefügte Anime</string>
+    <string name="openings">Vorspann</string>
+    <string name="endings">Abspann</string>
+    <string name="list_name">Listenname</string>
+    <string name="anime_behind">Ausstehende Folgen</string>
+    <string name="default_tab">Standardseite</string>
     <string name="last_used">Zuletzt verwendet</string>
+    <string name="male">Männlich</string>
+    <string name="female">Weiblich</string>
+    <string name="non_binary">Divers</string>
+    <string name="watched_episode_of">Episode %1$s von %2$s gesehen</string>
+    <string name="rewatched_episode_of">Episode %1$s von %2$s erneut gesehen</string>
+    <string name="read_chapter_of">Kapitel %1$s von %2$s gesehen</string>
+    <string name="reread_chapter_of">Kapitel %1$s von %2$s erneut gelesen</string>
+    <string name="plans_to_watch_anime">Plant %s zu schauen</string>
+    <string name="plans_to_read_manga">Plant %s zu lesen</string>
+    <string name="completed_media">%s abgeschlossen</string>
+    <string name="dropped_media">%s abgebrochen</string>
+    <string name="paused_media">%s pausiert</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
