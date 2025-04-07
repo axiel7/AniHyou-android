@@ -84,10 +84,10 @@ class MediaListRepository (
             startedAt = LocalDate.now().takeIf {
                 (!isRepeating || entry.startedAt?.fuzzyDate?.isNull() != false) &&
                 (isPlanning || !entry.progress.isGreaterThanZero())
-            }?.toFuzzyDate(),
+            }?.toFuzzyDate() ?: entry.startedAt?.fuzzyDate,
             completedAt = LocalDate.now().takeIf {
                 (!isRepeating || entry.completedAt?.fuzzyDate?.isNull() != false) && isMaxProgress
-            }?.toFuzzyDate(),
+            }?.toFuzzyDate() ?: entry.completedAt?.fuzzyDate,
         )
     }
 

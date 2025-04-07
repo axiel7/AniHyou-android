@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isNullOrZero
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
@@ -17,7 +18,6 @@ import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
 import com.axiel7.anihyou.core.model.media.titleComparator
-import com.axiel7.anihyou.core.network.api.model.toFuzzyDate
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
@@ -26,7 +26,6 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
-import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -43,7 +42,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserMediaListViewModel(
@@ -157,33 +155,6 @@ class UserMediaListViewModel(
         }
     }
 
-    private suspend fun updateEntry(
-        mediaId: Int,
-        progress: Int? = null,
-        status: MediaListStatus? = null,
-        startDate: LocalDate? = null,
-        endDate: LocalDate? = null,
-        score: Double? = null,
-        isFromScoreDialog: Boolean = false,
-    ) {
-        if (mutableUiState.value.isLoading) return
-        mediaListRepository.updateEntry(
-            mediaId = mediaId,
-            progress = progress,
-            status = status,
-            score = score,
-            startedAt = startDate?.toFuzzyDate(),
-            completedAt = endDate?.toFuzzyDate(),
-        ).collectLatest { result ->
-            mutableUiState.update {
-                if (result is DataResult.Success && result.data != null && !isFromScoreDialog) {
-                    onUpdateListEntry(result.data!!.basicMediaListEntry)
-                }
-                result.toUiState()
-            }
-        }
-    }
-
     override fun onClickPlusOne(entry: CommonMediaListEntry) {
         viewModelScope.launch {
             mutableUiState.update { it.copy(selectedItem = entry, isLoadingPlusOne = true) }
@@ -238,12 +209,18 @@ class UserMediaListViewModel(
 
     override fun setScore(score: Double?) {
         viewModelScope.launch {
-            mutableUiState.value.selectedItem?.mediaId?.let { mediaId ->
-                updateEntry(
-                    mediaId = mediaId,
-                    score = score,
-                    isFromScoreDialog = true,
-                )
+            mutableUiState.value.run {
+                if (isLoading) return@launch
+                selectedItem?.mediaId?.let { mediaId ->
+                    mediaListRepository.updateEntry(
+                        mediaId = mediaId,
+                        score = score,
+                    ).collectLatest { result ->
+                        mutableUiState.update {
+                            result.toUiState()
+                        }
+                    }
+                }
             }
             toggleScoreDialog(false)
         }
