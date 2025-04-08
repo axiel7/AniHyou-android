@@ -58,8 +58,6 @@ android {
     }
 
     buildTypes {
-        val clientId = versionProps.getProperty("client_id")
-
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
@@ -70,7 +68,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("int", "CLIENT_ID", clientId)
             resValue("string", "app_name", "AniHyou Debug")
         }
         release {
@@ -81,7 +78,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("int", "CLIENT_ID", clientId)
         }
     }
     splits {

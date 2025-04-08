@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class MalApi (
+class MalApi(
     private val client: OkHttpClient
 ) {
     private val json = Json {

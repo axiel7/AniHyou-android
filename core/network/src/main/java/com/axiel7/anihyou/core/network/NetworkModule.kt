@@ -5,6 +5,7 @@ import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
 import com.apollographql.apollo.cache.normalized.normalizedCache
 import com.apollographql.apollo.network.okHttpClient
 import com.axiel7.anihyou.core.base.ANILIST_GRAPHQL_URL
+import com.axiel7.anihyou.core.base.MAL_CLIENT_ID
 import com.axiel7.anihyou.core.base.X_MAL_CLIENT_ID
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -57,13 +58,12 @@ fun provideAuthorizationInterceptor(
 }
 
 fun provideOkHttpClient(): OkHttpClient {
-    val malClientId = System.getProperty("malClientId").orEmpty()
     return OkHttpClient()
         .newBuilder()
         .addInterceptor {
             it.proceed(
                 it.request().newBuilder()
-                    .addHeader(X_MAL_CLIENT_ID, malClientId)
+                    .addHeader(X_MAL_CLIENT_ID, MAL_CLIENT_ID)
                     .build()
             )
         }
