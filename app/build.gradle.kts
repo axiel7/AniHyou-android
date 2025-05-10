@@ -53,7 +53,8 @@ android {
             "de-rDE",
             "zh-rCN",
             "zh-rTW",
-            "fr-rFR"
+            "fr-rFR",
+            "th-rTH"
         )
     }
 
