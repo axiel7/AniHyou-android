@@ -1,23 +1,30 @@
 package com.axiel7.anihyou.ui.screens.main
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import androidx.concurrent.futures.await
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.axiel7.anihyou.common.GlobalVariables
-import com.axiel7.anihyou.data.repository.DefaultPreferencesRepository
-import com.axiel7.anihyou.data.repository.LoginRepository
-import com.axiel7.anihyou.ui.common.DefaultTab
-import com.axiel7.anihyou.utils.ANIHYOU_SCHEME
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.wear.remote.interactions.RemoteActivityHelper
+import com.axiel7.anihyou.core.base.ANIHYOU_AUTH_RESPONSE
+import com.axiel7.anihyou.core.base.ANIHYOU_SCHEME
+import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_AUTH
+import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_CALLBACK_URL
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.LoginRepository
+import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.network.NetworkVariables
+import com.axiel7.anihyou.core.resources.R
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    private val globalVariables: GlobalVariables,
+class MainViewModel(
+    private val networkVariables: NetworkVariables,
     private val loginRepository: LoginRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : ViewModel(), MainEvent {
@@ -52,12 +59,35 @@ class MainViewModel @Inject constructor(
     }
 
     fun setToken(token: String?) {
-        globalVariables.accessToken = token
+        networkVariables.accessToken = token
     }
 
-    fun onIntentDataReceived(data: Uri?) = viewModelScope.launch {
+    fun onIntentDataReceived(context: Context, data: Uri?) = viewModelScope.launch {
         if (data?.scheme == ANIHYOU_SCHEME) {
-            loginRepository.parseRedirectUri(data)
+            when {
+                data.toString().contains(ANIHYOU_AUTH_RESPONSE) -> loginRepository.parseRedirectUri(data)
+                data.toString().contains(ANIHYOU_WEAR_AUTH) -> sendAuthTokenToWearable(context)
+            }
+        }
+    }
+
+    private fun sendAuthTokenToWearable(context: Context) {
+        viewModelScope.launch {
+            try {
+                val token = accessToken.first()
+                if (token == null) {
+                    context.showToast(R.string.not_logged_text)
+                } else {
+                    val data = "${ANIHYOU_WEAR_CALLBACK_URL}?access_token=$token".toUri()
+                    RemoteActivityHelper(context).startRemoteActivity(
+                        Intent(Intent.ACTION_VIEW)
+                            .addCategory(Intent.CATEGORY_BROWSABLE)
+                            .setData(data),
+                    ).await()
+                }
+            } catch (e: RemoteActivityHelper.RemoteIntentException) {
+                context.showToast(e.message)
+            }
         }
     }
 

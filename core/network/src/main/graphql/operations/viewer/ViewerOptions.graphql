@@ -1,0 +1,26 @@
+query ViewerOptions {
+    Viewer {
+        id
+        options {
+            profileColor
+            titleLanguage
+            displayAdultContent
+        }
+        mediaListOptions {
+            ...CommonMediaListOptions
+        }
+    }
+}
+
+fragment CommonMediaListOptions on MediaListOptions {
+    scoreFormat
+    animeList {
+        advancedScoringEnabled # shared between animeList and mangaList
+        sectionOrder
+        customLists
+    }
+    mangaList {
+        sectionOrder
+        customLists
+    }
+}

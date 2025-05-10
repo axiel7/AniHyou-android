@@ -1,0 +1,20 @@
+query MediaFollowing($id: Int, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        mediaList(mediaId: $id, isFollowing: true, sort: UPDATED_TIME_DESC) {
+            id
+            status
+            score
+            user {
+                id
+                name
+                avatar {
+                    medium
+                }
+                mediaListOptions{scoreFormat}
+            }
+        }
+        pageInfo {
+            ...CommonPage
+        }
+    }
+}

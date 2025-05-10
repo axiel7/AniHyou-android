@@ -1,0 +1,60 @@
+query UserListCollection(
+    $userId: Int,
+    $type: MediaType,
+    $sort: [MediaListSort],
+    $chunk: Int,
+    $perChunk: Int
+) {
+    MediaListCollection(
+        userId: $userId,
+        type: $type,
+        sort: $sort,
+        chunk: $chunk,
+        perChunk: $perChunk
+    ) {
+        lists {
+            name
+            isCustomList
+            entries {
+                ...CommonMediaListEntry
+            }
+        }
+        hasNextChunk
+    }
+}
+
+fragment BasicMediaListEntry on MediaList {
+    id
+    status
+    score
+    advancedScores
+    progress
+    progressVolumes
+    repeat
+    private
+    hiddenFromStatusLists
+    startedAt {
+        ...FuzzyDate
+    }
+    completedAt {
+        ...FuzzyDate
+    }
+    notes
+}
+
+fragment CommonMediaListEntry on MediaList {
+    ...BasicMediaListEntry
+    mediaId
+    media {
+        ...BasicMediaDetails
+        coverImage {
+            large
+            color
+        }
+        nextAiringEpisode {
+            episode
+            timeUntilAiring
+        }
+        status
+    }
+}

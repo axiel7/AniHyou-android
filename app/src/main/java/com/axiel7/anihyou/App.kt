@@ -2,8 +2,6 @@ package com.axiel7.anihyou
 
 import android.app.Application
 import android.os.Build.VERSION.SDK_INT
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -13,17 +11,37 @@ import coil3.gif.AnimatedImageDecoder
 import coil3.gif.GifDecoder
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.axiel7.anihyou.core.domain.dataStoreModule
+import com.axiel7.anihyou.core.domain.repositoryModule
+import com.axiel7.anihyou.core.network.apiModule
+import com.axiel7.anihyou.core.network.networkModule
+import com.axiel7.anihyou.feature.worker.workerModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.androix.startup.KoinStartup
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.component.KoinComponent
+import org.koin.dsl.koinConfiguration
 
-@HiltAndroidApp
-class App : Application(), Configuration.Provider, SingletonImageLoader.Factory {
+@OptIn(KoinExperimentalAPI::class)
+class App : Application(), KoinComponent, KoinStartup, SingletonImageLoader.Factory {
 
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    override val workManagerConfiguration
-        get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
+    override fun onKoinStartup() = koinConfiguration {
+        if (BuildConfig.DEBUG) {
+            androidLogger()
+        }
+        androidContext(this@App)
+        workManagerFactory()
+        modules(
+            dataStoreModule,
+            networkModule,
+            apiModule,
+            repositoryModule,
+            viewModelModule,
+            workerModule,
+        )
+    }
 
     override fun newImageLoader(context: PlatformContext) =
         ImageLoader.Builder(this)

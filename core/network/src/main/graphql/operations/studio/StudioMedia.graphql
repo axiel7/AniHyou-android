@@ -1,0 +1,29 @@
+query StudioMedia($studioId: Int, $page: Int, $perPage: Int) {
+    Studio(id: $studioId) {
+        media(isMain: true, page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+            ...CommonStudioMedia
+            pageInfo {
+                ...CommonPage
+            }
+        }
+    }
+}
+
+fragment CommonStudioMedia on MediaConnection {
+    nodes {
+        id
+        coverImage {
+            large
+        }
+        title {
+            userPreferred
+        }
+        startDate {
+            year
+        }
+        mediaListEntry {
+            id
+            status
+        }
+    }
+}

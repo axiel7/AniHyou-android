@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.axiel7.anihyou.ui.common.BottomDestination
+import com.axiel7.anihyou.core.ui.common.BottomDestination
 
 @Composable
 fun MainNavigationRail(
