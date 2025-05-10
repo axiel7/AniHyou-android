@@ -21,6 +21,7 @@
         <item quantity="other">%d Tage</item>
     </plurals>
     <string name="unknown">Unbekannt</string>
+    <string name="airing_soon">Erscheint bald</string>
     <string name="mean_score">Durchschnitt</string>
     <string name="airing_in">Ausstrahlung in %s</string>
     <string name="winter">Winter</string>
@@ -501,7 +502,7 @@
     <string name="non_binary">Divers</string>
     <string name="watched_episode_of">Episode %1$s von %2$s gesehen</string>
     <string name="rewatched_episode_of">Episode %1$s von %2$s erneut gesehen</string>
-    <string name="read_chapter_of">Kapitel %1$s von %2$s gesehen</string>
+    <string name="read_chapter_of">Kapitel %1$s von %2$s gelesen</string>
     <string name="reread_chapter_of">Kapitel %1$s von %2$s erneut gelesen</string>
     <string name="plans_to_watch_anime">Plant %s zu schauen</string>
     <string name="plans_to_read_manga">Plant %s zu lesen</string>

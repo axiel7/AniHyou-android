@@ -43,11 +43,11 @@
     <string name="not_logged_text">Будь ласка, увійдіть, щоб скористатися цією функцією</string>
     <string name="login">Увійти</string>
     <string name="current">Поточне</string>
-    <string name="planning">Заплановано</string>
-    <string name="completed">Завершено</string>
-    <string name="dropped">Кинуто</string>
-    <string name="paused">Призупинено</string>
-    <string name="repeating">Повторюється</string>
+    <string name="planning">Заплановані</string>
+    <string name="completed">Завершені</string>
+    <string name="dropped">Кинуті</string>
+    <string name="paused">Призупинені</string>
+    <string name="repeating">Повторюю</string>
     <string name="anime_list">Каталог анiме</string>
     <string name="manga_list">Каталог манґи</string>
     <string name="ok">ОК</string>
@@ -470,6 +470,8 @@
     <string name="staff_role_layout">Композиція</string>
     <string name="staff_role_lettering">Літерування</string>
     <string name="staff_role_line_producer">Лінійний продюсер</string>
+    <string name="staff_role_literary_arts_assistance">Поміч із координуванням сценарію</string>
+    <string name="staff_role_literary_arts">Координування сценарію</string>
     <string name="staff_role_main_animator">Головний аніматор</string>
     <string name="staff_role_mechanical_animation_director">Режисер механічної анімації</string>
     <string name="staff_role_mechanical_design">Механічний дизайн</string>
