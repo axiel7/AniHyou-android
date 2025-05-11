@@ -16,10 +16,11 @@
 default_platform(:android)
 
 platform :android do
-  desc "Build and sign APK"
+  desc "Build and sign FOSS APK"
   lane :release do
     gradle(
         task: "assemble",
+        flavor: "foss",
         build_type: "release",
         print_command: false,
         properties: {
