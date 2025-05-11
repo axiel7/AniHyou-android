@@ -1,4 +1,4 @@
-name: Android Build Release APK
+name: Android Build Release FOSS APK
 
 on:
   push:
@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: assets
-          path: ${{github.workspace}}/app/build/outputs/apk/release/*.apk
+          path: ${{github.workspace}}/app/foss/release/*.apk
