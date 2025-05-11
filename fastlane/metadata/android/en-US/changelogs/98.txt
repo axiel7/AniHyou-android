@@ -1,0 +1,10 @@
+- Add color to list status indicators
+- Show volumes instead of chapters when applicable
+- Search: add sort by end date option
+- Search: add scroll to top button
+- Search: season filter
+- Search: year selection fixes
+- Current: implemented full list view
+- Auto set start date when completed
+- Chinese (Traditional) and Thai support
+- Lot of bug fixes and improvements
