@@ -1,13 +1,10 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import androidx.concurrent.futures.await
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.axiel7.anihyou.core.base.ANIHYOU_AUTH_RESPONSE
 import com.axiel7.anihyou.core.base.ANIHYOU_SCHEME
 import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_AUTH
@@ -18,6 +15,7 @@ import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.network.NetworkVariables
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.startRemoteActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -73,20 +71,12 @@ class MainViewModel(
 
     private fun sendAuthTokenToWearable(context: Context) {
         viewModelScope.launch {
-            try {
-                val token = accessToken.first()
-                if (token == null) {
-                    context.showToast(R.string.not_logged_text)
-                } else {
-                    val data = "${ANIHYOU_WEAR_CALLBACK_URL}?access_token=$token".toUri()
-                    RemoteActivityHelper(context).startRemoteActivity(
-                        Intent(Intent.ACTION_VIEW)
-                            .addCategory(Intent.CATEGORY_BROWSABLE)
-                            .setData(data),
-                    ).await()
-                }
-            } catch (e: RemoteActivityHelper.RemoteIntentException) {
-                context.showToast(e.message)
+            val token = accessToken.first()
+            if (token == null) {
+                context.showToast(R.string.not_logged_text)
+            } else {
+                val data = "${ANIHYOU_WEAR_CALLBACK_URL}?access_token=$token".toUri()
+                context.startRemoteActivity(data)
             }
         }
     }

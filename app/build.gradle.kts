@@ -81,6 +81,21 @@ android {
             )
         }
     }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("foss") {
+            dimension = "version"
+            versionNameSuffix = "-foss"
+            matchingFallbacks += listOf("debug")
+        }
+        create("gms") {
+            dimension = "version"
+            versionNameSuffix = "-gms"
+            matchingFallbacks += listOf("debug")
+        }
+    }
+
     splits {
         abi {
             isEnable = true
@@ -158,7 +173,7 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.androidx.wear.remote.interactions)
+    "gmsImplementation"(libs.androidx.wear.remote.interactions)
 
     implementation(libs.accompanist.permissions)
 
