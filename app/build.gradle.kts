@@ -86,13 +86,10 @@ android {
     productFlavors {
         create("foss") {
             dimension = "version"
-            versionNameSuffix = "-foss"
-            matchingFallbacks += listOf("debug")
         }
         create("gms") {
             dimension = "version"
             versionNameSuffix = "-gms"
-            matchingFallbacks += listOf("debug")
         }
     }
 
