@@ -6,23 +6,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.model.user.hexColor
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
@@ -60,7 +63,6 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.feature.profile.about.UserAboutView
 import com.axiel7.anihyou.feature.profile.activity.UserActivityView
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesView
@@ -121,7 +123,23 @@ private fun ProfileContent(
                 fallbackColor = colorFromHex(uiState.userInfo?.hexColor()),
                 height = statusBarPadding.calculateTopPadding() + 100.dp
             )
-            LargeTopAppBar(
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    if (!uiState.isMyProfile) {
+                        BackIconButton(onClick = navActionManager::goBack)
+                    }
+                },
+                actions = {
+                    ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
+                },
+                windowInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                ),
+            )
+            TopAppBar(
                 title = {
                     MainProfileInfo(
                         uiState = uiState,
@@ -136,15 +154,7 @@ private fun ProfileContent(
                         }
                     )
                 },
-                navigationIcon = {
-                    if (!uiState.isMyProfile) {
-                        BackIconButton(onClick = navActionManager::goBack)
-                    }
-                },
-                actions = {
-                    ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
-                },
-                expandedHeight = 264.dp,
+                modifier = Modifier.padding(top = statusBarPadding.calculateTopPadding() + 24.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     scrolledContainerColor = Color.Transparent,
