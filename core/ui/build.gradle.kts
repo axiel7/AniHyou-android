@@ -62,4 +62,6 @@ dependencies {
     implementation(libs.compose.markdown)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    debugImplementation(libs.ui.tooling)
 }
