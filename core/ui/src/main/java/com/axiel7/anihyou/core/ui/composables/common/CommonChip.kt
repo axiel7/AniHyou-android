@@ -118,7 +118,7 @@ fun AssistChipWithTooltip(
     }
 
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = {
             RichTooltip(text = tooltipContent ?: {})
         },
@@ -150,7 +150,7 @@ fun TagChip(
 ) {
     val tooltipState = rememberTooltipState(isPersistent = true)
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = {
             RichTooltip {
                 Text(text = description ?: stringResource(R.string.no_description))
@@ -180,7 +180,7 @@ fun SpoilerTagChip(
     val tooltipState = rememberTooltipState(isPersistent = true)
     AnimatedVisibility(visible = visible) {
         TooltipBox(
-            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
             tooltip = {
                 RichTooltip {
                     Text(text = description ?: stringResource(R.string.no_description))

@@ -71,7 +71,7 @@ fun <T> VerticalStatsBar(
             val scope = rememberCoroutineScope()
             val tooltipState = rememberTooltipState(isPersistent = true)
             TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
                 tooltip = {
                     RichTooltip {
                         Column {

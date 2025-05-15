@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -48,7 +47,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.core.model.canUseAdvancedScoring
 import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.model.media.duration
@@ -61,15 +61,15 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
+import com.axiel7.anihyou.core.ui.composables.rememberSheetState
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
-import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.feature.editmedia.composables.CustomListsDialog
 import com.axiel7.anihyou.feature.editmedia.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDateField
@@ -445,9 +445,8 @@ fun EditMediaSheetPreview() {
             EditMediaSheetContent(
                 uiState = EditMediaUiState(),
                 event = null,
-                sheetState = SheetState(
+                sheetState = rememberSheetState(
                     skipPartiallyExpanded = true,
-                    density = LocalDensity.current,
                     initialValue = SheetValue.Expanded
                 ),
                 onEntryUpdated = {},

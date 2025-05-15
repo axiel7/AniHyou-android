@@ -27,7 +27,7 @@ fun <T> SelectableIconToggleButton(
     val scope = rememberCoroutineScope()
 
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = {
             PlainTooltip {
                 Text(tooltipText)
