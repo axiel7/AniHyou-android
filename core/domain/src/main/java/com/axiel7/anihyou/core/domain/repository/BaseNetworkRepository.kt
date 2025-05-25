@@ -84,13 +84,13 @@ abstract class BaseNetworkRepository(
     }
 
     private suspend fun <D: Operation.Data> onError(response: ApolloResponse<D>) {
-        if (response.errors?.any { it.message == "Invalid token" } == true) {
+        if (response.errors?.any { it.message == INVALID_TOKEN_ERROR } == true) {
             onInvalidToken()
         }
     }
 
     private suspend fun onError(error: ErrorResponse) {
-        if (error.errors.any { it.message == "Invalid token" }) {
+        if (error.errors.any { it.message == INVALID_TOKEN_ERROR }) {
             onInvalidToken()
         }
     }
@@ -111,6 +111,10 @@ abstract class BaseNetworkRepository(
     }
 
     private suspend fun onInvalidToken() {
-        defaultPreferencesRepository.setAccessToken(null)
+        defaultPreferencesRepository.removeAccessToken()
+    }
+
+    companion object {
+        const val INVALID_TOKEN_ERROR = "Invalid token"
     }
 }

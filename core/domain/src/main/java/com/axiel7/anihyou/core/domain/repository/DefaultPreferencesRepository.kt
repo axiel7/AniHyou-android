@@ -37,6 +37,10 @@ class DefaultPreferencesRepository (
         dataStore.setValue(ACCESS_TOKEN_KEY, value)
     }
 
+    suspend fun removeAccessToken() {
+        dataStore.edit { it.remove(ACCESS_TOKEN_KEY) }
+    }
+
     val isLoggedIn = accessToken.map { it != null }
 
     val userId = dataStore.getValue(USER_ID_KEY)
