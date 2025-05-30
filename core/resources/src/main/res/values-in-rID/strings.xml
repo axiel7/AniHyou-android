@@ -608,10 +608,14 @@
     <string name="completed_media">Selesai %s</string>
     <string name="dropped_media">Dihapus %s</string>
     <string name="paused_media">Dijeda %s</string>
+    <string name="rewatched_media">Ditonton ulang %s</string>
+    <string name="reread_media">Dibaca ulang %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d j</item>
     </plurals>
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d mnt</item>
     </plurals>
+    <string name="login_required_in_phone">Untuk menggunakan aplikasi ini anda harus masuk dengan membuka aplikasi AniHyou yang terpasang di ponsel Anda</string>
+    <string name="app_installed_required">Tidak ada perangkat terdekat yang terdeteksi, harap instal versi aplikasi AniHyou terbaru di ponsel Android Anda</string>
 </resources>
