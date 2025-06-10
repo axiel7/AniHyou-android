@@ -14,6 +14,7 @@ data class ProfileUiState(
     val activities: SnapshotStateList<UserActivityQuery.Activity> = mutableStateListOf(),
     val isLoadingActivity: Boolean = true,
     val isMyProfile: Boolean,
+    val fetchFromNetwork: Boolean = false,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,
