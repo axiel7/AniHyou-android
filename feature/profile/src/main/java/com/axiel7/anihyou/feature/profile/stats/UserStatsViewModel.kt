@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserStatsViewModel(
@@ -54,6 +55,12 @@ class UserStatsViewModel(
 
     override fun setStudiosType(value: StatDistributionType) =
         mutableUiState.update { it.copy(studiosType = value) }
+
+    override fun onRefresh() {
+        val userId = uiState.value.userId
+        mutableUiState.update { it.copy(userId = null, isLoading = true) }
+        mutableUiState.update { it.copy(userId = userId) }
+    }
 
     init {
         // overview

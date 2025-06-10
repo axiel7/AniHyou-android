@@ -15,5 +15,5 @@ interface UserStatsEvent {
     fun setStaffType(value: StatDistributionType)
     fun setVoiceActorsType(value: StatDistributionType)
     fun setStudiosType(value: StatDistributionType)
-
+    fun onRefresh()
 }

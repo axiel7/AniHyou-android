@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,6 +55,7 @@ fun UserStatsView(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserStatsContent(
     uiState: UserStatsUiState,
@@ -61,82 +64,87 @@ private fun UserStatsContent(
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth()
+    PullToRefreshBox(
+        isRefreshing = uiState.isLoading,
+        onRefresh = { event?.onRefresh() }
     ) {
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+        Column(
+            modifier = modifier.fillMaxWidth()
         ) {
-            UserStatType.entries.forEach {
-                FilterSelectionChip(
-                    selected = uiState.type == it,
-                    text = it.localized(),
-                    onClick = {
-                        event?.setType(it)
-                    },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }//: Row
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                UserStatType.entries.forEach {
+                    FilterSelectionChip(
+                        selected = uiState.type == it,
+                        text = it.localized(),
+                        onClick = {
+                            event?.setType(it)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
+            }//: Row
 
-        when (uiState.type) {
-            UserStatType.OVERVIEW -> {
-                OverviewStatsView(
-                    uiState = uiState,
-                    event = event,
-                    modifier = Modifier
-                        .nestedScroll(nestedScrollConnection)
-                        .verticalScroll(rememberScrollState())
-                        .navigationBarsPadding()
-                )
-            }
+            when (uiState.type) {
+                UserStatType.OVERVIEW -> {
+                    OverviewStatsView(
+                        uiState = uiState,
+                        event = event,
+                        modifier = Modifier
+                            .nestedScroll(nestedScrollConnection)
+                            .verticalScroll(rememberScrollState())
+                            .navigationBarsPadding()
+                    )
+                }
 
-            UserStatType.GENRES -> {
-                GenresStatsView(
-                    uiState = uiState,
-                    event = event,
-                    navActionManager = navActionManager,
-                    modifier = Modifier.nestedScroll(nestedScrollConnection)
-                )
-            }
+                UserStatType.GENRES -> {
+                    GenresStatsView(
+                        uiState = uiState,
+                        event = event,
+                        navActionManager = navActionManager,
+                        modifier = Modifier.nestedScroll(nestedScrollConnection)
+                    )
+                }
 
-            UserStatType.TAGS -> {
-                TagsStatsView(
-                    uiState = uiState,
-                    event = event,
-                    navActionManager = navActionManager,
-                    modifier = Modifier.nestedScroll(nestedScrollConnection)
-                )
-            }
+                UserStatType.TAGS -> {
+                    TagsStatsView(
+                        uiState = uiState,
+                        event = event,
+                        navActionManager = navActionManager,
+                        modifier = Modifier.nestedScroll(nestedScrollConnection)
+                    )
+                }
 
-            UserStatType.STAFF -> {
-                StaffStatsView(
-                    uiState = uiState,
-                    event = event,
-                    navActionManager = navActionManager,
-                    modifier = Modifier.nestedScroll(nestedScrollConnection)
-                )
-            }
+                UserStatType.STAFF -> {
+                    StaffStatsView(
+                        uiState = uiState,
+                        event = event,
+                        navActionManager = navActionManager,
+                        modifier = Modifier.nestedScroll(nestedScrollConnection)
+                    )
+                }
 
-            UserStatType.VOICE_ACTORS -> {
-                VoiceActorsStatsView(
-                    uiState = uiState,
-                    event = event,
-                    navActionManager = navActionManager,
-                )
-            }
+                UserStatType.VOICE_ACTORS -> {
+                    VoiceActorsStatsView(
+                        uiState = uiState,
+                        event = event,
+                        navActionManager = navActionManager,
+                    )
+                }
 
-            UserStatType.STUDIOS -> {
-                StudiosStatsView(
-                    uiState = uiState,
-                    event = event,
-                    navActionManager = navActionManager,
-                )
+                UserStatType.STUDIOS -> {
+                    StudiosStatsView(
+                        uiState = uiState,
+                        event = event,
+                        navActionManager = navActionManager,
+                    )
+                }
             }
-        }
-    }//: Column
+        }//: Column
+    }
 }
 
 @Preview

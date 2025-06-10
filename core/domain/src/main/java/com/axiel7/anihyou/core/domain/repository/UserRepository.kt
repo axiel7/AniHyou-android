@@ -77,8 +77,9 @@ class UserRepository(
         }
     )
 
-    fun getMyUserInfo() = api
+    fun getMyUserInfo(fetchFromNetwork: Boolean = false) = api
         .viewerUserInfoQuery()
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .watch()
         .asDataResult {
             it.Viewer?.userInfo
@@ -87,8 +88,10 @@ class UserRepository(
     fun getUserInfo(
         userId: Int? = null,
         username: String? = null,
+        fetchFromNetwork: Boolean = false
     ) = api
         .userBasicInfoQuery(userId, username)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .watch()
         .asDataResult {
             it.User?.userInfo
@@ -104,10 +107,12 @@ class UserRepository(
     fun getUserActivity(
         userId: Int,
         sort: List<ActivitySort> = listOf(ActivitySort.ID_DESC),
+        fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int = 25,
     ) = api
         .userActivityQuery(userId, sort, page, perPage)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .watch()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.activities?.filterNotNull().orEmpty()

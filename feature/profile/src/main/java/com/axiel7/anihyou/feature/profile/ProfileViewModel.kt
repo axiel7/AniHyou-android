@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -32,7 +33,8 @@ class ProfileViewModel(
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
-    private val arguments = runCatching { savedStateHandle.toRoute<Routes.UserDetails>() }.getOrNull()
+    private val arguments =
+        runCatching { savedStateHandle.toRoute<Routes.UserDetails>() }.getOrNull()
 
     private val myUserId = defaultPreferencesRepository.userId
 
@@ -42,7 +44,7 @@ class ProfileViewModel(
 
     private fun getMyUserInfo() {
         viewModelScope.launch {
-            userRepository.getMyUserInfo()
+            userRepository.getMyUserInfo(fetchFromNetwork = uiState.value.fetchFromNetwork)
                 .collectLatest { result ->
                     mutableUiState.update {
                         if (result is DataResult.Success && result.data != null) {
@@ -50,6 +52,7 @@ class ProfileViewModel(
                             defaultPreferencesRepository.saveProfileInfo(result.data!!)
                             it.copy(
                                 userInfo = result.data,
+                                fetchFromNetwork = false,
                                 isLoading = false
                             )
                         } else {
@@ -65,20 +68,24 @@ class ProfileViewModel(
         username: String? = null,
     ) {
         viewModelScope.launch {
-            userRepository.getUserInfo(userId, username)
-                .collectLatest { result ->
-                    mutableUiState.update {
-                        if (result is DataResult.Success) {
-                            it.copy(
-                                userInfo = result.data,
-                                isMyProfile = result.data?.id == myUserId.first(),
-                                isLoading = false,
-                            )
-                        } else {
-                            result.toUiState()
-                        }
+            userRepository.getUserInfo(
+                userId = userId,
+                username = username,
+                fetchFromNetwork = uiState.value.fetchFromNetwork
+            ).collectLatest { result ->
+                mutableUiState.update {
+                    if (result is DataResult.Success) {
+                        it.copy(
+                            userInfo = result.data,
+                            isMyProfile = result.data?.id == myUserId.first(),
+                            fetchFromNetwork = false,
+                            isLoading = false,
+                        )
+                    } else {
+                        result.toUiState()
                     }
                 }
+            }
         }
     }
 
@@ -135,6 +142,23 @@ class ProfileViewModel(
         }.launchIn(viewModelScope)
     }
 
+    override fun onRefresh() {
+        mutableUiState.update { it.copy(fetchFromNetwork = true, isLoading = true) }
+        if (mutableUiState.value.isMyProfile) getMyUserInfo()
+        else getUserInfo(arguments?.id, arguments?.userName)
+    }
+
+    override fun onRefreshActivities() {
+        mutableUiState.update {
+            it.copy(
+                isLoadingActivity = true,
+                fetchFromNetwork = true,
+                page = 1,
+                hasNextPage = true
+            )
+        }
+    }
+
     init {
         if (mutableUiState.value.isMyProfile) getMyUserInfo()
         else getUserInfo(arguments?.id, arguments?.userName)
@@ -142,19 +166,25 @@ class ProfileViewModel(
         // activities
         mutableUiState
             .filter { it.userInfo != null && it.hasNextPage && it.page != 0 }
-            .distinctUntilChangedBy { it.page }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && !new.fetchFromNetwork
+            }
             .flatMapLatest { uiState ->
                 userRepository.getUserActivity(
                     userId = uiState.userInfo!!.id,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page
                 )
             }
             .onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
+                        if (it.page == 1) it.activities.clear()
                         it.activities.addAll(result.list)
                         it.copy(
                             isLoadingActivity = false,
+                            fetchFromNetwork = false,
                             hasNextPage = result.hasNextPage
                         )
                     } else {

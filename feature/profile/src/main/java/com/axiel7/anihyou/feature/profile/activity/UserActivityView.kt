@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +25,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.ProfileEvent
 import com.axiel7.anihyou.feature.profile.ProfileUiState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserActivityView(
     activities: List<UserActivityQuery.Activity>,
@@ -36,113 +39,118 @@ fun UserActivityView(
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        state = listState,
-        contentPadding = PaddingValues(top = 8.dp)
+    PullToRefreshBox(
+        isRefreshing = uiState.isLoadingActivity,
+        onRefresh = { event?.onRefreshActivities() }
     ) {
-        if (uiState.isLoadingActivity) {
-            items(10) {
-                ActivityItemPlaceholder(
-                    modifier = Modifier.padding(8.dp)
-                )
+        LazyColumn(
+            modifier = modifier.fillMaxWidth(),
+            state = listState,
+            contentPadding = PaddingValues(top = 8.dp)
+        ) {
+            if (uiState.isLoadingActivity) {
+                items(10) {
+                    ActivityItemPlaceholder(
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
-        }
-        items(
-            items = activities,
-            contentType = { it }
-        ) { item ->
-            item.onListActivity?.listActivityFragment?.let { activity ->
-                ActivityItem(
-                    type = ActivityType.MEDIA_LIST,
-                    text = activity.text(),
-                    createdAt = activity.createdAt,
-                    replyCount = activity.replyCount,
-                    likeCount = activity.likeCount,
-                    isLiked = activity.isLiked,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    imageUrl = activity.media?.coverImage?.medium,
-                    isLocked = activity.isLocked,
-                    onClick = {
-                        navActionManager.toActivityDetails(activity.id)
-                    },
-                    onClickImage = {
-                        activity.media?.id?.let(navActionManager::toMediaDetails)
-                    },
-                    onClickLike = {
-                        event?.toggleLikeActivity(activity.id)
-                    },
-                    onClickDelete = {
-                        event?.deleteActivity(activity.id)
-                    }
-                )
-                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+            items(
+                items = activities,
+                contentType = { it }
+            ) { item ->
+                item.onListActivity?.listActivityFragment?.let { activity ->
+                    ActivityItem(
+                        type = ActivityType.MEDIA_LIST,
+                        text = activity.text(),
+                        createdAt = activity.createdAt,
+                        replyCount = activity.replyCount,
+                        likeCount = activity.likeCount,
+                        isLiked = activity.isLiked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        imageUrl = activity.media?.coverImage?.medium,
+                        isLocked = activity.isLocked,
+                        onClick = {
+                            navActionManager.toActivityDetails(activity.id)
+                        },
+                        onClickImage = {
+                            activity.media?.id?.let(navActionManager::toMediaDetails)
+                        },
+                        onClickLike = {
+                            event?.toggleLikeActivity(activity.id)
+                        },
+                        onClickDelete = {
+                            event?.deleteActivity(activity.id)
+                        }
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+                }
+                item.onTextActivity?.textActivityFragment?.let { activity ->
+                    ActivityItem(
+                        type = ActivityType.TEXT,
+                        text = activity.text.orEmpty(),
+                        createdAt = activity.createdAt,
+                        replyCount = activity.replyCount,
+                        likeCount = activity.likeCount,
+                        isLiked = activity.isLiked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        imageUrl = activity.user?.avatar?.medium,
+                        username = activity.user?.name,
+                        isLocked = activity.isLocked,
+                        onClick = {
+                            navActionManager.toActivityDetails(activity.id)
+                        },
+                        onClickImage = {
+                            activity.userId?.let(navActionManager::toUserDetails)
+                        },
+                        onClickLike = {
+                            event?.toggleLikeActivity(activity.id)
+                        },
+                        onClickDelete = {
+                            event?.deleteActivity(activity.id)
+                        },
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+                }
+                item.onMessageActivity?.messageActivityFragment?.let { activity ->
+                    ActivityItem(
+                        type = ActivityType.MESSAGE,
+                        text = activity.message.orEmpty(),
+                        createdAt = activity.createdAt,
+                        replyCount = activity.replyCount,
+                        likeCount = activity.likeCount,
+                        isLiked = activity.isLiked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        imageUrl = activity.messenger?.avatar?.medium,
+                        username = activity.messenger?.name,
+                        isPrivate = activity.isPrivate,
+                        isLocked = activity.isLocked,
+                        onClick = {
+                            navActionManager.toActivityDetails(activity.id)
+                        },
+                        onClickImage = {
+                            activity.messengerId?.let(navActionManager::toUserDetails)
+                        },
+                        onClickLike = {
+                            event?.toggleLikeActivity(activity.id)
+                        },
+                        onClickDelete = {
+                            event?.deleteActivity(activity.id)
+                        },
+                        navigateToFullscreenImage = navActionManager::toFullscreenImage
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
+                }
             }
-            item.onTextActivity?.textActivityFragment?.let { activity ->
-                ActivityItem(
-                    type = ActivityType.TEXT,
-                    text = activity.text.orEmpty(),
-                    createdAt = activity.createdAt,
-                    replyCount = activity.replyCount,
-                    likeCount = activity.likeCount,
-                    isLiked = activity.isLiked,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    imageUrl = activity.user?.avatar?.medium,
-                    username = activity.user?.name,
-                    isLocked = activity.isLocked,
-                    onClick = {
-                        navActionManager.toActivityDetails(activity.id)
-                    },
-                    onClickImage = {
-                        activity.userId?.let(navActionManager::toUserDetails)
-                    },
-                    onClickLike = {
-                        event?.toggleLikeActivity(activity.id)
-                    },
-                    onClickDelete = {
-                        event?.deleteActivity(activity.id)
-                    },
-                    navigateToFullscreenImage = navActionManager::toFullscreenImage
-                )
-                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
-            }
-            item.onMessageActivity?.messageActivityFragment?.let { activity ->
-                ActivityItem(
-                    type = ActivityType.MESSAGE,
-                    text = activity.message.orEmpty(),
-                    createdAt = activity.createdAt,
-                    replyCount = activity.replyCount,
-                    likeCount = activity.likeCount,
-                    isLiked = activity.isLiked,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    imageUrl = activity.messenger?.avatar?.medium,
-                    username = activity.messenger?.name,
-                    isPrivate = activity.isPrivate,
-                    isLocked = activity.isLocked,
-                    onClick = {
-                        navActionManager.toActivityDetails(activity.id)
-                    },
-                    onClickImage = {
-                        activity.messengerId?.let(navActionManager::toUserDetails)
-                    },
-                    onClickLike = {
-                        event?.toggleLikeActivity(activity.id)
-                    },
-                    onClickDelete = {
-                        event?.deleteActivity(activity.id)
-                    },
-                    navigateToFullscreenImage = navActionManager::toFullscreenImage
-                )
-                HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
-            }
-        }
-    }//: LazyColumn
+        }//: LazyColumn
+    }
 }
 
 @Preview

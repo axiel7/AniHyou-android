@@ -7,4 +7,6 @@ interface ProfileEvent : UiEvent, PagedEvent {
     fun toggleFollow()
     fun toggleLikeActivity(id: Int)
     fun deleteActivity(id: Int)
+    fun onRefresh()
+    fun onRefreshActivities()
 }
