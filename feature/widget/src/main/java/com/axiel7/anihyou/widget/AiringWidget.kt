@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -160,7 +161,8 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
             Image(
                 provider = ImageProvider(R.drawable.replay_20),
                 contentDescription = glanceStringResource(R.string.refresh),
-                modifier = GlanceModifier.padding(end = 8.dp)
+                modifier = GlanceModifier.padding(end = 8.dp),
+                colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface)
             )
             Text(
                 text = glanceStringResource(R.string.refresh),
