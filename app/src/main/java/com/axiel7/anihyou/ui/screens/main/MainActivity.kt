@@ -50,7 +50,6 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import kotlinx.coroutines.runBlocking
-import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -76,53 +75,51 @@ class MainActivity : AppCompatActivity() {
         val tabToOpen = intent.action?.toBottomDestinationIndex() ?: startTab
 
         setContent {
-            KoinAndroidContext {
-                val windowSizeClass = calculateWindowSizeClass(this)
-                val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
-                val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
-                else theme == Theme.DARK
-                val useBlackColors by viewModel.useBlackColors.collectAsStateWithLifecycle(
-                    initialValue = initialUseBlackColors
-                )
-                val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
-                val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
-                    initialValue = initialAppColorMode
-                )
-                val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
+            val windowSizeClass = calculateWindowSizeClass(this)
+            val theme by viewModel.theme.collectAsStateWithLifecycle(initialTheme)
+            val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+            else theme == Theme.DARK
+            val useBlackColors by viewModel.useBlackColors.collectAsStateWithLifecycle(
+                initialValue = initialUseBlackColors
+            )
+            val appColor by viewModel.appColor.collectAsStateWithLifecycle(initialAppColor)
+            val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
+                initialValue = initialAppColorMode
+            )
+            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
-                DisposableEffect(isDark) {
-                    enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.auto(
-                            android.graphics.Color.TRANSPARENT,
-                            android.graphics.Color.TRANSPARENT,
-                        ) { isDark },
-                        navigationBarStyle = SystemBarStyle.auto(
-                            light_scrim.toArgb(),
-                            dark_scrim.toArgb(),
-                        ) { isDark },
-                    )
-                    onDispose {}
-                }
+            DisposableEffect(isDark) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
+                    ) { isDark },
+                    navigationBarStyle = SystemBarStyle.auto(
+                        light_scrim.toArgb(),
+                        dark_scrim.toArgb(),
+                    ) { isDark },
+                )
+                onDispose {}
+            }
 
-                AniHyouTheme(
-                    darkTheme = isDark,
-                    blackColors = useBlackColors,
-                    appColor = appColor,
-                    appColorMode = appColorMode,
+            AniHyouTheme(
+                darkTheme = isDark,
+                blackColors = useBlackColors,
+                appColor = appColor,
+                appColorMode = appColorMode,
+            ) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        MainView(
-                            windowSizeClass = windowSizeClass,
-                            isLoggedIn = isLoggedIn,
-                            tabToOpen = tabToOpen,
-                            event = viewModel,
-                            homeTab = homeTab,
-                            deepLink = deepLink,
-                        )
-                    }
+                    MainView(
+                        windowSizeClass = windowSizeClass,
+                        isLoggedIn = isLoggedIn,
+                        tabToOpen = startTab,
+                        event = viewModel,
+                        homeTab = homeTab,
+                        deepLink = deepLink,
+                    )
                 }
             }
         }
