@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.reviewdetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.ReviewRepository
 import com.axiel7.anihyou.core.network.type.ReviewRating
@@ -13,11 +11,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 class ReviewDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.ReviewDetails,
     private val reviewRepository: ReviewRepository
 ) : UiStateViewModel<ReviewDetailsUiState>(), ReviewDetailsEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.ReviewDetails>()
 
     override val initialState = ReviewDetailsUiState()
 

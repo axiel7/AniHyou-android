@@ -168,7 +168,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.sizeclass)
 
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     "gmsImplementation"(libs.androidx.wear.remote.interactions)
 

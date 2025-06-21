@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.usermedialist
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
@@ -45,17 +43,14 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserMediaListViewModel(
-    private val mediaType: MediaType,
-    savedStateHandle: SavedStateHandle,
+    arguments: Routes.UserMediaList,
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
-    private val arguments =
-        runCatching { savedStateHandle.toRoute<Routes.UserMediaList>() }.getOrNull()
-    private val scoreFormat = arguments?.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
-
+    private val scoreFormat = arguments.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
+    private val mediaType = MediaType.safeValueOf(arguments.mediaType)
     private val lastSelectedList =
         (if (mediaType == MediaType.ANIME) listPreferencesRepository.animeListSelected
         else listPreferencesRepository.mangaListSelected).firstBlocking()
@@ -64,20 +59,17 @@ class UserMediaListViewModel(
         UserMediaListUiState(
             mediaType = mediaType,
             scoreFormat = scoreFormat ?: ScoreFormat.POINT_10,
+            isCompactScreen = arguments.isCompactScreen,
             selectedListName = lastSelectedList,
             status = lastSelectedList?.asMediaListStatus(),
-            userId = arguments?.userId.takeIf { it != 0 },
-            isMyList = arguments == null || arguments.userId == 0
+            userId = arguments.userId.takeIf { it != 0 },
+            isMyList = arguments.userId == 0
         )
 
     private val myUserId = defaultPreferencesRepository.userId
         .filterNotNull()
 
     private val titleLanguage = defaultPreferencesRepository.titleLanguage
-
-    fun setIsCompactScreen(value: Boolean) {
-        mutableUiState.update { it.copy(isCompactScreen = value) }
-    }
 
     override fun setScoreFormat(value: ScoreFormat) {
         mutableUiState.update { it.copy(scoreFormat = value) }

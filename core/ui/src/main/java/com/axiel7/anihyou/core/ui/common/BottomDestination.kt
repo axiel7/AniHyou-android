@@ -5,15 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
 
 sealed class BottomDestination(
     val index: Int,
-    val route: Any,
+    val route: NavKey,
     @StringRes val title: Int,
     @DrawableRes val icon: Int,
     @DrawableRes val iconSelected: Int,
@@ -71,14 +69,9 @@ sealed class BottomDestination(
 
         val railValues = listOf(Home, AnimeList, MangaList, Profile)
 
-        fun String.toBottomDestinationIndex() = values.find { it.route == this }?.index
+        fun Int.toBottomDestinationRoute(): NavKey? = values.find { it.index == this }?.route
 
-        fun Int.toBottomDestinationRoute() = values.find { it.index == this }?.route
-
-        fun NavBackStackEntry.isBottomDestination() =
-            destination.hierarchy.any { dest ->
-                values.any { value -> dest.hasRoute(value.route::class) }
-            }
+        fun NavKey.isBottomDestination() = values.any { it.route == this }
 
         val BottomDestination.testTag
             get() = when (this) {

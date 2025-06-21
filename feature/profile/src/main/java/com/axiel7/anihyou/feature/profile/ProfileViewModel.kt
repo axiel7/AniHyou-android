@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.profile
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
@@ -15,7 +13,6 @@ import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -26,20 +23,17 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.UserDetails,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
     private val activityRepository: ActivityRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ProfileUiState>(), ProfileEvent {
 
-    private val arguments =
-        runCatching { savedStateHandle.toRoute<Routes.UserDetails>() }.getOrNull()
-
     private val myUserId = defaultPreferencesRepository.userId
 
     override val initialState = ProfileUiState(
-        isMyProfile = arguments == null || (arguments.id == null && arguments.userName == null),
+        isMyProfile = (arguments.id == null && arguments.userName == null),
     )
 
     private fun getMyUserInfo() {

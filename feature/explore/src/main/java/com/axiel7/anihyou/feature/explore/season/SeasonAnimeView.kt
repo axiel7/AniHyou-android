@@ -46,6 +46,7 @@ import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLoc
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -60,12 +61,14 @@ import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.season.composables.SeasonChartFilterSheet
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeasonAnimeView(
+    arguments: Routes.SeasonAnime,
     navActionManager: NavActionManager
 ) {
-    val viewModel: SeasonAnimeViewModel = koinViewModel()
+    val viewModel: SeasonAnimeViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SeasonAnimeContent(

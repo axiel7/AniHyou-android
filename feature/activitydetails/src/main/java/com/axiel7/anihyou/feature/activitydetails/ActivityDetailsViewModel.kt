@@ -1,15 +1,13 @@
 package com.axiel7.anihyou.feature.activitydetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.model.activity.toGenericActivity
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.type.ActivityType
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.ActivityDetails
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -22,12 +20,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    arguments: Routes.ActivityDetails,
     private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>(), ActivityDetailsEvent {
-
-    val arguments = savedStateHandle.toRoute<ActivityDetails>()
 
     private var detailsQueryData: ActivityDetailsQuery.Activity? = null
 

@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.mediadetails.activity
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
@@ -26,14 +24,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaActivityViewModel(
-    savedStateHandle: SavedStateHandle,
+    arguments: Routes.MediaActivity,
     private val mediaRepository: MediaRepository,
     private val likeRepository: LikeRepository,
     private val activityRepository: ActivityRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<MediaActivityUiState>(), MediaActivityEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.MediaActivity>()
 
     override val initialState = MediaActivityUiState()
 

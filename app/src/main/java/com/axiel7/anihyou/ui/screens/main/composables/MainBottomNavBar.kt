@@ -14,20 +14,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.testTag
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.TopLevelBackStack
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainBottomNavBar(
-    navController: NavController,
-    navBackStackEntry: NavBackStackEntry?,
+    topLevelBackStack: TopLevelBackStack<NavKey>,
     navActionManager: NavActionManager,
     isVisible: Boolean,
     onItemSelected: (Int) -> Unit,
@@ -39,9 +35,7 @@ fun MainBottomNavBar(
     ) {
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
-                val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
-                    it.hasRoute(dest.route::class)
-                } == true
+                val isSelected = dest.route == topLevelBackStack.topLevelKey
                 NavigationBarItem(
                     icon = {
                         dest.Icon(selected = isSelected)
@@ -68,13 +62,7 @@ fun MainBottomNavBar(
                             }
                         } else {
                             onItemSelected(index)
-                            navController.navigate(dest.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            topLevelBackStack.addTopLevel(dest.route)
                         }
                     }
                 )

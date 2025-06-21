@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.explore.search
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
 import com.axiel7.anihyou.core.model.SearchType
@@ -15,7 +13,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.Search
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -27,11 +25,10 @@ import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel(
-    savedStateHandle: SavedStateHandle,
+    arguments: Routes.Search,
     private val searchRepository: SearchRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
 
-    private val arguments = savedStateHandle.toRoute<Search>()
     private val mediaType = arguments.mediaType?.let { MediaType.safeValueOf(it) }
     private val mediaSort = arguments.mediaSort?.let { MediaSort.safeValueOf(it) }
 

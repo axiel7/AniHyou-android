@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -36,12 +37,14 @@ import com.axiel7.anihyou.feature.staffdetails.content.StaffCharacterView
 import com.axiel7.anihyou.feature.staffdetails.content.StaffInfoView
 import com.axiel7.anihyou.feature.staffdetails.content.StaffMediaView
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun StaffDetailsView(
+    arguments: Routes.StaffDetails,
     navActionManager: NavActionManager
 ) {
-    val viewModel: StaffDetailsViewModel = koinViewModel()
+    val viewModel: StaffDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     StaffDetailsContent(

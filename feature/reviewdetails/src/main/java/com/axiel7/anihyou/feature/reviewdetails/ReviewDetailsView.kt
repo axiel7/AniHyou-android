@@ -31,6 +31,7 @@ import com.axiel7.anihyou.core.model.review.userRatingsString
 import com.axiel7.anihyou.core.network.type.ReviewRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -40,12 +41,14 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReviewDetailsView(
+    arguments: Routes.ReviewDetails,
     navActionManager: NavActionManager
 ) {
-    val viewModel: ReviewDetailsViewModel = koinViewModel()
+    val viewModel: ReviewDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ReviewDetailsContent(

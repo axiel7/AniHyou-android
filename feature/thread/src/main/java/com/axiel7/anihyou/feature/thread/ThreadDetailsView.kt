@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_THREAD_URL
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.NotificationIconButton
@@ -35,12 +36,14 @@ import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
 import com.axiel7.anihyou.feature.thread.composables.ThreadCommentView
 import com.axiel7.anihyou.feature.thread.composables.ThreadCommentViewPlaceholder
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ThreadDetailsView(
+    arguments: Routes.ThreadDetails,
     navActionManager: NavActionManager
 ) {
-    val viewModel: ThreadDetailsViewModel = koinViewModel()
+    val viewModel: ThreadDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ThreadDetailsContent(

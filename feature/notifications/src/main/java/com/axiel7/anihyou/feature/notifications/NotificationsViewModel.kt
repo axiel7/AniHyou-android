@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.notifications
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
@@ -18,11 +16,9 @@ import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationsViewModel(
-    savedStateHandle: SavedStateHandle,
+    arguments: Routes.Notifications,
     private val notificationRepository: NotificationRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.Notifications>()
 
     override val initialState = NotificationsUiState()
 

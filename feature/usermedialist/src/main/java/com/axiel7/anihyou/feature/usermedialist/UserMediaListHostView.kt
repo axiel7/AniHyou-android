@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -26,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,11 +44,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -61,17 +64,17 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserMediaListHostView(
-    mediaType: MediaType,
-    isCompactScreen: Boolean,
+    arguments: Routes.UserMediaList,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserMediaListViewModel = koinViewModel(parameters = { parametersOf(mediaType) })
+    val viewModel: UserMediaListViewModel = koinViewModel(
+        key = arguments.userId.toString(),
+        parameters = { parametersOf(arguments) },
+        viewModelStoreOwner = if (arguments.userId == 0) LocalActivity.current as AppCompatActivity
+        else LocalViewModelStoreOwner.current!!
+    )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(isCompactScreen) {
-        viewModel.setIsCompactScreen(isCompactScreen)
-    }
 
     UserMediaListHostContent(
         uiState = uiState,

@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.mediadetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
@@ -23,18 +21,12 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class MediaDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.MediaDetails,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<MediaDetailsUiState>(), MediaDetailsEvent {
 
-    private val arguments = savedStateHandle.toRoute<Routes.MediaDetails>()
-
-    override val initialState = MediaDetailsUiState()
-
-    fun setIsLoggedIn(value: Boolean) {
-        mutableUiState.update { it.copy(isLoggedIn = value) }
-    }
+    override val initialState = MediaDetailsUiState(isLoggedIn = arguments.isLoggedIn)
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
         if (mutableUiState.value.details?.mediaListEntry?.basicMediaListEntry != newListEntry) {

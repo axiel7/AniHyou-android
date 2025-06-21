@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.staffdetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
@@ -22,12 +20,10 @@ import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.StaffDetails,
     private val staffRepository: StaffRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<StaffDetailsUiState>(), StaffDetailsEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.StaffDetails>()
 
     override val initialState = StaffDetailsUiState()
 

@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.home
 
+import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -48,7 +50,9 @@ fun HomeView(
     contentPadding: PaddingValues = PaddingValues(),
     navActionManager: NavActionManager,
 ) {
-    val viewModel: HomeViewModel = koinViewModel()
+    val viewModel: HomeViewModel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
+    )
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()

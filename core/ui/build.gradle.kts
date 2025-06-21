@@ -55,7 +55,8 @@ dependencies {
     implementation(libs.material.kolor)
     implementation(libs.placeholder.material3)
 
-    api(libs.androidx.navigation.compose)
+    api(libs.androidx.navigation3.runtime)
+    api(libs.androidx.navigation3.ui)
 
     implementation(libs.coil.compose)
 

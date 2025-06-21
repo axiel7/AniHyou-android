@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.profile
 
+import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,11 +51,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.model.user.hexColor
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.TopBannerView
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -70,13 +74,20 @@ import com.axiel7.anihyou.feature.profile.social.UserSocialView
 import com.axiel7.anihyou.feature.profile.stats.UserStatsView
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ProfileView(
+    arguments: Routes.UserDetails,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: ProfileViewModel = koinViewModel()
+    val viewModel: ProfileViewModel = koinViewModel(
+        parameters = { parametersOf(arguments) },
+        viewModelStoreOwner = if (arguments.id == null && arguments.userName == null)
+            LocalActivity.current as AppCompatActivity
+        else LocalViewModelStoreOwner.current!!
+    )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ProfileContent(

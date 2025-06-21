@@ -28,18 +28,20 @@ import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.explore.search.SearchContentView
 import com.axiel7.anihyou.feature.explore.search.SearchEvent
 import com.axiel7.anihyou.feature.explore.search.SearchUiState
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ExploreSearchBar(
     navActionManager: NavActionManager
 ) {
-    val viewModel: SearchViewModel = koinViewModel()
+    val viewModel: SearchViewModel = koinViewModel(parameters = { parametersOf(Routes.Search()) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ExploreSearchBarContent(

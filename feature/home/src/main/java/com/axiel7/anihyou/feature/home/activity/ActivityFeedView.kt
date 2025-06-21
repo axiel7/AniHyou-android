@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.home.activity
 
+import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +36,9 @@ fun ActivityFeedView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: ActivityFeedViewModel = koinViewModel()
+    val viewModel: ActivityFeedViewModel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
+    )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ActivityFeedContent(

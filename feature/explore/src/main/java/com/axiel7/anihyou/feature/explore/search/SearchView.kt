@@ -84,6 +84,7 @@ import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchStatusChip
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SearchView(
@@ -91,7 +92,7 @@ fun SearchView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: SearchViewModel = koinViewModel()
+    val viewModel: SearchViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var query by rememberSaveable { mutableStateOf("") }

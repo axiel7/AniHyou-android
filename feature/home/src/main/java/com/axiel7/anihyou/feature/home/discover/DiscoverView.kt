@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.home.discover
 
+import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,7 +54,9 @@ fun DiscoverView(
     contentPadding: PaddingValues = PaddingValues(),
     navActionManager: NavActionManager
 ) {
-    val viewModel: DiscoverViewModel = koinViewModel()
+    val viewModel: DiscoverViewModel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
+    )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DiscoverContent(

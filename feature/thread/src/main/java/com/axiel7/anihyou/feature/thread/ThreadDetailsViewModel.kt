@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.thread
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
@@ -20,12 +18,10 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ThreadDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.ThreadDetails,
     private val threadRepository: ThreadRepository,
     private val likeRepository: LikeRepository,
 ) : PagedUiStateViewModel<ThreadDetailsUiState>(), ThreadDetailsEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.ThreadDetails>()
 
     override val initialState = ThreadDetailsUiState()
 

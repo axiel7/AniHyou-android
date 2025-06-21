@@ -29,18 +29,21 @@ import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaActivityView(
+    arguments: Routes.MediaActivity,
     navActionManager: NavActionManager
 ) {
-    val viewModel: MediaActivityViewModel = koinViewModel()
+    val viewModel: MediaActivityViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MediaActivityContent(

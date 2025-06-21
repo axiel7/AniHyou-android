@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -38,12 +39,14 @@ import com.axiel7.anihyou.feature.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CharacterDetailsView(
+    arguments: Routes.CharacterDetails,
     navActionManager: NavActionManager
 ) {
-    val viewModel: CharacterDetailsViewModel = koinViewModel()
+    val viewModel: CharacterDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CharacterDetailsContent(

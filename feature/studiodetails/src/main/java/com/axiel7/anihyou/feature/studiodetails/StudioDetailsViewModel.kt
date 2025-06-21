@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.feature.studiodetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
@@ -19,12 +17,10 @@ import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StudioDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val arguments: Routes.StudioDetails,
     private val studioRepository: StudioRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<StudioDetailsUiState>(), StudioDetailsEvent {
-
-    private val arguments = savedStateHandle.toRoute<Routes.StudioDetails>()
 
     override val initialState = StudioDetailsUiState()
 

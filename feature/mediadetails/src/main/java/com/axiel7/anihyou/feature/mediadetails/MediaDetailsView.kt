@@ -84,6 +84,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.utils.StringUtils.htmlDecoded
@@ -95,18 +96,15 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaDetailsView(
-    isLoggedIn: Boolean,
+    arguments: Routes.MediaDetails,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: MediaDetailsViewModel = koinViewModel()
+    val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(isLoggedIn) {
-        viewModel.setIsLoggedIn(isLoggedIn)
-    }
 
     MediaDetailsContent(
         uiState = uiState,

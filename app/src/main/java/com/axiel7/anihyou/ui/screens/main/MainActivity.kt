@@ -35,17 +35,18 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.resources.dark_scrim
 import com.axiel7.anihyou.core.resources.light_scrim
+import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.isBottomDestination
-import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationIndex
+import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationRoute
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.TopLevelBackStack
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
@@ -72,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
-        val tabToOpen = intent.action?.toBottomDestinationIndex() ?: startTab
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -177,20 +177,22 @@ fun MainView(
     homeTab: HomeTab,
     deepLink: DeepLink?,
 ) {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val isBottomDestination by remember {
-        derivedStateOf { navBackStackEntry?.isBottomDestination() == true }
+    val startKey = remember(tabToOpen) {
+        tabToOpen.toBottomDestinationRoute() ?: BottomDestination.Home.route
     }
-    val navActionManager = NavActionManager.rememberNavActionManager(navController)
+    val backStack = rememberNavBackStack(startKey)
+    val topLevelBackStack = remember { TopLevelBackStack(startKey, backStack) }
+    val isBottomDestination by remember {
+        derivedStateOf { topLevelBackStack.backStack.lastOrNull()?.isBottomDestination() == true }
+    }
+    val navActionManager = NavActionManager.rememberNavActionManager(topLevelBackStack)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     Scaffold(
         bottomBar = {
             if (isCompactScreen) {
                 MainBottomNavBar(
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
+                    topLevelBackStack = topLevelBackStack,
                     navActionManager = navActionManager,
                     isVisible = isBottomDestination,
                     onItemSelected = { event?.saveLastTab(it) }
@@ -202,11 +204,10 @@ fun MainView(
     ) { padding ->
         if (isCompactScreen) {
             MainNavigation(
-                navController = navController,
+                topLevelBackStack = topLevelBackStack,
                 navActionManager = navActionManager,
                 isCompactScreen = true,
                 isLoggedIn = isLoggedIn,
-                tabToOpen = tabToOpen,
                 deepLink = deepLink,
                 homeTab = homeTab,
                 padding = padding,
@@ -216,17 +217,15 @@ fun MainView(
                 modifier = Modifier.padding(padding)
             ) {
                 MainNavigationRail(
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
+                    topLevelBackStack = topLevelBackStack,
                     onItemSelected = { event?.saveLastTab(it) },
                     modifier = Modifier.safeDrawingPadding(),
                 )
                 MainNavigation(
-                    navController = navController,
+                    topLevelBackStack = topLevelBackStack,
                     navActionManager = navActionManager,
                     isCompactScreen = false,
                     isLoggedIn = isLoggedIn,
-                    tabToOpen = tabToOpen,
                     deepLink = deepLink,
                     homeTab = homeTab,
                 )
