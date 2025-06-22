@@ -27,7 +27,7 @@
     <string name="profile">プロフ</string>
     <string name="trending_now">今のトレンド</string>
     <string name="next_season">次のシーズン</string>
-    <string name="trending_manga">人気のマンガ</string>
+    <string name="trending_manga">人気マンガ</string>
     <string name="not_logged_text">この機能を使用するには、ログインしてください。</string>
     <string name="login">ログイン</string>
     <string name="current">今時</string>
@@ -359,7 +359,6 @@
     <string name="newly_anime">新着アニメ</string>
     <string name="openings">オープニング</string>
     <string name="endings">エンディング</string>
-    <string name="anime_behind">遅いなアニメ</string>
     <string name="last_used">前回使用</string>
     <string name="watched_episode_of">%2$sの第%1$s話を見ました</string>
     <string name="read_chapter_of">%2$sの第%1$s話を読みました</string>
