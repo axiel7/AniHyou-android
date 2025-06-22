@@ -1,0 +1,1 @@
+- Fix for losing data when updating custom lists
