@@ -105,7 +105,6 @@ class MediaListRepository (
         private: Boolean? = null,
         hiddenFromStatusLists: Boolean? = null,
         notes: String? = null,
-        customLists: List<String?>? = null,
     ) = api
         .updateEntryMutation(
             mediaId = mediaId,
@@ -122,8 +121,23 @@ class MediaListRepository (
             hiddenFromStatusLists = hiddenFromStatusLists
                 .takeIf { hiddenFromStatusLists != oldEntry?.hiddenFromStatusLists },
             notes = notes.takeIf { notes != oldEntry?.notes },
-            customLists = customLists,
         )
+        .toFlow()
+        .onEach {
+            it.data?.SaveMediaListEntry?.basicMediaListEntry?.let { entry ->
+                _lastUpdatedEntry.emit(entry)
+                api.updateMediaListCache(entry)
+            }
+        }
+        .asDataResult {
+            it.SaveMediaListEntry
+        }
+
+    fun updateEntryCustomLists(
+        mediaId: Int,
+        customLists: List<String?>,
+    ) = api
+        .updateEntryCustomListsMutation(mediaId, customLists)
         .toFlow()
         .onEach {
             it.data?.SaveMediaListEntry?.basicMediaListEntry?.let { entry ->

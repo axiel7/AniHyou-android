@@ -1,0 +1,12 @@
+mutation UpdateEntryCustomLists(
+    $mediaId: Int,
+    $customLists: [String]
+) {
+    SaveMediaListEntry(
+        mediaId: $mediaId,
+        customLists: $customLists,
+    ) {
+        ...BasicMediaListEntry
+        customLists
+    }
+}

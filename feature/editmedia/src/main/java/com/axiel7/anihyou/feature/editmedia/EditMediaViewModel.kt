@@ -235,7 +235,7 @@ class EditMediaViewModel(
     @Suppress("UNCHECKED_CAST")
     override fun updateCustomLists(customsList: List<String>) {
         mediaListRepository
-            .updateEntry(
+            .updateEntryCustomLists(
                 mediaId = uiState.value.mediaDetails!!.id,
                 customLists = customsList
             ).onEach { result ->

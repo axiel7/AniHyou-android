@@ -9,6 +9,7 @@ import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.DeleteMediaListMutation
 import com.axiel7.anihyou.core.network.MediaListCustomListsQuery
 import com.axiel7.anihyou.core.network.MediaListIdsQuery
+import com.axiel7.anihyou.core.network.UpdateEntryCustomListsMutation
 import com.axiel7.anihyou.core.network.UpdateEntryMutation
 import com.axiel7.anihyou.core.network.UserListCollectionQuery
 import com.axiel7.anihyou.core.network.UserMediaListQuery
@@ -19,7 +20,7 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 
-class MediaListApi (
+class MediaListApi(
     private val client: ApolloClient
 ) {
     fun mediaListCollection(
@@ -84,7 +85,6 @@ class MediaListApi (
         private: Boolean?,
         hiddenFromStatusLists: Boolean?,
         notes: String?,
-        customLists: List<String?>?,
     ) = client
         .mutation(
             UpdateEntryMutation(
@@ -100,7 +100,17 @@ class MediaListApi (
                 private = Optional.presentIfNotNull(private),
                 hiddenFromStatusLists = Optional.presentIfNotNull(hiddenFromStatusLists),
                 notes = Optional.presentIfNotNull(notes),
-                customLists = Optional.presentIfNotNull(customLists),
+            )
+        )
+
+    fun updateEntryCustomListsMutation(
+        mediaId: Int,
+        customLists: List<String?>,
+    ) = client
+        .mutation(
+            UpdateEntryCustomListsMutation(
+                mediaId = Optional.present(mediaId),
+                customLists = Optional.present(customLists)
             )
         )
 
