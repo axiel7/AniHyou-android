@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,10 +32,12 @@ import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleBasicMediaListEntry
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
@@ -121,10 +126,20 @@ fun CompactUserMediaListItem(
                 ) {
                     val progress = item.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
                     val duration = item.duration()?.format()
-                    Text(
-                        text = if (duration != null) "$progress/$duration" else "$progress",
-                        fontSize = 15.sp,
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = if (duration != null) "$progress/$duration" else "$progress",
+                            fontSize = 15.sp,
+                        )
+                        if (item.basicMediaListEntry.isUsingVolumeProgress()) {
+                            Icon(
+                                painter = painterResource(R.drawable.bookmark_20),
+                                contentDescription = stringResource(R.string.volumes),
+                            )
+                        }
+                    }
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),

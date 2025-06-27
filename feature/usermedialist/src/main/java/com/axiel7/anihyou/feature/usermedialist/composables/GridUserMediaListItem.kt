@@ -14,11 +14,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,10 +32,12 @@ import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
+import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_HEIGHT
@@ -122,6 +127,12 @@ fun GridUserMediaListItem(
                     fontSize = 15.sp,
                     maxLines = 1
                 )
+                if (item.basicMediaListEntry.isUsingVolumeProgress()) {
+                    Icon(
+                        painter = painterResource(R.drawable.bookmark_20),
+                        contentDescription = stringResource(R.string.volumes),
+                    )
+                }
             }
         }//:Column
     }//:Card
