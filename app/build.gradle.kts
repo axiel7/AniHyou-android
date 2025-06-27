@@ -54,7 +54,8 @@ android {
             "zh-rCN",
             "zh-rTW",
             "fr-rFR",
-            "th-rTH"
+            "th-rTH",
+            "ro-rRO"
         )
     }
 
