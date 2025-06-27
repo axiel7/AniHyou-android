@@ -69,7 +69,7 @@ fun UserMediaListHostView(
     navActionManager: NavActionManager,
 ) {
     val viewModel: UserMediaListViewModel = koinViewModel(
-        key = arguments.userId.toString(),
+        key = "${arguments.mediaType}${arguments.userId}",
         parameters = { parametersOf(arguments) },
         viewModelStoreOwner = if (arguments.userId == 0) LocalActivity.current as AppCompatActivity
         else LocalViewModelStoreOwner.current!!
