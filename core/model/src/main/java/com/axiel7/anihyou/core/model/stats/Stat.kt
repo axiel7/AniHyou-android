@@ -10,7 +10,7 @@ abstract class Stat<T> {
     abstract val details: List<Detail>?
 
     data class Detail(
-        @StringRes
+        @param:StringRes
         /**
          * This should be a string resource with one `%s`
          * so [text] can be formatted with the [value] argument

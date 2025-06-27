@@ -12,9 +12,9 @@ import com.axiel7.anihyou.core.ui.common.navigation.Routes
 sealed class BottomDestination(
     val index: Int,
     val route: NavKey,
-    @StringRes val title: Int,
-    @DrawableRes val icon: Int,
-    @DrawableRes val iconSelected: Int,
+    @param:StringRes val title: Int,
+    @param:DrawableRes val icon: Int,
+    @param:DrawableRes val iconSelected: Int,
 ) {
     data object Home : BottomDestination(
         index = 0,
