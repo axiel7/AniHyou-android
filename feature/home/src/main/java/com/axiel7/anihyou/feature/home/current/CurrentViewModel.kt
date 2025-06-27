@@ -44,6 +44,7 @@ class CurrentViewModel(
     }
 
     override fun onClickPlusOne(
+        increment: Int,
         item: CommonMediaListEntry,
         type: CurrentListType
     ) {
@@ -55,8 +56,9 @@ class CurrentViewModel(
                     isLoadingPlusOne = true
                 )
             }
-            mediaListRepository.incrementOneProgress(
+            mediaListRepository.incrementProgress(
                 entry = item.basicMediaListEntry,
+                increment = increment,
                 total = item.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
@@ -67,6 +69,10 @@ class CurrentViewModel(
                 }
             }
         }
+    }
+
+    override fun blockPlusOne() {
+        mutableUiState.update { it.copy(isLoadingPlusOne = true) }
     }
 
     override fun onUpdateListEntry(

@@ -135,17 +135,16 @@ private fun CurrentContent(
                         isLoading = uiState.isLoading,
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(it.mediaId) },
-                        onClickPlus = {
-                            if (!uiState.isLoadingPlusOne) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                event?.onClickPlusOne(it, type)
-                            }
+                        onClickPlus = { increment, item ->
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            event?.onClickPlusOne(increment, item, type)
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             event?.selectItem(it, type)
                             showEditSheet = true
-                        }
+                        },
+                        blockPlus = { event?.blockPlusOne() }
                     )
                 }
             }
@@ -169,7 +168,8 @@ private fun CurrentLazyGrid(
     isPlusEnabled: Boolean,
     onClick: (CommonMediaListEntry) -> Unit,
     onLongClick: (CommonMediaListEntry) -> Unit,
-    onClickPlus: (CommonMediaListEntry) -> Unit,
+    onClickPlus: (Int, CommonMediaListEntry) -> Unit,
+    blockPlus: () -> Unit,
 ) {
     val state = rememberLazyGridState()
     val rows = if (items.size == 1) 1 else 2
@@ -197,7 +197,8 @@ private fun CurrentLazyGrid(
                 isPlusEnabled = isPlusEnabled,
                 onClick = { onClick(item) },
                 onLongClick = { onLongClick(item) },
-                onClickPlus = { onClickPlus(item) },
+                onClickPlus = { onClickPlus(it, item) },
+                blockPlus = blockPlus,
             )
         }
         if (items.isEmpty() && isLoading) {

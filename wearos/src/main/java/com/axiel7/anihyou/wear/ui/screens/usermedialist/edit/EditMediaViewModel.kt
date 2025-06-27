@@ -26,7 +26,7 @@ class EditMediaViewModel(
     override fun onClickPlusOne() {
         viewModelScope.launch {
             uiState.value.entry?.let { entry ->
-                mediaListRepository.incrementOneProgress(
+                mediaListRepository.incrementProgress(
                     entry = entry.basicMediaListEntry,
                     total = entry.duration()
                 ).collectLatest { result ->

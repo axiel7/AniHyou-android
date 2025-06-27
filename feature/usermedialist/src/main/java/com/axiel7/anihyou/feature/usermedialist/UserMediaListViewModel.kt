@@ -147,11 +147,12 @@ class UserMediaListViewModel(
         }
     }
 
-    override fun onClickPlusOne(entry: CommonMediaListEntry) {
+    override fun onClickPlusOne(increment: Int, entry: CommonMediaListEntry) {
         viewModelScope.launch {
             mutableUiState.update { it.copy(selectedItem = entry, isLoadingPlusOne = true) }
-            mediaListRepository.incrementOneProgress(
+            mediaListRepository.incrementProgress(
                 entry = entry.basicMediaListEntry,
+                increment = increment,
                 total = entry.duration()
             ).collectLatest { result ->
                 mutableUiState.update {
@@ -162,6 +163,10 @@ class UserMediaListViewModel(
                 }
             }
         }
+    }
+
+    override fun blockPlusOne() {
+        mutableUiState.update { it.copy(isLoadingPlusOne = true) }
     }
 
     override fun selectItem(value: CommonMediaListEntry?) {

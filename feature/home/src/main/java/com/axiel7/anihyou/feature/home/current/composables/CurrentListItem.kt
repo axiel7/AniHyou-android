@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,12 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.model.media.duration
@@ -35,13 +32,14 @@ import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.ScoreFormat
-import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
-import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
+import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +50,8 @@ fun CurrentListItem(
     isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    onClickPlus: () -> Unit,
+    onClickPlus: (Int) -> Unit,
+    blockPlus: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -114,12 +113,11 @@ fun CurrentListItem(
                     fontSize = 15.sp,
                 )
 
-                FilledTonalButton(
-                    onClick = onClickPlus,
+                IncrementOneButton(
+                    onClickPlus = onClickPlus,
+                    blockPlus = blockPlus,
                     enabled = isPlusEnabled,
-                ) {
-                    Text(text = stringResource(R.string.plus_one))
-                }
+                )
             }//:Row
         }//:Column
     }//:Row
@@ -185,6 +183,7 @@ fun CurrentListItemPreview() {
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
+                    blockPlus = {},
                 )
                 CurrentListItemPlaceholder()
             }

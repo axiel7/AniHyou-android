@@ -25,7 +25,9 @@ interface UserMediaListEvent : PagedEvent, UiEvent {
 
     fun refreshList()
 
-    fun onClickPlusOne(entry: CommonMediaListEntry)
+    fun onClickPlusOne(increment: Int, entry: CommonMediaListEntry)
+
+    fun blockPlusOne()
 
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
 

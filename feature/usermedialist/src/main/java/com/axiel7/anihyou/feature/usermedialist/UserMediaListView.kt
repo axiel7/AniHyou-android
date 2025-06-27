@@ -69,11 +69,9 @@ fun UserMediaListView(
         }
     }
 
-    val onClickPlus: (CommonMediaListEntry) -> Unit = {
-        if (!uiState.isLoadingPlusOne) {
-            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            event?.onClickPlusOne(it)
-        }
+    val onClickPlus: (Int, CommonMediaListEntry) -> Unit = { increment, item ->
+        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        event?.onClickPlusOne(increment, item)
     }
 
     PullToRefreshBox(
@@ -190,7 +188,7 @@ private fun LazyListTablet(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
-    onClickPlus: (CommonMediaListEntry) -> Unit,
+    onClickPlus: (Int, CommonMediaListEntry) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -229,8 +227,9 @@ private fun LazyListTablet(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() }
                     )
                 }
             }
@@ -253,8 +252,9 @@ private fun LazyListTablet(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() },
                     )
                 }
             }
@@ -277,8 +277,9 @@ private fun LazyListTablet(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() },
                     )
                 }
             }
@@ -310,7 +311,7 @@ private fun LazyListPhone(
     contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
-    onClickPlus: (CommonMediaListEntry) -> Unit,
+    onClickPlus: (Int, CommonMediaListEntry) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -345,8 +346,9 @@ private fun LazyListPhone(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() },
                     )
                 }
             }
@@ -369,8 +371,9 @@ private fun LazyListPhone(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() },
                     )
                 }
             }
@@ -393,8 +396,9 @@ private fun LazyListPhone(
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onLongClick = { onShowEditSheet(item) },
-                        onClickPlus = { onClickPlus(item) },
-                        onClickNotes = { event?.onClickNotes(item) }
+                        onClickPlus = { onClickPlus(it, item) },
+                        onClickNotes = { event?.onClickNotes(item) },
+                        blockPlus = { event?.blockPlusOne() },
                     )
                 }
             }

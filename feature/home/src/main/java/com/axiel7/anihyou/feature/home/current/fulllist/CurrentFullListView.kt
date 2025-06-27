@@ -141,17 +141,16 @@ private fun CurrentFullListContent(
                         scoreFormat = uiState.scoreFormat,
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
-                        onClickPlus = {
-                            if (!uiState.isLoadingPlusOne) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                event?.onClickPlusOne(item, listType)
-                            }
+                        onClickPlus = { increment ->
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            event?.onClickPlusOne(increment, item, listType)
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             event?.selectItem(item, listType)
                             showEditSheet = true
-                        }
+                        },
+                        blockPlus = { event?.blockPlusOne() }
                     )
                 }
                 if (items.isEmpty() && uiState.isLoading) {
