@@ -25,7 +25,6 @@ activityCompose = "1.12.0-alpha03"
 composeBom = "2025.06.01"
 material3 = "1.4.0-alpha16"
 materialKolor = "2.1.1"
-navigation = "2.9.0"
 navigation3 = "1.0.0-alpha04"
 kotlinxSerialization = "1.8.1"
 placeholderMaterial3 = "2.0.0"
@@ -49,9 +48,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
-androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleNavigation3" }
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
@@ -67,7 +64,6 @@ desugar_jdk_libs = { group = "com.android.tools", name = "desugar_jdk_libs", ver
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
-koin-compose-navigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
 koin-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
 koin-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -82,7 +78,6 @@ androidx-glance-preview = {group = "androidx.glance", name = "glance-preview", v
 androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-material3-window-sizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
