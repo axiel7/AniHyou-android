@@ -129,6 +129,7 @@ class CurrentViewModel(
         viewModelScope.launch {
             mutableUiState.value.selectedItem?.let { item ->
                 mediaListRepository.updateEntry(
+                    oldEntry = item.basicMediaListEntry,
                     mediaId = item.mediaId,
                     score = score,
                 ).collectLatest {

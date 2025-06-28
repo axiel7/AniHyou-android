@@ -208,9 +208,10 @@ class UserMediaListViewModel(
         viewModelScope.launch {
             mutableUiState.value.run {
                 if (isLoading) return@launch
-                selectedItem?.mediaId?.let { mediaId ->
+                selectedItem?.let { item ->
                     mediaListRepository.updateEntry(
-                        mediaId = mediaId,
+                        oldEntry = item.basicMediaListEntry,
+                        mediaId = item.mediaId,
                         score = score,
                     ).collectLatest { result ->
                         mutableUiState.update {
