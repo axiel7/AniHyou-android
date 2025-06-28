@@ -175,8 +175,8 @@ fun ReviewThreadListView(
                 ) { item ->
                     PostItem(
                         title = item.text(),
-                        author = item.user?.name.orEmpty(),
-                        avatarUrl = item.user?.avatar?.medium.orEmpty(),
+                        author = item.user?.activityUser?.name.orEmpty(),
+                        avatarUrl = item.user?.activityUser?.avatar?.medium.orEmpty(),
                         subtitle = {
                             Text(
                                 text = item.createdAt.toLong().timestampIntervalSinceNow()

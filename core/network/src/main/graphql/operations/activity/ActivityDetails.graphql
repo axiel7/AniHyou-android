@@ -9,10 +9,7 @@ query ActivityDetails($activityId: Int) {
         ... on ListActivity {
             ...ListActivityFragment
             user {
-                name
-                avatar {
-                    medium
-                }
+                ...ActivityUser
             }
             replies {
                 ...ActivityReplyFragment
@@ -32,12 +29,12 @@ fragment ActivityReplyFragment on ActivityReply {
     createdAt
     isLiked
     likeCount
+    likes {
+        ...ActivityUser
+    }
     text
     userId
     user {
-        name
-        avatar {
-            medium
-        }
+        ...ActivityUser
     }
 }

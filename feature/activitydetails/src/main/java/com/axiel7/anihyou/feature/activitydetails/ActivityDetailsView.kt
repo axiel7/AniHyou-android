@@ -131,6 +131,7 @@ private fun ActivityDetailsContent(
                             createdAt = uiState.details.createdAt,
                             replyCount = uiState.details.replyCount,
                             likeCount = uiState.details.likeCount,
+                            likes = uiState.details.likes,
                             isLiked = uiState.details.isLiked,
                             onClickUser = {
                                 uiState.details.userId?.let(navActionManager::toUserDetails)
@@ -156,11 +157,12 @@ private fun ActivityDetailsContent(
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 4.dp),
                         text = item.text.orEmpty(),
-                        username = item.user?.name,
-                        avatarUrl = item.user?.avatar?.medium,
+                        username = item.username,
+                        avatarUrl = item.avatarUrl,
                         createdAt = item.createdAt,
                         replyCount = null,
                         likeCount = item.likeCount,
+                        likes = item.likes,
                         isLiked = item.isLiked,
                         onClickUser = {
                             item.userId?.let(navActionManager::toUserDetails)

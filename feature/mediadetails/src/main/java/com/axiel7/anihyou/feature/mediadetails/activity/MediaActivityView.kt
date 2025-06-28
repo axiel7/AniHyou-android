@@ -103,8 +103,8 @@ private fun MediaActivityContent(
                 ActivityFeedItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     type = ActivityType.MEDIA_LIST,
-                    username = item.user?.name,
-                    avatarUrl = item.user?.avatar?.medium,
+                    username = item.user?.activityUser?.name,
+                    avatarUrl = item.user?.activityUser?.avatar?.medium,
                     createdAt = item.createdAt,
                     text = item.text(),
                     replyCount = item.replyCount,

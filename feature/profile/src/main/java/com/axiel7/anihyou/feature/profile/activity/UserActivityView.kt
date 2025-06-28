@@ -98,8 +98,8 @@ fun UserActivityView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        imageUrl = activity.user?.avatar?.medium,
-                        username = activity.user?.name,
+                        imageUrl = activity.user?.activityUser?.avatar?.medium,
+                        username = activity.user?.activityUser?.name,
                         isLocked = activity.isLocked,
                         onClick = {
                             navActionManager.toActivityDetails(activity.id)
@@ -128,8 +128,8 @@ fun UserActivityView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        imageUrl = activity.messenger?.avatar?.medium,
-                        username = activity.messenger?.name,
+                        imageUrl = activity.messenger?.activityUser?.avatar?.medium,
+                        username = activity.messenger?.activityUser?.name,
                         isPrivate = activity.isPrivate,
                         isLocked = activity.isLocked,
                         onClick = {

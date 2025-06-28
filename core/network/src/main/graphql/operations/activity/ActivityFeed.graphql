@@ -22,6 +22,9 @@ fragment ListActivityFragment on ListActivity {
     createdAt
     isLiked
     likeCount
+    likes {
+        ...ActivityUser
+    }
     replyCount
     isLocked
     type
@@ -29,10 +32,7 @@ fragment ListActivityFragment on ListActivity {
     status
     userId
     user {
-        name
-        avatar {
-            medium
-        }
+        ...ActivityUser
     }
     media {
         id
@@ -50,15 +50,15 @@ fragment TextActivityFragment on TextActivity {
     createdAt
     isLiked
     likeCount
+    likes {
+        ...ActivityUser
+    }
     replyCount
     isLocked
     text
     userId
     user {
-        name
-        avatar {
-            medium
-        }
+        ...ActivityUser
     }
 }
 
@@ -67,15 +67,22 @@ fragment MessageActivityFragment on MessageActivity {
     createdAt
     isLiked
     likeCount
+    likes {
+        ...ActivityUser
+    }
     replyCount
     isPrivate
     isLocked
     message
     messengerId
     messenger {
-        name
-        avatar {
-            medium
-        }
+        ...ActivityUser
+    }
+}
+
+fragment ActivityUser on User {
+    name
+    avatar {
+        medium
     }
 }

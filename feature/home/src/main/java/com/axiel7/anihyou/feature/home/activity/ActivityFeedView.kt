@@ -101,8 +101,8 @@ private fun ActivityFeedContent(
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         type = ActivityType.MEDIA_LIST,
-                        username = it.user?.name,
-                        avatarUrl = it.user?.avatar?.medium,
+                        username = it.user?.activityUser?.name,
+                        avatarUrl = it.user?.activityUser?.avatar?.medium,
                         createdAt = it.createdAt,
                         text = it.text(),
                         replyCount = it.replyCount,
@@ -128,8 +128,8 @@ private fun ActivityFeedContent(
                     ActivityFeedItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         type = ActivityType.TEXT,
-                        username = it.user?.name,
-                        avatarUrl = it.user?.avatar?.medium,
+                        username = it.user?.activityUser?.name,
+                        avatarUrl = it.user?.activityUser?.avatar?.medium,
                         createdAt = it.createdAt,
                         text = it.text.orEmpty(),
                         replyCount = it.replyCount,

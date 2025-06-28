@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.model.activity
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
+import com.axiel7.anihyou.core.network.fragment.ActivityUser
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
 
@@ -14,7 +15,8 @@ data class GenericActivity(
     val text: String?,
     val isLiked: Boolean?,
     val likeCount: Int,
-    val replyCount: Int,
+    val likes: List<ActivityUser>?,
+    val replyCount: Int?,
     val userId: Int?,
     val username: String?,
     val avatarUrl: String?,
@@ -36,10 +38,11 @@ fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     text = textActivityFragment.text,
     isLiked = textActivityFragment.isLiked,
     likeCount = textActivityFragment.likeCount,
+    likes = textActivityFragment.likes?.mapNotNull { it?.activityUser },
     replyCount = textActivityFragment.replyCount,
     userId = textActivityFragment.user?.id,
-    username = textActivityFragment.user?.name,
-    avatarUrl = textActivityFragment.user?.avatar?.medium,
+    username = textActivityFragment.user?.activityUser?.name,
+    avatarUrl = textActivityFragment.user?.activityUser?.avatar?.medium,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment }
 )
 
@@ -50,10 +53,11 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     text = null,
     isLiked = listActivityFragment.isLiked,
     likeCount = listActivityFragment.likeCount,
+    likes = listActivityFragment.likes?.mapNotNull { it?.activityUser },
     replyCount = listActivityFragment.replyCount,
     userId = user?.id,
-    username = user?.name,
-    avatarUrl = user?.avatar?.medium,
+    username = user?.activityUser?.name,
+    avatarUrl = user?.activityUser?.avatar?.medium,
     mediaId = listActivityFragment.media?.id,
     mediaCoverUrl = listActivityFragment.media?.coverImage?.medium,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment },
@@ -67,9 +71,32 @@ fun ActivityDetailsQuery.OnMessageActivity.toGenericActivity() = GenericActivity
     text = messageActivityFragment.message,
     isLiked = messageActivityFragment.isLiked,
     likeCount = messageActivityFragment.likeCount,
+    likes = messageActivityFragment.likes?.mapNotNull { it?.activityUser },
     replyCount = messageActivityFragment.replyCount,
     userId = messageActivityFragment.messenger?.id,
-    username = messageActivityFragment.messenger?.name,
-    avatarUrl = messageActivityFragment.messenger?.avatar?.medium,
+    username = messageActivityFragment.messenger?.activityUser?.name,
+    avatarUrl = messageActivityFragment.messenger?.activityUser?.avatar?.medium,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment }
+)
+
+fun ActivityReplyFragment.toGenericActivity() = GenericActivity(
+    id = id,
+    type = ActivityType.TEXT,
+    createdAt = createdAt,
+    text = text,
+    isLiked = isLiked,
+    likeCount = likeCount,
+    likes = likes?.mapNotNull { it?.activityUser },
+    replyCount = null,
+    userId = user?.id,
+    username = user?.activityUser?.name,
+    avatarUrl = user?.activityUser?.avatar?.medium,
+    replies = null,
+)
+
+val exampleActivityUser = ActivityUser(
+    name = "HelloMyNameIsLong",
+    avatar = ActivityUser.Avatar(medium = "https://picsum.photos/200"),
+    __typename = "",
+    id = 1,
 )

@@ -104,7 +104,7 @@ class ActivityDetailsViewModel(
                     mutableUiState.value.run {
                         val foundIndex = replies.indexOfFirst { it.id == id }
                         if (foundIndex != -1) {
-                            replies[foundIndex] = result.data!!
+                            replies[foundIndex] = result.data!!.toGenericActivity()
                         }
                     }
                 } else if (result !is DataResult.Loading) {
@@ -132,17 +132,19 @@ class ActivityDetailsViewModel(
             .onEach { result ->
                 if (result is DataResult.Success) {
                     detailsQueryData = result.data
-                    mutableUiState.updateAndGet {
-                        it.copy(
+                    mutableUiState.updateAndGet { uiState ->
+                        uiState.copy(
                             isLoading = false,
                             fetchFromNetwork = false,
                             details = result.data?.onTextActivity?.toGenericActivity()
                                 ?: result.data?.onListActivity?.toGenericActivity()
                                 ?: result.data?.onMessageActivity?.toGenericActivity()
                         )
-                    }.also {
-                        it.replies.clear()
-                        it.replies.addAll(it.details?.replies.orEmpty())
+                    }.also { uiState ->
+                        uiState.replies.clear()
+                        uiState.replies.addAll(
+                            uiState.details?.replies?.map { it.toGenericActivity() }.orEmpty()
+                        )
                     }
                 } else {
                     mutableUiState.update { result.toUiState() }
