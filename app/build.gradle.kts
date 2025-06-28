@@ -19,16 +19,16 @@ android {
     namespace = appPackageName
     compileSdk = sdkVersion
 
+    base {
+        archivesName = "anihyou-${versionProps.getProperty("name")}"
+    }
+
     defaultConfig {
         applicationId = appPackageName
         minSdk = minSdkVersion
         targetSdk = sdkVersion
         versionCode = versionProps.getProperty("code").toInt()
         versionName = versionProps.getProperty("name")
-
-        base {
-            archivesName = "anihyou-$versionName"
-        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -107,8 +107,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+        }
     }
     buildFeatures {
         compose = true
