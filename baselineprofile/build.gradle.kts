@@ -6,7 +6,6 @@ plugins {
 
 val appPackageName: String by rootProject.extra
 val sdkVersion: Int by rootProject.extra
-val minSdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.baselineprofile"
@@ -24,10 +23,12 @@ android {
     }
 
     defaultConfig {
-        minSdk = minSdkVersion
+        minSdk = 28
         targetSdk = sdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        missingDimensionStrategy("version", "foss")
+        missingDimensionStrategy("version", "gms")
     }
 
     targetProjectPath = ":app"
