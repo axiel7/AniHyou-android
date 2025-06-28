@@ -84,13 +84,13 @@ abstract class BaseNetworkRepository(
     }
 
     private suspend fun <D: Operation.Data> onError(response: ApolloResponse<D>) {
-        if (response.errors?.any { it.message == INVALID_TOKEN_ERROR } == true) {
+        if (response.errors?.any { it.message.contains(INVALID_TOKEN_ERROR) } == true) {
             onInvalidToken()
         }
     }
 
     private suspend fun onError(error: ErrorResponse) {
-        if (error.errors.any { it.message == INVALID_TOKEN_ERROR }) {
+        if (error.errors.any { it.message.contains(INVALID_TOKEN_ERROR) }) {
             onInvalidToken()
         }
     }
