@@ -58,7 +58,7 @@
     <string name="novel">นิยาย</string>
     <string name="one_shot">ตอนเดียวจบ</string>
     <plurals name="num_episodes">
-        <item quantity="other">%d ตอนที่</item>
+        <item quantity="other">%d ตอน</item>
     </plurals>
     <plurals name="num_chapters">
         <item quantity="other">%d ตอน</item>
@@ -77,7 +77,7 @@
         <item quantity="other">%d ตอนที่ยังไม่ได้ดู</item>
     </plurals>
     <string name="information">เกี่ยวกับ</string>
-    <string name="duration">ระยะเวลา</string>
+    <string name="duration">ตอนละ</string>
     <string name="start_date">เริ่มวันที่</string>
     <string name="end_date">จบวันที่</string>
     <string name="season">ฤดู</string>
@@ -607,10 +607,14 @@
     <string name="completed_media">ดูจบแล้ว %s</string>
     <string name="dropped_media">เลิกดู %s</string>
     <string name="paused_media">หยุดดู %s</string>
+    <string name="rewatched_media">ดูซ้ำ %s ครั้ง</string>
+    <string name="reread_media">อ่านซ้ำ %s ครั้ง</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d ชม.</item>
     </plurals>
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d นาที</item>
     </plurals>
+    <string name="login_required_in_phone">ในการใช้แอพนี้ครั้งแรก ต้องเข้าสู่ระบบก่อน โดยเปิดแอพ AniHyou</string>
+    <string name="app_installed_required">ไม่พบอุปกรณ์ใกล้เคียง โปรดติดตั้งแอป AniHyou เวอร์ชันล่าสุด</string>
 </resources>
