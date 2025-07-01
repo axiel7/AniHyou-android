@@ -1,5 +1,9 @@
 package com.axiel7.anihyou.feature.explore.season
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -154,7 +158,11 @@ private fun SeasonAnimeContent(
         contentWindowInsets = WindowInsets.systemBars
             .only(WindowInsetsSides.Horizontal)
     ) { padding ->
-        if (uiState.listStyle == ListStyle.STANDARD) {
+        AnimatedVisibility(
+            visible = uiState.listStyle == ListStyle.STANDARD,
+            enter = fadeIn(animationSpec = tween()),
+            exit = fadeOut(animationSpec = tween()),
+        ) {
             SeasonalList(
                 uiState = uiState,
                 event = event,
@@ -170,7 +178,12 @@ private fun SeasonAnimeContent(
                     showEditSheet = true
                 }
             )
-        } else {
+        }
+        AnimatedVisibility(
+            visible = uiState.listStyle != ListStyle.STANDARD,
+            enter = fadeIn(animationSpec = tween()),
+            exit = fadeOut(animationSpec = tween()),
+        ) {
             SeasonalGrid(
                 uiState = uiState,
                 event = event,
