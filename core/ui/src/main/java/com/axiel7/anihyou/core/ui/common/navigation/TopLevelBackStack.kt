@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
 class TopLevelBackStack<T : NavKey>(
-    startKey: T,
+    private val startKey: T,
     val backStack: NavBackStack
 ) {
 
@@ -54,7 +54,7 @@ class TopLevelBackStack<T : NavKey>(
         val removedKey = topLevelStacks[topLevelKey]?.removeLastOrNull()
         // If the removed key was a top level key, remove the associated top level stack
         topLevelStacks.remove(removedKey)
-        topLevelKey = topLevelStacks.keys.last()
+        topLevelKey = topLevelStacks.keys.lastOrNull() ?: startKey
         updateBackStack()
     }
 }
