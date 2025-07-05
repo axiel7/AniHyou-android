@@ -62,18 +62,18 @@ import com.axiel7.anihyou.feature.usermedialist.UserMediaListHostView
 
 private val topNavigationTransitionSpec = NavDisplay.transitionSpec {
     ContentTransform(
-        fadeIn(animationSpec = tween(600)),
-        fadeOut(animationSpec = tween(600)),
+        fadeIn(animationSpec = tween(500)),
+        fadeOut(animationSpec = tween(500)),
     )
 } + NavDisplay.popTransitionSpec {
     ContentTransform(
-        fadeIn(animationSpec = tween(600)),
-        fadeOut(animationSpec = tween(600)),
+        fadeIn(animationSpec = tween(500)),
+        fadeOut(animationSpec = tween(500)),
     )
 } + NavDisplay.predictivePopTransitionSpec {
     ContentTransform(
         fadeIn(spring(dampingRatio = 1f, stiffness = 1600f)),
-        scaleOut(targetScale = 0.7f)
+        fadeOut(spring(dampingRatio = 1f, stiffness = 1600f))
     )
 }
 
