@@ -3,7 +3,8 @@ package com.axiel7.anihyou.core.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -12,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
+import com.axiel7.anihyou.core.model.AppColorMode
+import com.axiel7.anihyou.core.resources.ColorUtils.isBlack
+import com.axiel7.anihyou.core.resources.ColorUtils.isWhite
 import com.axiel7.anihyou.core.resources.md_theme_dark_background
 import com.axiel7.anihyou.core.resources.md_theme_dark_error
 import com.axiel7.anihyou.core.resources.md_theme_dark_errorContainer
@@ -71,9 +75,6 @@ import com.axiel7.anihyou.core.resources.md_theme_light_surfaceVariant
 import com.axiel7.anihyou.core.resources.md_theme_light_tertiary
 import com.axiel7.anihyou.core.resources.md_theme_light_tertiaryContainer
 import com.axiel7.anihyou.core.resources.seed
-import com.axiel7.anihyou.core.model.AppColorMode
-import com.axiel7.anihyou.core.resources.ColorUtils.isBlack
-import com.axiel7.anihyou.core.resources.ColorUtils.isWhite
 import com.materialkolor.dynamicColorScheme
 
 private val LightColorScheme = lightColorScheme(
@@ -206,6 +207,7 @@ private fun ColorScheme.toBlackScheme() = this.copy(
     surfaceContainerHighest = surfaceContainerHighest.copy(alpha = 0.6f).compositeOver(Color.Black)
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AniHyouTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -243,7 +245,7 @@ fun AniHyouTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
