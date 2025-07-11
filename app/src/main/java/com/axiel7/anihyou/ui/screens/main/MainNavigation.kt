@@ -62,13 +62,13 @@ import com.axiel7.anihyou.feature.usermedialist.UserMediaListHostView
 
 private val topNavigationTransitionSpec = NavDisplay.transitionSpec {
     ContentTransform(
-        fadeIn(animationSpec = tween(500)),
-        fadeOut(animationSpec = tween(500)),
+        fadeIn(animationSpec = tween()),
+        fadeOut(animationSpec = tween()),
     )
 } + NavDisplay.popTransitionSpec {
     ContentTransform(
-        fadeIn(animationSpec = tween(500)),
-        fadeOut(animationSpec = tween(500)),
+        fadeIn(animationSpec = tween()),
+        fadeOut(animationSpec = tween()),
     )
 } + NavDisplay.predictivePopTransitionSpec {
     ContentTransform(
@@ -148,7 +148,7 @@ fun MainNavigation(
             // Slide in from right when navigating forward
             (slideInHorizontally(initialOffsetX = { it })) togetherWith
                     (slideOutHorizontally(targetOffsetX = { -it })
-                            + fadeOut(animationSpec = tween(500)))
+                            + fadeOut(animationSpec = tween()))
         },
         popTransitionSpec = {
             // Slide in from left when navigating back
@@ -158,7 +158,7 @@ fun MainNavigation(
         predictivePopTransitionSpec = {
             // Slide in from left when navigating back
             (slideInHorizontally(initialOffsetX = { -it })
-                    + fadeIn(animationSpec = tween(500))) togetherWith
+                    + fadeIn(animationSpec = tween())) togetherWith
                     (slideOutHorizontally(targetOffsetX = { it }))
         },
         entryProvider = entryProvider {
