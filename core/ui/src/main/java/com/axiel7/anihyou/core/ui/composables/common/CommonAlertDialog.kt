@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.base.Localizable
@@ -39,7 +39,7 @@ fun <T : Localizable> DialogWithRadioSelection(
     onConfirm: (T?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val configuration = LocalConfiguration.current
+    val windowInfo = LocalWindowInfo.current.containerSize
     var selectedValue by remember { mutableStateOf(defaultValue) }
 
     AlertDialog(
@@ -60,7 +60,7 @@ fun <T : Localizable> DialogWithRadioSelection(
         text = {
             LazyColumn(
                 modifier = Modifier.sizeIn(
-                    maxHeight = (configuration.screenHeightDp - 48).dp
+                    maxHeight = (windowInfo.height - 48).dp
                 )
             ) {
                 if (showAllCasesOption) {
@@ -114,7 +114,7 @@ fun <T : Localizable> DialogWithCheckboxSelection(
     onConfirm: (List<T>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val configuration = LocalConfiguration.current
+    val windowInfo = LocalWindowInfo.current.containerSize
     val selectedValues = remember {
         defaultValues.toMutableStateList()
     }
@@ -137,7 +137,7 @@ fun <T : Localizable> DialogWithCheckboxSelection(
         text = {
             LazyColumn(
                 modifier = Modifier.sizeIn(
-                    maxHeight = (configuration.screenHeightDp - 48).dp
+                    maxHeight = (windowInfo.height - 48).dp
                 )
             ) {
                 items(values) { value ->

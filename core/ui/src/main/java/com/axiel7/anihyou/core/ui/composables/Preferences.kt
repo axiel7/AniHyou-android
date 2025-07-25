@@ -28,14 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable
 fun PreferencesTitle(text: String) {
@@ -52,8 +54,8 @@ fun PreferencesTitle(text: String) {
 @Composable
 fun PlainPreference(
     title: String,
-    titleTint: Color = MaterialTheme.colorScheme.onSurface,
     modifier: Modifier = Modifier,
+    titleTint: Color = MaterialTheme.colorScheme.onSurface,
     subtitle: String? = null,
     @DrawableRes icon: Int? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
@@ -195,7 +197,7 @@ fun <T> ListPreference(
     @DrawableRes icon: Int? = null,
     onValueChange: (T) -> Unit
 ) {
-    val configuration = LocalConfiguration.current
+    val windowInfo = LocalWindowInfo.current.containerSize
     var openDialog by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
@@ -244,7 +246,7 @@ fun <T> ListPreference(
             text = {
                 LazyColumn(
                     modifier = Modifier.sizeIn(
-                        maxHeight = (configuration.screenHeightDp - 48).dp
+                        maxHeight = (windowInfo.height - 48).dp
                     )
                 ) {
                     items(entriesValues.entries.toList()) { entry ->
@@ -269,5 +271,39 @@ fun <T> ListPreference(
                 }
             }
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreferencesPreviews() {
+    var enabled by remember { mutableStateOf(true) }
+    AniHyouTheme {
+        Column {
+            PreferencesTitle(text = "Preferences")
+
+            PlainPreference(
+                title = "Plain Preference",
+                subtitle = "Subtitle",
+                icon = R.drawable.settings_24,
+                onClick = {},
+            )
+
+            SwitchPreference(
+                title = "Switch Preference",
+                subtitle = "Subtitle",
+                preferenceValue = enabled,
+                icon = R.drawable.settings_24,
+                onValueChange = { enabled = it },
+            )
+
+            ListPreference(
+                title = "List Preference",
+                entriesValues = mapOf("Profile" to R.string.profile),
+                preferenceValue = null,
+                icon = R.drawable.settings_24,
+                onValueChange = {},
+            )
+        }
     }
 }

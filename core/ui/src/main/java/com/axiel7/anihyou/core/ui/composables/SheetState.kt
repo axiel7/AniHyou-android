@@ -25,7 +25,6 @@ fun rememberSheetState(
     positionalThreshold: Dp = 56.dp,
     velocityThreshold: Dp = 125.dp,
 ): SheetState {
-    rememberModalBottomSheetState()
     val density = LocalDensity.current
     val positionalThresholdToPx = { with(density) { positionalThreshold.toPx() } }
     val velocityThresholdToPx = { with(density) { velocityThreshold.toPx() } }

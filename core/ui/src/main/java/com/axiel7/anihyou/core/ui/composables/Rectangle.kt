@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.ui.composables
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -53,8 +54,14 @@ fun RoundedRectangle(
 @Composable
 fun RectanglePreview() {
     AniHyouTheme {
-        Surface {
+        Column {
             Rectangle(width = 50.dp, height = 12.dp, color = Color.Blue)
+            RoundedRectangle(
+                width = 50.dp,
+                height = 12.dp,
+                cornerRadius = CornerRadius(x = 16f, y = 16f),
+                color = Color.Green,
+            )
         }
     }
 }

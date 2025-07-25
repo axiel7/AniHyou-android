@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
@@ -29,7 +29,7 @@ fun CustomListsDialog(
     onConfirm: (List<String>) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val configuration = LocalConfiguration.current
+    val windowInfo = LocalWindowInfo.current.containerSize
     val selectedLists = remember {
         lists.filterValues { it }.keys.toMutableStateList()
     }
@@ -58,7 +58,7 @@ fun CustomListsDialog(
         text = {
             LazyColumn(
                 modifier = Modifier.sizeIn(
-                    maxHeight = (configuration.screenHeightDp - 48).dp
+                    maxHeight = (windowInfo.height - 48).dp
                 )
             ) {
                 items(lists.keys.toTypedArray()) { name ->

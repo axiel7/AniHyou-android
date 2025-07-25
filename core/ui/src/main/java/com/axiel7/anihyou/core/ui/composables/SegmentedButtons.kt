@@ -71,9 +71,7 @@ fun SegmentedButtonsPreview() {
                     TabRowItem("favorites", icon = R.drawable.star_24),
                     TabRowItem("social", icon = R.drawable.group_24)
                 ),
-                onItemSelection = {
-
-                }
+                onItemSelection = {},
             )
         }
     }

@@ -12,6 +12,9 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,5 +48,19 @@ fun <T> SelectableIconToggleButton(
         ) {
             Icon(painter = painterResource(icon), contentDescription = tooltipText)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SelectableIconToggleButtonPreview() {
+    AniHyouTheme {
+        SelectableIconToggleButton(
+            icon = R.drawable.play_circle_24,
+            tooltipText = "SelectableIconToggleButton",
+            value = "",
+            selectedValue = "0",
+            onClick = {},
+        )
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,12 +22,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.MoreLessButton
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable
 fun InfoItemView(
@@ -129,3 +133,29 @@ fun InfoTitle(
         trailingIcon()
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun InfoPreviews() {
+    AniHyouTheme {
+        Column {
+            InfoTitle(
+                text = "Information",
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.info_24),
+                        contentDescription = null
+                    )
+                }
+            )
+            InfoItemView(title = "Start Date", info = "1999")
+            InfoClickableItemView(
+                title = "Studios",
+                items = listOf("MAPPA", "Kyoto Animation", "Shaft"),
+                itemName = { it },
+                onItemClicked = {},
+            )
+        }
+    }
+}
+

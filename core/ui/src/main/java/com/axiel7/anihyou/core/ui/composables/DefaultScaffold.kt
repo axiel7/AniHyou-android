@@ -3,10 +3,10 @@ package com.axiel7.anihyou.core.ui.composables
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -24,7 +24,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
-    contentWindowInsets: WindowInsets = WindowInsets.systemBars,
+    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -59,7 +59,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
-    contentWindowInsets: WindowInsets = WindowInsets.systemBars,
+    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
