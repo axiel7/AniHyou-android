@@ -247,7 +247,6 @@ fun AniHyouTheme(
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }
