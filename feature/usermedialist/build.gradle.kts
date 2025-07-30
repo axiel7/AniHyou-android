@@ -9,7 +9,7 @@ val sdkVersion: Int by rootProject.extra
 val minSdkVersion: Int by rootProject.extra
 
 android {
-    namespace = "$appPackageName.feature.editmedia"
+    namespace = "$appPackageName.feature.usermedialist"
     compileSdk = sdkVersion
 
     defaultConfig {

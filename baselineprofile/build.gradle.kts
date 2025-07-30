@@ -27,8 +27,16 @@ android {
         targetSdk = sdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        missingDimensionStrategy("version", "foss")
-        missingDimensionStrategy("version", "gms")
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("foss") {
+            dimension = "version"
+        }
+        create("gms") {
+            dimension = "version"
+        }
     }
 
     targetProjectPath = ":app"
