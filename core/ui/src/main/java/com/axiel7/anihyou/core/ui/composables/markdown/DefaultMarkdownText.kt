@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.ui.composables.markdown
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,8 +29,8 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 fun DefaultMarkdownText(
     markdown: String?,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontSize: TextUnit = LocalTextStyle.current.fontSize,
+    lineHeight: TextUnit = LocalTextStyle.current.lineHeight,
     color: Color = MaterialTheme.colorScheme.onSurface,
     navigateToFullscreenImage: (String) -> Unit = {},
 ) {
@@ -47,10 +48,12 @@ fun DefaultMarkdownText(
     MarkdownText(
         markdown = markdown?.formatCompatibleMarkdown().orEmpty(),
         modifier = modifier,
-        fontSize = fontSize,
-        lineHeight = lineHeight,
-        color = color,
         linkColor = MaterialTheme.colorScheme.primary,
+        style = LocalTextStyle.current.copy(
+            color = color,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+        ),
         onLinkClicked = { link ->
             link.onMarkdownLinkClicked(
                 onSpoilerClicked = { spoilerText = it },
