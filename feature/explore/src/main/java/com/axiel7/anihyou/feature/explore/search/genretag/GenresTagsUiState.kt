@@ -15,6 +15,7 @@ data class GenresTagsUiState(
     val tags: SnapshotStateList<SelectableGenre> = mutableStateListOf(),
     val displayGenres: SnapshotStateList<SelectableGenre> = mutableStateListOf(),
     val displayTags: SnapshotStateList<SelectableGenre> = mutableStateListOf(),
+    val minimumTagPercentage: Int = 18,
     val externalGenre: SelectableGenre? = null,
     val externalTag: SelectableGenre? = null,
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
@@ -40,7 +41,8 @@ data class GenresTagsUiState(
         genreIn = selectedGenres(),
         genreNot = excludedGenres(),
         tagIn = selectedTags(),
-        tagNot = excludedTags()
+        tagNot = excludedTags(),
+        minimumTagPercentage = minimumTagPercentage
     )
 
     fun updateGenre(value: SelectableGenre) {

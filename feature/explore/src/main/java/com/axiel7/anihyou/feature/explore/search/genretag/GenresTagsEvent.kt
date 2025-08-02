@@ -11,6 +11,7 @@ interface GenresTagsEvent {
     suspend fun onGenreRemoved(name: String): GenresAndTagsForSearch
     fun onTagUpdated(value: SelectableGenre)
     suspend fun onTagRemoved(name: String): GenresAndTagsForSearch
+    fun onMinTagPercentageUpdated(value: Int)
     fun unselectAllGenresAndTags()
     fun resetData()
     suspend fun onDismissSheet()
