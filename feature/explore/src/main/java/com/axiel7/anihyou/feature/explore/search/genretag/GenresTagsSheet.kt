@@ -50,6 +50,7 @@ import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.TextTriCheckbox
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.feature.explore.search.composables.PercentageSlider
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -188,7 +189,14 @@ private fun GenresTagsSheetContent(
                             )
                         }
 
-                    GenresTagsSheetTab.TAGS ->
+                    GenresTagsSheetTab.TAGS -> {
+                        item {
+                            PercentageSlider(
+                                label = stringResource(R.string.minimum_tag_percentage),
+                                value = uiState.minimumTagPercentage,
+                                onValueChange = { event?.onMinTagPercentageUpdated(it) }
+                            )
+                        }
                         items(uiState.displayTags) { item ->
                             TextTriCheckbox(
                                 text = item.name,
@@ -199,6 +207,7 @@ private fun GenresTagsSheetContent(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+                    }
                 }
             }
         }//: Column

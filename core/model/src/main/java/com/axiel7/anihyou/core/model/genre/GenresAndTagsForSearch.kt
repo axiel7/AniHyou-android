@@ -5,4 +5,5 @@ data class GenresAndTagsForSearch(
     val genreNot: List<String> = emptyList(),
     val tagIn: List<String> = emptyList(),
     val tagNot: List<String> = emptyList(),
+    val minimumTagPercentage: Int = 18,
 )

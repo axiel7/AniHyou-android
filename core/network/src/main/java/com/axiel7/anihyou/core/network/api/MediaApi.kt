@@ -41,6 +41,7 @@ class MediaApi(
         genreNotIn: List<String>?,
         tagIn: List<String>?,
         tagNotIn: List<String>?,
+        minimumTagPercentage: Int?,
         formatIn: List<MediaFormat>?,
         statusIn: List<MediaStatus>?,
         startYear: Int?,
@@ -68,6 +69,7 @@ class MediaApi(
                 else Optional.present(tagIn),
                 tag_not_in = if (tagNotIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(tagNotIn),
+                minimumTagRank = Optional.presentIfNotNull(minimumTagPercentage),
                 format_in = if (formatIn.isNullOrEmpty()) Optional.absent()
                 else Optional.present(formatIn),
                 status_in = if (statusIn.isNullOrEmpty()) Optional.absent()

@@ -198,6 +198,7 @@ class SearchViewModel(
                     genreNotIn = uiState.genresAndTagsForSearch.genreNot,
                     tagIn = uiState.genresAndTagsForSearch.tagIn,
                     tagNotIn = uiState.genresAndTagsForSearch.tagNot,
+                    minimumTagPercentage = uiState.genresAndTagsForSearch.minimumTagPercentage,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },
                     startYear = uiState.startYear,

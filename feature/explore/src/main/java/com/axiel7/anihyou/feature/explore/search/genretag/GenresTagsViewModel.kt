@@ -97,6 +97,19 @@ class GenresTagsViewModel(
         return uiState.genresAndTagsForSearch
     }
 
+    override fun onMinTagPercentageUpdated(value: Int) {
+        viewModelScope.launch {
+            mutableUiState.update { uiState ->
+                uiState.copy(
+                    minimumTagPercentage = value,
+                    genresAndTagsForSearch = uiState.genresAndTagsForSearch.copy(
+                        minimumTagPercentage = value
+                    )
+                )
+            }
+        }
+    }
+
     override fun unselectAllGenresAndTags() {
         viewModelScope.launch {
             mutableUiState.value.run {
