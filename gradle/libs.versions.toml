@@ -1,7 +1,7 @@
 [versions]
 accompanist = "0.37.3"
 agp = "8.12.0"
-apollo = "4.3.2"
+apollo = "4.3.3"
 appcompat = "1.7.1"
 benchmarkMacroJunit4 = "1.4.0"
 coil = "3.3.0"
