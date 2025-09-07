@@ -23,6 +23,7 @@ fun ModalBottomSheet(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     sheetState: SheetState = rememberModalBottomSheetState(),
+    sheetGesturesEnabled: Boolean = true,
     windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
     properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
     content: @Composable (ColumnScope.(dismiss: () -> Unit) -> Unit)
@@ -34,6 +35,7 @@ fun ModalBottomSheet(
         onDismissRequest = { dismiss() },
         modifier = modifier,
         sheetState = sheetState,
+        sheetGesturesEnabled = sheetGesturesEnabled,
         contentWindowInsets = { windowInsets },
         properties = properties,
     ) {

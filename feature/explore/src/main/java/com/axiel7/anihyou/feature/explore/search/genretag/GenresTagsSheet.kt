@@ -14,13 +14,13 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
@@ -30,6 +30,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.TextTriCheckbox
+import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.explore.search.composables.PercentageSlider
 import kotlinx.coroutines.launch
@@ -92,14 +94,22 @@ private fun GenresTagsSheetContent(
     val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
+    val listState = rememberLazyListState()
+    val isAtTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+    }
+
     SideEffect {
         scope.launch { if (isKeyboardVisible) sheetState.expand() }
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissed = onDismiss,
         sheetState = sheetState,
-        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
+        sheetGesturesEnabled = isAtTop,
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         Column(
             modifier = Modifier
@@ -174,6 +184,7 @@ private fun GenresTagsSheetContent(
                 }
             }
             LazyColumn(
+                state = listState,
                 contentPadding = PaddingValues(bottom = bottomPadding)
             ) {
                 when (GenresTagsSheetTab.tabRows[selectedTabIndex].value) {

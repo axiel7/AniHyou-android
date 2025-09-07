@@ -129,6 +129,7 @@ private fun EditMediaSheetContent(
     val datePickerState = rememberDatePickerState()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
 
     if (uiState.openDatePicker) {
         EditMediaDatePicker(
@@ -184,6 +185,7 @@ private fun EditMediaSheetContent(
         onDismissed = onDismissed,
         scope = scope,
         sheetState = sheetState,
+        sheetGesturesEnabled = !scrollState.canScrollBackward,
         windowInsets = WindowInsets(0, 0, 0, 0),
         properties = ModalBottomSheetProperties(shouldDismissOnBackPress = false),
     ) { dismiss ->
@@ -215,7 +217,7 @@ private fun EditMediaSheetContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .imePadding()
                 .padding(bottom = 32.dp + bottomPadding),
             horizontalAlignment = Alignment.Start
