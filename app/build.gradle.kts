@@ -81,6 +81,12 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("benchmarkRelease") {
+            matchingFallbacks += listOf("release")
+        }
+        create("nonMinifiedRelease") {
+            matchingFallbacks += listOf("debug")
+        }
     }
 
     flavorDimensions += "version"
