@@ -78,6 +78,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchCountryChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDateChip
+import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDurationChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchFormatChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
@@ -182,7 +183,7 @@ fun SearchContentView(
         }
     }
 
-    var showMoreFilters by rememberSaveable { mutableStateOf(false) }
+    var showMoreFilters by rememberSaveable { mutableStateOf(true) }
 
     val haptic = LocalHapticFeedback.current
     var showEditSheet by remember { mutableStateOf(false) }
@@ -266,63 +267,7 @@ fun SearchContentView(
                             }
                         )
                         if (showMoreFilters) {
-                            Row(
-                                modifier = Modifier
-                                    .horizontalScroll(rememberScrollState())
-                                    .padding(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                MediaSearchFormatChip(
-                                    mediaType = uiState.mediaType ?: MediaType.ANIME,
-                                    selectedMediaFormats = uiState.selectedMediaFormats,
-                                    onMediaFormatsChanged = { event?.setMediaFormats(it) }
-                                )
-
-                                MediaSearchStatusChip(
-                                    selectedMediaStatuses = uiState.selectedMediaStatuses,
-                                    onMediaStatusesChanged = { event?.setMediaStatuses(it) }
-                                )
-
-                                TriFilterChip(
-                                    text = stringResource(R.string.on_my_list),
-                                    value = uiState.onMyList,
-                                    onValueChanged = { event?.setOnMyList(it) },
-                                )
-
-                                MediaSearchCountryChip(
-                                    value = uiState.country,
-                                    onValueChanged = { event?.setCountry(it) }
-                                )
-                            }
-                            MediaSearchDateChip(
-                                startYear = uiState.startYear,
-                                endYear = uiState.endYear,
-                                season = uiState.season,
-                                onStartYearChanged = { event?.setStartYear(it) },
-                                onEndYearChanged = { event?.setEndYear(it) },
-                                onSeasonChanged = { event?.setSeason(it) },
-                            )
-                            MediaSearchGenresChips(
-                                externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-                                externalTag = initialTag?.let { SelectableGenre(name = it) },
-                                clearedFilters = uiState.clearedFilters,
-                                onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
-                            )
-                            Row(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                TriFilterChip(
-                                    text = stringResource(R.string.doujinshi),
-                                    value = uiState.isDoujin,
-                                    onValueChanged = { event?.setIsDoujin(it) }
-                                )
-                                TriFilterChip(
-                                    text = stringResource(R.string.is_adult),
-                                    value = uiState.isAdult,
-                                    onValueChanged = { event?.setIsAdult(it) }
-                                )
-                            }
+                            MoreFilters(uiState, event, initialGenre, initialTag)
                         }
                         Row(
                             modifier = Modifier.padding(horizontal = 8.dp),
@@ -463,6 +408,81 @@ fun SearchContentView(
                 }
             }
         }//: LazyColumn
+    }
+}
+
+@Composable
+private fun MoreFilters(
+    uiState: SearchUiState,
+    event: SearchEvent?,
+    initialGenre: String?,
+    initialTag: String?,
+) {
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        MediaSearchFormatChip(
+            mediaType = uiState.mediaType ?: MediaType.ANIME,
+            selectedMediaFormats = uiState.selectedMediaFormats,
+            onMediaFormatsChanged = { event?.setMediaFormats(it) }
+        )
+
+        MediaSearchStatusChip(
+            selectedMediaStatuses = uiState.selectedMediaStatuses,
+            onMediaStatusesChanged = { event?.setMediaStatuses(it) }
+        )
+
+        TriFilterChip(
+            text = stringResource(R.string.on_my_list),
+            value = uiState.onMyList,
+            onValueChanged = { event?.setOnMyList(it) },
+        )
+
+        MediaSearchCountryChip(
+            value = uiState.country,
+            onValueChanged = { event?.setCountry(it) }
+        )
+    }
+    MediaSearchDateChip(
+        startYear = uiState.startYear,
+        endYear = uiState.endYear,
+        season = uiState.season,
+        onStartYearChanged = { event?.setStartYear(it) },
+        onEndYearChanged = { event?.setEndYear(it) },
+        onSeasonChanged = { event?.setSeason(it) },
+    )
+    MediaSearchDurationChip(
+        mediaType = uiState.mediaType ?: MediaType.UNKNOWN__,
+        minEpCh = uiState.minEpCh,
+        maxEpCh = uiState.maxEpCh,
+        minDuration = uiState.minDuration,
+        maxDuration = uiState.maxDuration,
+        setEpCh = { event?.setEpCh(it) },
+        setDuration = { event?.setDuration(it) },
+    )
+    MediaSearchGenresChips(
+        externalGenre = initialGenre?.let { SelectableGenre(name = it) },
+        externalTag = initialTag?.let { SelectableGenre(name = it) },
+        clearedFilters = uiState.clearedFilters,
+        onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+    )
+    Row(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        TriFilterChip(
+            text = stringResource(R.string.doujinshi),
+            value = uiState.isDoujin,
+            onValueChanged = { event?.setIsDoujin(it) }
+        )
+        TriFilterChip(
+            text = stringResource(R.string.is_adult),
+            value = uiState.isAdult,
+            onValueChanged = { event?.setIsAdult(it) }
+        )
     }
 }
 

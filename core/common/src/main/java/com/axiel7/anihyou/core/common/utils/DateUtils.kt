@@ -51,7 +51,7 @@ object DateUtils {
         GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
     val currentYear = Calendar.getInstance()[Calendar.YEAR]
-    private const val BASE_YEAR = 1917
+    const val BASE_YEAR = 1917
     val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toList()
 
     fun currentTimeSeconds() = System.currentTimeMillis() / 1000

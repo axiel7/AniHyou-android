@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.explore.search
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.axiel7.anihyou.core.base.state.PagedUiState
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
@@ -16,7 +17,6 @@ import com.axiel7.anihyou.core.network.SearchUserQuery
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class SearchUiState(
@@ -37,6 +37,10 @@ data class SearchUiState(
     val startYear: Int? = null,
     val endYear: Int? = null,
     val season: MediaSeason? = null,
+    val minEpCh: Int? = null,
+    val maxEpCh: Int? = null,
+    val minDuration: Int? = null,
+    val maxDuration: Int? = null,
     val onMyList: Boolean? = null,
     val isDoujin: Boolean? = null,
     val isAdult: Boolean? = null,
@@ -54,6 +58,9 @@ data class SearchUiState(
         SearchType.MANGA -> MediaType.MANGA
         else -> null
     }
+
+    val isAnime = searchType == SearchType.ANIME
+    val isManga = searchType == SearchType.MANGA
 
     private val hasGenreOrTagFilter = genresAndTagsForSearch.genreIn.isNotEmpty()
             || genresAndTagsForSearch.tagIn.isNotEmpty()
