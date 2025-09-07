@@ -2,8 +2,8 @@
 val appPackageName by extra { "com.axiel7.anihyou" }
 val sdkVersion by extra { 36 }
 val minSdkVersion by extra { 23 }
-val wearCompileSdkVersion by extra { 35 }
-val wearSdkVersion by extra { 34 }
+val wearCompileSdkVersion by extra { 36 }
+val wearSdkVersion by extra { 36 }
 val wearMinSdkVersion by extra { 25 }
 
 plugins {
