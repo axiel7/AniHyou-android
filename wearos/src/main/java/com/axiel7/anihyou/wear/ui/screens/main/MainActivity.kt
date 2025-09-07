@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,7 +26,6 @@ import com.axiel7.anihyou.wear.ui.screens.login.LoginView
 import com.axiel7.anihyou.wear.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.wear.ui.screens.usermedialist.edit.EditMediaView
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -45,14 +43,12 @@ class MainActivity : ComponentActivity() {
         intent.data?.let { viewModel.onIntentDataReceived(it) }
 
         setContent {
-            KoinAndroidContext {
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                WearApp(
-                    uiState = uiState,
-                    event = viewModel,
-                )
-            }
+            WearApp(
+                uiState = uiState,
+                event = viewModel,
+            )
         }
     }
 

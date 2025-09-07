@@ -18,6 +18,7 @@ import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -118,7 +119,9 @@ fun AssistChipWithTooltip(
     }
 
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+            positioning = TooltipAnchorPosition.Above
+        ),
         tooltip = {
             RichTooltip(text = tooltipContent ?: {})
         },
@@ -150,7 +153,9 @@ fun TagChip(
 ) {
     val tooltipState = rememberTooltipState(isPersistent = true)
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+            positioning = TooltipAnchorPosition.Above
+        ),
         tooltip = {
             RichTooltip {
                 Text(text = description ?: stringResource(R.string.no_description))
@@ -180,7 +185,9 @@ fun SpoilerTagChip(
     val tooltipState = rememberTooltipState(isPersistent = true)
     AnimatedVisibility(visible = visible) {
         TooltipBox(
-            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                positioning = TooltipAnchorPosition.Above
+            ),
             tooltip = {
                 RichTooltip {
                     Text(text = description ?: stringResource(R.string.no_description))
