@@ -348,6 +348,11 @@
     <string name="translations">Tłumaczenia</string>
     <string name="from_year">Od roku</string>
     <string name="to_year">Do roku</string>
+    <string name="staff_role_a_and_r_producer">A&amp;R Producent</string>
+    <string name="staff_role_action_animator">Animator akcji</string>
+    <string name="staff_role_advertising">Reklamowanie</string>
+    <string name="staff_role_advertising_producer">Producent reklamowy</string>
+    <string name="staff_role_animation">Animacja</string>
     <string name="staff_role_music">Muzyka</string>
     <string name="staff_role_planning">Planowane</string>
     <string name="hide_filters">Ukryj filtry</string>

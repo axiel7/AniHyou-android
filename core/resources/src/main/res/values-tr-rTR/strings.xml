@@ -21,7 +21,7 @@
         <item quantity="other">%d gün</item>
     </plurals>
     <string name="unknown">Bilinmiyor</string>
-    <string name="airing_soon">Yakında yayınlanacak</string>
+    <string name="airing_soon">Yakında Yayında</string>
     <string name="mean_score">Ortalama Puan</string>
     <string name="airing_in">%s sonra yayınlanacak</string>
     <string name="winter">Kış</string>
@@ -616,6 +616,8 @@
     <string name="completed_media">%s animesi tamamlandı</string>
     <string name="dropped_media">%s animesi bırakıldı</string>
     <string name="paused_media">%s animesi duraklatıldı</string>
+    <string name="rewatched_media">Tekrar izleme %s</string>
+    <string name="reread_media">Tekrar okuma %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d saat</item>
         <item quantity="other">%d saat</item>
@@ -624,4 +626,6 @@
         <item quantity="one">%d dk</item>
         <item quantity="other">%d dk</item>
     </plurals>
+    <string name="login_required_in_phone">Bu uygulamayı kullanmak için öncelikle telefonunuzda yüklü olan AniHyou uygulamasını açarak giriş yapmanız gerekir</string>
+    <string name="app_installed_required">Yakında bir cihaz algılanmadı, lütfen Android telefonunuza en son AniHyou uygulama sürümünü yükleyin</string>
 </resources>
