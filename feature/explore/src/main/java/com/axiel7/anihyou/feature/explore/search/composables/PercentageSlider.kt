@@ -40,7 +40,6 @@ fun PercentageSlider(
                 value = value.toFloat(),
                 onValueChange = { onValueChange(it.toInt().coerceIn(0, 100)) },
                 valueRange = 0f..100f,
-                steps = 99,
             )
             Text(
                 text = "${value}%",
