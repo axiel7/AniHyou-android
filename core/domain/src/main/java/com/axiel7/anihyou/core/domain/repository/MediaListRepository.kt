@@ -78,6 +78,7 @@ class MediaListRepository (
             else -> null
         }
         return updateEntry(
+            oldEntry = entry,
             mediaId = entry.mediaId,
             progress = newProgress.takeIf { !entry.isUsingVolumeProgress() },
             progressVolumes = newProgress.takeIf { entry.isUsingVolumeProgress() },
