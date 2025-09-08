@@ -4,7 +4,7 @@ val sdkVersion by extra { 36 }
 val minSdkVersion by extra { 23 }
 val wearCompileSdkVersion by extra { 36 }
 val wearSdkVersion by extra { 36 }
-val wearMinSdkVersion by extra { 25 }
+val wearMinSdkVersion by extra { 26 }
 
 plugins {
     alias(libs.plugins.android.application) apply false
