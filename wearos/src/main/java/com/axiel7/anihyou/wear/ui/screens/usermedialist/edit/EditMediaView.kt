@@ -2,9 +2,7 @@ package com.axiel7.anihyou.wear.ui.screens.usermedialist.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.OutlinedButton
 import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
@@ -36,6 +33,9 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.ScrollableColumn
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.ScreenScaffold
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,16 +57,21 @@ fun EditMediaContent(
     event: EditMediaEvent?,
     modifier: Modifier = Modifier
 ) {
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.BodyText,
+        last = ColumnItemType.Button,
+    )
     val scrollState = rememberScrollState()
 
-    Scaffold(
+    ScreenScaffold(
         modifier = modifier,
         positionIndicator = {
             PositionIndicator(
                 scrollState = scrollState
             )
         },
-        timeText = { TimeText() }
+        timeText = { TimeText() },
+        scrollState = scrollState,
     ) {
         uiState.entry?.let { entry ->
             val accentColor = (colorFromHex(entry.media?.coverImage?.color)
@@ -74,11 +79,10 @@ fun EditMediaContent(
 
             ScrollableColumn(
                 scrollState = scrollState,
-                modifier = Modifier.padding(horizontal = 20.dp),
+                modifier = Modifier.padding(contentPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = entry.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                     textAlign = TextAlign.Center,

@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.wear.compose.material)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.navigation)
+    implementation(libs.horologist.compose.layout)
 
     implementation(libs.androidx.wear.tooling.preview)
     implementation(libs.androidx.wear.compose.ui.tooling)

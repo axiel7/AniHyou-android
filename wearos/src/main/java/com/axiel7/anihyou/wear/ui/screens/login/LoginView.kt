@@ -23,6 +23,8 @@ import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.ScrollableColumn
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -46,6 +48,10 @@ private fun LoginContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.BodyText,
+        last = ColumnItemType.Button,
+    )
     val scrollState = rememberScrollState()
     Scaffold(
         positionIndicator = {
@@ -54,14 +60,13 @@ private fun LoginContent(
     ) {
         ScrollableColumn(
             scrollState = scrollState,
-            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = modifier.padding(contentPadding),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = uiState.error ?: stringResource(R.string.login_required_in_phone),
-                modifier = Modifier.padding(8.dp),
                 textAlign = TextAlign.Center
             )
 
