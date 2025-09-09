@@ -17,9 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.TimeText
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.google.android.horologist.compose.layout.ScreenScaffold
 
 @Composable
 fun UserMediaListHostView(
@@ -49,9 +48,8 @@ fun UserMediaListHostView(
 
     val pagerState = rememberPagerState { maxPages }
 
-    Scaffold(
+    ScreenScaffold(
         modifier = modifier,
-        timeText = { TimeText() }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             HorizontalPager(

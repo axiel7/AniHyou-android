@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.requestFocusOnHierarchyActive
 import androidx.wear.compose.foundation.rotary.RotaryScrollableDefaults
 import androidx.wear.compose.foundation.rotary.rotaryScrollable
 
@@ -27,11 +28,12 @@ fun ScrollableColumn(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .requestFocusOnHierarchyActive()
             .rotaryScrollable(
                 behavior = RotaryScrollableDefaults.behavior(scrollableState = scrollState),
                 focusRequester = remember { FocusRequester() }
             )
+            .verticalScroll(scrollState)
             .then(modifier),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,

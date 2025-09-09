@@ -5,11 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -26,6 +24,7 @@ import com.axiel7.anihyou.wear.ui.screens.login.LoginView
 import com.axiel7.anihyou.wear.ui.screens.usermedialist.UserMediaListHostView
 import com.axiel7.anihyou.wear.ui.screens.usermedialist.edit.EditMediaView
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
+import com.google.android.horologist.compose.layout.AppScaffold
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -66,11 +65,10 @@ fun WearApp(
     val navController = rememberSwipeDismissableNavController()
 
     AniHyouTheme {
-        Box(
+        AppScaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
         ) {
             SwipeDismissableNavHost(
                 navController = navController,

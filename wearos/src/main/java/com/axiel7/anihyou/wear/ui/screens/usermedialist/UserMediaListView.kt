@@ -21,7 +21,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.compositeOver
@@ -43,10 +42,7 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.OutlinedCompactChip
 import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.Vignette
-import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.material.placeholder
 import androidx.wear.compose.material.placeholderShimmer
 import androidx.wear.compose.material.rememberPlaceholderState
@@ -64,6 +60,7 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.OnBottomReached
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
+import com.google.android.horologist.compose.layout.ScreenScaffold
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -103,67 +100,58 @@ private fun UserMediaListContent(
         derivedStateOf { listState.canScrollBackward }
     }
 
-    Scaffold(
+    ScreenScaffold(
         modifier = modifier,
-        vignette = {
-            Vignette(vignettePosition = VignettePosition.TopAndBottom)
-        },
         positionIndicator = {
             PositionIndicator(
                 scalingLazyListState = listState
             )
         },
     ) {
-        Box(
+        ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
+            state = listState,
         ) {
-            ScalingLazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = listState,
-            ) {
-                item {
-                    Box(modifier = Modifier.height(48.dp)) {
-                        AnimatedVisibility(
-                            visible = !canScrollUp,
-                            enter = fadeIn() + slideInVertically(tween(100)),
-                            exit = fadeOut() + slideOutVertically(tween(100)),
-                        ) {
-                            OutlinedCompactChip(
-                                onClick = { event?.refreshList() },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.refresh_24),
-                                        contentDescription = stringResource(R.string.refresh)
-                                    )
-                                }
-                            )
-                        }
+            item {
+                Box(modifier = Modifier.height(48.dp)) {
+                    AnimatedVisibility(
+                        visible = !canScrollUp,
+                        enter = fadeIn() + slideInVertically(tween(100)),
+                        exit = fadeOut() + slideOutVertically(tween(100)),
+                    ) {
+                        OutlinedCompactChip(
+                            onClick = { event?.refreshList() },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.refresh_24),
+                                    contentDescription = stringResource(R.string.refresh)
+                                )
+                            }
+                        )
                     }
                 }
-                item {
-                    LaunchedEffect(uiState.entries) {
-                        if (uiState.entries.isEmpty()) {
-                            listState.scrollToItem(index = 1, scrollOffset = 50)
-                        }
+            }
+            item {
+                LaunchedEffect(uiState.entries) {
+                    if (uiState.entries.isEmpty()) {
+                        listState.scrollToItem(index = 1, scrollOffset = 50)
                     }
-                    Text(
-                        text = uiState.mediaType.localized(),
-                        modifier = Modifier.padding(bottom = 4.dp),
-                        style = MaterialTheme.typography.title3
-                    )
                 }
-                items(uiState.entries) { item ->
-                    ItemView(
-                        item = item,
-                        onClick = { goToEditMedia(item.mediaId) }
-                    )
-                }
-                if (uiState.isLoading) {
-                    items(10) {
-                        ItemPlaceholder()
-                    }
+                Text(
+                    text = uiState.mediaType.localized(),
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    style = MaterialTheme.typography.title3
+                )
+            }
+            items(uiState.entries) { item ->
+                ItemView(
+                    item = item,
+                    onClick = { goToEditMedia(item.mediaId) }
+                )
+            }
+            if (uiState.isLoading) {
+                items(10) {
+                    ItemPlaceholder()
                 }
             }
         }

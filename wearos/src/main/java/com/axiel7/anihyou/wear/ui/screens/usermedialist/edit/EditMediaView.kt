@@ -18,11 +18,11 @@ import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.OutlinedButton
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
@@ -58,7 +58,7 @@ fun EditMediaContent(
     modifier: Modifier = Modifier
 ) {
     val contentPadding = rememberResponsiveColumnPadding(
-        first = ColumnItemType.BodyText,
+        first = ColumnItemType.ListHeader,
         last = ColumnItemType.Button,
     )
     val scrollState = rememberScrollState()
@@ -70,7 +70,6 @@ fun EditMediaContent(
                 scrollState = scrollState
             )
         },
-        timeText = { TimeText() },
         scrollState = scrollState,
     ) {
         uiState.entry?.let { entry ->
@@ -83,11 +82,15 @@ fun EditMediaContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = entry.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.title3,
-                )
+                ListHeader(
+                    contentColor = MaterialTheme.colors.onSurface
+                ) {
+                    Text(
+                        text = entry.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.title3,
+                    )
+                }
 
                 val progress = entry.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
                 val duration = entry.duration()?.format()

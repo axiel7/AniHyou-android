@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
@@ -24,6 +23,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.ScrollableColumn
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
 import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -53,7 +53,7 @@ private fun LoginContent(
         last = ColumnItemType.Button,
     )
     val scrollState = rememberScrollState()
-    Scaffold(
+    ScreenScaffold(
         positionIndicator = {
             PositionIndicator(scrollState = scrollState)
         }
