@@ -643,4 +643,5 @@
     <string name="login_required_in_phone">To use this app you first need to login opening the AniHyou app installed on your phone</string>
     <string name="app_installed_required">No nearby device detected, please install the latest AniHyou app version on your Android phone</string>
     <string name="minimum_tag_percentage">Minimum Tag Percentage</string>
+    <string name="search_my_list">Search my list…</string>
 </resources>

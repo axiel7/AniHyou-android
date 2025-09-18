@@ -118,7 +118,13 @@ fun SearchView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
-                placeholder = { Text(text = stringResource(R.string.anime_manga_and_more)) },
+                placeholder = {
+                    if (arguments.onList == true && uiState.onMyList == true) {
+                        Text(text = stringResource(R.string.search_my_list))
+                    } else {
+                        Text(text = stringResource(R.string.anime_manga_and_more))
+                    }
+                },
                 leadingIcon = {
                     BackIconButton(onClick = navActionManager::goBack)
                 },
