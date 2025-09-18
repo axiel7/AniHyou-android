@@ -3,16 +3,15 @@ package com.axiel7.anihyou.core.ui.common.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import com.axiel7.anihyou.core.model.CurrentListType
+import com.axiel7.anihyou.core.model.media.AnimeSeason
+import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
-import com.axiel7.anihyou.core.model.CurrentListType
-import com.axiel7.anihyou.core.model.media.AnimeSeason
-import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 
 @Immutable
@@ -201,7 +200,7 @@ class NavActionManager(
         fun rememberNavActionManager(
             backStack: TopLevelBackStack<NavKey> = TopLevelBackStack(
                 startKey = BottomDestination.Home.route,
-                backStack = NavBackStack()
+                backStack = rememberNavBackStack<NavKey>()
             )
         ) = remember {
             NavActionManager(backStack)

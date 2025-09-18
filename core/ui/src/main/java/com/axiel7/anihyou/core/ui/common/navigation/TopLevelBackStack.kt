@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.NavKey
 
 class TopLevelBackStack<T : NavKey>(
     private val startKey: T,
-    val backStack: NavBackStack
+    val backStack: NavBackStack<T>
 ) {
 
     // Maintain a stack for each top level route
