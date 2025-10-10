@@ -200,7 +200,7 @@ class NavActionManager(
         fun rememberNavActionManager(
             backStack: TopLevelBackStack<NavKey> = TopLevelBackStack(
                 startKey = BottomDestination.Home.route,
-                backStack = rememberNavBackStack<NavKey>()
+                backStack = rememberNavBackStack()
             )
         ) = remember {
             NavActionManager(backStack)
