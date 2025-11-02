@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.model.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.resources.R
 
@@ -23,4 +24,27 @@ fun MediaSource.localized() = when (this) {
     MediaSource.MULTIMEDIA_PROJECT -> stringResource(R.string.multimedia_project)
     MediaSource.PICTURE_BOOK -> stringResource(R.string.picture_book)
     MediaSource.UNKNOWN__ -> stringResource(R.string.unknown)
+}
+
+enum class MediaSourceLocalizable(val value: MediaSource): Localizable {
+    ORIGINAL(MediaSource.ORIGINAL),
+    MANGA(MediaSource.MANGA),
+    LIGHT_NOVEL(MediaSource.LIGHT_NOVEL),
+    VISUAL_NOVEL(MediaSource.VISUAL_NOVEL),
+    VIDEO_GAME(MediaSource.VIDEO_GAME),
+    OTHER(MediaSource.OTHER),
+    NOVEL(MediaSource.NOVEL),
+    DOUJINSHI(MediaSource.DOUJINSHI),
+    ANIME(MediaSource.ANIME),
+    WEB_NOVEL(MediaSource.WEB_NOVEL),
+    LIVE_ACTION(MediaSource.LIVE_ACTION),
+    GAME(MediaSource.GAME),
+    COMIC(MediaSource.COMIC),
+    MULTIMEDIA_PROJECT(MediaSource.MULTIMEDIA_PROJECT),
+    PICTURE_BOOK(MediaSource.PICTURE_BOOK),
+    UNKNOWN(MediaSource.UNKNOWN__),
+    ;
+
+    @Composable
+    override fun localized() = value.localized()
 }

@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.network.api.UserApi
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
+import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 
@@ -51,6 +52,7 @@ class SearchRepository(
         isLicensed: Boolean? = null,
         isAdult: Boolean? = null,
         country: CountryOfOrigin? = null,
+        sourceIn: List<MediaSource>? = null,
         page: Int,
         perPage: Int = 25,
     ) = mediaApi
@@ -82,6 +84,7 @@ class SearchRepository(
             isLicensed,
             isAdult,
             country?.toDto(),
+            sourceIn,
             page,
             perPage
         )

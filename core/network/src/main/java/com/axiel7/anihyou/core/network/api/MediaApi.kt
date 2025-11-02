@@ -26,6 +26,7 @@ import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
+import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ThreadSort
@@ -61,6 +62,7 @@ class MediaApi(
         isLicensed: Boolean?,
         isAdult: Boolean?,
         country: CountryOfOriginDto?,
+        sourceIn: List<MediaSource>?,
         page: Int,
         perPage: Int,
     ) = client
@@ -107,6 +109,8 @@ class MediaApi(
                 isLicensed = Optional.presentIfNotNull(isLicensed),
                 isAdult = Optional.presentIfNotNull(isAdult),
                 country = Optional.presentIfNotNull(country),
+                source_in = if (sourceIn.isNullOrEmpty()) Optional.absent()
+                else Optional.present(sourceIn),
             )
         )
 

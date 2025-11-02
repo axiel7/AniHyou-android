@@ -5,6 +5,7 @@ import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
+import com.axiel7.anihyou.core.model.media.MediaSourceLocalizable
 import com.axiel7.anihyou.core.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.core.network.SearchMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
@@ -26,6 +27,7 @@ interface SearchEvent : PagedEvent {
     fun setIsDoujin(value: Boolean?)
     fun setIsAdult(value: Boolean?)
     fun setCountry(value: CountryOfOrigin?)
+    fun setSources(values: List<MediaSourceLocalizable>)
     fun onGenreTagStateChanged(genresAndTagsForSearch: GenresAndTagsForSearch)
     fun clearFilters()
     fun selectMediaItem(value: SearchMediaQuery.Medium?)

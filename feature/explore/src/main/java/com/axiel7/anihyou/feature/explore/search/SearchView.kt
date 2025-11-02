@@ -82,6 +82,7 @@ import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDuration
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchFormatChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
+import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSourcesChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchStatusChip
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -450,6 +451,11 @@ private fun MoreFilters(
         MediaSearchCountryChip(
             value = uiState.country,
             onValueChanged = { event?.setCountry(it) }
+        )
+
+        MediaSearchSourcesChip(
+            selectedSources = uiState.selectedSources,
+            onSourcesChanged = { event?.setSources(it) }
         )
     }
     MediaSearchDateChip(

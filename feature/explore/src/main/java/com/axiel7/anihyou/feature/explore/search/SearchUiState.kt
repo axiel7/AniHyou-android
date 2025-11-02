@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
+import com.axiel7.anihyou.core.model.media.MediaSourceLocalizable
 import com.axiel7.anihyou.core.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.core.network.SearchCharacterQuery
 import com.axiel7.anihyou.core.network.SearchMediaQuery
@@ -45,6 +46,8 @@ data class SearchUiState(
     val isDoujin: Boolean? = null,
     val isAdult: Boolean? = null,
     val country: CountryOfOrigin? = null,
+    val selectedSources: List<MediaSourceLocalizable> = emptyList(),
+    val sourcesChanged: Boolean = false,
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
     val clearedFilters: Boolean = false,
     override val page: Int = 0,

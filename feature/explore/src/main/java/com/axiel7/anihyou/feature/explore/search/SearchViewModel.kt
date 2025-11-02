@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
+import com.axiel7.anihyou.core.model.media.MediaSourceLocalizable
 import com.axiel7.anihyou.core.model.media.MediaStatusLocalizable
 import com.axiel7.anihyou.core.network.SearchMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
@@ -122,6 +123,16 @@ class SearchViewModel(
         it.copy(country = value, page = 1, hasNextPage = true, isLoading = true)
     }
 
+    override fun setSources(values: List<MediaSourceLocalizable>) = mutableUiState.update {
+        it.copy(
+            selectedSources = values,
+            page = 1,
+            hasNextPage = true,
+            isLoading = true,
+            sourcesChanged = true
+        )
+    }
+
     override fun onGenreTagStateChanged(genresAndTagsForSearch: GenresAndTagsForSearch) =
         mutableUiState.update {
             it.copy(
@@ -146,6 +157,7 @@ class SearchViewModel(
             isAdult = null,
             country = null,
             season = null,
+            selectedSources = emptyList(),
             clearedFilters = true,
             page = 1,
             hasNextPage = true,
@@ -200,6 +212,7 @@ class SearchViewModel(
                         && !new.genresOrTagsChanged
                         && !new.mediaFormatsChanged
                         && !new.mediaStatusesChanged
+                        && !new.sourcesChanged
             }
             .flatMapLatest { uiState ->
                 searchRepository.searchMedia(
@@ -228,6 +241,7 @@ class SearchViewModel(
                     isLicensed = uiState.isDoujin?.not(),
                     isAdult = uiState.isAdult,
                     country = uiState.country,
+                    sourceIn = uiState.selectedSources.map { it.value },
                     page = uiState.page
                 )
             }
@@ -242,6 +256,7 @@ class SearchViewModel(
                             genresOrTagsChanged = false,
                             mediaFormatsChanged = false,
                             mediaStatusesChanged = false,
+                            sourcesChanged = false,
                             clearedFilters = false,
                         )
                     } else {
