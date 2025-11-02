@@ -49,6 +49,8 @@ fun HtmlWebView(
             webView.background = Color.TRANSPARENT.toDrawable()
             webView.isScrollContainer = false
             webView.isVerticalScrollBarEnabled = false
+            webView.settings.useWideViewPort = true
+            webView.settings.loadWithOverviewMode = true
         },
         client = webClient
     )
@@ -60,7 +62,7 @@ fun generateHtml(
 ) = """
     <HTML>
     <head>
-        <meta name='viewport' content='width=device-width, shrink-to-fit=YES, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'>
+        <meta name='viewport' content='width=device-width, shrink-to-fit=YES'>
     </head>
     ${generateCSS(colorScheme)}
     <BODY>
