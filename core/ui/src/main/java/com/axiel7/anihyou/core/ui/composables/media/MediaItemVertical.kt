@@ -42,9 +42,9 @@ const val MEDIA_ITEM_VERTICAL_HEIGHT = 200
 fun MediaItemVertical(
     title: String,
     imageUrl: String?,
+    modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
     status: MediaListStatus?,
-    modifier: Modifier = Modifier,
     minLines: Int = 1,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},

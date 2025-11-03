@@ -34,7 +34,7 @@ class TopLevelBackStack<T : NavKey>(
 
         // If the top level doesn't exist, add it
         if (topLevelStacks[key] == null) {
-            topLevelStacks.put(key, mutableStateListOf(key))
+            topLevelStacks[key] = mutableStateListOf(key)
         } else {
             // Otherwise just move it to the end of the stacks
             topLevelStacks.apply {

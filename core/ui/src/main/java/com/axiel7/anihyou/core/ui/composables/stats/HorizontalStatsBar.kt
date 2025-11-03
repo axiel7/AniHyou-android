@@ -14,7 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -42,8 +43,9 @@ fun <T> HorizontalStatsBar(
     val totalValue = remember(stats) {
         stats.map { it.value }.sum()
     }
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
+    val screenWidth = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.width.toDp().value
+    }
 
     Column(
         modifier = Modifier.padding(vertical = verticalPadding)
@@ -55,7 +57,7 @@ fun <T> HorizontalStatsBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (isLoading) {
-                for (i in 1..5) {
+                repeat(5) {
                     Text(
                         text = "Loading",
                         modifier = Modifier

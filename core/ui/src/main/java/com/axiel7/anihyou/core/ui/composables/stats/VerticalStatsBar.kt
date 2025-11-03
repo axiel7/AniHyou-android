@@ -58,10 +58,10 @@ fun <T> VerticalStatsBar(
         verticalAlignment = Alignment.Bottom,
     ) {
         if (isLoading) {
-            for (i in 1..10) {
+            repeat(10) {
                 Rectangle(
                     width = 25.dp,
-                    height = (MAX_VERTICAL_STAT_HEIGHT - (10 / i + i * 2)).dp,
+                    height = (MAX_VERTICAL_STAT_HEIGHT - (10 / it + it * 2)).dp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
