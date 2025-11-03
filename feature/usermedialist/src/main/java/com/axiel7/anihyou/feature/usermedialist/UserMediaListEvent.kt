@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
@@ -7,6 +8,7 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.base.event.PagedEvent
 import com.axiel7.anihyou.core.base.event.UiEvent
 
+@Immutable
 interface UserMediaListEvent : PagedEvent, UiEvent {
     fun setScoreFormat(value: ScoreFormat)
 

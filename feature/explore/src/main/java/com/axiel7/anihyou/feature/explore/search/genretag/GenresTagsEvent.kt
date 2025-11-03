@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.feature.explore.search.genretag
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.genre.SelectableGenre
 
+@Immutable
 interface GenresTagsEvent {
     fun setExternalGenre(value: SelectableGenre)
     fun setExternalTag(value: SelectableGenre)

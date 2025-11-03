@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.feature.mediadetails
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 
+@Immutable
 interface MediaDetailsEvent {
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
     fun toggleFavorite()

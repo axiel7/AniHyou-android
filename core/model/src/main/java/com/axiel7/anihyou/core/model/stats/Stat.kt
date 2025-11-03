@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.model.stats
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.res.stringResource
 
 abstract class Stat<T> {
@@ -23,12 +24,14 @@ abstract class Stat<T> {
     }
 }
 
+@Stable
 data class StatLocalizableAndColorable<T>(
     override val type: T,
     override val value: Float,
     override val details: List<Detail>? = null,
 ) : Stat<T>() where T : com.axiel7.anihyou.core.model.base.Localizable, T : com.axiel7.anihyou.core.model.base.Colorable
 
+@Stable
 data class StatColorable<T : com.axiel7.anihyou.core.model.base.Colorable>(
     override val type: T,
     override val value: Float,

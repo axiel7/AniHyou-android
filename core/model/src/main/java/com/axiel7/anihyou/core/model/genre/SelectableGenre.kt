@@ -2,11 +2,13 @@ package com.axiel7.anihyou.core.model.genre
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
 
+@Stable
 data class SelectableGenre(
     val name: String,
     val state: State = State.NONE,

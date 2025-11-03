@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.ui.common.navigation
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +9,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
+@Immutable
 class TopLevelBackStack<T : NavKey>(
     private val startKey: T,
     val backStack: NavBackStack<T>

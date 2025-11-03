@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.core.model.thread
 
+import androidx.compose.runtime.Stable
 import com.axiel7.anihyou.core.network.ChildCommentsQuery
 
 // This model is necessary because AniList API returns a JSON string for the `childComments` query
 // and Apollo converts it to an ArrayList of LinkedHashMap
+@Stable
 data class ChildComment(
     val id: Int,
     val comment: String?,
@@ -14,11 +16,13 @@ data class ChildComment(
     val user: User?,
     val childComments: List<ChildComment?>?,
 ) {
+    @Stable
     data class User(
         val id: Int,
         val name: String,
         val avatar: Avatar?,
     ) {
+        @Stable
         data class Avatar(
             val medium: String?,
         )

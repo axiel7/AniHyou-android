@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.feature.activitydetails.publish
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.state.UiState
 
+@Immutable
 data class PublishActivityUiState(
     val wasPublished: Boolean? = null,
     override val error: String? = null,

@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.feature.mediadetails.activity
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.PagedEvent
 
+@Immutable
 interface MediaActivityEvent : PagedEvent {
     fun setIsMine(value: Boolean)
     fun toggleLikeActivity(id: Int)

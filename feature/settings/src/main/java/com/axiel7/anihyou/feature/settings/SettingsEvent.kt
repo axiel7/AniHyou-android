@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.settings
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
@@ -13,6 +14,7 @@ import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 
+@Immutable
 interface SettingsEvent {
 
     fun setTheme(value: Theme)

@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.feature.thread.publish
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.state.UiState
 
+@Immutable
 data class PublishCommentUiState(
     val wasPublished: Boolean? = null,
     override val error: String? = null,

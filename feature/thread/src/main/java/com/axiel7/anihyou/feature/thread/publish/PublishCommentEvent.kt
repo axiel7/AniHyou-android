@@ -1,6 +1,10 @@
 package com.axiel7.anihyou.feature.thread.publish
 
-interface PublishCommentEvent {
+import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.base.event.UiEvent
+
+@Immutable
+interface PublishCommentEvent: UiEvent {
     fun setWasPublished(value: Boolean)
 
     fun publishThreadComment(
@@ -9,6 +13,4 @@ interface PublishCommentEvent {
         id: Int? = null,
         text: String
     )
-
-    fun onErrorDisplayed()
 }

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.explore.search
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.PagedEvent
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
@@ -12,6 +13,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 
+@Immutable
 interface SearchEvent : PagedEvent {
     fun setQuery(value: String)
     fun setSearchType(value: SearchType)

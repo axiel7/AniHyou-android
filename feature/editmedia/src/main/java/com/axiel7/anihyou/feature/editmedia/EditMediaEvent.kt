@@ -1,8 +1,11 @@
 package com.axiel7.anihyou.feature.editmedia
 
+import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 
-interface EditMediaEvent {
+@Immutable
+interface EditMediaEvent: UiEvent {
     fun onChangeStatus(value: MediaListStatus)
     fun onChangeProgress(value: Int?)
     fun onChangeVolumeProgress(value: Int?)
@@ -23,6 +26,4 @@ interface EditMediaEvent {
     fun toggleDeleteDialog(open: Boolean)
     fun deleteListEntry()
     fun setUpdateSuccess(value: Boolean)
-
-    fun onErrorDisplayed()
 }
