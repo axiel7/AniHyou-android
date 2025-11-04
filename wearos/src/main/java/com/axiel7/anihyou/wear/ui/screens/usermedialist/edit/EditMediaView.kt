@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.wear.ui.screens.usermedialist.edit
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,14 +16,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.CircularProgressIndicator
-import androidx.wear.compose.material.ListHeader
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.OutlinedButton
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.ScrollIndicator
+import androidx.wear.compose.material3.TextButton
+import androidx.wear.compose.material3.TextButtonDefaults
+import androidx.wear.compose.material3.contentColorFor
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
@@ -66,15 +67,18 @@ fun EditMediaContent(
     ScreenScaffold(
         modifier = modifier,
         positionIndicator = {
-            PositionIndicator(
-                scrollState = scrollState
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                ScrollIndicator(
+                    state = scrollState,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
         },
         scrollState = scrollState,
     ) {
         uiState.entry?.let { entry ->
             val accentColor = (colorFromHex(entry.media?.coverImage?.color)
-                ?: MaterialTheme.colors.primary).compositeOver(MaterialTheme.colors.background)
+                ?: MaterialTheme.colorScheme.primary).compositeOver(MaterialTheme.colorScheme.background)
 
             ScrollableColumn(
                 scrollState = scrollState,
@@ -83,12 +87,13 @@ fun EditMediaContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ListHeader(
-                    contentColor = MaterialTheme.colors.onSurface
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ) {
                     Text(
                         text = entry.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.title3,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 4,
                     )
                 }
 
@@ -98,23 +103,28 @@ fun EditMediaContent(
                     text = if (duration != null) "$progress/$duration" else "$progress",
                 )
 
-                Button(
+                TextButton(
                     onClick = { event?.onClickPlusOne() },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 4.dp),
-                    colors = ButtonDefaults.primaryButtonColors(backgroundColor = accentColor)
+                    colors = TextButtonDefaults.filledTextButtonColors(
+                        containerColor = accentColor,
+                        contentColor = contentColorFor(accentColor)
+                    ),
+                    shapes = TextButtonDefaults.animatedShapes(),
                 ) {
                     Text(text = stringResource(R.string.plus_one))
                 }
 
-                OutlinedButton(
+                TextButton(
                     onClick = { event?.onClickMinusOne() },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 4.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = accentColor),
-                    border = ButtonDefaults.outlinedButtonBorder(borderColor = accentColor),
+                    colors = TextButtonDefaults.outlinedTextButtonColors(contentColor = accentColor),
+                    border = BorderStroke(1.dp, accentColor),
+                    shapes = TextButtonDefaults.animatedShapes(),
                 ) {
                     Text(text = stringResource(R.string.minus_one))
                 }

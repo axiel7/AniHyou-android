@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.wear.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ScrollIndicator
+import androidx.wear.compose.material3.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.axiel7.anihyou.core.resources.R
@@ -54,8 +56,14 @@ private fun LoginContent(
     )
     val scrollState = rememberScrollState()
     ScreenScaffold(
+        scrollState = scrollState,
         positionIndicator = {
-            PositionIndicator(scrollState = scrollState)
+            Box(modifier = Modifier.fillMaxSize()) {
+                ScrollIndicator(
+                    state = scrollState,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
         }
     ) {
         ScrollableColumn(

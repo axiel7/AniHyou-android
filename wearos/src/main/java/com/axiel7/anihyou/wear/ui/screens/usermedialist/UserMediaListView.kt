@@ -21,10 +21,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,20 +34,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.Card
-import androidx.wear.compose.material.CardDefaults
-import androidx.wear.compose.material.ExperimentalWearMaterialApi
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.OutlinedCompactChip
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.placeholder
-import androidx.wear.compose.material.placeholderShimmer
-import androidx.wear.compose.material.rememberPlaceholderState
+import androidx.wear.compose.material3.Card
+import androidx.wear.compose.material3.CardDefaults
+import androidx.wear.compose.material3.CompactButton
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScrollIndicator
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.placeholder
+import androidx.wear.compose.material3.placeholderShimmer
+import androidx.wear.compose.material3.rememberPlaceholderState
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
-import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
@@ -56,11 +54,11 @@ import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.wear.ui.composables.OnBottomReached
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
 import com.google.android.horologist.compose.layout.ScreenScaffold
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -91,6 +89,7 @@ private fun UserMediaListContent(
     modifier: Modifier = Modifier,
     goToEditMedia: (Int) -> Unit = {},
 ) {
+    val scope = rememberCoroutineScope()
     val listState = rememberScalingLazyListState()
     listState.OnBottomReached(buffer = 2) {
         event?.onLoadMore()
@@ -102,10 +101,14 @@ private fun UserMediaListContent(
 
     ScreenScaffold(
         modifier = modifier,
+        scrollState = listState,
         positionIndicator = {
-            PositionIndicator(
-                scalingLazyListState = listState
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                ScrollIndicator(
+                    state = listState,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
         },
     ) {
         ScalingLazyColumn(
@@ -119,8 +122,13 @@ private fun UserMediaListContent(
                         enter = fadeIn() + slideInVertically(tween(100)),
                         exit = fadeOut() + slideOutVertically(tween(100)),
                     ) {
-                        OutlinedCompactChip(
-                            onClick = { event?.refreshList() },
+                        CompactButton(
+                            onClick = {
+                                event?.refreshList()
+                                scope.launch {
+                                    listState.scrollToItem(index = 1, scrollOffset = 50)
+                                }
+                            },
                             icon = {
                                 Icon(
                                     painter = painterResource(R.drawable.refresh_24),
@@ -140,7 +148,7 @@ private fun UserMediaListContent(
                 Text(
                     text = uiState.mediaType.localized(),
                     modifier = Modifier.padding(bottom = 4.dp),
-                    style = MaterialTheme.typography.title3
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
             items(uiState.entries) { item ->
@@ -164,41 +172,27 @@ private fun ItemView(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val backgroundImage = rememberAsyncImagePainter(
+        model = item.media?.coverImage?.large,
+        contentScale = ContentScale.Crop
+    )
+
     Card(
         onClick = onClick,
         modifier = modifier.height(IntrinsicSize.Min),
-        contentColor = MaterialTheme.colors.onSurface,
         contentPadding = PaddingValues(),
+        containerPainter = CardDefaults.containerPainter(
+            image = backgroundImage,
+            sizeToIntrinsics = true,
+            contentScale = ContentScale.Crop
+        ),
+        colors = CardDefaults.cardWithContainerPainterColors()
     ) {
         Box(
             modifier = Modifier
                 .height(IntrinsicSize.Min)
                 .fillMaxWidth(),
         ) {
-            Box(
-                modifier = Modifier.matchParentSize(),
-            ) {
-                AsyncImage(
-                    model = item.media?.coverImage?.large,
-                    contentDescription = "background",
-                    placeholder = ColorPainter(MaterialTheme.colors.surface),
-                    modifier = Modifier.matchParentSize(),
-                    contentScale = ContentScale.Crop
-                )
-                Box(
-                    modifier = Modifier
-                        .paint(
-                            CardDefaults.cardBackgroundPainter(
-                                startBackgroundColor = (colorFromHex(item.media?.coverImage?.color)
-                                    ?: MaterialTheme.colors.primary.copy(alpha = 0.50f))
-                                    .compositeOver(MaterialTheme.colors.background),
-                                endBackgroundColor = MaterialTheme.colors.background.copy(
-                                    alpha = 0.50f
-                                )
-                            )
-                        )
-                )
-            }
             Column(
                 modifier = Modifier
                     .padding(CardDefaults.ContentPadding)
@@ -220,13 +214,9 @@ private fun ItemView(
     }
 }
 
-@OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 private fun ItemPlaceholder(modifier: Modifier = Modifier) {
-    val placeholderState = rememberPlaceholderState { false }
-    LaunchedEffect(placeholderState) {
-        placeholderState.startPlaceholderAnimation()
-    }
+    val placeholderState = rememberPlaceholderState(isVisible = true)
     Card(
         onClick = {},
         modifier = modifier.placeholderShimmer(placeholderState)

@@ -1,22 +1,15 @@
 package com.axiel7.anihyou.wear.ui.screens.usermedialist
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.HorizontalPageIndicator
-import androidx.wear.compose.material.PageIndicatorState
+import androidx.wear.compose.foundation.pager.HorizontalPager
+import androidx.wear.compose.foundation.pager.rememberPagerState
+import androidx.wear.compose.material3.HorizontalPageIndicator
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.google.android.horologist.compose.layout.ScreenScaffold
 
@@ -26,25 +19,6 @@ fun UserMediaListHostView(
     modifier: Modifier = Modifier
 ) {
     val maxPages = 2
-    var selectedPage by remember { mutableIntStateOf(0) }
-    var finalValue by remember { mutableIntStateOf(0) }
-
-    val animatedSelectedPage by animateFloatAsState(
-        targetValue = selectedPage.toFloat(),
-    ) {
-        finalValue = it.toInt()
-    }
-
-    val pageIndicatorState: PageIndicatorState = remember {
-        object : PageIndicatorState {
-            override val pageOffset: Float
-                get() = animatedSelectedPage - finalValue
-            override val selectedPage: Int
-                get() = finalValue
-            override val pageCount: Int
-                get() = maxPages
-        }
-    }
 
     val pagerState = rememberPagerState { maxPages }
 
@@ -60,7 +34,6 @@ fun UserMediaListHostView(
                     // To make sure only one offscreen page is being composed
                     return@HorizontalPager
                 }
-                LaunchedEffect(page) { selectedPage = page }
 
                 UserMediaListView(
                     mediaType = if (page == 0) MediaType.ANIME else MediaType.MANGA,
@@ -68,7 +41,7 @@ fun UserMediaListHostView(
                 )
             }
             HorizontalPageIndicator(
-                pageIndicatorState = pageIndicatorState,
+                pagerState = pagerState,
                 modifier = Modifier.padding(8.dp)
             )
         }
