@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.wear.ui.screens.login
 
+import androidx.compose.runtime.Stable
 import com.axiel7.anihyou.core.base.state.UiState
 
+@Stable
 data class LoginUiState(
     override val error: String? = null,
     override val isLoading: Boolean = false,
