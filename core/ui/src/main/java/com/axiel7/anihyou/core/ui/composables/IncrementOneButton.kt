@@ -5,6 +5,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
@@ -31,7 +32,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun IncrementOneButton(
     onClickPlus: (Int) -> Unit,
@@ -102,6 +103,7 @@ fun IncrementOneButton(
                 }
             },
             enabled = enabled || isCountingDown,
+            shapes = ButtonDefaults.shapes(),
             colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = containerColor,
                 contentColor = contentColor,

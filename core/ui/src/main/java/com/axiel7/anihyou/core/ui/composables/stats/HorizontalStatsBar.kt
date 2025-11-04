@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,7 @@ import com.axiel7.anihyou.core.ui.composables.Rectangle
 import com.axiel7.anihyou.core.ui.composables.common.AssistChipWithTooltip
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.harmonize
 
 @Composable
 fun <T> HorizontalStatsBar(
@@ -79,9 +81,12 @@ fun <T> HorizontalStatsBar(
                     } else null,
                     leadingIcon = { Text(text = stat.value.toInt().format().orEmpty()) },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = stat.type.primaryColor(),
-                        labelColor = stat.type.onPrimaryColor(),
+                        containerColor = stat.type.primaryColor()
+                            .harmonize(MaterialTheme.colorScheme.primary),
+                        labelColor = stat.type.onPrimaryColor()
+                            .harmonize(MaterialTheme.colorScheme.primary),
                         leadingIconContentColor = stat.type.onPrimaryColor()
+                            .harmonize(MaterialTheme.colorScheme.primary)
                     ),
                     border = null
                 )
@@ -93,7 +98,7 @@ fun <T> HorizontalStatsBar(
                 Rectangle(
                     width = (it.value / totalValue * screenWidth).dp,
                     height = 16.dp,
-                    color = it.type.primaryColor()
+                    color = it.type.primaryColor().harmonize(MaterialTheme.colorScheme.primary)
                 )
             }
         }

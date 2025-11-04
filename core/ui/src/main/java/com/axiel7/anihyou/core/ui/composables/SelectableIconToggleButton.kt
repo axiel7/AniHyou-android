@@ -2,8 +2,10 @@ package com.axiel7.anihyou.core.ui.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
@@ -18,7 +20,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T> SelectableIconToggleButton(
     @DrawableRes icon: Int,
@@ -47,7 +49,8 @@ fun <T> SelectableIconToggleButton(
             onCheckedChange = {
                 scope.launch { tooltipState.show() }
                 onClick(it)
-            }
+            },
+            shapes = IconButtonDefaults.toggleableShapes(),
         ) {
             Icon(painter = painterResource(icon), contentDescription = tooltipText)
         }

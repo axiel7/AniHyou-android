@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,7 +32,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PublishMarkdownView(
     onPublish: (String) -> Unit,
@@ -46,7 +48,10 @@ fun PublishMarkdownView(
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
         navigationIcon = {
-            IconButton(onClick = navigateBack) {
+            IconButton(
+                onClick = navigateBack,
+                shapes = IconButtonDefaults.shapes()
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.close_24),
                     contentDescription = stringResource(R.string.close)
@@ -59,10 +64,9 @@ fun PublishMarkdownView(
                 modifier = Modifier.padding(end = 8.dp)
             ) {
                 if (isLoading) {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 3.dp
                     )
                 } else {
                     Text(text = stringResource(R.string.publish))

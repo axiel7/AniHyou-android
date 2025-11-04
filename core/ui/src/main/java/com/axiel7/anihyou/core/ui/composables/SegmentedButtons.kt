@@ -60,7 +60,7 @@ fun <T> SegmentedButtons(
 
 @Preview
 @Composable
-fun SegmentedButtonsPreview() {
+private fun SegmentedButtonsPreview() {
     AniHyouTheme {
         Surface {
             SegmentedButtons(

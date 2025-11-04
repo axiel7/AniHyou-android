@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +35,7 @@ import com.axiel7.anihyou.core.ui.composables.stats.HorizontalStatsBar
 import com.axiel7.anihyou.core.ui.composables.stats.VerticalStatsBar
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
+import com.materialkolor.ktx.harmonize
 
 @Composable
 fun MediaStatsView(
@@ -81,7 +83,7 @@ fun MediaStatsView(
                                 modifier = if (it.type == MediaRankType.POPULAR)
                                     Modifier.padding(start = 2.dp)
                                 else Modifier,
-                                tint = it.type.color()
+                                tint = it.type.color().harmonize(MaterialTheme.colorScheme.primary)
                             )
                         },
                         trailingIcon = {
@@ -90,7 +92,7 @@ fun MediaStatsView(
                     )
                 }
                 if (isLoading) {
-                    for (i in 1..3) {
+                    repeat(3) {
                         Text(
                             text = "This is a loading placeholder",
                             modifier = Modifier

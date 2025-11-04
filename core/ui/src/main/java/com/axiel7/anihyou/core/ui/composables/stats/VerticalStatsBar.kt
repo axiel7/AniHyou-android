@@ -37,6 +37,7 @@ import com.axiel7.anihyou.core.ui.composables.Rectangle
 import com.axiel7.anihyou.core.ui.composables.RoundedRectangle
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.launch
 
 const val MAX_VERTICAL_STAT_HEIGHT = 124
@@ -59,9 +60,10 @@ fun <T> VerticalStatsBar(
     ) {
         if (isLoading) {
             repeat(10) {
+                val count = it + 1
                 Rectangle(
                     width = 25.dp,
-                    height = (MAX_VERTICAL_STAT_HEIGHT - (10 / it + it * 2)).dp,
+                    height = (MAX_VERTICAL_STAT_HEIGHT - (10 / count + count * 2)).dp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
@@ -99,7 +101,7 @@ fun <T> VerticalStatsBar(
                     RoundedRectangle(
                         width = 25.dp,
                         height = (stat.value / maxValue * MAX_VERTICAL_STAT_HEIGHT).dp,
-                        color = mapColorTo(stat.type),
+                        color = mapColorTo(stat.type).harmonize(MaterialTheme.colorScheme.primary),
                         cornerRadius = CornerRadius(x = 16f, y = 16f),
                         modifier = Modifier.clickable {
                             if (stat.details != null) scope.launch { tooltipState.show() }

@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,6 +38,7 @@ import com.axiel7.anihyou.core.common.utils.NumberUtils.toDoubleLocaleInvariant
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RatingView(
     maxValue: Double,
@@ -125,7 +128,8 @@ fun RatingView(
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 val newValue = (rating ?: 0.0) - increments
                 if (newValue >= 0) onRatingChanged(newValue)
-            }
+            },
+            shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
                 painter = painterResource(R.drawable.remove_24),
@@ -137,7 +141,8 @@ fun RatingView(
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 val newValue = (rating ?: 0.0) + increments
                 if (newValue <= maxValue) onRatingChanged(newValue)
-            }
+            },
+            shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
                 painter = painterResource(R.drawable.add_24),

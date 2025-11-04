@@ -20,9 +20,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -68,7 +70,6 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.core.ui.composables.TopBannerView
@@ -85,6 +86,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.utils.StringUtils.htmlDecoded
@@ -113,7 +115,9 @@ fun MediaDetailsView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
 private fun MediaDetailsContent(
     uiState: MediaDetailsUiState,
@@ -404,7 +408,8 @@ private fun MediaDetailsContent(
                 }
 
                 IconButton(
-                    onClick = { isSynopsisExpanded = !isSynopsisExpanded }
+                    onClick = { isSynopsisExpanded = !isSynopsisExpanded },
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
                         painter = painterResource(iconExpand),
@@ -417,7 +422,8 @@ private fun MediaDetailsContent(
                         uiState.details?.description?.let {
                             context.copyToClipBoard(it.htmlStripped())
                         }
-                    }
+                    },
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.content_copy_24),
@@ -469,9 +475,9 @@ fun MediaInfoTabs(
             .padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SegmentedButtons(
+        ConnectedButtonGroup(
             items = MediaDetailsType.tabRows,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
             selectedIndex = selectedTabIndex,
             onItemSelection = {
                 selectedTabIndex = it

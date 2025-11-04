@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,7 +48,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import java.time.temporal.ChronoUnit
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ActivityTextView(
     modifier: Modifier = Modifier,
@@ -138,7 +140,10 @@ fun ActivityTextView(
                 Box(
                     modifier = Modifier.wrapContentSize(Alignment.TopStart)
                 ) {
-                    IconButton(onClick = { isLikesExpanded = !isLikesExpanded }) {
+                    IconButton(
+                        onClick = { isLikesExpanded = !isLikesExpanded },
+                        shapes = IconButtonDefaults.shapes()
+                    ) {
                         Icon(
                             painter = painterResource(
                                 id = if (isLikesExpanded) R.drawable.expand_less_24 else R.drawable.expand_more_24

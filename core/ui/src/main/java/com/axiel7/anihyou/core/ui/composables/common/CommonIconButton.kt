@@ -2,8 +2,11 @@ package com.axiel7.anihyou.core.ui.composables.common
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,11 +38,15 @@ fun singleClick(onClick: () -> Unit): () -> Unit {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BackIconButton(
     onClick: () -> Unit
 ) {
-    IconButton(onClick = singleClick(onClick)) {
+    IconButton(
+        onClick = singleClick(onClick),
+        shapes = IconButtonDefaults.shapes()
+    ) {
         Icon(
             painter = painterResource(R.drawable.arrow_back_24),
             contentDescription = stringResource(R.string.action_back)
@@ -52,10 +59,14 @@ fun ShareIconButton(url: String) {
     ShareIconButton(url = { url })
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShareIconButton(url: () -> String) {
     val context = LocalContext.current
-    IconButton(onClick = { context.openShareSheet(url()) }) {
+    IconButton(
+        onClick = { context.openShareSheet(url()) },
+        shapes = IconButtonDefaults.shapes()
+    ) {
         Icon(
             painter = painterResource(R.drawable.share_24),
             contentDescription = stringResource(R.string.share)
@@ -63,10 +74,14 @@ fun ShareIconButton(url: () -> String) {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun OpenInBrowserIconButton(url: String) {
     val context = LocalContext.current
-    IconButton(onClick = { context.openLink(url) }) {
+    IconButton(
+        onClick = { context.openLink(url) },
+        shapes = IconButtonDefaults.shapes()
+    ) {
         Icon(
             painter = painterResource(R.drawable.open_in_browser_24),
             contentDescription = stringResource(R.string.external_links)
@@ -74,6 +89,7 @@ fun OpenInBrowserIconButton(url: String) {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FavoriteIconButton(
     modifier: Modifier = Modifier,
@@ -88,6 +104,7 @@ fun FavoriteIconButton(
     TextButton(
         onClick = onClick,
         modifier = modifier,
+        shapes = ButtonDefaults.shapes(),
     ) {
         if (favoritesCount > 0) {
             Text(
@@ -110,6 +127,7 @@ fun FavoriteIconButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CommentIconButton(
     modifier: Modifier = Modifier,
@@ -122,6 +140,7 @@ fun CommentIconButton(
     TextButton(
         onClick = onClick,
         modifier = modifier,
+        shapes = ButtonDefaults.shapes(),
     ) {
         if (commentCount > 0) {
             Text(
@@ -141,6 +160,7 @@ fun CommentIconButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ReplyButton(
     modifier: Modifier = Modifier,
@@ -151,7 +171,8 @@ fun ReplyButton(
 ) {
     TextButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shapes = ButtonDefaults.shapes(),
     ) {
         Icon(
             painter = painterResource(R.drawable.reply_24),
@@ -169,6 +190,7 @@ fun ReplyButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TranslateIconButton(
     text: String?,
@@ -179,7 +201,8 @@ fun TranslateIconButton(
         onClick = {
             text?.let { context.openTranslator(it) }
         },
-        modifier = modifier
+        modifier = modifier,
+        shapes = IconButtonDefaults.shapes()
     ) {
         Icon(
             painter = painterResource(R.drawable.translate_24),
@@ -188,6 +211,7 @@ fun TranslateIconButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LikeButton(
     isLiked: Boolean,
@@ -204,7 +228,8 @@ fun LikeButton(
     }
     TextButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shapes = ButtonDefaults.shapes(),
     ) {
         if (likeCount > 0) {
             Text(text = likeCount.format().orEmpty())
@@ -216,6 +241,7 @@ fun LikeButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NotificationIconButton(
     isActive: Boolean,
@@ -224,7 +250,8 @@ fun NotificationIconButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shapes = IconButtonDefaults.shapes()
     ) {
         Icon(
             painter = painterResource(

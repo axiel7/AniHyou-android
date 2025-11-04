@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
@@ -58,7 +60,7 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
-import com.axiel7.anihyou.core.ui.composables.SegmentedButtons
+import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.composables.TopBannerView
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
@@ -180,11 +182,11 @@ private fun ProfileContent(
                 .fillMaxSize()
         ) {
             if (uiState.userInfo != null) {
-                SegmentedButtons(
+                ConnectedButtonGroup(
                     items = ProfileInfoType.tabRows,
                     modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
+                        start = 8.dp,
+                        end = 8.dp,
                         bottom = 8.dp
                     ),
                     selectedIndex = selectedTabIndex,
@@ -249,6 +251,7 @@ private fun ProfileContent(
     }//: Scaffold
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MainProfileInfo(
     uiState: ProfileUiState,
@@ -310,6 +313,7 @@ private fun MainProfileInfo(
                 OutlinedIconButton(
                     onClick = navActionManager::toSettings,
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    shapes = IconButtonDefaults.shapes(),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                 ) {
                     Icon(

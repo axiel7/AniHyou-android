@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +30,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun UserAboutView(
     aboutHtml: String?,
@@ -36,10 +39,19 @@ fun UserAboutView(
     onRefresh: () -> Unit,
     navigateToUserMediaList: ((MediaType) -> Unit)?,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     PullToRefreshBox(
         isRefreshing = isLoading,
         onRefresh = onRefresh,
         modifier = modifier.fillMaxSize(),
+        state = pullRefreshState,
+        indicator = {
+            PullToRefreshDefaults.LoadingIndicator(
+                state = pullRefreshState,
+                isRefreshing = isLoading,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
     ) {
         Column(
             modifier = modifier.verticalScroll(rememberScrollState())
@@ -85,7 +97,7 @@ fun UserAboutView(
                     contentAlignment = Alignment.Center
                 ) {
                     if (isLoading)
-                        CircularProgressIndicator()
+                        LoadingIndicator()
                     else
                         Text(text = stringResource(R.string.no_description))
                 }

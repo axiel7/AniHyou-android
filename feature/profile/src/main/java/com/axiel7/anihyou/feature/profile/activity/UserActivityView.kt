@@ -7,10 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +29,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.ProfileEvent
 import com.axiel7.anihyou.feature.profile.ProfileUiState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun UserActivityView(
     activities: List<UserActivityQuery.Activity>,
@@ -34,6 +38,7 @@ fun UserActivityView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyListState()
     if (!uiState.isLoadingActivity) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
@@ -41,7 +46,15 @@ fun UserActivityView(
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoadingActivity,
-        onRefresh = { event?.onRefreshActivities() }
+        onRefresh = { event?.onRefreshActivities() },
+        state = pullRefreshState,
+        indicator = {
+            PullToRefreshDefaults.LoadingIndicator(
+                state = pullRefreshState,
+                isRefreshing = uiState.isLoadingActivity,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
     ) {
         LazyColumn(
             modifier = modifier.fillMaxWidth(),

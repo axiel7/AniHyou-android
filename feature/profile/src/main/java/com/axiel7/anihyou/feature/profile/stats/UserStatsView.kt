@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Surface
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -55,7 +59,7 @@ fun UserStatsView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun UserStatsContent(
     uiState: UserStatsUiState,
@@ -64,9 +68,18 @@ private fun UserStatsContent(
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
-        onRefresh = { event?.onRefresh() }
+        onRefresh = { event?.onRefresh() },
+        state = pullRefreshState,
+        indicator = {
+            PullToRefreshDefaults.LoadingIndicator(
+                state = pullRefreshState,
+                isRefreshing = uiState.isLoading,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
     ) {
         Column(
             modifier = modifier.fillMaxWidth()

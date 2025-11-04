@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    implementation(libs.material.kolor)
+    api(libs.material.kolor)
     implementation(libs.placeholder.material3)
 
     api(libs.androidx.navigation3.runtime)

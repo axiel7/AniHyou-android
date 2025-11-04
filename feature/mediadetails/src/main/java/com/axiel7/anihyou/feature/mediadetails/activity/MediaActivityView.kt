@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -53,7 +55,7 @@ fun MediaActivityView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MediaActivityContent(
     uiState: MediaActivityUiState,
@@ -71,7 +73,10 @@ private fun MediaActivityContent(
             )
         },
         actions = {
-            IconButton(onClick = { event?.setIsMine(!uiState.isMine) }) {
+            IconButton(
+                onClick = { event?.setIsMine(!uiState.isMine) },
+                shapes = IconButtonDefaults.shapes()
+            ) {
                 Icon(
                     painter = painterResource(
                         id = if (uiState.isMine) R.drawable.person_filled_24
@@ -130,7 +135,7 @@ private fun MediaActivityContent(
             item(contentType = { 0 }) {
                 if (uiState.hasNextPage) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        CircularProgressIndicator(
+                        LoadingIndicator(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }

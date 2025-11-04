@@ -31,6 +31,7 @@ import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.harmonize
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -71,6 +72,7 @@ fun AiringAnimeHorizontalItem(
                         .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
                         .background(
                             color = statusStat?.primaryColor()
+                                ?.harmonize(MaterialTheme.colorScheme.primary)
                                 ?: MaterialTheme.colorScheme.secondaryContainer
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -79,7 +81,9 @@ fun AiringAnimeHorizontalItem(
                     Icon(
                         painter = painterResource(status.icon()),
                         contentDescription = status.localized(),
-                        tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                        tint = statusStat?.onPrimaryColor()
+                            ?.harmonize(MaterialTheme.colorScheme.primary)
+                            ?: LocalContentColor.current
                     )
                 }
             }

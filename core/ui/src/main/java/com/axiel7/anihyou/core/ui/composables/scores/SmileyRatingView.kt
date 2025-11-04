@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.core.ui.composables.scores
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.core.model.smileyIcon
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SmileyRatingView(
     modifier: Modifier = Modifier,
@@ -38,7 +41,8 @@ fun SmileyRatingView(
                     onRatingChanged(
                         if (rating == rate) 0.0 else rate
                     )
-                }
+                },
+                shapes = IconButtonDefaults.shapes()
             ) {
                 Icon(
                     painter = painterResource(rateInt.smileyIcon(filled = rating == rate)),

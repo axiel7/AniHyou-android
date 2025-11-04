@@ -14,8 +14,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -132,7 +134,7 @@ fun MarkdownEditor(
     }//:Column
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MarkdownFormattingButtons(
     onButtonClicked: (MarkdownFormat) -> Unit,
@@ -140,7 +142,10 @@ fun MarkdownFormattingButtons(
 ) {
     FlowRow(modifier = modifier) {
         MarkdownFormat.entries.forEach { format ->
-            IconButton(onClick = { onButtonClicked(format) }) {
+            IconButton(
+                onClick = { onButtonClicked(format) },
+                shapes = IconButtonDefaults.shapes()
+            ) {
                 Icon(
                     painter = painterResource(format.icon),
                     contentDescription = format.localized()

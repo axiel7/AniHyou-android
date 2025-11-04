@@ -35,6 +35,7 @@ import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.harmonize
 
 const val MEDIA_ITEM_VERTICAL_HEIGHT = 200
 
@@ -60,11 +61,14 @@ fun MediaItemVertical(
                 Icon(
                     painter = painterResource(status.icon()),
                     contentDescription = status.localized(),
-                    tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+                    tint = statusStat?.onPrimaryColor()
+                        ?.harmonize(MaterialTheme.colorScheme.primary)
+                        ?: LocalContentColor.current
                 )
             }
         },
         badgeBackgroundColor = statusStat?.primaryColor()
+            ?.harmonize(MaterialTheme.colorScheme.primary)
             ?: MaterialTheme.colorScheme.secondaryContainer,
         minLines = minLines,
         onClick = onClick,

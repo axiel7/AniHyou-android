@@ -20,9 +20,11 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -84,7 +86,7 @@ fun UserMediaListHostView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun UserMediaListHostContent(
     uiState: UserMediaListUiState,
@@ -182,7 +184,8 @@ private fun UserMediaListHostContent(
         actions = {
             if (uiState.isMyList) {
                 IconButton(
-                    onClick = { navActionManager.toSearchOnMyList(uiState.mediaType) }
+                    onClick = { navActionManager.toSearchOnMyList(uiState.mediaType) },
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.search_24),
@@ -193,7 +196,10 @@ private fun UserMediaListHostContent(
             Box(
                 modifier = Modifier.wrapContentSize(Alignment.TopStart)
             ) {
-                IconButton(onClick = { event?.toggleSortMenu(true) }) {
+                IconButton(
+                    onClick = { event?.toggleSortMenu(true) },
+                    shapes = IconButtonDefaults.shapes()
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.sort_24),
                         contentDescription = stringResource(R.string.sort)

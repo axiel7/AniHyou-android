@@ -13,9 +13,11 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +43,7 @@ import com.axiel7.anihyou.feature.usermedialist.composables.MinimalUserMediaList
 import com.axiel7.anihyou.feature.usermedialist.composables.RandomEntryButton
 import com.axiel7.anihyou.feature.usermedialist.composables.StandardUserMediaListItem
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun UserMediaListView(
     uiState: UserMediaListUiState,
@@ -79,6 +81,13 @@ fun UserMediaListView(
         onRefresh = { event?.refreshList() },
         modifier = Modifier.fillMaxSize(),
         state = pullRefreshState,
+        indicator = {
+            PullToRefreshDefaults.LoadingIndicator(
+                state = pullRefreshState,
+                isRefreshing = uiState.fetchFromNetwork,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
     ) {
         val listModifier = Modifier
             .fillMaxSize()
@@ -118,6 +127,7 @@ fun UserMediaListView(
     }//: Box
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LazyListGrid(
     mediaList: List<CommonMediaListEntry>,
@@ -167,7 +177,7 @@ private fun LazyListGrid(
         item(contentType = { 0 }) {
             if (uiState.hasNextPage) {
                 Box {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -179,6 +189,7 @@ private fun LazyListGrid(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LazyListTablet(
     mediaList: List<CommonMediaListEntry>,
@@ -290,7 +301,7 @@ private fun LazyListTablet(
         item(contentType = { 0 }) {
             if (uiState.hasNextPage) {
                 Box {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -302,6 +313,7 @@ private fun LazyListTablet(
     }//: LazyVerticalGrid
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LazyListPhone(
     mediaList: List<CommonMediaListEntry>,
@@ -409,7 +421,7 @@ private fun LazyListPhone(
         item(contentType = { 0 }) {
             if (uiState.hasNextPage) {
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

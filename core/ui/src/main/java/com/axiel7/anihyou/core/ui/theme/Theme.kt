@@ -13,7 +13,9 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.resources.ColorUtils.isBlack
 import com.axiel7.anihyou.core.resources.ColorUtils.isWhite
 import com.axiel7.anihyou.core.resources.seed
+import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
+import com.materialkolor.dynamiccolor.ColorSpec
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -28,29 +30,35 @@ fun AniHyouTheme(
     val colorScheme = when {
         appColorMode == AppColorMode.PROFILE || appColorMode == AppColorMode.CUSTOM -> {
             val isMonochrome = appColor != null && (appColor.isBlack || appColor.isWhite)
-            if (isMonochrome) {
-                if (darkTheme) LightAccentColorScheme else BlackAccentColorScheme
-            } else {
-                val scheme = dynamicColorScheme(
-                    seedColor = appColor ?: seed,
-                    isDark = darkTheme,
-                    isAmoled = false
-                )
-                if (blackColors) scheme.toBlackScheme()
-                else scheme
-            }
+            dynamicColorScheme(
+                seedColor = appColor ?: seed,
+                isDark = darkTheme,
+                isAmoled = blackColors,
+                style = if (isMonochrome) PaletteStyle.Monochrome else PaletteStyle.Expressive,
+                specVersion = ColorSpec.SpecVersion.SPEC_2025,
+            )
         }
 
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context).let {
-                return@let if (blackColors) it.toBlackScheme() else it
-            }
-            else dynamicLightColorScheme(context)
+            val colors = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+
+            dynamicColorScheme(
+                primary = colors.primary,
+                isDark = darkTheme,
+                isAmoled = blackColors,
+                style = PaletteStyle.Expressive,
+                specVersion = ColorSpec.SpecVersion.SPEC_2025,
+            )
         }
 
-        darkTheme -> if (blackColors) DarkColorScheme.toBlackScheme() else DarkColorScheme
-        else -> LightColorScheme
+        else -> dynamicColorScheme(
+            seedColor = seed,
+            isDark = darkTheme,
+            isAmoled = blackColors,
+            style = PaletteStyle.Expressive,
+            specVersion = ColorSpec.SpecVersion.SPEC_2025
+        )
     }
 
     MaterialExpressiveTheme(

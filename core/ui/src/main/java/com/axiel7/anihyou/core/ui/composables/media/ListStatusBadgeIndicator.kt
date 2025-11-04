@@ -19,6 +19,7 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion.asStat
+import com.materialkolor.ktx.harmonize
 
 @Composable
 fun BoxScope.ListStatusBadgeIndicator(
@@ -37,14 +38,20 @@ fun BoxScope.ListStatusBadgeIndicator(
         modifier = Modifier
             .align(alignment)
             .clip(shape)
-            .background(statusStat?.primaryColor() ?: MaterialTheme.colorScheme.secondaryContainer)
+            .background(
+                color = statusStat?.primaryColor()
+                    ?.harmonize(MaterialTheme.colorScheme.primary)
+                    ?: MaterialTheme.colorScheme.secondaryContainer
+            )
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(status.icon()),
             contentDescription = status.localized(),
-            tint = statusStat?.onPrimaryColor() ?: LocalContentColor.current
+            tint = statusStat?.onPrimaryColor()
+                ?.harmonize(MaterialTheme.colorScheme.primary)
+                ?: LocalContentColor.current
         )
     }
 }
