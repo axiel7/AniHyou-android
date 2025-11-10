@@ -125,6 +125,9 @@ android {
         renderScript = false
         shaders = false
     }
+    composeCompiler {
+        stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
+    }
     androidResources {
         aaptOptions.cruncherEnabled = false
     }
