@@ -56,6 +56,10 @@ class TopLevelBackStack<T : NavKey>(
         val removedKey = topLevelStacks[topLevelKey]?.removeLastOrNull()
         // If the removed key was a top level key, remove the associated top level stack
         topLevelStacks.remove(removedKey)
+        if (topLevelStacks.isEmpty()) {
+            // rare case
+            topLevelStacks[startKey] = mutableStateListOf(startKey)
+        }
         topLevelKey = topLevelStacks.keys.lastOrNull() ?: startKey
         updateBackStack()
     }
