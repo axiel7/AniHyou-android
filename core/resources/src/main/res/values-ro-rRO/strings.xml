@@ -342,6 +342,7 @@
     <string name="from_year">Din anul</string>
     <string name="to_year">Până în anul</string>
     <string name="staff_role_a_and_r_producer">Producător A&amp;R</string>
+    <string name="staff_role_adr_director">Director ADR</string>
     <string name="staff_role_accessory_design">Proiectare accesorii</string>
     <string name="staff_role_action_animator">Animator de acțiune</string>
     <string name="staff_role_action_director">Director de acțiune</string>

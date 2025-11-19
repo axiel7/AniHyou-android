@@ -616,6 +616,8 @@
     <string name="completed_media">Ha terminado %s</string>
     <string name="dropped_media">Ha dropeado %s</string>
     <string name="paused_media">Ha pausado %s</string>
+    <string name="rewatched_media">Ha vuelto a ver %s</string>
+    <string name="reread_media">Ha vuelto a leer %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
@@ -624,4 +626,6 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="login_required_in_phone">Para utilizar esta aplicación primero tienes que iniciar sesión abriendo la aplicación AniHyou instalada en tu teléfono</string>
+    <string name="app_installed_required">No se ha detectado ningún dispositivo cercano, por favor, instala la última versión de la aplicación AniHyou en tu teléfono Android</string>
 </resources>

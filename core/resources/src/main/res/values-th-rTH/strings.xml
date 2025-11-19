@@ -63,7 +63,7 @@
     <plurals name="num_chapters">
         <item quantity="other">%d ตอน</item>
     </plurals>
-    <string name="finished">ดูจบแล้ว</string>
+    <string name="finished">จบแล้ว</string>
     <string name="releasing">ออกอากาศแล้ว</string>
     <string name="not_yet_released">ยังไม่ออกอากาศ</string>
     <string name="cancelled">ยกเลิก</string>
