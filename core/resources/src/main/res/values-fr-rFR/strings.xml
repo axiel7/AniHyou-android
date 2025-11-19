@@ -335,6 +335,7 @@
     <string name="from_year">Depuis l\'année</string>
     <string name="to_year">À l\'année</string>
     <string name="staff_role_a_and_r_producer">Producteur A&amp;R</string>
+    <string name="staff_role_adr_director">Directeur postsynchronisation</string>
     <string name="staff_role_accessory_design">Conception d\'accessoires</string>
     <string name="staff_role_action_animator">Animateur d\'action</string>
     <string name="staff_role_action_director">Directeur d\'action</string>
@@ -615,6 +616,8 @@
     <string name="completed_media">A complété %s</string>
     <string name="dropped_media">A abandonné %s</string>
     <string name="paused_media">A mis en pause %s</string>
+    <string name="rewatched_media">A regardé à nouveau %s</string>
+    <string name="reread_media">A relu %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
@@ -623,4 +626,5 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="app_installed_required">Aucun appareil à proximité n\'a été détecté, veuillez installer la dernière version de l\'application AniHyou sur votre téléphone Android</string>
 </resources>

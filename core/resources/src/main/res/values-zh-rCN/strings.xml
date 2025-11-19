@@ -188,7 +188,7 @@
     <string name="followers">关注者</string>
     <string name="following">正在关注</string>
     <string name="trailer">PV</string>
-    <string name="streaming_sites">在线发布网站</string>
+    <string name="streaming_sites">在线播出平台</string>
     <string name="external_links">外部链接</string>
     <string name="standard">标准</string>
     <string name="compact">紧凑</string>
@@ -230,7 +230,7 @@
     <string name="forum">论坛</string>
     <string name="notifications_media">媒体</string>
     <string name="content">内容</string>
-    <string name="airing_on_my_list">在我的列表上播出</string>
+    <string name="airing_on_my_list">在我列表上正在播出的</string>
     <string name="airing_on_my_list_summary">仅显示您列表中的即将播出的动漫</string>
     <string name="follow">关注</string>
     <string name="follows_you">关注了你</string>
@@ -328,17 +328,18 @@
     <string name="from_year">起始年份</string>
     <string name="to_year">结束年份</string>
     <string name="staff_role_a_and_r_producer">A&amp;R制作人</string>
+    <string name="staff_role_adr_director">配音监督</string>
     <string name="staff_role_accessory_design">配件设计</string>
     <string name="staff_role_action_animator">动作动画师</string>
     <string name="staff_role_action_director">动作监督</string>
     <string name="staff_role_action_animation_director">动作作画监督</string>
-    <string name="staff_role_action_animation_supervisor">动作动画主管</string>
+    <string name="staff_role_action_animation_supervisor">动作动画指导</string>
     <string name="staff_role_advertising">广告</string>
     <string name="staff_role_advertising_producer">广告制作人</string>
     <string name="staff_role_animation_director">作画监督</string>
     <string name="staff_role_animation_producer">动画制片人</string>
     <string name="staff_role_animation_production_assistance">动画制作协助</string>
-    <string name="staff_role_animation_supervisor">动画主管</string>
+    <string name="staff_role_animation_supervisor">动画指导</string>
     <string name="staff_role_animation">动画</string>
     <string name="staff_role_art">美术</string>
     <string name="staff_role_art_board">艺术版面</string>
@@ -348,7 +349,7 @@
     <string name="staff_role_assistance">协助</string>
     <string name="staff_role_assistant">助理</string>
     <string name="staff_role_assistant_animation_director">副作画监督</string>
-    <string name="staff_role_assistant_art_director">美术副监督</string>
+    <string name="staff_role_assistant_art_director">副美术监督</string>
     <string name="staff_role_assistant_chief_animation_director">总作画监督助理</string>
     <string name="staff_role_assistant_chief_director">总监督助理</string>
     <string name="staff_role_assistant_director_of_photo">摄影监督助理</string>
@@ -375,7 +376,7 @@
     <string name="staff_role_cg_modeling">CG建模</string>
     <string name="staff_role_cg_producer">CG制作人</string>
     <string name="staff_role_cg_production">CG制作</string>
-    <string name="staff_role_cg_supervisor">CG主管</string>
+    <string name="staff_role_cg_supervisor">CG指导</string>
     <string name="staff_role_cg_technical_director">CG技术监督</string>
     <string name="staff_role_character_design">角色设计</string>
     <string name="staff_role_chief_animation_director">总作画监督</string>
@@ -384,7 +385,7 @@
     <string name="staff_role_chief_mechanical_animation_director">总机械动画监督</string>
     <string name="staff_role_chief_producer">首席制作人</string>
     <string name="staff_role_chief_production_desk">首席制作主编</string>
-    <string name="staff_role_chief_supervisor">首席主管</string>
+    <string name="staff_role_chief_supervisor">首席指导</string>
     <string name="staff_role_chief_unit_director">总单元监督</string>
     <string name="staff_role_co_producer">联合制作人</string>
     <string name="staff_role_color_coordination">色彩协调</string>
@@ -419,7 +420,7 @@
     <string name="staff_role_episode_director_op">剧集监督（OP）</string>
     <string name="staff_role_episode_director_ed">剧集监督（ED）</string>
     <string name="staff_role_executive_producer">执行制片人</string>
-    <string name="staff_role_executive_supervisor">执行主管</string>
+    <string name="staff_role_executive_supervisor">执行总监</string>
     <string name="staff_role_eyecatch">中场过渡</string>
     <string name="staff_role_finishing_assistance">完片协助</string>
     <string name="staff_role_finishing_check">完片审核</string>
@@ -445,7 +446,7 @@
     <string name="staff_role_layout_animation_director">动画布局监督</string>
     <string name="staff_role_layout_animation_supervisor">动画布局主管</string>
     <string name="staff_role_layout_editor">布局编辑</string>
-    <string name="staff_role_layout_supervisor">布局主管</string>
+    <string name="staff_role_layout_supervisor">布局指导</string>
     <string name="staff_role_layout">布局</string>
     <string name="staff_role_lettering">嵌字</string>
     <string name="staff_role_line_producer">线制作人</string>
@@ -454,7 +455,7 @@
     <string name="staff_role_main_animator">主动画师</string>
     <string name="staff_role_mechanical_animation_director">机械动画监督</string>
     <string name="staff_role_mechanical_design">机械设计</string>
-    <string name="staff_role_mechanical_supervisor">机械动画主管</string>
+    <string name="staff_role_mechanical_supervisor">机械动画指导</string>
     <string name="staff_role_monitor_graphics">显示器图像</string>
     <string name="staff_role_monster_design">怪物设计</string>
     <string name="staff_role_music_arrangement">音乐编排</string>
@@ -467,9 +468,9 @@
     <string name="staff_role_music_production_assistance">音乐制作协助</string>
     <string name="staff_role_music_production">音乐制作</string>
     <string name="staff_role_music_selection">音乐筛选</string>
-    <string name="staff_role_music_supervisor">音乐主管</string>
+    <string name="staff_role_music_supervisor">音乐指导</string>
     <string name="staff_role_music">音乐</string>
-    <string name="staff_role_musical_instrument_supervisor">乐器主管</string>
+    <string name="staff_role_musical_instrument_supervisor">乐器指导</string>
     <string name="staff_role_offline_editing_manager">离线编辑经理</string>
     <string name="staff_role_offline_editing">离线编辑</string>
     <string name="staff_role_online_editing_manager">在线编辑经理</string>
@@ -484,7 +485,7 @@
     <string name="staff_role_overseas_advertising_producer">海外广告制作人</string>
     <string name="staff_role_paint">绘画</string>
     <string name="staff_role_photography_assistance">摄影协助</string>
-    <string name="staff_role_photography_chief">摄影主管</string>
+    <string name="staff_role_photography_chief">摄影指导</string>
     <string name="staff_role_photography_manager">摄影经理</string>
     <string name="staff_role_photography">摄影</string>
     <string name="staff_role_planning_assistance">企划协助</string>
@@ -514,7 +515,7 @@
     <string name="staff_role_sound_producer">音响制作人</string>
     <string name="staff_role_sound_production_manager">音响制作经理</string>
     <string name="staff_role_sound_production">音响制作</string>
-    <string name="staff_role_sound_supervisor">音响主管</string>
+    <string name="staff_role_sound_supervisor">音响指导</string>
     <string name="staff_role_special_design">特殊设计</string>
     <string name="staff_role_special_effects_assistant">特效协助</string>
     <string name="staff_role_special_effects">特效</string>
@@ -560,7 +561,7 @@
     <string name="japan">日本</string>
     <string name="south_korea">韩国</string>
     <string name="china">中国</string>
-    <string name="taiwan">台灣</string>
+    <string name="taiwan">台湾</string>
     <string name="country">国家/地区</string>
     <string name="custom_lists">自定义列表</string>
     <string name="no_custom_lists">无自定义列表</string>
@@ -607,10 +608,14 @@
     <string name="completed_media">已完成《%s》</string>
     <string name="dropped_media">已放弃《%s》</string>
     <string name="paused_media">已暂停《%s》</string>
+    <string name="rewatched_media">重看了《%s》</string>
+    <string name="reread_media">重读了《%s》</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d小时</item>
     </plurals>
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d分钟</item>
     </plurals>
+    <string name="login_required_in_phone">要使用这个应用，您首先需要登录并打开安装在您手机上的 AniHyou</string>
+    <string name="app_installed_required">未检测到附近的设备，请在安卓手机上安装最新版本的 AniHyou</string>
 </resources>

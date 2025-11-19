@@ -491,6 +491,11 @@
     <string name="staff_role_music_supervisor">Наглядач за музикою</string>
     <string name="staff_role_music">Музика</string>
     <string name="staff_role_musical_instrument_supervisor">Наглядач за музичними інструментами</string>
+    <string name="staff_role_offline_editing_manager">Менеджер офлайн монтажу</string>
+    <string name="staff_role_offline_editing">Офлайн монтаж</string>
+    <string name="staff_role_online_editing_manager">Менеджер онлайн монтажу</string>
+    <string name="staff_role_online_editing">Онлайн монтаж</string>
+    <string name="staff_role_online_hd_editing">Онлайн монтаж HD</string>
     <string name="staff_role_optical_recording">Оптичне записування</string>
     <string name="staff_role_original_character_design">Оригінальний дизайн персонажів</string>
     <string name="staff_role_original_creator">Автор оригіналу</string>
@@ -624,6 +629,8 @@
     <string name="completed_media">Завершує «%s»</string>
     <string name="dropped_media">Кидає «%s»</string>
     <string name="paused_media">Призупиняє «%s»</string>
+    <string name="rewatched_media">Пере-переглянуто %s</string>
+    <string name="reread_media">Пере-перечитано %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>
@@ -636,4 +643,6 @@
         <item quantity="many">%d хв</item>
         <item quantity="other">%d хв</item>
     </plurals>
+    <string name="login_required_in_phone">Щоб скористатися цим додатком, вам треба авторизуватися, відкривши додаток AniHyou, встановлений на вашому телефоні</string>
+    <string name="app_installed_required">Пристрої поблизу не виявлено, будь ласка, встановіть останню версію AniHyou на вашому телефоні Android</string>
 </resources>
