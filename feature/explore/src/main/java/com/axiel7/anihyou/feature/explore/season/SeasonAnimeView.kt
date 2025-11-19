@@ -53,6 +53,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
@@ -97,6 +98,8 @@ private fun SeasonAnimeContent(
     val haptic = LocalHapticFeedback.current
     var showFilterSheet by remember { mutableStateOf(false) }
     var showEditSheet by remember { mutableStateOf(false) }
+
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     if (showFilterSheet && uiState.season != null) {
         SeasonChartFilterSheet(

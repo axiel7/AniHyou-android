@@ -32,6 +32,7 @@ import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.character.CharacterVoiceActorsSheet
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -73,6 +74,8 @@ private fun CharacterDetailsContent(
     val haptic = LocalHapticFeedback.current
     var showEditSheet by remember { mutableStateOf(false) }
     var showVaSheet by remember { mutableStateOf(false) }
+
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     if (showVaSheet) {
         CharacterVoiceActorsSheet(

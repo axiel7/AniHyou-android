@@ -1,11 +1,12 @@
 package com.axiel7.anihyou.feature.home.discover
 
 import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 
 @Immutable
-interface DiscoverEvent {
+interface DiscoverEvent : UiEvent {
     fun addNextInfo()
     fun fetchAiringAnime()
     fun fetchAiringAnimeOnMyList()

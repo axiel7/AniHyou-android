@@ -42,6 +42,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TabRowWithPager
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
@@ -106,6 +107,9 @@ private fun CalendarViewContent(
             val weekday = CalendarTab.tabRows[page].value.ordinal + 1
             val viewModel: CalendarViewModel = koinViewModel(key = weekday.toString())
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            ErrorDialogHandler(uiState, onDismiss = viewModel::onErrorDisplayed)
+
             LaunchedEffect(weekday) {
                 viewModel.setWeekday(weekday)
             }

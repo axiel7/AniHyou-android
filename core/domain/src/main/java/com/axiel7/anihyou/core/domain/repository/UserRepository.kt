@@ -80,7 +80,7 @@ class UserRepository(
     fun getMyUserInfo(fetchFromNetwork: Boolean = false) = api
         .viewerUserInfoQuery()
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
-        .watch()
+        .toFlow()
         .asDataResult {
             it.Viewer?.userInfo
         }
@@ -92,7 +92,7 @@ class UserRepository(
     ) = api
         .userBasicInfoQuery(userId, username)
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
-        .watch()
+        .toFlow()
         .asDataResult {
             it.User?.userInfo
         }

@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.domain.repository
 import com.apollographql.apollo.api.ApolloResponse
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.exception.ApolloHttpException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.network.api.response.ErrorResponse
@@ -30,6 +31,11 @@ abstract class BaseNetworkRepository(
 
         exception is ApolloHttpException -> {
             val message = onHttpException(this)
+            DataResult.Error(message = message)
+        }
+
+        exception is ApolloNetworkException -> {
+            val message = onNetworkException(this)
             DataResult.Error(message = message)
         }
 
@@ -72,6 +78,11 @@ abstract class BaseNetworkRepository(
                     PagedResult.Error(message = message)
                 }
 
+                response.exception is ApolloNetworkException -> {
+                    val message = onNetworkException(response)
+                    PagedResult.Error(message = message)
+                }
+
                 else -> PagedResult.Loading
             }
         }
@@ -81,6 +92,14 @@ abstract class BaseNetworkRepository(
         val errorResponse = exception.parseBodyToErrorResponse()
         errorResponse?.let { onError(it) } ?: onError(response)
         return errorResponse?.errors?.joinToString { it.message } ?: response.errorString
+    }
+
+    private suspend fun <D: Operation.Data> onNetworkException(response: ApolloResponse<D>): String {
+        val exception = response.exception as ApolloNetworkException
+        if (exception.toString().contains(INVALID_TOKEN_ERROR)) {
+            onInvalidToken()
+        }
+        return exception.message ?: response.errorString
     }
 
     private suspend fun <D: Operation.Data> onError(response: ApolloResponse<D>) {

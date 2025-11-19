@@ -139,7 +139,7 @@ class ProfileViewModel(
     override fun onRefresh() {
         mutableUiState.update { it.copy(fetchFromNetwork = true, isLoading = true) }
         if (mutableUiState.value.isMyProfile) getMyUserInfo()
-        else getUserInfo(arguments?.id, arguments?.userName)
+        else getUserInfo(arguments.id, arguments.userName)
     }
 
     override fun onRefreshActivities() {
@@ -155,7 +155,7 @@ class ProfileViewModel(
 
     init {
         if (mutableUiState.value.isMyProfile) getMyUserInfo()
-        else getUserInfo(arguments?.id, arguments?.userName)
+        else getUserInfo(arguments.id, arguments.userName)
 
         // activities
         mutableUiState
@@ -183,7 +183,8 @@ class ProfileViewModel(
                         )
                     } else {
                         it.copy(
-                            isLoadingActivity = result is PagedResult.Loading && it.page == 1
+                            isLoadingActivity = result is PagedResult.Loading && it.page == 1,
+                            error = (result as? PagedResult.Error)?.message
                         )
                     }
                 }

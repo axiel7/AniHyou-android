@@ -7,9 +7,10 @@ import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.base.event.PagedEvent
+import com.axiel7.anihyou.core.base.event.UiEvent
 
 @Immutable
-interface SeasonAnimeEvent : PagedEvent {
+interface SeasonAnimeEvent : UiEvent, PagedEvent {
     fun setSeason(value: AnimeSeason)
     fun onChangeSort(value: MediaSort)
     fun selectItem(value: SeasonalAnimeQuery.Medium?)

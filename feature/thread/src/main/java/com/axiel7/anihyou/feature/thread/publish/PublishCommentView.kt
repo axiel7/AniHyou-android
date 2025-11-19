@@ -4,14 +4,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,14 +36,7 @@ private fun PublishCommentContent(
     event: PublishCommentEvent?,
     navActionManager: NavActionManager,
 ) {
-    val context = LocalContext.current
-
-    LaunchedEffect(uiState.error) {
-        if (uiState.error != null) {
-            event?.onErrorDisplayed()
-            context.showToast(uiState.error)
-        }
-    }
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     LaunchedEffect(uiState.wasPublished) {
         if (uiState.wasPublished == true) {

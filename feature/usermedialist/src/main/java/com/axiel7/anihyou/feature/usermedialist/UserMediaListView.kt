@@ -26,17 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.feature.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.MinimalUserMediaListItem
@@ -53,7 +52,6 @@ fun UserMediaListView(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
 
@@ -64,12 +62,7 @@ fun UserMediaListView(
         }
     }
 
-    LaunchedEffect(uiState.error) {
-        if (uiState.error != null) {
-            event?.onErrorDisplayed()
-            context.showToast(uiState.error)
-        }
-    }
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     val onClickPlus: (Int, CommonMediaListEntry) -> Unit = { increment, item ->
         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)

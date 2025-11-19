@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.stats.genres.GenresStatsView
@@ -69,6 +70,9 @@ private fun UserStatsContent(
     nestedScrollConnection: NestedScrollConnection,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
+
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
         onRefresh = { event?.onRefresh() },

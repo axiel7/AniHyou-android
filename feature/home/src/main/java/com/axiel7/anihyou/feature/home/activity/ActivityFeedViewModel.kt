@@ -116,7 +116,7 @@ class ActivityFeedViewModel(
                             isLoading = false
                         )
                     } else {
-                        result.toUiState(loadingWhen = it.page == 1)
+                        result.toUiState(loadingWhen = it.page == 1).copy(hasNextPage = false)
                     }
                 }
             }
