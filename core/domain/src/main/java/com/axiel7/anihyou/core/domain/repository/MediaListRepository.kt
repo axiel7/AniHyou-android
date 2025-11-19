@@ -4,6 +4,7 @@ import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
+import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.advancedScoresMap
 import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
@@ -17,6 +18,7 @@ import com.axiel7.anihyou.core.network.fragment.CommonPage
 import com.axiel7.anihyou.core.network.fragment.FuzzyDate
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,6 +61,19 @@ class MediaListRepository (
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+        }
+
+    fun getMySeasonalAnime(
+        animeSeason: AnimeSeason,
+        sort: List<MediaSort> = listOf(MediaSort.POPULARITY_DESC),
+        fetchFromNetwork: Boolean = false,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mySeasonalAnimeQuery(animeSeason.toDto(), sort, fetchFromNetwork, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.media?.mapNotNull { it?.mediaListEntry?.commonMediaListEntry }.orEmpty()
         }
 
     fun incrementProgress(

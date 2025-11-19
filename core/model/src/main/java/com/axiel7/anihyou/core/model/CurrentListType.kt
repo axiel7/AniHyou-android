@@ -11,7 +11,8 @@ enum class CurrentListType: Localizable {
     AIRING,
     BEHIND,
     ANIME,
-    MANGA;
+    MANGA,
+    NEXT_SEASON;
 
     @Composable
     override fun localized() = when (this) {
@@ -19,5 +20,6 @@ enum class CurrentListType: Localizable {
         BEHIND -> stringResource(R.string.anime_behind)
         ANIME -> stringResource(R.string.watching)
         MANGA -> stringResource(R.string.reading)
+        NEXT_SEASON -> stringResource(R.string.next_season)
     }
 }

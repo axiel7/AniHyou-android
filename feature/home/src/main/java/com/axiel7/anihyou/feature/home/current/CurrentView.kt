@@ -129,12 +129,7 @@ private fun CurrentContent(
                 .padding(bottom = 16.dp)
         ) {
             CurrentListType.entries.forEach { type ->
-                val list = when (type) {
-                    CurrentListType.AIRING -> uiState.airingList
-                    CurrentListType.BEHIND -> uiState.behindList
-                    CurrentListType.ANIME -> uiState.animeList
-                    CurrentListType.MANGA -> uiState.mangaList
-                }
+                val list = uiState.getListFromType(type)
                 if (list.isNotEmpty()) {
                     HorizontalListHeader(
                         text = type.localized(),

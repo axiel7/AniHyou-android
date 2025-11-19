@@ -15,6 +15,7 @@ data class CurrentUiState(
     val behindList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val animeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val mangaList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val nextSeasonAnimeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val selectedItem: CommonMediaListEntry? = null,
     val selectedType: CurrentListType? = null,
     val openSetScoreDialog: Boolean = false,
@@ -35,4 +36,12 @@ data class CurrentUiState(
     private val hasManga get() = mangaList.isNotEmpty()
 
     val hasNothing get() = !hasAiring && !hasBehind && !hasAnime && !hasManga
+
+    fun getListFromType(type: CurrentListType) = when (type) {
+        CurrentListType.AIRING -> airingList
+        CurrentListType.BEHIND -> behindList
+        CurrentListType.ANIME -> animeList
+        CurrentListType.MANGA -> mangaList
+        CurrentListType.NEXT_SEASON -> nextSeasonAnimeList
+    }
 }

@@ -85,12 +85,7 @@ private fun CurrentFullListContent(
     var showEditSheet by remember { mutableStateOf(false) }
 
     val items = remember(listType) {
-        when (listType) {
-            CurrentListType.AIRING -> uiState.airingList
-            CurrentListType.BEHIND -> uiState.behindList
-            CurrentListType.ANIME -> uiState.animeList
-            CurrentListType.MANGA -> uiState.mangaList
-        }
+        uiState.getListFromType(listType)
     }
 
     if (showEditSheet && uiState.selectedItem?.media != null && uiState.selectedType != null) {

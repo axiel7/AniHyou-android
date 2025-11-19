@@ -1,0 +1,13 @@
+query MySeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear: Int, $sort: [MediaSort]) {
+    Page(page: $page, perPage: $perPage) {
+        media(season: $season, seasonYear: $seasonYear, sort: $sort, onList: true) {
+            id
+            mediaListEntry {
+                ...CommonMediaListEntry
+            }
+        }
+        pageInfo {
+            ...CommonPage
+        }
+    }
+}

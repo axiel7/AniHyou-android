@@ -9,15 +9,18 @@ import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.DeleteMediaListMutation
 import com.axiel7.anihyou.core.network.MediaListCustomListsQuery
 import com.axiel7.anihyou.core.network.MediaListIdsQuery
+import com.axiel7.anihyou.core.network.MySeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.UpdateEntryCustomListsMutation
 import com.axiel7.anihyou.core.network.UpdateEntryMutation
 import com.axiel7.anihyou.core.network.UserListCollectionQuery
 import com.axiel7.anihyou.core.network.UserMediaListQuery
+import com.axiel7.anihyou.core.network.api.model.AnimeSeasonDto
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntryImpl
 import com.axiel7.anihyou.core.network.type.FuzzyDateInput
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 
 class MediaListApi(
@@ -59,6 +62,24 @@ class MediaListApi(
                 sort = Optional.present(sort),
                 page = Optional.presentIfNotNull(page),
                 perPage = Optional.presentIfNotNull(perPage),
+            )
+        )
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
+
+    fun mySeasonalAnimeQuery(
+        animeSeason: AnimeSeasonDto,
+        sort: List<MediaSort>,
+        fetchFromNetwork: Boolean,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            MySeasonalAnimeQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
+                season = Optional.present(animeSeason.season),
+                seasonYear = Optional.present(animeSeason.year),
+                sort = Optional.present(sort)
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
