@@ -16,8 +16,10 @@ import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.network.NetworkVariables
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.startRemoteActivity
+import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -40,6 +42,10 @@ class MainViewModel(
     val appColor = defaultPreferencesRepository.appColor
 
     val appColorMode = defaultPreferencesRepository.appColorMode
+
+    val paletteStyle = defaultPreferencesRepository.colorPalette.map { value ->
+        value?.let { PaletteStyle.valueOf(it) } ?: PaletteStyle.Expressive
+    }
 
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {

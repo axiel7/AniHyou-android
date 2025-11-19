@@ -84,6 +84,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.setAppColor(value)
     }
 
+    override fun setColorPalette(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setColorPalette(value)
+        }
+    }
+
     override fun setUseGeneralListStyle(value: Boolean) {
         viewModelScope.launch {
             listPreferencesRepository.setUseGeneralListStyle(value)
@@ -259,6 +265,13 @@ class SettingsViewModel(
         defaultPreferencesRepository.appColor
             .onEach { value ->
                 mutableUiState.update { it.copy(appColor = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorPalette
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(colorPaletteStyle = value) }
             }
             .launchIn(viewModelScope)
 

@@ -282,6 +282,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(APP_COLOR_KEY, value?.toArgb()?.hexToString())
     }
 
+    val colorPalette = dataStore.getValue(COLOR_PALETTE_KEY)
+
+    suspend fun setColorPalette(value: String?) {
+        dataStore.setValue(COLOR_PALETTE_KEY, value)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -312,5 +318,7 @@ class DefaultPreferencesRepository (
 
         private val APP_COLOR_MODE_KEY = stringPreferencesKey("app_color_mode")
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
+
+        private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
     }
 }

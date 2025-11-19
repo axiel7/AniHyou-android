@@ -285,6 +285,7 @@
     <string name="update_interval">Update interval</string>
     <string name="airing_anime_notifications">Airing anime notifications</string>
     <string name="color">Color</string>
+    <string name="color_palette">Color palette</string>
     <string name="discover">Discover</string>
     <string name="default_home_tab">Default Home tab</string>
     <string name="text_status">Text Status</string>

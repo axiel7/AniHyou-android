@@ -24,6 +24,8 @@ interface SettingsEvent : UiEvent {
 
     fun setAppColorMode(value: AppColorMode)
 
+    fun setColorPalette(value: String)
+
     fun setCustomAppColor(color: Color)
 
     fun setUseGeneralListStyle(value: Boolean)

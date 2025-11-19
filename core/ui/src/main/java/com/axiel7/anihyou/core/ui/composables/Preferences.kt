@@ -191,7 +191,8 @@ fun SwitchPreference(
 @Composable
 fun <T> ListPreference(
     title: String,
-    entriesValues: Map<T, Int>,
+    values: List<T>,
+    labelForValue: @Composable (T) -> String = { it.toString() },
     modifier: Modifier = Modifier,
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
@@ -231,7 +232,7 @@ fun <T> ListPreference(
 
             if (preferenceValue != null) {
                 Text(
-                    text = entriesValues[preferenceValue]?.let { stringResource(it) }.orEmpty(),
+                    text = labelForValue(preferenceValue),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp
                 )
@@ -249,18 +250,18 @@ fun <T> ListPreference(
                         maxHeight = (windowInfo.height - 48).dp
                     )
                 ) {
-                    items(entriesValues.entries.toList()) { entry ->
+                    items(values) { entry ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onValueChange(entry.key) },
+                                .clickable { onValueChange(entry) },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = preferenceValue == entry.key,
-                                onClick = { onValueChange(entry.key) }
+                                selected = preferenceValue == entry,
+                                onClick = { onValueChange(entry) }
                             )
-                            Text(text = stringResource(entry.value))
+                            Text(text = labelForValue(entry))
                         }
                     }
                 }
@@ -272,6 +273,28 @@ fun <T> ListPreference(
             }
         )
     }
+}
+
+@Composable
+fun <T> ListPreference(
+    title: String,
+    entriesValues: Map<T, Int>,
+    modifier: Modifier = Modifier,
+    preferenceValue: T?,
+    @DrawableRes icon: Int? = null,
+    onValueChange: (T) -> Unit
+) {
+    ListPreference(
+        title = title,
+        values = entriesValues.entries.map { it.key },
+        labelForValue = { value ->
+            entriesValues[value]?.let { stringResource(it) }.orEmpty()
+        },
+        modifier = modifier,
+        preferenceValue = preferenceValue,
+        icon = icon,
+        onValueChange = onValueChange,
+    )
 }
 
 @Preview(showBackground = true)

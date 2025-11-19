@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         val initialUseBlackColors = viewModel.useBlackColors.firstBlocking()
         val initialAppColor = viewModel.appColor.firstBlocking()
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
+        val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
 
@@ -89,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             val appColorMode by viewModel.appColorMode.collectAsStateWithLifecycle(
                 initialValue = initialAppColorMode
             )
+            val paletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialPaletteStyle)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
 
             DisposableEffect(isDark) {
@@ -110,6 +112,7 @@ class MainActivity : AppCompatActivity() {
                 blackColors = useBlackColors,
                 appColor = appColor,
                 appColorMode = appColorMode,
+                paletteStyle = paletteStyle,
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

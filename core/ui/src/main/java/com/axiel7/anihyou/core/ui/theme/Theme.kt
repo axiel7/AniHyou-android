@@ -25,6 +25,7 @@ fun AniHyouTheme(
     blackColors: Boolean = false,
     appColor: Color? = null,
     appColorMode: AppColorMode = AppColorMode.DEFAULT,
+    paletteStyle: PaletteStyle = PaletteStyle.Expressive,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -34,7 +35,7 @@ fun AniHyouTheme(
                 seedColor = appColor ?: seed,
                 isDark = darkTheme,
                 isAmoled = blackColors,
-                style = if (isMonochrome) PaletteStyle.Monochrome else PaletteStyle.Expressive,
+                style = if (isMonochrome) PaletteStyle.Monochrome else paletteStyle,
                 specVersion = ColorSpec.SpecVersion.SPEC_2025,
             )
         }
@@ -47,7 +48,7 @@ fun AniHyouTheme(
                 primary = colors.primary,
                 isDark = darkTheme,
                 isAmoled = blackColors,
-                style = PaletteStyle.Expressive,
+                style = paletteStyle,
                 specVersion = ColorSpec.SpecVersion.SPEC_2025,
             )
         }
@@ -56,7 +57,7 @@ fun AniHyouTheme(
             seedColor = seed,
             isDark = darkTheme,
             isAmoled = blackColors,
-            style = PaletteStyle.Expressive,
+            style = paletteStyle,
             specVersion = ColorSpec.SpecVersion.SPEC_2025
         )
     }
