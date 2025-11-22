@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -171,16 +172,18 @@ fun ActivityMenu(
                 contentDescription = stringResource(R.string.show_more),
             )
         }
-        DropdownMenu(
+        DropdownMenuPopup(
             expanded = moreExpanded,
             onDismissRequest = { moreExpanded = false }
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.delete)) },
-                onClick = {
+                checked = false,
+                onCheckedChange = {
                     moreExpanded = false
                     onClickDelete()
                 },
+                text = { Text(text = stringResource(R.string.delete)) },
+                shapes = MenuDefaults.itemShapes(),
             )
         }
     }

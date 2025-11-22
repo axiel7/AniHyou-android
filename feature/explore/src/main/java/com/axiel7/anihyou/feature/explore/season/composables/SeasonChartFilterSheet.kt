@@ -15,12 +15,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import com.axiel7.anihyou.core.common.utils.DateUtils
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.icon
@@ -44,7 +48,6 @@ import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,6 +153,7 @@ private val seasonSortEntries = listOf(
     MediaSort.END_DATE_DESC,
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SortMenu(
     sort: MediaSort,
@@ -157,9 +161,7 @@ private fun SortMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
         AssistChip(
             onClick = { expanded = !expanded },
@@ -179,22 +181,28 @@ private fun SortMenu(
                 )
             }
         )
-        DropdownMenu(
+        DropdownMenuPopup(
             expanded = expanded,
             onDismissRequest = {
                 setSort(sort)
                 expanded = false
             }
         ) {
-            seasonSortEntries.forEach {
-                DropdownMenuItem(
-                    text = { Text(text = it.localized()) },
-                    onClick = {
-                        setSort(it)
-                        expanded = false
-                    },
-                    modifier = Modifier.padding(end = 8.dp),
-                )
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes()
+            ) {
+                seasonSortEntries.fastForEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        checked = sort == item,
+                        onCheckedChange = {
+                            setSort(item)
+                            expanded = false
+                        },
+                        text = { Text(text = item.localized()) },
+                        modifier = Modifier.padding(end = 8.dp),
+                        shapes = MenuDefaults.itemShape(index, seasonSortEntries.size)
+                    )
+                }
             }
         }
     }

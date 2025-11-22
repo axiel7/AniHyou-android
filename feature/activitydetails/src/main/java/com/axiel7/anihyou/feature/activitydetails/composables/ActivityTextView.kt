@@ -11,14 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.model.activity.exampleActivityUser
 import com.axiel7.anihyou.core.network.fragment.ActivityUser
@@ -151,21 +154,27 @@ fun ActivityTextView(
                             contentDescription = null
                         )
                     }
-                    DropdownMenu(
+                    DropdownMenuPopup(
                         expanded = isLikesExpanded,
                         onDismissRequest = { isLikesExpanded = false }
                     ) {
-                        likes.forEach { user ->
-                            DropdownMenuItem(
-                                text = { Text(text = user.name) },
-                                onClick = {},
-                                leadingIcon = {
-                                    PersonImage(
-                                        url = user.avatar?.medium,
-                                        modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-                                    )
-                                }
-                            )
+                        DropdownMenuGroup(
+                            shapes = MenuDefaults.groupShapes()
+                        ) {
+                            likes.fastForEach { user ->
+                                DropdownMenuItem(
+                                    checked = false,
+                                    onCheckedChange = {},
+                                    text = { Text(text = user.name) },
+                                    shapes = MenuDefaults.itemShapes(),
+                                    leadingIcon = {
+                                        PersonImage(
+                                            url = user.avatar?.medium,
+                                            modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
