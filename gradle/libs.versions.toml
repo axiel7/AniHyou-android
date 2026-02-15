@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.37.3"
-agp = "9.0.0"
+agp = "9.0.1"
 apollo = "4.4.1"
 appcompat = "1.7.1"
 benchmarkMacroJunit4 = "1.4.1"
