@@ -645,4 +645,5 @@
     </plurals>
     <string name="login_required_in_phone">Щоб скористатися цим додатком, вам треба авторизуватися, відкривши додаток AniHyou, встановлений на вашому телефоні</string>
     <string name="app_installed_required">Пристрої поблизу не виявлено, будь ласка, встановіть останню версію AniHyou на вашому телефоні Android</string>
+    <string name="translator_app">Перекладач</string>
 </resources>

@@ -613,4 +613,5 @@
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d分鐘</item>
     </plurals>
+    <string name="translator_app">翻譯</string>
 </resources>

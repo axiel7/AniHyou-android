@@ -628,4 +628,5 @@
     </plurals>
     <string name="login_required_in_phone">Para utilizar esta aplicación primero tienes que iniciar sesión abriendo la aplicación AniHyou instalada en tu teléfono</string>
     <string name="app_installed_required">No se ha detectado ningún dispositivo cercano, por favor, instala la última versión de la aplicación AniHyou en tu teléfono Android</string>
+    <string name="translator_app">Traductor</string>
 </resources>

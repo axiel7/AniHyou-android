@@ -618,4 +618,5 @@
     </plurals>
     <string name="login_required_in_phone">要使用这个应用，您首先需要登录并打开安装在您手机上的 AniHyou</string>
     <string name="app_installed_required">未检测到附近的设备，请在安卓手机上安装最新版本的 AniHyou</string>
+    <string name="translator_app">翻译</string>
 </resources>

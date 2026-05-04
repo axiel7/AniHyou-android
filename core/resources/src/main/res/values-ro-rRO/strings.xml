@@ -636,4 +636,5 @@
     </plurals>
     <string name="login_required_in_phone">Pentru a utiliza această aplicație, trebuie mai întâi să vă conectați deschizând aplicația AniHyou instalată pe telefonul dvs.</string>
     <string name="app_installed_required">Nu s-a detectat niciun dispozitiv în apropiere. Instalați cea mai recentă versiune a aplicației AniHyou pe telefonul dvs. Android.</string>
+    <string name="translator_app">Traducător</string>
 </resources>
