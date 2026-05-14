@@ -1,13 +1,10 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.anihyou.feature)
 }
 
 val appPackageName: String by rootProject.extra
-val sdkVersion: Int by rootProject.extra
-val minSdkVersion: Int by rootProject.extra
 
 val versionProps = Properties().also {
     it.load(project.rootProject.file("version.properties").reader())
@@ -15,20 +12,9 @@ val versionProps = Properties().also {
 
 android {
     namespace = "$appPackageName.feature.settings"
-    compileSdk = sdkVersion
-
-    defaultConfig {
-        minSdk = minSdkVersion
-    }
 
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 
     buildTypes.all {
@@ -37,25 +23,8 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
-    }
-}
-
 dependencies {
-    implementation(project(":core:network"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:ui"))
     implementation(project(":feature:worker"))
-
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.compose)
 
     implementation(libs.androidx.work.runtime)
     implementation(libs.accompanist.permissions)

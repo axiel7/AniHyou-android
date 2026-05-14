@@ -106,6 +106,9 @@ androidx-wear-compose-ui-tooling = { group = "androidx.wear.compose", name = "co
 androidx-wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
 gms-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "gmsWearable" }
 horologist-compose-layout = { group = "com.google.android.horologist", name = "horologist-compose-layout", version.ref = "horologist" }
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { group = "org.jetbrains.kotlin.plugin.compose", name = "org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -117,3 +120,4 @@ androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "bas
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinPlugin" }
+anihyou-feature = { id = "anihyou.android.feature", version = "unspecified" }
