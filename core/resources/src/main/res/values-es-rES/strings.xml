@@ -273,6 +273,7 @@
     <string name="update_interval">Intervalo de actualización</string>
     <string name="airing_anime_notifications">Notificaciones de anime en emisión</string>
     <string name="color">Color</string>
+    <string name="color_palette">Paleta de colores</string>
     <string name="discover">Descubre</string>
     <string name="default_home_tab">Pestaña por defecto en Inicio</string>
     <string name="text_status">Texto</string>
@@ -628,4 +629,6 @@
     </plurals>
     <string name="login_required_in_phone">Para utilizar esta aplicación primero tienes que iniciar sesión abriendo la aplicación AniHyou instalada en tu teléfono</string>
     <string name="app_installed_required">No se ha detectado ningún dispositivo cercano, por favor, instala la última versión de la aplicación AniHyou en tu teléfono Android</string>
+    <string name="minimum_tag_percentage">Porcentaje mínimo de etiquetas</string>
+    <string name="search_my_list">Buscar en mi lista…</string>
 </resources>

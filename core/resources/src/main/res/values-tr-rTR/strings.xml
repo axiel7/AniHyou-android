@@ -273,6 +273,7 @@
     <string name="update_interval">Güncelleme sıklığı</string>
     <string name="airing_anime_notifications">Anime yayınlanma bildirimi</string>
     <string name="color">Renk</string>
+    <string name="color_palette">Renk paleti</string>
     <string name="discover">Keşfet</string>
     <string name="default_home_tab">Varsayılan Ana Sayfa</string>
     <string name="text_status">Metin Durumu</string>
@@ -628,4 +629,6 @@
     </plurals>
     <string name="login_required_in_phone">Bu uygulamayı kullanmak için öncelikle telefonunuzda yüklü olan AniHyou uygulamasını açarak giriş yapmanız gerekir</string>
     <string name="app_installed_required">Yakında bir cihaz algılanmadı, lütfen Android telefonunuza en son AniHyou uygulama sürümünü yükleyin</string>
+    <string name="minimum_tag_percentage">Minimum Etiket Oranı</string>
+    <string name="search_my_list">Listemde ara…</string>
 </resources>
