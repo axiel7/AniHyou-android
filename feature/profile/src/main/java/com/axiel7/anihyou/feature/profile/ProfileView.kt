@@ -74,7 +74,7 @@ import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesView
 import com.axiel7.anihyou.feature.profile.social.UserSocialView
 import com.axiel7.anihyou.feature.profile.stats.UserStatsView
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.apollo)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.koin.compiler)
 }
 
 java {

@@ -43,7 +43,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.home.discover.content.AiringContent
 import com.axiel7.anihyou.feature.home.discover.content.DiscoverMediaContent
 import com.axiel7.anihyou.feature.home.discover.content.SeasonAnimeContent
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDateTime
 
 enum class DiscoverInfo {

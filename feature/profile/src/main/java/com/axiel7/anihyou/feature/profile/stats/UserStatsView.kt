@@ -35,7 +35,7 @@ import com.axiel7.anihyou.feature.profile.stats.staff.StaffStatsView
 import com.axiel7.anihyou.feature.profile.stats.studios.StudiosStatsView
 import com.axiel7.anihyou.feature.profile.stats.tags.TagsStatsView
 import com.axiel7.anihyou.feature.profile.stats.voiceactors.VoiceActorsStatsView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UserStatsView(

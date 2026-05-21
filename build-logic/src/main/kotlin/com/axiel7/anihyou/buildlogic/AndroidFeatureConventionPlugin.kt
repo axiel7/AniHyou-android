@@ -56,6 +56,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
                 add("implementation", platform(libs.findLibrary("koin-bom").get()))
                 add("implementation", libs.findLibrary("koin-compose").get())
+                add("implementation", libs.findLibrary("koin-compose-viewmodel").get())
+                add("implementation", libs.findLibrary("koin-compose-navigation3").get())
 
                 add("coreLibraryDesugaring", libs.findLibrary("desugar_jdk_libs").get())
             }

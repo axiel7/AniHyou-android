@@ -47,7 +47,7 @@ import com.axiel7.anihyou.feature.home.current.CurrentUiState
 import com.axiel7.anihyou.feature.home.current.CurrentViewModel
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItemPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CurrentFullListView(

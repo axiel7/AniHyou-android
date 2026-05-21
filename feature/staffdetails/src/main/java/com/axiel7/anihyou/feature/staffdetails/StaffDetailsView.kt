@@ -37,7 +37,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.staffdetails.content.StaffCharacterView
 import com.axiel7.anihyou.feature.staffdetails.content.StaffInfoView
 import com.axiel7.anihyou.feature.staffdetails.content.StaffMediaView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

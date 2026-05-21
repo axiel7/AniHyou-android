@@ -11,7 +11,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.Routes.PublishActivity
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PublishActivityView(

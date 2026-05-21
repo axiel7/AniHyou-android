@@ -44,7 +44,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextViewPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

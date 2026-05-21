@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.koin.compiler)
 }
 
 val appPackageName: String by rootProject.extra
@@ -42,7 +41,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
 
     implementation(platform(libs.koin.bom))
-    implementation(libs.koin.compose)
+    implementation(libs.koin.android)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

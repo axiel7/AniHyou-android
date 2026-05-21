@@ -39,7 +39,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UserFavoritesView(

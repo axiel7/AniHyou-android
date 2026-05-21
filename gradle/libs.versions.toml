@@ -18,7 +18,6 @@ desugar_jdk_libs = "2.1.5"
 glanceAppwidget = "1.1.1"
 glancePreview = "1.1.1"
 koin = "4.2.1"
-koinPlugin = "1.0.0"
 kotlin = "2.3.21"
 coreKtx = "1.18.0"
 junit = "4.13.2"
@@ -72,9 +71,11 @@ markdown-renderer-coil3 = { group = "com.mikepenz", name = "multiplatform-markdo
 desugar_jdk_libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
+koin-compose-navigation3 = { group = "io.insert-koin", name = "koin-compose-navigation3" }
 koin-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
-koin-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroid" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -119,5 +120,4 @@ jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serializati
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinPlugin" }
 anihyou-feature = { id = "anihyou.android.feature", version = "unspecified" }

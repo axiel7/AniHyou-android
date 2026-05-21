@@ -40,7 +40,7 @@ import com.axiel7.anihyou.feature.thread.composables.ParentThreadView
 import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
 import com.axiel7.anihyou.feature.thread.composables.ThreadCommentView
 import com.axiel7.anihyou.feature.thread.composables.ThreadCommentViewPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

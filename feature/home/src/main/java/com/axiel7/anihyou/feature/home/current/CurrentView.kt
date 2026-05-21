@@ -57,7 +57,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItemPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CurrentView(

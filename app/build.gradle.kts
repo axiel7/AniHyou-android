@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.compose)
     alias(libs.plugins.androidx.baselineprofile)
-    alias(libs.plugins.koin.compiler)
 }
 
 val appPackageName: String by rootProject.extra
@@ -190,9 +189,11 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.navigation3)
     implementation(libs.koin.workmanager)
-    implementation(libs.koin.startup)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

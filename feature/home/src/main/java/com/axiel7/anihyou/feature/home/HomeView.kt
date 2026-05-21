@@ -40,7 +40,7 @@ import com.axiel7.anihyou.feature.home.activity.ActivityFeedView
 import com.axiel7.anihyou.feature.home.current.CurrentView
 import com.axiel7.anihyou.feature.home.discover.DiscoverView
 import com.axiel7.anihyou.feature.login.LoginView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeView(

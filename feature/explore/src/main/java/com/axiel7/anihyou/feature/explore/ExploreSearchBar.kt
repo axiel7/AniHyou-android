@@ -36,7 +36,7 @@ import com.axiel7.anihyou.feature.explore.search.SearchContentView
 import com.axiel7.anihyou.feature.explore.search.SearchEvent
 import com.axiel7.anihyou.feature.explore.search.SearchUiState
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

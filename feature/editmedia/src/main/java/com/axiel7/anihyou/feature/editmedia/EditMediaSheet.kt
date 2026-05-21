@@ -75,7 +75,7 @@ import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDatePicker
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaProgressRow
 import com.axiel7.anihyou.feature.editmedia.composables.ScoreView
 import kotlinx.coroutines.CoroutineScope
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

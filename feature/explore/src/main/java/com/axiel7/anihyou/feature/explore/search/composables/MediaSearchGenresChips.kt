@@ -31,7 +31,7 @@ import com.axiel7.anihyou.core.ui.composables.common.InputChipError
 import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsSheet
 import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable

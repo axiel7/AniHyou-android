@@ -19,28 +19,28 @@ import com.axiel7.anihyou.feature.worker.workerModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
-import org.koin.androix.startup.KoinStartup
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.component.KoinComponent
-import org.koin.dsl.koinConfiguration
+import org.koin.core.context.startKoin
 
-@OptIn(KoinExperimentalAPI::class)
-class App : Application(), KoinComponent, KoinStartup, SingletonImageLoader.Factory {
+class App : Application(), SingletonImageLoader.Factory {
 
-    override fun onKoinStartup() = koinConfiguration {
-        if (BuildConfig.DEBUG) {
-            androidLogger()
+    override fun onCreate() {
+        super.onCreate()
+
+        startKoin {
+            if (BuildConfig.DEBUG) {
+                androidLogger()
+            }
+            androidContext(this@App)
+            workManagerFactory()
+            modules(
+                dataStoreModule,
+                networkModule,
+                apiModule,
+                repositoryModule,
+                viewModelModule,
+                workerModule,
+            )
         }
-        androidContext(this@App)
-        workManagerFactory()
-        modules(
-            dataStoreModule,
-            networkModule,
-            apiModule,
-            repositoryModule,
-            viewModelModule,
-            workerModule,
-        )
     }
 
     override fun newImageLoader(context: PlatformContext) =
