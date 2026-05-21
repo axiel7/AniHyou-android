@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.model.thread.ChildComment.Companion.toChildComment
 import com.axiel7.anihyou.core.network.api.ThreadApi
 

@@ -2,9 +2,9 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.apolloStore
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.ActivityFeedQuery
 import com.axiel7.anihyou.core.network.DeleteActivityMutation
@@ -48,9 +48,10 @@ class ActivityApi(
                 operation = ActivityDetailsQuery(
                     activityId = Optional.present(id)
                 ),
-                operationData = ActivityDetailsQuery.Data(
+                data = ActivityDetailsQuery.Data(
                     Activity = activity
-                )
+                ),
+                publish = true
             )
         client.apolloStore.publish(result)
     }

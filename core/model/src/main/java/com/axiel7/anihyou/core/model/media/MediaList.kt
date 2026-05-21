@@ -73,10 +73,12 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
         __typename = "",
         id = 1,
         coverImage = CommonMediaListEntry.CoverImage(
+            __typename = "",
             large = null,
             color = "#f55442"
         ),
         nextAiringEpisode = CommonMediaListEntry.NextAiringEpisode(
+            __typename = "",
             episode = 3,
             timeUntilAiring = 1203239
         ),
@@ -85,6 +87,7 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             __typename = "",
             id = 1,
             title = BasicMediaDetails.Title(
+                __typename = "",
                 userPreferred = "Guild no Uketsukejou desu ga, Zangyou wa Iya nanode Boss wo Solo Toubatsu Shiyou to Omoimasu"
             ),
             episodes = 1095,
@@ -101,9 +104,11 @@ val exampleAiringWidgetEntry = AiringWidgetQuery.Medium(
     __typename = "",
     id = 1,
     title = AiringWidgetQuery.Title(
+        __typename = "",
         userPreferred = "Kimetsu no Yaiba: Katanakaji no Sato-hen"
     ),
     nextAiringEpisode = AiringWidgetQuery.NextAiringEpisode(
+        __typename = "",
         episode = 3,
         airingAt = 1725018922,
         timeUntilAiring = 1203239

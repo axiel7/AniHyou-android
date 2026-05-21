@@ -2,7 +2,7 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
@@ -205,7 +205,8 @@ class MediaApi(
                         operation = MediaDetailsQuery(
                             mediaId = Optional.present(mediaId)
                         ),
-                        operationData = data,
+                        data = data,
+                        publish = true,
                     )
             } catch (_: IllegalStateException) {
             }

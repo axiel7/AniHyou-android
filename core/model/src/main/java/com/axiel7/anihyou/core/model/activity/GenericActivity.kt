@@ -96,7 +96,7 @@ fun ActivityReplyFragment.toGenericActivity() = GenericActivity(
 
 val exampleActivityUser = ActivityUser(
     name = "HelloMyNameIsLong",
-    avatar = ActivityUser.Avatar(medium = "https://picsum.photos/200"),
+    avatar = ActivityUser.Avatar(__typename = "", medium = "https://picsum.photos/200"),
     __typename = "",
     id = 1,
 )

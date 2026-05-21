@@ -1,12 +1,13 @@
 package com.axiel7.anihyou.core.network
 
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo.cache.normalized.normalizedCache
 import com.apollographql.apollo.network.okHttpClient
+import com.apollographql.cache.normalized.api.CacheKey
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
 import com.axiel7.anihyou.core.base.ANILIST_GRAPHQL_URL
 import com.axiel7.anihyou.core.base.MAL_CLIENT_ID
 import com.axiel7.anihyou.core.base.X_MAL_CLIENT_ID
+import com.axiel7.anihyou.core.network.cache.Cache.cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -31,7 +32,10 @@ private fun provideApolloClient(
     return ApolloClient.Builder()
         .serverUrl(ANILIST_GRAPHQL_URL)
         .okHttpClient(okHttpClient)
-        .normalizedCache(cacheFactory)
+        .cache(
+            cacheFactory,
+            keyScope = CacheKey.Scope.SERVICE
+        )
         .httpExposeErrorBody(true)
         .build()
 }

@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.model.media.AnimeSeason
@@ -44,7 +44,7 @@ class MediaListRepository (
     ) = api
         .mediaListCollection(userId, mediaType, sort, fetchFromNetwork, chunk, perChunk)
         .toFlow()
-        .asPagedResult(page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }) {
+        .asPagedResult(page = { CommonPage("", chunk, it.MediaListCollection?.hasNextChunk) }) {
             it.MediaListCollection?.lists.orEmpty()
         }
 
@@ -195,7 +195,7 @@ class MediaListRepository (
         .fetchPolicy(FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(
-            page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }
+            page = { CommonPage("", chunk, it.MediaListCollection?.hasNextChunk) }
         ) { data ->
             data.MediaListCollection?.lists
                 ?.flatMap { list ->

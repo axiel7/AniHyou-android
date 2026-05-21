@@ -2,7 +2,7 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.SearchStudioQuery
 import com.axiel7.anihyou.core.network.StudioDetailsQuery
 import com.axiel7.anihyou.core.network.StudioMediaQuery
@@ -40,7 +40,8 @@ class StudioApi (
                 operation = StudioDetailsQuery(
                     studioId = Optional.presentIfNotNull(data.Studio?.id)
                 ),
-                operationData = data
+                data = data,
+                publish = true,
             )
     }
 

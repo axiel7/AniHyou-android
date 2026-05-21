@@ -2,7 +2,7 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.CharacterDetailsQuery
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.SearchCharacterQuery
@@ -36,7 +36,8 @@ class CharacterApi(
                 operation = CharacterDetailsQuery(
                     characterId = Optional.presentIfNotNull(data.Character?.id)
                 ),
-                operationData = data
+                data = data,
+                publish = true
             )
     }
 

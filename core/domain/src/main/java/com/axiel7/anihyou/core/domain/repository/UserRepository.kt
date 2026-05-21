@@ -1,9 +1,9 @@
 package com.axiel7.anihyou.core.domain.repository
 
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
-import com.apollographql.apollo.cache.normalized.refetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.refetchPolicy
 import com.axiel7.anihyou.core.model.stats.overview.toOverviewStats
 import com.axiel7.anihyou.core.network.api.UserApi
 import com.axiel7.anihyou.core.network.type.ActivitySort

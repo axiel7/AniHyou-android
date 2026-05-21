@@ -165,6 +165,7 @@ private fun ParentThreadViewPreview() {
             id = 1,
             name = "KOMBRAT",
             avatar = BasicThreadDetails.Avatar(
+                __typename = "",
                 medium = null
             ),
             __typename = "User"
