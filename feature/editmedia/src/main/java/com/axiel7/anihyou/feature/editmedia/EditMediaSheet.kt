@@ -28,8 +28,8 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,7 +65,6 @@ import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
-import com.axiel7.anihyou.core.ui.composables.rememberSheetState
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -119,7 +118,7 @@ private fun EditMediaSheetContent(
     event: EditMediaEvent?,
     bottomPadding: Dp = 0.dp,
     scope: CoroutineScope = rememberCoroutineScope(),
-    sheetState: SheetState = rememberModalBottomSheetState(),
+    sheetState: SheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden),
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
@@ -440,10 +439,7 @@ private fun EditMediaSheetPreview() {
             EditMediaSheetContent(
                 uiState = EditMediaUiState(),
                 event = null,
-                sheetState = rememberSheetState(
-                    skipPartiallyExpanded = true,
-                    initialValue = SheetValue.Expanded
-                ),
+                sheetState = rememberBottomSheetState(initialValue = SheetValue.Expanded),
                 onEntryUpdated = {},
                 onDismissed = {}
             )
