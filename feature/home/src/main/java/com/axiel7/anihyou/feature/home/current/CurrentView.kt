@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.home.current
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Column
@@ -57,7 +55,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItemPlaceholder
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun CurrentView(
@@ -65,9 +63,7 @@ fun CurrentView(
     navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: CurrentViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
-    )
+    val viewModel: CurrentViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CurrentContent(

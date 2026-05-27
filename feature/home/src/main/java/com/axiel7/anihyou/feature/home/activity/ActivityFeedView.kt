@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.home.activity
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +32,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityTypeChip
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun ActivityFeedView(
@@ -42,9 +40,7 @@ fun ActivityFeedView(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: ActivityFeedViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
-    )
+    val viewModel: ActivityFeedViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ActivityFeedContent(

@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.home
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -40,7 +38,7 @@ import com.axiel7.anihyou.feature.home.activity.ActivityFeedView
 import com.axiel7.anihyou.feature.home.current.CurrentView
 import com.axiel7.anihyou.feature.home.discover.DiscoverView
 import com.axiel7.anihyou.feature.login.LoginView
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun HomeView(
@@ -51,9 +49,7 @@ fun HomeView(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: HomeViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
-    )
+    val viewModel: HomeViewModel = koinActivityViewModel()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
