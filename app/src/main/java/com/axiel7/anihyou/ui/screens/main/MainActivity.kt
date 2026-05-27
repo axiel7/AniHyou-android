@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.ReportDrawn
@@ -28,6 +29,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -125,6 +127,11 @@ class MainActivity : AppCompatActivity() {
                         event = viewModel,
                         homeTab = homeTab,
                         deepLink = deepLink,
+                        setNavigationBarContrastEnforced = {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                window.isNavigationBarContrastEnforced = it
+                            }
+                        }
                     )
                 }
             }
@@ -183,6 +190,7 @@ fun MainView(
     event: MainEvent?,
     homeTab: HomeTab,
     deepLink: DeepLink?,
+    setNavigationBarContrastEnforced: (Boolean) -> Unit,
 ) {
     val startKey = remember(tabToOpen) {
         tabToOpen.toBottomDestinationRoute() ?: BottomDestination.Home.route
@@ -194,6 +202,10 @@ fun MainView(
     }
     val navActionManager = NavActionManager.rememberNavActionManager(navigator)
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+    LaunchedEffect(isBottomDestination) {
+        setNavigationBarContrastEnforced(!isBottomDestination)
+    }
 
     Scaffold(
         bottomBar = {
@@ -256,7 +268,8 @@ private fun MainPreview() {
             tabToOpen = 0,
             event = null,
             homeTab = HomeTab.DISCOVER,
-            deepLink = null
+            deepLink = null,
+            setNavigationBarContrastEnforced = {},
         )
     }
 }
