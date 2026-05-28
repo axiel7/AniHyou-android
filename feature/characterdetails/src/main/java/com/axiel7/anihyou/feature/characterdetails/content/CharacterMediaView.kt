@@ -74,7 +74,7 @@ fun CharacterMediaView(
                 },
                 status = item.node?.mediaListEntry?.basicMediaListEntry?.status,
                 onClick = {
-                    navigateToMediaDetails(item.node?.id!!)
+                    item.node?.id?.let(navigateToMediaDetails)
                 },
                 onLongClick = {
                     showEditSheet(item)

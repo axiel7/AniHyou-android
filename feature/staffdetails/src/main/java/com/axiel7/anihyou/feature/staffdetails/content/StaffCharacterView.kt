@@ -63,7 +63,7 @@ fun StaffCharacterView(
                     imageUrl = character?.image?.large,
                     subtitle = item.node?.title?.userPreferred.orEmpty(),
                     onClick = {
-                        navigateToCharacterDetails(character!!.id)
+                        character?.id?.let(navigateToCharacterDetails)
                     }
                 )
             }

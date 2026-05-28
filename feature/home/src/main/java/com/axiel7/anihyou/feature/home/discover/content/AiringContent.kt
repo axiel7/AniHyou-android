@@ -88,7 +88,7 @@ fun AiringContent(
                         score = item.media?.meanScore,
                         status = item.media?.mediaListEntry?.basicMediaListEntry?.status,
                         onClick = {
-                            navigateToMediaDetails(item.media!!.id)
+                            item.media?.id?.let(navigateToMediaDetails)
                         },
                         onLongClick = {
                             item.media?.let { media ->

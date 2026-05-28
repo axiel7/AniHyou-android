@@ -160,15 +160,17 @@ private fun ThreadDetailsContent(
                         translatorApp = uiState.translatorApp,
                         toggleLike = { event?.toggleLikeComment(item.id) ?: false },
                         navigateToUserDetails = {
-                            navActionManager.toUserDetails(item.user!!.id)
+                            item.user?.id?.let(navActionManager::toUserDetails)
                         },
                         navigateToPublishReply = { parentCommentId, id, text ->
-                            navActionManager.toPublishCommentReply(
-                                threadId = uiState.details!!.id,
-                                parentCommentId = parentCommentId,
-                                commentId = id,
-                                text = text,
-                            )
+                            uiState.details?.id?.let { threadId ->
+                                navActionManager.toPublishCommentReply(
+                                    threadId = threadId,
+                                    parentCommentId = parentCommentId,
+                                    commentId = id,
+                                    text = text,
+                                )
+                            }
                         },
                         uriHandler = uriHandler,
                     )
