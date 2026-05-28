@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Decode Keystore File
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v2
         id: android_keystore
         with:
           fileName: "android_keystore.keystore"
