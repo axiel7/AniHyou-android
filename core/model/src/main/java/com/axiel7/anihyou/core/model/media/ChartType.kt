@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.model.media
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.network.type.MediaFormat
@@ -31,6 +32,19 @@ enum class ChartType : Localizable {
         POPULAR_MANGA -> stringResource(R.string.top_popular)
         UPCOMING_MANGA -> stringResource(R.string.upcoming)
         PUBLISHING_MANGA -> stringResource(R.string.publishing)
+    }
+
+    @DrawableRes
+    fun icon() = when (this) {
+        TOP_ANIME -> R.drawable.star_24
+        POPULAR_ANIME -> R.drawable.trending_up_24
+        UPCOMING_ANIME -> R.drawable.schedule_24
+        AIRING_ANIME -> R.drawable.rss_feed_24
+        TOP_MOVIES -> R.drawable.movie_24
+        TOP_MANGA -> R.drawable.star_24
+        POPULAR_MANGA -> R.drawable.trending_up_24
+        UPCOMING_MANGA -> R.drawable.schedule_24
+        PUBLISHING_MANGA -> R.drawable.rss_feed_24
     }
 
     val mediaType
@@ -77,4 +91,14 @@ enum class ChartType : Localizable {
             TOP_MOVIES -> MediaFormat.MOVIE
             else -> null
         }
+
+    companion object {
+        val animeCharts = listOf(
+            TOP_ANIME, POPULAR_ANIME, UPCOMING_ANIME, AIRING_ANIME, TOP_MOVIES
+        )
+
+        val mangaCharts = listOf(
+            TOP_MANGA, POPULAR_MANGA, UPCOMING_MANGA, PUBLISHING_MANGA
+        )
+    }
 }

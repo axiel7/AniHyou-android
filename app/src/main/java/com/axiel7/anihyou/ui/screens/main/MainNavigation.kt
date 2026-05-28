@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
@@ -39,8 +38,8 @@ import com.axiel7.anihyou.feature.activitydetails.ActivityDetailsView
 import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityView
 import com.axiel7.anihyou.feature.calendar.CalendarView
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsView
-import com.axiel7.anihyou.feature.explore.ExploreView
 import com.axiel7.anihyou.feature.explore.charts.MediaChartListView
+import com.axiel7.anihyou.feature.explore.discover.DiscoverView
 import com.axiel7.anihyou.feature.explore.search.SearchView
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.feature.home.HomeView
@@ -158,8 +157,6 @@ fun MainNavigation(
                 isLoggedIn = isLoggedIn,
                 defaultHomeTab = homeTab,
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                contentPadding = if (isCompactScreen) PaddingValues(bottom = 16.dp)
-                else PaddingValues(bottom = 16.dp + bottomPadding),
                 uriHandler = markdownUriHandler,
                 navActionManager = navActionManager,
             )
@@ -220,9 +217,9 @@ fun MainNavigation(
         entry<Routes.Explore>(
             metadata = topNavigationTransitionSpec
         ) {
-            ExploreView(
+            DiscoverView(
                 isLoggedIn = isLoggedIn,
-                modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
+                contentPadding = if (isCompactScreen) PaddingValues(bottom = bottomPadding) else PaddingValues(),
                 navActionManager = navActionManager,
             )
         }

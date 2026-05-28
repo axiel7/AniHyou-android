@@ -36,7 +36,6 @@ import com.axiel7.anihyou.core.ui.composables.IconButtonWithBadge
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.feature.home.activity.ActivityFeedView
 import com.axiel7.anihyou.feature.home.current.CurrentView
-import com.axiel7.anihyou.feature.home.discover.DiscoverView
 import com.axiel7.anihyou.feature.login.LoginView
 import org.koin.compose.viewmodel.koinActivityViewModel
 
@@ -45,7 +44,6 @@ fun HomeView(
     isLoggedIn: Boolean,
     defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
@@ -114,15 +112,6 @@ fun HomeView(
                 }
             }
             when (HomeTab.entries[selectedTabIndex]) {
-                HomeTab.DISCOVER ->
-                    DiscoverView(
-                        isLoggedIn = isLoggedIn,
-                        snackbarManager = snackbarManager,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = contentPadding,
-                        navActionManager = navActionManager,
-                    )
-
                 HomeTab.ACTIVITY_FEED -> {
                     if (isLoggedIn) {
                         ActivityFeedView(

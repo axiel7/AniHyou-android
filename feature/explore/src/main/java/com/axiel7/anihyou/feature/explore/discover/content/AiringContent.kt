@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.home.discover.content
+package com.axiel7.anihyou.feature.explore.discover.content
 
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text

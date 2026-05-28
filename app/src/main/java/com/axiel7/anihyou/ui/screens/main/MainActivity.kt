@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
         val initialBlurAdult = viewModel.blurAdultContent.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
-        val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
+        val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -273,7 +273,7 @@ private fun MainPreview() {
             isLoggedIn = false,
             tabToOpen = 0,
             event = null,
-            homeTab = HomeTab.DISCOVER,
+            homeTab = HomeTab.CURRENT,
             deepLink = null,
             setNavigationBarContrastEnforced = {},
         )

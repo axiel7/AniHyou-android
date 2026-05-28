@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.home.discover
+package com.axiel7.anihyou.feature.explore.discover
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope

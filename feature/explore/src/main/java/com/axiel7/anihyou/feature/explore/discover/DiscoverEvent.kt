@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.home.discover
+package com.axiel7.anihyou.feature.explore.discover
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent

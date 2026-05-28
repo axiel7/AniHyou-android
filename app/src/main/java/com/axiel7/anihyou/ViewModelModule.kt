@@ -13,7 +13,7 @@ import com.axiel7.anihyou.feature.explore.season.SeasonAnimeViewModel
 import com.axiel7.anihyou.feature.home.HomeViewModel
 import com.axiel7.anihyou.feature.home.activity.ActivityFeedViewModel
 import com.axiel7.anihyou.feature.home.current.CurrentViewModel
-import com.axiel7.anihyou.feature.home.discover.DiscoverViewModel
+import com.axiel7.anihyou.feature.explore.discover.DiscoverViewModel
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityViewModel
 import com.axiel7.anihyou.feature.notifications.NotificationsViewModel
@@ -33,7 +33,6 @@ import com.axiel7.anihyou.feature.usermedialist.UserMediaListViewModel
 import com.axiel7.anihyou.ui.screens.main.MainViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.viewModel
 
 val viewModelModule = module {
     viewModelOf(::MainViewModel)

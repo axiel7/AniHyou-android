@@ -216,7 +216,7 @@ class DefaultPreferencesRepository (
         dataStore.setValue(USE_BLACK_COLORS_KEY, value)
     }
 
-    val lastTab = dataStore.getValue(key = LAST_TAB_KEY, default = 0)
+    val lastTab = dataStore.getValue(key = LAST_TAB_KEY, default = DefaultTab.EXPLORE.ordinal - 1)
     suspend fun setLastTab(value: Int) {
         dataStore.setValue(LAST_TAB_KEY, value)
     }
@@ -231,7 +231,7 @@ class DefaultPreferencesRepository (
 
     // home
     val defaultHomeTab =
-        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.ordinal)
+        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.CURRENT.ordinal)
             .map { HomeTab.valueOf(it) }
 
     suspend fun setDefaultHomeTab(value: HomeTab) {

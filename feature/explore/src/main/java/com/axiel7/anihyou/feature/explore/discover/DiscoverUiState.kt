@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.home.discover
+package com.axiel7.anihyou.feature.explore.discover
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -11,9 +11,12 @@ import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.model.media.currentAnimeSeason
+import java.time.LocalDateTime
 
 @Stable
 data class DiscoverUiState(
+    val currentSeason: AnimeSeason = LocalDateTime.now().currentAnimeSeason(),
     val infos: SnapshotStateList<DiscoverInfo>,
     val airingAnime: SnapshotStateList<AiringAnimesQuery.AiringSchedule> = mutableStateListOf(),
     val airingAnimeOnMyList: SnapshotStateList<AiringOnMyListQuery.Medium> = mutableStateListOf(),
