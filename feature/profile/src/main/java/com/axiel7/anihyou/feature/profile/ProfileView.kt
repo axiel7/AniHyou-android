@@ -74,6 +74,7 @@ import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesView
 import com.axiel7.anihyou.feature.profile.social.UserSocialView
 import com.axiel7.anihyou.feature.profile.stats.UserStatsView
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -84,12 +85,9 @@ fun ProfileView(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: ProfileViewModel = koinViewModel(
-        parameters = { parametersOf(arguments) },
-        viewModelStoreOwner = if (arguments.id == null && arguments.userName == null)
-            LocalActivity.current as AppCompatActivity
-        else LocalViewModelStoreOwner.current!!
-    )
+    val viewModel: ProfileViewModel = if (arguments.id == null && arguments.userName == null)
+        koinActivityViewModel { parametersOf(arguments) }
+    else koinViewModel { parametersOf(arguments) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ProfileContent(

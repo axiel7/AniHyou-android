@@ -58,6 +58,7 @@ import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
 import com.axiel7.anihyou.feature.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.composables.SortMenu
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -67,12 +68,10 @@ fun UserMediaListHostView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserMediaListViewModel = koinViewModel(
-        key = "${arguments.mediaType}${arguments.userId}",
-        parameters = { parametersOf(arguments) },
-        viewModelStoreOwner = if (arguments.userId == 0) LocalActivity.current as AppCompatActivity
-        else LocalViewModelStoreOwner.current!!
-    )
+    val key = "${arguments.mediaType}${arguments.userId}"
+    val viewModel: UserMediaListViewModel = if (arguments.userId == 0)
+        koinActivityViewModel(key = key) { parametersOf(arguments) }
+    else koinViewModel(key = key) { parametersOf(arguments) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserMediaListHostContent(
