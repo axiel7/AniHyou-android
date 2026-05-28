@@ -15,11 +15,13 @@ import com.axiel7.anihyou.core.model.media.asMediaListStatus
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
+import com.axiel7.anihyou.core.model.media.plainName
 import com.axiel7.anihyou.core.model.media.titleComparator
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
@@ -229,34 +231,13 @@ class UserMediaListViewModel(
     }
 
     override fun getRandomPlannedEntry(chunk: Int) {
-        if (chunk == 1 && mutableUiState.value.plannedEntriesIds.isNotEmpty()) {
-            mutableUiState.update {
-                it.copy(randomEntryId = it.plannedEntriesIds.random())
+        uiState.value.run {
+            val plannedAndReleasedList = lists[MediaListStatus.PLANNING.plainName()]?.filter {
+                it.media?.status != MediaStatus.NOT_YET_RELEASED
             }
-        } else {
-            viewModelScope.launch {
-                var hasNextPage = false
-                mediaListRepository.getMediaListIds(
-                    userId = mutableUiState.value.userId ?: myUserId.first(),
-                    type = mutableUiState.value.mediaType,
-                    status = MediaListStatus.PLANNING,
-                    chunk = chunk
-                ).collectLatest { result ->
-                    mutableUiState.update {
-                        if (result is PagedResult.Success) {
-                            hasNextPage = result.hasNextPage
-                            val newList = it.plannedEntriesIds + result.list
-                            it.copy(
-                                plannedEntriesIds = newList,
-                                randomEntryId = if (!result.hasNextPage && newList.isNotEmpty())
-                                    newList.random() else null,
-                                isLoading = result.hasNextPage
-                            )
-                        } else result.toUiState()
-                    }
-                }
-                if (hasNextPage) {
-                    getRandomPlannedEntry(chunk + 1)
+            if (!plannedAndReleasedList.isNullOrEmpty()) {
+                mutableUiState.update {
+                    it.copy(randomEntryId = plannedAndReleasedList.random().mediaId)
                 }
             }
         }
