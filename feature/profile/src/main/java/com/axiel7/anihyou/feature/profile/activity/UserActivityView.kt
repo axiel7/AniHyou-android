@@ -27,6 +27,7 @@ import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.profile.ProfileEvent
 import com.axiel7.anihyou.feature.profile.ProfileUiState
 
@@ -40,6 +41,7 @@ fun UserActivityView(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyListState()
     if (!uiState.isLoadingActivity) {
@@ -85,6 +87,7 @@ fun UserActivityView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
+                        blurImage = blurAdult && activity.media?.isAdult == true,
                         imageUrl = activity.media?.coverImage?.medium,
                         isLocked = activity.isLocked,
                         onClick = {

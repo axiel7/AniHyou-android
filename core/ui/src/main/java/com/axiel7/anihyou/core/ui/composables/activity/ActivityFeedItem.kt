@@ -42,6 +42,7 @@ fun ActivityFeedItem(
     replyCount: Int,
     likeCount: Int,
     isLiked: Boolean?,
+    blurCover: Boolean = false,
     mediaCoverUrl: String? = null,
     showMenu: Boolean = false,
     onClick: () -> Unit,
@@ -79,6 +80,7 @@ fun ActivityFeedItem(
             if (type == ActivityType.MEDIA_LIST) {
                 MediaPoster(
                     url = mediaCoverUrl,
+                    enableBlur = blurCover,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(

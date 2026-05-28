@@ -30,6 +30,7 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityTypeChip
 import org.koin.compose.viewmodel.koinActivityViewModel
@@ -61,6 +62,7 @@ private fun ActivityFeedContent(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
 
     val listState = rememberLazyListState()
@@ -122,6 +124,7 @@ private fun ActivityFeedContent(
                         replyCount = it.replyCount,
                         likeCount = it.likeCount,
                         isLiked = it.isLiked,
+                        blurCover = blurAdult && it.media?.isAdult == true,
                         mediaCoverUrl = it.media?.coverImage?.medium,
                         onClick = {
                             navActionManager.toActivityDetails(it.id)

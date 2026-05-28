@@ -21,6 +21,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -32,6 +33,7 @@ fun DiscoverMediaContent(
     onClickHeader: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     HorizontalListHeader(
         text = title,
         onClick = onClickHeader
@@ -46,6 +48,7 @@ fun DiscoverMediaContent(
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .semantics {

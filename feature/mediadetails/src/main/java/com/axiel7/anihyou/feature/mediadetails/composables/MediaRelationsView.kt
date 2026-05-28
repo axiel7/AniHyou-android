@@ -23,6 +23,7 @@ import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
 
 @Composable
@@ -31,6 +32,7 @@ fun MediaRelationsView(
     fetchData: () -> Unit,
     navigateToDetails: (Int) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val isLoading = uiState.relationsAndRecommendations == null
 
     LaunchedEffect(uiState.relationsAndRecommendations) {
@@ -57,6 +59,7 @@ fun MediaRelationsView(
                     MediaItemVertical(
                         title = item.mediaRelated.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
+                        blurImage = blurAdult && item.mediaRelated.node?.basicMediaDetails?.isAdult == true,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             Text(
@@ -94,6 +97,8 @@ fun MediaRelationsView(
                         title = item.mediaRecommended.mediaRecommendation?.basicMediaDetails
                             ?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
+                        blurImage = blurAdult
+                                && item.mediaRecommended.mediaRecommendation?.basicMediaDetails?.isAdult == true,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             TextIconHorizontal(

@@ -14,6 +14,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                         medium
                         large
                     }
+                    isAdult
                 }
                 type
                 createdAt
@@ -213,6 +214,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                         medium
                         large
                     }
+                    isAdult
                 }
                 type
                 createdAt
@@ -230,6 +232,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                         medium
                         large
                     }
+                    isAdult
                 }
                 type
                 createdAt
@@ -247,6 +250,7 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                         medium
                         large
                     }
+                    isAdult
                 }
                 type
                 createdAt

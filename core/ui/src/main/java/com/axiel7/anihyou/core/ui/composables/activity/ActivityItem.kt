@@ -59,6 +59,7 @@ fun ActivityItem(
     likeCount: Int,
     isLiked: Boolean?,
     modifier: Modifier = Modifier,
+    blurImage: Boolean = false,
     imageUrl: String? = null,
     username: String? = null,
     isPrivate: Boolean? = null,
@@ -77,6 +78,7 @@ fun ActivityItem(
         if (type == ActivityType.MEDIA_LIST) {
             MediaPoster(
                 url = imageUrl,
+                enableBlur = blurImage,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .size(ACTIVITY_IMAGE_SIZE.dp)

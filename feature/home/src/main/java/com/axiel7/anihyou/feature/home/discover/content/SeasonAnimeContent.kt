@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @Composable
 fun SeasonAnimeContent(
@@ -29,6 +30,7 @@ fun SeasonAnimeContent(
     navigateToAnimeSeason: (AnimeSeason) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     HorizontalListHeader(
         text = if (isNextSeason) stringResource(R.string.next_season)
         else animeSeason.localized(),
@@ -46,6 +48,7 @@ fun SeasonAnimeContent(
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.padding(horizontal = 8.dp),
                 subtitle = {
                     item.meanScore?.let { meanScore ->

@@ -23,6 +23,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @Composable
 fun CharacterMediaView(
@@ -35,6 +36,7 @@ fun CharacterMediaView(
     showVoiceActorsSheet: (CharacterMediaQuery.Edge) -> Unit,
     showEditSheet: (CharacterMediaQuery.Edge) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()
     if (!isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
@@ -53,6 +55,7 @@ fun CharacterMediaView(
             MediaItemHorizontal(
                 title = item.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.node?.coverImage?.large,
+                blurImage = blurAdult && item.node?.basicMediaDetails?.isAdult == true,
                 subtitle1 = {
                     Text(
                         text = item.characterRole?.localized().orEmpty(),

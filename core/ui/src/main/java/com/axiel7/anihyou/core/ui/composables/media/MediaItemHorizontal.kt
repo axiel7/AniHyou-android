@@ -47,6 +47,7 @@ import com.materialkolor.ktx.harmonize
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
+    blurImage: Boolean,
     subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     status: MediaListStatus? = null,
@@ -58,6 +59,7 @@ fun MediaItemHorizontal(
     MediaItemHorizontal(
         title = title,
         imageUrl = imageUrl,
+        blurImage = blurImage,
         subtitle1 = subtitle1,
         subtitle2 = subtitle2,
         badgeContent = status?.let {
@@ -85,6 +87,7 @@ fun MediaItemHorizontal(
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
+    blurImage: Boolean,
     subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
@@ -108,6 +111,7 @@ fun MediaItemHorizontal(
             ) {
                 MediaPoster(
                     url = imageUrl,
+                    enableBlur = blurImage,
                     showShadow = false,
                     modifier = posterSizeModifier
                 )
@@ -162,6 +166,7 @@ fun MediaItemHorizontal(
 fun MediaItemHorizontal(
     title: String,
     imageUrl: String?,
+    blurImage: Boolean,
     score: Int,
     format: MediaFormat,
     year: Int?,
@@ -174,6 +179,7 @@ fun MediaItemHorizontal(
     MediaItemHorizontal(
         title = title,
         imageUrl = imageUrl,
+        blurImage = blurImage,
         subtitle1 = {
             Text(
                 text = buildString {
@@ -262,6 +268,7 @@ private fun MediaItemHorizontalPreview() {
                 MediaItemHorizontal(
                     title = "This is a very large anime title that should serve as a preview example",
                     imageUrl = null,
+                    blurImage = false,
                     status = MediaListStatus.COMPLETED,
                     topBadgeContent = {
                         Text(

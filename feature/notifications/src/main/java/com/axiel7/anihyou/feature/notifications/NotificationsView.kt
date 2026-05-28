@@ -36,6 +36,7 @@ import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItem
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItemPlaceholder
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,6 +64,7 @@ private fun NotificationsContent(
     event: NotificationsEvent?,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -124,6 +126,7 @@ private fun NotificationsContent(
             ) { item ->
                 NotificationItem(
                     title = item.text,
+                    blurImage = blurAdult && item.isAdultMedia,
                     imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
                         ?.secondsToLegibleText(

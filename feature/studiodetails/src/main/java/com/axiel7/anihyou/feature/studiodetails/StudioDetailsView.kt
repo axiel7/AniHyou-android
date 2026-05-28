@@ -40,6 +40,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -64,6 +65,7 @@ private fun StudioDetailsContent(
     event: StudioDetailsEvent?,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -110,6 +112,7 @@ private fun StudioDetailsContent(
                 MediaItemVertical(
                     title = item.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
+                    blurImage = blurAdult && item.isAdult == true,
                     modifier = Modifier.wrapContentWidth(),
                     subtitle = {
                         Text(

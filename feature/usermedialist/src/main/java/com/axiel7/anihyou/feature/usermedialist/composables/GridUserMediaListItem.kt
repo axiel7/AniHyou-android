@@ -45,6 +45,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -55,6 +56,7 @@ fun GridUserMediaListItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     Card(
         modifier = Modifier
@@ -68,6 +70,7 @@ fun GridUserMediaListItem(
             Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
+                    enableBlur = blurAdult && item.media?.basicMediaDetails?.isAdult == true,
                     showShadow = false,
                     modifier = Modifier
                         .fillMaxWidth()

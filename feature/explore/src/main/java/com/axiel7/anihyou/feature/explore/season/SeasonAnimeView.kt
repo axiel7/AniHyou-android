@@ -63,6 +63,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.season.composables.SeasonChartFilterSheet
 import org.koin.compose.viewmodel.koinViewModel
@@ -222,6 +223,7 @@ private fun SeasonalGrid(
     onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
     onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     LazyVerticalGrid(
@@ -239,6 +241,7 @@ private fun SeasonalGrid(
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
                     item.meanScore?.let { meanScore ->
@@ -267,6 +270,7 @@ private fun SeasonalList(
     onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
     onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     LazyColumn(
@@ -280,6 +284,7 @@ private fun SeasonalList(
             MediaItemHorizontal(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 subtitle1 = {
                     item.nextAiringEpisode?.let { nextAiringEpisode ->
                         Text(

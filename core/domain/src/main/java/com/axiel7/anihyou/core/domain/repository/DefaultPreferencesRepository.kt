@@ -84,6 +84,11 @@ class DefaultPreferencesRepository (
         dataStore.setValue(DISPLAY_ADULT_KEY, value)
     }
 
+    val blurAdult = dataStore.getValue(BLUR_ADULT_KEY, default = true)
+    suspend fun setBlurAdult(value: Boolean) {
+        dataStore.setValue(BLUR_ADULT_KEY, value)
+    }
+
     // profile info
     val profileColor = dataStore.getValue(PROFILE_COLOR_KEY).map {
         if (it != null) colorFromHex(it) else null
@@ -302,6 +307,7 @@ class DefaultPreferencesRepository (
 
         private val TITLE_LANGUAGE_KEY = stringPreferencesKey("title_language")
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
+        private val BLUR_ADULT_KEY = booleanPreferencesKey("blur_adult")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")

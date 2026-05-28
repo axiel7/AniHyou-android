@@ -77,6 +77,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlacehold
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchCountryChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDateChip
@@ -185,6 +186,7 @@ fun SearchContentView(
     event: SearchEvent?,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val scope = rememberCoroutineScope()
     val snackbarManager = rememberSnackbarManager()
     val listState = rememberLazyListState()
@@ -318,6 +320,7 @@ fun SearchContentView(
                         MediaItemHorizontal(
                             title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                             imageUrl = item.coverImage?.large,
+                            blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                             score = item.meanScore ?: 0,
                             format = item.format ?: MediaFormat.UNKNOWN__,
                             year = item.startDate?.year,

@@ -50,6 +50,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDate
@@ -153,6 +154,7 @@ private fun CalendarDayView(
     contentPadding: PaddingValues = PaddingValues(),
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val haptic = LocalHapticFeedback.current
 
     val listState = rememberLazyGridState()
@@ -188,6 +190,7 @@ private fun CalendarDayView(
             MediaItemVertical(
                 title = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.media?.coverImage?.large,
+                blurImage = blurAdult && item.media?.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
                     Text(

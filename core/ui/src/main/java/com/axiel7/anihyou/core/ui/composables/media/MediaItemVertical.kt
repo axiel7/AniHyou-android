@@ -44,6 +44,7 @@ const val MEDIA_ITEM_VERTICAL_HEIGHT = 200
 fun MediaItemVertical(
     title: String,
     imageUrl: String?,
+    blurImage: Boolean,
     modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
     status: MediaListStatus?,
@@ -55,6 +56,7 @@ fun MediaItemVertical(
     MediaItemVertical(
         title = title,
         imageUrl = imageUrl,
+        blurImage = blurImage,
         modifier = modifier,
         subtitle = subtitle,
         badgeContent = status?.let {
@@ -83,6 +85,7 @@ fun MediaItemVertical(
 fun MediaItemVertical(
     title: String,
     imageUrl: String?,
+    blurImage: Boolean,
     modifier: Modifier = Modifier,
     subtitle: @Composable (() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
@@ -113,6 +116,7 @@ fun MediaItemVertical(
             ) {
                 MediaPoster(
                     url = imageUrl,
+                    enableBlur = blurImage,
                     showShadow = false,
                     modifier = posterSizeModifier
                 )
@@ -189,6 +193,7 @@ private fun MediaItemVerticalPreview() {
             MediaItemVertical(
                 title = "This is a very large anime title that should serve as a preview example",
                 imageUrl = null,
+                blurImage = false,
                 subtitle = {
                     SmallScoreIndicator(score = 83)
                 },

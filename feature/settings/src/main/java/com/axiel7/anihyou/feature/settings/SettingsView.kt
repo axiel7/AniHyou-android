@@ -273,6 +273,13 @@ private fun SettingsContent(
                     onValueChange = { event?.setDisplayAdultContent(it) }
                 )
                 SwitchPreference(
+                    title = stringResource(R.string.blur_adult_content),
+                    preferenceValue = uiState.blurAdultContent,
+                    icon = R.drawable.blur_on_24,
+                    onValueChange = { event?.setBlurAdultContent(it) }
+                )
+
+                SwitchPreference(
                     title = stringResource(R.string.airing_on_my_list),
                     preferenceValue = uiState.airingOnMyList,
                     subtitle = stringResource(R.string.airing_on_my_list_summary),

@@ -17,6 +17,7 @@ import com.axiel7.anihyou.core.ui.composables.media.AiringAnimeHorizontalItem
 import com.axiel7.anihyou.core.ui.composables.media.AiringAnimeHorizontalItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @Composable
 fun AiringContent(
@@ -28,6 +29,7 @@ fun AiringContent(
     navigateToCalendar: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit
 ) {
+    val blurAdult = LocalBlurAdult.current
     HorizontalListHeader(
         text = stringResource(R.string.airing_soon),
         onClick = navigateToCalendar
@@ -48,6 +50,7 @@ fun AiringContent(
                             item.nextAiringEpisode?.timeUntilAiring?.toLong()
                                 ?.secondsToLegibleText() ?: UNKNOWN_CHAR
                         ),
+                        blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                         imageUrl = item.coverImage?.large,
                         score = item.meanScore,
                         status = item.mediaListEntry?.basicMediaListEntry?.status,

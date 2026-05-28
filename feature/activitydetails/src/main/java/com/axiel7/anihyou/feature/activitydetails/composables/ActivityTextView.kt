@@ -59,6 +59,7 @@ fun ActivityTextView(
     text: String,
     username: String?,
     avatarUrl: String?,
+    blurCover: Boolean = false,
     mediaCoverUrl: String? = null,
     createdAt: Int,
     replyCount: Int?,
@@ -103,6 +104,7 @@ fun ActivityTextView(
             if (mediaCoverUrl != null) {
                 MediaPoster(
                     url = mediaCoverUrl,
+                    enableBlur = blurCover,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(MEDIA_POSTER_TINY_HEIGHT.dp)

@@ -47,6 +47,8 @@ class MainViewModel(
         value?.let { PaletteStyle.valueOf(it) } ?: PaletteStyle.Expressive
     }
 
+    val blurAdultContent = defaultPreferencesRepository.blurAdult
+
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {
             defaultPreferencesRepository.setLastTab(index)

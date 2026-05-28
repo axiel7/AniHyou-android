@@ -58,6 +58,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.haze.blur)
+
     implementation(libs.markdown.renderer)
     implementation(libs.markdown.renderer.material3)
     implementation(libs.markdown.renderer.coil3)

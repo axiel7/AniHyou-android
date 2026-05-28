@@ -38,6 +38,7 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -66,6 +67,7 @@ private fun MediaActivityContent(
     uriHandler: MarkdownUriHandler,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -122,6 +124,7 @@ private fun MediaActivityContent(
                     replyCount = item.replyCount,
                     likeCount = item.likeCount,
                     isLiked = item.isLiked,
+                    blurCover = blurAdult && item.media?.isAdult == true,
                     mediaCoverUrl = item.media?.coverImage?.medium,
                     showMenu = uiState.isMine,
                     onClick = {

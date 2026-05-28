@@ -21,6 +21,7 @@ data class SettingsUiState(
     val appColorMode: AppColorMode? = null,
     val appColor: Color? = null,
     val colorPaletteStyle: String = PaletteStyle.Expressive.name,
+    val blurAdultContent: Boolean = true,
     val useGeneralListStyle: Boolean? = null,
     val generalListStyle: ListStyle? = null,
     val gridItemsPerRow: ItemsPerRow? = null,

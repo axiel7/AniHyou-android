@@ -40,6 +40,7 @@ import com.materialkolor.ktx.harmonize
 fun AiringAnimeHorizontalItem(
     title: String,
     subtitle: String,
+    blurImage: Boolean = false,
     imageUrl: String?,
     score: Int? = null,
     status: MediaListStatus? = null,
@@ -62,6 +63,7 @@ fun AiringAnimeHorizontalItem(
             ) {
                 MediaPoster(
                     url = imageUrl,
+                    enableBlur = blurImage,
                     showShadow = false,
                     modifier = posterSizeModifier
                 )

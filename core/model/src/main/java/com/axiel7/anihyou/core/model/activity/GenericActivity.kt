@@ -22,6 +22,7 @@ data class GenericActivity(
     val avatarUrl: String?,
     val mediaId: Int? = null,
     val mediaCoverUrl: String? = null,
+    val isAdultMedia: Boolean = false,
     val replies: List<ActivityReplyFragment>?,
     val listActivityFragment: ListActivityFragment? = null,
 ) {
@@ -60,6 +61,7 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     avatarUrl = user?.activityUser?.avatar?.medium,
     mediaId = listActivityFragment.media?.id,
     mediaCoverUrl = listActivityFragment.media?.coverImage?.medium,
+    isAdultMedia = listActivityFragment.media?.isAdult == true,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment },
     listActivityFragment = listActivityFragment,
 )

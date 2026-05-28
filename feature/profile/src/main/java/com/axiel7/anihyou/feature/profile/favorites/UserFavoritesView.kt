@@ -39,6 +39,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -70,6 +71,7 @@ private fun UserFavoritesContent(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
@@ -125,6 +127,7 @@ private fun UserFavoritesContent(
                             MediaItemVertical(
                                 title = item.title?.userPreferred.orEmpty(),
                                 imageUrl = item.coverImage?.large,
+                                blurImage = blurAdult && item.isAdult == true,
                                 modifier = Modifier.wrapContentWidth(),
                                 onClick = {
                                     navActionManager.toMediaDetails(item.id)
@@ -147,6 +150,7 @@ private fun UserFavoritesContent(
                             MediaItemVertical(
                                 title = item.title?.userPreferred.orEmpty(),
                                 imageUrl = item.coverImage?.large,
+                                blurImage = blurAdult && item.isAdult == true,
                                 modifier = Modifier.wrapContentWidth(),
                                 onClick = {
                                     navActionManager.toMediaDetails(item.id)

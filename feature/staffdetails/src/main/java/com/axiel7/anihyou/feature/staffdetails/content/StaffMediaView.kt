@@ -22,6 +22,7 @@ import com.axiel7.anihyou.core.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @Composable
 fun StaffMediaView(
@@ -35,6 +36,7 @@ fun StaffMediaView(
     showEditSheet: (Pair<Int, StaffMediaGrouped>) -> Unit,
     navigateToMediaDetails: (Int) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()
     if (!isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
@@ -63,6 +65,7 @@ fun StaffMediaView(
             MediaItemHorizontal(
                 title = item.second.value.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.second.value.node?.coverImage?.large,
+                blurImage = blurAdult && item.second.value.node?.basicMediaDetails?.isAdult == true,
                 subtitle1 = {
                     Text(
                         text = item.second.staffRoles.joinToString(),

@@ -42,6 +42,7 @@ fragment ListActivityFragment on ListActivity {
         coverImage {
             medium
         }
+        isAdult
     }
 }
 

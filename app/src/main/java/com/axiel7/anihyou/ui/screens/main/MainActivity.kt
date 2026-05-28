@@ -28,6 +28,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -53,6 +54,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
 import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import kotlinx.coroutines.runBlocking
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         val initialAppColor = viewModel.appColor.firstBlocking()
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
+        val initialBlurAdult = viewModel.blurAdultContent.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
 
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             )
             val paletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialPaletteStyle)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
+            val blurAdultContent by viewModel.blurAdultContent.collectAsStateWithLifecycle(initialBlurAdult)
 
             DisposableEffect(isDark) {
                 enableEdgeToEdge(
@@ -120,19 +124,21 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainView(
-                        windowSizeClass = windowSizeClass,
-                        isLoggedIn = isLoggedIn,
-                        tabToOpen = startTab,
-                        event = viewModel,
-                        homeTab = homeTab,
-                        deepLink = deepLink,
-                        setNavigationBarContrastEnforced = {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                window.isNavigationBarContrastEnforced = it
+                    CompositionLocalProvider(LocalBlurAdult provides blurAdultContent) {
+                        MainView(
+                            windowSizeClass = windowSizeClass,
+                            isLoggedIn = isLoggedIn,
+                            tabToOpen = startTab,
+                            event = viewModel,
+                            homeTab = homeTab,
+                            deepLink = deepLink,
+                            setNavigationBarContrastEnforced = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    window.isNavigationBarContrastEnforced = it
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

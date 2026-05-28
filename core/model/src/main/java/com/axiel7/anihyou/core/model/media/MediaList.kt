@@ -93,7 +93,8 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             episodes = 1095,
             chapters = null,
             volumes = null,
-            type = MediaType.ANIME
+            type = MediaType.ANIME,
+            isAdult = false,
         )
     ),
     id = 1,

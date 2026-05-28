@@ -37,6 +37,7 @@ import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -65,6 +66,7 @@ private fun MediaChartListContent(
     event: MediaChartEvent?,
     navActionManager: NavActionManager,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -117,6 +119,7 @@ private fun MediaChartListContent(
                 MediaItemHorizontal(
                     title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
+                    blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                     score = item.meanScore ?: 0,
                     format = item.format ?: MediaFormat.UNKNOWN__,
                     year = item.startDate?.year,

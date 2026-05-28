@@ -98,4 +98,5 @@ fragment BasicMediaDetails on Media {
     chapters
     volumes
     type
+    isAdult
 }

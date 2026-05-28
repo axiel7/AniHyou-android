@@ -155,6 +155,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setBlurAdultContent(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setBlurAdult(value)
+        }
+    }
+
     override fun setTranslatorApp(value: TranslatorApp) {
         viewModelScope.launch {
             defaultPreferencesRepository.setTranslatorApp(value)
@@ -278,6 +284,13 @@ class SettingsViewModel(
             .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(colorPaletteStyle = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.blurAdult
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(blurAdultContent = value) }
             }
             .launchIn(viewModelScope)
 

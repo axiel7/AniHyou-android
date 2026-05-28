@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.ui.utils
 
 import android.content.Context
+import androidx.compose.runtime.staticCompositionLocalOf
 import coil3.annotation.ExperimentalCoilApi
 import coil3.imageLoader
 import coil3.request.ImageRequest
@@ -16,4 +17,6 @@ object ImageUtils {
             .allowHardware(false)
             .build()
     ).image?.toBitmap()
+
+    val LocalBlurAdult = staticCompositionLocalOf { true }
 }
