@@ -15,8 +15,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -49,6 +53,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -99,10 +104,11 @@ fun SearchView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel: SearchViewModel = koinViewModel(parameters = { parametersOf(arguments, isLoggedIn) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var query by rememberSaveable { mutableStateOf("") }
+    val textFieldState = rememberTextFieldState()
     val performSearch = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
@@ -119,8 +125,7 @@ fun SearchView(
                 .fillMaxSize()
         ) {
             TextField(
-                value = query,
-                onValueChange = { query = it },
+                state = textFieldState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
@@ -135,10 +140,10 @@ fun SearchView(
                     BackIconButton(onClick = navActionManager::goBack)
                 },
                 trailingIcon = {
-                    if (query.isNotEmpty()) {
+                    if (textFieldState.text.isNotEmpty()) {
                         IconButton(
                             onClick = {
-                                query = ""
+                                textFieldState.clearText()
                                 performSearch.value = true
                             },
                             shapes = IconButtonDefaults.shapes()
@@ -151,10 +156,12 @@ fun SearchView(
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = { performSearch.value = true }
-                ),
-                singleLine = true,
+                onKeyboardAction = KeyboardActionHandler { defaultAction ->
+                    performSearch.value = true
+                    keyboardController?.hide()
+                    defaultAction()
+                },
+                lineLimits = TextFieldLineLimits.SingleLine,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -163,7 +170,7 @@ fun SearchView(
                 )
             )
             SearchContentView(
-                query = query,
+                textFieldState = textFieldState,
                 performSearch = performSearch,
                 initialGenre = arguments.genre,
                 initialTag = arguments.tag,
@@ -178,7 +185,7 @@ fun SearchView(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchContentView(
-    query: String,
+    textFieldState: TextFieldState,
     performSearch: MutableState<Boolean>,
     initialGenre: String?,
     initialTag: String?,
@@ -209,7 +216,7 @@ fun SearchContentView(
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
             listState.scrollToItem(0)
-            event?.setQuery(query)
+            event?.setQuery(textFieldState.text.toString())
             performSearch.value = false
         }
     }
@@ -519,7 +526,7 @@ private fun SearchPreview() {
     AniHyouTheme {
         Surface {
             SearchContentView(
-                query = "",
+                textFieldState = rememberTextFieldState(),
                 performSearch = remember { mutableStateOf(false) },
                 initialGenre = null,
                 initialTag = null,
