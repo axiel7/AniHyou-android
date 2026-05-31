@@ -650,5 +650,5 @@
     <string name="google_translate" translatable="false">Google</string>
     <string name="deepl" translatable="false">DeepL</string>
     <string name="translate_you" translatable="false">TranslateYou</string>
-    <string name="blur_adult_content">Blur adult content</string>
+    <string name="blur_adult_content">Blur adult media</string>
 </resources>
