@@ -5,15 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.MediaListRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.nextAnimeSeason
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaListSort
+import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -22,14 +26,18 @@ import java.time.LocalDateTime
 
 class DiscoverViewModel(
     private val mediaRepository: MediaRepository,
-    defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val mediaListRepository: MediaListRepository,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : UiStateViewModel<DiscoverUiState>(), DiscoverEvent {
 
     private val now = LocalDateTime.now()
 
+    private val myUserId = defaultPreferencesRepository.userId
+
     override val initialState =
         DiscoverUiState(
             infos = mutableStateListOf(
+                DiscoverInfo.CURRENTLY_WATCHING,
                 DiscoverInfo.AIRING,
                 DiscoverInfo.THIS_SEASON,
                 DiscoverInfo.TRENDING_ANIME
@@ -207,9 +215,37 @@ class DiscoverViewModel(
         }
     }
 
+    override fun fetchCurrentlyWatching() {
+        if (mutableUiState.value.currentlyWatching.isEmpty()) {
+            viewModelScope.launch {
+                val userId = myUserId.first() ?: return@launch
+                mediaListRepository.getUserMediaList(
+                    userId = userId,
+                    mediaType = MediaType.ANIME,
+                    statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
+                    sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                    fetchFromNetwork = false,
+                    page = 1,
+                    perPage = 20,
+                ).onEach { result ->
+                    mutableUiState.update {
+                        if (result is PagedResult.Success) {
+                            it.currentlyWatching.addAll(result.list)
+                        }
+                        it.copy(
+                            isLoadingCurrentlyWatching = result is PagedResult.Loading,
+                            error = (result as? PagedResult.Error)?.message
+                        )
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }
+    }
+
     override fun refresh() {
         mutableUiState.update { it.copy(isLoading = true) }
         mutableUiState.value.run {
+            currentlyWatching.clear()
             airingAnime.clear()
             airingAnimeOnMyList.clear()
             thisSeasonAnime.clear()
@@ -218,6 +254,7 @@ class DiscoverViewModel(
             trendingManga.clear()
             newlyAnime.clear()
             newlyManga.clear()
+            fetchCurrentlyWatching()
             if (airingOnMyList == true) fetchAiringAnimeOnMyList()
             else fetchAiringAnime()
             fetchThisSeasonAnime()

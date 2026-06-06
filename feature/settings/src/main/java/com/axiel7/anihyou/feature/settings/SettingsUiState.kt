@@ -28,6 +28,7 @@ data class SettingsUiState(
     val defaultTab: DefaultTab = DefaultTab.LAST_USED,
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
+    val tvdbApiKey: String? = null,
     val userSettings: UserSettings? = null,
     val isLoggedIn: Boolean = false,
     override val error: String? = null,

@@ -288,6 +288,13 @@ class DefaultPreferencesRepository (
         dataStore.setValue(COLOR_PALETTE_KEY, value)
     }
 
+    // TVDB API key
+    val tvdbApiKey = dataStore.getValue(key = TVDB_API_KEY)
+
+    suspend fun setTvdbApiKey(value: String?) {
+        dataStore.setValue(TVDB_API_KEY, value)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -320,5 +327,6 @@ class DefaultPreferencesRepository (
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
+        private val TVDB_API_KEY = stringPreferencesKey("tvdb_api_key")
     }
 }

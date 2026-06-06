@@ -10,11 +10,13 @@ import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.base.state.UiState
 
 @Stable
 data class DiscoverUiState(
     val infos: SnapshotStateList<DiscoverInfo>,
+    val currentlyWatching: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val airingAnime: SnapshotStateList<AiringAnimesQuery.AiringSchedule> = mutableStateListOf(),
     val airingAnimeOnMyList: SnapshotStateList<AiringOnMyListQuery.Medium> = mutableStateListOf(),
     val thisSeasonAnime: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
@@ -29,6 +31,7 @@ data class DiscoverUiState(
     val displayAdult: Boolean = false,
     val selectedMediaDetails: BasicMediaDetails? = null,
     val selectedMediaListEntry: BasicMediaListEntry? = null,
+    val isLoadingCurrentlyWatching: Boolean = true,
     val isLoadingAiring: Boolean = true,
     val isLoadingThisSeason: Boolean = true,
     val isLoadingTrendingAnime: Boolean = true,

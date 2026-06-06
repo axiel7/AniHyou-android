@@ -185,6 +185,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setTvdbApiKey(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setTvdbApiKey(value)
+        }
+    }
+
     override fun logOut(recreate: () -> Unit) {
         viewModelScope.launch {
             loginRepository.logOut()
@@ -314,6 +320,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.isNotificationsEnabled
             .onEach { value ->
                 mutableUiState.update { it.copy(isNotificationsEnabled = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.tvdbApiKey
+            .onEach { value ->
+                mutableUiState.update { it.copy(tvdbApiKey = value ?: "") }
             }
             .launchIn(viewModelScope)
 

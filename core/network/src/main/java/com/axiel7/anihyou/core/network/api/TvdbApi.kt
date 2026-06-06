@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.network.api
 
-import com.axiel7.anihyou.core.base.TVDB_API_KEY
 import com.axiel7.anihyou.core.base.TVDB_API_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,7 +19,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
  * API docs: https://thetvdb.github.io/v4-api/
  * Get a free key at: https://www.thetvdb.com/api-information
  */
-class TvdbApi(private val okHttpClient: OkHttpClient) {
+class TvdbApi(
+    private val okHttpClient: OkHttpClient,
+    private val keyProvider: suspend () -> String,
+) {
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
     private var cachedToken: String? = null
@@ -31,7 +33,8 @@ class TvdbApi(private val okHttpClient: OkHttpClient) {
         cachedToken?.let { return it }
         return withContext(Dispatchers.IO) {
             runCatching {
-                val body = """{"apikey":"$TVDB_API_KEY"}"""
+                val apiKey = keyProvider()
+                val body = """{"apikey":"$apiKey"}"""
                     .toRequestBody("application/json".toMediaType())
                 val request = Request.Builder()
                     .url("$TVDB_API_URL/login")

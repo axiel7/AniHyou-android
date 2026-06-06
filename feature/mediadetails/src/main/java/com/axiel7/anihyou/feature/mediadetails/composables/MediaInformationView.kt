@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.core.base.MIRURO_BASE_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.episodeNumber
@@ -278,6 +279,22 @@ fun MediaInformationView(
                         )
                     }
                 }
+            }
+        }
+
+        // Miruro streaming
+        if (isAnime) {
+            val searchTitle = uiState.details?.title?.romaji
+                ?: uiState.details?.title?.english
+                ?: uiState.details?.title?.userPreferred
+            if (searchTitle != null) {
+                AssistChip(
+                    onClick = {
+                        context.openActionView("$MIRURO_BASE_URL/search?query=${java.net.URLEncoder.encode(searchTitle, "UTF-8")}")
+                    },
+                    label = { Text(text = "Miruro") },
+                    modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
+                )
             }
         }
 

@@ -58,4 +58,6 @@ interface SettingsEvent : UiEvent {
     fun setAiringNotification(value: Boolean)
 
     fun logOut(recreate: () -> Unit)
+
+    fun setTvdbApiKey(value: String)
 }

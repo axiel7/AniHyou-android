@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 
 @Immutable
 interface DiscoverEvent : UiEvent {
@@ -18,4 +19,5 @@ interface DiscoverEvent : UiEvent {
     fun fetchNewlyManga()
     fun refresh()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
+    fun fetchCurrentlyWatching()
 }

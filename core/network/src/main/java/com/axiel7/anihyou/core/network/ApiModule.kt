@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.network
 
+import com.axiel7.anihyou.core.base.TvdbKeyProvider
 import com.axiel7.anihyou.core.network.api.ActivityApi
 import com.axiel7.anihyou.core.network.api.CharacterApi
 import com.axiel7.anihyou.core.network.api.FavoriteApi
@@ -32,6 +33,6 @@ val apiModule = module {
     singleOf(::StudioApi)
     singleOf(::ThreadApi)
     singleOf(::UserApi)
-    // TheTVDB — English dub air dates
-    single { TvdbApi(get(named("plain"))) }
+    // TheTVDB — English dub air dates (key provided by domain module)
+    single { TvdbApi(get(named("plain")), get<TvdbKeyProvider>()) }
 }

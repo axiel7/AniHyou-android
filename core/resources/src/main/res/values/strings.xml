@@ -645,4 +645,8 @@
     <string name="app_installed_required">No nearby device detected, please install the latest AniHyou app version on your Android phone</string>
     <string name="minimum_tag_percentage">Minimum Tag Percentage</string>
     <string name="search_my_list">Search my list…</string>
+    <string name="month">Month</string>
+    <string name="week">Week</string>
+    <string name="day">Day</string>
+    <string name="currently_watching">Currently Watching</string>
 </resources>

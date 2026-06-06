@@ -7,13 +7,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -261,6 +268,42 @@ private fun SettingsContent(
                     preferenceValue = uiState.airingOnMyList,
                     subtitle = stringResource(R.string.airing_on_my_list_summary),
                     onValueChange = { event?.setAiringOnMyList(it) }
+                )
+
+                var showTvdbDialog by remember { mutableStateOf(false) }
+                if (showTvdbDialog) {
+                    var tvdbKeyInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
+                    AlertDialog(
+                        onDismissRequest = { showTvdbDialog = false },
+                        title = { Text(text = "TVDB API Key") },
+                        text = {
+                            OutlinedTextField(
+                                value = tvdbKeyInput,
+                                onValueChange = { tvdbKeyInput = it },
+                                label = { Text("API Key") },
+                                singleLine = true
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                event?.setTvdbApiKey(tvdbKeyInput)
+                                showTvdbDialog = false
+                            }) {
+                                Text(stringResource(R.string.save))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showTvdbDialog = false }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+                PlainPreference(
+                    title = "TVDB API Key",
+                    subtitle = if (uiState.tvdbApiKey.isNullOrEmpty()) "Not set" else "Set",
+                    icon = R.drawable.code_24,
+                    onClick = { showTvdbDialog = true }
                 )
 
                 PreferencesTitle(text = stringResource(R.string.notifications))

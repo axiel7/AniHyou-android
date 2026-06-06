@@ -45,6 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 
 enum class DiscoverInfo {
+    CURRENTLY_WATCHING,
     AIRING,
     THIS_SEASON,
     TRENDING_ANIME,
@@ -129,6 +130,21 @@ private fun DiscoverContent(
         ) {
             items(uiState.infos) { item ->
                 when (item) {
+                    DiscoverInfo.CURRENTLY_WATCHING -> {
+                        LaunchedEffect(Unit) {
+                            event?.fetchCurrentlyWatching()
+                        }
+                        CurrentlyWatchingContent(
+                            currentlyWatching = uiState.currentlyWatching,
+                            isLoading = uiState.isLoadingCurrentlyWatching,
+                            onLongClickItem = { details, listEntry ->
+                                event?.selectItem(details, listEntry)
+                                showEditSheetAction()
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
+                    }
+
                     DiscoverInfo.AIRING -> {
                         LaunchedEffect(uiState.airingOnMyList) {
                             if (uiState.airingOnMyList == true) event?.fetchAiringAnimeOnMyList()
