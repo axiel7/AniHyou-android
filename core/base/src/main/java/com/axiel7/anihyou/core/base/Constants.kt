@@ -40,3 +40,20 @@ const val CROWDIN_URL = "https://crowdin.com/project/anihyou"
 const val UNKNOWN_CHAR = "─"
 
 const val UTF_8 = "UTF-8"
+
+// VidFast player — personal use only
+const val VIDFAST_BASE_URL = "https://vidfast.pro"
+const val VIDFAST_MOVIE_URL = "$VIDFAST_BASE_URL/movie"
+const val VIDFAST_TV_URL = "$VIDFAST_BASE_URL/tv"
+
+// Miruro anime streaming
+const val MIRURO_BASE_URL = "https://www.miruro.to"
+const val MIRURO_WATCH_URL = "$MIRURO_BASE_URL/watch"
+
+// TheTVDB — dub air dates
+const val TVDB_API_URL = "https://api4.thetvdb.com/v4"
+// Register at thetvdb.com/api-information for a free key and replace this placeholder
+const val TVDB_API_KEY = "YOUR_TVDB_API_KEY_HERE"
+
+// Google Calendar
+const val GOOGLE_CALENDAR_PACKAGE = "com.google.android.calendar"

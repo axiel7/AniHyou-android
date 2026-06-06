@@ -10,13 +10,17 @@ import com.axiel7.anihyou.core.base.X_MAL_CLIENT_ID
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val networkModule = module {
     single { NetworkVariables() }
     single { provideAuthorizationInterceptor(get()) }
     single { provideApolloClient(get()) }
+    // MAL client (with X-MAL-CLIENT-ID header)
     single { provideOkHttpClient() }
+    // Plain client for TheTVDB and other REST APIs
+    single(named("plain")) { OkHttpClient.Builder().build() }
 }
 
 private fun provideApolloClient(

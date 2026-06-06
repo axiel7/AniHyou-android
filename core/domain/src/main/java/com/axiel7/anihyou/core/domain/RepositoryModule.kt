@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.domain
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
 import com.axiel7.anihyou.core.domain.repository.CharacterRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.DubScheduleRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
@@ -23,6 +24,7 @@ val repositoryModule = module {
     singleOf(::ActivityRepository)
     singleOf(::CharacterRepository)
     singleOf(::DefaultPreferencesRepository)
+    singleOf(::DubScheduleRepository)
     singleOf(::FavoriteRepository)
     singleOf(::LikeRepository)
     singleOf(::ListPreferencesRepository)

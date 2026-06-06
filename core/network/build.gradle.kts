@@ -25,6 +25,9 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 
+    // OkHttp — used by Apollo and directly by TvdbApi
+    implementation(libs.coil.network.okhttp)
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 }

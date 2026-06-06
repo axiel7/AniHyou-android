@@ -4,7 +4,7 @@ import com.axiel7.anihyou.core.ui.common.TabRowItem
 import com.axiel7.anihyou.core.resources.R
 
 enum class MediaDetailsType {
-    INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;
+    INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS, DUB_SCHEDULE;
 
     companion object {
         val tabRows = arrayOf(
@@ -12,7 +12,8 @@ enum class MediaDetailsType {
             TabRowItem(STAFF_CHARACTERS, icon = R.drawable.group_24),
             TabRowItem(RELATIONS, icon = R.drawable.shuffle_24),
             TabRowItem(STATS, icon = R.drawable.bar_chart_24),
-            TabRowItem(REVIEWS, icon = R.drawable.rate_review_24)
+            TabRowItem(REVIEWS, icon = R.drawable.rate_review_24),
+            TabRowItem(DUB_SCHEDULE, icon = R.drawable.live_tv_24),
         )
     }
 }
