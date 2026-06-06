@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -59,6 +60,7 @@ fun StaffDetailsView(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StaffDetailsContent(
     isLoggedIn: Boolean,
