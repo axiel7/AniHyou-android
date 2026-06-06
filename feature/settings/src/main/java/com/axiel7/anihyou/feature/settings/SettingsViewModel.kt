@@ -193,6 +193,13 @@ class SettingsViewModel(
         }
     }
 
+    override fun saveTvdbApiKey(key: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setTvdbApiKey(key.ifBlank { null })
+            mutableUiState.update { it.copy(tvdbApiKey = key.ifBlank { null }) }
+        }
+    }
+
     private suspend fun updateUser(
         displayAdultContent: Boolean? = null,
         titleLanguage: UserTitleLanguage? = null,

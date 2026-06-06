@@ -6,37 +6,37 @@
 
     <!-- Top bar -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M110,85 L390,85 L390,115 L110,115 Z" />
 
-    <!-- Second bar (wider, with left extension) -->
+    <!-- Second bar -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M95,130 L390,130 L390,162 L95,162 Z" />
 
     <!-- Center vertical stem -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M220,162 L252,162 L252,430 L220,430 Z" />
 
     <!-- Right vertical bar -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M295,162 L327,162 L327,340 L295,340 Z" />
 
-    <!-- Left diagonal slash (top-right to bottom-left) -->
+    <!-- Left diagonal slash -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M100,210 L132,178 L270,316 L238,348 Z" />
 
-    <!-- Right diagonal slash (top-left to bottom-right) -->
+    <!-- Right diagonal slash -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M218,178 L250,210 L370,330 L338,362 Z" />
 
     <!-- Bottom left stub -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#000000"
         android:pathData="M175,355 L207,355 L207,430 L175,430 Z" />
 
 </vector>

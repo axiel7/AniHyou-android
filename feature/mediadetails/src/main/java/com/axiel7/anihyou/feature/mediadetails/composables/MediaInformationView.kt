@@ -277,6 +277,20 @@ fun MediaInformationView(
                             }
                         )
                     }
+
+                    // Miruro — auto-search by title
+                    val miruroTitle = uiState.details?.title?.english
+                        ?: uiState.details?.title?.romaji
+                    if (!miruroTitle.isNullOrBlank()) {
+                        val miruroUrl = "https://www.miruro.to/search?query=${
+                            java.net.URLEncoder.encode(miruroTitle, "UTF-8")
+                        }"
+                        AssistChip(
+                            onClick = { context.openActionView(miruroUrl) },
+                            label = { Text(text = "Miruro") },
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                        )
+                    }
                 }
             }
         }

@@ -30,6 +30,7 @@ data class SettingsUiState(
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val userSettings: UserSettings? = null,
     val isLoggedIn: Boolean = false,
+    val tvdbApiKey: String? = null,
     override val error: String? = null,
     override val isLoading: Boolean = false,
 ) : UiState() {

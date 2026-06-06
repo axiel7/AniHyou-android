@@ -61,6 +61,10 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.materialkolor.PaletteStyle
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
 
 private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
@@ -295,6 +299,51 @@ private fun SettingsContent(
                 }
 
                 PreferencesTitle(text = stringResource(R.string.account))
+
+                // TVDB API Key
+                var showTvdbKeyDialog by remember { mutableStateOf(false) }
+                var tvdbKeyInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
+
+                if (showTvdbKeyDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showTvdbKeyDialog = false },
+                        title = { Text("TheTVDB API Key") },
+                        text = {
+                            Column {
+                                Text(
+                                    text = "Get a free key at thetvdb.com/api-information — used for English dub air dates.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(bottom = 12.dp)
+                                )
+                                OutlinedTextField(
+                                    value = tvdbKeyInput,
+                                    onValueChange = { tvdbKeyInput = it },
+                                    label = { Text("API Key") },
+                                    singleLine = true,
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                event?.saveTvdbApiKey(tvdbKeyInput.trim())
+                                showTvdbKeyDialog = false
+                            }) { Text("Save") }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showTvdbKeyDialog = false }) { Text("Cancel") }
+                        }
+                    )
+                }
+
+                PlainPreference(
+                    title = "TheTVDB API Key",
+                    subtitle = if (uiState.tvdbApiKey.isNullOrBlank()) "Not set — tap to add" else "Set ✓",
+                    icon = R.drawable.live_tv_24,
+                    onClick = {
+                        tvdbKeyInput = uiState.tvdbApiKey ?: ""
+                        showTvdbKeyDialog = true
+                    }
+                )
 
                 PlainPreference(
                     title = stringResource(R.string.anilist_account_settings),

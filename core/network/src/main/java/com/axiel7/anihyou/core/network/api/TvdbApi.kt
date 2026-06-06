@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.network.api
 
-import com.axiel7.anihyou.core.base.TVDB_API_KEY
 import com.axiel7.anihyou.core.base.TVDB_API_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,14 +12,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * TheTVDB v4 API — used exclusively to retrieve English dub air dates.
- *
- * AniList only knows simulcast/sub schedules. TheTVDB is the most complete
- * freely-available source for English dub air dates per episode.
- *
- * API docs: https://thetvdb.github.io/v4-api/
- * Get a free key at: https://www.thetvdb.com/api-information
+ * API key is supplied at runtime from DataStore (set in Settings → TheTVDB API Key).
  */
-class TvdbApi(private val okHttpClient: OkHttpClient) {
+class TvdbApi(
+    private val okHttpClient: OkHttpClient,
+    private val apiKeyProvider: () -> String?,
+) {
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
     private var cachedToken: String? = null
@@ -29,9 +26,10 @@ class TvdbApi(private val okHttpClient: OkHttpClient) {
 
     private suspend fun getToken(): String? {
         cachedToken?.let { return it }
+        val apiKey = apiKeyProvider() ?: return null
         return withContext(Dispatchers.IO) {
             runCatching {
-                val body = """{"apikey":"$TVDB_API_KEY"}"""
+                val body = """{"apikey":"$apiKey"}"""
                     .toRequestBody("application/json".toMediaType())
                 val request = Request.Builder()
                     .url("$TVDB_API_URL/login")
