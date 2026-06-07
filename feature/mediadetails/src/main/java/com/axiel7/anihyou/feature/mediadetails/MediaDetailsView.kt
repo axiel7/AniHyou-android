@@ -99,6 +99,7 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import com.axiel7.anihyou.feature.mediadetails.dubschedule.DubScheduleView
+import com.axiel7.anihyou.feature.mediadetails.watch.WatchView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -473,6 +474,7 @@ fun MediaInfoTabs(
     navActionManager: NavActionManager,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    var isDub by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -495,6 +497,19 @@ fun MediaInfoTabs(
                     navigateToStudioDetails = navActionManager::toStudioDetails,
                     navigateToAnimeSeason = navActionManager::toAnimeSeason
                 )
+
+            MediaDetailsType.WATCH -> {
+                val anilistId = uiState.details?.id
+                if (anilistId != null) {
+                    WatchView(
+                        anilistId = anilistId,
+                        totalEpisodes = uiState.details.basicMediaDetails?.episodes,
+                        userProgress = uiState.details.mediaListEntry?.basicMediaListEntry?.progress,
+                        isDub = isDub,
+                        onToggleDub = { isDub = it },
+                    )
+                }
+            }
 
             MediaDetailsType.STAFF_CHARACTERS ->
                 MediaCharacterStaffView(

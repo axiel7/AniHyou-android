@@ -649,4 +649,12 @@
     <string name="week">Week</string>
     <string name="day">Day</string>
     <string name="currently_watching">Currently Watching</string>
+    <string name="watch">Watch</string>
+    <string name="audio_language">Audio Language</string>
+    <string name="sub">Subtitled (Sub)</string>
+    <string name="dub">Dubbed (Dub)</string>
+    <string name="episode_n">Episode %d</string>
+    <string name="select_episode">Select Episode</string>
+    <string name="no_episodes">No episodes available</string>
+    <string name="season_n">Season %d</string>
 </resources>

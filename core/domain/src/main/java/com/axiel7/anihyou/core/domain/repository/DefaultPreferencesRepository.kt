@@ -295,6 +295,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(TVDB_API_KEY, value)
     }
 
+    // Audio language preference (sub/dub)
+    val audioLanguage = dataStore.getValue(key = AUDIO_LANGUAGE_KEY, default = "sub")
+    suspend fun setAudioLanguage(value: String) {
+        dataStore.setValue(AUDIO_LANGUAGE_KEY, value)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -328,5 +334,6 @@ class DefaultPreferencesRepository (
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
         private val TVDB_API_KEY = stringPreferencesKey("tvdb_api_key")
+        private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")
     }
 }

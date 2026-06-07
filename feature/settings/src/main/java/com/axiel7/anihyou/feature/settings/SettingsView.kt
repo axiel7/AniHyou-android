@@ -306,6 +306,15 @@ private fun SettingsContent(
                     onClick = { showTvdbDialog = true }
                 )
 
+                ListPreference(
+                    title = stringResource(R.string.audio_language),
+                    values = listOf("sub", "dub"),
+                    preferenceValue = uiState.audioLanguage,
+                    icon = R.drawable.language_24,
+                    labelForValue = { if (it == "dub") stringResource(R.string.dub) else stringResource(R.string.sub) },
+                    onValueChange = { event?.setAudioLanguage(it) }
+                )
+
                 PreferencesTitle(text = stringResource(R.string.notifications))
 
                 SwitchPreference(

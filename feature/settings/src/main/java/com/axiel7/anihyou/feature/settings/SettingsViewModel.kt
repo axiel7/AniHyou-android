@@ -191,6 +191,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setAudioLanguage(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setAudioLanguage(value)
+        }
+    }
+
     override fun logOut(recreate: () -> Unit) {
         viewModelScope.launch {
             loginRepository.logOut()
@@ -326,6 +332,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.tvdbApiKey
             .onEach { value ->
                 mutableUiState.update { it.copy(tvdbApiKey = value ?: "") }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.audioLanguage
+            .onEach { value ->
+                mutableUiState.update { it.copy(audioLanguage = value) }
             }
             .launchIn(viewModelScope)
 
