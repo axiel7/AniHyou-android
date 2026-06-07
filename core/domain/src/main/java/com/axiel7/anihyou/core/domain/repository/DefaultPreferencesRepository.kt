@@ -315,6 +315,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(AUDIO_LANGUAGE_KEY, value)
     }
 
+    // Episode metadata source: "tmdb" | "anilist" | "tvdb"
+    val episodeSource = dataStore.getValue(key = EPISODE_SOURCE_KEY, default = "tmdb")
+    suspend fun setEpisodeSource(value: String) {
+        dataStore.setValue(EPISODE_SOURCE_KEY, value)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -351,5 +357,6 @@ class DefaultPreferencesRepository (
         private val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         private val ANILIST_CLIENT_ID_KEY = stringPreferencesKey("anilist_client_id")
         private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")
+        private val EPISODE_SOURCE_KEY = stringPreferencesKey("episode_source")
     }
 }

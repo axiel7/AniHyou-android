@@ -16,7 +16,7 @@ import com.axiel7.anihyou.feature.home.current.CurrentViewModel
 import com.axiel7.anihyou.feature.home.discover.DiscoverViewModel
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityViewModel
-import com.axiel7.anihyou.feature.mediadetails.dubschedule.DubScheduleViewModel
+import com.axiel7.anihyou.feature.mediadetails.episodes.EpisodesViewModel
 import com.axiel7.anihyou.feature.notifications.NotificationsViewModel
 import com.axiel7.anihyou.feature.profile.ProfileViewModel
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesViewModel
@@ -33,6 +33,7 @@ import com.axiel7.anihyou.feature.thread.publish.PublishCommentViewModel
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListViewModel
 import com.axiel7.anihyou.ui.screens.main.MainViewModel
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule = module {
@@ -53,7 +54,7 @@ val viewModelModule = module {
     viewModelOf(::DiscoverViewModel)
     viewModelOf(::MediaDetailsViewModel)
     viewModelOf(::MediaActivityViewModel)
-    viewModelOf(::DubScheduleViewModel)
+    viewModel { EpisodesViewModel(get(), get(named("plain"))) }
     viewModelOf(::NotificationsViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::UserFavoritesViewModel)

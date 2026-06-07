@@ -270,36 +270,6 @@ private fun SettingsContent(
                     onValueChange = { event?.setAiringOnMyList(it) }
                 )
 
-                var showTvdbDialog by remember { mutableStateOf(false) }
-                if (showTvdbDialog) {
-                    var tvdbKeyInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
-                    AlertDialog(
-                        onDismissRequest = { showTvdbDialog = false },
-                        title = { Text(text = "TVDB API Key") },
-                        text = {
-                            OutlinedTextField(
-                                value = tvdbKeyInput,
-                                onValueChange = { tvdbKeyInput = it },
-                                label = { Text("API Key") },
-                                singleLine = true
-                            )
-                        },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                event?.setTvdbApiKey(tvdbKeyInput)
-                                showTvdbDialog = false
-                            }) {
-                                Text(stringResource(R.string.save))
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showTvdbDialog = false }) {
-                                Text(stringResource(R.string.cancel))
-                            }
-                        }
-                    )
-                }
-
                 ListPreference(
                     title = stringResource(R.string.audio_language),
                     values = listOf("sub", "dub"),
@@ -312,6 +282,20 @@ private fun SettingsContent(
                 // ── APIs section ─────────────────────────────────────────────
                 PreferencesTitle(text = "APIs")
 
+                // Episode source picker
+                ListPreference(
+                    title = "Episode Data Source",
+                    values = listOf("tmdb", "anilist", "tvdb"),
+                    preferenceValue = uiState.episodeSource,
+                    icon = R.drawable.play_circle_24,
+                    labelForValue = { when (it) {
+                        "anilist" -> "AniList"
+                        "tvdb" -> "TheTVDB (optional key)"
+                        else -> "TMDB (default)"
+                    }},
+                    onValueChange = { event?.setEpisodeSource(it) }
+                )
+
                 // TMDB dialog
                 var showTmdbDialog by remember { mutableStateOf(false) }
                 if (showTmdbDialog) {
@@ -322,7 +306,7 @@ private fun SettingsContent(
                         text = {
                             Column {
                                 Text(
-                                    text = "Used for episode metadata and cover images. Get yours at themoviedb.org/settings/api",
+                                    text = "Used for episode metadata, thumbnails and ratings. Get yours at themoviedb.org/settings/api",
                                     style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
@@ -394,6 +378,48 @@ private fun SettingsContent(
                     subtitle = if (uiState.anilistClientId.isNullOrEmpty()) "Not configured — tap to add" else "✓ Configured",
                     icon = R.drawable.code_24,
                     onClick = { showAnilistDialog = true }
+                )
+
+                // TVDB dialog (optional — only needed if TVDB source is selected)
+                var showTvdbDialog2 by remember { mutableStateOf(false) }
+                if (showTvdbDialog2) {
+                    var tvdbInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
+                    AlertDialog(
+                        onDismissRequest = { showTvdbDialog2 = false },
+                        title = { Text("TheTVDB API Key (Optional)") },
+                        text = {
+                            Column {
+                                Text(
+                                    text = "Only needed if you selected TheTVDB as your episode source. Get a free key at thetvdb.com/api-information",
+                                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                OutlinedTextField(
+                                    value = tvdbInput,
+                                    onValueChange = { tvdbInput = it },
+                                    label = { Text("API Key") },
+                                    singleLine = true
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                event?.setTvdbApiKey(tvdbInput)
+                                showTvdbDialog2 = false
+                            }) { Text(stringResource(R.string.save)) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showTvdbDialog2 = false }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+                PlainPreference(
+                    title = "TheTVDB API Key (Optional)",
+                    subtitle = if (uiState.tvdbApiKey.isNullOrEmpty()) "Not configured — only needed for TVDB source" else "✓ Configured",
+                    icon = R.drawable.live_tv_24,
+                    onClick = { showTvdbDialog2 = true }
                 )
 
                 PreferencesTitle(text = stringResource(R.string.notifications))

@@ -209,6 +209,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setEpisodeSource(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setEpisodeSource(value)
+        }
+    }
+
     override fun logOut(recreate: () -> Unit) {
         viewModelScope.launch {
             loginRepository.logOut()
@@ -362,6 +368,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.audioLanguage
             .onEach { value ->
                 mutableUiState.update { it.copy(audioLanguage = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.episodeSource
+            .onEach { value ->
+                mutableUiState.update { it.copy(episodeSource = value) }
             }
             .launchIn(viewModelScope)
 
