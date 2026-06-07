@@ -25,8 +25,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -230,7 +230,7 @@ private fun CalendarMonthView(
 
         item {
             Text(
-                text = (selectedDay ?: now).let { "${it.month.name.lowercase().replaceFirstChar { c -> c.uppercase() }} ${it.dayOfWeek.name.lowercase().replaceFirstChar { c -> c.uppercase() }}, ${it.day} ${it.year}" },
+                text = (selectedDay ?: now).let { "${it.month.name.lowercase().replaceFirstChar { c -> c.uppercase() }} ${it.dayOfWeek.name.lowercase().replaceFirstChar { c -> c.uppercase() }}, ${it.dayOfMonth} ${it.year}" },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -292,7 +292,7 @@ private fun MonthCalendarGrid(
         ) {
             IconButton(onClick = { onMonthChange(currentMonth.minusMonths(1)) }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Previous month"
                 )
             }
@@ -304,7 +304,7 @@ private fun MonthCalendarGrid(
             )
             IconButton(onClick = { onMonthChange(currentMonth.plusMonths(1)) }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    imageVector = Icons.Filled.ArrowForward,
                     contentDescription = "Next month"
                 )
             }
