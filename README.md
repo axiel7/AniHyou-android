@@ -1,44 +1,52 @@
-# <img alt="app-icon" height="50" src="https://github.com/axiel7/AniHyou-android/blob/master/core/resources/src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>AniHyou
+# <img alt="app-icon" height="50" src="https://github.com/axiel7/AniHyou-android/blob/master/core/resources/src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>AniHyou — Shatter Fork
 
-[![Downloads](https://img.shields.io/github/downloads/axiel7/AniHyou-android/total.svg)](https://github.com/axiel7/MoeList/releases/latest)
-[![Crowdin](https://badges.crowdin.net/anihyou/localized.svg)](https://crowdin.com/project/anihyou)
-[![Donate](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://ko-fi.com/axiel7)
+[![Downloads](https://img.shields.io/github/downloads/Xhanti-mbasa/AniHyou-android/total.svg)](https://github.com/Xhanti-mbasa/AniHyou-android/releases/latest)
 
-Another unofficial Android AniList client
+A personal fork of [axiel7/AniHyou-android](https://github.com/axiel7/AniHyou-android) with custom features built on top of the original unofficial Android AniList client.
 
-[<img alt="Google Play" height="80" src="https://play.google.com/intl/en_US/badges/images/generic/en_badge_web_generic.png"/>](https://play.google.com/store/apps/details?id=com.axiel7.anihyou)
-[<img alt="Get it on F-Droid" height="80" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png">](https://f-droid.org/packages/com.axiel7.anihyou)
+> Download the latest debug build from [Actions](https://github.com/Xhanti-mbasa/AniHyou-android/actions) → most recent **Build APK** run → **app-foss-debug** artifact.
 
-iOS version [here](https://github.com/axiel7/AniHyou-iOS)
+---
 
-Get latest beta version from [nightly.link](https://nightly.link/axiel7/AniHyou-android/workflows/build-upload-android/develop)
+## Changes in this fork
 
-Follow the development on the official Discord server:
+### 🎨 Custom app icon
+The default AniHyou icon has been replaced with the Shatter logo.
+- **Light mode** — black mark on white background
+- **Dark mode** — white mark on black background
 
-[![Discord Banner 3](https://discordapp.com/api/guilds/741059285122940928/widget.png?style=banner2)](https://discord.gg/CTv3WdfxHh)
+Android picks the correct variant automatically based on system theme via `values-night` color resources.
 
-# Screenshots
-![Screenshots](https://github.com/axiel7/AniHyou-android/blob/master/screenshots.webp)
+### ▶️ Miruro streaming integration
+Every anime's info tab now includes a **Miruro** chip in the Streaming Sites section. Tapping it opens [miruro.to](https://miruro.to) with the anime pre-searched by title, taking you directly to available streams.
 
-## Coming features
-- [See project](https://github.com/users/axiel7/projects/2/views/1)
+### 📺 Currently Watching on Home
+The home Discover screen now has a **Continue Watching** row (Netflix-style) showing your in-progress anime from your AniList list, with episode progress displayed under each card.
 
-# Donate 💸
-Support the development of AniHyou by making a donation via:
+### 📅 Calendar — Month / Week / Day views
+The airing calendar has been extended with three view modes selectable via a segmented button at the top:
+- **Month** — grid overview of the whole month
+- **Week** — horizontal scroll through each day of the week (default)
+- **Day** — single-day focus with time-ordered airing slots
 
-[Ko-Fi](https://ko-fi.com/axiel7)
+### 🔑 TVDB API key in Settings
+A **TVDB API Key** field has been added under Settings. Paste your key from [thetvdb.com/api-information](https://thetvdb.com/api-information) to enable the dub schedule tab on anime detail pages. The key is stored locally on-device.
 
-BTC
+---
+
+## Building
+
+The repo uses GitHub Actions to build automatically on every push to `master`.
+
+To build manually:
+```bash
+./gradlew assembleFossDebug
 ```
-3KKjJuorh9se2jUo1Hr6MFgXhnBWbj5fTP
-```
 
-ETH
-```
-0xBd20dD0e036B246F879EeFde52601f0fBbeC69c0
-```
+---
 
-LTC
-```
-MRw5XPLsM9SVf48tv4nwQoY12nMXaiVzmD
-```
+## Upstream
+
+This fork tracks [axiel7/AniHyou-android](https://github.com/axiel7/AniHyou-android). For issues with core AniList functionality, refer to the upstream repo.
+
+iOS version: [axiel7/AniHyou-iOS](https://github.com/axiel7/AniHyou-iOS)
