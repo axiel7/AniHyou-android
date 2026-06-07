@@ -4,10 +4,13 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.media.MetadataProvider
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
+
 import com.axiel7.anihyou.core.network.fragment.UserSettings
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.base.state.UiState
@@ -26,6 +29,7 @@ data class SettingsUiState(
     val airingOnMyList: Boolean? = null,
     val scoreFormat: ScoreFormat? = null,
     val defaultTab: DefaultTab = DefaultTab.LAST_USED,
+    val metadataProvider: MetadataProvider? = null,
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val tvdbApiKey: String? = null,

@@ -209,6 +209,15 @@ class MediaDetailsViewModel(
         mutableUiState.update { it.copy(showVoiceActorsSheet = false) }
     }
 
+    override fun fetchEpisodes() {
+        // TODO: Implement episode fetching using TMDB/AniList
+        mutableUiState.update { it.copy(isLoadingEpisodes = true) }
+        viewModelScope.launch {
+            // Placeholder implementation
+            mutableUiState.update { it.copy(isLoadingEpisodes = false) }
+        }
+    }
+
     private suspend fun fetchAnimeThemes(idMal: Int) {
         mediaRepository.getAnimeThemes(idMal = idMal)?.let {
             mutableUiState.update { state ->

@@ -17,4 +17,5 @@ interface MediaDetailsEvent : UiEvent {
     fun fetchActivity()
     fun showVoiceActorsSheet(character: MediaCharacter)
     fun hideVoiceActorSheet()
+    fun fetchEpisodes()
 }

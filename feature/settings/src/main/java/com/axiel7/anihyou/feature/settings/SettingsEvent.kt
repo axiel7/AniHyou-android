@@ -5,9 +5,11 @@ import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.media.MetadataProvider
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
@@ -60,8 +62,5 @@ interface SettingsEvent : UiEvent {
     fun logOut(recreate: () -> Unit)
 
     fun setTvdbApiKey(value: String)
-    fun setTmdbApiKey(value: String)
-    fun setAnilistClientId(value: String)
-    fun setAudioLanguage(value: String)
-    fun setEpisodeSource(value: String)
+    fun setMetadataProvider(value: MetadataProvider)
 }

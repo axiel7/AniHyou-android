@@ -95,10 +95,8 @@ import com.axiel7.anihyou.core.ui.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaCharacterStaffView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaInformationView
-import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
-import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
-import com.axiel7.anihyou.feature.mediadetails.episodes.EpisodesView
+import com.axiel7.anihyou.feature.mediadetails.composables.EpisodesView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -498,9 +496,10 @@ fun MediaInfoTabs(
 
             MediaDetailsType.EPISODES -> {
                 EpisodesView(
-                    englishTitle = uiState.details?.title?.english,
-                    romajiTitle = uiState.details?.title?.romaji,
-                    nativeTitle = uiState.details?.title?.native,
+                    uiState = uiState,
+                    onEpisodeClick = { episode ->
+                        // TODO: Implement VidFast playback
+                    }
                 )
             }
 

@@ -11,10 +11,13 @@ import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.media.MetadataProvider
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
+
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
@@ -185,9 +188,9 @@ class SettingsViewModel(
         }
     }
 
-    override fun setTvdbApiKey(value: String) {
+    override fun setMetadataProvider(value: MetadataProvider) {
         viewModelScope.launch {
-            defaultPreferencesRepository.setTvdbApiKey(value)
+            defaultPreferencesRepository.setMetadataProvider(value)
         }
     }
 
@@ -380,6 +383,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.notificationCheckInterval
             .onEach { value ->
                 mutableUiState.update { it.copy(notificationCheckInterval = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.metadataProvider
+            .onEach { value ->
+                mutableUiState.update { it.copy(metadataProvider = value) }
             }
             .launchIn(viewModelScope)
     }

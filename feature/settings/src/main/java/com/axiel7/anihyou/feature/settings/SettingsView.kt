@@ -40,10 +40,11 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
-import com.axiel7.anihyou.core.model.entriesLocalized
+import com.axiel7.anihyou.core.model.media.MetadataProvider
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.model.user.entriesLocalized
 import com.axiel7.anihyou.core.network.type.ScoreFormat
@@ -271,38 +272,19 @@ private fun SettingsContent(
                 )
 
                 ListPreference(
-                    title = stringResource(R.string.audio_language),
-                    values = listOf("sub", "dub"),
-                    preferenceValue = uiState.audioLanguage,
-                    icon = R.drawable.language_24,
-                    labelForValue = { if (it == "dub") stringResource(R.string.dub) else stringResource(R.string.sub) },
-                    onValueChange = { event?.setAudioLanguage(it) }
+                    title = "Metadata Provider",
+                    entriesValues = MetadataProvider.entriesLocalized,
+                    preferenceValue = uiState.metadataProvider,
+                    icon = R.drawable.settings_24,
+                    onValueChange = { event?.setMetadataProvider(it) }
                 )
 
-                // ── APIs section ─────────────────────────────────────────────
-                PreferencesTitle(text = "APIs")
-
-                // Episode source picker
-                ListPreference(
-                    title = "Episode Data Source",
-                    values = listOf("tmdb", "anilist", "tvdb"),
-                    preferenceValue = uiState.episodeSource,
-                    icon = R.drawable.play_circle_24,
-                    labelForValue = { when (it) {
-                        "anilist" -> "AniList"
-                        "tvdb" -> "TheTVDB (optional key)"
-                        else -> "TMDB (default)"
-                    }},
-                    onValueChange = { event?.setEpisodeSource(it) }
-                )
-
-                // TMDB dialog
-                var showTmdbDialog by remember { mutableStateOf(false) }
-                if (showTmdbDialog) {
-                    var tmdbInput by remember { mutableStateOf(uiState.tmdbApiKey ?: "") }
+                var showTvdbDialog by remember { mutableStateOf(false) }
+                if (showTvdbDialog) {
+                    var tvdbKeyInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
                     AlertDialog(
-                        onDismissRequest = { showTmdbDialog = false },
-                        title = { Text("TMDB API Key") },
+                        onDismissRequest = { showTvdbDialog = false },
+                        title = { Text("TVDB API Key") },
                         text = {
                             Column {
                                 Text(
@@ -311,92 +293,8 @@ private fun SettingsContent(
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
                                 OutlinedTextField(
-                                    value = tmdbInput,
-                                    onValueChange = { tmdbInput = it },
-                                    label = { Text("API Key (v3 auth)") },
-                                    singleLine = true
-                                )
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                event?.setTmdbApiKey(tmdbInput)
-                                showTmdbDialog = false
-                            }) { Text(stringResource(R.string.save)) }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showTmdbDialog = false }) {
-                                Text(stringResource(R.string.cancel))
-                            }
-                        }
-                    )
-                }
-                PlainPreference(
-                    title = "TMDB API Key",
-                    subtitle = if (uiState.tmdbApiKey.isNullOrEmpty()) "Not configured — tap to add" else "✓ Configured",
-                    icon = R.drawable.code_24,
-                    onClick = { showTmdbDialog = true }
-                )
-
-                // AniList Client ID dialog
-                var showAnilistDialog by remember { mutableStateOf(false) }
-                if (showAnilistDialog) {
-                    var anilistInput by remember { mutableStateOf(uiState.anilistClientId ?: "") }
-                    AlertDialog(
-                        onDismissRequest = { showAnilistDialog = false },
-                        title = { Text("AniList Client ID") },
-                        text = {
-                            Column {
-                                Text(
-                                    text = "Your AniList OAuth app Client ID. Find it at anilist.co/settings/developer",
-                                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                OutlinedTextField(
-                                    value = anilistInput,
-                                    onValueChange = { anilistInput = it },
-                                    label = { Text("Client ID") },
-                                    singleLine = true
-                                )
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                event?.setAnilistClientId(anilistInput)
-                                showAnilistDialog = false
-                            }) { Text(stringResource(R.string.save)) }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showAnilistDialog = false }) {
-                                Text(stringResource(R.string.cancel))
-                            }
-                        }
-                    )
-                }
-                PlainPreference(
-                    title = "AniList Client ID",
-                    subtitle = if (uiState.anilistClientId.isNullOrEmpty()) "Not configured — tap to add" else "✓ Configured",
-                    icon = R.drawable.code_24,
-                    onClick = { showAnilistDialog = true }
-                )
-
-                // TVDB dialog (optional — only needed if TVDB source is selected)
-                var showTvdbDialog2 by remember { mutableStateOf(false) }
-                if (showTvdbDialog2) {
-                    var tvdbInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
-                    AlertDialog(
-                        onDismissRequest = { showTvdbDialog2 = false },
-                        title = { Text("TheTVDB API Key (Optional)") },
-                        text = {
-                            Column {
-                                Text(
-                                    text = "Only needed if you selected TheTVDB as your episode source. Get a free key at thetvdb.com/api-information",
-                                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                OutlinedTextField(
-                                    value = tvdbInput,
-                                    onValueChange = { tvdbInput = it },
+                                    value = tvdbKeyInput,
+                                    onValueChange = { tvdbKeyInput = it },
                                     label = { Text("API Key") },
                                     singleLine = true
                                 )
@@ -404,22 +302,22 @@ private fun SettingsContent(
                         },
                         confirmButton = {
                             TextButton(onClick = {
-                                event?.setTvdbApiKey(tvdbInput)
-                                showTvdbDialog2 = false
+                                event?.setTvdbApiKey(tvdbKeyInput)
+                                showTvdbDialog = false
                             }) { Text(stringResource(R.string.save)) }
                         },
                         dismissButton = {
-                            TextButton(onClick = { showTvdbDialog2 = false }) {
+                            TextButton(onClick = { showTvdbDialog = false }) {
                                 Text(stringResource(R.string.cancel))
                             }
                         }
                     )
                 }
                 PlainPreference(
-                    title = "TheTVDB API Key (Optional)",
+                    title = "TVDB API Key",
                     subtitle = if (uiState.tvdbApiKey.isNullOrEmpty()) "Not configured — only needed for TVDB source" else "✓ Configured",
                     icon = R.drawable.live_tv_24,
-                    onClick = { showTvdbDialog2 = true }
+                    onClick = { showTvdbDialog = true }
                 )
 
                 PreferencesTitle(text = stringResource(R.string.notifications))

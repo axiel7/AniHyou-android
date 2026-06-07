@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.mediadetails
 
 import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.AnimeThemes
 import com.axiel7.anihyou.core.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.core.model.stats.Stat
@@ -16,6 +17,20 @@ import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.fragment.MediaStaff
 import com.axiel7.anihyou.core.base.state.UiState
+
+@Immutable
+data class Episode(
+    val number: Int,
+    val title: String?,
+    val thumbnail: String?,
+    val streamUrl: String?
+)
+
+@Immutable
+data class SeasonWithEpisodes(
+    val season: AnimeSeason,
+    val episodes: List<Episode>
+)
 
 @Immutable
 data class MediaDetailsUiState(
@@ -46,6 +61,9 @@ data class MediaDetailsUiState(
 
     val isLoadingActivity: Boolean = true,
     val activity: List<ListActivityFragment> = emptyList(),
+
+    val isLoadingEpisodes: Boolean = false,
+    val seasonsWithEpisodes: List<SeasonWithEpisodes> = emptyList(),
 
     override val error: String? = null,
     override val isLoading: Boolean = true,

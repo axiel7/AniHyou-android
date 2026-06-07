@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.domain.setValue
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.media.MetadataProvider
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.model.user.hexColor
@@ -232,9 +233,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(DEFAULT_HOME_TAB_KEY, value.ordinal)
     }
 
-    val airingOnMyList = dataStore.getValue(key = AIRING_ON_MY_LIST_KEY, default = false)
-    suspend fun setAiringOnMyList(value: Boolean) {
-        dataStore.setValue(AIRING_ON_MY_LIST_KEY, value)
+    val metadataProvider = dataStore.getValue(METADATA_PROVIDER_KEY).map {
+        if (it != null) MetadataProvider.valueOfOrNull(it) ?: MetadataProvider.TMDB else MetadataProvider.TMDB
+    }
+
+    suspend fun setMetadataProvider(value: MetadataProvider) {
+        dataStore.setValue(METADATA_PROVIDER_KEY, value.name)
     }
 
     // calendar
@@ -342,6 +346,7 @@ class DefaultPreferencesRepository (
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")
+        private val METADATA_PROVIDER_KEY = stringPreferencesKey("metadata_provider")
         private val CALENDAR_ON_MY_LIST_KEY = booleanPreferencesKey("calendar_on_my_list")
 
         private val NOTIFICATIONS_ENABLED_KEY = booleanPreferencesKey("enabled_notifications")
