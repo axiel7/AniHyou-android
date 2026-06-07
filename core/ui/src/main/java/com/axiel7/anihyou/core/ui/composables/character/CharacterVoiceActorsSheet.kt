@@ -41,6 +41,7 @@ fun CharacterVoiceActorsSheet(
                     imageUrl = it.image?.medium,
                     subtitle = it.languageV2,
                     onClick = {
+                        onDismiss()
                         navigateToStaffDetails(it.id)
                     }
                 )
