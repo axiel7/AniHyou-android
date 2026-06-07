@@ -16,3 +16,13 @@ fun Modifier.defaultPlaceholder(
         highlight = PlaceholderHighlight.fade()
     )
 }
+
+fun Modifier.spoilerPlaceholder(
+    visible: Boolean
+) = composed {
+    this.placeholder(
+        visible = visible,
+        color = MaterialTheme.colorScheme.outline,
+        highlight = null,
+    )
+}

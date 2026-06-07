@@ -37,6 +37,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
+import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsUiState
@@ -120,7 +121,7 @@ fun CharacterInfoView(
                             text = uiState.alternativeNamesSpoiler,
                             modifier = Modifier
                                 .padding(horizontal = 8.dp)
-                                .defaultPlaceholder(visible = !showSpoiler)
+                                .spoilerPlaceholder(visible = !showSpoiler)
                                 .clickable { showSpoiler = !showSpoiler }
                         )
                     }
