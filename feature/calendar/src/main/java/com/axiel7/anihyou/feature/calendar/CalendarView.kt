@@ -24,9 +24,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -287,27 +284,15 @@ private fun MonthCalendarGrid(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(onClick = { onMonthChange(currentMonth.minusMonths(1)) }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Previous month"
-                )
-            }
             Text(
                 text = "${currentMonth.year} ${currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
             )
-            IconButton(onClick = { onMonthChange(currentMonth.plusMonths(1)) }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "Next month"
-                )
-            }
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
