@@ -63,4 +63,8 @@ interface SettingsEvent : UiEvent {
 
     fun setTvdbApiKey(value: String)
     fun setMetadataProvider(value: MetadataProvider)
+    fun setAudioLanguage(value: String)
+    fun setTmdbApiKey(value: String)
+    fun setAnilistClientId(value: String)
+    fun setEpisodeSource(value: String)
 }

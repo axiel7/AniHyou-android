@@ -40,6 +40,10 @@ gmsWearable = "19.0.0"
 horologist = "0.7.15"
 
 [libraries]
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version = "1.5.1" }
+media3-exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version = "1.5.1" }
+media3-ui = { group = "androidx.media3", name = "media3-ui", version = "1.5.1" }
+media3-session = { group = "androidx.media3", name = "media3-session", version = "1.5.1" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }

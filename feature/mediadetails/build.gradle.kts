@@ -48,8 +48,15 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+<<<<<<< Updated upstream
     implementation(libs.coil.compose)
 
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.serialization.json)
+=======
+    implementation(project(":core:streaming"))
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.exoplayer.hls)
+    implementation(libs.media3.ui)
+>>>>>>> Stashed changes
 }

@@ -95,6 +95,8 @@ import com.axiel7.anihyou.core.ui.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaCharacterStaffView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaInformationView
+import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
+import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import com.axiel7.anihyou.feature.mediadetails.composables.EpisodesView
 import org.koin.androidx.compose.koinViewModel
@@ -525,7 +527,7 @@ fun MediaInfoTabs(
                 MediaStatsView(
                     uiState = uiState,
                     fetchData = { event?.fetchStats() },
-                    navigateToUserDetails = navActionManager::toUserDetails
+                    navigateToUserDetails = { id -> navActionManager.toUserDetails(id) }
                 )
 
             MediaDetailsType.REVIEWS -> {

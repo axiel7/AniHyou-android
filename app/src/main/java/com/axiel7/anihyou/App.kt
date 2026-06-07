@@ -14,6 +14,7 @@ import coil3.request.crossfade
 import com.axiel7.anihyou.core.domain.dataStoreModule
 import com.axiel7.anihyou.core.domain.repositoryModule
 import com.axiel7.anihyou.core.domain.tvdbModule
+import com.axiel7.anihyou.core.streaming.di.streamingModule
 import com.axiel7.anihyou.core.network.apiModule
 import com.axiel7.anihyou.core.network.networkModule
 import com.axiel7.anihyou.feature.worker.workerModule
@@ -40,6 +41,7 @@ class App : Application(), KoinComponent, KoinStartup, SingletonImageLoader.Fact
             apiModule,
             repositoryModule,
             tvdbModule,
+            streamingModule,
             viewModelModule,
             workerModule,
         )

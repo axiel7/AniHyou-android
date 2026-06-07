@@ -247,6 +247,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(CALENDAR_ON_MY_LIST_KEY, value)
     }
 
+    // airing on my list
+    val airingOnMyList = dataStore.getValue(key = AIRING_ON_MY_LIST_KEY, default = false)
+    suspend fun setAiringOnMyList(value: Boolean) {
+        dataStore.setValue(AIRING_ON_MY_LIST_KEY, value)
+    }
+
     // notifications
     val isNotificationsEnabled =
         dataStore.getValue(key = NOTIFICATIONS_ENABLED_KEY, default = false)
