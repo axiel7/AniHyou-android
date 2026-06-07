@@ -1,17 +1,27 @@
+val sdkVersion: Int by rootProject.extra
+val minSdkVersion: Int by rootProject.extra
+
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    kotlin("android")
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+android {
+    namespace = "com.axiel7.anihyou.core.streaming"
+    compileSdk = sdkVersion
+    
+    defaultConfig {
+        minSdk = minSdkVersion
+    }
+    
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
