@@ -25,7 +25,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AniHyou"
 include(":app")
-include(":baselineprofile")
 include(":core:base")
 include(":core:common")
 include(":core:network")
@@ -51,4 +50,3 @@ include(":feature:staffdetails")
 include(":feature:studiodetails")
 include(":feature:thread")
 include(":feature:usermedialist")
-include(":wearos")
