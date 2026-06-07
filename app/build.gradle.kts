@@ -107,7 +107,6 @@ android {
         compose = true
         buildConfig = true
         aidl = false
-        renderScript = false
         shaders = false
     }
     packaging {
@@ -132,10 +131,6 @@ kotlin {
 
 composeCompiler {
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
-}
-
-baselineProfile {
-    dexLayoutOptimization = true
 }
 
 dependencies {
