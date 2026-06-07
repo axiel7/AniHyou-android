@@ -505,6 +505,7 @@ fun MediaInfoTabs(
                         anilistId = anilistId,
                         totalEpisodes = uiState.details.basicMediaDetails?.episodes,
                         userProgress = uiState.details.mediaListEntry?.basicMediaListEntry?.progress,
+                        streamingEpisodes = uiState.details.streamingEpisodes,
                         isDub = isDub,
                         onToggleDub = { isDub = it },
                     )

@@ -19,14 +19,20 @@ class DubScheduleViewModel(
         season: Int,
     ) {
         viewModelScope.launch {
-            mutableUiState.update { it.copy(isLoading = true, tvdbNotFound = false) }
+            mutableUiState.update { it.copy(isLoading = true, tvdbNotFound = false, noApiKey = false) }
 
-            // Step 1: find the TVDB series
             val seriesResult = dubScheduleRepository.findTvdbSeries(englishTitle, romajiTitle)
 
             if (seriesResult is DataResult.Error || seriesResult !is DataResult.Success) {
+                val msg = (seriesResult as? DataResult.Error)?.message ?: ""
+                val isKeyMissing = msg == "NO_API_KEY"
                 mutableUiState.update {
-                    it.copy(isLoading = false, tvdbNotFound = true, error = (seriesResult as? DataResult.Error)?.message)
+                    it.copy(
+                        isLoading = false,
+                        noApiKey = isKeyMissing,
+                        tvdbNotFound = !isKeyMissing,
+                        error = if (isKeyMissing) null else msg.takeIf { it != "No title available" },
+                    )
                 }
                 return@launch
             }
@@ -41,7 +47,6 @@ class DubScheduleViewModel(
 
             mutableUiState.update { it.copy(tvdbSeries = series) }
 
-            // Step 2: fetch the dub episode list for the season
             val episodesResult = dubScheduleRepository.getDubSchedule(tvdbId, season)
 
             mutableUiState.update {

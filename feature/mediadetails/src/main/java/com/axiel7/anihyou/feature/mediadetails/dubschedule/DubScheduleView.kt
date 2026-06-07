@@ -131,6 +131,45 @@ fun DubScheduleView(
             }
         }
 
+        uiState.noApiKey -> {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(contentPadding),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(24.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.live_tv_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(48.dp),
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "TheTVDB API Key Required",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Add your free TheTVDB API key in Settings to see English dub air dates.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Get a free key at thetvdb.com/api-information",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                }
+            }
+        }
+
         uiState.tvdbNotFound -> {
             Box(
                 modifier = Modifier.fillMaxSize().padding(contentPadding),

@@ -34,6 +34,8 @@ class TvdbApi(
         return withContext(Dispatchers.IO) {
             runCatching {
                 val apiKey = keyProvider()
+                // Placeholder key — bail early instead of hitting the network
+                if (apiKey.isBlank() || apiKey == "YOUR_TVDB_API_KEY_HERE") return@runCatching null
                 val body = """{"apikey":"$apiKey"}"""
                     .toRequestBody("application/json".toMediaType())
                 val request = Request.Builder()

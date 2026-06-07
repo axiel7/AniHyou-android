@@ -10,6 +10,7 @@ data class DubScheduleUiState(
     val selectedSeason: Int = 1,
     val isSearchingTvdb: Boolean = false,
     val tvdbNotFound: Boolean = false,
+    val noApiKey: Boolean = false,
     override val isLoading: Boolean = false,
     override val error: String? = null,
 ) : UiState() {
