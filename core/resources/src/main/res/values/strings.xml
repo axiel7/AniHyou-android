@@ -21,6 +21,8 @@
         <item quantity="other">%d days</item>
     </plurals>
     <string name="unknown">Unknown</string>
+    <string name="anime">Anime</string>
+    <string name="manga">Manga</string>
     <string name="airing_soon">Airing Soon</string>
     <string name="mean_score">Mean score</string>
     <string name="airing_in">Airing in %s</string>
