@@ -3,7 +3,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.compose)
-    alias(libs.plugins.androidx.baselineprofile)
 }
 
 val appPackageName: String by rootProject.extra
@@ -88,10 +87,6 @@ android {
     productFlavors {
         create("foss") {
             dimension = "version"
-        }
-        create("gms") {
-            dimension = "version"
-            versionNameSuffix = "-gms"
         }
     }
 
@@ -184,8 +179,6 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
-    "gmsImplementation"(libs.androidx.wear.remote.interactions)
-
     implementation(libs.accompanist.permissions)
 
     implementation(libs.coil.compose)
@@ -206,7 +199,4 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    implementation(libs.androidx.profileinstaller)
-    "baselineProfile"(project(":baselineprofile"))
 }

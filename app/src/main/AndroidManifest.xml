@@ -49,18 +49,6 @@
 
             </intent-filter>
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="wear-auth"
-                    android:scheme="anihyou" />
-
-            </intent-filter>
-
             <intent-filter tools:ignore="AppLinkWarning">
                 <action android:name="android.intent.action.VIEW" />
 
