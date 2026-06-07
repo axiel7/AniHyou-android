@@ -39,6 +39,7 @@ import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.home.discover.content.AiringContent
+import com.axiel7.anihyou.feature.home.discover.content.CurrentlyWatchingContent
 import com.axiel7.anihyou.feature.home.discover.content.DiscoverMediaContent
 import com.axiel7.anihyou.feature.home.discover.content.SeasonAnimeContent
 import org.koin.androidx.compose.koinViewModel

@@ -23,23 +23,21 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 fun CurrentlyWatchingContent(
     currentlyWatching: List<CommonMediaListEntry>,
     isLoading: Boolean,
-    onLongClickItem: (BasicMediaDetails?, BasicMediaListEntry?) -> Unit,
+    onLongClickItem: (BasicMediaDetails, BasicMediaListEntry?) -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
-    HorizontalListHeader(
-        text = stringResource(R.string.continue_watching),
-    )
+    HorizontalListHeader(text = stringResource(R.string.continue_watching))
     DiscoverLazyRow {
         items(
             items = currentlyWatching,
             contentType = { it }
         ) { item ->
             MediaItemVertical(
-                title = item.basicMediaDetails?.title?.userPreferred.orEmpty(),
-                imageUrl = item.basicMediaDetails?.coverImage?.large,
+                title = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
+                imageUrl = item.media?.coverImage?.large,
                 modifier = Modifier.padding(horizontal = 8.dp),
                 subtitle = {
-                    val progress = item.basicMediaListEntry?.progressOrVolumes()
+                    val progress = item.basicMediaListEntry.progressOrVolumes()
                     if (progress != null) {
                         Text(
                             text = stringResource(R.string.progress) + ": $progress",
@@ -48,23 +46,23 @@ fun CurrentlyWatchingContent(
                         )
                     }
                 },
-                status = item.basicMediaListEntry?.status,
+                status = item.basicMediaListEntry.status,
                 minLines = 2,
-                onClick = { item.mediaId?.let { navigateToMediaDetails(it) } },
-                onLongClick = { onLongClickItem(item.basicMediaDetails, item.basicMediaListEntry) }
+                onClick = { navigateToMediaDetails(item.mediaId) },
+                onLongClick = {
+                    item.media?.basicMediaDetails?.let { details ->
+                        onLongClickItem(details, item.basicMediaListEntry)
+                    }
+                }
             )
         }
         if (isLoading) {
             items(10) {
-                MediaItemVerticalPlaceholder(
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                MediaItemVerticalPlaceholder(modifier = Modifier.padding(start = 8.dp))
             }
         }
         if (currentlyWatching.isEmpty() && !isLoading) {
-            item {
-                Text(text = stringResource(R.string.no_information))
-            }
+            item { Text(text = stringResource(R.string.no_information)) }
         }
     }
 }
