@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -312,7 +313,7 @@ private fun MonthCalendarGrid(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            header.forEach { dayName ->
+            for (dayName in header) {
                 Text(
                     text = dayName,
                     modifier = Modifier.weight(1f).padding(vertical = 4.dp),
@@ -447,7 +448,7 @@ private fun CalendarDayDetailView(
         modifier = Modifier.fillMaxSize()
     ) {
         Text(
-            text = "${currentDay.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentDay.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}, ${currentDay.day} ${currentDay.year}",
+            text = "${currentDay.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentDay.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}, ${currentDay.dayOfMonth} ${currentDay.year}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -472,10 +473,11 @@ private fun CalendarDayDetailView(
             viewModel.onLoadMore()
         }
 
-        if (showEditSheet.value && uiState.selectedItem?.media != null) {
+        val selectedItem = uiState.selectedItem
+        if (showEditSheet.value && selectedItem?.media != null) {
             EditMediaSheet(
-                mediaDetails = uiState.selectedItem.media!!.basicMediaDetails,
-                listEntry = uiState.selectedItem.media!!.mediaListEntry?.basicMediaListEntry,
+                mediaDetails = selectedItem.media!!.basicMediaDetails,
+                listEntry = selectedItem.media!!.mediaListEntry?.basicMediaListEntry,
                 onEntryUpdated = { viewModel.onUpdateListEntry(it) },
                 onDismissed = { showEditSheet.value = false }
             )
@@ -547,10 +549,11 @@ private fun CalendarDayView(
         events?.onLoadMore()
     }
 
-    if (showEditSheet.value && uiState.selectedItem?.media != null) {
+    val selectedItem = uiState.selectedItem
+    if (showEditSheet.value && selectedItem?.media != null) {
         EditMediaSheet(
-            mediaDetails = uiState.selectedItem.media!!.basicMediaDetails,
-            listEntry = uiState.selectedItem.media!!.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = selectedItem.media!!.basicMediaDetails,
+            listEntry = selectedItem.media!!.mediaListEntry?.basicMediaListEntry,
             onEntryUpdated = { events?.onUpdateListEntry(it) },
             onDismissed = { showEditSheet.value = false }
         )
