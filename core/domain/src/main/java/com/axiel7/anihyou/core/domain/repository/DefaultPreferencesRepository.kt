@@ -295,6 +295,20 @@ class DefaultPreferencesRepository (
         dataStore.setValue(TVDB_API_KEY, value)
     }
 
+    // TMDB API key
+    val tmdbApiKey = dataStore.getValue(key = TMDB_API_KEY)
+
+    suspend fun setTmdbApiKey(value: String?) {
+        dataStore.setValue(TMDB_API_KEY, value)
+    }
+
+    // AniList Client ID (for OAuth / metadata)
+    val anilistClientId = dataStore.getValue(key = ANILIST_CLIENT_ID_KEY)
+
+    suspend fun setAnilistClientId(value: String?) {
+        dataStore.setValue(ANILIST_CLIENT_ID_KEY, value)
+    }
+
     // Audio language preference (sub/dub)
     val audioLanguage = dataStore.getValue(key = AUDIO_LANGUAGE_KEY, default = "sub")
     suspend fun setAudioLanguage(value: String) {
@@ -334,6 +348,8 @@ class DefaultPreferencesRepository (
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
         private val TVDB_API_KEY = stringPreferencesKey("tvdb_api_key")
+        private val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
+        private val ANILIST_CLIENT_ID_KEY = stringPreferencesKey("anilist_client_id")
         private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")
     }
 }

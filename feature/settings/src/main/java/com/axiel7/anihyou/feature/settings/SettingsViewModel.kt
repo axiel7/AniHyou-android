@@ -191,6 +191,18 @@ class SettingsViewModel(
         }
     }
 
+    override fun setTmdbApiKey(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setTmdbApiKey(value)
+        }
+    }
+
+    override fun setAnilistClientId(value: String) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setAnilistClientId(value)
+        }
+    }
+
     override fun setAudioLanguage(value: String) {
         viewModelScope.launch {
             defaultPreferencesRepository.setAudioLanguage(value)
@@ -332,6 +344,18 @@ class SettingsViewModel(
         defaultPreferencesRepository.tvdbApiKey
             .onEach { value ->
                 mutableUiState.update { it.copy(tvdbApiKey = value ?: "") }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.tmdbApiKey
+            .onEach { value ->
+                mutableUiState.update { it.copy(tmdbApiKey = value ?: "") }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.anilistClientId
+            .onEach { value ->
+                mutableUiState.update { it.copy(anilistClientId = value ?: "") }
             }
             .launchIn(viewModelScope)
 

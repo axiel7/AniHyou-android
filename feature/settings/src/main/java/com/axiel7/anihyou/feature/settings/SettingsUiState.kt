@@ -29,6 +29,8 @@ data class SettingsUiState(
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val tvdbApiKey: String? = null,
+    val tmdbApiKey: String? = null,
+    val anilistClientId: String? = null,
     val audioLanguage: String = "sub",
     val userSettings: UserSettings? = null,
     val isLoggedIn: Boolean = false,

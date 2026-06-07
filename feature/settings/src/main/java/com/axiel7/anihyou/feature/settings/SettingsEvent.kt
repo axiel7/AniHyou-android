@@ -60,5 +60,7 @@ interface SettingsEvent : UiEvent {
     fun logOut(recreate: () -> Unit)
 
     fun setTvdbApiKey(value: String)
+    fun setTmdbApiKey(value: String)
+    fun setAnilistClientId(value: String)
     fun setAudioLanguage(value: String)
 }

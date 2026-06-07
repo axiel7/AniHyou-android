@@ -299,12 +299,6 @@ private fun SettingsContent(
                         }
                     )
                 }
-                PlainPreference(
-                    title = "TVDB API Key",
-                    subtitle = if (uiState.tvdbApiKey.isNullOrEmpty()) "Not set" else "Set",
-                    icon = R.drawable.code_24,
-                    onClick = { showTvdbDialog = true }
-                )
 
                 ListPreference(
                     title = stringResource(R.string.audio_language),
@@ -313,6 +307,93 @@ private fun SettingsContent(
                     icon = R.drawable.language_24,
                     labelForValue = { if (it == "dub") stringResource(R.string.dub) else stringResource(R.string.sub) },
                     onValueChange = { event?.setAudioLanguage(it) }
+                )
+
+                // ── APIs section ─────────────────────────────────────────────
+                PreferencesTitle(text = "APIs")
+
+                // TMDB dialog
+                var showTmdbDialog by remember { mutableStateOf(false) }
+                if (showTmdbDialog) {
+                    var tmdbInput by remember { mutableStateOf(uiState.tmdbApiKey ?: "") }
+                    AlertDialog(
+                        onDismissRequest = { showTmdbDialog = false },
+                        title = { Text("TMDB API Key") },
+                        text = {
+                            Column {
+                                Text(
+                                    text = "Used for episode metadata and cover images. Get yours at themoviedb.org/settings/api",
+                                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                OutlinedTextField(
+                                    value = tmdbInput,
+                                    onValueChange = { tmdbInput = it },
+                                    label = { Text("API Key (v3 auth)") },
+                                    singleLine = true
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                event?.setTmdbApiKey(tmdbInput)
+                                showTmdbDialog = false
+                            }) { Text(stringResource(R.string.save)) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showTmdbDialog = false }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+                PlainPreference(
+                    title = "TMDB API Key",
+                    subtitle = if (uiState.tmdbApiKey.isNullOrEmpty()) "Not configured — tap to add" else "✓ Configured",
+                    icon = R.drawable.code_24,
+                    onClick = { showTmdbDialog = true }
+                )
+
+                // AniList Client ID dialog
+                var showAnilistDialog by remember { mutableStateOf(false) }
+                if (showAnilistDialog) {
+                    var anilistInput by remember { mutableStateOf(uiState.anilistClientId ?: "") }
+                    AlertDialog(
+                        onDismissRequest = { showAnilistDialog = false },
+                        title = { Text("AniList Client ID") },
+                        text = {
+                            Column {
+                                Text(
+                                    text = "Your AniList OAuth app Client ID. Find it at anilist.co/settings/developer",
+                                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                OutlinedTextField(
+                                    value = anilistInput,
+                                    onValueChange = { anilistInput = it },
+                                    label = { Text("Client ID") },
+                                    singleLine = true
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                event?.setAnilistClientId(anilistInput)
+                                showAnilistDialog = false
+                            }) { Text(stringResource(R.string.save)) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showAnilistDialog = false }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+                PlainPreference(
+                    title = "AniList Client ID",
+                    subtitle = if (uiState.anilistClientId.isNullOrEmpty()) "Not configured — tap to add" else "✓ Configured",
+                    icon = R.drawable.code_24,
+                    onClick = { showAnilistDialog = true }
                 )
 
                 PreferencesTitle(text = stringResource(R.string.notifications))
