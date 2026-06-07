@@ -234,7 +234,7 @@ class DefaultPreferencesRepository (
     }
 
     val metadataProvider = dataStore.getValue(METADATA_PROVIDER_KEY).map {
-        if (it != null) MetadataProvider.valueOfOrNull(it) ?: MetadataProvider.TMDB else MetadataProvider.TMDB
+        if (it != null) runCatching { enumValueOf<MetadataProvider>(it) }.getOrDefault(MetadataProvider.TMDB) else MetadataProvider.TMDB
     }
 
     suspend fun setMetadataProvider(value: MetadataProvider) {
