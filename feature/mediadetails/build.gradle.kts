@@ -46,17 +46,14 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.compose)
 
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-<<<<<<< Updated upstream
     implementation(libs.coil.compose)
-
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.serialization.json)
-=======
+
     implementation(project(":core:streaming"))
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.hls)
     implementation(libs.media3.ui)
->>>>>>> Stashed changes
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
