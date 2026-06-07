@@ -1,5 +1,0 @@
-mutation UpdateActivityReply($activityId: Int, $id: Int, $text: String) {
-    SaveActivityReply(activityId: $activityId, id: $id, text: $text) {
-        ...ActivityReplyFragment
-    }
-}

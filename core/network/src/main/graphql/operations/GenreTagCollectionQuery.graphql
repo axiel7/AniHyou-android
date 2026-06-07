@@ -1,7 +1,0 @@
-query GenreTagCollectionQuery {
-    GenreCollection
-    MediaTagCollection {
-        id
-        name
-    }
-}

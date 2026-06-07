@@ -1,5 +1,0 @@
-mutation DeleteActivity($id: Int) {
-    DeleteActivity(id: $id) {
-        deleted
-    }
-}

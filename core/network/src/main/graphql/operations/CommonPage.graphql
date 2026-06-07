@@ -1,4 +1,0 @@
-fragment CommonPage on PageInfo {
-    currentPage
-    hasNextPage
-}

@@ -1,6 +1,0 @@
-mutation SubscribeThread($threadId: Int, $subscribe: Boolean) {
-    ToggleThreadSubscription(threadId: $threadId, subscribe: $subscribe) {
-        id
-        isSubscribed
-    }
-}
