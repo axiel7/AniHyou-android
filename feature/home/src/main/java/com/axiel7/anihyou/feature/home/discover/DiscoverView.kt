@@ -42,10 +42,17 @@ import com.axiel7.anihyou.feature.home.discover.content.AiringContent
 import com.axiel7.anihyou.feature.home.discover.content.CurrentlyWatchingContent
 import com.axiel7.anihyou.feature.home.discover.content.DiscoverMediaContent
 import com.axiel7.anihyou.feature.home.discover.content.SeasonAnimeContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 
 enum class DiscoverInfo {
+    RECOMMENDATIONS,
+    POPULAR_ANIME,
     CURRENTLY_WATCHING,
     AIRING,
     THIS_SEASON,
@@ -111,6 +118,14 @@ private fun DiscoverContent(
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
+    // Navigate to random anime when fetched
+    uiState.randomAnimeId?.let { randomId ->
+        LaunchedEffect(randomId) {
+            navActionManager.toMediaDetails(randomId)
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
         onRefresh = { event?.refresh() },
@@ -294,10 +309,64 @@ private fun DiscoverContent(
                             navigateToMediaDetails = navActionManager::toMediaDetails,
                         )
                     }
+
+                    DiscoverInfo.POPULAR_ANIME -> {
+                        LaunchedEffect(Unit) {
+                            event?.fetchPopularAnime()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.popular_anime),
+                            media = uiState.popularAnime,
+                            isLoading = uiState.isLoadingPopularAnime,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.ANIME, MediaSort.POPULARITY_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
+                    }
+
+                    DiscoverInfo.RECOMMENDATIONS -> {
+                        LaunchedEffect(Unit) {
+                            event?.fetchRecommendations()
+                        }
+                        DiscoverMediaContent(
+                            title = stringResource(R.string.top_rated),
+                            media = uiState.recommendations,
+                            isLoading = uiState.isLoadingRecommendations,
+                            onLongClickItem = {
+                                event?.selectItem(
+                                    details = it.basicMediaDetails,
+                                    listEntry = it.mediaListEntry?.basicMediaListEntry
+                                )
+                                showEditSheetAction()
+                            },
+                            onClickHeader = {
+                                navActionManager.toExplore(MediaType.ANIME, MediaSort.SCORE_DESC)
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                        )
+                    }
                 }
             }
         }//: LazyColumn
-    }
+    } // PullToRefreshBox
+
+    ExtendedFloatingActionButton(
+        onClick = { event?.fetchRandomAnime() },
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(16.dp),
+        icon = { Icon(painterResource(R.drawable.shuffle_24), contentDescription = null) },
+        text = { Text(stringResource(R.string.surprise_me)) },
+    )
+    } // Box
 }
 
 @Preview

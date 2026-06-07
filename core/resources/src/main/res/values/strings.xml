@@ -657,4 +657,8 @@
     <string name="select_episode">Select Episode</string>
     <string name="no_episodes">No episodes available</string>
     <string name="season_n">Season %d</string>
+    <string name="popular_anime">Popular Anime</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="random_anime">Random Anime</string>
+    <string name="surprise_me">Surprise me!</string>
 </resources>

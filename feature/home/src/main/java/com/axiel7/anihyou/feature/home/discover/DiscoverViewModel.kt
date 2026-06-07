@@ -215,6 +215,66 @@ class DiscoverViewModel(
         }
     }
 
+    override fun fetchPopularAnime() {
+        if (mutableUiState.value.popularAnime.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.POPULARITY_DESC),
+                isAdult = uiState.value.isAdult,
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.popularAnime.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingPopularAnime = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun fetchRecommendations() {
+        if (mutableUiState.value.recommendations.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.SCORE_DESC),
+                isAdult = uiState.value.isAdult,
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.recommendations.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingRecommendations = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun fetchRandomAnime() {
+        viewModelScope.launch {
+            val randomPage = (1..50).random()
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.ID),
+                isAdult = uiState.value.isAdult,
+                page = randomPage,
+                perPage = 1,
+            ).onEach { result ->
+                if (result is PagedResult.Success) {
+                    val media = result.list.firstOrNull()
+                    mutableUiState.update { it.copy(randomAnimeId = media?.basicMediaDetails?.id) }
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
     override fun fetchCurrentlyWatching() {
         if (mutableUiState.value.currentlyWatching.isEmpty()) {
             viewModelScope.launch {
@@ -254,6 +314,8 @@ class DiscoverViewModel(
             trendingManga.clear()
             newlyAnime.clear()
             newlyManga.clear()
+            popularAnime.clear()
+            recommendations.clear()
             fetchCurrentlyWatching()
             if (airingOnMyList == true) fetchAiringAnimeOnMyList()
             else fetchAiringAnime()

@@ -19,5 +19,8 @@ interface DiscoverEvent : UiEvent {
     fun fetchNewlyManga()
     fun refresh()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
+    fun fetchPopularAnime()
+    fun fetchRecommendations()
+    fun fetchRandomAnime()
     fun fetchCurrentlyWatching()
 }
