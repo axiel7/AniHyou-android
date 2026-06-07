@@ -1,5 +1,10 @@
 package com.axiel7.anihyou.feature.thread.composables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -55,6 +60,8 @@ fun ChildCommentView(
     val scope = rememberCoroutineScope()
     var isLiked by remember { mutableStateOf(comment.isLiked == true) }
     var showChildComments by remember { mutableStateOf(false) }
+    val hasComments = !comment.childComments.isNullOrEmpty()
+
     Row(
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -107,10 +114,10 @@ fun ChildCommentView(
                         app = translatorApp,
                     )
                 }
-                if (!comment.childComments.isNullOrEmpty()) {
+                if (hasComments) {
                     CommentIconButton(
                         modifier = Modifier.width(78.dp),
-                        commentCount = comment.childComments!!.size,
+                        commentCount = comment.childComments?.size ?: 0,
                         onClick = { showChildComments = !showChildComments },
                         fontSize = 14.sp,
                         iconSize = 20.dp,
@@ -135,17 +142,25 @@ fun ChildCommentView(
             }
         }//:Column
     }//:Row
-    if (showChildComments) {
-        comment.childComments?.filterNotNull()?.forEach {
-            ChildCommentView(
-                comment = it,
-                translatorApp = translatorApp,
-                modifier = Modifier.padding(start = 16.dp),
-                toggleLike = toggleLike,
-                navigateToUserDetails = navigateToUserDetails,
-                navigateToPublishReply = navigateToPublishReply,
-                uriHandler = uriHandler,
-            )
+    if (hasComments) {
+        AnimatedVisibility(
+            visible = showChildComments,
+            enter = fadeIn() + slideInVertically(),
+            exit = slideOutVertically() + fadeOut(),
+        ) {
+            Column {
+                comment.childComments?.filterNotNull()?.forEach {
+                    ChildCommentView(
+                        comment = it,
+                        translatorApp = translatorApp,
+                        modifier = Modifier.padding(start = 16.dp),
+                        toggleLike = toggleLike,
+                        navigateToUserDetails = navigateToUserDetails,
+                        navigateToPublishReply = navigateToPublishReply,
+                        uriHandler = uriHandler,
+                    )
+                }
+            }
         }
     }
 }
