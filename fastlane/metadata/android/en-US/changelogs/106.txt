@@ -1,6 +1,0 @@
-- Updated for Material 3 Expressive
-- Search: filter for episodes, chapters, duration, volumes and source
-- Search: minimum tag percentage filter (Thanks to @Fewwan)
-- MediaList: The +1 button is now spammable, try it!
-- Current: added next season anime on my list
-- Lot of bug fixes and other improvements

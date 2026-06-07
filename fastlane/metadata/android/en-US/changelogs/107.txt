@@ -1,4 +1,0 @@
-- Profile: new layout with more space
-- Fix too many request error
-- Hide adult content when logged out
-- Other fixes and improvements
