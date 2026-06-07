@@ -47,4 +47,6 @@ dependencies {
     implementation(libs.koin.compose)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    implementation(libs.coil.compose)
 }
