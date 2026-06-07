@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.streaming.api
 
+import android.util.Base64
 import com.axiel7.anihyou.core.streaming.model.Episode
 import com.axiel7.anihyou.core.streaming.model.EpisodeList
 import com.axiel7.anihyou.core.streaming.model.PlaybackInfo
@@ -43,7 +44,7 @@ class AllAnimeProvider(
     private val referer = "https://allanime.to"
     private val userAgent = "Mozilla/5.0 (Android 14; Mobile) AppleWebKit/537.36"
 
-    // ── Search ────────────────────────────────────────────────────────────────
+    // ── Search ──────────────────────────────────────────────────────────
 
     override suspend fun findAnimeId(anilistId: Int, title: String): String? =
         withContext(Dispatchers.IO) {
@@ -66,7 +67,7 @@ class AllAnimeProvider(
             }.getOrNull()
         }
 
-    // ── Episodes ──────────────────────────────────────────────────────────────
+    // ── Episodes ─────────────────────────────────────────────────────────
 
     override suspend fun getEpisodes(animeId: String, isDub: Boolean): EpisodeList =
         withContext(Dispatchers.IO) {
@@ -107,7 +108,7 @@ class AllAnimeProvider(
             }.getOrElse { EpisodeList(animeId, emptyList()) }
         }
 
-    // ── Streams ───────────────────────────────────────────────────────────────
+    // ── Streams ──────────────────────────────────────────────────────────
 
     override suspend fun getPlaybackInfo(episodeId: String): PlaybackInfo =
         withContext(Dispatchers.IO) {
@@ -139,7 +140,7 @@ class AllAnimeProvider(
             }.getOrElse { PlaybackInfo(emptyList()) }
         }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+    // ── Internal helpers ──────────────────────────────���───────────────────────
 
     private fun graphql(query: String, variables: String): String? {
         return runCatching {
@@ -159,7 +160,7 @@ class AllAnimeProvider(
         // AllAnime returns base64-encoded URLs prefixed with "--"
         val url = if (rawUrl.startsWith("--")) {
             try {
-                String(android.util.Base64.decode(rawUrl.substring(2), android.util.Base64.DEFAULT))
+                String(Base64.decode(rawUrl.substring(2), Base64.DEFAULT))
             } catch (_: Exception) {
                 rawUrl
             }
