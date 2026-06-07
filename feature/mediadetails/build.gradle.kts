@@ -49,4 +49,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.coil.compose)
+
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.serialization.json)
 }
