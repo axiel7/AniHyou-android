@@ -646,4 +646,5 @@
     </plurals>
     <string name="login_required_in_phone">Чтобы воспользоваться этим приложением, сначала нужно войти в систему, открыв приложение AniHyou, установленное на вашем телефоне</string>
     <string name="app_installed_required">Устройство поблизости не обнаружено, пожалуйста, установите последнюю версию приложения AniHyou на свой телефон Android</string>
+    <string name="translator_app">Переводчик</string>
 </resources>
