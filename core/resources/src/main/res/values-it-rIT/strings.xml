@@ -128,7 +128,6 @@
     <string name="trending">Tendenze</string>
     <string name="sort_status">Stato</string>
     <string name="search_match">Corrispondenza ricerca</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popolari</string>
     <string name="apply">Applica</string>
     <string name="sort_default">Predefinito</string>
@@ -159,15 +158,12 @@
     <string name="theme_system">Segui sistema</string>
     <string name="theme_light">Chiaro</string>
     <string name="theme_dark">Scuro</string>
-    <string name="theme_black">Nero</string>
     <string name="open_al_links_in_the_app">Apri i link di AniList nell\'app</string>
     <string name="account">Account</string>
     <string name="github_repository">Repository GitHub</string>
     <string name="version">Versione</string>
-    <string name="developed_by_axiel7">Sviluppato da axiel7</string>
     <string name="anilist_account_settings">Impostazioni account AniList</string>
     <string name="logout">Esci</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Compleanno</string>
     <string name="age">Età</string>
     <string name="gender">Sesso</string>
@@ -186,7 +182,6 @@
     <string name="reviews">Recensioni</string>
     <string name="loading">Caricamento</string>
     <string name="users_likes">Agli utenti piace</string>
-    <string name="no_reviews">Nessuna recensione</string>
     <string name="close">Chiudi</string>
     <string name="genres">Generi</string>
     <string name="add_genre">Aggiungi genere</string>
@@ -251,17 +246,10 @@
     <string name="items_per_row">Elementi per riga</string>
     <string name="default_setting">Predefinito</string>
     <string name="media_status">Stato</string>
-    <string name="year">Anno</string>
-    <string name="episode_aired_ago">Ep %d in onda %s fa</string>
     <string name="title_language">Lingua del titolo</string>
     <string name="romaji_western_order">Romaji (Ordine Occidentale)</string>
     <string name="staff_character_name_language"><![CDATA[Lingua dei nomi dello staff e dei personaggi]]></string>
     <string name="score_format">Formato del punteggio</string>
-    <string name="score_point_100">100 punti (55/100)</string>
-    <string name="score_point_10_decimal">10 punti decimali (5,5/10)</string>
-    <string name="score_point_10">10 punti (5/10)</string>
-    <string name="score_point_5">5 Stelle (3/5)</string>
-    <string name="score_point_3">Smiley a 3 punti :)</string>
     <string name="no_media">Nessun media</string>
     <string name="every_six_hours">Ogni 6 ore</string>
     <string name="every_twelve_hours">Ogni 12 ore</string>
@@ -274,7 +262,6 @@
     <string name="airing_anime_notifications">Notifiche di anime in onda</string>
     <string name="color">Colore</string>
     <string name="discover">Scopri</string>
-    <string name="default_home_tab">Scheda Home predefinita</string>
     <string name="text_status">Stato del testo</string>
     <string name="list_progress">Progresso lista</string>
     <string name="all">Tutto</string>
@@ -298,7 +285,6 @@
     <string name="reply">Rispondi</string>
     <string name="locked">Bloccato</string>
     <string name="donator">Donatore</string>
-    <string name="google_translate_not_installed">Traduttore Google non è installato</string>
     <string name="no_app_found_for_this_action">Nessuna app trovata per questa azione</string>
     <string name="list_status">Stato</string>
     <string name="action_back">Indietro</string>
@@ -366,9 +352,6 @@
     <string name="staff_role_assistant_unit_director">Assistente del direttore dell\'unità</string>
     <string name="staff_role_associate_producer">Produttore associato</string>
     <string name="staff_role_background_manager">Responsabile sfondi</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">Opere 3D</string>
-    <string name="staff_role_3d_works">Lavori 3D</string>
     <string name="staff_role_cg_animation_director">Direttore Animazione CG</string>
     <string name="staff_role_cg_animation">Animazione CG</string>
     <string name="staff_role_cg_assistant_director">Assistente Direttore CG</string>
@@ -399,8 +382,6 @@
     <string name="staff_role_cover_illustration">Illustrazione di copertina</string>
     <string name="staff_role_creature_design">Design delle creature</string>
     <string name="staff_role_design_assistance">Assistenza al design</string>
-    <string name="staff_role_2d_design">Design 2D</string>
-    <string name="staff_role_2d_works">Lavori 2D</string>
     <string name="staff_role_digital_paint">Disegno digitale</string>
     <string name="staff_role_digital_photography">Fotografia digitale</string>
     <string name="staff_role_digital_production_assistant">Assistenza della produzione digitale</string>
@@ -410,7 +391,6 @@
     <string name="staff_role_editing_manager">Manager editing</string>
     <string name="staff_role_editing">Editing</string>
     <string name="staff_role_effects">effetti</string>
-    <string name="staff_role_2d_effects">Effetti 2D</string>
     <string name="staff_role_effects_animation_director">Direttore effetti</string>
     <string name="staff_role_endcard">Scheda finale</string>
     <string name="staff_role_episode_director">Direttore episodi</string>
@@ -424,9 +404,6 @@
     <string name="staff_role_hd_editing">Editing HD</string>
     <string name="staff_role_in_betweens_manager">Responsabile intermezzi</string>
     <string name="staff_role_key_animation">Animazioni chiave</string>
-    <string name="staff_role_1st_key_animation">Direttore principale d\'animazione</string>
-    <string name="staff_role_1st_key_assistant">Assistente del direttore d\'animazione</string>
-    <string name="staff_role_2nd_key_animation">Animazione secondaria</string>
     <string name="staff_role_key_animation_assistance">Assistenza animazioni chiave</string>
     <string name="staff_role_key_animation_op">Animazioni chiave (OP)</string>
     <string name="staff_role_layout">Layout</string>

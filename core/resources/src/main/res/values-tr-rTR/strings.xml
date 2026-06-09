@@ -128,7 +128,6 @@
     <string name="trending">Popüler</string>
     <string name="sort_status">Durum</string>
     <string name="search_match">Eşleşen Arama</string>
-    <string name="top_100">En İyi 100</string>
     <string name="top_popular">En Popüler</string>
     <string name="apply">Uygula</string>
     <string name="sort_default">Varsayılan</string>
@@ -159,15 +158,12 @@
     <string name="theme_system">Sistem ile aynı</string>
     <string name="theme_light">Aydınlık</string>
     <string name="theme_dark">Karanlık</string>
-    <string name="theme_black">Siyah</string>
     <string name="open_al_links_in_the_app">AniList bağlantılarını uygulama içinde aç</string>
     <string name="account">Hesap</string>
     <string name="github_repository">GitHub Reposu</string>
     <string name="version">Sürüm</string>
-    <string name="developed_by_axiel7">axiel7 tarafından geliştirildi</string>
     <string name="anilist_account_settings">AniList hesap ayarları</string>
     <string name="logout">Oturumu kapat</string>
-    <string name="character_media">Medya</string>
     <string name="birthday">Doğum günü</string>
     <string name="age">Yaş</string>
     <string name="gender">Cinsiyet</string>
@@ -186,7 +182,6 @@
     <string name="reviews">Değerlendirmeler</string>
     <string name="loading">Yükleniyor</string>
     <string name="users_likes">Kullanıcıların beğendikleri</string>
-    <string name="no_reviews">Değerlendirme yok</string>
     <string name="close">Kapat</string>
     <string name="genres">Türler</string>
     <string name="add_genre">Tür ekle</string>
@@ -251,17 +246,10 @@
     <string name="items_per_row">Satır başına öğe sayısı</string>
     <string name="default_setting">Varsayılan</string>
     <string name="media_status">Durum</string>
-    <string name="year">Yıl</string>
-    <string name="episode_aired_ago">Bölüm, %d, %s önce yayınlandı</string>
     <string name="title_language">Başlık dili</string>
     <string name="romaji_western_order">Romaji (Japonca Okunuş)</string>
     <string name="staff_character_name_language"><![CDATA[Ekip & Karakter adı dili]]></string>
     <string name="score_format">Puanlama türü</string>
-    <string name="score_point_100">100 Puan (55/100)</string>
-    <string name="score_point_10_decimal">10 puan ondalık (5.5/10)</string>
-    <string name="score_point_10">10 Puan (5/10)</string>
-    <string name="score_point_5">5 Yıldız (3/5)</string>
-    <string name="score_point_3">3 Puan Gülücük :)</string>
     <string name="no_media">İçerik yok</string>
     <string name="every_six_hours">Her 6 saatte</string>
     <string name="every_twelve_hours">Her 12 saatte</string>
@@ -274,7 +262,6 @@
     <string name="airing_anime_notifications">Anime yayınlanma bildirimi</string>
     <string name="color">Renk</string>
     <string name="discover">Keşfet</string>
-    <string name="default_home_tab">Varsayılan Ana Sayfa</string>
     <string name="text_status">Metin Durumu</string>
     <string name="list_progress">Listele</string>
     <string name="all">Tümü</string>
@@ -298,7 +285,6 @@
     <string name="reply">Yanıtla</string>
     <string name="locked">Kilitli</string>
     <string name="donator">Bağışcı</string>
-    <string name="google_translate_not_installed">Google Çeviri yüklü değil</string>
     <string name="no_app_found_for_this_action">Bu eylem için gerekli uygulama bulunamadı</string>
     <string name="list_status">Durum</string>
     <string name="action_back">Geri</string>
@@ -370,9 +356,6 @@
     <string name="staff_role_background_art_assistance">Sanat Arka Plan Asistanı</string>
     <string name="staff_role_background_manager">Arkaplan Yöneticim</string>
     <string name="staff_role_background_production">Arkaplan Yapım</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D Sanat</string>
-    <string name="staff_role_3d_works">3D Çalışmalar</string>
     <string name="staff_role_cg_animation_director">CG Animasyon Yönetmeni</string>
     <string name="staff_role_cg_animation">CG Animasyon</string>
     <string name="staff_role_cg_assistant_director">CG Asitan Yönetmen</string>
@@ -405,8 +388,6 @@
     <string name="staff_role_creature_design">Yaratık Tasarımı</string>
     <string name="staff_role_design_assistance">Tasarım Yönetmeni</string>
     <string name="staff_role_design_works">Tasarım Çalışmaları</string>
-    <string name="staff_role_2d_design">2D Tasarım</string>
-    <string name="staff_role_2d_works">2D Çalışmalar</string>
     <string name="staff_role_digital_animation">Dijital Animasyon</string>
     <string name="staff_role_digital_art">Dijital Sanat</string>
     <string name="staff_role_digital_coloring">Dijital Renklendirme</string>
@@ -420,7 +401,6 @@
     <string name="staff_role_editing_manager">Kurgu Yönetmeni</string>
     <string name="staff_role_editing">Kurgu</string>
     <string name="staff_role_effects">Efektler</string>
-    <string name="staff_role_2d_effects">2D Efekt</string>
     <string name="staff_role_effects_animation_director">Efekt Animasyon Yönetmeni</string>
     <string name="staff_role_endcard">Bitiş Kartı</string>
     <string name="staff_role_episode_director">Bölüm Yönetmeni</string>
@@ -445,9 +425,6 @@
     <string name="staff_role_insert_song_composition">Şarkı Kompozisyonu Ekleme</string>
     <string name="staff_role_insert_song_arrangement">Şarkı Düzenlemesi Ekleme</string>
     <string name="staff_role_key_animation">Anahtar Animasyon</string>
-    <string name="staff_role_1st_key_animation">1. Anahtar Animasyon Yönetmeni</string>
-    <string name="staff_role_1st_key_assistant">1. Anahtar Animasyon Yönetmen Yardımcısı</string>
-    <string name="staff_role_2nd_key_animation">2. Anahtar Animasyon</string>
     <string name="staff_role_key_animation_assistance">Anahtar Animasyon Asistanı</string>
     <string name="staff_role_key_animation_op">Anahtar Animasyon (OP)</string>
     <string name="staff_role_layout_animation_director">Plan Animasyon Yönetmeni</string>
@@ -550,7 +527,6 @@
     <string name="staff_role_theme_song_performance_op">Tema Şarkısı Performansı (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Tema Şarkısı Performansı (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Tema Şarkısı Performansı (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Film Başlığı Logo Tasarım Asistanı</string>
     <string name="staff_role_title_logo_design">Film Başlığı Logo Tasarımı</string>
     <string name="staff_role_touch_up_art_and_lettering">Rötuş Sanatı &amp; Metin</string>
     <string name="staff_role_touch_up_art">Rötuş Sanatı</string>

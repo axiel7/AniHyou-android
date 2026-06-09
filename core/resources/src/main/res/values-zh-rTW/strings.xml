@@ -121,7 +121,6 @@
     <string name="trending">熱門</string>
     <string name="sort_status">狀態</string>
     <string name="search_match">搜索匹配</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">熱門排行</string>
     <string name="apply">套用</string>
     <string name="sort_default">預設</string>
@@ -152,15 +151,12 @@
     <string name="theme_system">依據系統設定</string>
     <string name="theme_light">淺色</string>
     <string name="theme_dark">深色</string>
-    <string name="theme_black">黑色</string>
     <string name="open_al_links_in_the_app">在應用程式中打開 AniList 連結</string>
     <string name="account">帳號</string>
     <string name="github_repository">Github 倉庫</string>
     <string name="version">版本</string>
-    <string name="developed_by_axiel7">由 axiel7 開發</string>
     <string name="anilist_account_settings">AniList 帳戶設定</string>
     <string name="logout">登出</string>
-    <string name="character_media">媒體</string>
     <string name="birthday">生日</string>
     <string name="age">年齡</string>
     <string name="gender">性別</string>
@@ -179,7 +175,6 @@
     <string name="reviews">評論</string>
     <string name="loading">載入中</string>
     <string name="users_likes">用戶收藏</string>
-    <string name="no_reviews">暫無評論</string>
     <string name="close">關閉</string>
     <string name="genres">類型</string>
     <string name="add_genre">添加類型</string>
@@ -244,17 +239,10 @@
     <string name="items_per_row">每行顯示物品數</string>
     <string name="default_setting">預設</string>
     <string name="media_status">狀態</string>
-    <string name="year">年</string>
-    <string name="episode_aired_ago">第%d集在%s前播出</string>
     <string name="title_language">標題語言</string>
     <string name="romaji_western_order">羅馬字（西方順序）</string>
     <string name="staff_character_name_language"><![CDATA[製作人員和角色名稱的語言]]></string>
     <string name="score_format">評分格式</string>
-    <string name="score_point_100">百分制（55/100）</string>
-    <string name="score_point_10_decimal">帶小數十分制（5.5/10）</string>
-    <string name="score_point_10">十分制（5/10）</string>
-    <string name="score_point_5">五星制（3/5）</string>
-    <string name="score_point_3">3點笑臉 :)</string>
     <string name="no_media">無媒體</string>
     <string name="every_six_hours">每6個小時</string>
     <string name="every_twelve_hours">每12個小時</string>
@@ -267,7 +255,6 @@
     <string name="airing_anime_notifications">動漫播出通知</string>
     <string name="color">顔色</string>
     <string name="discover">發現</string>
-    <string name="default_home_tab">默認主頁</string>
     <string name="text_status">文本狀態</string>
     <string name="list_progress">列表進度</string>
     <string name="all">全部</string>
@@ -291,7 +278,6 @@
     <string name="reply">回復</string>
     <string name="locked">已鎖定</string>
     <string name="donator">捐款者</string>
-    <string name="google_translate_not_installed">未安裝 Google 翻譯</string>
     <string name="no_app_found_for_this_action">未找到適用於此動作的應用程式</string>
     <string name="list_status">狀態</string>
     <string name="action_back">返回</string>
@@ -362,9 +348,6 @@
     <string name="staff_role_background_art_assistance">背景美術協助</string>
     <string name="staff_role_background_manager">背景經理</string>
     <string name="staff_role_background_production">背景製作</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D</string>
-    <string name="staff_role_3d_works">3D</string>
     <string name="staff_role_cg_animation_director">CG 動畫監督</string>
     <string name="staff_role_cg_animation">CG 動畫</string>
     <string name="staff_role_cg_assistant_director">CG 副监督</string>
@@ -397,8 +380,6 @@
     <string name="staff_role_creature_design">生物設計</string>
     <string name="staff_role_design_assistance">設計協助</string>
     <string name="staff_role_design_works">設定</string>
-    <string name="staff_role_2d_design">2D 設計</string>
-    <string name="staff_role_2d_works">2D</string>
     <string name="staff_role_digital_animation">數位動畫</string>
     <string name="staff_role_digital_art">數位美術</string>
     <string name="staff_role_digital_coloring">數位著色</string>
@@ -412,7 +393,6 @@
     <string name="staff_role_editing_manager">編輯經理</string>
     <string name="staff_role_editing">編輯</string>
     <string name="staff_role_effects">特效</string>
-    <string name="staff_role_2d_effects">2D特效</string>
     <string name="staff_role_effects_animation_director">動畫特效監督</string>
     <string name="staff_role_endcard">片尾插畫</string>
     <string name="staff_role_episode_director">劇集監督</string>
@@ -437,9 +417,6 @@
     <string name="staff_role_insert_song_composition">插曲作曲</string>
     <string name="staff_role_insert_song_arrangement">插曲編曲</string>
     <string name="staff_role_key_animation">關鍵幀動畫</string>
-    <string name="staff_role_1st_key_animation">第一關鍵幀動畫監督</string>
-    <string name="staff_role_1st_key_assistant">第一關鍵幀動畫監督助理</string>
-    <string name="staff_role_2nd_key_animation">第二關鍵幀動畫</string>
     <string name="staff_role_key_animation_assistance">關鍵幀動畫協助</string>
     <string name="staff_role_key_animation_op">關鍵幀動畫（OP）</string>
     <string name="staff_role_layout_animation_director">動畫佈局監督</string>
@@ -542,7 +519,6 @@
     <string name="staff_role_theme_song_performance_op">主題曲演唱（OP）</string>
     <string name="staff_role_theme_song_performance_ed">主題曲演唱（ED）</string>
     <string name="staff_role_theme_song_performance_op_ed">主題曲演唱（OP，ED）</string>
-    <string name="staff_role_title_logo_design_assistance">標題Logo設計協助</string>
     <string name="staff_role_title_logo_design">標題Logo設計</string>
     <string name="staff_role_touch_up_art_and_lettering">修圖&amp;簽字</string>
     <string name="staff_role_touch_up_art">修圖</string>

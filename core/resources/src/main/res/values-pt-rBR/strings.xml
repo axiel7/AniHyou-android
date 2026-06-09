@@ -128,7 +128,6 @@
     <string name="trending">Em alta</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Pesquisa Correspondente</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popular</string>
     <string name="apply">Aplicar</string>
     <string name="sort_default">Padrão</string>
@@ -159,15 +158,12 @@
     <string name="theme_system">Seguir o sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Escuro</string>
-    <string name="theme_black">Preto</string>
     <string name="open_al_links_in_the_app">Abrir links do AniList no app</string>
     <string name="account">Conta</string>
     <string name="github_repository">Repositório GitHub</string>
     <string name="version">Versão</string>
-    <string name="developed_by_axiel7">Desenvolvido por axiel7</string>
     <string name="anilist_account_settings">Ajustes da conta AniList</string>
     <string name="logout">Deslogar</string>
-    <string name="character_media">Mídia</string>
     <string name="birthday">Aniversário</string>
     <string name="age">Idade</string>
     <string name="gender">Gênero</string>
@@ -186,7 +182,6 @@
     <string name="reviews">Resenhas</string>
     <string name="loading">Carregando</string>
     <string name="users_likes">Curtidas de usuários</string>
-    <string name="no_reviews">Sem resenhas</string>
     <string name="close">Fechar</string>
     <string name="genres">Gêneros</string>
     <string name="add_genre">Adicionar gênero</string>
@@ -251,17 +246,10 @@
     <string name="items_per_row">Itens por linha</string>
     <string name="default_setting">Padrão</string>
     <string name="media_status">Status</string>
-    <string name="year">Ano</string>
-    <string name="episode_aired_ago">Ep %d estreou %s atrás</string>
     <string name="title_language">Idioma do título</string>
     <string name="romaji_western_order">Romaji (Ordem Ocidental)</string>
     <string name="staff_character_name_language"><![CDATA[Língua do nome da Equipe e Personagens]]></string>
     <string name="score_format">Formato da nota</string>
-    <string name="score_point_100">100 Pontos (55/100)</string>
-    <string name="score_point_10_decimal">10 Pontos Decimais (5,5/10)</string>
-    <string name="score_point_10">10 Pontos (5/10)</string>
-    <string name="score_point_5">5 Estrelas (3/5)</string>
-    <string name="score_point_3">Rostinho de 3 Pontos :)</string>
     <string name="no_media">Sem mídia</string>
     <string name="every_six_hours">A cada 6 horas</string>
     <string name="every_twelve_hours">A cada 12 horas</string>
@@ -274,7 +262,6 @@
     <string name="airing_anime_notifications">Notificações de animes estreando</string>
     <string name="color">Cor</string>
     <string name="discover">Descobrir</string>
-    <string name="default_home_tab">Tela inicial padrão</string>
     <string name="text_status">Status de texto</string>
     <string name="list_progress">Progresso da lista</string>
     <string name="all">Todos</string>
@@ -298,7 +285,6 @@
     <string name="reply">Responder</string>
     <string name="locked">Bloqueado</string>
     <string name="donator">Doador</string>
-    <string name="google_translate_not_installed">Google Tradutor não está instalado</string>
     <string name="no_app_found_for_this_action">Nenhum aplicativo encontrado para esta ação</string>
     <string name="list_status">Status</string>
     <string name="action_back">Voltar</string>
@@ -364,7 +350,6 @@
     <string name="staff_role_director_of_photography">Diretor de Fotografia</string>
     <string name="staff_role_director">Diretor</string>
     <string name="staff_role_editing_assistant">Assistente de Edição</string>
-    <string name="staff_role_1st_key_animation">1° Diretor-Chave de Animação</string>
     <string name="staff_role_music">Música</string>
     <string name="staff_role_planning">Planejado</string>
     <string name="hide_filters">Ocultar filtros</string>

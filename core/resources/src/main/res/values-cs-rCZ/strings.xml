@@ -110,7 +110,6 @@
     <string name="theme_system">Podle systému</string>
     <string name="theme_light">Světlý</string>
     <string name="theme_dark">Tmavý</string>
-    <string name="theme_black">Černý</string>
     <string name="account">Účet</string>
     <string name="version">Verze</string>
     <string name="age">Věk</string>
@@ -149,13 +148,8 @@
     <string name="items_per_row">Položky na řádek</string>
     <string name="default_setting">Výchozí</string>
     <string name="media_status">Stav</string>
-    <string name="year">Rok</string>
     <string name="title_language">Jazyk titulku</string>
     <string name="romaji_western_order">Romadži (západní pořadí)</string>
-    <string name="score_point_100">100 bodů (55/100)</string>
-    <string name="score_point_10">10 bodů (5/10)</string>
-    <string name="score_point_5">5 hvězdiček (3/5)</string>
-    <string name="score_point_3">3 bodový smajlík :)</string>
     <string name="all">Vše</string>
     <string name="format_image">Image</string>
     <string name="list_status">Stav</string>
@@ -200,9 +194,6 @@
     <string name="staff_role_animation">Animace</string>
     <string name="staff_role_art">Grafika</string>
     <string name="staff_role_art_board">Umělecká deska</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D Grafika</string>
-    <string name="staff_role_3d_works">3D Works</string>
     <string name="staff_role_chief_animation_director">Hlavní režisér animace</string>
     <string name="staff_role_chief_director">Hlavní ředitel</string>
     <string name="staff_role_chief_episode_director">Hlavní režisér epizod</string>
@@ -222,8 +213,6 @@
     <string name="staff_role_creature_design">Design stvoření</string>
     <string name="staff_role_design_assistance">Asistence při navrhování</string>
     <string name="staff_role_design_works">Designové práce</string>
-    <string name="staff_role_2d_design">2D design</string>
-    <string name="staff_role_2d_works">2D práce</string>
     <string name="staff_role_digital_animation">Digitální animace</string>
     <string name="staff_role_digital_art">Digitální umění</string>
     <string name="staff_role_digital_coloring">Digitální zbarvení</string>
@@ -233,14 +222,12 @@
     <string name="staff_role_digital_production_assistant">Asistent digitální produkce</string>
     <string name="staff_role_director_of_photography">Kameraman</string>
     <string name="staff_role_director">Ředitel</string>
-    <string name="staff_role_2d_effects">2D efekty</string>
     <string name="staff_role_illustration">Ilustrace</string>
     <string name="staff_role_in_between_animation_assistance">Pomoc při animaci v mezidobí</string>
     <string name="staff_role_in_between_animation">Animace v mezidobí</string>
     <string name="staff_role_in_betweens_check">Kontrola mezistupňů</string>
     <string name="staff_role_in_betweens_manager">Manažer pro mezistupně</string>
     <string name="staff_role_insert_song_arrangement">Vložit aranžmá písně</string>
-    <string name="staff_role_2nd_key_animation">2. klíčová animace</string>
     <string name="staff_role_music">Hudba</string>
     <string name="staff_role_planning">Plánováno</string>
     <string name="hide_filters">Skrýt filtry</string>

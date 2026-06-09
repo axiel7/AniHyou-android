@@ -142,7 +142,6 @@
     <string name="trending">Popularne</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Domyślnie</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Najpopularniejsze</string>
     <string name="apply">Zastosuj</string>
     <string name="sort_default">Domyślny</string>
@@ -173,15 +172,12 @@
     <string name="theme_system">Zgodnie z systemem</string>
     <string name="theme_light">Jasny</string>
     <string name="theme_dark">Ciemny</string>
-    <string name="theme_black">Czarny</string>
     <string name="open_al_links_in_the_app">Otwórz linki AniList w aplikacji</string>
     <string name="account">Konto</string>
     <string name="github_repository">Repozytorium GitHub</string>
     <string name="version">Wersja</string>
-    <string name="developed_by_axiel7">Stworzone przez axiel7</string>
     <string name="anilist_account_settings">Ustawienia konta AniList</string>
     <string name="logout">Wyloguj się</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Urodziny</string>
     <string name="age">Wiek</string>
     <string name="gender">Płeć</string>
@@ -200,7 +196,6 @@
     <string name="reviews">Recenzje</string>
     <string name="loading">Ładowanie</string>
     <string name="users_likes">Użytkownicy lubią</string>
-    <string name="no_reviews">Brak recenzji</string>
     <string name="close">Zamknij</string>
     <string name="genres">Gatunki</string>
     <string name="add_genre">Dodaj gatunek</string>
@@ -265,17 +260,10 @@
     <string name="items_per_row">Pozycje w rzędzie</string>
     <string name="default_setting">Domyślny</string>
     <string name="media_status">Status</string>
-    <string name="year">Rok</string>
-    <string name="episode_aired_ago">Odc. %d wyemitowany %s temu</string>
     <string name="title_language">Język tytułu</string>
     <string name="romaji_western_order">Romaji (Zachodnia Kolejność)</string>
     <string name="staff_character_name_language"><![CDATA[Język personelu i nazwy postaci]]></string>
     <string name="score_format">Format oceny</string>
-    <string name="score_point_100">100 Punktowy (55/100)</string>
-    <string name="score_point_10_decimal">10-punktowy dziesiętny (5,5/10)</string>
-    <string name="score_point_10">10-Punktowy (5/10)</string>
-    <string name="score_point_5">5-gwiazdkowy (3/5)</string>
-    <string name="score_point_3">3-Punktowe Emotikony :-)</string>
     <string name="no_media">Brak mediów</string>
     <string name="every_six_hours">Co 6 godzin</string>
     <string name="every_twelve_hours">Co 12 godzin</string>
@@ -288,7 +276,6 @@
     <string name="airing_anime_notifications">Powiadomienia o emisji anime</string>
     <string name="color">Kolor</string>
     <string name="discover">Odkryj</string>
-    <string name="default_home_tab">Domyślna główna zakładka</string>
     <string name="text_status">Status tekstowy</string>
     <string name="list_progress">Lista postępów</string>
     <string name="all">Wszystkie</string>
@@ -312,7 +299,6 @@
     <string name="reply">Odpowiedz</string>
     <string name="locked">Zablokowany</string>
     <string name="donator">Donator</string>
-    <string name="google_translate_not_installed">Tłumacz Google nie został zainstalowany</string>
     <string name="no_app_found_for_this_action">Nie można odnaleźć aplikacji dla tego działania</string>
     <string name="list_status">Status</string>
     <string name="action_back">Cofnij</string>

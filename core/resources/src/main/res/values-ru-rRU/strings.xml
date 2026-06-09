@@ -142,7 +142,6 @@
     <string name="trending">В тренде</string>
     <string name="sort_status">Статус</string>
     <string name="search_match">Поиск совпадений</string>
-    <string name="top_100">Топ 100</string>
     <string name="top_popular">Топ Популярных</string>
     <string name="apply">Применить</string>
     <string name="sort_default">По умолчанию</string>
@@ -173,15 +172,12 @@
     <string name="theme_system">Как в системе</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>
-    <string name="theme_black">Чёрная</string>
     <string name="open_al_links_in_the_app">Открыть ссылки AniList в приложении</string>
     <string name="account">Аккаунт</string>
     <string name="github_repository">Репозиторий на GitHub</string>
     <string name="version">Версия</string>
-    <string name="developed_by_axiel7">Разработано axiel7</string>
     <string name="anilist_account_settings">Настройки аккаунта AniList</string>
     <string name="logout">Выйти</string>
-    <string name="character_media">Медиа</string>
     <string name="birthday">День рождения</string>
     <string name="age">Возраст</string>
     <string name="gender">Гендер</string>
@@ -200,7 +196,6 @@
     <string name="reviews">Отзывы</string>
     <string name="loading">Загрузка</string>
     <string name="users_likes">Пользователям понравилось</string>
-    <string name="no_reviews">Нет отзывов</string>
     <string name="close">Закрыть</string>
     <string name="genres">Жанры</string>
     <string name="add_genre">Добавить жанр</string>
@@ -265,17 +260,10 @@
     <string name="items_per_row">Элементы в строке</string>
     <string name="default_setting">По умолчанию</string>
     <string name="media_status">Статус</string>
-    <string name="year">Год</string>
-    <string name="episode_aired_ago">Эп %d вышел %s назад</string>
     <string name="title_language">Язык названия</string>
     <string name="romaji_western_order">Ромадзи (Западный Порядок)</string>
     <string name="staff_character_name_language"><![CDATA[Язык имен сотрудников и персонажей]]></string>
     <string name="score_format">Формат счета</string>
-    <string name="score_point_100">100 Очков (55/100)</string>
-    <string name="score_point_10_decimal">10-балльная десятичная система (5,5/10)</string>
-    <string name="score_point_10">10 Очков (5/10)</string>
-    <string name="score_point_5">5 Звезд (3/5)</string>
-    <string name="score_point_3">3 Очка Смайл :)</string>
     <string name="no_media">Нет медиа</string>
     <string name="every_six_hours">Каждые 6 часов</string>
     <string name="every_twelve_hours">Каждые 12 часов</string>
@@ -288,7 +276,6 @@
     <string name="airing_anime_notifications">Уведомления выходящих аниме</string>
     <string name="color">Цвет</string>
     <string name="discover">Узнать</string>
-    <string name="default_home_tab">Вкладка домашней страницы по умолчанию</string>
     <string name="text_status">Статус текста</string>
     <string name="list_progress">Прогресс списка</string>
     <string name="all">Все</string>
@@ -312,7 +299,6 @@
     <string name="reply">Ответить</string>
     <string name="locked">Заблокировано</string>
     <string name="donator">Пожертвователь</string>
-    <string name="google_translate_not_installed">Google Переводчик не установлен</string>
     <string name="no_app_found_for_this_action">Не найдено приложений для этого действия</string>
     <string name="list_status">Статус</string>
     <string name="action_back">Назад</string>
@@ -384,9 +370,6 @@
     <string name="staff_role_background_art_assistance">Помощь в создании фонового искусства</string>
     <string name="staff_role_background_manager">Фоновый менеджер</string>
     <string name="staff_role_background_production">Фоновое производство</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D-искусство</string>
-    <string name="staff_role_3d_works">3D-работы</string>
     <string name="staff_role_cg_animation_director">Режиссёр CG-анимации</string>
     <string name="staff_role_cg_animation">CG-анимация</string>
     <string name="staff_role_cg_assistant_director">CG Помощник режиссёра</string>
@@ -419,8 +402,6 @@
     <string name="staff_role_creature_design">Дизайн существ</string>
     <string name="staff_role_design_assistance">Помощь в проектировании</string>
     <string name="staff_role_design_works">Проектные работы</string>
-    <string name="staff_role_2d_design">2D-дизайн</string>
-    <string name="staff_role_2d_works">2D-работы</string>
     <string name="staff_role_digital_animation">Цифровая анимация</string>
     <string name="staff_role_digital_art">Цифровое искусство</string>
     <string name="staff_role_digital_coloring">Цифровая раскраска</string>
@@ -434,7 +415,6 @@
     <string name="staff_role_editing_manager">Менеджер по редактированию</string>
     <string name="staff_role_editing">Редактирование</string>
     <string name="staff_role_effects">Эффекты</string>
-    <string name="staff_role_2d_effects">2D-эффекты</string>
     <string name="staff_role_effects_animation_director">Директор по анимации эффектов</string>
     <string name="staff_role_endcard">Конечная карточка</string>
     <string name="staff_role_episode_director">Режиссёр эпизода</string>
@@ -459,9 +439,6 @@
     <string name="staff_role_insert_song_composition">Композиция вставной песни</string>
     <string name="staff_role_insert_song_arrangement">Аранжировка вставной песни</string>
     <string name="staff_role_key_animation">Ключевая анимация</string>
-    <string name="staff_role_1st_key_animation">1-й ключевой режиссёр анимации</string>
-    <string name="staff_role_1st_key_assistant">1-й ключевой помощник режиссёра анимации</string>
-    <string name="staff_role_2nd_key_animation">2-я ключевая анимация</string>
     <string name="staff_role_key_animation_assistance">Помощь в создании ключевых анимаций</string>
     <string name="staff_role_key_animation_op">Ключевая анимация (OP)</string>
     <string name="staff_role_layout_animation_director">Директор по анимации макета</string>
@@ -564,7 +541,6 @@
     <string name="staff_role_theme_song_performance_op">Исполнение тематической песни (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Исполнение тематической песни (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Исполнение тематической песни (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Помощь в разработке дизайна логотипа названия</string>
     <string name="staff_role_title_logo_design">Дизайн логотипа названия</string>
     <string name="staff_role_touch_up_art_and_lettering">Искусство ретуши &amp; Нанесение надписей</string>
     <string name="staff_role_touch_up_art">Искусство ретуши</string>

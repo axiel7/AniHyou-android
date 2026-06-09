@@ -121,7 +121,6 @@
     <string name="trending">Trending</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Mencari Kecocokan</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Populer</string>
     <string name="apply">Terapkan</string>
     <string name="sort_default">Default</string>
@@ -152,15 +151,12 @@
     <string name="theme_system">Ikuti sistem</string>
     <string name="theme_light">Terang</string>
     <string name="theme_dark">Gelap</string>
-    <string name="theme_black">Hitam</string>
     <string name="open_al_links_in_the_app">Buka tautan AniList di app</string>
     <string name="account">Akun</string>
     <string name="github_repository">Repositori GitHub</string>
     <string name="version">Versi</string>
-    <string name="developed_by_axiel7">Dibuat oleh axiel7</string>
     <string name="anilist_account_settings">Pengaturan akun AniList</string>
     <string name="logout">Keluar</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Ulang tahun</string>
     <string name="age">Usia</string>
     <string name="gender">Gender</string>
@@ -179,7 +175,6 @@
     <string name="reviews">Ulasan</string>
     <string name="loading">Memuat</string>
     <string name="users_likes">Like pengguna</string>
-    <string name="no_reviews">Tidak ada ulasan</string>
     <string name="close">Tutup</string>
     <string name="genres">Genre</string>
     <string name="add_genre">Tambah genre</string>
@@ -244,17 +239,10 @@
     <string name="items_per_row">Item perbaris</string>
     <string name="default_setting">Default</string>
     <string name="media_status">Status</string>
-    <string name="year">Tahun</string>
-    <string name="episode_aired_ago">Ep %d ditayangkan %s yang lalu</string>
     <string name="title_language">Judul bahasa</string>
     <string name="romaji_western_order">Romaji (Ordo Barat)</string>
     <string name="staff_character_name_language"><![CDATA[Bahasa untuk nama Staff & Karakter]]></string>
     <string name="score_format">Format Skor</string>
-    <string name="score_point_100">Nilai 100 (55/100)</string>
-    <string name="score_point_10_decimal">Nilai 10 Desimal (5.5/10)</string>
-    <string name="score_point_10">Nilai 10 (5/10)</string>
-    <string name="score_point_5">5 Bintang (3/5)</string>
-    <string name="score_point_3">Nilai 3 Tersenyum (੭˃ᴗ˂) ੭</string>
     <string name="no_media">Tanpa media</string>
     <string name="every_six_hours">Setiap 6 jam</string>
     <string name="every_twelve_hours">Setiap 12 jam</string>
@@ -267,7 +255,6 @@
     <string name="airing_anime_notifications">Notifikasi anime ditayangkan</string>
     <string name="color">Warna</string>
     <string name="discover">Jelajahi</string>
-    <string name="default_home_tab">Tampilan Awal bawaan</string>
     <string name="text_status">Status Teks</string>
     <string name="list_progress">Daftar Progres</string>
     <string name="all">Semua</string>
@@ -291,7 +278,6 @@
     <string name="reply">Balasan</string>
     <string name="locked">Terkunci</string>
     <string name="donator">Donatur</string>
-    <string name="google_translate_not_installed">Google Translate tidak terinstal</string>
     <string name="no_app_found_for_this_action">Aplikasi tidak ditemukan untuk melakukan aksi ini</string>
     <string name="list_status">Status</string>
     <string name="action_back">Kembali</string>
@@ -362,9 +348,6 @@
     <string name="staff_role_background_art_assistance">Bantuan Latar Belakang Seni</string>
     <string name="staff_role_background_manager">Latar Belakang Manajer</string>
     <string name="staff_role_background_production">Latar Belakang Produksi</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">Seni 3D</string>
-    <string name="staff_role_3d_works">Karya 3D</string>
     <string name="staff_role_cg_animation_director">Direktur Animasi CG</string>
     <string name="staff_role_cg_animation">Animasi CG</string>
     <string name="staff_role_cg_assistant_director">Asisten Direktur CG</string>
@@ -397,8 +380,6 @@
     <string name="staff_role_creature_design">Desain Makhluk</string>
     <string name="staff_role_design_assistance">Bantuan Desain</string>
     <string name="staff_role_design_works">Karya Desain</string>
-    <string name="staff_role_2d_design">Desain 2D</string>
-    <string name="staff_role_2d_works">Karya 2D</string>
     <string name="staff_role_digital_animation">Animasi Digital</string>
     <string name="staff_role_digital_art">Seni Digital</string>
     <string name="staff_role_digital_coloring">Pewarnaan Digital</string>
@@ -412,7 +393,6 @@
     <string name="staff_role_editing_manager">Manajer Pengeditan</string>
     <string name="staff_role_editing">Pengeditan</string>
     <string name="staff_role_effects">Efek</string>
-    <string name="staff_role_2d_effects">Efek 2D</string>
     <string name="staff_role_effects_animation_director">Sutradara Efek Animasi</string>
     <string name="staff_role_endcard">Kartu akhir</string>
     <string name="staff_role_episode_director">Direktur Episode</string>
@@ -437,9 +417,6 @@
     <string name="staff_role_insert_song_composition">Menyisipkan Komposisi Lagu</string>
     <string name="staff_role_insert_song_arrangement">Menyisipkan Aransemen Lagu</string>
     <string name="staff_role_key_animation">Animasi Kunci</string>
-    <string name="staff_role_1st_key_animation">Direktur Animasi Utama Pertama</string>
-    <string name="staff_role_1st_key_assistant">Asisten Sutradara Animasi Utama Pertama</string>
-    <string name="staff_role_2nd_key_animation">Animasi Kunci ke-2</string>
     <string name="staff_role_key_animation_assistance">Bantuan Animasi Utama</string>
     <string name="staff_role_key_animation_op">Animasi Kunci (OP)</string>
     <string name="staff_role_layout_animation_director">Direktur Animasi Tata Letak</string>
@@ -542,7 +519,6 @@
     <string name="staff_role_theme_song_performance_op">Pertunjukan Lagu Tema (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Penampilan Lagu Tema (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Penampilan Lagu Tema (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Bantuan Desain Logo Judul</string>
     <string name="staff_role_title_logo_design">Desain Logo Judul</string>
     <string name="staff_role_touch_up_art_and_lettering">Penyempurnaan Seni &amp; Huruf</string>
     <string name="staff_role_touch_up_art">Penyempurnaan Seni</string>

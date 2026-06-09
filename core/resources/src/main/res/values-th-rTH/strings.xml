@@ -121,7 +121,6 @@
     <string name="trending">กำลังมาแรง</string>
     <string name="sort_status">สถานะ</string>
     <string name="search_match">ผลลัพธ์ตรงกัน</string>
-    <string name="top_100">100 อันดับแรก</string>
     <string name="top_popular">อันดับนิยม</string>
     <string name="apply">นำไปใช้</string>
     <string name="sort_default">ค่าเริ่มต้น</string>
@@ -152,15 +151,12 @@
     <string name="theme_system">ตามการตั้งค่าจากเครื่อง</string>
     <string name="theme_light">สว่าง</string>
     <string name="theme_dark">มืด</string>
-    <string name="theme_black">ดำ</string>
     <string name="open_al_links_in_the_app">เปิดลิงค์ Anilist ผ่านแอพ</string>
     <string name="account">บัญชี</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">เวอร์ชั่น</string>
-    <string name="developed_by_axiel7">พัฒนาโดย axiel7</string>
     <string name="anilist_account_settings">ตั้งค่าบัญชี AniList</string>
     <string name="logout">ออกจากระบบ</string>
-    <string name="character_media">สื่อมีเดีย</string>
     <string name="birthday">วันเกิด</string>
     <string name="age">อายุ</string>
     <string name="gender">เพศ</string>
@@ -179,7 +175,6 @@
     <string name="reviews">รีวิว</string>
     <string name="loading">กำลังโหลด</string>
     <string name="users_likes">จำนวนผู้ชื่นชอบ</string>
-    <string name="no_reviews">ไม่มีรีวิว</string>
     <string name="close">ปิด</string>
     <string name="genres">ประเภท</string>
     <string name="add_genre">เพิ่มประเภท</string>
@@ -244,17 +239,10 @@
     <string name="items_per_row">รายการต่อแถว</string>
     <string name="default_setting">ค่าเริ่มต้น</string>
     <string name="media_status">สถานะ</string>
-    <string name="year">ปี</string>
-    <string name="episode_aired_ago">ตอนที่ %d ออกอากาศเมื่อ %s</string>
     <string name="title_language">ภาษาของชื่อเรื่อง</string>
     <string name="romaji_western_order">โรมาจิ (แบบตะวันตก)</string>
     <string name="staff_character_name_language"><![CDATA[ภาษาของชื่อ ทีมงาน และตัวละคร]]></string>
     <string name="score_format">รูปแบบคะแนน</string>
-    <string name="score_point_100">100 คะแนน (55/100)</string>
-    <string name="score_point_10_decimal">10 คะแนน ทศนิยม (5.5/10)</string>
-    <string name="score_point_10">10 คะแนน (5/10)</string>
-    <string name="score_point_5">5 ดาว (3/5)</string>
-    <string name="score_point_3">ระบบคะแนน 3 จุดแบบอิโมจิ</string>
     <string name="no_media">ไม่มีสื่อ</string>
     <string name="every_six_hours">ทุก 6 ชม.</string>
     <string name="every_twelve_hours">ทุก 12 ชม.</string>
@@ -267,7 +255,6 @@
     <string name="airing_anime_notifications">การแจ้งเตือนอนิเมะที่กำลังออกอากาศ</string>
     <string name="color">สี</string>
     <string name="discover">ค้นพบ</string>
-    <string name="default_home_tab">ตั้งค่า หน้า เริ่มต้น</string>
     <string name="text_status">สถานะข้อความ</string>
     <string name="list_progress">สถานะรายการ</string>
     <string name="all">ทั้งหมด</string>
@@ -291,7 +278,6 @@
     <string name="reply">ตอบกลับ</string>
     <string name="locked">ถูกล็อก</string>
     <string name="donator">ผู้บริจาค</string>
-    <string name="google_translate_not_installed">ยังไม่ได้ติดตั้ง Google Translate</string>
     <string name="no_app_found_for_this_action">ไม่พบแอปสำหรับการดำเนินการนี้</string>
     <string name="list_status">สถานะ</string>
     <string name="action_back">ย้อนกลับ</string>
@@ -362,9 +348,6 @@
     <string name="staff_role_background_art_assistance">ผู้ช่วยศิลปะพื้นหลัง</string>
     <string name="staff_role_background_manager">ผู้จัดการศิลปะพื้นหลัง</string>
     <string name="staff_role_background_production">การผลิตศิลปะพื้นหลัง</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D Art</string>
-    <string name="staff_role_3d_works">งาน 3D</string>
     <string name="staff_role_cg_animation_director">ผู้กำกับแอนิเมชัน CG</string>
     <string name="staff_role_cg_animation">แอนิเมชัน CG</string>
     <string name="staff_role_cg_assistant_director">ผู้ช่วยผู้กำกับแอนิเมชัน CG</string>
@@ -397,8 +380,6 @@
     <string name="staff_role_creature_design">ออกแบบสิ่งมีชีวิต</string>
     <string name="staff_role_design_assistance">ผู้ช่วยออกแบบ</string>
     <string name="staff_role_design_works">ผลงานออกแบบ</string>
-    <string name="staff_role_2d_design">ออกแบบ 2D</string>
-    <string name="staff_role_2d_works">งาน 2D</string>
     <string name="staff_role_digital_animation">แอนิเมชั่นดิจิทัล</string>
     <string name="staff_role_digital_art">ศิลปะดิจิทัล</string>
     <string name="staff_role_digital_coloring">การระบายสีแบบดิจิทัล</string>
@@ -412,7 +393,6 @@
     <string name="staff_role_editing_manager">ผู้จัดการฝ่ายตัดต่อ</string>
     <string name="staff_role_editing">การตัดต่อ</string>
     <string name="staff_role_effects">เอฟเฟกต์</string>
-    <string name="staff_role_2d_effects">เอฟเฟกต์ 2D</string>
     <string name="staff_role_effects_animation_director">หัวหน้าผู้กำกับแอนิเมชันเอฟเฟกต์</string>
     <string name="staff_role_endcard">การ์ดท้ายตอน</string>
     <string name="staff_role_episode_director">ผู้กำกับตอน</string>
@@ -437,9 +417,6 @@
     <string name="staff_role_insert_song_composition">แต่งเพลงแทรก</string>
     <string name="staff_role_insert_song_arrangement">เรียบเรียงเพลงแทรก</string>
     <string name="staff_role_key_animation">แอนิเมชันหลัก</string>
-    <string name="staff_role_1st_key_animation">หัวหน้าผู้กำกับแอนิเมชันหลัก</string>
-    <string name="staff_role_1st_key_assistant">ผู้ช่วยหัวหน้าผู้กำกับแอนิเมชันหลัก</string>
-    <string name="staff_role_2nd_key_animation">แอนิเมชันหลักลำดับที่สอง</string>
     <string name="staff_role_key_animation_assistance">ผู้ช่วยแอนิเมชันหลัก</string>
     <string name="staff_role_key_animation_op">แอนิเมชันหลัก (เพลงเปิด)</string>
     <string name="staff_role_layout_animation_director">ผู้กำกับแอนิเมชันเลย์เอาต์</string>
@@ -542,7 +519,6 @@
     <string name="staff_role_theme_song_performance_op">แสดงเพลงธีม (เพลงเปิด)</string>
     <string name="staff_role_theme_song_performance_ed">แสดงเพลงธีม (เพลงปิด)</string>
     <string name="staff_role_theme_song_performance_op_ed">แสดงเพลงธีม (เพลงเปิดและเพลงปิด)</string>
-    <string name="staff_role_title_logo_design_assistance">ผู้ช่วยออกแบบโลโก้ชื่อเรื่อง</string>
     <string name="staff_role_title_logo_design">ออกแบบโลโก้ชื่อเรื่อง</string>
     <string name="staff_role_touch_up_art_and_lettering">ตกแต่งงานศิลป์ &amp; ตัวอักษร</string>
     <string name="staff_role_touch_up_art">ตกแต่งงานศิลป์</string>

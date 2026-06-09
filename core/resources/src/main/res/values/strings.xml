@@ -130,7 +130,6 @@
     <string name="trending">Trending</string>
     <string name="sort_status">Status</string>
     <string name="search_match">Search Match</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popular</string>
     <string name="apply">Apply</string>
     <string name="sort_default">Default</string>
@@ -161,15 +160,12 @@
     <string name="theme_system">Follow system</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="theme_black">Black</string>
     <string name="open_al_links_in_the_app">Open AniList links in the app</string>
     <string name="account">Account</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">Version</string>
-    <string name="developed_by_axiel7">Developed by axiel7</string>
     <string name="anilist_account_settings">AniList account settings</string>
     <string name="logout">Log out</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Birthday</string>
     <string name="age">Age</string>
     <string name="gender">Gender</string>
@@ -188,7 +184,6 @@
     <string name="reviews">Reviews</string>
     <string name="loading">Loading</string>
     <string name="users_likes">Users likes</string>
-    <string name="no_reviews">No reviews</string>
     <string name="close">Close</string>
     <string name="genres">Genres</string>
     <string name="add_genre">Add genre</string>
@@ -263,17 +258,10 @@
     <string name="nine" translatable="false">9</string>
     <string name="ten" translatable="false">10</string>
     <string name="media_status">Status</string>
-    <string name="year">Year</string>
-    <string name="episode_aired_ago">Ep %d aired %s ago</string>
     <string name="title_language">Title language</string>
     <string name="romaji_western_order">Romaji (Western Order)</string>
     <string name="staff_character_name_language"><![CDATA[Staff & Character name language]]></string>
     <string name="score_format">Score format</string>
-    <string name="score_point_100">100 Point (55/100)</string>
-    <string name="score_point_10_decimal">10 Point Decimal (5.5/10)</string>
-    <string name="score_point_10">10 Point (5/10)</string>
-    <string name="score_point_5">5 Star (3/5)</string>
-    <string name="score_point_3">3 Point Smiley :)</string>
     <string name="no_media">No media</string>
     <string name="every_six_hours">Every 6 hours</string>
     <string name="every_twelve_hours">Every 12 hours</string>
@@ -287,7 +275,6 @@
     <string name="color">Color</string>
     <string name="color_palette">Color palette</string>
     <string name="discover">Discover</string>
-    <string name="default_home_tab">Default Home tab</string>
     <string name="text_status">Text Status</string>
     <string name="list_progress">List Progress</string>
     <string name="all">All</string>
@@ -312,7 +299,6 @@
     <string name="reply">Reply</string>
     <string name="locked">Locked</string>
     <string name="donator">Donator</string>
-    <string name="google_translate_not_installed">Google Translate not installed</string>
     <string name="no_app_found_for_this_action">No app found for this action</string>
     <string name="list_status">Status</string>
     <string name="action_back">Back</string>
@@ -384,9 +370,6 @@
     <string name="staff_role_background_art_assistance">Background Art Assistance</string>
     <string name="staff_role_background_manager">Background Manager</string>
     <string name="staff_role_background_production">Background Production</string>
-    <string name="staff_role_3dcg">3DCG</string>
-    <string name="staff_role_3d_art">3D Art</string>
-    <string name="staff_role_3d_works">3D Works</string>
     <string name="staff_role_cg_animation_director">CG Animation Director</string>
     <string name="staff_role_cg_animation">CG Animation</string>
     <string name="staff_role_cg_assistant_director">CG Assistant Director</string>
@@ -400,7 +383,6 @@
     <string name="staff_role_cg_supervisor">CG Supervisor</string>
     <string name="staff_role_cg_technical_director">CG Technical Director</string>
     <string name="staff_role_character_design">Character Design</string>
-    <string name="staff_role_chief_animation_director">Chief Animation Director</string>
     <string name="staff_role_chief_director">Chief Director</string>
     <string name="staff_role_chief_episode_director">Chief Episode Director</string>
     <string name="staff_role_chief_mechanical_animation_director">Chief Mechanical Animation Director</string>
@@ -419,8 +401,6 @@
     <string name="staff_role_creature_design">Creature Design</string>
     <string name="staff_role_design_assistance">Design Assistance</string>
     <string name="staff_role_design_works">Design Works</string>
-    <string name="staff_role_2d_design">2D Design</string>
-    <string name="staff_role_2d_works">2D Works</string>
     <string name="staff_role_digital_animation">Digital Animation</string>
     <string name="staff_role_digital_art">Digital Art</string>
     <string name="staff_role_digital_coloring">Digital Coloring</string>
@@ -434,7 +414,6 @@
     <string name="staff_role_editing_manager">Editing Manager</string>
     <string name="staff_role_editing">Editing</string>
     <string name="staff_role_effects">Effects</string>
-    <string name="staff_role_2d_effects">2D Effects</string>
     <string name="staff_role_effects_animation_director">Effects Animation Director</string>
     <string name="staff_role_endcard">Endcard</string>
     <string name="staff_role_episode_director">Episode Director</string>
@@ -459,9 +438,6 @@
     <string name="staff_role_insert_song_composition">Insert Song Composition</string>
     <string name="staff_role_insert_song_arrangement">Insert Song Arrangement</string>
     <string name="staff_role_key_animation">Key Animation</string>
-    <string name="staff_role_1st_key_animation">1st Key Animation Director</string>
-    <string name="staff_role_1st_key_assistant">1st Key Assistant Animation Director</string>
-    <string name="staff_role_2nd_key_animation">2nd Key Animation</string>
     <string name="staff_role_key_animation_assistance">Key Animation Assistance</string>
     <string name="staff_role_key_animation_op">Key Animation (OP)</string>
     <string name="staff_role_layout_animation_director">Layout Animation Director</string>
@@ -564,7 +540,6 @@
     <string name="staff_role_theme_song_performance_op">Theme Song Performance (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Theme Song Performance (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Theme Song Performance (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Title Logo Design Assistance</string>
     <string name="staff_role_title_logo_design">Title Logo Design</string>
     <string name="staff_role_touch_up_art_and_lettering">Touch-up Art &amp; Lettering</string>
     <string name="staff_role_touch_up_art">Touch-up Art</string>
@@ -648,17 +623,12 @@
     <string name="month">Month</string>
     <string name="week">Week</string>
     <string name="day">Day</string>
-    <string name="currently_watching">Currently Watching</string>
-    <string name="watch">Watch</string>
     <string name="audio_language">Audio Language</string>
     <string name="sub">Subtitled (Sub)</string>
     <string name="dub">Dubbed (Dub)</string>
     <string name="episode_n">Episode %d</string>
-    <string name="select_episode">Select Episode</string>
     <string name="no_episodes">No episodes available</string>
-    <string name="season_n">Season %d</string>
     <string name="popular_anime">Popular Anime</string>
     <string name="top_rated">Top Rated</string>
-    <string name="random_anime">Random Anime</string>
     <string name="surprise_me">Surprise me!</string>
 </resources>

@@ -100,7 +100,6 @@
     <string name="trending">Trend</string>
     <string name="sort_status">Statusu</string>
     <string name="search_match">Uyğun axtarışlar</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Populyar</string>
     <string name="apply">Tətbiq et</string>
     <string name="sort_default">İlkin</string>
@@ -131,15 +130,12 @@
     <string name="theme_system">Sistem ilə eyni</string>
     <string name="theme_light">Açıq</string>
     <string name="theme_dark">Qaranlıq</string>
-    <string name="theme_black">Qara</string>
     <string name="open_al_links_in_the_app">AniList linklərini açın</string>
     <string name="account">Hesab</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">Versiya</string>
-    <string name="developed_by_axiel7">Developed by axiel7</string>
     <string name="anilist_account_settings">AniList hesab tənzimlənmələri</string>
     <string name="logout">Çıxış et</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Ad günü</string>
     <string name="age">Yaş</string>
     <string name="gender">Cinsiyyət</string>
@@ -158,7 +154,6 @@
     <string name="reviews">İncələmələr</string>
     <string name="loading">Yüklənir</string>
     <string name="users_likes">Bəyənən istifadəçilər</string>
-    <string name="no_reviews">İncələmə yoxdur</string>
     <string name="close">Bağla</string>
     <string name="genres">Janrlar</string>
     <string name="add_genre">Janr əlavə et</string>
@@ -223,17 +218,10 @@
     <string name="items_per_row">Hər sıra üçün item\'lər</string>
     <string name="default_setting">İlkin</string>
     <string name="media_status">Statusu</string>
-    <string name="year">İl</string>
-    <string name="episode_aired_ago">Bölüm %d, %s dəqiqə öncə yayımlandı</string>
     <string name="title_language">Başlıq dili</string>
     <string name="romaji_western_order">Romaji (Qərb Sırasında)</string>
     <string name="staff_character_name_language"><![CDATA[Heyət & Xarakter adlarının dili]]></string>
     <string name="score_format">Xal formatı</string>
-    <string name="score_point_100">100 Xal (55/100)</string>
-    <string name="score_point_10_decimal">10 Xal onluq sistemdə (5.5/10)</string>
-    <string name="score_point_10">10 Xal (5/10)</string>
-    <string name="score_point_5">5 Ulduz (3/5)</string>
-    <string name="score_point_3">3 Xal Smiley :)</string>
     <string name="no_media">Media yoxdur</string>
     <string name="every_six_hours">Hər 6 saatda</string>
     <string name="every_twelve_hours">Hər 12 saatda</string>
@@ -246,7 +234,6 @@
     <string name="airing_anime_notifications">Yayımlanacaq anime bildirişləri</string>
     <string name="color">Rəng</string>
     <string name="discover">Kəşf et</string>
-    <string name="default_home_tab">Mövcud Ana ekran tab\'ı</string>
     <string name="text_status">Yazı Statusu</string>
     <string name="list_progress">List Yüksəlişi</string>
     <string name="all">Hamısı</string>
@@ -270,7 +257,6 @@
     <string name="reply">Cavabla</string>
     <string name="locked">Bloklanmış</string>
     <string name="donator">Bəxşişçilər</string>
-    <string name="google_translate_not_installed">Google Translate köçürülməyib</string>
     <string name="no_app_found_for_this_action">Bu fəaliyyət üçün tətbiq tapılmadı</string>
     <string name="list_status">Statusu</string>
     <string name="action_back">Geri</string>

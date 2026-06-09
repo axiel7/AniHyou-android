@@ -142,7 +142,6 @@
     <string name="trending">Популярне</string>
     <string name="sort_status">Статус</string>
     <string name="search_match">Пошук збігів</string>
-    <string name="top_100">Найкраща сотня</string>
     <string name="top_popular">Найбільш популярні</string>
     <string name="apply">Застосувати</string>
     <string name="sort_default">Типовий</string>
@@ -173,15 +172,12 @@
     <string name="theme_system">Як у системі</string>
     <string name="theme_light">Світла</string>
     <string name="theme_dark">Темна</string>
-    <string name="theme_black">Чорна</string>
     <string name="open_al_links_in_the_app">Відкривати посилання AniList у застосунку</string>
     <string name="account">Акаунт</string>
     <string name="github_repository">Репозиторій GitHub</string>
     <string name="version">Версія</string>
-    <string name="developed_by_axiel7">Розробник — axiel7</string>
     <string name="anilist_account_settings">Налаштування акаунту AniList</string>
     <string name="logout">Вийти з акаунту</string>
-    <string name="character_media">Медіа</string>
     <string name="birthday">День народження</string>
     <string name="age">Вік</string>
     <string name="gender">Ґендер</string>
@@ -200,7 +196,6 @@
     <string name="reviews">Відгуки</string>
     <string name="loading">Завантаження</string>
     <string name="users_likes">Вподобання користувачів</string>
-    <string name="no_reviews">Немає відгуків</string>
     <string name="close">Закрити</string>
     <string name="genres">Жанри</string>
     <string name="add_genre">Додати жанр</string>
@@ -265,17 +260,10 @@
     <string name="items_per_row">Елементів у рядку</string>
     <string name="default_setting">Типово</string>
     <string name="media_status">Статус</string>
-    <string name="year">Рік</string>
-    <string name="episode_aired_ago">Еп %d вийшов %s тому</string>
     <string name="title_language">Мова назв тайтлів</string>
     <string name="romaji_western_order">Романджі (Західний порядок)</string>
     <string name="staff_character_name_language"><![CDATA[Мова імен персоналу та персонажів]]></string>
     <string name="score_format">Формат оцінки</string>
-    <string name="score_point_100">100-бальна (55/100)</string>
-    <string name="score_point_10_decimal">10-бальна десяткова (5.5/10)</string>
-    <string name="score_point_10">10-бальна (5/10)</string>
-    <string name="score_point_5">5-зіркова (3/5)</string>
-    <string name="score_point_3">3-значний усміхайлик :)</string>
     <string name="no_media">Немає медіа</string>
     <string name="every_six_hours">Кожні 6 годин</string>
     <string name="every_twelve_hours">Кожні 12 годин</string>
@@ -288,7 +276,6 @@
     <string name="airing_anime_notifications">Сповіщення про вихід аніме</string>
     <string name="color">Колір</string>
     <string name="discover">Огляд</string>
-    <string name="default_home_tab">Типове головне меню</string>
     <string name="text_status">Текстовий статус</string>
     <string name="list_progress">Прогрес у каталозі</string>
     <string name="all">Усі</string>
@@ -312,7 +299,6 @@
     <string name="reply">Відповісти</string>
     <string name="locked">Заблоковано</string>
     <string name="donator">Донатер</string>
-    <string name="google_translate_not_installed">Перекладач Google не встановлено</string>
     <string name="no_app_found_for_this_action">Застосунку для виконання дії не знайдено</string>
     <string name="list_status">Статус</string>
     <string name="action_back">Назад</string>
@@ -383,9 +369,6 @@
     <string name="staff_role_background_art_assistance">Поміч із тлом</string>
     <string name="staff_role_background_manager">Керівник тла</string>
     <string name="staff_role_background_production">Виробництво тла</string>
-    <string name="staff_role_3dcg">Комп\'ютерна 3D-графіка</string>
-    <string name="staff_role_3d_art">Художник 3D</string>
-    <string name="staff_role_3d_works">Робота з 3D</string>
     <string name="staff_role_cg_animation_director">Режисер CG-анімації</string>
     <string name="staff_role_cg_animation">CG-анімація</string>
     <string name="staff_role_cg_assistant_director">Помічний керівник CG</string>
@@ -418,8 +401,6 @@
     <string name="staff_role_creature_design">Дизайн істот</string>
     <string name="staff_role_design_assistance">Поміч із дизайном</string>
     <string name="staff_role_design_works">Робота з дизайном</string>
-    <string name="staff_role_2d_design">2D-дизайн</string>
-    <string name="staff_role_2d_works">Робота з 2D</string>
     <string name="staff_role_digital_animation">Цифрова анімація</string>
     <string name="staff_role_digital_art">Цифрові ілюстрації</string>
     <string name="staff_role_digital_coloring">Цифрове забарвлення</string>
@@ -433,7 +414,6 @@
     <string name="staff_role_editing_manager">Керівник монтажу</string>
     <string name="staff_role_editing">Монтаж</string>
     <string name="staff_role_effects">Ефекти</string>
-    <string name="staff_role_2d_effects">2D-ефекти</string>
     <string name="staff_role_effects_animation_director">Режисер анімації ефектів</string>
     <string name="staff_role_endcard">Прикінцевий малюнок</string>
     <string name="staff_role_episode_director">Режисер епізодів</string>
@@ -458,9 +438,6 @@
     <string name="staff_role_insert_song_composition">Композитор вставної пісні</string>
     <string name="staff_role_insert_song_arrangement">Аранжування вставної пісні</string>
     <string name="staff_role_key_animation">Ключова анімація</string>
-    <string name="staff_role_1st_key_animation">Режисер 1-ї ключової анімації</string>
-    <string name="staff_role_1st_key_assistant">Помічний режисер 1-ї ключової анімації</string>
-    <string name="staff_role_2nd_key_animation">2-га ключова анімація</string>
     <string name="staff_role_key_animation_assistance">Поміч із ключовою анімацією</string>
     <string name="staff_role_key_animation_op">Ключова анімація (OP)</string>
     <string name="staff_role_layout_animation_director">Режисер композиційної анімації</string>
@@ -563,7 +540,6 @@
     <string name="staff_role_theme_song_performance_op">Виконавець тематичної пісні (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Виконання тематичної пісні (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Виконавець тематичної пісні (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Поміч з дизайном титульного лого</string>
     <string name="staff_role_title_logo_design">Дизайн титульного лого</string>
     <string name="staff_role_touch_up_art_and_lettering">Підмальовування та літерування</string>
     <string name="staff_role_touch_up_art">Підмальовування</string>

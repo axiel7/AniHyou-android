@@ -121,7 +121,6 @@
     <string name="trending">トレンド</string>
     <string name="sort_status">ステータス</string>
     <string name="search_match">デフォルト</string>
-    <string name="top_100">トップ１００</string>
     <string name="top_popular">人気のトップ</string>
     <string name="apply">適用する</string>
     <string name="sort_default">デフォルト</string>
@@ -152,15 +151,12 @@
     <string name="theme_system">システムに従う</string>
     <string name="theme_light">ライト</string>
     <string name="theme_dark">ダーク</string>
-    <string name="theme_black">ブラック</string>
     <string name="open_al_links_in_the_app">アプリで AniList リンクを開く</string>
     <string name="account">アカウント</string>
     <string name="github_repository">GitHubリポジトリ</string>
     <string name="version">バージョン</string>
-    <string name="developed_by_axiel7">開発：axiel7</string>
     <string name="anilist_account_settings">AniListアカウントの設定</string>
     <string name="logout">ログアウト</string>
-    <string name="character_media">メディア</string>
     <string name="birthday">誕生日</string>
     <string name="age">年齢</string>
     <string name="gender">性別</string>
@@ -179,7 +175,6 @@
     <string name="reviews">レビュー</string>
     <string name="loading">読み込み中</string>
     <string name="users_likes">ユーザーのいいね！</string>
-    <string name="no_reviews">レビューなし</string>
     <string name="close">閉じる</string>
     <string name="genres">ジャンル</string>
     <string name="add_genre">ジャンルを追加</string>
@@ -240,17 +235,10 @@
     <string name="items_per_row">行ごとの項目</string>
     <string name="default_setting">デフォルト</string>
     <string name="media_status">ステータス</string>
-    <string name="year">年</string>
-    <string name="episode_aired_ago">第%d話は%sで配信しました</string>
     <string name="title_language">作品名の言語</string>
     <string name="romaji_western_order">英語表記（ローマ字）</string>
     <string name="staff_character_name_language"><![CDATA[スタッフとキャラクター名の言語]]></string>
     <string name="score_format">スコアの形式</string>
-    <string name="score_point_100">１００点（５５/１００）</string>
-    <string name="score_point_10_decimal">１０小数点（５.５/１０）</string>
-    <string name="score_point_10">１０点（５/１０）</string>
-    <string name="score_point_5">５点（３/５）</string>
-    <string name="score_point_3">3点スマイリー　( ◠‿◠ )</string>
     <string name="no_media">メディアなし</string>
     <string name="every_six_hours">６時間毎</string>
     <string name="every_twelve_hours">１２時間毎</string>
@@ -263,7 +251,6 @@
     <string name="airing_anime_notifications">配信中のアニメ通知</string>
     <string name="color">カラー</string>
     <string name="discover">見つける</string>
-    <string name="default_home_tab">デフォルトのホームタブ</string>
     <string name="text_status">テキストのステータス</string>
     <string name="all">すべて</string>
     <string name="global_feed">グローバル</string>
@@ -286,7 +273,6 @@
     <string name="reply">返信する</string>
     <string name="locked">ロックされた</string>
     <string name="donator">ドナー</string>
-    <string name="google_translate_not_installed">Google翻訳がインストールされていません</string>
     <string name="no_app_found_for_this_action">このアクションのアプリが見つかりませんでした</string>
     <string name="list_status">ステータス</string>
     <string name="action_back">戻る</string>

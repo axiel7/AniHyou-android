@@ -72,7 +72,6 @@
     <string name="theme_system">Nasledovať systém</string>
     <string name="theme_light">Svetlý</string>
     <string name="theme_dark">Tmavý</string>
-    <string name="theme_black">Čierny</string>
     <string name="account">Konto</string>
     <string name="version">Verzia</string>
     <string name="score">Skóre</string>
@@ -104,7 +103,6 @@
     <string name="items_per_row">Položky na riadok</string>
     <string name="default_setting">Predvolené</string>
     <string name="media_status">Status</string>
-    <string name="year">Rok</string>
     <string name="title_language">Jazyk názvu</string>
     <string name="all">Všetko</string>
     <string name="list_status">Status</string>

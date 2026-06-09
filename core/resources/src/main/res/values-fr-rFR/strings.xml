@@ -128,7 +128,6 @@
     <string name="trending">Tendance</string>
     <string name="sort_status">État</string>
     <string name="search_match">Correspondances</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Top Populaire</string>
     <string name="apply">Appliquer</string>
     <string name="sort_default">Par défaut</string>
@@ -159,15 +158,12 @@
     <string name="theme_system">Suivre le système</string>
     <string name="theme_light">Clair</string>
     <string name="theme_dark">Sombre</string>
-    <string name="theme_black">Noir</string>
     <string name="open_al_links_in_the_app">Ouvrir les liens AniList dans l\'application</string>
     <string name="account">Compte</string>
     <string name="github_repository">Dépôt GitHub</string>
     <string name="version">Version</string>
-    <string name="developed_by_axiel7">Développé par axiel7</string>
     <string name="anilist_account_settings">Paramètres du compte AniList</string>
     <string name="logout">Se déconnecter</string>
-    <string name="character_media">Média</string>
     <string name="birthday">Date de naissance</string>
     <string name="age">Age</string>
     <string name="gender">Genre</string>
@@ -186,7 +182,6 @@
     <string name="reviews">Avis</string>
     <string name="loading">Chargement</string>
     <string name="users_likes">Utilisateurs ont aimés</string>
-    <string name="no_reviews">Aucun avis</string>
     <string name="close">Fermer</string>
     <string name="genres">Genres</string>
     <string name="add_genre">Ajouter un genre</string>
@@ -251,17 +246,10 @@
     <string name="items_per_row">Éléments par ligne</string>
     <string name="default_setting">Par défaut</string>
     <string name="media_status">État</string>
-    <string name="year">Année</string>
-    <string name="episode_aired_ago">Épisode %d diffusé il y a %s</string>
     <string name="title_language">Langue du titre</string>
     <string name="romaji_western_order">Romaji (Ordre occidental)</string>
     <string name="staff_character_name_language"><![CDATA[Langue du personnel et du nom des personnages]]></string>
     <string name="score_format">Format des notes</string>
-    <string name="score_point_100">100 Points (55/100)</string>
-    <string name="score_point_10_decimal">10 Points avec décimales (5.5/10)</string>
-    <string name="score_point_10">10 Points (5/10)</string>
-    <string name="score_point_5">5 Étoiles (3/5)</string>
-    <string name="score_point_3">3 Émoticônes :)</string>
     <string name="no_media">Aucun média</string>
     <string name="every_six_hours">Toutes les 6 heures</string>
     <string name="every_twelve_hours">Toutes les 12 heures</string>
@@ -274,7 +262,6 @@
     <string name="airing_anime_notifications">Notifications de diffusion d\'animé</string>
     <string name="color">Couleur </string>
     <string name="discover">Découvrir</string>
-    <string name="default_home_tab">Onglet d\'accueil par défaut</string>
     <string name="text_status">Statut personnalisé</string>
     <string name="list_progress">Progression</string>
     <string name="all">Tout</string>
@@ -298,7 +285,6 @@
     <string name="reply">Répondre</string>
     <string name="locked">Verrouillé</string>
     <string name="donator">Donateur</string>
-    <string name="google_translate_not_installed">Google Traduction n\'est pas installé</string>
     <string name="no_app_found_for_this_action">Aucune application n\'a été trouvée pour cette action</string>
     <string name="list_status">État</string>
     <string name="action_back">Retour</string>
@@ -370,9 +356,6 @@
     <string name="staff_role_background_art_assistance">Assistance en art de fond</string>
     <string name="staff_role_background_manager">Responsable des décors</string>
     <string name="staff_role_background_production">Production des décors</string>
-    <string name="staff_role_3dcg">3D CG (Computer Graphics)</string>
-    <string name="staff_role_3d_art">Art 3D</string>
-    <string name="staff_role_3d_works">Travaux en 3D</string>
     <string name="staff_role_cg_animation_director">Directeur de l\'animation en CG</string>
     <string name="staff_role_cg_animation">Animation en CG</string>
     <string name="staff_role_cg_assistant_director">Assistant directeur CG</string>
@@ -405,8 +388,6 @@
     <string name="staff_role_creature_design">Conception de créatures</string>
     <string name="staff_role_design_assistance">Assistance en conception</string>
     <string name="staff_role_design_works">Travaux de conception</string>
-    <string name="staff_role_2d_design">Conception 2D</string>
-    <string name="staff_role_2d_works">Travaux en 2D</string>
     <string name="staff_role_digital_animation">Animation numérique</string>
     <string name="staff_role_digital_art">Art numérique</string>
     <string name="staff_role_digital_coloring">Colorisation numérique</string>
@@ -420,7 +401,6 @@
     <string name="staff_role_editing_manager">Responsable du montage</string>
     <string name="staff_role_editing">Montage</string>
     <string name="staff_role_effects">Effets</string>
-    <string name="staff_role_2d_effects">Effets 2D</string>
     <string name="staff_role_effects_animation_director">Directeur des effets d\'animation</string>
     <string name="staff_role_endcard">Carte de fin</string>
     <string name="staff_role_episode_director">Réalisateur d\'épisode</string>
@@ -445,9 +425,6 @@
     <string name="staff_role_insert_song_composition">Composition de la chanson d\'insertion</string>
     <string name="staff_role_insert_song_arrangement">Arrangement de la chanson d\'insertion</string>
     <string name="staff_role_key_animation">Animation clé</string>
-    <string name="staff_role_1st_key_animation">Directeur de la première animation clé</string>
-    <string name="staff_role_1st_key_assistant">Assistant directeur de la première animation clé</string>
-    <string name="staff_role_2nd_key_animation">Deuxième animation clé</string>
     <string name="staff_role_key_animation_assistance">Assistance à l\'animation clé</string>
     <string name="staff_role_key_animation_op">Animation clé (Opening)</string>
     <string name="staff_role_layout_animation_director">Directeur d\'animation du layout</string>
@@ -550,7 +527,6 @@
     <string name="staff_role_theme_song_performance_op">Interprétation de la chanson thème (Opening)</string>
     <string name="staff_role_theme_song_performance_ed">Interprétation de la chanson thème (Ending)</string>
     <string name="staff_role_theme_song_performance_op_ed">Interprétation de la chanson thème (Opening, Ending)</string>
-    <string name="staff_role_title_logo_design_assistance">Assistance en conception de logo de titre</string>
     <string name="staff_role_title_logo_design">Conception de logo de titre</string>
     <string name="staff_role_touch_up_art_and_lettering">Retouches artistiques et lettrage</string>
     <string name="staff_role_touch_up_art">Retouche artistique</string>

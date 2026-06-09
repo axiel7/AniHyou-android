@@ -135,7 +135,6 @@
     <string name="trending">În tendințe</string>
     <string name="sort_status">Stare</string>
     <string name="search_match">Căutare potrivire</string>
-    <string name="top_100">Top 100</string>
     <string name="top_popular">Cele mai populare</string>
     <string name="apply">Aplicați</string>
     <string name="sort_default">Implicit</string>
@@ -166,15 +165,12 @@
     <string name="theme_system">Urmați sistemul</string>
     <string name="theme_light">Lumină</string>
     <string name="theme_dark">Întunecat</string>
-    <string name="theme_black">Negru</string>
     <string name="open_al_links_in_the_app">Deschideți linkurile AniList în aplicație</string>
     <string name="account">Cont</string>
     <string name="github_repository">Depozit GitHub</string>
     <string name="version">Versiune</string>
-    <string name="developed_by_axiel7">Dezvoltat de axiel7</string>
     <string name="anilist_account_settings">Setări cont AniList</string>
     <string name="logout">Deconectare</string>
-    <string name="character_media">Media</string>
     <string name="birthday">Ziua de naștere</string>
     <string name="age">Vârsta</string>
     <string name="gender">Gen</string>
@@ -193,7 +189,6 @@
     <string name="reviews">Recenzii</string>
     <string name="loading">Încărcare</string>
     <string name="users_likes">Utilizatorilor le place</string>
-    <string name="no_reviews">Nu există recenzii</string>
     <string name="close">Închide</string>
     <string name="genres">Genuri</string>
     <string name="add_genre">Adăugați genul</string>
@@ -258,17 +253,10 @@
     <string name="items_per_row">Articole pe rând</string>
     <string name="default_setting">Implicit</string>
     <string name="media_status">Stare</string>
-    <string name="year">An</string>
-    <string name="episode_aired_ago">Ep %d difuzat %s în urmă</string>
     <string name="title_language">Limba titlului</string>
     <string name="romaji_western_order">Romaji (ordinea occidentală)</string>
     <string name="staff_character_name_language"><![CDATA[Personal & Limba numelui personajului]]></string>
     <string name="score_format">Format scor</string>
-    <string name="score_point_100">100 de puncte (55/100)</string>
-    <string name="score_point_10_decimal">10 puncte zecimale (5,5/10)</string>
-    <string name="score_point_10">10 puncte (5/10)</string>
-    <string name="score_point_5">5 stele (3/5)</string>
-    <string name="score_point_3">3 puncte zâmbitoare :)</string>
     <string name="no_media">Fără mass-media</string>
     <string name="every_six_hours">La fiecare 6 ore</string>
     <string name="every_twelve_hours">La fiecare 12 ore</string>
@@ -281,7 +269,6 @@
     <string name="airing_anime_notifications">Afișarea notificărilor anime</string>
     <string name="color">Culoare</string>
     <string name="discover">Descoperă</string>
-    <string name="default_home_tab">Fila implicită Acasă</string>
     <string name="text_status">Stare text</string>
     <string name="list_progress">Progresul listei</string>
     <string name="all">Toate</string>
@@ -305,7 +292,6 @@
     <string name="reply">Răspunde</string>
     <string name="locked">Blocat</string>
     <string name="donator">Donator</string>
-    <string name="google_translate_not_installed">Google Translate nu este instalat</string>
     <string name="no_app_found_for_this_action">Nu s-a găsit nicio aplicație pentru această acțiune</string>
     <string name="list_status">Stare</string>
     <string name="action_back">Înapoi</string>
@@ -377,9 +363,6 @@
     <string name="staff_role_background_art_assistance">Asistență artistică pentru fundal</string>
     <string name="staff_role_background_manager">Manager de fundal</string>
     <string name="staff_role_background_production">Producție de fundal</string>
-    <string name="staff_role_3dcg">grafică 3D generată pe computer</string>
-    <string name="staff_role_3d_art">Artă 3D</string>
-    <string name="staff_role_3d_works">Lucrări 3D</string>
     <string name="staff_role_cg_animation_director">Director animație CG</string>
     <string name="staff_role_cg_animation">Animație CG</string>
     <string name="staff_role_cg_assistant_director">Asistent regizor CG</string>
@@ -412,8 +395,6 @@
     <string name="staff_role_creature_design">Proiectarea creaturilor</string>
     <string name="staff_role_design_assistance">Asistență la proiectare</string>
     <string name="staff_role_design_works">Lucrări de proiectare</string>
-    <string name="staff_role_2d_design">Proiectare 2D</string>
-    <string name="staff_role_2d_works">Lucrări 2D</string>
     <string name="staff_role_digital_animation">Animație digitală</string>
     <string name="staff_role_digital_art">Artă digitală</string>
     <string name="staff_role_digital_coloring">Colorare digitală</string>
@@ -427,7 +408,6 @@
     <string name="staff_role_editing_manager">Manager de editare</string>
     <string name="staff_role_editing">Editare</string>
     <string name="staff_role_effects">Efecte</string>
-    <string name="staff_role_2d_effects">Efecte 2D</string>
     <string name="staff_role_effects_animation_director">Director animație efecte speciale</string>
     <string name="staff_role_endcard">Card final</string>
     <string name="staff_role_episode_director">Regizor episod</string>
@@ -452,9 +432,6 @@
     <string name="staff_role_insert_song_composition">Inserați compoziția melodiei</string>
     <string name="staff_role_insert_song_arrangement">Inserare aranjament melodie</string>
     <string name="staff_role_key_animation">Animație cheie</string>
-    <string name="staff_role_1st_key_animation">Primul director de animație cheie</string>
-    <string name="staff_role_1st_key_assistant">Primul asistent regizor de animație</string>
-    <string name="staff_role_2nd_key_animation">A doua animație cheie</string>
     <string name="staff_role_key_animation_assistance">Asistență pentru animație cheie</string>
     <string name="staff_role_key_animation_op">Animație cheie (OP)</string>
     <string name="staff_role_layout_animation_director">Director animație layout</string>
@@ -557,7 +534,6 @@
     <string name="staff_role_theme_song_performance_op">Interpretarea melodiei tematice (OP)</string>
     <string name="staff_role_theme_song_performance_ed">Interpretarea melodiei tematice (ED)</string>
     <string name="staff_role_theme_song_performance_op_ed">Interpretarea melodiei tematice (OP, ED)</string>
-    <string name="staff_role_title_logo_design_assistance">Asistență la proiectarea logo-ului titlului</string>
     <string name="staff_role_title_logo_design">Design logo titlu</string>
     <string name="staff_role_touch_up_art_and_lettering">Artă de retușare &amp; Lettering</string>
     <string name="staff_role_touch_up_art">Retușuri artistice</string>

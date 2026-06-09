@@ -74,7 +74,6 @@
     <string name="theme_system">Seguir o sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Escuro</string>
-    <string name="theme_black">Negro</string>
     <string name="account">Conta</string>
     <string name="version">Versão</string>
     <string name="score">Pontuação</string>
@@ -106,7 +105,6 @@
     <string name="items_per_row">Itens por linha</string>
     <string name="default_setting">Padrão</string>
     <string name="media_status">Estado</string>
-    <string name="year">Ano</string>
     <string name="title_language">Idioma do título</string>
     <string name="all">Todos</string>
     <string name="format_image">Imagem</string>
