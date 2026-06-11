@@ -16,6 +16,7 @@ import com.axiel7.anihyou.feature.home.current.CurrentViewModel
 import com.axiel7.anihyou.feature.home.discover.DiscoverViewModel
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityViewModel
+import com.axiel7.anihyou.feature.mediadetails.episodes.EpisodesViewModel
 import com.axiel7.anihyou.feature.notifications.NotificationsViewModel
 import com.axiel7.anihyou.feature.profile.ProfileViewModel
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesViewModel
@@ -52,6 +53,7 @@ val viewModelModule = module {
     viewModelOf(::DiscoverViewModel)
     viewModelOf(::MediaDetailsViewModel)
     viewModelOf(::MediaActivityViewModel)
+    viewModelOf(::EpisodesViewModel)
     viewModelOf(::NotificationsViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::UserFavoritesViewModel)

@@ -98,6 +98,7 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaInformationView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
+import com.axiel7.anihyou.feature.mediadetails.episodes.EpisodesView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -493,6 +494,13 @@ fun MediaInfoTabs(
                     navigateToGenreTag = navActionManager::toGenreTag,
                     navigateToStudioDetails = navActionManager::toStudioDetails,
                     navigateToAnimeSeason = navActionManager::toAnimeSeason
+                )
+
+            MediaDetailsType.EPISODES ->
+                EpisodesView(
+                    englishTitle = uiState.details?.title?.english,
+                    romajiTitle = uiState.details?.title?.romaji,
+                    nativeTitle = uiState.details?.title?.native,
                 )
 
             MediaDetailsType.STAFF_CHARACTERS ->
