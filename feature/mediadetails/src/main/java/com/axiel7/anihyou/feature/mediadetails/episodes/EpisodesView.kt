@@ -258,8 +258,9 @@ private fun EpisodeItem(episode: TmdbEpisode, onWatch: () -> Unit) {
                     )
                 }
                 if (episode.rating != null && episode.rating > 0) {
+                    val rating = episode.rating
                     Text(
-                        text = "★ ${"%.1f".format(episode.rating)}",
+                        text = "★ ${"%.1f".format(rating)}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 11.sp,

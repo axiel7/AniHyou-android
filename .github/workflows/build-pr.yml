@@ -18,6 +18,9 @@ jobs:
           java-version: 17
           distribution: adopt
 
+      - name: Check string resources
+        run: bash scripts/check_string_refs.sh
+
       - name: Build FOSS debug APK
         run: ./gradlew assembleFossDebug
 

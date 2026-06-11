@@ -164,6 +164,7 @@
     <string name="account">Account</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">Version</string>
+    <string name="developed_by_axiel7">Developed by axiel7</string>
     <string name="anilist_account_settings">AniList account settings</string>
     <string name="logout">Log out</string>
     <string name="birthday">Birthday</string>
