@@ -257,8 +257,8 @@ private fun EpisodeItem(episode: TmdbEpisode, onWatch: () -> Unit) {
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-                if (episode.rating != null && episode.rating > 0) {
-                    val rating = episode.rating
+                val rating = episode.rating
+                if (rating != null && rating > 0) {
                     Text(
                         text = "★ ${"%.1f".format(rating)}",
                         style = MaterialTheme.typography.labelSmall,
