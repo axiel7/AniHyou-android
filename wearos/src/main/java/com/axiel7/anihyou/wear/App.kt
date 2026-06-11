@@ -3,7 +3,6 @@ package com.axiel7.anihyou.wear
 import android.app.Application
 import com.axiel7.anihyou.core.domain.dataStoreModule
 import com.axiel7.anihyou.core.domain.repositoryModule
-import com.axiel7.anihyou.core.domain.tvdbModule
 import com.axiel7.anihyou.core.network.apiModule
 import com.axiel7.anihyou.core.network.networkModule
 import org.koin.android.ext.koin.androidContext
@@ -26,7 +25,6 @@ class App : Application(), KoinComponent {
                 networkModule,
                 apiModule,
                 repositoryModule,
-                tvdbModule,
                 viewModelModule,
             )
         }

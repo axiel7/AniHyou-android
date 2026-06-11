@@ -270,36 +270,6 @@ private fun SettingsContent(
                     onValueChange = { event?.setAiringOnMyList(it) }
                 )
 
-                var showTvdbDialog by remember { mutableStateOf(false) }
-                if (showTvdbDialog) {
-                    var tvdbKeyInput by remember { mutableStateOf(uiState.tvdbApiKey ?: "") }
-                    AlertDialog(
-                        onDismissRequest = { showTvdbDialog = false },
-                        title = { Text(text = "TVDB API Key") },
-                        text = {
-                            OutlinedTextField(
-                                value = tvdbKeyInput,
-                                onValueChange = { tvdbKeyInput = it },
-                                label = { Text("API Key") },
-                                singleLine = true
-                            )
-                        },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                event?.setTvdbApiKey(tvdbKeyInput)
-                                showTvdbDialog = false
-                            }) {
-                                Text(stringResource(R.string.save))
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showTvdbDialog = false }) {
-                                Text(stringResource(R.string.cancel))
-                            }
-                        }
-                    )
-                }
-
                 ListPreference(
                     title = stringResource(R.string.audio_language),
                     values = listOf("sub", "dub"),

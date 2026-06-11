@@ -28,7 +28,6 @@ data class SettingsUiState(
     val defaultTab: DefaultTab = DefaultTab.LAST_USED,
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
-    val tvdbApiKey: String? = null,
     val tmdbApiKey: String? = null,
     val anilistClientId: String? = null,
     val audioLanguage: String = "sub",

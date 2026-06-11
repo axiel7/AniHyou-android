@@ -50,10 +50,5 @@ const val VIDFAST_TV_URL = "$VIDFAST_BASE_URL/tv"
 const val MIRURO_BASE_URL = "https://www.miruro.to"
 const val MIRURO_WATCH_URL = "$MIRURO_BASE_URL/watch"
 
-// TheTVDB — dub air dates
-const val TVDB_API_URL = "https://api4.thetvdb.com/v4"
-// Register at thetvdb.com/api-information for a free key and replace this placeholder
-const val TVDB_API_KEY = "YOUR_TVDB_API_KEY_HERE"
-
 // Google Calendar
 const val GOOGLE_CALENDAR_PACKAGE = "com.google.android.calendar"

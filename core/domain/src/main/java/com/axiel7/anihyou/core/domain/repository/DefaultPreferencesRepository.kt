@@ -288,13 +288,6 @@ class DefaultPreferencesRepository (
         dataStore.setValue(COLOR_PALETTE_KEY, value)
     }
 
-    // TVDB API key
-    val tvdbApiKey = dataStore.getValue(key = TVDB_API_KEY)
-
-    suspend fun setTvdbApiKey(value: String?) {
-        dataStore.setValue(TVDB_API_KEY, value)
-    }
-
     // TMDB API key
     val tmdbApiKey = dataStore.getValue(key = TMDB_API_KEY)
 
@@ -347,7 +340,6 @@ class DefaultPreferencesRepository (
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
-        private val TVDB_API_KEY = stringPreferencesKey("tvdb_api_key")
         private val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         private val ANILIST_CLIENT_ID_KEY = stringPreferencesKey("anilist_client_id")
         private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")

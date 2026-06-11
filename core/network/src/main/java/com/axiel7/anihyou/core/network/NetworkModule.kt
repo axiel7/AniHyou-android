@@ -19,7 +19,7 @@ val networkModule = module {
     single { provideApolloClient(get()) }
     // MAL client (with X-MAL-CLIENT-ID header)
     single { provideOkHttpClient() }
-    // Plain client for TheTVDB and other REST APIs
+    // Plain client for REST APIs (TMDB etc.)
     single(named("plain")) { OkHttpClient.Builder().build() }
 }
 

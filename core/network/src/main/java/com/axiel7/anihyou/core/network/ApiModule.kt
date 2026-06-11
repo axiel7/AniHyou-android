@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.network
 
-import com.axiel7.anihyou.core.base.TvdbKeyProvider
 import com.axiel7.anihyou.core.network.api.ActivityApi
 import com.axiel7.anihyou.core.network.api.CharacterApi
 import com.axiel7.anihyou.core.network.api.FavoriteApi
@@ -13,10 +12,8 @@ import com.axiel7.anihyou.core.network.api.ReviewApi
 import com.axiel7.anihyou.core.network.api.StaffApi
 import com.axiel7.anihyou.core.network.api.StudioApi
 import com.axiel7.anihyou.core.network.api.ThreadApi
-import com.axiel7.anihyou.core.network.api.TvdbApi
 import com.axiel7.anihyou.core.network.api.UserApi
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val apiModule = module {
@@ -33,6 +30,4 @@ val apiModule = module {
     singleOf(::StudioApi)
     singleOf(::ThreadApi)
     singleOf(::UserApi)
-    // TheTVDB — English dub air dates (key provided by domain module)
-    single { TvdbApi(get(named("plain")), get<TvdbKeyProvider>()) }
 }

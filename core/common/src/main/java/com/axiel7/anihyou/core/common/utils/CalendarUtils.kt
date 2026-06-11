@@ -77,7 +77,7 @@ object CalendarUtils {
      * Open Google Calendar on the date that a dubbed episode airs.
      * Useful for "View in Calendar" action from the dub schedule screen.
      *
-     * @param dubAirDate  "YYYY-MM-DD" string from TheTVDB.
+     * @param dubAirDate  "YYYY-MM-DD" air date string.
      */
     fun Context.openCalendarOnDate(dubAirDate: String) {
         runCatching {

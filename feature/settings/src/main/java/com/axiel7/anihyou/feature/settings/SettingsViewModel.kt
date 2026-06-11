@@ -185,12 +185,6 @@ class SettingsViewModel(
         }
     }
 
-    override fun setTvdbApiKey(value: String) {
-        viewModelScope.launch {
-            defaultPreferencesRepository.setTvdbApiKey(value)
-        }
-    }
-
     override fun setTmdbApiKey(value: String) {
         viewModelScope.launch {
             defaultPreferencesRepository.setTmdbApiKey(value)
@@ -338,12 +332,6 @@ class SettingsViewModel(
         defaultPreferencesRepository.isNotificationsEnabled
             .onEach { value ->
                 mutableUiState.update { it.copy(isNotificationsEnabled = value) }
-            }
-            .launchIn(viewModelScope)
-
-        defaultPreferencesRepository.tvdbApiKey
-            .onEach { value ->
-                mutableUiState.update { it.copy(tvdbApiKey = value ?: "") }
             }
             .launchIn(viewModelScope)
 
