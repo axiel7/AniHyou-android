@@ -262,6 +262,11 @@
     <string name="romaji_western_order">Romaji (Western Order)</string>
     <string name="staff_character_name_language"><![CDATA[Staff & Character name language]]></string>
     <string name="score_format">Score format</string>
+    <string name="score_point_100">100 Point (55/100)</string>
+    <string name="score_point_10_decimal">10 Point Decimal (5.5/10)</string>
+    <string name="score_point_10">10 Point (5/10)</string>
+    <string name="score_point_5">5 Star (3/5)</string>
+    <string name="score_point_3">3 Point Smiley :)</string>
     <string name="no_media">No media</string>
     <string name="every_six_hours">Every 6 hours</string>
     <string name="every_twelve_hours">Every 12 hours</string>
@@ -344,6 +349,12 @@
     <string name="staff_role_advertising">Advertising</string>
     <string name="staff_role_advertising_producer">Advertising Producer</string>
     <string name="staff_role_animation_director">Animation Director</string>
+    <string name="staff_role_3dcg">3DCG</string>
+    <string name="staff_role_3d_art">3D Art</string>
+    <string name="staff_role_3d_works">3D Works</string>
+    <string name="staff_role_2d_design">2D Design</string>
+    <string name="staff_role_2d_works">2D Works</string>
+    <string name="staff_role_2d_effects">2D Effects</string>
     <string name="staff_role_animation_producer">Animation Producer</string>
     <string name="staff_role_animation_production_assistance">Animation Production Assistance</string>
     <string name="staff_role_animation_supervisor">Animation Supervisor</string>
@@ -385,6 +396,7 @@
     <string name="staff_role_character_design">Character Design</string>
     <string name="staff_role_chief_director">Chief Director</string>
     <string name="staff_role_chief_episode_director">Chief Episode Director</string>
+    <string name="staff_role_chief_animation_director">Chief Animation Director</string>
     <string name="staff_role_chief_mechanical_animation_director">Chief Mechanical Animation Director</string>
     <string name="staff_role_chief_producer">Chief Producer</string>
     <string name="staff_role_chief_production_desk">Chief Production Desk</string>
@@ -437,6 +449,9 @@
     <string name="staff_role_insert_song_lyrics">Insert Song Lyrics</string>
     <string name="staff_role_insert_song_composition">Insert Song Composition</string>
     <string name="staff_role_insert_song_arrangement">Insert Song Arrangement</string>
+    <string name="staff_role_1st_key_animation">1st Key Animation Director</string>
+    <string name="staff_role_1st_key_assistant">1st Key Assistant Animation Director</string>
+    <string name="staff_role_2nd_key_animation">2nd Key Animation</string>
     <string name="staff_role_key_animation">Key Animation</string>
     <string name="staff_role_key_animation_assistance">Key Animation Assistance</string>
     <string name="staff_role_key_animation_op">Key Animation (OP)</string>
@@ -630,5 +645,6 @@
     <string name="no_episodes">No episodes available</string>
     <string name="popular_anime">Popular Anime</string>
     <string name="top_rated">Top Rated</string>
+    <string name="top_100">Top 100</string>
     <string name="surprise_me">Surprise me!</string>
 </resources>
