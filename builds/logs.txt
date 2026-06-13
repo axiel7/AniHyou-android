@@ -16,3 +16,4 @@
 [2026-06-13 12:00 UTC] CHANGE | commit:pending | Nav reorder: Anime tab → Stream tab (placeholder); Profile moved to index 4 (last). Routes.StreamTab added. BottomDestination.Stream replaces AnimeList. MainNavigation AnimeTab entry → StreamTab placeholder. Rail Explore index 4→3.
 [2026-06-13 14:05 UTC] FAILURE | commit:e537536 | version:1.5.2 | see workflow run for details
 [2026-06-13 14:10 UTC] FAILURE | commit:e537536c | version:1.5.2 | CAUSE: StreamTab placeholder used fillMaxSize() without importing androidx.compose.foundation.layout.fillMaxSize or Box. FIX: added both imports to MainNavigation.kt.
+[2026-06-13 14:14 UTC] SUCCESS | commit:e16d503 | version:1.5.2 | assembleFossDebug + unit tests GREEN
