@@ -21,6 +21,22 @@ object Routes {
 
     @Serializable
     @Immutable
+    data class StreamDetail(val animeId: Int) : NavKey
+
+    @Serializable
+    @Immutable
+    data class StreamPlayer(
+        val animeId: Int,
+        val provider: String,
+        val category: String,
+        val episodeSlug: String,
+        val episodeNumber: Int,
+        val totalEpisodes: Int,
+        val resumePositionMs: Long = 0L,
+    ) : NavKey
+
+    @Serializable
+    @Immutable
     object MangaTab: NavKey
 
     @Serializable

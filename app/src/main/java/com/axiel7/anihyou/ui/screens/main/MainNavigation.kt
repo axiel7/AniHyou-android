@@ -10,6 +10,9 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import com.axiel7.anihyou.feature.stream.ui.browse.StreamBrowseView
+import com.axiel7.anihyou.feature.stream.ui.detail.StreamDetailView
+import com.axiel7.anihyou.feature.stream.ui.player.PlayerView
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -202,20 +205,62 @@ fun MainNavigation(
             entry<Routes.StreamTab>(
                 metadata = topNavigationTransitionSpec
             ) {
-                // TODO: Replace with StreamView once :feature:stream module is built.
-                // This tab will host the Miruro-based native streaming screen:
-                //   - Episode browser backed by MiruroPipeClient
-                //   - Media3/ExoPlayer playback with HLS streams
-                //   - Sub/dub selector, intro/outro skip buttons
-                // For now show a placeholder so the tab is navigable.
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = bottomPadding),
-                    contentAlignment = androidx.compose.ui.Alignment.Center,
-                ) {
-                    androidx.compose.material3.Text("Stream coming soon")
-                }
+                StreamBrowseView(
+                    onAnimeClick = { animeId ->
+                        topLevelBackStack.add(Routes.StreamDetail(animeId))
+                    },
+                    modifier = Modifier.padding(bottom = bottomPadding),
+                )
+            }
+
+            entry<Routes.StreamDetail>(
+                metadata = topNavigationTransitionSpec
+            ) { entry ->
+                val args = entry.key as Routes.StreamDetail
+                StreamDetailView(
+                    animeId = args.animeId,
+                    onBack = { topLevelBackStack.removeLastOrNull() },
+                    onPlayEpisode = { animeId, provider, category, slug, epNum ->
+                        topLevelBackStack.add(
+                            Routes.StreamPlayer(
+                                animeId = animeId,
+                                provider = provider,
+                                category = category,
+                                episodeSlug = slug,
+                                episodeNumber = epNum,
+                                totalEpisodes = 0,
+                            )
+                        )
+                    },
+                )
+            }
+
+            entry<Routes.StreamPlayer>(
+                metadata = topNavigationTransitionSpec
+            ) { entry ->
+                val args = entry.key as Routes.StreamPlayer
+                PlayerView(
+                    animeId = args.animeId,
+                    provider = args.provider,
+                    category = args.category,
+                    episodeSlug = args.episodeSlug,
+                    episodeNumber = args.episodeNumber,
+                    totalEpisodes = args.totalEpisodes,
+                    resumePositionMs = args.resumePositionMs,
+                    onBack = { topLevelBackStack.removeLastOrNull() },
+                    onNextEpisode = { nextEp ->
+                        topLevelBackStack.removeLastOrNull()
+                        topLevelBackStack.add(
+                            args.copy(episodeNumber = nextEp, episodeSlug = "", resumePositionMs = 0L)
+                        )
+                    },
+                    onPreviousEpisode = { prevEp ->
+                        topLevelBackStack.removeLastOrNull()
+                        topLevelBackStack.add(
+                            args.copy(episodeNumber = prevEp, episodeSlug = "", resumePositionMs = 0L)
+                        )
+                    },
+                )
             }
 
             entry<Routes.MangaTab>(

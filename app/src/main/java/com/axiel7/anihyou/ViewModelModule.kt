@@ -30,6 +30,9 @@ import com.axiel7.anihyou.feature.staffdetails.StaffDetailsViewModel
 import com.axiel7.anihyou.feature.studiodetails.StudioDetailsViewModel
 import com.axiel7.anihyou.feature.thread.ThreadDetailsViewModel
 import com.axiel7.anihyou.feature.thread.publish.PublishCommentViewModel
+import com.axiel7.anihyou.feature.stream.ui.browse.StreamBrowseViewModel
+import com.axiel7.anihyou.feature.stream.ui.detail.StreamDetailViewModel
+import com.axiel7.anihyou.feature.stream.ui.player.PlayerViewModel
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListViewModel
 import com.axiel7.anihyou.ui.screens.main.MainViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -68,4 +71,7 @@ val viewModelModule = module {
     viewModelOf(::ThreadDetailsViewModel)
     viewModelOf(::PublishCommentViewModel)
     viewModelOf(::UserMediaListViewModel)
+    viewModelOf(::StreamBrowseViewModel)
+    viewModelOf(::StreamDetailViewModel)
+    viewModelOf(::PlayerViewModel)
 }

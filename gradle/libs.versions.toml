@@ -30,6 +30,7 @@ placeholderMaterial3 = "2.0.0"
 profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
 workRuntime = "2.11.1"
+media3 = "1.5.1"
 baselineprofile = "1.5.0-alpha03"
 wear = "1.4.0"
 wearRemoteInteractions = "1.2.0"
@@ -97,6 +98,11 @@ androidx-wear-compose-navigation = { group = "androidx.wear.compose", name = "co
 androidx-wear-compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wearComposeMaterial" }
 androidx-wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
 gms-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "gmsWearable" }
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+androidx-media3-exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "media3" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+androidx-media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", version.ref = "media3" }
+androidx-media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3" }
 horologist-compose-layout = { group = "com.google.android.horologist", name = "horologist-compose-layout", version.ref = "horologist" }
 
 [plugins]

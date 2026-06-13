@@ -163,6 +163,7 @@ dependencies {
     implementation(project(":feature:studiodetails"))
     implementation(project(":feature:thread"))
     implementation(project(":feature:usermedialist"))
+    implementation(project(":feature:stream"))
     implementation(project(":feature:widget"))
     implementation(project(":feature:worker"))
 
