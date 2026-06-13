@@ -12,3 +12,4 @@
 [2026-06-13 10:45 UTC] FAILURE | commit:f3fc9e91 | version:1.5.2 | CAUSE 1: ./gradlew test resolves :wearos deps (wear-phone-interactions:1.2.0 unavailable). CAUSE 2: GITHUB_TOKEN lacked contents:write so log push got 403. FIX: scope test to :app:testFossDebugUnitTest + add permissions.contents:write to workflow.
 [2026-06-13 03:38 UTC] FAILURE | commit:3b17c22 | version:1.5.2 | see workflow run for details
 [2026-06-13 11:00 UTC] FAILURE | commit:3b17c22d | version:1.5.2 | CAUSE: BuildIntegrityTest slugify assertions wrong — tests assumed lowercase output but StringUtils.slugify() preserves case. FIX: corrected 3 assertions to match actual implementation (Re-Zero not re-zero, Attack-on-Titan not attack-on-titan, regex [a-zA-Z0-9\-]+ not [a-z0-9\-]+).
+[2026-06-13 03:48 UTC] SUCCESS | commit:34a18d8 | version:1.5.2 | assembleFossDebug + unit tests GREEN
