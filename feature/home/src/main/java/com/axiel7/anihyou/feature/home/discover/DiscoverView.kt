@@ -159,7 +159,7 @@ private fun DiscoverContent(
                                 event?.selectItem(details, listEntry)
                                 showEditSheetAction()
                             },
-                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                            navigateToMediaDetails = navActionManager::toStreamDetail,
                         )
                     }
 

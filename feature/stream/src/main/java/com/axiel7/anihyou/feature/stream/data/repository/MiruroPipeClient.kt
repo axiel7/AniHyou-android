@@ -54,7 +54,10 @@ class MiruroPipeClient(
 
     /** Decode a base64+gzip pipe response to a raw JSON string. */
     fun decodePipeResponse(encoded: String): String {
-        val compressedBytes = encoded.decodeBase64()?.toByteArray() 
+        val base64 = encoded.replace('-', '+').replace('_', '/')
+        val padLength = (4 - (base64.length % 4)) % 4
+        val padded = base64 + "=".repeat(padLength)
+        val compressedBytes = padded.decodeBase64()?.toByteArray() 
             ?: error("Invalid Base64 response")
         return GZIPInputStream(ByteArrayInputStream(compressedBytes)).bufferedReader(Charsets.UTF_8).readText()
     }
@@ -66,7 +69,10 @@ class MiruroPipeClient(
         return rawJson.replace(Regex("\"id\"\\s*:\\s*\"([A-Za-z0-9+/=_-]{10,})\"")) { match ->
             val encoded = match.groupValues[1]
             val decoded = runCatching {
-                val bytes = encoded.decodeBase64()?.utf8()
+                val base64 = encoded.replace('-', '+').replace('_', '/')
+                val padLength = (4 - (base64.length % 4)) % 4
+                val padded = base64 + "=".repeat(padLength)
+                val bytes = padded.decodeBase64()?.utf8()
                 // Only accept if it looks like a real id (contains ':')
                 if (bytes != null && ':' in bytes) bytes else null
             }.getOrNull()

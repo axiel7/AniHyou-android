@@ -137,6 +137,11 @@ fun PlayerView(
     // Once stream URL is ready, build HLS media source
     LaunchedEffect(state.activeStreamUrl) {
         val url = state.activeStreamUrl ?: return@LaunchedEffect
+        val currentPos = if (!exoPlayer.currentTimeline.isEmpty) {
+            exoPlayer.currentPosition
+        } else {
+            state.resumePositionMs
+        }
         val dataSourceFactory = OkHttpDataSource.Factory(
             okHttpClient.newBuilder().apply {
                 state.activeReferer?.let { referer ->
@@ -154,7 +159,7 @@ fun PlayerView(
             .createMediaSource(MediaItem.fromUri(url))
         exoPlayer.setMediaSource(hlsSource)
         exoPlayer.prepare()
-        if (state.resumePositionMs > 0) exoPlayer.seekTo(state.resumePositionMs)
+        if (currentPos > 0) exoPlayer.seekTo(currentPos)
         if (state.autoPlay) exoPlayer.play()
     }
 

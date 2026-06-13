@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -44,8 +45,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.axiel7.anihyou.core.model.media.progressOrVolumes
+import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.feature.stream.data.model.StreamAnime
 import org.koin.androidx.compose.koinViewModel
+import java.time.LocalDateTime
 
 @Composable
 fun PulsePlaceholder(
@@ -119,6 +123,22 @@ fun StreamBrowseView(
                 contentPadding = PaddingValues(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Continue watching skeleton
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        PulsePlaceholder(Modifier.width(130.dp).height(20.dp))
+                        Spacer(Modifier.height(12.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            repeat(3) {
+                                Column(Modifier.width(110.dp)) {
+                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                    Spacer(Modifier.height(6.dp))
+                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                }
+                            }
+                        }
+                    }
+                }
                 // Spotlight skeleton
                 item {
                     Column(Modifier.padding(horizontal = 16.dp)) {
@@ -143,22 +163,6 @@ fun StreamBrowseView(
                         }
                     }
                 }
-                // Popular skeleton
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        PulsePlaceholder(Modifier.width(140.dp).height(20.dp))
-                        Spacer(Modifier.height(12.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            repeat(3) {
-                                Column(Modifier.width(110.dp)) {
-                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
-                                    Spacer(Modifier.height(6.dp))
-                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
-                                }
-                            }
-                        }
-                    }
-                }
             }
             return@Column
         }
@@ -167,6 +171,42 @@ fun StreamBrowseView(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
+            // ── Continue Watching (Top Option) ────────────────────────────────
+            if (state.currentlyWatching.isNotEmpty() || state.isLoadingCurrentlyWatching) {
+                item { SectionHeader("Continue Watching") }
+                item {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        if (state.isLoadingCurrentlyWatching && state.currentlyWatching.isEmpty()) {
+                            items(3) {
+                                Column(Modifier.width(110.dp)) {
+                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                    Spacer(Modifier.height(6.dp))
+                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                }
+                            }
+                        } else {
+                            items(state.currentlyWatching) { item ->
+                                val media = item.media
+                                val title = media?.basicMediaDetails?.title?.userPreferred.orEmpty()
+                                val coverUrl = media?.coverImage?.large
+                                val progress = item.basicMediaListEntry.progressOrVolumes()
+
+                                ContinueWatchingCard(
+                                    title = title,
+                                    coverUrl = coverUrl,
+                                    progress = progress,
+                                    onClick = { onAnimeClick(item.mediaId) }
+                                )
+                            }
+                        }
+                    }
+                }
+                item { Spacer(Modifier.height(16.dp)) }
+            }
+
             // Spotlight
             if (state.spotlight.isNotEmpty()) {
                 item { SectionHeader("Spotlight") }
@@ -227,6 +267,84 @@ fun StreamBrowseView(
                             AnimeCard(anime = anime, onClick = { onAnimeClick(anime.id) })
                         }
                     }
+                }
+                item { Spacer(Modifier.height(16.dp)) }
+            }
+
+            // ── Season Selection ──────────────────────────────────────────────
+            item { SectionHeader("Browse by Season") }
+            item {
+                Column(Modifier.padding(horizontal = 16.dp)) {
+                    // Season Filter Chips
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        listOf(MediaSeason.WINTER, MediaSeason.SPRING, MediaSeason.SUMMER, MediaSeason.FALL).forEach { s ->
+                            val isSelected = state.selectedSeason == s
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { viewModel.onSeasonSelected(s) },
+                                label = { Text(s.name.lowercase().replaceFirstChar { it.uppercase() }) }
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    // Year Filter Chips
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val currentYear = LocalDateTime.now().year
+                        items((currentYear downTo currentYear - 4).toList()) { y ->
+                            val isSelected = state.selectedYear == y
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { viewModel.onYearSelected(y) },
+                                label = { Text(y.toString()) }
+                            )
+                        }
+                    }
+                }
+            }
+
+            item { Spacer(Modifier.height(12.dp)) }
+
+            // Seasonal Anime Row
+            if (state.isLoadingSeasonal && state.seasonalAnime.isEmpty()) {
+                item {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(3) {
+                            Column(Modifier.width(110.dp)) {
+                                PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                Spacer(Modifier.height(6.dp))
+                                PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                            }
+                        }
+                    }
+                }
+            } else if (state.seasonalAnime.isNotEmpty()) {
+                item {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        items(state.seasonalAnime) { anime ->
+                            AnimeCard(anime = anime, onClick = { onAnimeClick(anime.id) })
+                        }
+                    }
+                }
+            } else {
+                item {
+                    Text(
+                        text = "No seasonal anime found",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
@@ -415,6 +533,61 @@ private fun AnimeCard(anime: StreamAnime, onClick: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+}
+
+@Composable
+private fun ContinueWatchingCard(
+    title: String,
+    coverUrl: String?,
+    progress: Int?,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(110.dp)
+            .clickable(onClick = onClick),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(2f / 3f)
+                .clip(MaterialTheme.shapes.medium)
+        ) {
+            AsyncImage(
+                model = coverUrl,
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+            // Progress tag overlay
+            if (progress != null) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.75f))
+                        .padding(vertical = 4.dp, horizontal = 6.dp)
+                ) {
+                    Text(
+                        text = "Ep $progress",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 

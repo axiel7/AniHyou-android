@@ -4,6 +4,9 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
+import com.axiel7.anihyou.core.model.media.AnimeSeason
+import com.axiel7.anihyou.core.network.type.MediaSeason
+import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
@@ -189,6 +192,36 @@ class StreamRepository(
             }
         }.getOrElse { DataResult.Error(it.message ?: "upcoming failed") }
 
+    suspend fun getAnimeBySeason(
+        season: MediaSeason,
+        year: Int,
+        page: Int = 1,
+        perPage: Int = 20
+    ): DataResult<PagedAnimeResponse> = runCatching {
+        val result = mediaRepository.getSeasonalAnimePage(
+            animeSeason = AnimeSeason(year = year, season = season),
+            sort = listOf(com.axiel7.anihyou.core.network.type.MediaSort.POPULARITY_DESC),
+            isAdult = false,
+            page = page,
+            perPage = perPage
+        ).first { it !is PagedResult.Loading }
+
+        when (result) {
+            is PagedResult.Success -> {
+                val list = result.list.map { it.toStreamAnime() }
+                DataResult.Success(
+                    PagedAnimeResponse(
+                        page = page,
+                        perPage = perPage,
+                        results = list
+                    )
+                )
+            }
+            is PagedResult.Error -> DataResult.Error(result.message)
+            else -> DataResult.Error("Failed to fetch seasonal anime")
+        }
+    }.getOrElse { DataResult.Error(it.message ?: "seasonal failed") }
+
     suspend fun search(
         query: String,
         page: Int = 1,
@@ -225,6 +258,22 @@ class StreamRepository(
     }.getOrElse { DataResult.Error(it.message ?: "info failed") }
 
     // ── Mappers ───────────────────────────────────────────────────────────────
+
+    fun CommonMediaListEntry.toStreamAnime(): StreamAnime {
+        return StreamAnime(
+            id = this.mediaId,
+            title = AnimeTitle(
+                english = this.media?.basicMediaDetails?.title?.userPreferred,
+                romaji = this.media?.basicMediaDetails?.title?.userPreferred
+            ),
+            coverImage = CoverImage(
+                large = this.media?.coverImage?.large
+            ),
+            format = this.media?.basicMediaDetails?.type?.rawValue,
+            averageScore = null,
+            genres = emptyList()
+        )
+    }
 
     private fun SeasonalAnimeQuery.Medium.toStreamAnime(): StreamAnime {
         return StreamAnime(

@@ -26,6 +26,10 @@ class NavActionManager(
         backStack.add(Routes.MediaDetails(id))
     }
 
+    fun toStreamDetail(id: Int) {
+        backStack.add(Routes.StreamDetail(id))
+    }
+
     fun toMediaActivity(mediaId: Int) {
         backStack.add(Routes.MediaActivity(mediaId))
     }
