@@ -116,6 +116,7 @@ Format per entry:
 | Cannot access 'X': it is internal in 'Y'    | Accessing internal across module boundary | Expose via public API or move to shared module |
 | Merge conflict markers (<<<<<<< / =======)  | Un-resolved git merge                | Run git status, resolve, recommit |
 | Base64 not found / wrong API level           | android.util.Base64 used in pure-JVM module | Use java.util.Base64 in :core:common/:core:base |
+| Unresolved reference in *Test.kt (e.g. BasicUnitTest) | Import path stale after package refactor | Update import to current module path (e.g. core.ui.utils.* not plain utils.*) |
 
 ## 9. TIER LIST FEATURE (planned)
 The document in context describes a community ranking UI scraped from an external source.

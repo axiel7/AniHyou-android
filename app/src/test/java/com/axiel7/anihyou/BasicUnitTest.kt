@@ -1,6 +1,6 @@
 package com.axiel7.anihyou
 
-import com.axiel7.anihyou.utils.MarkdownUtils.formatCompatibleMarkdown
+import com.axiel7.anihyou.core.ui.utils.MarkdownUtils.formatCompatibleMarkdown
 import org.junit.Test
 
 class BasicUnitTest {
