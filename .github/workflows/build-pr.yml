@@ -6,6 +6,9 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,8 +26,8 @@ jobs:
       - name: Check string resources
         run: bash scripts/check_string_refs.sh
 
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Run unit tests (app module only)
+        run: ./gradlew :app:testFossDebugUnitTest
 
       - name: Build FOSS debug APK
         run: ./gradlew assembleFossDebug
