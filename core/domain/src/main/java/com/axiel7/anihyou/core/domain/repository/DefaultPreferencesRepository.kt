@@ -308,6 +308,12 @@ class DefaultPreferencesRepository (
         dataStore.setValue(AUDIO_LANGUAGE_KEY, value)
     }
 
+    // In-app browser player setting
+    val useInAppBrowser = dataStore.getValue(key = USE_IN_APP_BROWSER_KEY, default = false)
+    suspend fun setUseInAppBrowser(value: Boolean) {
+        dataStore.setValue(USE_IN_APP_BROWSER_KEY, value)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -343,5 +349,6 @@ class DefaultPreferencesRepository (
         private val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         private val ANILIST_CLIENT_ID_KEY = stringPreferencesKey("anilist_client_id")
         private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")
+        private val USE_IN_APP_BROWSER_KEY = booleanPreferencesKey("use_in_app_browser")
     }
 }

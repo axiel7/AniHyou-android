@@ -19,6 +19,7 @@ import com.axiel7.anihyou.feature.stream.data.model.PagedAnimeResponse
 import com.axiel7.anihyou.feature.stream.data.model.SpotlightResponse
 import com.axiel7.anihyou.feature.stream.data.model.StreamAnime
 import com.axiel7.anihyou.feature.stream.data.model.StreamSourcesResponse
+import com.axiel7.anihyou.feature.stream.data.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -46,6 +47,35 @@ class StreamRepository(
     private val pipe = MiruroPipeClient(okHttpClient)
     private val json = pipe.json
     private val restClient = okHttpClient
+
+    private suspend fun isReanime(): Boolean {
+        val base = baseUrlProvider()
+        return base.contains("reanime") || !base.contains("miruro")
+    }
+
+    private fun extractAnilistIdFromCoverUrl(url: String?): Int? {
+        if (url == null) return null
+        val match = Regex("""/bx(\d+)-""").find(url)
+        return match?.groupValues?.get(1)?.toIntOrNull()
+    }
+
+    private suspend fun getReanimeSlug(anilistId: Int): String? {
+        val detailsResult = mediaRepository.getMediaDetails(anilistId).first { it !is DataResult.Loading }
+        val title = if (detailsResult is DataResult.Success) {
+            detailsResult.data?.title?.english ?: detailsResult.data?.title?.romaji ?: detailsResult.data?.title?.userPreferred
+        } else null
+        if (title.isNullOrEmpty()) return null
+        
+        val searchJson = get("/search?q=${java.net.URLEncoder.encode(title, "UTF-8")}")
+        val results = runCatching { json.decodeFromString<List<ReanimeAnime>>(searchJson) }.getOrNull() ?: emptyList()
+        for (item in results) {
+            val id = item.anilist?.toIntOrNull() ?: extractAnilistIdFromCoverUrl(item.cover_image?.large ?: item.cover_image?.medium)
+            if (id == anilistId) {
+                return item.slug
+            }
+        }
+        return results.firstOrNull()?.slug
+    }
 
     // ── REST helpers ──────────────────────────────────────────────────────────
 
@@ -227,15 +257,37 @@ class StreamRepository(
         page: Int = 1,
         perPage: Int = 20,
     ): DataResult<PagedAnimeResponse> = runCatching {
-        val rawJson = pipe.pipeGet("search", mapOf("query" to query))
-        val results = json.decodeFromString<List<StreamAnime>>(rawJson)
-        DataResult.Success(
-            PagedAnimeResponse(
-                page = page,
-                perPage = perPage,
-                results = results
+        if (isReanime()) {
+            val searchJson = get("/search?q=${java.net.URLEncoder.encode(query, "UTF-8")}")
+            val results = json.decodeFromString<List<ReanimeAnime>>(searchJson)
+            val list = results.map { item ->
+                StreamAnime(
+                    id = item.anilist?.toIntOrNull() ?: extractAnilistIdFromCoverUrl(item.cover_image?.large ?: item.cover_image?.medium) ?: 0,
+                    title = AnimeTitle(english = item.title, romaji = item.title),
+                    coverImage = CoverImage(large = item.cover_image?.large ?: item.cover_image?.medium),
+                    format = "ANIME",
+                    averageScore = null,
+                    genres = emptyList()
+                )
+            }
+            DataResult.Success(
+                PagedAnimeResponse(
+                    page = page,
+                    perPage = perPage,
+                    results = list
+                )
             )
-        )
+        } else {
+            val rawJson = pipe.pipeGet("search", mapOf("query" to query))
+            val results = json.decodeFromString<List<StreamAnime>>(rawJson)
+            DataResult.Success(
+                PagedAnimeResponse(
+                    page = page,
+                    perPage = perPage,
+                    results = results
+                )
+            )
+        }
     }.getOrElse { DataResult.Error(it.message ?: "search failed") }
 
     // ── Anime info ────────────────────────────────────────────────────────────
@@ -350,10 +402,42 @@ class StreamRepository(
      * Returns the raw [EpisodeListResponse] with provider → sub/dub episode maps.
      */
     suspend fun getEpisodes(anilistId: Int): DataResult<EpisodeListResponse> = runCatching {
-        val rawJson = pipe.pipeGet("episodes", mapOf("anilistId" to anilistId.toString()))
-        val data = json.decodeFromString<EpisodeListResponse>(rawJson)
-        // Inject slugified IDs matching the /watch/{provider}/{id}/{cat}/{slug} pattern
-        DataResult.Success(injectSlugs(data, anilistId))
+        if (isReanime()) {
+            val reanimeSlug = getReanimeSlug(anilistId) ?: error("ReAnime slug not found for AniList ID $anilistId")
+            val infoJson = get("/info/$reanimeSlug")
+            val infoRes = json.decodeFromString<ReanimeInfoResponse>(infoJson)
+            val subList = infoRes.episodes.map { ep ->
+                Episode(
+                    id = reanimeSlug,
+                    number = ep.number,
+                    title = ep.title,
+                    airDate = ep.airDate,
+                    image = ep.image
+                )
+            }
+            val dubList = infoRes.episodes.map { ep ->
+                Episode(
+                    id = reanimeSlug,
+                    number = ep.number,
+                    title = ep.title,
+                    airDate = ep.airDate,
+                    image = ep.image
+                )
+            }
+            val providerData = ProviderData(
+                meta = ProviderMeta(title = "ReAnime", currentEpisode = infoRes.episodes.size, totalEpisodes = infoRes.episodes.size),
+                episodes = EpisodesByAudio(sub = subList, dub = dubList)
+            )
+            val data = EpisodeListResponse(
+                mappings = Mappings(anilistId = anilistId),
+                providers = mapOf("reanime" to providerData)
+            )
+            DataResult.Success(injectSlugs(data, anilistId))
+        } else {
+            val rawJson = pipe.pipeGet("episodes", mapOf("anilistId" to anilistId.toString()))
+            val data = json.decodeFromString<EpisodeListResponse>(rawJson)
+            DataResult.Success(injectSlugs(data, anilistId))
+        }
     }.getOrElse { DataResult.Error(it.message ?: "episodes failed") }
 
     /**
@@ -370,31 +454,69 @@ class StreamRepository(
         category: String,
         slug: String,
     ): DataResult<StreamSourcesResponse> = runCatching {
-        // Resolve slug → original episode ID
-        val epJson = pipe.pipeGet("episodes", mapOf("anilistId" to anilistId.toString()))
-        val epData = json.decodeFromString<EpisodeListResponse>(epJson)
-
-        val providerData = epData.providers[provider]
-            ?: error("Provider '$provider' not found for $anilistId")
-        val epList = if (category == "dub") providerData.episodes.dub else providerData.episodes.sub
-
-        val targetId = epList.firstOrNull { ep ->
-            val prefix = if (':' in ep.id) ep.id.substringBefore(':') else ep.id
-            "$prefix-${ep.number}" == slug
-        }?.id ?: error("Slug '$slug' not found in provider $provider/$category")
-
-        // Encode the original ID and call /sources
-        val encodedId = pipe.encodeEpisodeId(targetId)
-        val sourcesJson = pipe.pipeGet(
-            "sources",
-            mapOf(
-                "episodeId" to encodedId,
-                "provider" to provider,
-                "category" to category,
-                "anilistId" to anilistId.toString(),
+        if (isReanime()) {
+            val reanimeSlug = slug.substringBeforeLast("-")
+            val epNum = slug.substringAfterLast("-").toIntOrNull() ?: 1
+            
+            // 1. Get servers
+            val serversJson = get("/servers/$reanimeSlug/$epNum")
+            val serversRes = json.decodeFromString<ReanimeServersResponse>(serversJson)
+            
+            // 2. Select sub or dub servers
+            val servers = if (category == "dub") serversRes.dub else serversRes.sub
+            val server = servers.firstOrNull() ?: error("No servers found for $category")
+            
+            // 3. Decrypt stream link
+            val streamJson = get("/stream/from-link?link=${java.net.URLEncoder.encode(server.dataLink, "UTF-8")}")
+            val streamRes = json.decodeFromString<ReanimeStreamResponse>(streamJson)
+            
+            // 4. Return StreamSourcesResponse
+            DataResult.Success(
+                StreamSourcesResponse(
+                    streams = listOf(
+                        StreamSource(
+                            url = streamRes.url,
+                            type = "hls",
+                            quality = "auto",
+                            isActive = true
+                        )
+                    ),
+                    subtitles = streamRes.subtitles.map {
+                        Subtitle(
+                            file = it.url,
+                            label = it.language,
+                            kind = "captions"
+                        )
+                    }
+                )
             )
-        )
-        DataResult.Success(json.decodeFromString<StreamSourcesResponse>(sourcesJson))
+        } else {
+            // Resolve slug → original episode ID
+            val epJson = pipe.pipeGet("episodes", mapOf("anilistId" to anilistId.toString()))
+            val epData = json.decodeFromString<EpisodeListResponse>(epJson)
+
+            val providerData = epData.providers[provider]
+                ?: error("Provider '$provider' not found for $anilistId")
+            val epList = if (category == "dub") providerData.episodes.dub else providerData.episodes.sub
+
+            val targetId = epList.firstOrNull { ep ->
+                val prefix = if (':' in ep.id) ep.id.substringBefore(':') else ep.id
+                "$prefix-${ep.number}" == slug
+            }?.id ?: error("Slug '$slug' not found in provider $provider/$category")
+
+            // Encode the original ID and call /sources
+            val encodedId = pipe.encodeEpisodeId(targetId)
+            val sourcesJson = pipe.pipeGet(
+                "sources",
+                mapOf(
+                    "episodeId" to encodedId,
+                    "provider" to provider,
+                    "category" to category,
+                    "anilistId" to anilistId.toString(),
+                )
+            )
+            DataResult.Success(json.decodeFromString<StreamSourcesResponse>(sourcesJson))
+        }
     }.getOrElse { DataResult.Error(it.message ?: "sources failed") }
 
     // ── Internal helpers ──────────────────────────────────────────────────────

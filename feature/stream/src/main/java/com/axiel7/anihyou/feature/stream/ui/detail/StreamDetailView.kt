@@ -69,6 +69,8 @@ import coil3.compose.AsyncImage
 import com.axiel7.anihyou.feature.stream.data.model.AudioType
 import com.axiel7.anihyou.feature.stream.data.model.Episode
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.res.painterResource
+
 
 @Composable
 private fun DetailPulsePlaceholder(
@@ -98,10 +100,12 @@ fun StreamDetailView(
     animeId: Int,
     onBack: () -> Unit,
     onPlayEpisode: (animeId: Int, provider: String, category: String, episodeSlug: String, episodeNumber: Int) -> Unit,
+    onAnimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: StreamDetailViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var selectedEpisodeForAudioChoice by remember { mutableStateOf<Episode?>(null) }
 
     LaunchedEffect(animeId) { viewModel.load(animeId) }
 
@@ -286,6 +290,41 @@ fun StreamDetailView(
                 }
             }
 
+            // ── Seasons list ──────────────────────────────────────────────────
+            if (state.seasonsList.size > 1) {
+                item {
+                    Column(Modifier.padding(vertical = 8.dp)) {
+                        Text(
+                            text = "Seasons",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.seasonsList) { season ->
+                                val isCurrent = season.animeId == animeId
+                                SeasonCard(
+                                    season = season,
+                                    onClick = {
+                                        if (!isCurrent) {
+                                            onAnimeClick(season.animeId)
+                                        }
+                                    },
+                                    modifier = Modifier.border(
+                                        width = if (isCurrent) 2.dp else 0.dp,
+                                        color = if (isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             // ── Provider selector ─────────────────────────────────────────────
             if (state.availableProviders.isNotEmpty()) {
                 item {
@@ -336,26 +375,48 @@ fun StreamDetailView(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f),
                     )
+                    IconButton(onClick = viewModel::toggleSortOrder) {
+                        Icon(
+                            painter = painterResource(
+                                if (state.isSortAscending) com.axiel7.anihyou.core.resources.R.drawable.arrow_upward_24
+                                else com.axiel7.anihyou.core.resources.R.drawable.arrow_downward_24
+                            ),
+                            contentDescription = "Toggle Sort Order"
+                        )
+                    }
                 }
             }
 
             // ── Episodes ──────────────────────────────────────────────────────
+            val providerData = state.episodeData?.providers?.get(state.selectedProvider)
             items(state.episodeList) { episode ->
                 val isWatched = episode.number in state.watchedEpisodes
                 val isResume = episode.number == state.resumeEpisode
+                val hasSub = providerData?.episodes?.sub?.any { it.number == episode.number } == true
+                val hasDub = providerData?.episodes?.dub?.any { it.number == episode.number } == true
                 EpisodeCard(
                     episode = episode,
                     isWatched = isWatched,
                     isResume = isResume,
+                    hasSub = hasSub,
+                    hasDub = hasDub,
                     onPlay = {
-                        val slug = episode.id.substringAfterLast("/")
-                        onPlayEpisode(
-                            animeId,
-                            state.selectedProvider,
-                            state.selectedAudio.value,
-                            slug,
-                            episode.number,
-                        )
+                        if (state.selectedAudio == AudioType.ALL && hasSub && hasDub) {
+                            selectedEpisodeForAudioChoice = episode
+                        } else {
+                            val playCategory = if (hasDub && state.selectedAudio == AudioType.DUB) "dub" else "sub"
+                            val playEp = if (playCategory == "dub") {
+                                providerData?.episodes?.dub?.firstOrNull { it.number == episode.number } ?: episode
+                            } else episode
+                            val slug = playEp.id.substringAfterLast("/")
+                            onPlayEpisode(
+                                animeId,
+                                state.selectedProvider,
+                                playCategory,
+                                slug,
+                                episode.number,
+                            )
+                        }
                     },
                     onToggleWatched = {
                         if (isWatched) viewModel.markUnwatched(episode.number)
@@ -364,6 +425,36 @@ fun StreamDetailView(
                     onAddNote = { viewModel.openNoteDialog(episode.number) },
                 )
             }
+        }
+
+        // ── Audio choice dialog ───────────────────────────────────────────────
+        if (selectedEpisodeForAudioChoice != null) {
+            val ep = selectedEpisodeForAudioChoice!!
+            val providerData = state.episodeData?.providers?.get(state.selectedProvider)
+            AlertDialog(
+                onDismissRequest = { selectedEpisodeForAudioChoice = null },
+                title = { Text("Choose Audio") },
+                text = { Text("Select your preferred audio track for streaming:") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            val slug = ep.id.substringAfterLast("/")
+                            onPlayEpisode(animeId, state.selectedProvider, "sub", slug, ep.number)
+                            selectedEpisodeForAudioChoice = null
+                        }
+                    ) { Text("SUB") }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            val dubEp = providerData?.episodes?.dub?.firstOrNull { it.number == ep.number }
+                            val slug = (dubEp ?: ep).id.substringAfterLast("/")
+                            onPlayEpisode(animeId, state.selectedProvider, "dub", slug, ep.number)
+                            selectedEpisodeForAudioChoice = null
+                        }
+                    ) { Text("DUB") }
+                }
+            )
         }
 
         // ── Note dialog ───────────────────────────────────────────────────────
@@ -455,6 +546,8 @@ private fun EpisodeCard(
     episode: Episode,
     isWatched: Boolean,
     isResume: Boolean,
+    hasSub: Boolean,
+    hasDub: Boolean,
     onPlay: () -> Unit,
     onToggleWatched: () -> Unit,
     onAddNote: () -> Unit,
@@ -531,17 +624,38 @@ private fun EpisodeCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(Modifier.height(2.dp))
-                val meta = buildList {
-                    episode.durationMinutes?.let { add("${it}m") }
-                    episode.airDate?.let { add(it) }
-                    if (episode.filler) add("Filler")
-                }.joinToString(" · ")
-                if (meta.isNotEmpty()) {
-                    Text(
-                        text = meta,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    if (hasSub) {
+                        Icon(
+                            painter = painterResource(com.axiel7.anihyou.core.resources.R.drawable.mic_24),
+                            contentDescription = "Sub",
+                            tint = Color(0xFFEF5350),
+                            modifier = Modifier.size(12.dp)
+                        )
+                    }
+                    if (hasDub) {
+                        Icon(
+                            painter = painterResource(com.axiel7.anihyou.core.resources.R.drawable.mic_24),
+                            contentDescription = "Dub",
+                            tint = Color(0xFF66BB6A),
+                            modifier = Modifier.size(12.dp)
+                        )
+                    }
+                    val meta = buildList {
+                        episode.durationMinutes?.let { add("${it}m") }
+                        episode.airDate?.let { add(it) }
+                        if (episode.filler) add("Filler")
+                    }.joinToString(" · ")
+                    if (meta.isNotEmpty()) {
+                        Text(
+                            text = meta,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
 
@@ -563,3 +677,94 @@ private fun EpisodeCard(
         }
     }
 }
+
+@Composable
+private fun SeasonCard(
+    season: SeasonInfo,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier
+            .width(130.dp)
+            .clickable(onClick = onClick),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+        )
+    ) {
+        Column {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(11f / 16f)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            ) {
+                if (season.coverUrl != null) {
+                    AsyncImage(
+                        model = season.coverUrl,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = season.title,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    minLines = 2,
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    if (season.subCount > 0) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(com.axiel7.anihyou.core.resources.R.drawable.mic_24),
+                                contentDescription = "Sub",
+                                tint = Color(0xFFEF5350),
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(Modifier.width(2.dp))
+                            Text(
+                                text = "${season.subCount}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    if (season.dubCount > 0) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(com.axiel7.anihyou.core.resources.R.drawable.mic_24),
+                                contentDescription = "Dub",
+                                tint = Color(0xFF66BB6A),
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(Modifier.width(2.dp))
+                            Text(
+                                text = "${season.dubCount}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

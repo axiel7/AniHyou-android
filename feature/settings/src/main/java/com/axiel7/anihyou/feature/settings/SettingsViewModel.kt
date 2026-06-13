@@ -203,6 +203,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setUseInAppBrowser(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setUseInAppBrowser(value)
+        }
+    }
+
     override fun logOut(recreate: () -> Unit) {
         viewModelScope.launch {
             loginRepository.logOut()
@@ -356,6 +362,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.notificationCheckInterval
             .onEach { value ->
                 mutableUiState.update { it.copy(notificationCheckInterval = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.useInAppBrowser
+            .onEach { value ->
+                mutableUiState.update { it.copy(useInAppBrowser = value) }
             }
             .launchIn(viewModelScope)
     }

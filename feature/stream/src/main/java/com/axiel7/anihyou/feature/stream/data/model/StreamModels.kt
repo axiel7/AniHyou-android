@@ -261,7 +261,8 @@ data class ExternalLink(
 
 enum class AudioType(val value: String) {
     SUB("sub"),
-    DUB("dub");
+    DUB("dub"),
+    ALL("all");
     companion object {
         fun from(value: String) = entries.firstOrNull { it.value == value } ?: SUB
     }
@@ -272,3 +273,63 @@ data class EpisodeNote(
     val episodeNumber: Int,
     val note: String,
 )
+
+// ─── ReAnime Scraper API models ──────────────────────────────────────────────
+
+@Serializable
+data class ReanimeCoverImage(
+    val extra_large: String? = null,
+    val large: String? = null,
+    val medium: String? = null,
+)
+
+@Serializable
+data class ReanimeAnime(
+    val slug: String,
+    val title: String? = null,
+    val cover_image: ReanimeCoverImage? = null,
+    val anilist: String? = null,
+)
+
+@Serializable
+data class ReanimeEpisode(
+    val number: Int,
+    val title: String? = null,
+    val airDate: String? = null,
+    val image: String? = null,
+)
+
+@Serializable
+data class ReanimeInfoResponse(
+    val slug: String? = null,
+    val title: String? = null,
+    val anilist_id: Int? = null,
+    val cover_image: ReanimeCoverImage? = null,
+    val episodes: List<ReanimeEpisode> = emptyList(),
+)
+
+@Serializable
+data class ReanimeServersResponse(
+    val sub: List<ReanimeServer> = emptyList(),
+    val dub: List<ReanimeServer> = emptyList(),
+)
+
+@Serializable
+data class ReanimeServer(
+    val serverName: String,
+    val dataLink: String,
+    val dataType: String,
+)
+
+@Serializable
+data class ReanimeStreamResponse(
+    val url: String,
+    val subtitles: List<ReanimeSubtitle> = emptyList(),
+)
+
+@Serializable
+data class ReanimeSubtitle(
+    val url: String,
+    val language: String,
+)
+

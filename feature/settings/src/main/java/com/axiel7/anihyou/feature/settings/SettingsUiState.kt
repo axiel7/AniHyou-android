@@ -31,6 +31,7 @@ data class SettingsUiState(
     val tmdbApiKey: String? = null,
     val anilistClientId: String? = null,
     val audioLanguage: String = "sub",
+    val useInAppBrowser: Boolean = false,
     val userSettings: UserSettings? = null,
     val isLoggedIn: Boolean = false,
     override val error: String? = null,

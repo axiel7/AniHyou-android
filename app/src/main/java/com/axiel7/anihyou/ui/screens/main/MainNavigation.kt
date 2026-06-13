@@ -34,6 +34,16 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.feature.stream.data.repository.StreamPreferencesRepository
+import com.axiel7.anihyou.feature.stream.data.repository.StreamRepository
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.base.DataResult
+import org.koin.compose.koinInject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -216,21 +226,46 @@ fun MainNavigation(
             entry<Routes.StreamDetail>(
                 metadata = topNavigationTransitionSpec
             ) { route ->
+                val scope = rememberCoroutineScope()
+                val context = LocalContext.current
+                val defaultPrefs = koinInject<DefaultPreferencesRepository>()
+                val streamRepo = koinInject<StreamRepository>()
+
                 StreamDetailView(
                     animeId = route.animeId,
                     onBack = { topLevelBackStack.removeLast() },
                     onPlayEpisode = { animeId, provider, category, slug, epNum ->
-                        topLevelBackStack.add(
-                            Routes.StreamPlayer(
-                                animeId = animeId,
-                                provider = provider,
-                                category = category,
-                                episodeSlug = slug,
-                                episodeNumber = epNum,
-                                totalEpisodes = 0,
-                            )
-                        )
+                        scope.launch {
+                            val useBrowser = defaultPrefs.useInAppBrowser.first()
+                            if (useBrowser) {
+                                val sourcesResult = streamRepo.getSources(provider, animeId, category, slug)
+                                if (sourcesResult is DataResult.Success) {
+                                    val url = sourcesResult.data.streams.firstOrNull()?.url
+                                    if (url != null) {
+                                        context.openLink(url)
+                                    } else {
+                                        context.showToast("No playable stream found")
+                                    }
+                                } else {
+                                    context.showToast("Failed to resolve stream")
+                                }
+                            } else {
+                                topLevelBackStack.add(
+                                    Routes.StreamPlayer(
+                                        animeId = animeId,
+                                        provider = provider,
+                                        category = category,
+                                        episodeSlug = slug,
+                                        episodeNumber = epNum,
+                                        totalEpisodes = 0,
+                                    )
+                                )
+                            }
+                        }
                     },
+                    onAnimeClick = { id ->
+                        topLevelBackStack.add(Routes.StreamDetail(id))
+                    }
                 )
             }
 

@@ -63,6 +63,9 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
+import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun PlayerView(
@@ -91,6 +94,13 @@ fun PlayerView(
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     if (playbackState == Player.STATE_ENDED) {
                         viewModel.markWatched()
+                    }
+                }
+
+                override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                    context.showToast("Playback failed. Opening in browser...")
+                    viewModel.uiState.value.activeStreamUrl?.let { url ->
+                        context.openLink(url)
                     }
                 }
 

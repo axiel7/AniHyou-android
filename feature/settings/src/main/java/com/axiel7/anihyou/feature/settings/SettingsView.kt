@@ -279,6 +279,14 @@ private fun SettingsContent(
                     onValueChange = { event?.setAudioLanguage(it) }
                 )
 
+                SwitchPreference(
+                    title = "Use in-app browser player",
+                    preferenceValue = uiState.useInAppBrowser,
+                    icon = R.drawable.open_in_browser_24,
+                    subtitle = "Open streams in an in-app browser instead of native player",
+                    onValueChange = { event?.setUseInAppBrowser(it) }
+                )
+
                 // ── APIs section ─────────────────────────────────────────────
                 PreferencesTitle(text = "APIs")
 

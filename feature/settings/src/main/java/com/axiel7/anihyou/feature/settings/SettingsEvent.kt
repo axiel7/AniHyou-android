@@ -62,4 +62,5 @@ interface SettingsEvent : UiEvent {
     fun setTmdbApiKey(value: String)
     fun setAnilistClientId(value: String)
     fun setAudioLanguage(value: String)
+    fun setUseInAppBrowser(value: Boolean)
 }
