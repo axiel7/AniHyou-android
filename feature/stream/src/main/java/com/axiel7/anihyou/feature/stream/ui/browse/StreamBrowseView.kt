@@ -1,5 +1,11 @@
 package com.axiel7.anihyou.feature.stream.ui.browse
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +46,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.feature.stream.data.model.StreamAnime
 import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun PulsePlaceholder(
+    modifier: Modifier,
+    shape: Shape = MaterialTheme.shapes.medium
+) {
+    val transition = rememberInfiniteTransition(label = "pulse")
+    val alpha by transition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "alpha"
+    )
+    Box(
+        modifier = modifier
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = alpha * 0.15f))
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +114,52 @@ fun StreamBrowseView(
 
         // ── Main content ──────────────────────────────────────────────────────
         if (state.isLoading && state.spotlight.isEmpty()) {
-            Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Spotlight skeleton
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        PulsePlaceholder(Modifier.width(100.dp).height(20.dp))
+                        Spacer(Modifier.height(12.dp))
+                        PulsePlaceholder(Modifier.fillMaxWidth().height(160.dp), shape = MaterialTheme.shapes.large)
+                    }
+                }
+                // Trending skeleton
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        PulsePlaceholder(Modifier.width(120.dp).height(20.dp))
+                        Spacer(Modifier.height(12.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            repeat(3) {
+                                Column(Modifier.width(110.dp)) {
+                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                    Spacer(Modifier.height(6.dp))
+                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                }
+                            }
+                        }
+                    }
+                }
+                // Popular skeleton
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        PulsePlaceholder(Modifier.width(140.dp).height(20.dp))
+                        Spacer(Modifier.height(12.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            repeat(3) {
+                                Column(Modifier.width(110.dp)) {
+                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                    Spacer(Modifier.height(6.dp))
+                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             return@Column
         }
 
@@ -160,12 +235,26 @@ fun StreamBrowseView(
 
 @Composable
 private fun SectionHeader(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+    ) {
+        // Vertical indicator bar
+        Box(
+            modifier = Modifier
+                .width(4.dp)
+                .height(18.dp)
+                .clip(MaterialTheme.shapes.extraSmall)
+                .background(MaterialTheme.colorScheme.primary)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
 }
 
 @Composable
@@ -185,24 +274,50 @@ private fun SpotlightCard(anime: StreamAnime, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
             )
+            // Premium gradient overlay
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f))
+                        )
+                    )
+            )
+            // Title & Info container
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(12.dp),
+                    .padding(16.dp),
             ) {
+                // Spotlight Tag
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "★ Spotlight",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(Modifier.height(6.dp))
                 Text(
                     text = anime.displayTitle,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.White
                 )
-                anime.genres.take(3).joinToString(" • ").takeIf { it.isNotEmpty() }?.let {
+                anime.genres.take(2).joinToString(" • ").takeIf { it.isNotEmpty() }?.let {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = Color.LightGray,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -219,21 +334,79 @@ private fun AnimeCard(anime: StreamAnime, onClick: () -> Unit) {
             .width(110.dp)
             .clickable(onClick = onClick),
     ) {
-        AsyncImage(
-            model = anime.coverUrl,
-            contentDescription = anime.displayTitle,
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2f / 3f)
-                .clip(MaterialTheme.shapes.medium),
-        )
-        Spacer(Modifier.height(4.dp))
+                .clip(MaterialTheme.shapes.medium)
+        ) {
+            AsyncImage(
+                model = anime.coverUrl,
+                contentDescription = anime.displayTitle,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+            // Cover card overlay gradient
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            listOf(Color.Transparent, Color.Black.copy(alpha = 0.4f))
+                        )
+                    )
+            )
+            // Badge Overlay
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(6.dp)
+                    .align(Alignment.TopStart),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Score badge (if present)
+                anime.averageScore?.let { score ->
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(Color.Black.copy(alpha = 0.7f))
+                            .padding(horizontal = 4.dp, vertical = 1.dp)
+                    ) {
+                        Text(
+                            text = "★ ${score / 10.0}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                // Format badge (if present)
+                anime.format?.let { format ->
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.85f))
+                            .padding(horizontal = 4.dp, vertical = 1.dp)
+                    ) {
+                        Text(
+                            text = format,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+        Spacer(Modifier.height(6.dp))
         Text(
             text = anime.displayTitle,
             style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onSurface
         )
         anime.seasonYear?.let {
             Text(

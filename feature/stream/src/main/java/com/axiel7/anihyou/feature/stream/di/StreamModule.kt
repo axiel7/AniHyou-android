@@ -20,6 +20,7 @@ val streamModule = module {
     single {
         StreamRepository(
             okHttpClient = get<OkHttpClient>(named("plain")),
+            mediaRepository = get(),
             baseUrlProvider = { get<StreamPreferencesRepository>().apiBaseUrl.first() },
         )
     }

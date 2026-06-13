@@ -11,6 +11,10 @@ query SeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear
                 timeUntilAiring
             }
             genres
+            bannerImage
+            format
+            seasonYear
+            averageScore
             mediaListEntry {
                 ...BasicMediaListEntry
             }

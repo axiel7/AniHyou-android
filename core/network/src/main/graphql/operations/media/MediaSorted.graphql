@@ -6,6 +6,11 @@ query MediaSorted($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort
                 large
             }
             meanScore
+            bannerImage
+            format
+            seasonYear
+            averageScore
+            genres
             mediaListEntry {
                 ...BasicMediaListEntry
             }

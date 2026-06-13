@@ -1,5 +1,11 @@
 package com.axiel7.anihyou.feature.stream.ui.detail
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,6 +33,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -44,10 +52,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,6 +69,28 @@ import coil3.compose.AsyncImage
 import com.axiel7.anihyou.feature.stream.data.model.AudioType
 import com.axiel7.anihyou.feature.stream.data.model.Episode
 import org.koin.androidx.compose.koinViewModel
+
+@Composable
+private fun DetailPulsePlaceholder(
+    modifier: Modifier,
+    shape: Shape = MaterialTheme.shapes.medium
+) {
+    val transition = rememberInfiniteTransition(label = "pulse")
+    val alpha by transition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "alpha"
+    )
+    Box(
+        modifier = modifier
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = alpha * 0.15f))
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,8 +128,26 @@ fun StreamDetailView(
         modifier = modifier,
     ) { innerPadding ->
         if (state.isLoading && state.info == null) {
-            Box(Modifier.fillMaxSize().padding(innerPadding), Alignment.Center) {
-                CircularProgressIndicator()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(innerPadding),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Banner skeleton
+                item {
+                    DetailPulsePlaceholder(Modifier.fillMaxWidth().height(180.dp), shape = MaterialTheme.shapes.large)
+                }
+                // Title skeleton
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        DetailPulsePlaceholder(Modifier.fillMaxWidth(0.7f).height(24.dp))
+                        DetailPulsePlaceholder(Modifier.fillMaxWidth(0.4f).height(16.dp))
+                    }
+                }
+                // Episode list skeleton
+                items(5) {
+                    DetailPulsePlaceholder(Modifier.fillMaxWidth().height(72.dp), shape = MaterialTheme.shapes.medium)
+                }
             }
             return@Scaffold
         }
@@ -106,20 +158,24 @@ fun StreamDetailView(
         ) {
             // ── Banner + cover ────────────────────────────────────────────────
             item {
-                Box(Modifier.fillMaxWidth().height(200.dp)) {
+                Box(Modifier.fillMaxWidth().height(220.dp)) {
                     AsyncImage(
                         model = state.info?.bannerImage ?: state.info?.coverUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
                     )
-                    // Gradient overlay
+                    // Premium multi-stop gradient overlay
                     Box(
                         Modifier
                             .fillMaxSize()
                             .background(
                                 androidx.compose.ui.graphics.Brush.verticalGradient(
-                                    listOf(Color.Transparent, MaterialTheme.colorScheme.surface)
+                                    listOf(
+                                        Color.Transparent,
+                                        MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                                        MaterialTheme.colorScheme.surface
+                                    )
                                 )
                             )
                     )
@@ -132,60 +188,67 @@ fun StreamDetailView(
                     Column(Modifier.padding(horizontal = 16.dp)) {
                         Text(
                             text = info.displayTitle,
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                         )
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                        // Metadata row
-                        val meta = buildList {
-                            info.format?.let { add(it) }
-                            info.seasonYear?.let { add(it.toString()) }
-                            info.episodes?.let { add("$it eps") }
-                            info.duration?.let { add("${it}m") }
-                            info.status?.let { add(it.lowercase().replaceFirstChar { c -> c.uppercase() }) }
-                        }.joinToString(" · ")
+                        // Metadata pills row
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            info.format?.let { InfoBadge(it, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) }
+                            info.seasonYear?.let { InfoBadge(it.toString()) }
+                            info.episodes?.let { InfoBadge("$it Episodes") }
+                            info.duration?.let { InfoBadge("${it}m") }
+                        }
+                        Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            text = meta,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        Spacer(Modifier.height(4.dp))
-
-                        // Score
+                        // Score & popularity
                         info.averageScore?.let { score ->
                             Text(
-                                text = "★ ${score / 10.0} · ${info.popularity?.let { "$it users" } ?: ""}",
+                                text = "★ ${score / 10.0}   •   ${info.popularity?.let { "$it Popularity" } ?: ""}",
                                 style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(10.dp))
 
                         // Genres
                         if (info.genres.isNotEmpty()) {
                             LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 items(info.genres) { genre ->
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = {},
-                                        label = { Text(genre, style = MaterialTheme.typography.labelSmall) },
-                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .border(
+                                                width = 1.dp,
+                                                color = MaterialTheme.colorScheme.outlineVariant,
+                                                shape = MaterialTheme.shapes.extraLarge
+                                            )
+                                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = genre,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(12.dp))
 
                         // Detail grid
                         DetailGrid(info)
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(12.dp))
 
                         // Description
                         info.description?.let { desc ->
                             Text(
-                                text = desc,
-                                style = MaterialTheme.typography.bodySmall,
+                                text = desc.replace(Regex("<[^>]*>"), ""), // strip simple html
+                                style = MaterialTheme.typography.bodyMedium,
                                 maxLines = 5,
                                 overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -214,7 +277,7 @@ fun StreamDetailView(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
                     ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
@@ -226,9 +289,9 @@ fun StreamDetailView(
             // ── Provider selector ─────────────────────────────────────────────
             if (state.availableProviders.isNotEmpty()) {
                 item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
+                    Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         Text("Provider", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(6.dp))
                         ScrollableTabRow(
                             selectedTabIndex = state.availableProviders.indexOf(state.selectedProvider).coerceAtLeast(0),
                             edgePadding = 0.dp,
@@ -264,12 +327,12 @@ fun StreamDetailView(
             // ── Episode list header ───────────────────────────────────────────
             item {
                 Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Episodes (${state.episodeList.size})",
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f),
                     )
@@ -280,7 +343,7 @@ fun StreamDetailView(
             items(state.episodeList) { episode ->
                 val isWatched = episode.number in state.watchedEpisodes
                 val isResume = episode.number == state.resumeEpisode
-                EpisodeRow(
+                EpisodeCard(
                     episode = episode,
                     isWatched = isWatched,
                     isResume = isResume,
@@ -329,6 +392,27 @@ fun StreamDetailView(
 }
 
 @Composable
+private fun InfoBadge(
+    text: String,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+) {
+    Box(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(containerColor)
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = contentColor
+        )
+    }
+}
+
+@Composable
 private fun DetailGrid(info: com.axiel7.anihyou.feature.stream.data.model.AnimeInfoResponse) {
     val items = buildList {
         info.mainStudio?.let { add("Studio" to it) }
@@ -340,13 +424,20 @@ private fun DetailGrid(info: com.axiel7.anihyou.feature.stream.data.model.AnimeI
         }
     }
     if (items.isEmpty()) return
-    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         items.forEach { (label, value) ->
             Row {
                 Text(
                     text = "$label: ",
                     style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
@@ -360,7 +451,7 @@ private fun DetailGrid(info: com.axiel7.anihyou.feature.stream.data.model.AnimeI
 }
 
 @Composable
-private fun EpisodeRow(
+private fun EpisodeCard(
     episode: Episode,
     isWatched: Boolean,
     isResume: Boolean,
@@ -368,96 +459,107 @@ private fun EpisodeRow(
     onToggleWatched: () -> Unit,
     onAddNote: () -> Unit,
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onPlay)
-            .background(
-                if (isResume) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
-                else Color.Transparent
-            )
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable(onClick = onPlay),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isResume) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f)
+            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (isResume) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+        )
     ) {
-        // Thumbnail or episode number
-        Box(
-            modifier = Modifier
-                .width(80.dp)
-                .aspectRatio(16f / 9f)
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center,
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (episode.image != null) {
-                AsyncImage(
-                    model = episode.image,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            } else {
-                Text(
-                    text = "${episode.number}",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            // Thumbnail or episode number
+            Box(
+                modifier = Modifier
+                    .width(100.dp)
+                    .aspectRatio(16f / 9f)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (episode.image != null) {
+                    AsyncImage(
+                        model = episode.image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    Text(
+                        text = "${episode.number}",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                // Watched overlay
+                if (isWatched) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.5f)),
+                        Alignment.Center,
+                    ) {
+                        Icon(
+                            Icons.Default.CheckCircle,
+                            contentDescription = "Watched",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                }
             }
-            // Watched overlay
-            if (isWatched) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f)),
-                    Alignment.Center,
-                ) {
-                    Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = "Watched",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp),
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = episode.title?.takeIf { it.isNotBlank() } ?: "Episode ${episode.number}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(Modifier.height(2.dp))
+                val meta = buildList {
+                    episode.durationMinutes?.let { add("${it}m") }
+                    episode.airDate?.let { add(it) }
+                    if (episode.filler) add("Filler")
+                }.joinToString(" · ")
+                if (meta.isNotEmpty()) {
+                    Text(
+                        text = meta,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
-        }
 
-        Spacer(Modifier.width(12.dp))
+            // Note button
+            IconButton(onClick = onAddNote, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Default.Edit, contentDescription = "Add note", modifier = Modifier.size(18.dp))
+            }
 
-        Column(Modifier.weight(1f)) {
-            Text(
-                text = episode.title?.takeIf { it.isNotBlank() } ?: "Episode ${episode.number}",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = if (isResume) FontWeight.Bold else FontWeight.Normal,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            val meta = buildList {
-                episode.durationMinutes?.let { add("${it}m") }
-                episode.airDate?.let { add(it) }
-                if (episode.filler) add("Filler")
-            }.joinToString(" · ")
-            if (meta.isNotEmpty()) {
-                Text(
-                    text = meta,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+            // Watch toggle
+            IconButton(onClick = onToggleWatched, modifier = Modifier.size(36.dp)) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = if (isWatched) "Mark unwatched" else "Mark watched",
+                    tint = if (isWatched) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
                 )
             }
-        }
-
-        // Note button
-        IconButton(onClick = onAddNote, modifier = Modifier.size(32.dp)) {
-            Icon(Icons.Default.Edit, contentDescription = "Add note", modifier = Modifier.size(16.dp))
-        }
-
-        // Watch toggle
-        IconButton(onClick = onToggleWatched, modifier = Modifier.size(32.dp)) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = if (isWatched) "Mark unwatched" else "Mark watched",
-                tint = if (isWatched) MaterialTheme.colorScheme.primary
-                       else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(16.dp),
-            )
         }
     }
 }
