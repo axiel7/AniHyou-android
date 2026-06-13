@@ -10,10 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: adopt
@@ -21,11 +23,40 @@ jobs:
       - name: Check string resources
         run: bash scripts/check_string_refs.sh
 
+      - name: Run unit tests
+        run: ./gradlew test
+
       - name: Build FOSS debug APK
         run: ./gradlew assembleFossDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: app-foss-debug
           path: app/build/outputs/apk/foss/debug/*.apk
+
+      - name: Append SUCCESS to build log
+        if: success()
+        run: |
+          COMMIT=$(git rev-parse --short HEAD)
+          VERSION=$(grep '^name' version.properties | cut -d= -f2 | tr -d ' ')
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+          echo "[${DATE}] SUCCESS | commit:${COMMIT} | version:${VERSION} | assembleFossDebug + unit tests GREEN" >> builds/logs.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add builds/logs.txt
+          git diff --cached --quiet || git commit -m "ci: log SUCCESS build at ${COMMIT}"
+          git push
+
+      - name: Append FAILURE to build log
+        if: failure()
+        run: |
+          COMMIT=$(git rev-parse --short HEAD)
+          VERSION=$(grep '^name' version.properties | cut -d= -f2 | tr -d ' ')
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+          echo "[${DATE}] FAILURE | commit:${COMMIT} | version:${VERSION} | see workflow run for details" >> builds/logs.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add builds/logs.txt
+          git diff --cached --quiet || git commit -m "ci: log FAILURE build at ${COMMIT}"
+          git push

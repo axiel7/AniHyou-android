@@ -1,0 +1,135 @@
+# AniHyou-android — LLM Context & Build Success Guide
+# =====================================================
+# This file is machine-readable context for any LLM assisting with this repo.
+# Read this FIRST before touching any file. Violations cause CI breakage.
+
+## 1. REPO IDENTITY
+- Name: AniHyou-android (fork: github.com/Xhanti-mbasa/AniHyou-android)
+- Default branch: master
+- Language: Kotlin (Jetpack Compose, multi-module Android)
+- Package: com.axiel7.anihyou
+- Build tool: Gradle (Kotlin DSL, .kts files only)
+
+## 2. MODULE MAP
+Every include() in settings.gradle.kts must have a matching directory with a build.gradle.kts.
+Current modules:
+
+  :app                        → main Android application
+  :baselineprofile            → baseline performance profile
+  :core:base                  → constants (UNKNOWN_CHAR etc.)
+  :core:common                → pure-JVM utilities (DateUtils, NumberUtils, StringUtils, ...)
+  :core:network               → Apollo GraphQL + OkHttp, API modules
+  :core:resources             → strings.xml and all XML resources (THE source of truth)
+  :core:model                 → shared data models / GraphQL types
+  :core:ui                    → Compose UI primitives, MarkdownUtils, ImageUtils, ...
+  :core:domain                → repositories, use-cases, Koin DI modules
+  :feature:*                  → screen-level feature modules (activitydetails, calendar, ...)
+  :wearos                     → WearOS companion (separate compileSdk/minSdk, do not mix with phone modules)
+
+## 3. KNOWN-GOOD BASELINE
+Commit: 29dc040d  ("Refactor rating null check: move assignment outside conditional")
+Version: 1.5.2 (versionCode 108)
+Build command: ./gradlew assembleFossDebug
+This commit builds GREEN. Any master HEAD that cannot assemble fossDebug is broken.
+
+## 4. BUILD RULES — NEVER BREAK THESE
+
+### 4.1 String resources
+- ALL R.string.* keys MUST exist in:
+    core/resources/src/main/res/values/strings.xml
+- The CI runs `bash scripts/check_string_refs.sh` BEFORE Gradle.
+  Adding a Kotlin reference without adding the string = immediate CI fail.
+- Script scans: app/ core/ feature/ wearos/
+
+### 4.2 Module boundaries
+- :wearos has its own wearCompileSdk / wearMinSdk (defined in root build.gradle.kts).
+  Do NOT add :wearos as a dependency to any :app or :feature module.
+- :core:base has no Android dependencies — keep it pure JVM.
+- :core:common has no Android dependencies — keep it pure JVM.
+- :core:network owns ALL network clients (Apollo, OkHttp, Retrofit/Ktor if added).
+  Feature modules must NOT create their own HTTP clients.
+
+### 4.3 Dependency injection
+- DI framework: Koin (koin-android, koin-compose).
+- All singletons go in:
+    core/domain/src/main/java/.../core/domain/RepositoryModule.kt
+    or a new *Module.kt in :core:domain — registered in App.kt startKoin{}.
+- ViewModels: registered in app/.../ViewModelModule.kt.
+- Never use Hilt or Dagger — wrong framework for this project.
+
+### 4.4 Build flavors
+The app has a "foss" product flavor. CI always builds assembleFossDebug.
+If you add a new BuildConfig field, add it inside the foss flavor block too.
+
+### 4.5 Kotlin / AGP versions
+Defined in gradle/libs.versions.toml — do not hardcode version strings anywhere else.
+Use alias(libs.plugins.*) in build.gradle.kts plugin blocks.
+Use libs.* for dependency declarations.
+
+### 4.6 WearOS
+- :wearos is included in settings.gradle.kts — do NOT remove the include() line.
+- Do NOT add or remove files from :wearos without verifying assembleFossDebug still passes
+  (wearos is a separate app module; phone build does NOT compile wearos sources).
+
+## 5. CI WORKFLOW
+File: .github/workflows/build-pr.yml
+Trigger: push to master, workflow_dispatch
+Steps (in order):
+  1. checkout
+  2. setup JDK 17 (adopt distribution)
+  3. bash scripts/check_string_refs.sh   ← fails fast on broken string refs
+  4. ./gradlew assembleFossDebug         ← main build gate
+  5. upload APK artifact
+
+A build is only GREEN when BOTH steps 3 and 4 exit 0.
+
+## 6. TESTING STRATEGY
+Test files live at:
+  app/src/test/java/com/axiel7/anihyou/          ← JVM unit tests (no emulator needed)
+  app/src/androidTest/java/com/axiel7/anihyou/   ← instrumented tests (emulator required)
+
+Key test files:
+  BasicUnitTest.kt        → markdown formatting smoke test
+  BuildIntegrityTest.kt   → guards StringUtils, NumberUtils, DateUtils at baseline commit
+  DateTest.kt             → instrumented compose date rendering test
+
+Rules for adding tests:
+  - New feature added to master? → add a *Test.kt covering its pure-JVM logic.
+  - Only add tests for NEW code introduced since the last GREEN build.
+  - Never delete or weaken existing test assertions.
+  - Tests for compose/UI go in androidTest; pure logic goes in test.
+  - Run locally: ./gradlew test  (unit)  or  ./gradlew connectedDebugAndroidTest (instrumented)
+
+## 7. LOG FILE
+builds/logs.txt tracks every CI build attempt.
+Format per entry:
+  [YYYY-MM-DD HH:MM UTC] RESULT | commit:<sha> | version:<name> | notes:<text>
+
+## 8. COMMON FAILURE PATTERNS & FIXES
+
+| Symptom                                      | Root cause                          | Fix |
+|----------------------------------------------|-------------------------------------|-----|
+| check_string_refs.sh: MISSING STRING         | R.string.X used in Kotlin, not in XML | Add to strings.xml |
+| Unresolved reference: <ClassName>            | Wrong import or module not in deps   | Check module's build.gradle.kts dependencies |
+| e: ... class 'X' is not abstract             | Missing override in sealed class impl | Implement all required members |
+| Duplicate class found in modules             | Same class in two modules both on classpath | Remove duplicate, use single source |
+| Cannot access 'X': it is internal in 'Y'    | Accessing internal across module boundary | Expose via public API or move to shared module |
+| Merge conflict markers (<<<<<<< / =======)  | Un-resolved git merge                | Run git status, resolve, recommit |
+| Base64 not found / wrong API level           | android.util.Base64 used in pure-JVM module | Use java.util.Base64 in :core:common/:core:base |
+
+## 9. TIER LIST FEATURE (planned)
+The document in context describes a community ranking UI scraped from an external source.
+When implementing:
+  - Data model goes in :core:model
+  - API/fetch logic goes in :core:network
+  - Repository goes in :core:domain
+  - UI goes in :feature:home or a new :feature:tierlist module
+  - All new R.string.* keys must be added to strings.xml FIRST
+  - Add unit tests for any pure-JVM parsing/mapping logic
+
+## 10. WHAT TO DO WHEN YOU SEE A BUILD LOG
+1. Check builds/logs.txt for the last GREEN entry.
+2. Run diff between that commit and current HEAD.
+3. Match the diff against Section 8 failure patterns.
+4. Fix the root cause — do not comment out tests or downgrade checks.
+5. After fix, append a new entry to builds/logs.txt.

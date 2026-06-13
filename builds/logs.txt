@@ -1,0 +1,10 @@
+# AniHyou Build Log
+# Format: [YYYY-MM-DD HH:MM UTC] RESULT | commit:<sha> | version:<name> | notes:<text>
+# RESULT = SUCCESS | FAILURE
+# ─────────────────────────────────────────────────────────────────────────────
+# This file is append-only. Never delete or edit past entries.
+# After every CI run, the workflow appends one line here and commits it.
+# LLMs: read this file to understand build health history before making changes.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[2025-06-13 00:00 UTC] SUCCESS | commit:29dc040d | version:1.5.2 | Baseline: reverted from broken streaming/WearOS commits. assembleFossDebug GREEN. BuildIntegrityTest added.
