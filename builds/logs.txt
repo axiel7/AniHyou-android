@@ -13,3 +13,4 @@
 [2026-06-13 03:38 UTC] FAILURE | commit:3b17c22 | version:1.5.2 | see workflow run for details
 [2026-06-13 11:00 UTC] FAILURE | commit:3b17c22d | version:1.5.2 | CAUSE: BuildIntegrityTest slugify assertions wrong — tests assumed lowercase output but StringUtils.slugify() preserves case. FIX: corrected 3 assertions to match actual implementation (Re-Zero not re-zero, Attack-on-Titan not attack-on-titan, regex [a-zA-Z0-9\-]+ not [a-z0-9\-]+).
 [2026-06-13 03:48 UTC] SUCCESS | commit:34a18d8 | version:1.5.2 | assembleFossDebug + unit tests GREEN
+[2026-06-13 12:00 UTC] CHANGE | commit:pending | Nav reorder: Anime tab → Stream tab (placeholder); Profile moved to index 4 (last). Routes.StreamTab added. BottomDestination.Stream replaces AnimeList. MainNavigation AnimeTab entry → StreamTab placeholder. Rail Explore index 4→3.

@@ -197,20 +197,22 @@ fun MainNavigation(
                 )
             }
 
-            entry<Routes.AnimeTab>(
+            entry<Routes.StreamTab>(
                 metadata = topNavigationTransitionSpec
             ) {
-                if (isLoggedIn) {
-                    UserMediaListHostView(
-                        arguments = Routes.UserMediaList(
-                            mediaType = MediaType.ANIME.rawValue,
-                            isCompactScreen = isCompactScreen
-                        ),
-                        modifier = Modifier.padding(bottom = bottomPadding),
-                        navActionManager = navActionManager,
-                    )
-                } else {
-                    LoginView()
+                // TODO: Replace with StreamView once :feature:stream module is built.
+                // This tab will host the Miruro-based native streaming screen:
+                //   - Episode browser backed by MiruroPipeClient
+                //   - Media3/ExoPlayer playback with HLS streams
+                //   - Sub/dub selector, intro/outro skip buttons
+                // For now show a placeholder so the tab is navigable.
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = bottomPadding),
+                    contentAlignment = androidx.compose.ui.Alignment.Center,
+                ) {
+                    androidx.compose.material3.Text("Stream coming soon")
                 }
             }
 

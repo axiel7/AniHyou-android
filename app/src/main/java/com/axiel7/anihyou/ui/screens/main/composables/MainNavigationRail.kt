@@ -28,7 +28,7 @@ fun MainNavigationRail(
         header = {
             FloatingActionButton(
                 onClick = {
-                    onItemSelected(4)
+                    onItemSelected(3)
                     topLevelBackStack.addTopLevel(BottomDestination.Explore.route)
                 }
             ) {

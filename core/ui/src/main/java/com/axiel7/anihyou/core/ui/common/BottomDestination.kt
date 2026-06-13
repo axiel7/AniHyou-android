@@ -24,12 +24,12 @@ sealed class BottomDestination(
         iconSelected = R.drawable.home_filled_24
     )
 
-    data object AnimeList : BottomDestination(
+    data object Stream : BottomDestination(
         index = 1,
-        route = Routes.AnimeTab,
-        title = R.string.anime,
-        icon = R.drawable.live_tv_24,
-        iconSelected = R.drawable.live_tv_filled_24
+        route = Routes.StreamTab,
+        title = R.string.stream,
+        icon = R.drawable.play_circle_24,
+        iconSelected = R.drawable.play_circle_24
     )
 
     data object MangaList : BottomDestination(
@@ -40,20 +40,20 @@ sealed class BottomDestination(
         iconSelected = R.drawable.book_filled_24
     )
 
-    data object Profile : BottomDestination(
-        index = 3,
-        route = Routes.Profile,
-        title = R.string.profile,
-        icon = R.drawable.person_24,
-        iconSelected = R.drawable.person_filled_24
-    )
-
     data object Explore : BottomDestination(
-        index = 4,
+        index = 3,
         route = Routes.Explore,
         title = R.string.explore,
         icon = R.drawable.explore_24,
         iconSelected = R.drawable.explore_filled_24
+    )
+
+    data object Profile : BottomDestination(
+        index = 4,
+        route = Routes.Profile,
+        title = R.string.profile,
+        icon = R.drawable.person_24,
+        iconSelected = R.drawable.person_filled_24
     )
 
     @Composable
@@ -65,9 +65,9 @@ sealed class BottomDestination(
     }
 
     companion object {
-        val values = listOf(Home, AnimeList, MangaList, Profile, Explore)
+        val values = listOf(Home, Stream, MangaList, Explore, Profile)
 
-        val railValues = listOf(Home, AnimeList, MangaList, Profile)
+        val railValues = listOf(Home, Stream, MangaList, Explore)
 
         fun Int.toBottomDestinationRoute(): NavKey? = values.find { it.index == this }?.route
 
@@ -76,10 +76,10 @@ sealed class BottomDestination(
         val BottomDestination.testTag
             get() = when (this) {
                 is Home -> "HomeTab"
-                is AnimeList -> "AnimeListTab"
+                is Stream -> "StreamTab"
                 is MangaList -> "MangaListTab"
-                is Profile -> "ProfileTab"
                 is Explore -> "ExploreTab"
+                is Profile -> "ProfileTab"
             }
     }
 }

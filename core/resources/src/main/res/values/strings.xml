@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">AniHyou</string>
     <string name="home">Home</string>
     <string name="anime">Anime</string>
+    <string name="stream">Stream</string>
     <string name="manga">Manga</string>
     <string name="explore">Explore</string>
     <plurals name="num_years">

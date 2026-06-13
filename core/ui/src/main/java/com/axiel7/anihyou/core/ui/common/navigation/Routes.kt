@@ -17,6 +17,10 @@ object Routes {
 
     @Serializable
     @Immutable
+    object StreamTab: NavKey
+
+    @Serializable
+    @Immutable
     object MangaTab: NavKey
 
     @Serializable
