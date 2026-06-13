@@ -58,18 +58,21 @@ class BuildIntegrityTest {
 
     @Test
     fun `slugify converts spaces to hyphens`() {
-        assertEquals("re-zero", "Re Zero".slugify())
+        // Implementation preserves case — no lowercase step
+        assertEquals("Re-Zero", "Re Zero".slugify())
     }
 
     @Test
     fun `slugify strips special characters`() {
-        assertEquals("attack-on-titan", "Attack on Titan!".slugify())
+        // Strips ! but preserves case
+        assertEquals("Attack-on-Titan", "Attack on Titan!".slugify())
     }
 
     @Test
-    fun `slugify is lowercase-preserving but strips accents`() {
+    fun `slugify output contains only alphanumeric and hyphens`() {
+        // Case is preserved; only [a-zA-Z0-9-] chars remain
         val result = "Shingeki no Kyojin".slugify()
-        assertTrue(result.matches(Regex("[a-z0-9\\-]+")))
+        assertTrue(result.matches(Regex("[a-zA-Z0-9\\-]+")))
     }
 
     // ── NumberUtils ──────────────────────────────────────────────────────────

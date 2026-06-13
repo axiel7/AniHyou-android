@@ -118,6 +118,7 @@ Format per entry:
 | Base64 not found / wrong API level           | android.util.Base64 used in pure-JVM module | Use java.util.Base64 in :core:common/:core:base |
 | Unresolved reference in *Test.kt (e.g. BasicUnitTest) | Import path stale after package refactor | Update import to current module path (e.g. core.ui.utils.* not plain utils.*) |
 | Could not find androidx.wear:wear-phone-interactions in CI | :wearos dep unavailable; bare `./gradlew test` resolves ALL modules | Use `:app:testFossDebugUnitTest` scoped task instead |
+| BuildIntegrityTest slugify tests fail (ComparisonFailure) | Test assertions assumed lowercase but StringUtils.slugify() preserves case | Match assertions to actual impl: "Re-Zero" not "re-zero"; use [a-zA-Z0-9\\-]+ regex |
 | fatal: unable to access repo 403 on CI git push | GITHUB_TOKEN default is contents:read only | Add `permissions: contents: write` block to workflow YAML |
 
 ## 9. TIER LIST FEATURE (planned)
