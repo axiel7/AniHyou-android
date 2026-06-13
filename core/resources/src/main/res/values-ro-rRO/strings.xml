@@ -83,7 +83,7 @@
     <string name="average_score">Scor mediu</string>
     <string name="popularity">Popularitate</string>
     <string name="favorites">Preferate</string>
-    <string name="episode_in_time">Ep %d în %s</string>
+    <string name="episode_in_time">Ep %1$d în %2$s</string>
     <string name="airing">Difuzare</string>
     <plurals name="num_episodes_behind">
         <item quantity="one">%d episod în urmă</item>
@@ -228,7 +228,7 @@
     <string name="friday">Vineri</string>
     <string name="saturday">Sâmbătă</string>
     <string name="sunday">Duminică</string>
-    <string name="episode_airing_at">Ep %d difuzat la %s</string>
+    <string name="episode_airing_at">Ep %1$d difuzat la %2$s</string>
     <string name="filter">Filtru</string>
     <string name="notifications">Notificări</string>
     <string name="threads">Fire</string>

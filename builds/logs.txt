@@ -21,3 +21,5 @@
 [2026-06-13 19:05 UTC] FAILURE | commit:5803823 | version:1.5.2 | see workflow run for details
 [2026-06-13 19:10 UTC] FAILURE | commit:58038233 | version:1.5.2 | CAUSE: media3-ui-compose:1.5.1 does not exist in Maven (artifact not published at that version). FIX: removed it — PlayerView uses AndroidView wrapping media3-ui PlayerView, so the compose binding artifact is not needed.
 [2026-06-13 19:11 UTC] FAILURE | commit:2eed665 | version:1.5.2 | see workflow run for details
+[2026-06-13 20:21 UTC] SUCCESS | commit:690f7d40 | version:1.5.2 | FIXED: resolved string resource non-positional format errors; resolved unresolved material icons references in :feature:stream UI by adding Compose Material Icons dependencies; resolved Unresolved reference 'datastore' by adding datastore.preferences dependency; refactored MiruroPipeClient to use Okio ByteString for pure-JVM Base64; added StreamFeatureTest covering MiruroPipeClient; resolved toDoubleLocaleInvariant test failure by using Kotlin's locale-invariant toDoubleOrNull(); fixed MainNavigation compile errors by updating lambda entry variable and calling topLevelBackStack.removeLast().
+

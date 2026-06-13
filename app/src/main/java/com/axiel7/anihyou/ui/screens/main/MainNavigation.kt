@@ -215,11 +215,10 @@ fun MainNavigation(
 
             entry<Routes.StreamDetail>(
                 metadata = topNavigationTransitionSpec
-            ) { entry ->
-                val args = entry.key as Routes.StreamDetail
+            ) { route ->
                 StreamDetailView(
-                    animeId = args.animeId,
-                    onBack = { topLevelBackStack.removeLastOrNull() },
+                    animeId = route.animeId,
+                    onBack = { topLevelBackStack.removeLast() },
                     onPlayEpisode = { animeId, provider, category, slug, epNum ->
                         topLevelBackStack.add(
                             Routes.StreamPlayer(
@@ -237,27 +236,26 @@ fun MainNavigation(
 
             entry<Routes.StreamPlayer>(
                 metadata = topNavigationTransitionSpec
-            ) { entry ->
-                val args = entry.key as Routes.StreamPlayer
+            ) { route ->
                 PlayerView(
-                    animeId = args.animeId,
-                    provider = args.provider,
-                    category = args.category,
-                    episodeSlug = args.episodeSlug,
-                    episodeNumber = args.episodeNumber,
-                    totalEpisodes = args.totalEpisodes,
-                    resumePositionMs = args.resumePositionMs,
-                    onBack = { topLevelBackStack.removeLastOrNull() },
+                    animeId = route.animeId,
+                    provider = route.provider,
+                    category = route.category,
+                    episodeSlug = route.episodeSlug,
+                    episodeNumber = route.episodeNumber,
+                    totalEpisodes = route.totalEpisodes,
+                    resumePositionMs = route.resumePositionMs,
+                    onBack = { topLevelBackStack.removeLast() },
                     onNextEpisode = { nextEp ->
-                        topLevelBackStack.removeLastOrNull()
+                        topLevelBackStack.removeLast()
                         topLevelBackStack.add(
-                            args.copy(episodeNumber = nextEp, episodeSlug = "", resumePositionMs = 0L)
+                            route.copy(episodeNumber = nextEp, episodeSlug = "", resumePositionMs = 0L)
                         )
                     },
                     onPreviousEpisode = { prevEp ->
-                        topLevelBackStack.removeLastOrNull()
+                        topLevelBackStack.removeLast()
                         topLevelBackStack.add(
-                            args.copy(episodeNumber = prevEp, episodeSlug = "", resumePositionMs = 0L)
+                            route.copy(episodeNumber = prevEp, episodeSlug = "", resumePositionMs = 0L)
                         )
                     },
                 )

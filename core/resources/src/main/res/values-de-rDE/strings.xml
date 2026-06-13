@@ -77,7 +77,7 @@
     <string name="average_score">Durchschnittliche Bewertung</string>
     <string name="popularity">Beliebtheit</string>
     <string name="favorites">Favoriten</string>
-    <string name="episode_in_time">Ep %d in %s</string>
+    <string name="episode_in_time">Ep %1$d in %2$s</string>
     <string name="airing">Läuft gerade</string>
     <plurals name="num_episodes_behind">
         <item quantity="one">%d Episode ausstehend</item>
@@ -221,7 +221,7 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
-    <string name="episode_airing_at">Ep %d Ausstrahlung um %s Uhr</string>
+    <string name="episode_airing_at">Ep %1$d Ausstrahlung um %2$s Uhr</string>
     <string name="filter">Filter</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="threads">Themen</string>

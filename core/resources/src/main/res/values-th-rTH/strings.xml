@@ -71,7 +71,7 @@
     <string name="average_score">คะแนนเฉลี่ย</string>
     <string name="popularity">ความนิยม</string>
     <string name="favorites">รายการโปรด</string>
-    <string name="episode_in_time">ตอนที่ %d ในอีก %s</string>
+    <string name="episode_in_time">ตอนที่ %1$d ในอีก %2$s</string>
     <string name="airing">กำลังออกอากาศ</string>
     <plurals name="num_episodes_behind">
         <item quantity="other">%d ตอนที่ยังไม่ได้ดู</item>
@@ -214,7 +214,7 @@
     <string name="friday">ศุกร์</string>
     <string name="saturday">เสาร์</string>
     <string name="sunday">อาทิตย์</string>
-    <string name="episode_airing_at">ตอนที่ %d ออกอากาศเวลา %s</string>
+    <string name="episode_airing_at">ตอนที่ %1$d ออกอากาศเวลา %2$s</string>
     <string name="filter">ตัวกรอง</string>
     <string name="notifications">การแจ้งเตือน</string>
     <string name="threads">กระทู้</string>

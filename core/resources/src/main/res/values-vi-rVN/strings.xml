@@ -24,7 +24,7 @@
     <string name="finished">Đã hoàn tất</string>
     <string name="cancelled">Đã huỷ bỏ</string>
     <string name="favorites">Yêu thích</string>
-    <string name="episode_in_time">Tập %d trong %s</string>
+    <string name="episode_in_time">Tập %1$d trong %2$s</string>
     <string name="airing">Phát sóng</string>
     <plurals name="num_episodes_behind">
         <item quantity="other">%d tập chưa xem</item>
@@ -73,7 +73,7 @@
     <string name="episodes_watched">Tập đã xem</string>
     <string name="notes">Ghi chú</string>
     <string name="calendar">Lịch</string>
-    <string name="episode_airing_at">Tập %d phát sóng vào %s</string>
+    <string name="episode_airing_at">Tập %1$d phát sóng vào %2$s</string>
     <string name="filter">Bộ lọc</string>
     <string name="notifications">Thông báo</string>
     <string name="notifications_all">Tất cả</string>

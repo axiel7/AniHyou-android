@@ -89,7 +89,7 @@
     <string name="average_score">Średnia ocena</string>
     <string name="popularity">Popularność</string>
     <string name="favorites">Ulubionych</string>
-    <string name="episode_in_time">Odc. %d za %s</string>
+    <string name="episode_in_time">Odc. %1$d za %2$s</string>
     <string name="airing">Emitowanie</string>
     <plurals name="num_episodes_behind">
         <item quantity="one">%d zaległy odcinek</item>
@@ -235,7 +235,7 @@
     <string name="friday">Piątek</string>
     <string name="saturday">Sobota</string>
     <string name="sunday">Niedziela</string>
-    <string name="episode_airing_at">Odc. %d emitowany za %s</string>
+    <string name="episode_airing_at">Odc. %1$d emitowany za %2$s</string>
     <string name="filter">Filtruj</string>
     <string name="notifications">Powiadomienia</string>
     <string name="threads">Wątki</string>

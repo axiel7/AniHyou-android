@@ -120,6 +120,11 @@ Format per entry:
 | Could not find androidx.wear:wear-phone-interactions in CI | :wearos dep unavailable; bare `./gradlew test` resolves ALL modules | Use `:app:testFossDebugUnitTest` scoped task instead |
 | BuildIntegrityTest slugify tests fail (ComparisonFailure) | Test assertions assumed lowercase but StringUtils.slugify() preserves case | Match assertions to actual impl: "Re-Zero" not "re-zero"; use [a-zA-Z0-9\\-]+ regex |
 | fatal: unable to access repo 403 on CI git push | GITHUB_TOKEN default is contents:read only | Add `permissions: contents: write` block to workflow YAML |
+| Unresolved reference: icons / Icons in feature module | Missing compose material-icons dependencies | Add `libs.androidx.compose.material.icons.core` / `extended` to build.gradle.kts |
+| Unresolved reference: datastore in feature module | Missing datastore preferences dependency | Add `libs.androidx.datastore.preferences` to build.gradle.kts |
+| singleOf fails to resolve constructor ref | Class fails to compile or Koin generic resolution fails | Fix the class's compile errors or register using `single { ... }` block |
+| toDoubleLocaleInvariant parses valid number FAILED | defaultNumberFormat.parse() throws ParseException on host machines with European locales | Implement `toDoubleLocaleInvariant` using Kotlin's locale-invariant `toDoubleOrNull()` |
+| MainNavigation compile failures (removeLastOrNull) | Navigation3 lambda parameter is route object (not NavEntry) and backstack lacks removeLastOrNull | Access route properties directly and call topLevelBackStack.removeLast() |
 
 ## 9. TIER LIST FEATURE (planned)
 The document in context describes a community ranking UI scraped from an external source.

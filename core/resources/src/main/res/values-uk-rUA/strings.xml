@@ -89,7 +89,7 @@
     <string name="average_score">Середня оцінка</string>
     <string name="popularity">Популярне</string>
     <string name="favorites">Обране</string>
-    <string name="episode_in_time">Еп %d за %s</string>
+    <string name="episode_in_time">Еп %1$d за %2$s</string>
     <string name="airing">Виходить</string>
     <plurals name="num_episodes_behind">
         <item quantity="one">%d епізод позаду</item>
@@ -235,7 +235,7 @@
     <string name="friday">П’ятниця</string>
     <string name="saturday">Субота</string>
     <string name="sunday">Неділя</string>
-    <string name="episode_airing_at">Серія %d виходить в %s</string>
+    <string name="episode_airing_at">Серія %1$d виходить в %2$s</string>
     <string name="filter">Фільтри</string>
     <string name="notifications">Сповіщення</string>
     <string name="threads">Обговорення</string>

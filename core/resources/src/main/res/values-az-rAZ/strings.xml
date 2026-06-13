@@ -53,7 +53,7 @@
     <string name="average_score">Orta xalı</string>
     <string name="popularity">Populyarlıq</string>
     <string name="favorites">Favoritlər</string>
-    <string name="episode_in_time">Bölüm %d %s dəqiqə sonra yayımda</string>
+    <string name="episode_in_time">Bölüm %1$d %2$s dəqiqə sonra yayımda</string>
     <string name="airing">Hazırda yayımlanan</string>
     <string name="information">Məlumat</string>
     <string name="duration">Müddət</string>
@@ -193,7 +193,7 @@
     <string name="friday">Cümə</string>
     <string name="saturday">Şənbə</string>
     <string name="sunday">Bazar</string>
-    <string name="episode_airing_at">Bölüm %d saat %s\'da yayımlanacaq</string>
+    <string name="episode_airing_at">Bölüm %1$d saat %2$s\'da yayımlanacaq</string>
     <string name="filter">Filterlər</string>
     <string name="notifications">Bildirişlər</string>
     <string name="threads">Mövzu</string>

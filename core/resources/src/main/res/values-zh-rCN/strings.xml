@@ -71,7 +71,7 @@
     <string name="average_score">加权平均评分</string>
     <string name="popularity">人气</string>
     <string name="favorites">收藏</string>
-    <string name="episode_in_time">第%d集在%s后播出</string>
+    <string name="episode_in_time">第%1$d集在%2$s后播出</string>
     <string name="airing">正在播出</string>
     <plurals name="num_episodes_behind">
         <item quantity="other">剩余%d集</item>
@@ -214,7 +214,7 @@
     <string name="friday">周五</string>
     <string name="saturday">周六</string>
     <string name="sunday">周日</string>
-    <string name="episode_airing_at">第%d集将在%s播出</string>
+    <string name="episode_airing_at">第%1$d集将在%2$s播出</string>
     <string name="filter">筛选</string>
     <string name="notifications">通知</string>
     <string name="threads">帖子</string>

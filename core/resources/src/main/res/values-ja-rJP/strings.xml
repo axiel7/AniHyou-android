@@ -71,7 +71,7 @@
     <string name="average_score">平均スコア</string>
     <string name="popularity">人気</string>
     <string name="favorites">お気に入り</string>
-    <string name="episode_in_time">第%d話は%s後</string>
+    <string name="episode_in_time">第%1$d話は%2$s後</string>
     <string name="airing">配信中</string>
     <plurals name="num_episodes_behind">
         <item quantity="other">%d話遅い</item>
@@ -212,7 +212,7 @@
     <string name="friday">金曜日</string>
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
-    <string name="episode_airing_at">第%d話は%sに配信中</string>
+    <string name="episode_airing_at">第%1$d話は%2$sに配信中</string>
     <string name="filter">検索</string>
     <string name="notifications">通知</string>
     <string name="threads">スレッド</string>

@@ -101,7 +101,7 @@
     <string name="average_score">متوسط الدرجة</string>
     <string name="popularity">الشعبية</string>
     <string name="favorites">المُفضلات</string>
-    <string name="episode_in_time">الحلقة %d بعد %s</string>
+    <string name="episode_in_time">الحلقة %1$d بعد %2$s</string>
     <string name="airing">يبث</string>
     <plurals name="num_episodes_behind">
         <item quantity="zero">%d لا توجد حلقات لم أشاهدها</item>
@@ -249,7 +249,7 @@
     <string name="friday">الجمعة</string>
     <string name="saturday">السبت</string>
     <string name="sunday">الأحد</string>
-    <string name="episode_airing_at">الحلقة %d تُبث في %s</string>
+    <string name="episode_airing_at">الحلقة %1$d تُبث في %2$s</string>
     <string name="filter">فلتر</string>
     <string name="notifications">الإشعارات</string>
     <string name="threads">المواضيع</string>

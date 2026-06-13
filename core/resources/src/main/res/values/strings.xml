@@ -78,7 +78,7 @@
     <string name="average_score">Average score</string>
     <string name="popularity">Popularity</string>
     <string name="favorites">Favorites</string>
-    <string name="episode_in_time">Ep %d in %s</string>
+    <string name="episode_in_time">Ep %1$d in %2$s</string>
     <string name="airing">Airing</string>
     <string name="lorem_ipsun" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <plurals name="num_episodes_behind">
@@ -225,7 +225,7 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
-    <string name="episode_airing_at">Ep %d airing at %s</string>
+    <string name="episode_airing_at">Ep %1$d airing at %2$s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifications</string>
     <string name="threads">Threads</string>

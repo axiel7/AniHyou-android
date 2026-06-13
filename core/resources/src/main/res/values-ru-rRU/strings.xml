@@ -89,7 +89,7 @@
     <string name="average_score">Средний счет</string>
     <string name="popularity">Популярность</string>
     <string name="favorites">Избранное</string>
-    <string name="episode_in_time">Эп %d через %s</string>
+    <string name="episode_in_time">Эп %1$d через %2$s</string>
     <string name="airing">Выходит</string>
     <plurals name="num_episodes_behind">
         <item quantity="one">%d эпизод позади</item>
@@ -235,7 +235,7 @@
     <string name="friday">Пятница</string>
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
-    <string name="episode_airing_at">Эп %d выйдет в %s</string>
+    <string name="episode_airing_at">Эп %1$d выйдет в %2$s</string>
     <string name="filter">Фильтр</string>
     <string name="notifications">Уведомления</string>
     <string name="threads">Темы</string>

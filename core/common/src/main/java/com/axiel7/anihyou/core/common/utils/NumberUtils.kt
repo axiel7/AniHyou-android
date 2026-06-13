@@ -54,11 +54,7 @@ object NumberUtils {
      * Parses the string as a [Double] number and returns the result.
      * It uses the default locale to parse the input
      */
-    fun String.toDoubleLocaleInvariant() = try {
-        defaultNumberFormat.parse(this)?.toDouble()
-    } catch (_: ParseException) {
-        null
-    }
+    fun String.toDoubleLocaleInvariant() = toDoubleOrNull()
 
     /**
      * @return if true 1 else 0

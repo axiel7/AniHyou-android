@@ -71,7 +71,7 @@
     <string name="average_score">Skor Rata-rata</string>
     <string name="popularity">Popularitas</string>
     <string name="favorites">Favorit</string>
-    <string name="episode_in_time">Ep %d dalam %s</string>
+    <string name="episode_in_time">Ep %1$d dalam %2$s</string>
     <string name="airing">Ditayangkan</string>
     <plurals name="num_episodes_behind">
         <item quantity="other">%d episode tertinggal</item>
@@ -214,7 +214,7 @@
     <string name="friday">Jumat</string>
     <string name="saturday">Sabtu</string>
     <string name="sunday">Minggu</string>
-    <string name="episode_airing_at">Ep %d ditayangkan pada %s</string>
+    <string name="episode_airing_at">Ep %1$d ditayangkan pada %2$s</string>
     <string name="filter">Filter</string>
     <string name="notifications">Notifikasi</string>
     <string name="threads">Bahasan</string>
