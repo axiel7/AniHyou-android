@@ -10,3 +10,4 @@
 [2025-06-13 00:00 UTC] SUCCESS | commit:29dc040d | version:1.5.2 | Baseline: reverted from broken streaming/WearOS commits. assembleFossDebug GREEN. BuildIntegrityTest added.
 [2026-06-13 10:30 UTC] FAILURE | commit:0da7678c | version:1.5.2 | CAUSE: BasicUnitTest.kt had stale import (com.axiel7.anihyou.utils.MarkdownUtils) — wrong package after refactor. FIX: updated import to com.axiel7.anihyou.core.ui.utils.MarkdownUtils
 [2026-06-13 10:45 UTC] FAILURE | commit:f3fc9e91 | version:1.5.2 | CAUSE 1: ./gradlew test resolves :wearos deps (wear-phone-interactions:1.2.0 unavailable). CAUSE 2: GITHUB_TOKEN lacked contents:write so log push got 403. FIX: scope test to :app:testFossDebugUnitTest + add permissions.contents:write to workflow.
+[2026-06-13 03:38 UTC] FAILURE | commit:3b17c22 | version:1.5.2 | see workflow run for details
