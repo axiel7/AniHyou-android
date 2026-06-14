@@ -1,8 +1,0 @@
-com.axiel7.anihyou.feature.stream-pngs-0 /home/shatter/MOCK/AniHyou-android/feature/stream/build/generated/res/pngs/debug
-com.axiel7.anihyou.feature.stream-updated_navigation_xml-1 /home/shatter/MOCK/AniHyou-android/feature/stream/build/generated/updated_navigation_xml/debug
-com.axiel7.anihyou.feature.stream-mergeDebugResources-2 /home/shatter/MOCK/AniHyou-android/feature/stream/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
-com.axiel7.anihyou.feature.stream-mergeDebugResources-3 /home/shatter/MOCK/AniHyou-android/feature/stream/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
-com.axiel7.anihyou.feature.stream-debug-4 /home/shatter/MOCK/AniHyou-android/feature/stream/build/intermediates/merged_res/debug/mergeDebugResources
-com.axiel7.anihyou.feature.stream-debug-5 /home/shatter/MOCK/AniHyou-android/feature/stream/build/intermediates/packaged_res/debug/packageDebugResources
-com.axiel7.anihyou.feature.stream-debug-6 /home/shatter/MOCK/AniHyou-android/feature/stream/src/debug/res
-com.axiel7.anihyou.feature.stream-main-7 /home/shatter/MOCK/AniHyou-android/feature/stream/src/main/res
