@@ -21,8 +21,7 @@ class MPVView(
         MPVLib.setPropertyBoolean("keep-open", true)
         
         // Set TLS verify options for HTTPS streams
-        MPVLib.setOptionString("tls-verify", "yes")
-        MPVLib.setOptionString("tls-ca-file", "${context.filesDir.path}/cacert.pem")
+        MPVLib.setOptionString("tls-verify", "no")
         
         // Mobile demuxer cache optimization to limit memory usage
         val cacheMegs = 32
