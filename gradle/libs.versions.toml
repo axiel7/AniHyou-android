@@ -46,7 +46,7 @@ wearComposeFoundation = "1.6.2"
 wearToolingPreview = "1.0.0"
 gmsWearable = "20.0.1"
 horologist = "0.7.15"
-haze = "2.0.0-alpha02"
+haze = "2.0.0-alpha03"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
