@@ -164,6 +164,7 @@ dependencies {
     implementation(project(":feature:thread"))
     implementation(project(":feature:usermedialist"))
     implementation(project(":feature:stream"))
+    implementation(files("../feature/stream/libs/mpv-android-lib-v0.0.1.aar"))
     implementation(project(":feature:widget"))
     implementation(project(":feature:worker"))
 

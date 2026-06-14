@@ -61,11 +61,8 @@ dependencies {
     // kotlinx-serialization for JSON parsing
     implementation(libs.kotlinx.serialization.json)
 
-    // Media3 / ExoPlayer for HLS playback
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.exoplayer.hls)
-    implementation(libs.androidx.media3.ui)
-    implementation(libs.androidx.media3.datasource.okhttp)
+    // MPV Video Player for HLS playback
+    compileOnly(files("libs/mpv-android-lib-v0.0.1.aar"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

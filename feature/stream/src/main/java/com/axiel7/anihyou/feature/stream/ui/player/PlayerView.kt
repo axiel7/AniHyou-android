@@ -42,6 +42,10 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,6 +56,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -68,24 +74,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import android.view.LayoutInflater
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.okhttp.OkHttpDataSource
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.hls.HlsMediaSource
-import androidx.media3.ui.PlayerView
-import okhttp3.OkHttpClient
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
-import org.koin.core.qualifier.named
+import `is`.xyz.mpv.MPVLib
+import `is`.xyz.mpv.Utils
 
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 
-@androidx.annotation.OptIn(UnstableApi::class)
+fun formatTime(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val seconds = totalSeconds % 60
+    val minutes = (totalSeconds / 60) % 60
+    val hours = totalSeconds / 3600
+    return if (hours > 0) {
+        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    } else {
+        String.format("%02d:%02d", minutes, seconds)
+    }
+}
+
 @Composable
 fun PlayerView(
     animeId: Int,
@@ -103,12 +113,18 @@ fun PlayerView(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val okHttpClient = koinInject<OkHttpClient>(named("plain"))
     val scope = rememberCoroutineScope()
 
     val activity = context as? Activity
     var isFullscreen by remember { mutableStateOf(false) }
     var showEpisodeOverlay by remember { mutableStateOf(false) }
+
+    // ── MPV playback state ───────────────────────────────────────────────────
+    var playerInstance by remember { mutableStateOf<MPVView?>(null) }
+    var isPaused by remember { mutableStateOf(false) }
+    var durationMs by remember { mutableStateOf(0L) }
+    var isBuffering by remember { mutableStateOf(false) }
+    var showControls by remember { mutableStateOf(true) }
 
     // ── Orientation and System Bars ──────────────────────────────────────────
     LaunchedEffect(isFullscreen, activity) {
@@ -139,12 +155,22 @@ fun PlayerView(
         }
     }
 
-    // ── ExoPlayer lifecycle ───────────────────────────────────────────────────
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().also { player ->
-            player.addListener(object : Player.Listener {
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    if (playbackState == Player.STATE_ENDED) {
+    // ── MPV event listener ───────────────────────────────────────────────────
+    val eventObserver = remember(playerInstance, state.resumePositionMs) {
+        object : MPVLib.EventObserver {
+            override fun eventProperty(property: String) {}
+
+            override fun eventProperty(property: String, value: Long) {}
+
+            override fun eventProperty(property: String, value: Boolean) {
+                activity?.runOnUiThread {
+                    if (property == "pause") {
+                        isPaused = value
+                    }
+                    if (property == "paused-for-cache") {
+                        isBuffering = value
+                    }
+                    if (property == "eof-reached" && value) {
                         viewModel.markWatched()
                         if (viewModel.uiState.value.autoNext && viewModel.uiState.value.hasNextEpisode) {
                             val nextEp = viewModel.uiState.value.episodeNumber + 1
@@ -164,40 +190,63 @@ fun PlayerView(
                         }
                     }
                 }
+            }
 
-                override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                    android.util.Log.e("PlayerView", "ExoPlayer playback error: ${error.errorCodeName} (${error.errorCode}): ${error.message}", error)
-                    if (state.selectedQuality != "auto") {
-                        context.showToast("Playback error (${error.errorCodeName}). Retrying with Auto quality...")
-                        viewModel.selectQuality("auto")
-                    } else {
-                        context.showToast("Playback failed: ${error.localizedMessage ?: error.message}. Opening in browser...")
-                        viewModel.uiState.value.activeStreamUrl?.let { url ->
-                            context.openLink(url)
+            override fun eventProperty(property: String, value: String) {}
+
+            override fun eventProperty(property: String, value: Double) {
+                activity?.runOnUiThread {
+                    if (property == "time-pos") {
+                        viewModel.onPositionChanged((value * 1000).toLong())
+                    }
+                    if (property == "duration") {
+                        durationMs = (value * 1000).toLong()
+                    }
+                }
+            }
+
+            override fun eventProperty(property: String, value: `is`.xyz.mpv.MPVNode) {}
+
+            override fun event(eventId: Int, data: `is`.xyz.mpv.MPVNode) {
+                activity?.runOnUiThread {
+                    if (eventId == MPVLib.MpvEvent.MPV_EVENT_FILE_LOADED) {
+                        val resumeMs = state.resumePositionMs
+                        if (resumeMs > 0) {
+                            MPVLib.setPropertyDouble("time-pos", resumeMs / 1000.0)
                         }
                     }
                 }
-
-                override fun onPositionDiscontinuity(
-                    oldPosition: Player.PositionInfo,
-                    newPosition: Player.PositionInfo,
-                    reason: Int,
-                ) {
-                    val seekTo = viewModel.onPositionChanged(newPosition.positionMs)
-                    if (seekTo != null) player.seekTo(seekTo)
-                }
-            })
+            }
         }
     }
 
-    DisposableEffect(Unit) {
+    LaunchedEffect(playerInstance) {
+        if (playerInstance != null) {
+            MPVLib.addObserver(eventObserver)
+        }
+    }
+
+    DisposableEffect(playerInstance) {
         onDispose {
-            viewModel.saveProgress(exoPlayer.currentPosition)
-            exoPlayer.release()
+            playerInstance?.let { view ->
+                view.isExiting = true
+                val currentPos = MPVLib.getPropertyDouble("time-pos")
+                if (currentPos != null && currentPos > 0) {
+                    viewModel.saveProgress((currentPos * 1000).toLong())
+                }
+                MPVLib.removeObserver(eventObserver)
+                MPVLib.command("quit")
+                try {
+                    Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                    // Ignore
+                }
+                MPVLib.destroy()
+            }
         }
     }
 
-    // Save progress every 10 seconds via side-effect on position
+    // Save progress periodically
     LaunchedEffect(state.currentPositionMs) {
         if (state.currentPositionMs > 0 && state.currentPositionMs % 10_000 < 1_000) {
             viewModel.saveProgress(state.currentPositionMs)
@@ -217,55 +266,32 @@ fun PlayerView(
         )
     }
 
-    // Once stream URL/referer is ready, build HLS media source
-    LaunchedEffect(state.activeStreamUrl, state.activeReferer) {
+    // Once stream URL/referer is ready, play file in MPV
+    LaunchedEffect(state.activeStreamUrl, state.activeReferer, playerInstance) {
         val url = state.activeStreamUrl ?: return@LaunchedEffect
-        val currentPos = if (!exoPlayer.currentTimeline.isEmpty) {
-            exoPlayer.currentPosition
+        val player = playerInstance ?: return@LaunchedEffect
+        
+        val referer = state.activeReferer ?: "https://www.miruro.tv/"
+        val userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        val headersString = "Referer: ${referer.replace(",", "\\,")},User-Agent: ${userAgent.replace(",", "\\,")}"
+        
+        MPVLib.setPropertyString("user-agent", userAgent)
+        MPVLib.setPropertyString("http-header-fields", headersString)
+        
+        player.playFile(url)
+        
+        if (state.autoPlay) {
+            MPVLib.setPropertyBoolean("pause", false)
         } else {
-            state.resumePositionMs
+            MPVLib.setPropertyBoolean("pause", true)
         }
-        val dataSourceFactory = OkHttpDataSource.Factory(
-            okHttpClient.newBuilder().apply {
-                addInterceptor { chain ->
-                    val referer = state.activeReferer ?: "https://www.miruro.tv/"
-                    val userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                    chain.proceed(
-                        chain.request().newBuilder()
-                            .header("Referer", referer)
-                            .header("User-Agent", userAgent)
-                            .build()
-                    )
-                }
-            }.build()
-        )
-        val hlsSource = HlsMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(url))
-        exoPlayer.setMediaSource(hlsSource)
-        exoPlayer.prepare()
-        if (currentPos > 0) exoPlayer.seekTo(currentPos)
-        if (state.autoPlay) exoPlayer.play()
     }
 
-    // Handle quality selection via TrackSelectionParameters
-    LaunchedEffect(state.selectedQuality) {
-        val quality = state.selectedQuality
-        val maxVideoSize = when (quality.removeSuffix("p").toIntOrNull()) {
-            1080 -> 1920 to 1080
-            720 -> 1280 to 720
-            480 -> 854 to 480
-            360 -> 640 to 360
-            else -> null
-        }
-        if (maxVideoSize != null) {
-            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters.buildUpon()
-                .setMaxVideoSize(maxVideoSize.first, maxVideoSize.second)
-                .setForceHighestSupportedBitrate(true)
-                .build()
-        } else {
-            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters.buildUpon()
-                .clearVideoSizeConstraints()
-                .build()
+    // Auto-hide controls after 3 seconds of inactivity
+    LaunchedEffect(showControls, isPaused) {
+        if (showControls && !isPaused) {
+            kotlinx.coroutines.delay(3000)
+            showControls = false
         }
     }
 
@@ -275,10 +301,8 @@ fun PlayerView(
     var showQualityMenu by remember { mutableStateOf(false) }
 
     // Netflix next episode overlay check
-    val showNextEpisodeOverlay = remember(state.currentPositionMs, exoPlayer.duration, state.hasNextEpisode) {
-        val duration = exoPlayer.duration
-        val pos = state.currentPositionMs
-        state.hasNextEpisode && duration > 0 && pos > 0 && (duration - pos) <= 10_000
+    val showNextEpisodeOverlay = remember(state.currentPositionMs, durationMs, state.hasNextEpisode) {
+        state.hasNextEpisode && durationMs > 0 && state.currentPositionMs > 0 && (durationMs - state.currentPositionMs) <= 10_000
     }
 
     @Composable
@@ -293,102 +317,168 @@ fun PlayerView(
                         }
                     }
                 }
+                .clickable { showControls = !showControls }
         ) {
-            // ── ExoPlayer surface ─────────────────────────────────────────────
+            // ── MPV surface ──────────────────────────────────────────────────
             AndroidView(
                 factory = { ctx ->
-                    PlayerView(ctx).apply {
-                        player = exoPlayer
-                        useController = true
+                    val view = LayoutInflater.from(ctx).inflate(
+                        com.axiel7.anihyou.feature.stream.R.layout.mpv_player_view,
+                        null
+                    ) as MPVView
+                    view.apply {
+                        Utils.copyAssets(ctx)
+                        initialize(ctx.filesDir.path, ctx.cacheDir.path)
                         layoutParams = ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT,
                         )
-                        controllerHideOnTouch = true
-                        controllerAutoShow = true
+                        playerInstance = this
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
             )
 
-            // ── Loading overlay ───────────────────────────────────────────────
-            if (state.isLoading) {
+            // ── Loading overlay / Buffering ──────────────────────────────────
+            if (state.isLoading || isBuffering) {
                 Box(Modifier.fillMaxSize(), Alignment.Center) {
                     CircularProgressIndicator(color = Color.White)
                 }
             }
 
-            // ── Top bar ───────────────────────────────────────────────────────
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.4f))
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            // ── Center playback controls ─────────────────────────────────────
+            AnimatedVisibility(
+                visible = showControls,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
             ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White,
-                    )
-                }
-                Text(
-                    text = "Episode ${state.episodeNumber}",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f),
-                )
-                
-                // Fullscreen toggle button
-                IconButton(onClick = { isFullscreen = !isFullscreen }) {
-                    Icon(
-                        imageVector = if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
-                        contentDescription = "Toggle Fullscreen",
-                        tint = Color.White
-                    )
-                }
-
-                // Episodes Overlay Trigger
-                IconButton(onClick = { showEpisodeOverlay = !showEpisodeOverlay }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Episodes",
-                        tint = Color.White
-                    )
-                }
-
-                // Quality selector
-                Box {
-                    IconButton(onClick = { showQualityMenu = true }) {
-                        Text(
-                            text = state.selectedQuality,
-                            color = Color.White,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(32.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            MPVLib.command("seek", "-10", "relative")
+                        },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FastRewind,
+                            contentDescription = "Rewind 10s",
+                            tint = Color.White,
+                            modifier = Modifier.size(36.dp)
                         )
                     }
-                    DropdownMenu(
-                        expanded = showQualityMenu,
-                        onDismissRequest = { showQualityMenu = false },
+
+                    IconButton(
+                        onClick = {
+                            MPVLib.setPropertyBoolean("pause", !isPaused)
+                        },
+                        modifier = Modifier.size(64.dp)
                     ) {
-                        state.availableQualities.forEach { quality ->
-                            DropdownMenuItem(
-                                text = { Text(quality) },
-                                onClick = {
-                                    viewModel.selectQuality(quality)
-                                    showQualityMenu = false
-                                },
-                                leadingIcon = if (quality == state.selectedQuality) ({
-                                    Icon(Icons.Default.Check, contentDescription = null)
-                                }) else null,
-                            )
-                        }
+                        Icon(
+                            imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                            contentDescription = if (isPaused) "Play" else "Pause",
+                            tint = Color.White,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            MPVLib.command("seek", "10", "relative")
+                        },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FastForward,
+                            contentDescription = "Forward 10s",
+                            tint = Color.White,
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
                 }
-                // Settings
-                IconButton(onClick = { showSettings = !showSettings }) {
-                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
+            }
+
+            // ── Top bar ───────────────────────────────────────────────────────
+            AnimatedVisibility(
+                visible = showControls,
+                enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.4f))
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White,
+                        )
+                    }
+                    Text(
+                        text = "Episode ${state.episodeNumber}",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.weight(1f),
+                    )
+                    
+                    // Fullscreen toggle button
+                    IconButton(onClick = { isFullscreen = !isFullscreen }) {
+                        Icon(
+                            imageVector = if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
+                            contentDescription = "Toggle Fullscreen",
+                            tint = Color.White
+                        )
+                    }
+
+                    // Episodes Overlay Trigger
+                    IconButton(onClick = { showEpisodeOverlay = !showEpisodeOverlay }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Episodes",
+                            tint = Color.White
+                        )
+                    }
+
+                    // Quality selector
+                    Box {
+                        IconButton(onClick = { showQualityMenu = true }) {
+                            Text(
+                                text = state.selectedQuality,
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showQualityMenu,
+                            onDismissRequest = { showQualityMenu = false },
+                        ) {
+                            state.availableQualities.forEach { quality ->
+                                DropdownMenuItem(
+                                    text = { Text(quality) },
+                                    onClick = {
+                                        viewModel.selectQuality(quality)
+                                        showQualityMenu = false
+                                    },
+                                    leadingIcon = if (quality == state.selectedQuality) ({
+                                        Icon(Icons.Default.Check, contentDescription = null)
+                                    }) else null,
+                                )
+                            }
+                        }
+                    }
+                    // Settings
+                    IconButton(onClick = { showSettings = !showSettings }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
+                    }
                 }
             }
 
@@ -403,7 +493,9 @@ fun PlayerView(
             ) {
                 Button(
                     onClick = {
-                        viewModel.skipIntro()?.let { exoPlayer.seekTo(it) }
+                        viewModel.skipIntro()?.let { seekTargetMs ->
+                            MPVLib.setPropertyDouble("time-pos", seekTargetMs / 1000.0)
+                        }
                     },
                     shape = RoundedCornerShape(4.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.9f)),
@@ -423,7 +515,9 @@ fun PlayerView(
             ) {
                 Button(
                     onClick = {
-                        viewModel.skipOutro()?.let { exoPlayer.seekTo(it) }
+                        viewModel.skipOutro()?.let { seekTargetMs ->
+                            MPVLib.setPropertyDouble("time-pos", seekTargetMs / 1000.0)
+                        }
                     },
                     shape = RoundedCornerShape(4.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.9f)),
@@ -468,60 +562,110 @@ fun PlayerView(
                 }
             }
 
-            // ── Prev / Next episode controls ──────────────────────────────────
-            Row(
+            // ── Bottom Seekbar and prev/next episode controls ───────────────────
+            AnimatedVisibility(
+                visible = showControls,
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    .fillMaxWidth()
+                    .background(Color.Black.copy(alpha = 0.6f))
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                if (state.hasPreviousEpisode) {
-                    IconButton(
-                        onClick = {
-                            val prevEp = state.episodeNumber - 1
-                            val prevEpisodeObj = state.episodeList.firstOrNull { it.number == prevEp }
-                            if (prevEpisodeObj != null) {
-                                val slug = prevEpisodeObj.id.substringAfterLast("/")
-                                viewModel.load(
-                                    animeId = state.animeId,
-                                    provider = state.provider,
-                                    category = state.category,
-                                    episodeSlug = slug,
-                                    episodeNumber = prevEp,
-                                    totalEpisodes = state.totalEpisodes,
-                                    resumePositionMs = 0L
-                                )
-                            } else {
-                                onPreviousEpisode?.invoke(prevEp)
-                            }
-                        },
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Seekbar Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(Icons.Default.SkipPrevious, contentDescription = "Previous episode", tint = Color.White)
+                        Text(
+                            text = formatTime(state.currentPositionMs),
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Slider(
+                            value = state.currentPositionMs.coerceIn(0L, durationMs).toFloat(),
+                            onValueChange = { newValue ->
+                                viewModel.onPositionChanged(newValue.toLong())
+                                playerInstance?.let {
+                                    MPVLib.setPropertyDouble("time-pos", newValue / 1000.0)
+                                }
+                            },
+                            valueRange = 0f..(durationMs.coerceAtLeast(1L).toFloat()),
+                            colors = SliderDefaults.colors(
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary,
+                                inactiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = formatTime(durationMs),
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
-                }
-                if (state.hasNextEpisode) {
-                    IconButton(
-                        onClick = {
-                            viewModel.markWatched()
-                            val nextEp = state.episodeNumber + 1
-                            val nextEpisodeObj = state.episodeList.firstOrNull { it.number == nextEp }
-                            if (nextEpisodeObj != null) {
-                                val slug = nextEpisodeObj.id.substringAfterLast("/")
-                                viewModel.load(
-                                    animeId = state.animeId,
-                                    provider = state.provider,
-                                    category = state.category,
-                                    episodeSlug = slug,
-                                    episodeNumber = nextEp,
-                                    totalEpisodes = state.totalEpisodes,
-                                    resumePositionMs = 0L
-                                )
-                            } else {
-                                onNextEpisode?.invoke(nextEp)
-                            }
-                        },
+                    
+                    // Prev / Next episode buttons row
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(32.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
                     ) {
-                        Icon(Icons.Default.SkipNext, contentDescription = "Next episode", tint = Color.White)
+                        if (state.hasPreviousEpisode) {
+                            IconButton(
+                                onClick = {
+                                    val prevEp = state.episodeNumber - 1
+                                    val prevEpisodeObj = state.episodeList.firstOrNull { it.number == prevEp }
+                                    if (prevEpisodeObj != null) {
+                                        val slug = prevEpisodeObj.id.substringAfterLast("/")
+                                        viewModel.load(
+                                            animeId = state.animeId,
+                                            provider = state.provider,
+                                            category = state.category,
+                                            episodeSlug = slug,
+                                            episodeNumber = prevEp,
+                                            totalEpisodes = state.totalEpisodes,
+                                            resumePositionMs = 0L
+                                        )
+                                    } else {
+                                        onPreviousEpisode?.invoke(prevEp)
+                                    }
+                                },
+                            ) {
+                                Icon(Icons.Default.SkipPrevious, contentDescription = "Previous episode", tint = Color.White)
+                            }
+                        }
+                        if (state.hasNextEpisode) {
+                            IconButton(
+                                onClick = {
+                                    viewModel.markWatched()
+                                    val nextEp = state.episodeNumber + 1
+                                    val nextEpisodeObj = state.episodeList.firstOrNull { it.number == nextEp }
+                                    if (nextEpisodeObj != null) {
+                                        val slug = nextEpisodeObj.id.substringAfterLast("/")
+                                        viewModel.load(
+                                            animeId = state.animeId,
+                                            provider = state.provider,
+                                            category = state.category,
+                                            episodeSlug = slug,
+                                            episodeNumber = nextEp,
+                                            totalEpisodes = state.totalEpisodes,
+                                            resumePositionMs = 0L
+                                        )
+                                    } else {
+                                        onNextEpisode?.invoke(nextEp)
+                                    }
+                                },
+                            ) {
+                                Icon(Icons.Default.SkipNext, contentDescription = "Next episode", tint = Color.White)
+                            }
+                        }
                     }
                 }
             }
@@ -651,10 +795,8 @@ fun PlayerView(
     }
 
     if (isFullscreen) {
-        // Landscape Fullscreen mode
         PlayerContent(modifier.fillMaxSize())
     } else {
-        // Portrait mode: top 16:9 player surface, bottom scrollable episode list
         Column(
             modifier = modifier
                 .fillMaxSize()
