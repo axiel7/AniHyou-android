@@ -56,49 +56,57 @@ class StreamDetailViewModel(
         prefs.getWatchedEpisodes(state.animeId)
     }
 
-    fun load(animeId: Int) {
-        mutableUiState.update { it.copy(animeId = animeId, isLoading = true) }
+    private var preferenceJobs: List<kotlinx.coroutines.Job> = emptyList()
 
-        viewModelScope.launch {
-            // Load default provider preference
-            prefs.defaultProvider.collect { provider ->
-                mutableUiState.update { it.copy(selectedProvider = provider) }
-            }
-        }
-
-        viewModelScope.launch {
-            prefs.audioType.collect { audio ->
-                mutableUiState.update { it.copy(selectedAudio = audio) }
-                refreshEpisodeList()
-            }
-        }
-
-        viewModelScope.launch {
-            prefs.getProgress(animeId).collect { progress ->
-                mutableUiState.update {
-                    it.copy(
-                        resumeEpisode = progress?.first,
-                        resumePosition = progress?.second ?: 0L,
-                    )
+    fun load(animeId: Int, isRefresh: Boolean = false) {
+        val isNewAnime = mutableUiState.value.animeId != animeId
+        if (isNewAnime) {
+            mutableUiState.update { it.copy(animeId = animeId, isLoading = true) }
+            
+            preferenceJobs.forEach { it.cancel() }
+            preferenceJobs = listOf(
+                viewModelScope.launch {
+                    prefs.defaultProvider.collect { provider ->
+                        mutableUiState.update { it.copy(selectedProvider = provider) }
+                    }
+                },
+                viewModelScope.launch {
+                    prefs.audioType.collect { audio ->
+                        mutableUiState.update { it.copy(selectedAudio = audio) }
+                        refreshEpisodeList()
+                    }
+                },
+                viewModelScope.launch {
+                    prefs.getProgress(animeId).collect { progress ->
+                        mutableUiState.update {
+                            it.copy(
+                                resumeEpisode = progress?.first,
+                                resumePosition = progress?.second ?: 0L,
+                            )
+                        }
+                    }
+                },
+                viewModelScope.launch {
+                    prefs.getWatchedEpisodes(animeId).collect { watched ->
+                        mutableUiState.update { it.copy(watchedEpisodes = watched) }
+                    }
+                },
+                viewModelScope.launch {
+                    defaultPrefs.getReminderLanguage(animeId).collect { lang ->
+                        mutableUiState.update { it.copy(reminderLanguage = lang) }
+                    }
                 }
-            }
-        }
-
-        viewModelScope.launch {
-            prefs.getWatchedEpisodes(animeId).collect { watched ->
-                mutableUiState.update { it.copy(watchedEpisodes = watched) }
-            }
-        }
-
-        viewModelScope.launch {
-            defaultPrefs.getReminderLanguage(animeId).collect { lang ->
-                mutableUiState.update { it.copy(reminderLanguage = lang) }
-            }
+            )
+        } else if (isRefresh) {
+            mutableUiState.update { it.copy(isLoading = true) }
+        } else {
+            // Already loaded this anime, not a refresh
+            return
         }
 
         viewModelScope.launch {
             // Load info and episodes in parallel
-            launch {
+            val task1 = async {
                 when (val r = streamRepository.getAnimeInfo(animeId)) {
                     is DataResult.Success -> {
                         mutableUiState.update { it.copy(info = r.data) }
@@ -109,7 +117,7 @@ class StreamDetailViewModel(
                 }
             }
 
-            launch {
+            val task2 = async {
                 when (val r = streamRepository.getEpisodes(animeId)) {
                     is DataResult.Success -> {
                         val providers = r.data.providers.keys.toList()
@@ -129,6 +137,7 @@ class StreamDetailViewModel(
                 }
             }
 
+            awaitAll(task1, task2)
             mutableUiState.update { it.copy(isLoading = false) }
         }
     }

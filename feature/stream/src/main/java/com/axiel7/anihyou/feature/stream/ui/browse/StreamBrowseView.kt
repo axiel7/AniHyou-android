@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.stream.ui.browse
 
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
@@ -75,7 +77,7 @@ fun PulsePlaceholder(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun StreamBrowseView(
     onAnimeClick: (Int) -> Unit,
@@ -124,7 +126,14 @@ fun StreamBrowseView(
             isRefreshing = state.isLoading,
             onRefresh = { viewModel.loadHome() },
             state = pullRefreshState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullRefreshState,
+                    isRefreshing = state.isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                )
+            }
         ) {
             if (state.isLoading && state.spotlight.isEmpty()) {
                 LazyColumn(

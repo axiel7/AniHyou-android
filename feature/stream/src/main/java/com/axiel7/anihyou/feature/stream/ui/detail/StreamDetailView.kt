@@ -37,6 +37,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,6 +68,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.feature.stream.data.model.AudioType
@@ -95,7 +97,7 @@ private fun DetailPulsePlaceholder(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun StreamDetailView(
     animeId: Int,
@@ -138,11 +140,18 @@ fun StreamDetailView(
     ) { innerPadding ->
         PullToRefreshBox(
             isRefreshing = state.isLoading,
-            onRefresh = { viewModel.load(animeId) },
+            onRefresh = { viewModel.load(animeId, isRefresh = true) },
             state = pullRefreshState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullRefreshState,
+                    isRefreshing = state.isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                )
+            }
         ) {
             if (state.isLoading && state.info == null) {
                 LazyColumn(

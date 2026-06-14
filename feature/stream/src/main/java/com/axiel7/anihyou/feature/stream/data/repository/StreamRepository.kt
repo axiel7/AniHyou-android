@@ -50,7 +50,7 @@ class StreamRepository(
 
     private suspend fun isReanime(): Boolean {
         val base = baseUrlProvider()
-        return base.contains("reanime") || !base.contains("miruro")
+        return base.contains("reanime")
     }
 
     private fun extractAnilistIdFromCoverUrl(url: String?): Int? {

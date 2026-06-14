@@ -20,6 +20,8 @@ import com.axiel7.anihyou.feature.stream.data.repository.StreamRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import java.time.LocalDateTime
 
 data class StreamBrowseUiState(
@@ -65,36 +67,81 @@ class StreamBrowseViewModel(
             mutableUiState.update { it.copy(isLoading = true) }
 
             // Load all sections concurrently
-            launch {
-                when (val r = streamRepository.getSpotlight()) {
-                    is DataResult.Success -> mutableUiState.update { it.copy(spotlight = r.data.results) }
-                    is DataResult.Error -> mutableUiState.update { it.copy(error = r.message) }
-                    else -> {}
+            val tasks = listOf(
+                async {
+                    when (val r = streamRepository.getSpotlight()) {
+                        is DataResult.Success -> mutableUiState.update { it.copy(spotlight = r.data.results) }
+                        is DataResult.Error -> mutableUiState.update { it.copy(error = r.message) }
+                        else -> {}
+                    }
+                },
+                async {
+                    when (val r = streamRepository.getTrending()) {
+                        is DataResult.Success -> mutableUiState.update { it.copy(trending = r.data.results) }
+                        else -> {}
+                    }
+                },
+                async {
+                    when (val r = streamRepository.getPopular()) {
+                        is DataResult.Success -> mutableUiState.update { it.copy(popular = r.data.results) }
+                        else -> {}
+                    }
+                },
+                async {
+                    when (val r = streamRepository.getRecent()) {
+                        is DataResult.Success -> mutableUiState.update { it.copy(recent = r.data.results) }
+                        else -> {}
+                    }
+                },
+                async {
+                    val state = mutableUiState.value
+                    mutableUiState.update { it.copy(isLoadingSeasonal = true) }
+                    when (val r = streamRepository.getAnimeBySeason(state.selectedSeason, state.selectedYear)) {
+                        is DataResult.Success -> mutableUiState.update {
+                            it.copy(seasonalAnime = r.data.results, isLoadingSeasonal = false)
+                        }
+                        is DataResult.Error -> mutableUiState.update {
+                            it.copy(error = r.message, isLoadingSeasonal = false)
+                        }
+                        else -> {}
+                    }
+                },
+                async {
+                    val userId = defaultPreferencesRepository.userId.first()
+                    if (userId != null) {
+                        mutableUiState.update { it.copy(isLoadingCurrentlyWatching = true) }
+                        mediaListRepository.getUserMediaList(
+                            userId = userId,
+                            mediaType = MediaType.ANIME,
+                            statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
+                            sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                            fetchFromNetwork = false,
+                            page = 1,
+                            perPage = 20,
+                        ).first { it !is PagedResult.Loading }.let { result ->
+                            mutableUiState.update { state ->
+                                when (result) {
+                                    is PagedResult.Success -> {
+                                        state.copy(
+                                            currentlyWatching = result.list,
+                                            isLoadingCurrentlyWatching = false
+                                        )
+                                    }
+                                    is PagedResult.Error -> {
+                                        state.copy(
+                                            isLoadingCurrentlyWatching = false,
+                                            error = result.message
+                                        )
+                                    }
+                                    else -> state
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-            launch {
-                when (val r = streamRepository.getTrending()) {
-                    is DataResult.Success -> mutableUiState.update { it.copy(trending = r.data.results) }
-                    else -> {}
-                }
-            }
-            launch {
-                when (val r = streamRepository.getPopular()) {
-                    is DataResult.Success -> mutableUiState.update { it.copy(popular = r.data.results) }
-                    else -> {}
-                }
-            }
-            launch {
-                when (val r = streamRepository.getRecent()) {
-                    is DataResult.Success -> mutableUiState.update { it.copy(recent = r.data.results) }
-                    else -> {}
-                }
-            }
-            
-            // Fetch continue watching & seasonal anime
-            fetchCurrentlyWatching()
-            fetchSeasonal()
+            )
 
+            tasks.awaitAll()
             mutableUiState.update { it.copy(isLoading = false) }
         }
     }

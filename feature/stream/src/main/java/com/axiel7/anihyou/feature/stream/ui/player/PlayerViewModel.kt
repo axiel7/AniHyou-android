@@ -11,6 +11,7 @@ import com.axiel7.anihyou.feature.stream.data.model.SkipInterval
 import com.axiel7.anihyou.feature.stream.data.model.StreamSource
 import com.axiel7.anihyou.feature.stream.data.model.StreamSourcesResponse
 import com.axiel7.anihyou.feature.stream.data.model.Subtitle
+import com.axiel7.anihyou.feature.stream.data.model.Episode
 import com.axiel7.anihyou.feature.stream.data.repository.StreamPreferencesRepository
 import com.axiel7.anihyou.feature.stream.data.repository.StreamRepository
 import kotlinx.coroutines.flow.first
@@ -32,6 +33,7 @@ data class PlayerUiState(
     val activeStreamUrl: String? = null,
     val activeReferer: String? = null,
     val subtitles: List<Subtitle> = emptyList(),
+    val episodeList: List<Episode> = emptyList(),
 
     // Skip
     val intro: SkipInterval? = null,
@@ -78,6 +80,11 @@ class PlayerViewModel(
         totalEpisodes: Int,
         resumePositionMs: Long = 0L,
     ) {
+        val currentPos = mutableUiState.value.currentPositionMs
+        if (mutableUiState.value.animeId != 0 && mutableUiState.value.episodeNumber != 0 && currentPos > 0) {
+            saveProgress(currentPos)
+        }
+
         viewModelScope.launch {
             val autoPlay = prefs.autoPlay.first()
             val autoNext = prefs.autoNext.first()
@@ -101,6 +108,26 @@ class PlayerViewModel(
                     autoSkipOutro = autoSkipOutro,
                     isLoading = true,
                 )
+            }
+
+            launch {
+                when (val epResult = streamRepository.getEpisodes(animeId)) {
+                    is DataResult.Success -> {
+                        val epData = epResult.data
+                        val providerData = epData.providers[provider]
+                            ?: epData.providers.values.firstOrNull()
+                        if (providerData != null) {
+                            val list = if (category == "dub") providerData.episodes.dub else providerData.episodes.sub
+                            mutableUiState.update { state ->
+                                state.copy(
+                                    episodeList = list,
+                                    totalEpisodes = list.size.takeIf { it > 0 } ?: state.totalEpisodes
+                                )
+                            }
+                        }
+                    }
+                    else -> {}
+                }
             }
 
             fetchSources(animeId, provider, category, episodeSlug)
@@ -186,7 +213,7 @@ class PlayerViewModel(
                         hlsSources = hlsSources,
                         availableQualities = qualities,
                         activeStreamUrl = bestSource?.url,
-                        activeReferer = bestSource?.referer,
+                        activeReferer = (bestSource?.referer).takeIf { !it.isNullOrEmpty() } ?: "https://www.miruro.tv/",
                         subtitles = response.subtitles,
                         intro = response.intro,
                         outro = response.outro,
@@ -216,7 +243,7 @@ class PlayerViewModel(
             it.copy(
                 selectedQuality = quality,
                 activeStreamUrl = source.url,
-                activeReferer = source.referer,
+                activeReferer = (source.referer).takeIf { !it.isNullOrEmpty() } ?: "https://www.miruro.tv/",
             )
         }
     }
@@ -245,10 +272,10 @@ class PlayerViewModel(
 
         // Auto-skip
         if (inIntro && state.autoSkipIntro) {
-            return (state.intro!!.end + 1).toLong() * 1000
+            return (state.intro?.end?.plus(1))?.toLong()?.times(1000)
         }
         if (inOutro && state.autoSkipOutro) {
-            return (state.outro!!.end + 1).toLong() * 1000
+            return (state.outro?.end?.plus(1))?.toLong()?.times(1000)
         }
         return null
     }
