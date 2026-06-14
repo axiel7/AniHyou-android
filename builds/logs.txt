@@ -36,3 +36,4 @@
 [2026-06-14 15:32 UTC] SUCCESS | commit:ccbaa22 | version:1.5.2 | assembleFossDebug + unit tests GREEN
 [2026-06-14 16:14 UTC] SUCCESS | commit:ccbaa227 | version:1.5.2 | FIXED: resolved HTTPS playback failure in embedded MPVView by disabling strict TLS verification (tls-verify=no) for network streams.
 
+[2026-06-14 16:24 UTC] SUCCESS | commit:3ff1a05 | version:1.5.2 | assembleFossDebug + unit tests GREEN
