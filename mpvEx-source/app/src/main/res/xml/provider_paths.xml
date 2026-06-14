@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path
+        name="cache_files"
+        path="." />
+    <files-path
+        name="files_path"
+        path="." />
+    <!-- Allow sharing files from external storage (e.g., /storage/emulated/0/...) -->
+    <external-path
+        name="external_storage"
+        path="." />
+    <!-- Allow sharing files from secondary external storage (e.g., /storage/xxxx-xxxx/..., external SD cards) -->
+    <external-files-path
+        name="external_files_storage"
+        path="." />
+    <!-- Allow sharing files from external cache directory (used for downloaded APK updates) -->
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <!-- Allow sharing files from removable media (SD cards, USB OTG mounted at /mnt/media_rw/) -->
+    <root-path
+        name="root_path"
+        path="." />
+</paths>
