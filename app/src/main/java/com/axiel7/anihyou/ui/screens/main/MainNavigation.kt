@@ -230,24 +230,53 @@ fun MainNavigation(
                 val context = LocalContext.current
                 val defaultPrefs = koinInject<DefaultPreferencesRepository>()
                 val streamRepo = koinInject<StreamRepository>()
+                val tmdbApi = koinInject<com.axiel7.anihyou.core.network.api.TmdbApi>()
 
                 StreamDetailView(
                     animeId = route.animeId,
                     onBack = { topLevelBackStack.removeLast() },
-                    onPlayEpisode = { animeId, provider, category, slug, epNum ->
+                    onPlayEpisode = { animeId, provider, category, slug, epNum, seasonNum ->
                         scope.launch {
                             val useBrowser = defaultPrefs.useInAppBrowser.first()
                             if (useBrowser) {
-                                val sourcesResult = streamRepo.getSources(provider, animeId, category, slug)
-                                if (sourcesResult is DataResult.Success) {
-                                    val url = sourcesResult.data.streams.firstOrNull()?.url
-                                    if (url != null) {
-                                        context.openLink(url)
+                                var tmdbId: Int? = null
+                                var isMovie = false
+
+                                val animeInfoResult = streamRepo.getAnimeInfo(animeId)
+                                if (animeInfoResult is DataResult.Success) {
+                                    isMovie = animeInfoResult.data?.format == "MOVIE"
+                                }
+
+                                val epResult = streamRepo.getEpisodes(animeId)
+                                if (epResult is DataResult.Success) {
+                                    tmdbId = epResult.data.mappings?.tmdbId
+                                }
+
+                                if (tmdbId == null && animeInfoResult is DataResult.Success) {
+                                    val title = animeInfoResult.data?.displayTitle ?: ""
+                                    val resolvedId = tmdbApi.findShowId(title)
+                                    tmdbId = resolvedId?.toIntOrNull()
+                                }
+
+                                if (tmdbId != null) {
+                                    val url = if (isMovie) {
+                                        "https://vidfast.pro/movie/$tmdbId"
                                     } else {
-                                        context.showToast("No playable stream found")
+                                        "https://vidfast.pro/tv/$tmdbId/$seasonNum/$epNum"
                                     }
+                                    context.openLink(url)
                                 } else {
-                                    context.showToast("Failed to resolve stream")
+                                    val sourcesResult = streamRepo.getSources(provider, animeId, category, slug)
+                                    if (sourcesResult is DataResult.Success) {
+                                        val url = sourcesResult.data.streams.firstOrNull()?.url
+                                        if (url != null) {
+                                            context.openLink(url)
+                                        } else {
+                                            context.showToast("No playable stream found")
+                                        }
+                                    } else {
+                                        context.showToast("Failed to resolve stream")
+                                    }
                                 }
                             } else {
                                 topLevelBackStack.add(

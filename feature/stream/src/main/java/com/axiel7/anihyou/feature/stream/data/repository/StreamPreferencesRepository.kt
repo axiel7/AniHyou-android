@@ -50,7 +50,7 @@ class StreamPreferencesRepository(
     }
 
     val preferredQuality: Flow<String> = dataStore.data.map {
-        it[PREF_QUALITY] ?: "1080p"
+        it[PREF_QUALITY] ?: "auto"
     }
 
     suspend fun setPreferredQuality(quality: String) {

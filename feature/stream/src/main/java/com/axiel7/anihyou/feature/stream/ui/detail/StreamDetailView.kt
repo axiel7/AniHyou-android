@@ -61,16 +61,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.feature.stream.data.model.AudioType
 import com.axiel7.anihyou.feature.stream.data.model.Episode
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.ui.res.painterResource
-
 
 @Composable
 private fun DetailPulsePlaceholder(
@@ -99,15 +100,19 @@ private fun DetailPulsePlaceholder(
 fun StreamDetailView(
     animeId: Int,
     onBack: () -> Unit,
-    onPlayEpisode: (animeId: Int, provider: String, category: String, episodeSlug: String, episodeNumber: Int) -> Unit,
+    onPlayEpisode: (animeId: Int, provider: String, category: String, episodeSlug: String, episodeNumber: Int, seasonNumber: Int) -> Unit,
     onAnimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: StreamDetailViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedEpisodeForAudioChoice by remember { mutableStateOf<Episode?>(null) }
+    var showReminderDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(animeId) { viewModel.load(animeId) }
+
+    val currentSeasonNumber = state.seasonsList.indexOfFirst { it.animeId == animeId }.let { if (it == -1) 1 else it + 1 }
+    val pullRefreshState = rememberPullToRefreshState()
 
     Scaffold(
         topBar = {
@@ -131,303 +136,329 @@ fun StreamDetailView(
         },
         modifier = modifier,
     ) { innerPadding ->
-        if (state.isLoading && state.info == null) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(innerPadding),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Banner skeleton
-                item {
-                    DetailPulsePlaceholder(Modifier.fillMaxWidth().height(180.dp), shape = MaterialTheme.shapes.large)
-                }
-                // Title skeleton
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DetailPulsePlaceholder(Modifier.fillMaxWidth(0.7f).height(24.dp))
-                        DetailPulsePlaceholder(Modifier.fillMaxWidth(0.4f).height(16.dp))
+        PullToRefreshBox(
+            isRefreshing = state.isLoading,
+            onRefresh = { viewModel.load(animeId) },
+            state = pullRefreshState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            if (state.isLoading && state.info == null) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        DetailPulsePlaceholder(Modifier.fillMaxWidth().height(180.dp), shape = MaterialTheme.shapes.large)
+                    }
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            DetailPulsePlaceholder(Modifier.fillMaxWidth(0.7f).height(24.dp))
+                            DetailPulsePlaceholder(Modifier.fillMaxWidth(0.4f).height(16.dp))
+                        }
+                    }
+                    items(5) {
+                        DetailPulsePlaceholder(Modifier.fillMaxWidth().height(72.dp), shape = MaterialTheme.shapes.medium)
                     }
                 }
-                // Episode list skeleton
-                items(5) {
-                    DetailPulsePlaceholder(Modifier.fillMaxWidth().height(72.dp), shape = MaterialTheme.shapes.medium)
-                }
-            }
-            return@Scaffold
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
-            contentPadding = PaddingValues(bottom = 32.dp),
-        ) {
-            // ── Banner + cover ────────────────────────────────────────────────
-            item {
-                Box(Modifier.fillMaxWidth().height(220.dp)) {
-                    AsyncImage(
-                        model = state.info?.bannerImage ?: state.info?.coverUrl,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    // Premium multi-stop gradient overlay
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(
-                                androidx.compose.ui.graphics.Brush.verticalGradient(
-                                    listOf(
-                                        Color.Transparent,
-                                        MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                                        MaterialTheme.colorScheme.surface
-                                    )
-                                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 32.dp),
+                ) {
+                    item {
+                        Box(Modifier.fillMaxWidth().height(220.dp)) {
+                            AsyncImage(
+                                model = state.info?.bannerImage ?: state.info?.coverUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize(),
                             )
-                    )
-                }
-            }
-
-            // ── Anime info panel ──────────────────────────────────────────────
-            state.info?.let { info ->
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        Text(
-                            text = info.displayTitle,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Spacer(Modifier.height(8.dp))
-
-                        // Metadata pills row
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            info.format?.let { InfoBadge(it, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) }
-                            info.seasonYear?.let { InfoBadge(it.toString()) }
-                            info.episodes?.let { InfoBadge("$it Episodes") }
-                            info.duration?.let { InfoBadge("${it}m") }
-                        }
-                        Spacer(Modifier.height(8.dp))
-
-                        // Score & popularity
-                        info.averageScore?.let { score ->
-                            Text(
-                                text = "★ ${score / 10.0}   •   ${info.popularity?.let { "$it Popularity" } ?: ""}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                        Spacer(Modifier.height(10.dp))
-
-                        // Genres
-                        if (info.genres.isNotEmpty()) {
-                            LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                items(info.genres) { genre ->
-                                    Box(
-                                        modifier = Modifier
-                                            .border(
-                                                width = 1.dp,
-                                                color = MaterialTheme.colorScheme.outlineVariant,
-                                                shape = MaterialTheme.shapes.extraLarge
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                                            listOf(
+                                                Color.Transparent,
+                                                MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                                                MaterialTheme.colorScheme.surface
                                             )
-                                            .padding(horizontal = 10.dp, vertical = 4.dp)
-                                    ) {
+                                        )
+                                    )
+                            )
+                        }
+                    }
+
+                    state.info?.let { info ->
+                        item {
+                            Column(Modifier.padding(horizontal = 16.dp)) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = info.displayTitle,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    IconButton(onClick = { showReminderDialog = true }) {
+                                        Icon(
+                                            painter = painterResource(
+                                                if (state.reminderLanguage != null) com.axiel7.anihyou.core.resources.R.drawable.notifications_active_filled_24
+                                                else com.axiel7.anihyou.core.resources.R.drawable.notifications_24
+                                            ),
+                                            contentDescription = "Set Reminder",
+                                            tint = if (state.reminderLanguage != null) MaterialTheme.colorScheme.primary
+                                            else MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(8.dp))
+
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    info.format?.let { InfoBadge(it, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) }
+                                    info.seasonYear?.let { InfoBadge(it.toString()) }
+                                    info.episodes?.let { InfoBadge("$it Episodes") }
+                                    info.duration?.let { InfoBadge("${it}m") }
+                                }
+                                Spacer(Modifier.height(8.dp))
+
+                                info.averageScore?.let { score ->
+                                    Text(
+                                        text = "★ ${score / 10.0}   •   ${info.popularity?.let { "$it Popularity" } ?: ""}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary,
+                                    )
+                                }
+                                Spacer(Modifier.height(10.dp))
+
+                                if (info.genres.isNotEmpty()) {
+                                    LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        items(info.genres) { genre ->
+                                            Box(
+                                                modifier = Modifier
+                                                    .border(
+                                                        width = 1.dp,
+                                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                                        shape = MaterialTheme.shapes.extraLarge
+                                                    )
+                                                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                                            ) {
+                                                Text(
+                                                    text = genre,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                Spacer(Modifier.height(12.dp))
+
+                                DetailGrid(info)
+                                Spacer(Modifier.height(12.dp))
+
+                                info.description?.let { desc ->
+                                    var isDescExpanded by remember { mutableStateOf(false) }
+                                    val cleanDesc = desc.replace(Regex("<[^>]*>"), "")
+                                    Column {
                                         Text(
-                                            text = genre,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            text = cleanDesc,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            maxLines = if (isDescExpanded) Int.MAX_VALUE else 3,
+                                            overflow = TextOverflow.Ellipsis,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                        if (cleanDesc.length > 150) {
+                                            Text(
+                                                text = if (isDescExpanded) "Read less" else "Read more",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier
+                                                    .clickable { isDescExpanded = !isDescExpanded }
+                                                    .padding(vertical = 4.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    state.resumeEpisode?.let { ep ->
+                        item {
+                            Button(
+                                onClick = {
+                                    val episode = state.episodeList.firstOrNull { it.number == ep }
+                                    if (episode != null) {
+                                        val slug = episode.id.substringAfterLast("/")
+                                        onPlayEpisode(
+                                            animeId,
+                                            state.selectedProvider,
+                                            state.selectedAudio.value,
+                                            slug,
+                                            ep,
+                                            currentSeasonNumber,
+                                        )
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                            ) {
+                                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Resume Episode $ep")
+                            }
+                        }
+                    }
+
+                    if (state.seasonsList.size > 1) {
+                        item {
+                            Column(Modifier.padding(vertical = 8.dp)) {
+                                Text(
+                                    text = "Seasons",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                                )
+                                LazyRow(
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    itemsIndexed(state.seasonsList) { index, season ->
+                                        val isCurrent = season.animeId == animeId
+                                        SeasonCard(
+                                            seasonNumber = index + 1,
+                                            season = season,
+                                            onClick = {
+                                                if (!isCurrent) {
+                                                    onAnimeClick(season.animeId)
+                                                }
+                                            },
+                                            modifier = Modifier.border(
+                                                width = if (isCurrent) 2.dp else 0.dp,
+                                                color = if (isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                                shape = MaterialTheme.shapes.medium
+                                            )
                                         )
                                     }
                                 }
                             }
                         }
-                        Spacer(Modifier.height(12.dp))
+                    }
 
-                        // Detail grid
-                        DetailGrid(info)
-                        Spacer(Modifier.height(12.dp))
+                    if (state.availableProviders.isNotEmpty()) {
+                        item {
+                            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                Text("Provider", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                                Spacer(Modifier.height(6.dp))
+                                ScrollableTabRow(
+                                    selectedTabIndex = state.availableProviders.indexOf(state.selectedProvider).coerceAtLeast(0),
+                                    edgePadding = 0.dp,
+                                ) {
+                                    state.availableProviders.forEach { provider ->
+                                        Tab(
+                                            selected = provider == state.selectedProvider,
+                                            onClick = { viewModel.selectProvider(provider) },
+                                            text = { Text(provider) },
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                        // Description
-                        info.description?.let { desc ->
+                    item {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            AudioType.entries.forEach { audio ->
+                                FilterChip(
+                                    selected = state.selectedAudio == audio,
+                                    onClick = { viewModel.selectAudio(audio) },
+                                    label = { Text(audio.value.uppercase()) },
+                                )
+                            }
+                        }
+                    }
+
+                    item {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
                             Text(
-                                text = desc.replace(Regex("<[^>]*>"), ""), // strip simple html
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 5,
-                                overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = "Episodes (${state.episodeList.size})",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.weight(1f),
                             )
-                        }
-                    }
-                }
-            }
-
-            // ── Resume button ─────────────────────────────────────────────────
-            state.resumeEpisode?.let { ep ->
-                item {
-                    Button(
-                        onClick = {
-                            val episode = state.episodeList.firstOrNull { it.number == ep }
-                            if (episode != null) {
-                                val slug = episode.id.substringAfterLast("/")
-                                onPlayEpisode(
-                                    animeId,
-                                    state.selectedProvider,
-                                    state.selectedAudio.value,
-                                    slug,
-                                    ep,
+                            IconButton(onClick = viewModel::toggleSortOrder) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (state.isSortAscending) com.axiel7.anihyou.core.resources.R.drawable.arrow_upward_24
+                                        else com.axiel7.anihyou.core.resources.R.drawable.arrow_downward_24
+                                    ),
+                                    contentDescription = "Toggle Sort Order"
                                 )
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                    ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Resume Episode $ep")
+                        }
                     }
-                }
-            }
 
-            // ── Seasons list ──────────────────────────────────────────────────
-            if (state.seasonsList.size > 1) {
-                item {
-                    Column(Modifier.padding(vertical = 8.dp)) {
-                        Text(
-                            text = "Seasons",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(state.seasonsList) { season ->
-                                val isCurrent = season.animeId == animeId
-                                SeasonCard(
-                                    season = season,
-                                    onClick = {
-                                        if (!isCurrent) {
-                                            onAnimeClick(season.animeId)
-                                        }
-                                    },
-                                    modifier = Modifier.border(
-                                        width = if (isCurrent) 2.dp else 0.dp,
-                                        color = if (isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        shape = MaterialTheme.shapes.medium
+                    val providerData = state.episodeData?.providers?.get(state.selectedProvider)
+                    items(state.episodeList) { episode ->
+                        val isWatched = episode.number in state.watchedEpisodes
+                        val isResume = episode.number == state.resumeEpisode
+                        val hasSub = providerData?.episodes?.sub?.any { it.number == episode.number } == true
+                        val hasDub = providerData?.episodes?.dub?.any { it.number == episode.number } == true
+                        EpisodeCard(
+                            episode = episode,
+                            isWatched = isWatched,
+                            isResume = isResume,
+                            hasSub = hasSub,
+                            hasDub = hasDub,
+                            onPlay = {
+                                if (state.selectedAudio == AudioType.ALL && hasSub && hasDub) {
+                                    selectedEpisodeForAudioChoice = episode
+                                } else {
+                                    val playCategory = if (hasDub && state.selectedAudio == AudioType.DUB) "dub" else "sub"
+                                    val playEp = if (playCategory == "dub") {
+                                        providerData?.episodes?.dub?.firstOrNull { it.number == episode.number } ?: episode
+                                    } else episode
+                                    val slug = playEp.id.substringAfterLast("/")
+                                    onPlayEpisode(
+                                        animeId,
+                                        state.selectedProvider,
+                                        playCategory,
+                                        slug,
+                                        episode.number,
+                                        currentSeasonNumber,
                                     )
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // ── Provider selector ─────────────────────────────────────────────
-            if (state.availableProviders.isNotEmpty()) {
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        Text("Provider", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
-                        ScrollableTabRow(
-                            selectedTabIndex = state.availableProviders.indexOf(state.selectedProvider).coerceAtLeast(0),
-                            edgePadding = 0.dp,
-                        ) {
-                            state.availableProviders.forEach { provider ->
-                                Tab(
-                                    selected = provider == state.selectedProvider,
-                                    onClick = { viewModel.selectProvider(provider) },
-                                    text = { Text(provider) },
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // ── Sub / Dub toggle ──────────────────────────────────────────────
-            item {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    AudioType.entries.forEach { audio ->
-                        FilterChip(
-                            selected = state.selectedAudio == audio,
-                            onClick = { viewModel.selectAudio(audio) },
-                            label = { Text(audio.value.uppercase()) },
+                                }
+                            },
+                            onToggleWatched = {
+                                if (isWatched) viewModel.markUnwatched(episode.number)
+                                else viewModel.markWatched(episode.number)
+                            },
+                            onAddNote = { viewModel.openNoteDialog(episode.number) },
                         )
                     }
                 }
-            }
-
-            // ── Episode list header ───────────────────────────────────────────
-            item {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "Episodes (${state.episodeList.size})",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
-                    )
-                    IconButton(onClick = viewModel::toggleSortOrder) {
-                        Icon(
-                            painter = painterResource(
-                                if (state.isSortAscending) com.axiel7.anihyou.core.resources.R.drawable.arrow_upward_24
-                                else com.axiel7.anihyou.core.resources.R.drawable.arrow_downward_24
-                            ),
-                            contentDescription = "Toggle Sort Order"
-                        )
-                    }
-                }
-            }
-
-            // ── Episodes ──────────────────────────────────────────────────────
-            val providerData = state.episodeData?.providers?.get(state.selectedProvider)
-            items(state.episodeList) { episode ->
-                val isWatched = episode.number in state.watchedEpisodes
-                val isResume = episode.number == state.resumeEpisode
-                val hasSub = providerData?.episodes?.sub?.any { it.number == episode.number } == true
-                val hasDub = providerData?.episodes?.dub?.any { it.number == episode.number } == true
-                EpisodeCard(
-                    episode = episode,
-                    isWatched = isWatched,
-                    isResume = isResume,
-                    hasSub = hasSub,
-                    hasDub = hasDub,
-                    onPlay = {
-                        if (state.selectedAudio == AudioType.ALL && hasSub && hasDub) {
-                            selectedEpisodeForAudioChoice = episode
-                        } else {
-                            val playCategory = if (hasDub && state.selectedAudio == AudioType.DUB) "dub" else "sub"
-                            val playEp = if (playCategory == "dub") {
-                                providerData?.episodes?.dub?.firstOrNull { it.number == episode.number } ?: episode
-                            } else episode
-                            val slug = playEp.id.substringAfterLast("/")
-                            onPlayEpisode(
-                                animeId,
-                                state.selectedProvider,
-                                playCategory,
-                                slug,
-                                episode.number,
-                            )
-                        }
-                    },
-                    onToggleWatched = {
-                        if (isWatched) viewModel.markUnwatched(episode.number)
-                        else viewModel.markWatched(episode.number)
-                    },
-                    onAddNote = { viewModel.openNoteDialog(episode.number) },
-                )
             }
         }
 
-        // ── Audio choice dialog ───────────────────────────────────────────────
         if (selectedEpisodeForAudioChoice != null) {
             val ep = selectedEpisodeForAudioChoice!!
             val providerData = state.episodeData?.providers?.get(state.selectedProvider)
@@ -439,7 +470,7 @@ fun StreamDetailView(
                     Button(
                         onClick = {
                             val slug = ep.id.substringAfterLast("/")
-                            onPlayEpisode(animeId, state.selectedProvider, "sub", slug, ep.number)
+                            onPlayEpisode(animeId, state.selectedProvider, "sub", slug, ep.number, currentSeasonNumber)
                             selectedEpisodeForAudioChoice = null
                         }
                     ) { Text("SUB") }
@@ -449,7 +480,7 @@ fun StreamDetailView(
                         onClick = {
                             val dubEp = providerData?.episodes?.dub?.firstOrNull { it.number == ep.number }
                             val slug = (dubEp ?: ep).id.substringAfterLast("/")
-                            onPlayEpisode(animeId, state.selectedProvider, "dub", slug, ep.number)
+                            onPlayEpisode(animeId, state.selectedProvider, "dub", slug, ep.number, currentSeasonNumber)
                             selectedEpisodeForAudioChoice = null
                         }
                     ) { Text("DUB") }
@@ -457,7 +488,6 @@ fun StreamDetailView(
             )
         }
 
-        // ── Note dialog ───────────────────────────────────────────────────────
         if (state.noteDialogEpisode != null) {
             AlertDialog(
                 onDismissRequest = viewModel::dismissNoteDialog,
@@ -477,6 +507,66 @@ fun StreamDetailView(
                 dismissButton = {
                     TextButton(onClick = viewModel::dismissNoteDialog) { Text("Cancel") }
                 },
+            )
+        }
+
+        if (showReminderDialog) {
+            AlertDialog(
+                onDismissRequest = { showReminderDialog = false },
+                title = { Text("Set Episode Drop Reminder") },
+                text = { Text("Select your preferred language for episode release notifications:") },
+                confirmButton = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                viewModel.setReminder("sub")
+                                showReminderDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("SUB Only")
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.setReminder("dub")
+                                showReminderDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("DUB Only")
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.setReminder("both")
+                                showReminderDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("BOTH Sub & Dub")
+                        }
+                        if (state.reminderLanguage != null) {
+                            TextButton(
+                                onClick = {
+                                    viewModel.setReminder(null)
+                                    showReminderDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Remove Reminder", color = MaterialTheme.colorScheme.error)
+                            }
+                        }
+                        TextButton(
+                            onClick = { showReminderDialog = false },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                },
+                dismissButton = null
             )
         }
     }
@@ -572,7 +662,6 @@ private fun EpisodeCard(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Thumbnail or episode number
             Box(
                 modifier = Modifier
                     .width(100.dp)
@@ -595,7 +684,6 @@ private fun EpisodeCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                // Watched overlay
                 if (isWatched) {
                     Box(
                         Modifier
@@ -616,8 +704,15 @@ private fun EpisodeCard(
             Spacer(Modifier.width(12.dp))
 
             Column(Modifier.weight(1f)) {
+                val displayTitle = if (episode.title.isNullOrBlank()) {
+                    "Episode ${episode.number}"
+                } else if (episode.title.startsWith("Episode ", ignoreCase = true)) {
+                    episode.title
+                } else {
+                    "${episode.number}. ${episode.title}"
+                }
                 Text(
-                    text = episode.title?.takeIf { it.isNotBlank() } ?: "Episode ${episode.number}",
+                    text = displayTitle,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
@@ -659,12 +754,10 @@ private fun EpisodeCard(
                 }
             }
 
-            // Note button
             IconButton(onClick = onAddNote, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Default.Edit, contentDescription = "Add note", modifier = Modifier.size(18.dp))
             }
 
-            // Watch toggle
             IconButton(onClick = onToggleWatched, modifier = Modifier.size(36.dp)) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -680,6 +773,7 @@ private fun EpisodeCard(
 
 @Composable
 private fun SeasonCard(
+    seasonNumber: Int,
     season: SeasonInfo,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -719,9 +813,14 @@ private fun SeasonCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = season.title,
+                    text = "Season $seasonNumber",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = season.title,
+                    style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     minLines = 2,
@@ -767,4 +866,3 @@ private fun SeasonCard(
         }
     }
 }
-

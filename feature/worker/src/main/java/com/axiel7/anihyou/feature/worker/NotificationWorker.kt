@@ -41,6 +41,7 @@ class NotificationWorker(
     private val notificationsRepository: NotificationRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val networkVariables: NetworkVariables,
+    private val streamRepository: com.axiel7.anihyou.feature.stream.data.repository.StreamRepository,
 ) : CoroutineWorker(context, params) {
 
     // AniList API does not have a socket for notifications, so we schedule a work with an interval
@@ -49,13 +50,17 @@ class NotificationWorker(
     override suspend fun doWork(): Result {
         try {
             setForegroundSafely()
+            
+            // Check custom reminders first
+            checkCustomReminders()
+
             val accessToken = defaultPreferencesRepository.accessToken.firstOrNull()
-                ?: return Result.failure()
+                ?: return Result.success()
             networkVariables.accessToken = accessToken
             // check first the unread count so we can skip early if there aren't unread notifications
             // e.g.: the user read the notifications on web
             val unreadCount = userRepository.getUnreadNotificationCount().firstOrNull()
-                ?: return Result.failure()
+                ?: return Result.success()
             if (unreadCount <= 0) return Result.success()
 
             val result = notificationsRepository.getNewNotifications(unreadCount)
@@ -134,6 +139,90 @@ class NotificationWorker(
         } catch (e: Exception) {
             Log.e(TAG, "doWork: ", e)
             return Result.retry()
+        }
+    }
+
+    @RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+    private suspend fun checkCustomReminders() {
+        val remindersRaw = defaultPreferencesRepository.episodeReminders.firstOrNull() ?: ""
+        if (remindersRaw.isBlank()) return
+
+        val reminders = remindersRaw.split(",")
+            .filter { it.isNotBlank() }
+            .mapNotNull {
+                val parts = it.split(":")
+                if (parts.size == 2) parts[0].toIntOrNull() to parts[1] else null
+            }
+
+        for ((animeId, prefLang) in reminders) {
+            if (animeId == null) continue
+            val epResult = streamRepository.getEpisodes(animeId)
+            if (epResult is DataResult.Success) {
+                val epData = epResult.data
+                val providerData = epData.providers["kiwi"]
+                    ?: epData.providers.values.firstOrNull()
+
+                if (providerData != null) {
+                    val subEpisodes = providerData.episodes.sub
+                    val dubEpisodes = providerData.episodes.dub
+
+                    val subCount = subEpisodes.size
+                    val dubCount = dubEpisodes.size
+
+                    val lastNotified = defaultPreferencesRepository.getLastNotifiedEpisode(animeId).firstOrNull() ?: 0
+
+                    val maxAvailable = when (prefLang) {
+                        "sub" -> subCount
+                        "dub" -> dubCount
+                        "both" -> maxOf(subCount, dubCount)
+                        else -> 0
+                    }
+
+                    if (maxAvailable > lastNotified) {
+                        val infoResult = streamRepository.getAnimeInfo(animeId)
+                        val title = if (infoResult is DataResult.Success) {
+                            infoResult.data?.displayTitle ?: "Anime update"
+                        } else "Anime update"
+
+                        val text = when (prefLang) {
+                            "sub" -> "Episode $maxAvailable (SUB) is available!"
+                            "dub" -> "Episode $maxAvailable (DUB) is available!"
+                            else -> "Episode $maxAvailable is available!"
+                        }
+
+                        val intent = applicationContext.packageManager
+                            .getLaunchIntentForPackage(APP_PACKAGE_NAME)
+                            ?.apply {
+                                action = "media_details"
+                                putExtra("media_id", animeId)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                        val pendingIntent = PendingIntent.getActivity(
+                            applicationContext, animeId, intent,
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+
+                        val largeIcon = if (infoResult is DataResult.Success) {
+                            infoResult.data?.coverUrl?.let { url ->
+                                runCatching { applicationContext.getBitmapFromUrl(url) }.getOrNull()
+                            }
+                        } else null
+
+                        applicationContext.showNotification(
+                            notificationId = animeId,
+                            channelId = DEFAULT_CHANNEL_ID,
+                            title = title,
+                            text = text,
+                            largeIcon = largeIcon,
+                            pendingIntent = pendingIntent,
+                            group = "reminders"
+                        )
+
+                        defaultPreferencesRepository.setLastNotifiedEpisode(animeId, maxAvailable)
+                    }
+                }
+            }
         }
     }
 

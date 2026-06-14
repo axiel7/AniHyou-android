@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.stream.ui.browse
 
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -82,6 +84,7 @@ fun StreamBrowseView(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var searchActive by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullToRefreshState()
 
     Column(modifier = modifier.fillMaxSize()) {
         // ── Search bar ────────────────────────────────────────────────────────
@@ -117,57 +120,61 @@ fun StreamBrowseView(
         }
 
         // ── Main content ──────────────────────────────────────────────────────
-        if (state.isLoading && state.spotlight.isEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Continue watching skeleton
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        PulsePlaceholder(Modifier.width(130.dp).height(20.dp))
-                        Spacer(Modifier.height(12.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            repeat(3) {
-                                Column(Modifier.width(110.dp)) {
-                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
-                                    Spacer(Modifier.height(6.dp))
-                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+        PullToRefreshBox(
+            isRefreshing = state.isLoading,
+            onRefresh = { viewModel.loadHome() },
+            state = pullRefreshState,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (state.isLoading && state.spotlight.isEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Continue watching skeleton
+                    item {
+                        Column(Modifier.padding(horizontal = 16.dp)) {
+                            PulsePlaceholder(Modifier.width(130.dp).height(20.dp))
+                            Spacer(Modifier.height(12.dp))
+                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                repeat(3) {
+                                    Column(Modifier.width(110.dp)) {
+                                        PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                        Spacer(Modifier.height(6.dp))
+                                        PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Spotlight skeleton
+                    item {
+                        Column(Modifier.padding(horizontal = 16.dp)) {
+                            PulsePlaceholder(Modifier.width(100.dp).height(20.dp))
+                            Spacer(Modifier.height(12.dp))
+                            PulsePlaceholder(Modifier.fillMaxWidth().height(160.dp), shape = MaterialTheme.shapes.large)
+                        }
+                    }
+                    // Trending skeleton
+                    item {
+                        Column(Modifier.padding(horizontal = 16.dp)) {
+                            PulsePlaceholder(Modifier.width(120.dp).height(20.dp))
+                            Spacer(Modifier.height(12.dp))
+                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                repeat(3) {
+                                    Column(Modifier.width(110.dp)) {
+                                        PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
+                                        Spacer(Modifier.height(6.dp))
+                                        PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                // Spotlight skeleton
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        PulsePlaceholder(Modifier.width(100.dp).height(20.dp))
-                        Spacer(Modifier.height(12.dp))
-                        PulsePlaceholder(Modifier.fillMaxWidth().height(160.dp), shape = MaterialTheme.shapes.large)
-                    }
-                }
-                // Trending skeleton
-                item {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        PulsePlaceholder(Modifier.width(120.dp).height(20.dp))
-                        Spacer(Modifier.height(12.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            repeat(3) {
-                                Column(Modifier.width(110.dp)) {
-                                    PulsePlaceholder(Modifier.fillMaxWidth().aspectRatio(2f / 3f))
-                                    Spacer(Modifier.height(6.dp))
-                                    PulsePlaceholder(Modifier.fillMaxWidth().height(14.dp))
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return@Column
-        }
-
-        LazyColumn(
+            } else {
+                LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
@@ -349,6 +356,8 @@ fun StreamBrowseView(
             }
         }
     }
+}
+}
 }
 
 @Composable

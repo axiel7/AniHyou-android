@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.stream.ui.player
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -86,6 +88,15 @@ fun PlayerView(
     val context = LocalContext.current
     val okHttpClient = koinInject<OkHttpClient>(named("plain"))
     val scope = rememberCoroutineScope()
+
+    val activity = context as? Activity
+    DisposableEffect(activity) {
+        val originalOrientation = activity?.requestedOrientation ?: ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        onDispose {
+            activity?.requestedOrientation = originalOrientation
+        }
+    }
 
     // ── ExoPlayer lifecycle ───────────────────────────────────────────────────
     val exoPlayer = remember {

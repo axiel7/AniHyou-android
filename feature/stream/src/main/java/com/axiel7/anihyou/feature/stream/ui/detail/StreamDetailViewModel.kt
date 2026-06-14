@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.stream.ui.detail
 
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.state.UiState
@@ -34,6 +35,7 @@ data class StreamDetailUiState(
     val noteDialogText: String = "",
     val seasonsList: List<SeasonInfo> = emptyList(),
     val isSortAscending: Boolean = true,
+    val reminderLanguage: String? = null,
     override val isLoading: Boolean = false,
     override val error: String? = null,
 ) : UiState() {
@@ -45,6 +47,7 @@ class StreamDetailViewModel(
     private val streamRepository: StreamRepository,
     private val prefs: StreamPreferencesRepository,
     private val mediaRepository: com.axiel7.anihyou.core.domain.repository.MediaRepository,
+    private val defaultPrefs: DefaultPreferencesRepository,
 ) : UiStateViewModel<StreamDetailUiState>() {
 
     override val initialState = StreamDetailUiState()
@@ -88,6 +91,12 @@ class StreamDetailViewModel(
         }
 
         viewModelScope.launch {
+            defaultPrefs.getReminderLanguage(animeId).collect { lang ->
+                mutableUiState.update { it.copy(reminderLanguage = lang) }
+            }
+        }
+
+        viewModelScope.launch {
             // Load info and episodes in parallel
             launch {
                 when (val r = streamRepository.getAnimeInfo(animeId)) {
@@ -121,6 +130,13 @@ class StreamDetailViewModel(
             }
 
             mutableUiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    fun setReminder(language: String?) {
+        val animeId = mutableUiState.value.animeId
+        viewModelScope.launch {
+            defaultPrefs.setEpisodeReminder(animeId, language)
         }
     }
 

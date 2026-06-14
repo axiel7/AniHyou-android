@@ -26,6 +26,7 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.ColorUtils.hexToString
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
 
 class DefaultPreferencesRepository (
     private val dataStore: DataStore<Preferences>
@@ -314,6 +315,50 @@ class DefaultPreferencesRepository (
         dataStore.setValue(USE_IN_APP_BROWSER_KEY, value)
     }
 
+    // Reminders
+    val episodeReminders = dataStore.getValue(key = EPISODE_REMINDERS_KEY, default = "")
+
+    suspend fun setEpisodeReminder(animeId: Int, language: String?) {
+        dataStore.edit { prefs ->
+            val raw = prefs[EPISODE_REMINDERS_KEY] ?: ""
+            val current = raw.split(",")
+                .filter { it.isNotBlank() }
+                .mapNotNull {
+                    val parts = it.split(":")
+                    if (parts.size == 2) parts[0].toIntOrNull() to parts[1] else null
+                }.toMap().toMutableMap()
+
+            if (language == null) {
+                current.remove(animeId)
+            } else {
+                current[animeId] = language
+            }
+
+            prefs[EPISODE_REMINDERS_KEY] = current.map { "${it.key}:${it.value}" }.joinToString(",")
+        }
+    }
+
+    fun getReminderLanguage(animeId: Int): Flow<String?> {
+        return episodeReminders.map { raw ->
+            raw.split(",")
+                .filter { it.isNotBlank() }
+                .mapNotNull {
+                    val parts = it.split(":")
+                    if (parts.size == 2) parts[0].toIntOrNull() to parts[1] else null
+                }.firstOrNull { it.first == animeId }?.second
+        }
+    }
+
+    fun getLastNotifiedEpisode(animeId: Int): Flow<Int> {
+        val key = intPreferencesKey("last_notified_ep_$animeId")
+        return dataStore.data.map { it[key] ?: 0 }
+    }
+
+    suspend fun setLastNotifiedEpisode(animeId: Int, episodeNumber: Int) {
+        val key = intPreferencesKey("last_notified_ep_$animeId")
+        dataStore.edit { it[key] = episodeNumber }
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -350,5 +395,6 @@ class DefaultPreferencesRepository (
         private val ANILIST_CLIENT_ID_KEY = stringPreferencesKey("anilist_client_id")
         private val AUDIO_LANGUAGE_KEY = stringPreferencesKey("audio_language")
         private val USE_IN_APP_BROWSER_KEY = booleanPreferencesKey("use_in_app_browser")
+        private val EPISODE_REMINDERS_KEY = stringPreferencesKey("episode_reminders")
     }
 }

@@ -4,6 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.MediaListRepository
+import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.feature.stream.data.model.SkipInterval
 import com.axiel7.anihyou.feature.stream.data.model.StreamSource
 import com.axiel7.anihyou.feature.stream.data.model.StreamSourcesResponse
@@ -25,7 +28,7 @@ data class PlayerUiState(
     // Sources
     val sourcesResponse: StreamSourcesResponse? = null,
     val hlsSources: List<StreamSource> = emptyList(),
-    val selectedQuality: String = "1080p",
+    val selectedQuality: String = "auto",
     val activeStreamUrl: String? = null,
     val activeReferer: String? = null,
     val subtitles: List<Subtitle> = emptyList(),
@@ -60,6 +63,8 @@ data class PlayerUiState(
 class PlayerViewModel(
     private val streamRepository: StreamRepository,
     private val prefs: StreamPreferencesRepository,
+    private val mediaListRepository: MediaListRepository,
+    private val defaultPrefs: DefaultPreferencesRepository,
 ) : UiStateViewModel<PlayerUiState>() {
 
     override val initialState = PlayerUiState()
@@ -108,16 +113,72 @@ class PlayerViewModel(
         category: String,
         slug: String,
     ) {
-        when (val result = streamRepository.getSources(provider, animeId, category, slug)) {
+        val success = tryFetchSources(provider, animeId, category, slug)
+        if (success) return
+
+        // Provider fallback chain: Fetch the episode list first
+        when (val epResult = streamRepository.getEpisodes(animeId)) {
+            is DataResult.Success -> {
+                val epData = epResult.data
+                val otherProviders = epData.providers.keys.filter { it != provider }
+                for (fallbackProvider in otherProviders) {
+                    val providerData = epData.providers[fallbackProvider] ?: continue
+                    val epList = if (category == "dub") providerData.episodes.dub else providerData.episodes.sub
+                    val targetEp = epList.firstOrNull { it.number == mutableUiState.value.episodeNumber }
+                    if (targetEp != null) {
+                        val fallbackSuccess = tryFetchSources(fallbackProvider, animeId, category, targetEp.id)
+                        if (fallbackSuccess) {
+                            mutableUiState.update {
+                                it.copy(
+                                    provider = fallbackProvider,
+                                    episodeSlug = targetEp.id
+                                )
+                            }
+                            return
+                        }
+                    }
+                }
+                mutableUiState.update {
+                    it.copy(error = "All providers failed to load stream source", isLoading = false)
+                }
+            }
+            is DataResult.Error -> {
+                mutableUiState.update {
+                    it.copy(error = "Failed to load stream: ${epResult.message}", isLoading = false)
+                }
+            }
+            else -> {
+                mutableUiState.update {
+                    it.copy(error = "Failed to load stream sources", isLoading = false)
+                }
+            }
+        }
+    }
+
+    private suspend fun tryFetchSources(
+        provider: String,
+        animeId: Int,
+        category: String,
+        slug: String,
+    ): Boolean {
+        return when (val result = streamRepository.getSources(provider, animeId, category, slug)) {
             is DataResult.Success -> {
                 val response = result.data
                 val hlsSources = response.streams.filter { it.type == "hls" }
-                val qualities = hlsSources.mapNotNull { it.quality }.distinct()
+                if (hlsSources.isEmpty()) return false
+
+                val qualities = (listOf("auto") + hlsSources.mapNotNull { it.quality }.filter { it != "auto" }).distinct()
 
                 val preferred = mutableUiState.value.selectedQuality
-                val bestSource = hlsSources.firstOrNull { it.quality == preferred }
-                    ?: hlsSources.firstOrNull { it.isActive }
-                    ?: hlsSources.firstOrNull()
+                val bestSource = if (preferred == "auto") {
+                    hlsSources.firstOrNull { it.quality == "auto" }
+                        ?: hlsSources.firstOrNull { it.isActive }
+                        ?: hlsSources.firstOrNull()
+                } else {
+                    hlsSources.firstOrNull { it.quality == preferred }
+                        ?: hlsSources.firstOrNull { it.isActive }
+                        ?: hlsSources.firstOrNull()
+                }
 
                 mutableUiState.update { state ->
                     state.copy(
@@ -130,21 +191,26 @@ class PlayerViewModel(
                         intro = response.intro,
                         outro = response.outro,
                         isLoading = false,
+                        error = null,
                     )
                 }
+                true
             }
-            is DataResult.Error -> mutableUiState.update {
-                it.copy(error = result.message, isLoading = false)
-            }
-            else -> {}
+            else -> false
         }
     }
 
     // ── Quality selection ─────────────────────────────────────────────────────
 
     fun selectQuality(quality: String) {
-        val source = mutableUiState.value.hlsSources.firstOrNull { it.quality == quality }
-            ?: return
+        val source = if (quality == "auto") {
+            mutableUiState.value.hlsSources.firstOrNull { it.quality == "auto" }
+                ?: mutableUiState.value.hlsSources.firstOrNull { it.isActive }
+                ?: mutableUiState.value.hlsSources.firstOrNull()
+        } else {
+            mutableUiState.value.hlsSources.firstOrNull { it.quality == quality }
+        }
+        if (source == null) return
         viewModelScope.launch { prefs.setPreferredQuality(quality) }
         mutableUiState.update {
             it.copy(
@@ -216,6 +282,20 @@ class PlayerViewModel(
             prefs.markEpisodeWatched(state.animeId, state.episodeNumber)
             // Clear resume position when episode completes
             prefs.saveProgress(state.animeId, state.episodeNumber + 1, 0L)
+            
+            // Sync progress to AniList if the user is authenticated
+            if (defaultPrefs.accessToken.first() != null) {
+                val status = if (state.totalEpisodes > 0 && state.episodeNumber >= state.totalEpisodes) {
+                    MediaListStatus.COMPLETED
+                } else {
+                    MediaListStatus.CURRENT
+                }
+                mediaListRepository.updateEntry(
+                    mediaId = state.animeId,
+                    progress = state.episodeNumber,
+                    status = status
+                ).first { it !is DataResult.Loading }
+            }
         }
     }
 
@@ -245,3 +325,4 @@ class PlayerViewModel(
         viewModelScope.launch { prefs.setAutoSkipOutro(new) }
     }
 }
+
