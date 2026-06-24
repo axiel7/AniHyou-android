@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.network.NetworkVariables
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.startRemoteActivity
 import com.materialkolor.PaletteStyle
@@ -48,6 +49,10 @@ class MainViewModel(
     }
 
     val blurAdultContent = defaultPreferencesRepository.blurAdult
+
+    val scoreFormat = defaultPreferencesRepository.scoreFormat.map {
+        it ?: ScoreFormat.POINT_10_DECIMAL
+    }
 
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {

@@ -14,13 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import com.axiel7.anihyou.core.common.utils.NumberUtils.formatPositiveValueOrUnknown
-import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.model.point10DecimalOnPrimaryColor
 import com.axiel7.anihyou.core.model.point10DecimalPrimaryColor
 import com.axiel7.anihyou.core.model.scoreOnPrimaryColor
@@ -28,8 +28,8 @@ import com.axiel7.anihyou.core.model.scorePrimaryColor
 import com.axiel7.anihyou.core.model.smileyIcon
 import com.axiel7.anihyou.core.model.smileyOnPrimaryColor
 import com.axiel7.anihyou.core.model.smileyPrimaryColor
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
-import java.util.Locale
 
 @Composable
 fun BadgeScoreIndicator(
@@ -54,7 +54,7 @@ fun BadgeScoreIndicator(
                 )
                 Text(
                     text = if (score != null && score != 0.0)
-                        String.format(Locale.getDefault(), "%.0f", score)
+                        String.format(LocalLocale.current.platformLocale, "%.0f", score)
                     else UNKNOWN_CHAR,
                     color = score.scoreOnPrimaryColor(format = scoreFormat),
                     fontSize = 14.sp
@@ -122,7 +122,7 @@ fun MinimalScoreIndicator(
                 )
                 Text(
                     text = if (score != null && score != 0.0) String.format(
-                        Locale.getDefault(),
+                        LocalLocale.current.platformLocale,
                         "%.0f",
                         score
                     ) else UNKNOWN_CHAR,

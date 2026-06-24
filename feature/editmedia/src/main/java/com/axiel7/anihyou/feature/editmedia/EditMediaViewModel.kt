@@ -17,7 +17,6 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -315,13 +314,6 @@ class EditMediaViewModel(
     }
 
     init {
-        defaultPreferencesRepository.scoreFormat
-            .filterNotNull()
-            .onEach { value ->
-                mutableUiState.update { it.copy(scoreFormat = value) }
-            }
-            .launchIn(viewModelScope)
-
         defaultPreferencesRepository.advancedScoringEnabled
             .onEach { value ->
                 mutableUiState.update { it.copy(advancedScoringEnabled = value) }

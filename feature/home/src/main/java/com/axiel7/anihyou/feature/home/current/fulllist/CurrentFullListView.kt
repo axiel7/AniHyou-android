@@ -110,7 +110,6 @@ private fun CurrentFullListContent(
         SetScoreDialog(
             onDismiss = { event?.toggleSetScoreDialog(false) },
             onConfirm = { event?.setScore(it) },
-            scoreFormat = uiState.scoreFormat,
         )
     }
 
@@ -150,7 +149,6 @@ private fun CurrentFullListContent(
                     CurrentListItem(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
-                        scoreFormat = uiState.scoreFormat,
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onClickPlus = { increment ->

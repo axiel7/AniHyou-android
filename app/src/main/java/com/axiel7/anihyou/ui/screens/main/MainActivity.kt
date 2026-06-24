@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.LocalScoreFormat
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.resources.dark_scrim
 import com.axiel7.anihyou.core.resources.light_scrim
@@ -80,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
         val initialBlurAdult = viewModel.blurAdultContent.firstBlocking()
+        val initialScoreFormat = viewModel.scoreFormat.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
 
@@ -98,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             val paletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialPaletteStyle)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
             val blurAdultContent by viewModel.blurAdultContent.collectAsStateWithLifecycle(initialBlurAdult)
+            val scoreFormat by viewModel.scoreFormat.collectAsStateWithLifecycle(initialScoreFormat)
 
             DisposableEffect(isDark) {
                 enableEdgeToEdge(
@@ -124,7 +127,10 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CompositionLocalProvider(LocalBlurAdult provides blurAdultContent) {
+                    CompositionLocalProvider(
+                        LocalBlurAdult provides blurAdultContent,
+                        LocalScoreFormat provides scoreFormat
+                    ) {
                         MainView(
                             windowSizeClass = windowSizeClass,
                             isLoggedIn = isLoggedIn,

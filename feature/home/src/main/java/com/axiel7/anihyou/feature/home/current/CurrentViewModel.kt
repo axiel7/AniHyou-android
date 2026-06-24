@@ -139,13 +139,6 @@ class CurrentViewModel(
     }
 
     init {
-        defaultPreferencesRepository.scoreFormat
-            .filterNotNull()
-            .onEach { value ->
-                mutableUiState.update { it.copy(scoreFormat = value) }
-            }
-            .launchIn(viewModelScope)
-
         // anime
         mutableUiState
             .distinctUntilChanged { _, new ->

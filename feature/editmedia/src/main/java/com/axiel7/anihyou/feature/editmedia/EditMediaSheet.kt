@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
+import com.axiel7.anihyou.core.model.LocalScoreFormat
 import com.axiel7.anihyou.core.model.canUseAdvancedScoring
 import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.model.media.duration
@@ -122,6 +123,7 @@ private fun EditMediaSheetContent(
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
+    val scoreFormat = LocalScoreFormat.current
     val haptic = LocalHapticFeedback.current
     val datePickerState = rememberDatePickerState()
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -282,10 +284,10 @@ private fun EditMediaSheetContent(
                 contentAlignment = Alignment.Center
             ) {
                 ScoreView(
-                    format = uiState.scoreFormat,
+                    format = scoreFormat,
                     rating = uiState.score,
                     onRatingChanged = { event?.onChangeScore(it) },
-                    modifier = when (uiState.scoreFormat) {
+                    modifier = when (scoreFormat) {
                         ScoreFormat.POINT_10,
                         ScoreFormat.POINT_10_DECIMAL,
                         ScoreFormat.POINT_100 -> Modifier.padding(top = 8.dp, end = 16.dp)
@@ -397,10 +399,10 @@ private fun EditMediaSheetContent(
                 )
             }
 
-            if (uiState.scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
+            if (scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
                 uiState.advancedScoresNames.forEach { score ->
                     RatingView(
-                        maxValue = uiState.scoreFormat.maxValue(),
+                        maxValue = scoreFormat.maxValue(),
                         modifier = Modifier
                             .padding(top = 8.dp, end = 8.dp),
                         label = score,

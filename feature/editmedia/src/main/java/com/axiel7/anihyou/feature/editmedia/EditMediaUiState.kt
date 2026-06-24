@@ -3,19 +3,17 @@ package com.axiel7.anihyou.feature.editmedia
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
-import com.axiel7.anihyou.core.network.type.ScoreFormat
-import com.axiel7.anihyou.core.base.state.UiState
 import java.time.LocalDate
 
 @Immutable
 data class EditMediaUiState(
     val mediaDetails: BasicMediaDetails? = null,
     val listEntry: BasicMediaListEntry? = null,
-    val scoreFormat: ScoreFormat = ScoreFormat.POINT_10_DECIMAL,
     val advancedScoringEnabled: Boolean = false,
 
     val status: MediaListStatus? = null,

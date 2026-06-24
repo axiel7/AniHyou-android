@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
+import com.axiel7.anihyou.core.model.LocalScoreFormat
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
-import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
@@ -45,13 +45,13 @@ import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 fun CurrentListItem(
     modifier: Modifier = Modifier,
     item: CommonMediaListEntry,
-    scoreFormat: ScoreFormat,
     isPlusEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
     blockPlus: () -> Unit,
 ) {
+    val scoreFormat = LocalScoreFormat.current
     val blurAdult = LocalBlurAdult.current
     ListItem(
         onClick = onClick,
@@ -177,7 +177,6 @@ private fun CurrentListItemPreview() {
             Column {
                 CurrentListItem(
                     item = exampleCommonMediaListEntry,
-                    scoreFormat = ScoreFormat.POINT_10_DECIMAL,
                     isPlusEnabled = true,
                     onClick = {},
                     onLongClick = {},

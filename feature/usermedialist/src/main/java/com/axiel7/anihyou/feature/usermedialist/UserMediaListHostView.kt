@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.usermedialist
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -118,7 +115,6 @@ private fun UserMediaListHostContent(
         SetScoreDialog(
             onDismiss = { event?.toggleScoreDialog(false) },
             onConfirm = { event?.setScore(it) },
-            scoreFormat = uiState.scoreFormat,
         )
     }
 

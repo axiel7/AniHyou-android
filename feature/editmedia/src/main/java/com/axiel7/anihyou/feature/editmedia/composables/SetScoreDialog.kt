@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
@@ -22,7 +21,6 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 fun SetScoreDialog(
     onDismiss: () -> Unit,
     onConfirm: (Double?) -> Unit,
-    scoreFormat: ScoreFormat,
     modifier: Modifier = Modifier
 ) {
     var score by remember { mutableStateOf<Double?>(null) }
@@ -48,7 +46,6 @@ fun SetScoreDialog(
                 contentAlignment = Alignment.Center
             ) {
                 ScoreView(
-                    format = scoreFormat,
                     rating = score,
                     onRatingChanged = { score = it },
                 )
@@ -64,7 +61,6 @@ private fun SetScoreDialogPreview() {
         SetScoreDialog(
             onDismiss = {},
             onConfirm = {},
-            scoreFormat = ScoreFormat.POINT_100
         )
     }
 }
