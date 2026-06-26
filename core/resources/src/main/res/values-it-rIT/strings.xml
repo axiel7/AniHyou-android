@@ -273,6 +273,7 @@
     <string name="update_interval">Intervallo aggiornamento</string>
     <string name="airing_anime_notifications">Notifiche di anime in onda</string>
     <string name="color">Colore</string>
+    <string name="color_palette">Schema colori</string>
     <string name="discover">Scopri</string>
     <string name="default_home_tab">Scheda Home predefinita</string>
     <string name="text_status">Stato del testo</string>
@@ -349,6 +350,7 @@
     <string name="staff_role_animation_supervisor">Supervisore dell\'animazione</string>
     <string name="staff_role_animation">Animazione</string>
     <string name="staff_role_art">Opere</string>
+    <string name="staff_role_art_board">Pannello d\'arte</string>
     <string name="staff_role_art_composition">Composizione artistica</string>
     <string name="staff_role_art_design">Design artistico</string>
     <string name="staff_role_art_director">Direttore artistico</string>
@@ -365,13 +367,17 @@
     <string name="staff_role_assistant_production_manager">Assistente del direttore di produzione</string>
     <string name="staff_role_assistant_unit_director">Assistente del direttore dell\'unità</string>
     <string name="staff_role_associate_producer">Produttore associato</string>
+    <string name="staff_role_background_art">Immagine sfondo</string>
+    <string name="staff_role_background_art_assistance">Assistenza per l\'immagine di sfondo</string>
     <string name="staff_role_background_manager">Responsabile sfondi</string>
+    <string name="staff_role_background_production">Produzione sfondo</string>
     <string name="staff_role_3dcg">3DCG</string>
     <string name="staff_role_3d_art">Opere 3D</string>
     <string name="staff_role_3d_works">Lavori 3D</string>
     <string name="staff_role_cg_animation_director">Direttore Animazione CG</string>
     <string name="staff_role_cg_animation">Animazione CG</string>
     <string name="staff_role_cg_assistant_director">Assistente Direttore CG</string>
+    <string name="staff_role_cg_background_modeling">Modellazione dello sfondo in CG</string>
     <string name="staff_role_cg_director">Direttore CG</string>
     <string name="staff_role_cg_layout">Layout CG</string>
     <string name="staff_role_cg_modeling_director">Direttore della modellazione CG</string>
@@ -399,8 +405,13 @@
     <string name="staff_role_cover_illustration">Illustrazione di copertina</string>
     <string name="staff_role_creature_design">Design delle creature</string>
     <string name="staff_role_design_assistance">Assistenza al design</string>
+    <string name="staff_role_design_works">Opere di design</string>
     <string name="staff_role_2d_design">Design 2D</string>
     <string name="staff_role_2d_works">Lavori 2D</string>
+    <string name="staff_role_digital_animation">Animazione digitale</string>
+    <string name="staff_role_digital_art">Arte digitale</string>
+    <string name="staff_role_digital_coloring">Colorazione digitale</string>
+    <string name="staff_role_digital_optical_recording">Registrazione ottica digitale</string>
     <string name="staff_role_digital_paint">Disegno digitale</string>
     <string name="staff_role_digital_photography">Fotografia digitale</string>
     <string name="staff_role_digital_production_assistant">Assistenza della produzione digitale</string>
@@ -418,10 +429,16 @@
     <string name="staff_role_episode_director_ed">Direttore episodi (ED)</string>
     <string name="staff_role_executive_producer">Produttore esecutivo</string>
     <string name="staff_role_executive_supervisor">Supervisore esecutivo</string>
+    <string name="staff_role_finishing_assistance">Assistenza alla finitura</string>
+    <string name="staff_role_finishing_check">Controllo di finitura</string>
     <string name="staff_role_finishing_manager">Responsabile rifiniture</string>
+    <string name="staff_role_finishing_production">Produzione finitura</string>
     <string name="staff_role_finishing">Rifiniture</string>
     <string name="staff_role_illustration">Illustrazione</string>
     <string name="staff_role_hd_editing">Editing HD</string>
+    <string name="staff_role_in_between_animation_assistance">Assistenza per le animazioni intermezzo</string>
+    <string name="staff_role_in_between_animation">Animazione intermezzo</string>
+    <string name="staff_role_in_betweens_check">Controllo intermezzi</string>
     <string name="staff_role_in_betweens_manager">Responsabile intermezzi</string>
     <string name="staff_role_key_animation">Animazioni chiave</string>
     <string name="staff_role_1st_key_animation">Direttore principale d\'animazione</string>
@@ -469,6 +486,14 @@
     <string name="staff_role_sound_producer">Produttore del suono</string>
     <string name="staff_role_sound_production_manager">Responsabile produzione audio</string>
     <string name="staff_role_sound_production">Produzione del suono</string>
+    <string name="staff_role_translator">Traduttore</string>
+    <string name="staff_role_unit_director">Direttore dell\'unità</string>
+    <string name="staff_role_video_editing">Editing video</string>
+    <string name="staff_role_visual_coordinator">Coordinatore visivo</string>
+    <string name="staff_role_visual_director">Direttore visivo</string>
+    <string name="staff_role_visual_effects">Effetti visivi</string>
+    <string name="staff_role_world_design">Design del mondo</string>
+    <string name="staff_role_weapon_design">Design dell\'arma</string>
     <string name="hide_filters">Nascondi filtri</string>
     <string name="more_filters">Altri filtri</string>
     <string name="is_adult">Adulto</string>
@@ -534,4 +559,10 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="login_required_in_phone">Per utilizzare questa app devi prima effettuare l\'accesso aprendo l\'app AniHyou installata sul tuo telefono</string>
+    <string name="app_installed_required">Non è stato rilevato alcun dispositivo nelle vicinanze, si prega di installare l\'ultima versione dell\'app AniHyou sul proprio telefono Android</string>
+    <string name="minimum_tag_percentage">Percentuale minima di tag</string>
+    <string name="search_my_list">Cerca nella mia lista…</string>
+    <string name="notifications_submission">Richiesta</string>
+    <string name="translator_app">Traduttore</string>
+    <string name="blur_adult_content">Sfocatura media per adulti</string>
 </resources>
