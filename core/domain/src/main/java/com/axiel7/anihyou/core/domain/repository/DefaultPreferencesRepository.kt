@@ -301,6 +301,13 @@ class DefaultPreferencesRepository (
         dataStore.setValue(TRANSLATOR_APP_KEY, value.name)
     }
 
+    val hideScores = dataStore.getValue(HIDE_SCORES_KEY, default = false)
+
+    suspend fun setHideScores(value: Boolean) {
+        dataStore.setValue(HIDE_SCORES_KEY, value)
+    }
+
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -336,5 +343,6 @@ class DefaultPreferencesRepository (
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
 
         private val TRANSLATOR_APP_KEY = stringPreferencesKey("translator_app")
+        private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
     }
 }

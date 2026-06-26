@@ -54,6 +54,8 @@ class MainViewModel(
         it ?: ScoreFormat.POINT_10_DECIMAL
     }
 
+    val hideScores = defaultPreferencesRepository.hideScores
+
     override fun saveLastTab(index: Int) {
         viewModelScope.launch {
             defaultPreferencesRepository.setLastTab(index)

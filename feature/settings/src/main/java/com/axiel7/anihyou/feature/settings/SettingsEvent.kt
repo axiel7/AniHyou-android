@@ -50,6 +50,8 @@ interface SettingsEvent : UiEvent {
 
     fun setBlurAdultContent(value: Boolean)
 
+    fun setHideScores(value: Boolean)
+
     fun setTranslatorApp(value: TranslatorApp)
 
     fun setTitleLanguage(value: UserTitleLanguage)

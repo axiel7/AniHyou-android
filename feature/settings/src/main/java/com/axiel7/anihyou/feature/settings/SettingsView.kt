@@ -281,6 +281,13 @@ private fun SettingsContent(
                 )
 
                 SwitchPreference(
+                    title = stringResource(R.string.hide_scores),
+                    preferenceValue = uiState.hideScores,
+                    icon = R.drawable.star_half_24,
+                    onValueChange = { event?.setHideScores(it) }
+                )
+
+                SwitchPreference(
                     title = stringResource(R.string.airing_on_my_list),
                     preferenceValue = uiState.airingOnMyList,
                     subtitle = stringResource(R.string.airing_on_my_list_summary),

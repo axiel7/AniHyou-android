@@ -44,18 +44,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
-import com.axiel7.anihyou.core.model.LocalScoreFormat
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.resources.dark_scrim
 import com.axiel7.anihyou.core.resources.light_scrim
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.isBottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalHideScores
+import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
 import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
 import kotlinx.coroutines.runBlocking
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
         val initialBlurAdult = viewModel.blurAdultContent.firstBlocking()
         val initialScoreFormat = viewModel.scoreFormat.firstBlocking()
+        val initialHideScores = viewModel.hideScores.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
 
@@ -101,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
             val blurAdultContent by viewModel.blurAdultContent.collectAsStateWithLifecycle(initialBlurAdult)
             val scoreFormat by viewModel.scoreFormat.collectAsStateWithLifecycle(initialScoreFormat)
+            val hideScores by viewModel.hideScores.collectAsStateWithLifecycle(initialHideScores)
 
             DisposableEffect(isDark) {
                 enableEdgeToEdge(
@@ -129,7 +132,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     CompositionLocalProvider(
                         LocalBlurAdult provides blurAdultContent,
-                        LocalScoreFormat provides scoreFormat
+                        LocalScoreFormat provides scoreFormat,
+                        LocalHideScores provides hideScores,
                     ) {
                         MainView(
                             windowSizeClass = windowSizeClass,

@@ -70,6 +70,7 @@ import com.axiel7.anihyou.core.model.media.siteUrlWithTitle
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalHideScores
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
@@ -88,6 +89,7 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.core.ui.utils.StringUtils.htmlDecoded
@@ -147,6 +149,8 @@ private fun MediaDetailsContent(
         }
     }
     val isCurrentLanguageEn = LocalIsLanguageEn.current
+    val hideScores = LocalHideScores.current
+    var showScores by rememberSaveable { mutableStateOf(false) }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
@@ -338,6 +342,9 @@ private fun MediaDetailsContent(
                 TextSubtitleVertical(
                     text = "${uiState.details?.meanScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.mean_score),
+                    modifier = Modifier
+                        .clickable { showScores = !showScores }
+                        .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
                 VerticalDivider(
@@ -348,6 +355,9 @@ private fun MediaDetailsContent(
                 TextSubtitleVertical(
                     text = "${uiState.details?.averageScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.average_score),
+                    modifier = Modifier
+                        .clickable { showScores = !showScores }
+                        .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
                 VerticalDivider(

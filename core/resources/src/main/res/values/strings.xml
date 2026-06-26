@@ -651,4 +651,5 @@
     <string name="deepl" translatable="false">DeepL</string>
     <string name="translate_you" translatable="false">TranslateYou</string>
     <string name="blur_adult_content">Blur adult media</string>
+    <string name="hide_scores">Hide scores</string>
 </resources>

@@ -32,6 +32,7 @@ data class SettingsUiState(
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val userSettings: UserSettings? = null,
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
+    val hideScores: Boolean = false,
     val isLoggedIn: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = false,

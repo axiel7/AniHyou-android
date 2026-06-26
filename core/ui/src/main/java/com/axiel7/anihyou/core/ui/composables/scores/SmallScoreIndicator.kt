@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalHideScores
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable
@@ -25,23 +26,25 @@ fun SmallScoreIndicator(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 14.sp,
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.star_filled_20),
-            contentDescription = stringResource(R.string.mean_score),
-            modifier = Modifier.padding(bottom = 2.dp),
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Text(
-            text = "${score.format()}%",
-            modifier = Modifier.padding(horizontal = 4.dp),
-            color = MaterialTheme.colorScheme.outline,
-            fontSize = fontSize,
-            lineHeight = fontSize,
-        )
+    if (!LocalHideScores.current) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.star_filled_20),
+                contentDescription = stringResource(R.string.mean_score),
+                modifier = Modifier.padding(bottom = 2.dp),
+                tint = MaterialTheme.colorScheme.outline
+            )
+            Text(
+                text = "${score.format()}%",
+                modifier = Modifier.padding(horizontal = 4.dp),
+                color = MaterialTheme.colorScheme.outline,
+                fontSize = fontSize,
+                lineHeight = fontSize,
+            )
+        }
     }
 }
 
