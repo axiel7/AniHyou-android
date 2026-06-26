@@ -19,7 +19,7 @@ class MalApi(
             .url("${MAL_API_URL}anime/$id?fields=$fields")
             .build()
         return try {
-            client.newCall(request).execute().body?.string()?.let {
+            client.newCall(request).execute().body.string().let {
                 json.decodeFromString(it)
             }
         } catch (_: Exception) {
