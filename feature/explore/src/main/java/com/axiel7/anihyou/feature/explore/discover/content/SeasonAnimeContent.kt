@@ -12,13 +12,13 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_ITEM_VERTICAL_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
-import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 
 @Composable
 fun SeasonAnimeContent(

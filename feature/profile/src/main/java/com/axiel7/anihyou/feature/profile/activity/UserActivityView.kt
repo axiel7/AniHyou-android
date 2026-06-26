@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.UserActivityQuery
 import com.axiel7.anihyou.core.network.type.ActivityType
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ImageUtils.LocalBlurAdult
 import com.axiel7.anihyou.feature.profile.ProfileEvent
 import com.axiel7.anihyou.feature.profile.ProfileUiState
 

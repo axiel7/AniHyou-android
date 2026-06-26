@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.model.character.genderLocalized
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.composables.InfoItemView
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
@@ -39,7 +40,6 @@ import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_BIG
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
-import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsUiState
 
 @OptIn(ExperimentalFoundationApi::class)

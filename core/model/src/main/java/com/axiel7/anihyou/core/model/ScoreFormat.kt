@@ -3,7 +3,6 @@ package com.axiel7.anihyou.core.model
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
@@ -74,8 +73,6 @@ fun ScoreFormat.stringRes() = when (this) {
 
 val ScoreFormat.Companion.entriesLocalized
     get() = knownEntries.associateWith { it.stringRes() }
-
-val LocalScoreFormat = staticCompositionLocalOf { ScoreFormat.POINT_10_DECIMAL }
 
 @Composable
 fun Double?.scorePrimaryColor(format: ScoreFormat): Color {

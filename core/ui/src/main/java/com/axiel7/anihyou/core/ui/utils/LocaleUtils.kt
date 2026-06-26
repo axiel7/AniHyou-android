@@ -2,7 +2,6 @@ package com.axiel7.anihyou.core.ui.utils
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.core.os.LocaleListCompat
 import com.axiel7.anihyou.core.resources.R
 import org.xmlpull.v1.XmlPullParser
@@ -61,10 +60,6 @@ object LocaleUtils {
         AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag().orEmpty()
 
     fun getCurrentLanguageTag() = LocaleListCompat.getAdjustedDefault()[0]?.toLanguageTag()
-
-    val LocalIsLanguageEn = staticCompositionLocalOf {
-        getCurrentLanguageTag()?.startsWith("en") == true
-    }
 
     fun setDefaultLocale(locale: String) {
         val localeList = if (locale.isEmpty()) LocaleListCompat.getEmptyLocaleList()

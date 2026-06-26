@@ -2,9 +2,9 @@ package com.axiel7.anihyou.feature.editmedia.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.axiel7.anihyou.core.model.LocalScoreFormat
 import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.network.type.ScoreFormat
+import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.composables.scores.FiveStarRatingView
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.scores.SmileyRatingView
