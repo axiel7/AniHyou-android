@@ -22,6 +22,7 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 
 class MediaListApi(
     private val client: ApolloClient
@@ -50,6 +51,7 @@ class MediaListApi(
         mediaType: MediaType,
         statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
+        scoreFormat: ScoreFormat,
         fetchFromNetwork: Boolean,
         page: Int?,
         perPage: Int?,
@@ -60,6 +62,7 @@ class MediaListApi(
                 type = Optional.present(mediaType),
                 statusIn = Optional.presentIfNotNull(statusIn),
                 sort = Optional.present(sort),
+                scoreFormat = Optional.present(scoreFormat),
                 page = Optional.presentIfNotNull(page),
                 perPage = Optional.presentIfNotNull(perPage),
             )

@@ -20,6 +20,7 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,14 +54,23 @@ class MediaListRepository (
         mediaType: MediaType,
         statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
+        scoreFormat: ScoreFormat,
         fetchFromNetwork: Boolean = false,
         page: Int?,
         perPage: Int? = 25,
     ) = api
-        .userMediaList(userId, mediaType, statusIn, sort, fetchFromNetwork, page, perPage)
+        .userMediaList(userId, mediaType, statusIn, sort, scoreFormat, fetchFromNetwork, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+            data.Page?.mediaList?.mapNotNull {
+                // this is needed because of a bug in the AniList API
+                // that sometimes returns the score in another format if we don't explicit send it
+                it?.commonMediaListEntry?.copy(
+                    basicMediaListEntry = it.commonMediaListEntry.basicMediaListEntry.copy(
+                        score = it.scoreFixed
+                    )
+                )
+            }.orEmpty()
         }
 
     fun getMySeasonalAnime(

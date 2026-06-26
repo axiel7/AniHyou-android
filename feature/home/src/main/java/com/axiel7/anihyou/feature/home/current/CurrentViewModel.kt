@@ -20,6 +20,7 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -150,6 +151,7 @@ class CurrentViewModel(
                     mediaType = MediaType.ANIME,
                     statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                    scoreFormat = defaultPreferencesRepository.scoreFormat.first() ?: ScoreFormat.POINT_10_DECIMAL,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = null,
                     perPage = null,
@@ -210,6 +212,7 @@ class CurrentViewModel(
                     mediaType = MediaType.MANGA,
                     statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                    scoreFormat = defaultPreferencesRepository.scoreFormat.first() ?: ScoreFormat.POINT_10_DECIMAL,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = 1
                 )
