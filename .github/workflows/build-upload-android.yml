@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: 17
-          distribution: adopt
+          distribution: temurin
 
       - if: ${{ inputs.single_apk == true || env.BRANCH_NAME == 'develop' }}
         run: sed -i -e '/isEnable/s/true/false/' app/build.gradle.kts
