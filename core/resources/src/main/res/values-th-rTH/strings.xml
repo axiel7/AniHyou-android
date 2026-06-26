@@ -617,4 +617,5 @@
     </plurals>
     <string name="login_required_in_phone">ในการใช้แอพนี้ครั้งแรก ต้องเข้าสู่ระบบก่อน โดยเปิดแอพ AniHyou</string>
     <string name="app_installed_required">ไม่พบอุปกรณ์ใกล้เคียง โปรดติดตั้งแอป AniHyou เวอร์ชันล่าสุด</string>
+    <string name="translator_app">ผู้แปลภาษา</string>
 </resources>

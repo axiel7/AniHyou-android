@@ -287,6 +287,7 @@
     <string name="update_interval">Частота оновлення</string>
     <string name="airing_anime_notifications">Сповіщення про вихід аніме</string>
     <string name="color">Колір</string>
+    <string name="color_palette">Кольорова палітра</string>
     <string name="discover">Огляд</string>
     <string name="default_home_tab">Типове головне меню</string>
     <string name="text_status">Текстовий статус</string>
@@ -349,6 +350,7 @@
     <string name="from_year">Від року</string>
     <string name="to_year">До року</string>
     <string name="staff_role_a_and_r_producer">Директор A&amp;R</string>
+    <string name="staff_role_adr_director">Режисер дубляжу</string>
     <string name="staff_role_accessory_design">Дизайн аксесуарів</string>
     <string name="staff_role_action_animator">Аніматор динаміки</string>
     <string name="staff_role_action_director">Режисер динамічних сцен</string>
@@ -645,4 +647,7 @@
     </plurals>
     <string name="login_required_in_phone">Щоб скористатися цим додатком, вам треба авторизуватися, відкривши додаток AniHyou, встановлений на вашому телефоні</string>
     <string name="app_installed_required">Пристрої поблизу не виявлено, будь ласка, встановіть останню версію AniHyou на вашому телефоні Android</string>
+    <string name="minimum_tag_percentage">Мінімальний відсоток міток</string>
+    <string name="search_my_list">Шукати в моєму каталозі…</string>
+    <string name="translator_app">Перекладач</string>
 </resources>

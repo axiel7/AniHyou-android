@@ -280,6 +280,7 @@
     <string name="update_interval">Interval de actualizare</string>
     <string name="airing_anime_notifications">Afișarea notificărilor anime</string>
     <string name="color">Culoare</string>
+    <string name="color_palette">Paleta de culori</string>
     <string name="discover">Descoperă</string>
     <string name="default_home_tab">Fila implicită Acasă</string>
     <string name="text_status">Stare text</string>
@@ -636,4 +637,7 @@
     </plurals>
     <string name="login_required_in_phone">Pentru a utiliza această aplicație, trebuie mai întâi să vă conectați deschizând aplicația AniHyou instalată pe telefonul dvs.</string>
     <string name="app_installed_required">Nu s-a detectat niciun dispozitiv în apropiere. Instalați cea mai recentă versiune a aplicației AniHyou pe telefonul dvs. Android.</string>
+    <string name="minimum_tag_percentage">Procentul minim de etichete</string>
+    <string name="search_my_list">Caută în lista mea…</string>
+    <string name="translator_app">Traducător</string>
 </resources>

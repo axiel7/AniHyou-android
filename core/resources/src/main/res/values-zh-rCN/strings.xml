@@ -266,6 +266,7 @@
     <string name="update_interval">更新频率</string>
     <string name="airing_anime_notifications">动漫播出通知</string>
     <string name="color">颜色</string>
+    <string name="color_palette">调色板</string>
     <string name="discover">发现</string>
     <string name="default_home_tab">默认主页</string>
     <string name="text_status">用户动态</string>
@@ -618,4 +619,9 @@
     </plurals>
     <string name="login_required_in_phone">要使用这个应用，您首先需要登录并打开安装在您手机上的 AniHyou</string>
     <string name="app_installed_required">未检测到附近的设备，请在安卓手机上安装最新版本的 AniHyou</string>
+    <string name="minimum_tag_percentage">最小标签百分比</string>
+    <string name="search_my_list">搜索我的列表…</string>
+    <string name="notifications_submission">提交</string>
+    <string name="translator_app">翻译</string>
+    <string name="blur_adult_content">模糊成人内容</string>
 </resources>
