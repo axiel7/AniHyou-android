@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.explore.search
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
@@ -19,6 +20,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,6 +31,7 @@ class SearchViewModel(
     arguments: Routes.Search,
     isLoggedIn: Boolean,
     private val searchRepository: SearchRepository,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
 
     private val mediaType = arguments.mediaType?.let { MediaType.safeValueOf(it) }
@@ -198,6 +201,13 @@ class SearchViewModel(
     }
 
     init {
+        defaultPreferencesRepository.titleLanguage
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(titleLanguage = value) }
+            }
+            .launchIn(viewModelScope)
+
         // media search
         mutableUiState
             .filter { it.searchType.isSearchMedia && it.hasNextPage }
