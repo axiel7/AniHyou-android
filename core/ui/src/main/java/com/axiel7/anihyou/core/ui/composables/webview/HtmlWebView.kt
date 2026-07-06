@@ -116,6 +116,7 @@ fun baseCss(
     body {background-color: $backgroundColor;}
     h1, h2, h3, h4, h5, h6, p, div, dl, ol, ul, pre, blockquote {line-height: 170%; font-family: 'Arial' !important; color: $fontColor; }
     iframe{width:100%; height:250px;}
+    img {max-width:100%;}
     a:link {color: $linkColor;}
     A {text-decoration: none;}
     .markdown_spoiler {color: $fontColor; background-color: $fontColor;}
