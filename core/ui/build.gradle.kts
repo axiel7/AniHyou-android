@@ -66,5 +66,8 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit)
+
     debugImplementation(libs.ui.tooling)
 }
