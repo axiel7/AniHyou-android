@@ -11,4 +11,9 @@ android {
 dependencies {
     implementation(project(":feature:editmedia"))
     implementation(project(":feature:login"))
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.junit)
 }
