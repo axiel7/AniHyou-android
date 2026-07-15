@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.axiel7.anihyou.utils.DateUtils.secondsToLegibleText
-import com.axiel7.anihyou.utils.DateUtils.timestampIntervalSinceNow
+import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
