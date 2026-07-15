@@ -44,7 +44,7 @@ fun HtmlWebView(
         modifier = modifier.fillMaxWidth(),
         hardwareEnabled = hardwareEnabled,
         onCreated = { webView ->
-            webView.background = Color.TRANSPARENT.toDrawable()
+            webView.background = null
             webView.isScrollContainer = false
             webView.isVerticalScrollBarEnabled = false
             webView.settings.useWideViewPort = true
