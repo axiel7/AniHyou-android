@@ -39,7 +39,7 @@ private val translations = mapOf(
     "pl" to "xiggeush, YOGI_AOGI",
     "pt-BR" to "Crono0, Torti, Ratolino, RickyM7, SamOak",
     "ro-RO" to "alexcsy",
-    "ru" to "Ronner231, grin3671, Speech100",
+    "ru" to "Ronner231, grin3671, Speech100, venyavis",
     "es-ES" to "axiel7",
     "th" to "PiyaRawing",
     "tr" to "hsinankirdar",
