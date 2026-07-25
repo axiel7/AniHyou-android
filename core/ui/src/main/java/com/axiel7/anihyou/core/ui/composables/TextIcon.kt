@@ -155,7 +155,7 @@ fun TextSubtitleVertical(
 }
 
 @Composable
-fun UpvoteDownvoteHorizontalText (
+fun UpvoteDownvoteHorizontalText(
     ratingText: String,
     isUpvoted: Boolean,
     isDownvoted: Boolean,
