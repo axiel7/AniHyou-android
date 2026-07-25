@@ -27,7 +27,9 @@ fragment MediaRelated on MediaEdge {
 }
 
 fragment MediaRecommended on Recommendation {
+    id
     rating
+    userRating
     mediaRecommendation {
         ...BasicMediaDetails
         coverImage {

@@ -13,6 +13,8 @@ import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.RecommendationRating
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -209,6 +211,48 @@ class MediaDetailsViewModel(
 
     override fun hideVoiceActorSheet() {
         mutableUiState.update { it.copy(showVoiceActorsSheet = false) }
+    }
+
+    override fun onVoteClick(recommendedMediaId: Int, recommendationId: Int, rating: RecommendationRating) {
+        if (!arguments.isLoggedIn) {
+            mutableUiState.update { it.copy(errorId = R.string.not_logged_text) }
+            return
+        }
+
+        val recommendations = mutableUiState.value.relationsAndRecommendations?.recommendations
+        val targetNode = recommendations?.find { it.mediaRecommended.id == recommendationId } ?: return
+
+        val previousUserRating = targetNode.mediaRecommended.userRating
+        val newRating = if (previousUserRating == rating) RecommendationRating.NO_RATING else rating // if the new rating is the same as the old one remove the rating
+
+        mediaRepository.saveRecommendation(
+            mediaId = arguments.id, // base media id
+            mediaRecommendationId = recommendedMediaId, // id of the media which gets recommended
+            rating = newRating
+        ).onEach { result ->
+            if (result is DataResult.Success) {
+                mutableUiState.update { state ->
+                    val relAndRecs = state.relationsAndRecommendations ?: return@update state
+                    val updatedRecs = relAndRecs.recommendations.map { node ->
+                        if (node.mediaRecommended.id == recommendationId) {
+                            node.copy(
+                                mediaRecommended = node.mediaRecommended.copy(
+                                    rating = result.data.SaveRecommendation?.rating
+                                        ?: node.mediaRecommended.rating,
+                                    userRating = result.data.SaveRecommendation?.userRating
+                                        ?: newRating
+                                )
+                            )
+                        } else node
+                    }
+                    state.copy(relationsAndRecommendations = relAndRecs.copy(recommendations = updatedRecs))
+                }
+            } else if (result is DataResult.Error) {
+                mutableUiState.update { state ->
+                    return@update state.copy(error = result.message)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private suspend fun fetchAnimeThemes(idMal: Int) {

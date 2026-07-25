@@ -1,8 +1,6 @@
 name: Crowdin Sync
 
 on:
-  schedule:
-    - cron: 0 0 * * 0
   push:
     paths:
       - 'core/resources/src/main/res/values/strings.xml'

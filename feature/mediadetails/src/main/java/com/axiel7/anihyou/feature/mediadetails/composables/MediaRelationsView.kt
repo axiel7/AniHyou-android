@@ -16,10 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.InfoTitle
-import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
+import com.axiel7.anihyou.core.ui.composables.UpvoteDownvoteHorizontalText
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
@@ -31,6 +32,7 @@ fun MediaRelationsView(
     uiState: MediaDetailsUiState,
     fetchData: () -> Unit,
     navigateToDetails: (Int) -> Unit,
+    onVoteClick: (Int, Int, RecommendationRating) -> Unit = { _, _, _ -> },
 ) {
     val blurAdult = LocalBlurAdult.current
     val isLoading = uiState.relationsAndRecommendations == null
@@ -92,7 +94,14 @@ fun MediaRelationsView(
                     count = mediaRecommendations.size,
                     contentType = { it }
                 ) {
+
                     val item = mediaRecommendations[it]
+                    val userRecLike = item.mediaRecommended.userRating
+                    val id: Int? = item.mediaRecommended.mediaRecommendation?.id
+                        ?: item.mediaRecommended.mediaRecommendation?.basicMediaDetails?.id // id of the media which gets recommended
+                    val recId: Int = item.mediaRecommended.id // id of the actual recommendation
+
+
                     MediaItemVertical(
                         title = item.mediaRecommended.mediaRecommendation?.basicMediaDetails
                             ?.title?.userPreferred.orEmpty(),
@@ -101,19 +110,25 @@ fun MediaRelationsView(
                                 && item.mediaRecommended.mediaRecommendation?.basicMediaDetails?.isAdult == true,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
-                            TextIconHorizontal(
-                                text = item.mediaRecommended.rating?.format().orEmpty(),
-                                icon = R.drawable.thumbs_up_down_20,
-                                color = MaterialTheme.colorScheme.outline,
-                                fontSize = 14.sp
+                            UpvoteDownvoteHorizontalText(
+                                ratingText = item.mediaRecommended.rating?.format().orEmpty(),
+                                isUpvoted = userRecLike == RecommendationRating.RATE_UP,
+                                isDownvoted = userRecLike == RecommendationRating.RATE_DOWN,
+                                onUpvoteClick = {
+                                    if (id != null) onVoteClick(id, recId, RecommendationRating.RATE_UP)
+                                },
+                                onDownvoteClick = {
+                                    if (id != null) onVoteClick(id, recId, RecommendationRating.RATE_DOWN)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp)
                             )
                         },
                         status = item.mediaRecommended.mediaRecommendation?.mediaListEntry
                             ?.basicMediaListEntry?.status,
                         minLines = 2,
                         onClick = {
-                            val id = item.mediaRecommended.mediaRecommendation?.id
-                                ?: item.mediaRecommended.mediaRecommendation?.basicMediaDetails?.id
                             id?.let(navigateToDetails)
                         }
                     )

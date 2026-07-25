@@ -26,6 +26,10 @@ abstract class UiStateViewModel<S : UiState> : ViewModel(), UiEvent {
         }
     }
 
+    override fun showError(error: String) {
+        mutableUiState.update { it.setError(error) as S }
+    }
+
     override fun onErrorDisplayed() {
         mutableUiState.update { it.removeError() as S }
     }

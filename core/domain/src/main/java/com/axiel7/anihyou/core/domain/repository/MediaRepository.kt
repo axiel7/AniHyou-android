@@ -16,6 +16,7 @@ import com.axiel7.anihyou.core.network.api.MediaApi
 import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.RecommendationRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -219,6 +220,16 @@ class MediaRepository (
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
                 .orEmpty()
         }
+
+    fun saveRecommendation(
+        mediaId: Int,
+        mediaRecommendationId: Int,
+        rating: RecommendationRating?
+    ) = api.saveRecommendationMutation(
+        mediaId = mediaId,
+        mediaRecommendationId = mediaRecommendationId,
+        rating = rating
+    ).toFlow().asDataResult()
 
     // MyAnimeList endpoints
 

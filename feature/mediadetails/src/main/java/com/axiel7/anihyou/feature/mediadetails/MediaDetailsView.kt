@@ -153,7 +153,13 @@ private fun MediaDetailsContent(
     var showScores by rememberSaveable { mutableStateOf(false) }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
+    val errorString = uiState.errorId?.let { stringResource(it) }
+
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
+    LaunchedEffect(errorString) {
+        errorString?.let { event?.showError(it) }
+    }
 
     if (showEditSheet && uiState.details != null) {
         EditMediaSheet(
@@ -522,7 +528,8 @@ fun MediaInfoTabs(
                 MediaRelationsView(
                     uiState = uiState,
                     fetchData = { event?.fetchRelationsAndRecommendations() },
-                    navigateToDetails = navActionManager::toMediaDetails
+                    navigateToDetails = navActionManager::toMediaDetails,
+                    onVoteClick = { mediaId, recId, rating -> event?.onVoteClick(mediaId, recId, rating) },
                 )
 
             MediaDetailsType.STATS ->
