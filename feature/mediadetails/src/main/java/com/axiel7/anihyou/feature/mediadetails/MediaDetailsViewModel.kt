@@ -13,6 +13,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -211,8 +212,8 @@ class MediaDetailsViewModel(
     }
 
     override fun onVoteClick(recommendedMediaId: Int, recommendationId: Int, rating: RecommendationRating) {
-        if (!arguments.isLoggedIn) { // look if the user is logged in, if not show an error to log in
-            mutableUiState.update { it.copy(error = "Please login to use this feature") } // show a popup to login
+        if (!arguments.isLoggedIn) {
+            mutableUiState.update { it.copy(errorId = R.string.not_logged_text) }
             return
         }
 
@@ -227,23 +228,24 @@ class MediaDetailsViewModel(
             mediaRecommendationId = recommendedMediaId, // id of the media which gets recommended
             rating = newRating
         ).onEach { result ->
-            // on success
             if (result is DataResult.Success) {
                 mutableUiState.update { state ->
                     val relAndRecs = state.relationsAndRecommendations ?: return@update state
                     val updatedRecs = relAndRecs.recommendations.map { node ->
                         if (node.mediaRecommended.id == recommendationId) {
-node.copy(mediaRecommended = node.mediaRecommended.copy(
-        rating = result.data.SaveRecommendation?.rating ?: node.mediaRecommended.rating,
-        userRating = result.data.SaveRecommendation?.userRating ?: newRating
-    )
-)
+                            node.copy(
+                                mediaRecommended = node.mediaRecommended.copy(
+                                    rating = result.data.SaveRecommendation?.rating
+                                        ?: node.mediaRecommended.rating,
+                                    userRating = result.data.SaveRecommendation?.userRating
+                                        ?: newRating
+                                )
+                            )
                         } else node
                     }
                     state.copy(relationsAndRecommendations = relAndRecs.copy(recommendations = updatedRecs))
                 }
-            }
-            if (result is DataResult.Error) {
+            } else if (result is DataResult.Error) {
                 mutableUiState.update { state ->
                     return@update state.copy(error = result.message)
                 }

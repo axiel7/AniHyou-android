@@ -47,6 +47,7 @@ data class MediaDetailsUiState(
     val isLoadingActivity: Boolean = true,
     val activity: List<ListActivityFragment> = emptyList(),
 
+    val errorId: Int? = null,
     override val error: String? = null,
     override val isLoading: Boolean = true,
 ) : UiState() {

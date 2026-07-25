@@ -149,7 +149,13 @@ private fun MediaDetailsContent(
     val isCurrentLanguageEn = LocalIsLanguageEn.current
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
+    val errorString = uiState.errorId?.let { stringResource(it) }
+
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
+    LaunchedEffect(errorString) {
+        errorString?.let { event?.showError(it) }
+    }
 
     if (showEditSheet && uiState.details != null) {
         EditMediaSheet(
