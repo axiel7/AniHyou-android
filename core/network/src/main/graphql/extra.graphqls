@@ -16,6 +16,8 @@ extend type ListActivity @typePolicy(keyFields: "id")
 extend type ActivityReply @typePolicy(keyFields: "id")
 extend type Thread @typePolicy(keyFields: "id")
 extend type ThreadComment @typePolicy(keyFields: "id")
+extend type Recommendation @typePolicy(keyFields: "id")
+extend type Review @typePolicy(keyFields: "id")
 
 extend type Query @fieldPolicy(forField: "User", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Media", keyArgs: "id")

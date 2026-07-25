@@ -510,7 +510,8 @@ fun MediaInfoTabs(
                 MediaRelationsView(
                     uiState = uiState,
                     fetchData = { event?.fetchRelationsAndRecommendations() },
-                    navigateToDetails = navActionManager::toMediaDetails
+                    navigateToDetails = navActionManager::toMediaDetails,
+                    onVoteClick = { mediaId, recId, rating -> event?.onVoteClick(mediaId, recId, rating) },
                 )
 
             MediaDetailsType.STATS ->
