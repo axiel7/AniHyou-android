@@ -233,11 +233,11 @@ class MediaDetailsViewModel(
                     val relAndRecs = state.relationsAndRecommendations ?: return@update state
                     val updatedRecs = relAndRecs.recommendations.map { node ->
                         if (node.mediaRecommended.id == recommendationId) {
-                            node.copy(mediaRecommended = node.mediaRecommended.copy(
-                                    rating = result.data.SaveRecommendation?.rating,
-                                    userRating = newRating
-                                )
-                            )
+node.copy(mediaRecommended = node.mediaRecommended.copy(
+        rating = result.data.SaveRecommendation?.rating ?: node.mediaRecommended.rating,
+        userRating = result.data.SaveRecommendation?.userRating ?: newRating
+    )
+)
                         } else node
                     }
                     state.copy(relationsAndRecommendations = relAndRecs.copy(recommendations = updatedRecs))
