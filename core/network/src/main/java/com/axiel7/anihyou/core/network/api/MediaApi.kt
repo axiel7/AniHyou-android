@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.network.MediaReviewsQuery
 import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.MediaStatsQuery
 import com.axiel7.anihyou.core.network.MediaThreadsQuery
+import com.axiel7.anihyou.core.network.SaveRecommendationMutation
 import com.axiel7.anihyou.core.network.SearchMediaQuery
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.api.model.AnimeSeasonDto
@@ -29,6 +30,7 @@ import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.network.type.ThreadSort
 
 class MediaApi(
@@ -313,6 +315,18 @@ class MediaApi(
         .query(
             BasicMediaDetailsQuery(
                 mediaId = Optional.present(mediaId)
+            )
+        )
+    fun saveRecommendationMutation(
+        mediaId: Int,
+        mediaRecommendationId: Int,
+        rating: RecommendationRating?
+    ) = client
+        .mutation(
+            SaveRecommendationMutation(
+                mediaId = Optional.present(mediaId),
+                mediaRecommendationId = Optional.present(mediaRecommendationId),
+                rating = Optional.present(rating)
             )
         )
 }

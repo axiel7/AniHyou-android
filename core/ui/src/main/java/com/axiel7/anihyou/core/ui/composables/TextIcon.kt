@@ -2,12 +2,15 @@ package com.axiel7.anihyou.core.ui.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Surface
@@ -148,6 +151,55 @@ fun TextSubtitleVertical(
             textAlign = TextAlign.Center,
             lineHeight = 15.sp
         )
+    }
+}
+
+@Composable
+fun UpvoteDownvoteHorizontalText (
+    ratingText: String,
+    isUpvoted: Boolean,
+    isDownvoted: Boolean,
+    onUpvoteClick: () -> Unit,
+    onDownvoteClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = ratingText,
+            color = MaterialTheme.colorScheme.outline,
+            fontSize = 14.sp
+        )
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = onUpvoteClick,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = if (isUpvoted) R.drawable.thumb_up_filled_24 else R.drawable.thumb_up_24),
+                    contentDescription = stringResource(id = R.string.upvote),
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            IconButton(
+                onClick = onDownvoteClick,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = if (isDownvoted) R.drawable.thumb_down_filled_24 else R.drawable.thumb_down_24),
+                    contentDescription = stringResource(id = R.string.downvote),
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
     }
 }
 
