@@ -192,6 +192,10 @@ class NavActionManager(
         navigator.navigate(Routes.Translations)
     }
 
+    fun toContributors() {
+        navigator.navigate(Routes.Contributors)
+    }
+
     companion object {
         @Composable
         fun rememberNavActionManager(
