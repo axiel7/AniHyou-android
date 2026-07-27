@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
+import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.episodeNumber
 import com.axiel7.anihyou.core.model.media.externalLinks
@@ -52,6 +53,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
+import java.time.LocalDateTime
 
 private const val TagLimit = 10
 
@@ -73,6 +75,14 @@ fun MediaInformationView(
     ) {
         InfoTitle(text = stringResource(R.string.information))
 
+        uiState.details?.nextAiringEpisode?.let { nextAiringEpisode ->
+            InfoItemView(
+                title = stringResource(R.string.airing),
+                info = LocalDateTime.now().plusSeconds(nextAiringEpisode.timeUntilAiring.toLong())
+                    ?.toLocalized(),
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        }
         InfoItemView(
             title = stringResource(R.string.duration),
             info = uiState.details?.duration?.toLong()?.minutesToLegibleText(),
