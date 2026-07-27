@@ -388,6 +388,26 @@ private fun MediaDetailsContent(
                 )
             }//: Row
 
+            // Genres
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 8.dp)
+            ) {
+                uiState.details?.genres?.filterNotNull()?.forEach { genre ->
+                    AssistChip(
+                        onClick = {
+                            uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                navActionManager.toGenreTag(mediaType, genre, null)
+                            }
+                        },
+                        label = { Text(text = genre.genreTagLocalized()) },
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+
             // Synopsis
             Text(
                 text = when {
@@ -453,26 +473,6 @@ private fun MediaDetailsContent(
                 }
             }//: Row
 
-            // Genres
-            Row(
-                modifier = Modifier
-                    .height(32.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 8.dp)
-            ) {
-                uiState.details?.genres?.filterNotNull()?.forEach { genre ->
-                    AssistChip(
-                        onClick = {
-                            uiState.details.basicMediaDetails.type?.let { mediaType ->
-                                navActionManager.toGenreTag(mediaType, genre, null)
-                            }
-                        },
-                        label = { Text(text = genre.genreTagLocalized()) },
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
-
             // Other info
             MediaInfoTabs(
                 event = event,
@@ -492,8 +492,7 @@ fun MediaInfoTabs(
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ConnectedButtonGroup(
