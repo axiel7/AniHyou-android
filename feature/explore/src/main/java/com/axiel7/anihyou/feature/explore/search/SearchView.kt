@@ -206,7 +206,7 @@ fun SearchContentView(
         }
     }
 
-    var showMoreFilters by rememberSaveable { mutableStateOf(true) }
+    var showMoreFilters by rememberSaveable { mutableStateOf(false) }
 
     val haptic = LocalHapticFeedback.current
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
