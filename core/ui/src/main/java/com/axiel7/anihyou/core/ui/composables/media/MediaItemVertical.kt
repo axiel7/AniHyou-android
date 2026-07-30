@@ -50,7 +50,7 @@ fun MediaItemVertical(
     status: MediaListStatus?,
     minLines: Int = 1,
     onClick: () -> Unit = {},
-    onLongClick: () -> Unit = {},
+    onLongClick: (() -> Unit)? = null,
 ) {
     val statusStat = remember(status) { status?.asStat() }
     MediaItemVertical(
@@ -92,7 +92,7 @@ fun MediaItemVertical(
     badgeBackgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     minLines: Int = 1,
     onClick: () -> Unit = {},
-    onLongClick: () -> Unit = {},
+    onLongClick: (() -> Unit)? = null,
 ) {
     ListItem(
         onClick = onClick,

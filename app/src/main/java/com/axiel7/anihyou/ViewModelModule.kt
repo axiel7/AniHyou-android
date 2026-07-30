@@ -19,6 +19,7 @@ import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityViewModel
 import com.axiel7.anihyou.feature.notifications.NotificationsViewModel
 import com.axiel7.anihyou.feature.profile.ProfileViewModel
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesViewModel
+import com.axiel7.anihyou.feature.profile.favorites.reorder.ReorderFavoritesViewModel
 import com.axiel7.anihyou.feature.profile.social.UserSocialViewModel
 import com.axiel7.anihyou.feature.profile.stats.UserStatsViewModel
 import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsViewModel
@@ -66,4 +67,5 @@ val viewModelModule = module {
     viewModelOf(::ThreadDetailsViewModel)
     viewModelOf(::PublishCommentViewModel)
     viewModelOf(::UserMediaListViewModel)
+    viewModelOf(::ReorderFavoritesViewModel)
 }

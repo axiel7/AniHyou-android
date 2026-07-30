@@ -49,6 +49,7 @@ import com.axiel7.anihyou.feature.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityView
 import com.axiel7.anihyou.feature.notifications.NotificationsView
 import com.axiel7.anihyou.feature.profile.ProfileView
+import com.axiel7.anihyou.feature.profile.favorites.reorder.ReorderFavoritesView
 import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.feature.settings.SettingsView
 import com.axiel7.anihyou.feature.settings.TranslationsView
@@ -402,6 +403,14 @@ fun MainNavigation(
                 isLoggedIn = isLoggedIn,
                 listType = it.listType,
                 navActionManager = navActionManager,
+            )
+        }
+
+        entry<Routes.ReorderFavorites> {
+            ReorderFavoritesView(
+                userId = it.userId,
+                type = it.type,
+                navActionManager = navActionManager
             )
         }
     }
