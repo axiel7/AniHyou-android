@@ -141,7 +141,7 @@ class ActivityFeedViewModel(
                 activityRepository.getActivityFeed(
                     isFollowing = it.isFollowing,
                     typeIn = it.type.value,
-                    userIdIn = it.followingFilters.takeIf { it.isNotEmpty() },
+                    userIdIn = if (it.isFollowing) it.followingFilters.takeIf { filters -> filters.isNotEmpty() } else null,
                     fetchFromNetwork = it.fetchFromNetwork,
                     page = it.page
                 )
