@@ -655,4 +655,5 @@
     <string name="upvote">Upvote Media</string>
     <string name="downvote">Downvote Media</string>
     <string name="reorder">Reorder</string>
+    <string name="activity_filter_following">From Following</string>
 </resources>

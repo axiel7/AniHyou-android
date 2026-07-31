@@ -14,6 +14,7 @@ class ActivityRepository(
     fun getActivityFeed(
         isFollowing: Boolean,
         typeIn: List<ActivityType>,
+        userIdIn: List<Int>? = null,
         fetchFromNetwork: Boolean = false,
         page: Int,
         perPage: Int = 25
@@ -21,6 +22,7 @@ class ActivityRepository(
         .activityFeedQuery(
             isFollowing = isFollowing,
             typeIn = typeIn,
+            userIdIn = userIdIn,
             fetchFromNetwork = fetchFromNetwork,
             page = page,
             perPage = perPage

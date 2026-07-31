@@ -9,6 +9,8 @@ import com.axiel7.anihyou.core.base.event.UiEvent
 interface ActivityFeedEvent : UiEvent, PagedEvent {
     fun setIsFollowing(value: Boolean)
     fun setType(value: ActivityTypeGrouped)
+    fun setFollowingFilters(value: List<Int>)
+    fun getUserFollowing()
     fun refreshList()
     fun toggleLikeActivity(id: Int)
 }
