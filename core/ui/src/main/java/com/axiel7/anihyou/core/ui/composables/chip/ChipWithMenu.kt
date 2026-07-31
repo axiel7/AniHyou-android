@@ -1,10 +1,13 @@
 package com.axiel7.anihyou.core.ui.composables.chip
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.requiredSizeIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -31,7 +34,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun <T> ChipWithMenu(
+fun <T> FilterChipWithMenu(
     title: String,
     values: List<T>,
     selectedValue: T?,
@@ -77,15 +80,83 @@ fun <T> ChipWithMenu(
                         shapes = MenuDefaults.itemShape(index, values.size),
                         checkedLeadingIcon = {
                             Icon(
-                                painter = painterResource(R.drawable.check_24),
-                                contentDescription = null
+                                painter = painterResource(R.drawable.check_20),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.TrailingIconSize)
                             )
                         },
                         leadingIcon = {
                             valueIcon(item)?.let { iconRes ->
                                 Icon(
                                     painter = painterResource(iconRes),
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun <T> AssistChipWithMenu(
+    values: List<T>,
+    selectedValue: T,
+    onValueSelected: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    valueString: @Composable (T) -> String = { it.toString() },
+    valueIcon: (T) -> Int? = { null },
+) {
+    val windowHeight = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.height.toDp()
+    }
+    var menuOpened by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .wrapContentSize(Alignment.TopStart)
+    ) {
+        AssistChip(
+            onClick = { menuOpened = true },
+            label = { Text(text = valueString(selectedValue)) },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+        )
+        DropdownMenuPopup(
+            expanded = menuOpened,
+            onDismissRequest = { menuOpened = false },
+            modifier = Modifier.requiredSizeIn(maxHeight = windowHeight / 2)
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                values.fastForEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        checked = selectedValue == item,
+                        onCheckedChange = {
+                            onValueSelected(item)
+                            menuOpened = false
+                        },
+                        text = { Text(text = valueString(item)) },
+                        shapes = MenuDefaults.itemShape(index, values.size),
+                        checkedLeadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.check_20),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                            )
+                        },
+                        leadingIcon = {
+                            valueIcon(item)?.let { iconRes ->
+                                Icon(
+                                    painter = painterResource(iconRes),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize)
                                 )
                             }
                         }
@@ -100,11 +171,18 @@ fun <T> ChipWithMenu(
 @Composable
 private fun ChipWithMenuPreview() {
     AniHyouTheme {
-        ChipWithMenu(
-            title = stringResource(R.string.from_year),
-            values = listOf("2000", "2001"),
-            selectedValue = null,
-            onValueSelected = {},
-        )
+        Column {
+            FilterChipWithMenu(
+                title = stringResource(R.string.from_year),
+                values = listOf("2000", "2001"),
+                selectedValue = null,
+                onValueSelected = {},
+            )
+            AssistChipWithMenu(
+                values = listOf("One", "Two"),
+                selectedValue = "One",
+                onValueSelected = {},
+            )
+        }
     }
 }

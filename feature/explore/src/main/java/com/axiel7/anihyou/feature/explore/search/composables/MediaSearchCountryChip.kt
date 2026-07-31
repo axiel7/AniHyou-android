@@ -4,14 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.chip.ChipWithMenu
+import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 
 @Composable
 fun MediaSearchCountryChip(
     value: CountryOfOrigin?,
     onValueChanged: (CountryOfOrigin?) -> Unit,
 ) {
-    ChipWithMenu(
+    FilterChipWithMenu(
         title = stringResource(R.string.country),
         values = CountryOfOrigin.entries,
         selectedValue = value,

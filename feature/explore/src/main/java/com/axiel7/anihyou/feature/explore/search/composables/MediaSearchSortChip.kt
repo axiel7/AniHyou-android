@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.common.DialogWithRadioSelection
 
 @Composable
@@ -51,22 +52,19 @@ fun MediaSearchSortChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        AssistChip(
-            onClick = { openDialog = !openDialog },
-            label = { Text(text = mediaSortSearch.localized()) },
+        AssistChipWithMenu(
+            values = MediaSortSearch.entries,
+            selectedValue = mediaSortSearch,
+            onValueSelected = {
+                onSortChanged((if (isDescending) it.desc else it.asc))
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.sort_24),
                     contentDescription = stringResource(R.string.sort)
                 )
             },
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_drop_down_24),
-                    contentDescription = "dropdown",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            valueString = { it.localized() },
         )
 
         if (mediaSortSearch != MediaSortSearch.SEARCH_MATCH) {
