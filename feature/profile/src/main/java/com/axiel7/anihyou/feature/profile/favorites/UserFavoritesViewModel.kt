@@ -35,30 +35,29 @@ class UserFavoritesViewModel(
     }
 
     override fun updateAfterReorderSaved(result: List<*>) {
-        mutableUiState.update { currentState ->
-            when (uiState.value.type) {
+        with(uiState.value) {
+            when (type) {
                 FavoritesType.ANIME -> {
-                    currentState.anime.clear()
-                    currentState.anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
+                    anime.clear()
+                    anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
                 }
                 FavoritesType.MANGA -> {
-                    currentState.manga.clear()
-                    currentState.manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
+                    manga.clear()
+                    manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
                 }
                 FavoritesType.CHARACTERS -> {
-                    currentState.characters.clear()
-                    currentState.characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
+                    characters.clear()
+                    characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
                 }
                 FavoritesType.STAFF -> {
-                    currentState.staff.clear()
-                    currentState.staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
+                    staff.clear()
+                    staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
                 }
                 FavoritesType.STUDIOS -> {
-                    currentState.studios.clear()
-                    currentState.studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
+                    studios.clear()
+                    studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
                 }
             }
-            currentState
         }
     }
 

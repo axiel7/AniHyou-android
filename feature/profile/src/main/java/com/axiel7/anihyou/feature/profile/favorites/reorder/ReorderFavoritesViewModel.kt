@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.profile.favorites.reorder
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
@@ -23,50 +24,56 @@ class ReorderFavoritesViewModel(
 
     fun setUserId(value: Int?) = mutableUiState.update { it.copy(userId = value) }
 
-    fun setType(value: FavoritesType) = mutableUiState.update { it.copy(type = value, page = 1, hasNextPage = true) }
+    fun setType(value: FavoritesType) =
+        mutableUiState.update { it.copy(type = value, page = 1, hasNextPage = true) }
 
     override fun onRefresh() {
         mutableUiState.update { it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true) }
     }
 
     override fun onMove(from: Int, to: Int) {
-        val currentState = uiState.value
-        when (currentState.type) {
-            FavoritesType.ANIME -> currentState.anime.apply { add(to, removeAt(from)) }
-            FavoritesType.MANGA -> currentState.manga.apply { add(to, removeAt(from)) }
-            FavoritesType.CHARACTERS -> currentState.characters.apply { add(to, removeAt(from)) }
-            FavoritesType.STAFF -> currentState.staff.apply { add(to, removeAt(from)) }
-            FavoritesType.STUDIOS -> currentState.studios.apply { add(to, removeAt(from)) }
+        fun SnapshotStateList<*>.updateOrder() {
+            add(to, removeAt(from))
+        }
+
+        with(uiState.value) {
+            when (type) {
+                FavoritesType.ANIME -> anime.updateOrder()
+                FavoritesType.MANGA -> manga.updateOrder()
+                FavoritesType.CHARACTERS -> characters.updateOrder()
+                FavoritesType.STAFF -> staff.updateOrder()
+                FavoritesType.STUDIOS -> studios.updateOrder()
+            }
         }
     }
 
     override fun saveNewOrder() {
-        val currentState = uiState.value
+        with(uiState.value) {
+            val animeIds = anime.map { it.id }.takeIf { type == FavoritesType.ANIME }
+            val animeOrder = anime.indices.toList().takeIf { type == FavoritesType.ANIME }
+            val mangaIds = manga.map { it.id }.takeIf { type == FavoritesType.MANGA }
+            val mangaOrder = manga.indices.toList().takeIf { type == FavoritesType.MANGA }
+            val characterIds = characters.map { it.id }.takeIf { type == FavoritesType.CHARACTERS }
+            val characterOrder = characters.indices.toList().takeIf { type == FavoritesType.CHARACTERS }
+            val staffIds = staff.map { it.id }.takeIf { type == FavoritesType.STAFF }
+            val staffOrder = staff.indices.toList().takeIf { type == FavoritesType.STAFF }
+            val studioIds = studios.map { it.id }.takeIf { type == FavoritesType.STUDIOS }
+            val studioOrder = studios.indices.toList().takeIf { type == FavoritesType.STUDIOS }
 
-        val animeIds = if (currentState.type == FavoritesType.ANIME) currentState.anime.map { it.id } else null
-        val animeOrder = if (currentState.type == FavoritesType.ANIME) currentState.anime.indices.toList() else null
-        val mangaIds = if (currentState.type == FavoritesType.MANGA) currentState.manga.map { it.id } else null
-        val mangaOrder = if (currentState.type == FavoritesType.MANGA) currentState.manga.indices.toList() else null
-        val characterIds = if (currentState.type == FavoritesType.CHARACTERS) currentState.characters.map { it.id } else null
-        val characterOrder = if (currentState.type == FavoritesType.CHARACTERS) currentState.characters.indices.toList() else null
-        val staffIds = if (currentState.type == FavoritesType.STAFF) currentState.staff.map { it.id } else null
-        val staffOrder = if (currentState.type == FavoritesType.STAFF) currentState.staff.indices.toList() else null
-        val studioIds = if (currentState.type == FavoritesType.STUDIOS) currentState.studios.map { it.id } else null
-        val studioOrder = if (currentState.type == FavoritesType.STUDIOS) currentState.studios.indices.toList() else null
-
-        favoritesRepository.updateFavouriteOrder(
-            animeIds = animeIds, animeOrder = animeOrder,
-            mangaIds = mangaIds, mangaOrder = mangaOrder,
-            characterIds = characterIds, characterOrder = characterOrder,
-            staffIds = staffIds, staffOrder = staffOrder,
-            studioIds = studioIds, studioOrder = studioOrder
-        ).onEach { result ->
-            if (result is DataResult.Success) {
-                mutableUiState.update { it.copy(error = null, isSaved = true) }
-            } else if (result is DataResult.Error) {
-                mutableUiState.update { it.copy(error = result.message, isSaved = false) }
-            }
-        }.launchIn(viewModelScope)
+            favoritesRepository.updateFavouriteOrder(
+                animeIds = animeIds, animeOrder = animeOrder,
+                mangaIds = mangaIds, mangaOrder = mangaOrder,
+                characterIds = characterIds, characterOrder = characterOrder,
+                staffIds = staffIds, staffOrder = staffOrder,
+                studioIds = studioIds, studioOrder = studioOrder
+            ).onEach { result ->
+                if (result is DataResult.Success) {
+                    mutableUiState.update { it.copy(error = null, isSaved = true) }
+                } else if (result is DataResult.Error) {
+                    mutableUiState.update { it.copy(error = result.message, isSaved = false) }
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
 
