@@ -113,6 +113,7 @@ private fun UserFavoritesContent(
                 text = { Text(text = stringResource(R.string.reorder)) }
             )
         },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = uiState.isLoading,
