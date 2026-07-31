@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import com.axiel7.anihyou.core.model.media.episodesBehind
 import com.axiel7.anihyou.core.model.media.isBehind
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
@@ -18,7 +17,6 @@ import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 fun AiringScheduleText(
     item: CommonMediaListEntry,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = TextUnit.Unspecified,
     textAlign: TextAlign? = null,
 ) {
     item.media?.nextAiringEpisode?.let { nextAiringEpisode ->
@@ -42,9 +40,8 @@ fun AiringScheduleText(
             modifier = modifier,
             color = if (isBehind) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = fontSize,
+            style = MaterialTheme.typography.labelLarge,
             textAlign = textAlign,
-            lineHeight = fontSize
         )
     }
 }

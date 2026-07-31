@@ -50,7 +50,8 @@ fun InfoItemView(
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Column(
             modifier = Modifier
@@ -63,7 +64,8 @@ fun InfoItemView(
                     maxLines = maxLines,
                     onTextLayout = {
                         showExpand = it.hasVisualOverflow
-                    }
+                    },
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
             if (showExpand || isExpanded) {
@@ -91,7 +93,8 @@ fun <T> InfoClickableItemView(
         Text(
             text = title,
             modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Row(
             modifier = Modifier
@@ -127,8 +130,7 @@ fun InfoTitle(
     ) {
         Text(
             text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium
         )
         trailingIcon()
     }

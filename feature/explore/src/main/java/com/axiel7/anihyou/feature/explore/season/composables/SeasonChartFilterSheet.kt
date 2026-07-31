@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.axiel7.anihyou.core.common.utils.DateUtils
 import com.axiel7.anihyou.core.model.media.AnimeSeason
-import com.axiel7.anihyou.core.model.media.icon
+import com.axiel7.anihyou.core.model.media.iconSmall
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -113,7 +113,7 @@ fun SeasonChartFilterSheet(
             ) {
                 MediaSeason.knownEntries.forEach { season ->
                     SelectableIconToggleButton(
-                        icon = season.icon(),
+                        icon = season.iconSmall(),
                         tooltipText = season.localized(),
                         value = season,
                         selectedValue = selectedSeason,

@@ -36,15 +36,15 @@ enum class ChartType : Localizable {
 
     @DrawableRes
     fun icon() = when (this) {
-        TOP_ANIME -> R.drawable.star_24
-        POPULAR_ANIME -> R.drawable.trending_up_24
-        UPCOMING_ANIME -> R.drawable.schedule_24
-        AIRING_ANIME -> R.drawable.rss_feed_24
-        TOP_MOVIES -> R.drawable.movie_24
-        TOP_MANGA -> R.drawable.star_24
-        POPULAR_MANGA -> R.drawable.trending_up_24
-        UPCOMING_MANGA -> R.drawable.schedule_24
-        PUBLISHING_MANGA -> R.drawable.rss_feed_24
+        TOP_ANIME -> R.drawable.star_20
+        POPULAR_ANIME -> R.drawable.trending_up_20
+        UPCOMING_ANIME -> R.drawable.schedule_20
+        AIRING_ANIME -> R.drawable.rss_feed_20
+        TOP_MOVIES -> R.drawable.movie_20
+        TOP_MANGA -> R.drawable.star_20
+        POPULAR_MANGA -> R.drawable.trending_up_20
+        UPCOMING_MANGA -> R.drawable.schedule_20
+        PUBLISHING_MANGA -> R.drawable.rss_feed_20
     }
 
     val mediaType

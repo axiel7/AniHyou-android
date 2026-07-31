@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -78,16 +79,16 @@ fun ReviewThreadListView(
                             ) {
                                 TextIconHorizontal(
                                     text = item.basicThreadDetails.totalReplies?.format().orEmpty(),
-                                    icon = R.drawable.chat_bubble_24,
+                                    icon = R.drawable.chat_bubble_20,
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.labelMedium,
                                 )
                                 TextIconHorizontal(
                                     text = item.basicThreadDetails.viewCount?.format().orEmpty(),
-                                    icon = R.drawable.visibility_24,
+                                    icon = R.drawable.visibility_20,
                                     modifier = Modifier.padding(end = 8.dp),
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.labelMedium,
                                 )
                             }
                         },
@@ -138,7 +139,7 @@ fun ReviewThreadListView(
                                 text = item.score?.format().orEmpty(),
                                 icon = R.drawable.star_filled_20,
                                 iconPadding = PaddingValues(0.dp),
-                                fontSize = 15.sp
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         },
                         onClick = {
@@ -184,9 +185,9 @@ fun ReviewThreadListView(
                                         maxUnit = ChronoUnit.WEEKS,
                                         isFutureDate = false
                                     ),
-                                fontSize = 15.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         },
                         onClick = {

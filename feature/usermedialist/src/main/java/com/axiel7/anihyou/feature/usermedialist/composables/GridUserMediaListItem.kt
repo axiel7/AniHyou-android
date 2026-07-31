@@ -101,7 +101,6 @@ fun GridUserMediaListItem(
                         AiringScheduleText(
                             item = item,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            fontSize = 15.sp,
                             textAlign = TextAlign.Center
                         )
                     }

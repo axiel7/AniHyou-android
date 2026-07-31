@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
@@ -163,8 +165,9 @@ fun MediaSearchGenresChips(
             label = { Text(text = stringResource(R.string.add_genre)) },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.add_24),
-                    contentDescription = stringResource(R.string.add)
+                    painter = painterResource(R.drawable.add_20),
+                    contentDescription = stringResource(R.string.add),
+                    modifier = Modifier.size(AssistChipDefaults.IconSize),
                 )
             }
         )

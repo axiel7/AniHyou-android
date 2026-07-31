@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalHideScores
@@ -24,7 +22,6 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 fun SmallScoreIndicator(
     score: Int,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = 14.sp,
 ) {
     if (!LocalHideScores.current) {
         Row(
@@ -40,9 +37,8 @@ fun SmallScoreIndicator(
             Text(
                 text = "${score.format()}%",
                 modifier = Modifier.padding(horizontal = 4.dp),
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.outline,
-                fontSize = fontSize,
-                lineHeight = fontSize,
             )
         }
     }

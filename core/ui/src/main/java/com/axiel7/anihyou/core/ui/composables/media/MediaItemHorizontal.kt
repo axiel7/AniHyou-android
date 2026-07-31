@@ -155,7 +155,7 @@ fun MediaItemHorizontal(
         Text(
             text = title,
             color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 17.sp,
+            style = MaterialTheme.typography.bodyLarge,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
         )
@@ -186,14 +186,13 @@ fun MediaItemHorizontal(
                     append(format.localized())
                     if (year != null) append(" · $year")
                 },
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         subtitle2 = {
             SmallScoreIndicator(
                 score = score,
-                fontSize = 15.sp
             )
         },
         badgeContent = status?.let {

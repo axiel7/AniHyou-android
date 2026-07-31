@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -96,7 +97,7 @@ fun CompactUserMediaListItem(
         }
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier.height((MEDIA_POSTER_COMPACT_WIDTH + 8).dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -110,7 +111,6 @@ fun CompactUserMediaListItem(
 
             AiringScheduleText(
                 item = item,
-                fontSize = 16.sp,
             )
 
             Row(

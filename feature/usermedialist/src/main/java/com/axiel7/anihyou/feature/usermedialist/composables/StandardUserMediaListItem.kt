@@ -109,14 +109,12 @@ fun StandardUserMediaListItem(
                     modifier = Modifier
                         .padding(bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
                 AiringScheduleText(
                     item = item,
-                    fontSize = 16.sp
                 )
             }//:Column
             Column {

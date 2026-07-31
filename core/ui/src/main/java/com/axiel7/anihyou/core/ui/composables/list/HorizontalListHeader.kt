@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,12 +28,17 @@ fun HorizontalListHeader(
     Box(modifier = Modifier.clickable(onClick = onClick ?: {})) {
         Row(
             modifier = modifier
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = text,
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                style = MaterialTheme.typography.titleMedium
+            )
             if (onClick != null) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_forward_24),

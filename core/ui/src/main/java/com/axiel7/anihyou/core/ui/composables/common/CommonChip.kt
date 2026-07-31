@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ChipColors
@@ -48,7 +49,11 @@ fun FilterSelectionChip(
         modifier = modifier,
         leadingIcon = {
             if (selected) {
-                Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
+                Icon(
+                    painter = painterResource(R.drawable.check_20),
+                    contentDescription = "check",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize),
+                )
             }
         }
     )
@@ -78,9 +83,17 @@ fun TriFilterChip(
         enabled = enabled,
         leadingIcon = {
             if (value == true) {
-                Icon(painter = painterResource(R.drawable.check_24), contentDescription = "check")
+                Icon(
+                    painter = painterResource(R.drawable.check_20),
+                    contentDescription = "check",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize),
+                )
             } else if (value == false) {
-                Icon(painter = painterResource(R.drawable.close_24), contentDescription = "close")
+                Icon(
+                    painter = painterResource(R.drawable.close_20),
+                    contentDescription = "close",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize),
+                )
             }
         },
         colors = if (value == false) {
@@ -170,7 +183,10 @@ fun TagChip(
             label = { Text(text = name) },
             modifier = Modifier
                 .padding(horizontal = 4.dp),
-            leadingIcon = { Text(text = "${rank?.format().orUnknown()}%") }
+            leadingIcon = { Text(text = "${rank?.format().orUnknown()}%") },
+            colors = AssistChipDefaults.elevatedAssistChipColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            )
         )
     }
 }
@@ -224,7 +240,8 @@ fun InputChipError(
             {
                 Icon(
                     painter = painterResource(icon),
-                    contentDescription = iconDescription
+                    contentDescription = iconDescription,
+                    modifier = Modifier.size(InputChipDefaults.IconSize),
                 )
             }
         },

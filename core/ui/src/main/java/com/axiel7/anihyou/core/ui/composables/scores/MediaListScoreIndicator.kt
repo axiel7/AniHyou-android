@@ -41,7 +41,12 @@ fun BadgeScoreIndicator(
         modifier = modifier
             .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 8.dp))
             .background(score.scorePrimaryColor(format = scoreFormat))
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(
+                start = 4.dp,
+                end = 8.dp,
+                top = 4.dp,
+                bottom = 4.dp
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         when (scoreFormat) {
@@ -49,7 +54,9 @@ fun BadgeScoreIndicator(
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
                     contentDescription = "star",
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier
+                        .padding(bottom = 1.dp)
+                        .size(18.dp),
                     tint = score.scoreOnPrimaryColor(format = scoreFormat)
                 )
                 Text(
@@ -57,7 +64,7 @@ fun BadgeScoreIndicator(
                         String.format(LocalLocale.current.platformLocale, "%.0f", score)
                     else UNKNOWN_CHAR,
                     color = score.scoreOnPrimaryColor(format = scoreFormat),
-                    fontSize = 14.sp
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
 
@@ -65,7 +72,9 @@ fun BadgeScoreIndicator(
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
                     contentDescription = "star",
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier
+                        .padding(bottom = 1.dp)
+                        .size(18.dp),
                     tint = score?.point10DecimalOnPrimaryColor()
                         ?: MaterialTheme.colorScheme.onSurface
                 )
@@ -73,7 +82,7 @@ fun BadgeScoreIndicator(
                     text = score.formatPositiveValueOrUnknown(),
                     color = score?.point10DecimalOnPrimaryColor()
                         ?: MaterialTheme.colorScheme.onSurface,
-                    fontSize = 14.sp
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
 
@@ -90,7 +99,7 @@ fun BadgeScoreIndicator(
                         text = UNKNOWN_CHAR,
                         modifier = Modifier.size(20.dp),
                         color = Color.White,
-                        fontSize = 14.sp,
+                        style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center
                     )
                 }

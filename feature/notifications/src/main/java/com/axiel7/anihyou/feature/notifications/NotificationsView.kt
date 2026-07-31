@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.notifications
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -95,11 +97,12 @@ private fun NotificationsContent(
                 bottom = padding.calculateBottomPadding()
             )
         ) {
-            item(
+            stickyHeader(
                 contentType = uiState.type
             ) {
                 Row(
                     modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp, end = 8.dp)
                 ) {

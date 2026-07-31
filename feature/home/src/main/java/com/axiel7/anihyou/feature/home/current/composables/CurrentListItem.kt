@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -90,14 +91,15 @@ fun CurrentListItem(
             Text(
                 text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 color = MaterialTheme.colorScheme.onSurface,
-                lineHeight = 19.sp,
+                style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
 
+            Spacer(modifier = Modifier.weight(1f))
+
             AiringScheduleText(
                 item = item,
-                fontSize = 15.sp,
             )
 
             Row(

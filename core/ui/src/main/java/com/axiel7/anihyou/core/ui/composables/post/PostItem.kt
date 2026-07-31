@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,7 +54,7 @@ fun PostItem(
                 text = title,
                 modifier = Modifier.fillMaxWidth(),
                 fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 3
@@ -66,7 +67,9 @@ fun PostItem(
             ) {
                 subtitle()
 
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     PersonImage(
                         url = avatarUrl,
                         modifier = Modifier
@@ -75,9 +78,9 @@ fun PostItem(
                     )
                     Text(
                         text = author,
-                        fontSize = 15.sp,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
+                        maxLines = 1,
+                        style = MaterialTheme.typography.labelMedium
                     )
                 }
             }
@@ -143,20 +146,21 @@ private fun PostItemPreview() {
                     modifier = Modifier.padding(16.dp),
                     subtitle = {
                         Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             TextIconHorizontal(
                                 text = "100",
                                 icon = R.drawable.star_filled_20,
-                                iconPadding = PaddingValues(0.dp),
-                                fontSize = 15.sp
+                                iconPadding = PaddingValues(bottom = 1.dp),
+                                style = MaterialTheme.typography.labelMedium
                             )
                             TextIconHorizontal(
                                 text = "1,212",
                                 icon = R.drawable.thumb_up_filled_20,
                                 modifier = Modifier.padding(end = 8.dp),
                                 iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                fontSize = 15.sp
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         }
                     },

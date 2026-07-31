@@ -292,33 +292,36 @@ private fun MediaDetailsContent(
                                 },
                                 onClick = { }
                             ),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium
                     )
                     TextIconHorizontal(
                         text = uiState.details?.format?.localized()
                             ?: stringResource(R.string.unknown),
                         icon = if (uiState.details?.basicMediaDetails?.isAnime() == true)
-                            R.drawable.live_tv_24
-                        else R.drawable.book_24,
+                            R.drawable.live_tv_20
+                        else R.drawable.book_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                     TextIconHorizontal(
                         text = uiState.details?.basicMediaDetails?.durationText()
                             ?: stringResource(R.string.unknown),
-                        icon = R.drawable.timer_24,
+                        icon = R.drawable.timer_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                     TextIconHorizontal(
                         text = uiState.details?.status.localized(),
-                        icon = R.drawable.rss_feed_24,
+                        icon = R.drawable.rss_feed_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 }//:Column
             }//:Row
@@ -327,9 +330,10 @@ private fun MediaDetailsContent(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                val dividerHeight = 36
+                val dividerHeight = 28
                 uiState.details?.nextAiringEpisode?.let { nextAiringEpisode ->
                     TextSubtitleVertical(
                         text = stringResource(

@@ -67,7 +67,6 @@ fun MediaRelationsView(
                             Text(
                                 text = item.mediaRelated.relationType?.localized().orEmpty(),
                                 color = MaterialTheme.colorScheme.outline,
-                                fontSize = 15.sp,
                             )
                         },
                         status = item.mediaRelated.node?.mediaListEntry?.basicMediaListEntry?.status,
