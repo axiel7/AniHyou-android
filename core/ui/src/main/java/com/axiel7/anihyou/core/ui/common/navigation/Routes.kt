@@ -117,6 +117,10 @@ object Routes {
 
     @Serializable
     @Immutable
+    object Contributors: NavKey
+
+    @Serializable
+    @Immutable
     data class FullScreenImage(val imageUrl: String?): NavKey
 
     @Serializable

@@ -203,6 +203,9 @@ class NavActionManager(
                 type = type
             )
         )
+        
+    fun toContributors() {
+        navigator.navigate(Routes.Contributors)
     }
 
     companion object {

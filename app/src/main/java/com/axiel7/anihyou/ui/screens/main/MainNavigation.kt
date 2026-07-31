@@ -51,6 +51,7 @@ import com.axiel7.anihyou.feature.notifications.NotificationsView
 import com.axiel7.anihyou.feature.profile.ProfileView
 import com.axiel7.anihyou.feature.profile.favorites.reorder.ReorderFavoritesView
 import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsView
+import com.axiel7.anihyou.feature.settings.ContributorsView
 import com.axiel7.anihyou.feature.settings.SettingsView
 import com.axiel7.anihyou.feature.settings.TranslationsView
 import com.axiel7.anihyou.feature.settings.customlists.CustomListsView
@@ -348,6 +349,11 @@ fun MainNavigation(
         }
         entry<Routes.Translations> {
             TranslationsView(
+                navActionManager = navActionManager,
+            )
+        }
+        entry<Routes.Contributors> {
+            ContributorsView(
                 navActionManager = navActionManager,
             )
         }

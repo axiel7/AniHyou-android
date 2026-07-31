@@ -40,9 +40,10 @@ object DateUtils {
     }
 
     fun LocalDateTime.toLocalized(
-        style: FormatStyle = FormatStyle.MEDIUM
+        dateStyle: FormatStyle = FormatStyle.MEDIUM,
+        timeStyle: FormatStyle = FormatStyle.SHORT,
     ): String? = try {
-        this.format(DateTimeFormatter.ofLocalizedDate(style)).orEmpty()
+        this.format(DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)).orEmpty()
     } catch (_: DateTimeException) {
         null
     }

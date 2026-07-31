@@ -373,11 +373,9 @@ private fun SettingsContent(
             )
 
             PlainPreference(
-                title = stringResource(R.string.developed_by_axiel7),
+                title = stringResource(R.string.contributors),
                 icon = R.drawable.code_24,
-                onClick = {
-                    context.openActionView(GITHUB_PROFILE_URL)
-                }
+                onClick = navActionManager::toContributors
             )
 
             PlainPreference(
