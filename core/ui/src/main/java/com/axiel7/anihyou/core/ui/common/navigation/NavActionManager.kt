@@ -193,7 +193,7 @@ class NavActionManager(
         navigator.navigate(Routes.Translations)
     }
 
-    fun toReorder(
+    fun toReorderFavorites(
         userId: Int?,
         type: FavoritesType
     ) {
