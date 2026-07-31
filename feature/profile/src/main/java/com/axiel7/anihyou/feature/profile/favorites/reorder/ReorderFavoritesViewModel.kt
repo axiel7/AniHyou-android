@@ -201,6 +201,7 @@ class ReorderFavoritesViewModel(
                     favoritesRepository.getFavoriteStaff(
                         userId = uiState.userId,
                         page = uiState.page,
+                        perPage = 100,
                         fetchFromNetwork = uiState.fetchFromNetwork,
                     )
                 else emptyFlow()
