@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.home.activity
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -32,6 +34,7 @@ import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
+import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingFilterChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityTypeChip
 import org.koin.compose.viewmodel.koinActivityViewModel
 
@@ -89,7 +92,9 @@ private fun ActivityFeedContent(
         ) {
             item {
                 Row(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ActivityTypeChip(
@@ -99,6 +104,12 @@ private fun ActivityFeedContent(
                     ActivityFollowingChip(
                         value = uiState.isFollowing,
                         onValueChanged = { event?.setIsFollowing(it) }
+                    )
+                    ActivityFollowingFilterChip(
+                        followingUsers = uiState.followingUsers,
+                        selectedIds = uiState.followingFilters,
+                        onValueChanged = { event?.setFollowingFilters(it) },
+                        enabled = uiState.isFollowing,
                     )
                 }
             }
