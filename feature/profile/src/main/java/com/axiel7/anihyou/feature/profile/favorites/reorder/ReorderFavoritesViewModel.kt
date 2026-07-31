@@ -114,6 +114,7 @@ data class ReorderFavoritesViewModel(
                     favoritesRepository.getFavoriteManga(
                         userId = uiState.userId,
                         page = uiState.page,
+                        perPage = 100,
                         fetchFromNetwork = uiState.fetchFromNetwork,
                     )
                 else emptyFlow()
