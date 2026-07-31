@@ -8,7 +8,6 @@ import com.axiel7.anihyou.core.base.event.UiEvent
 interface ReorderFavoritesEvent : UiEvent, PagedEvent {
     fun onRefresh()
 
-    override fun onErrorDisplayed()
 
     fun saveNewOrder()
 }
