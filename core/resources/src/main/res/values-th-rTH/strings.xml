@@ -157,7 +157,6 @@
     <string name="account">บัญชี</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">เวอร์ชั่น</string>
-    <string name="developed_by_axiel7">พัฒนาโดย axiel7</string>
     <string name="anilist_account_settings">ตั้งค่าบัญชี AniList</string>
     <string name="logout">ออกจากระบบ</string>
     <string name="character_media">สื่อมีเดีย</string>
@@ -405,7 +404,8 @@
     <string name="staff_role_digital_optical_recording">การบันทึกแบบดิจิตอลออปติคัล</string>
     <string name="staff_role_digital_paint">สีดิจิทัล</string>
     <string name="staff_role_digital_photography">ถ่ายภาพดิจิทัล</string>
-    <string name="staff_role_digital_production_assistant">ผู้ช่วยฝ่ายผลิตดิจิทัล</string>
+    <string name="staff_role_digital_production_assistant">ผู้ช่วยฝ่ายผลิตดิจิทัล
+</string>
     <string name="staff_role_director_of_photography">ผู้กำกับภาพ</string>
     <string name="staff_role_director">ผู้กำกับ</string>
     <string name="staff_role_editing_assistant">ผู้ช่วยตัดต่อ</string>
@@ -617,4 +617,5 @@
     </plurals>
     <string name="login_required_in_phone">ในการใช้แอพนี้ครั้งแรก ต้องเข้าสู่ระบบก่อน โดยเปิดแอพ AniHyou</string>
     <string name="app_installed_required">ไม่พบอุปกรณ์ใกล้เคียง โปรดติดตั้งแอป AniHyou เวอร์ชันล่าสุด</string>
+    <string name="translator_app">ผู้แปลภาษา</string>
 </resources>
