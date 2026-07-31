@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.ui.common.navigation
 import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.model.CurrentListType
+import com.axiel7.anihyou.core.model.FavoritesType
 import kotlinx.serialization.Serializable
 
 object Routes {
@@ -154,4 +155,11 @@ object Routes {
     data class CurrentFullList(
         val listType: CurrentListType,
     ): NavKey
+
+    @Serializable
+    @Immutable
+    data class ReorderFavorites(
+        val userId: Int? = null,
+        val type: FavoritesType
+    ) : NavKey
 }

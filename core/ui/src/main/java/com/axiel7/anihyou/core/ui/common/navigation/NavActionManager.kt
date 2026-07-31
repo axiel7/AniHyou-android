@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import com.axiel7.anihyou.core.model.CurrentListType
+import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.network.type.MediaSeason
@@ -192,6 +193,18 @@ class NavActionManager(
         navigator.navigate(Routes.Translations)
     }
 
+    fun toReorderFavorites(
+        userId: Int?,
+        type: FavoritesType
+    ) {
+        navigator.navigate(
+            Routes.ReorderFavorites(
+                userId = userId,
+                type = type
+            )
+        )
+    }
+        
     fun toContributors() {
         navigator.navigate(Routes.Contributors)
     }

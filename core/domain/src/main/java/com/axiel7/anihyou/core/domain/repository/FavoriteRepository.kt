@@ -86,4 +86,31 @@ class FavoriteRepository(
         .asPagedResult(page = { it.User?.favourites?.studios?.pageInfo?.commonPage }) {
             it.User?.favourites?.studios?.nodes?.filterNotNull().orEmpty()
         }
+
+    fun updateFavouriteOrder(
+        animeIds: List<Int>? = null,
+        animeOrder: List<Int>? = null,
+        mangaIds: List<Int>? = null,
+        mangaOrder: List<Int>? = null,
+        characterIds: List<Int>? = null,
+        characterOrder: List<Int>? = null,
+        staffIds: List<Int>? = null,
+        staffOrder: List<Int>? = null,
+        studioIds: List<Int>? = null,
+        studioOrder: List<Int>? = null
+    ) = api
+        .updateFavouriteOrderMutation(
+            animeIds,
+            animeOrder,
+            mangaIds,
+            mangaOrder,
+            characterIds,
+            characterOrder,
+            staffIds,
+            staffOrder,
+            studioIds,
+            studioOrder
+        )
+        .toFlow()
+        .asDataResult()
 }

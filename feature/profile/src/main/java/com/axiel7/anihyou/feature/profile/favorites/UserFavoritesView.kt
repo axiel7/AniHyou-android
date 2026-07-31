@@ -4,41 +4,44 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.LocalResultEventBus
+import androidx.navigation3.runtime.result.ResultEffect
+import androidx.navigation3.runtime.result.ResultEventBus
+import com.axiel7.anihyou.core.model.FavoritesType
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
-import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
-import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
-import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
-import com.axiel7.anihyou.core.ui.composables.person.PersonItemVertical
-import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -74,182 +77,83 @@ private fun UserFavoritesContent(
     val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
+
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     }
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
-    PullToRefreshBox(
-        isRefreshing = uiState.isLoading,
-        onRefresh = { event?.onRefresh() },
-        state = pullRefreshState,
-        indicator = {
-            PullToRefreshDefaults.LoadingIndicator(
-                state = pullRefreshState,
-                isRefreshing = uiState.isLoading,
-                modifier = Modifier.align(Alignment.TopCenter),
+    ResultEffect<List<*>> { result ->
+        event?.updateAfterReorderSaved(result)
+    }
+
+    Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { navActionManager.toReorderFavorites(userId = uiState.userId, type = uiState.type) },
+                icon = { Icon(painter = painterResource(R.drawable.baseline_swap_vert_24), contentDescription = stringResource(R.string.reorder)) },
+                text = { Text(text = stringResource(R.string.reorder)) }
             )
-        }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+    ) { padding ->
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = { event?.onRefresh() },
+            state = pullRefreshState,
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullRefreshState,
+                    isRefreshing = uiState.isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                )
+            }
         ) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+                    .padding(padding)
             ) {
-                FavoritesType.entries.forEach {
-                    FilterSelectionChip(
-                        selected = uiState.type == it,
-                        text = it.localized(),
-                        onClick = { event?.setType(it) },
-                        modifier = Modifier.padding(end = 8.dp)
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    FavoritesType.entries.forEach {
+                        FilterSelectionChip(
+                            selected = uiState.type == it,
+                            text = it.localized(),
+                            onClick = { event?.setType(it) },
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+                }//: Row
+
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
+                    modifier = modifier.padding(horizontal = 8.dp),
+                    state = listState,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    favoritesItems(
+                        type = uiState.type,
+                        anime = uiState.anime,
+                        manga = uiState.manga,
+                        characters = uiState.characters,
+                        staff = uiState.staff,
+                        studios = uiState.studios,
+                        isLoading = uiState.isLoading,
+                        blurAdult = blurAdult,
+                        onMediaClick = navActionManager::toMediaDetails,
+                        onCharacterClick = navActionManager::toCharacterDetails,
+                        onStaffClick = navActionManager::toStaffDetails,
+                        onStudioClick = navActionManager::toStudioDetails
                     )
-                }
-            }//: Row
-
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
-                modifier = modifier.padding(horizontal = 8.dp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                when (uiState.type) {
-                    FavoritesType.ANIME -> {
-                        items(
-                            items = uiState.anime,
-                            key = { it.id },
-                            contentType = { it }
-                        ) { item ->
-                            MediaItemVertical(
-                                title = item.title?.userPreferred.orEmpty(),
-                                imageUrl = item.coverImage?.large,
-                                blurImage = blurAdult && item.isAdult == true,
-                                modifier = Modifier.wrapContentWidth(),
-                                onClick = {
-                                    navActionManager.toMediaDetails(item.id)
-                                }
-                            )
-                        }
-                        if (uiState.isLoading) {
-                            items(14) {
-                                MediaItemVerticalPlaceholder()
-                            }
-                        }
-                    }
-
-                    FavoritesType.MANGA -> {
-                        items(
-                            items = uiState.manga,
-                            key = { it.id },
-                            contentType = { it }
-                        ) { item ->
-                            MediaItemVertical(
-                                title = item.title?.userPreferred.orEmpty(),
-                                imageUrl = item.coverImage?.large,
-                                blurImage = blurAdult && item.isAdult == true,
-                                modifier = Modifier.wrapContentWidth(),
-                                onClick = {
-                                    navActionManager.toMediaDetails(item.id)
-                                }
-                            )
-                        }
-                        if (uiState.isLoading) {
-                            items(14) {
-                                MediaItemVerticalPlaceholder()
-                            }
-                        }
-                    }
-
-                    FavoritesType.CHARACTERS -> {
-                        items(
-                            items = uiState.characters,
-                            key = { it.id },
-                            contentType = { it }
-                        ) { item ->
-                            PersonItemVertical(
-                                title = item.name?.userPreferred.orEmpty(),
-                                imageUrl = item.image?.large,
-                                onClick = {
-                                    navActionManager.toCharacterDetails(item.id)
-                                }
-                            )
-                        }
-                        if (uiState.isLoading) {
-                            items(14) {
-                                PersonItemVerticalPlaceholder()
-                            }
-                        }
-                    }
-
-                    FavoritesType.STAFF -> {
-                        items(
-                            items = uiState.staff,
-                            key = { it.id },
-                            contentType = { it }
-                        ) { item ->
-                            PersonItemVertical(
-                                title = item.name?.userPreferred.orEmpty(),
-                                imageUrl = item.image?.large,
-                                onClick = {
-                                    navActionManager.toStaffDetails(item.id)
-                                }
-                            )
-                        }
-                        if (uiState.isLoading) {
-                            items(14) {
-                                PersonItemVerticalPlaceholder()
-                            }
-                        }
-                    }
-
-                    FavoritesType.STUDIOS -> {
-                        items(
-                            items = uiState.studios,
-                            key = { it.id },
-                            contentType = { it }
-                        ) { item ->
-                            Card(
-                                modifier = Modifier.padding(horizontal = 4.dp),
-                                onClick = { navActionManager.toStudioDetails(item.id) }
-                            ) {
-                                Text(
-                                    text = item.name,
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    ),
-                                    fontSize = 16.sp,
-                                    lineHeight = 18.sp
-                                )
-                            }
-                        }
-                        if (uiState.isLoading) {
-                            items(14) {
-                                Card(
-                                    modifier = Modifier
-                                        .padding(horizontal = 4.dp)
-                                        .defaultPlaceholder(visible = true),
-                                ) {
-                                    Text(
-                                        text = "Loading",
-                                        modifier = Modifier.padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        ),
-                                        fontSize = 16.sp,
-                                        lineHeight = 18.sp
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }//: LazyVerticalGrid
-        }//: Column
+                }//: LazyVerticalGrid
+            }//: Column
+        }
     }
 }
 
@@ -258,11 +162,13 @@ private fun UserFavoritesContent(
 private fun UserFavoritesViewPreview() {
     AniHyouTheme {
         Surface {
-            UserFavoritesContent(
-                uiState = UserFavoritesUiState(),
-                event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
-            )
+            CompositionLocalProvider(LocalResultEventBus provides ResultEventBus()) {
+                UserFavoritesContent(
+                    uiState = UserFavoritesUiState(),
+                    event = null,
+                    navActionManager = NavActionManager.rememberNavActionManager()
+                )
+            }
         }
     }
 }

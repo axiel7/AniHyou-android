@@ -3,10 +3,13 @@ package com.axiel7.anihyou.feature.profile.favorites
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.PagedEvent
 import com.axiel7.anihyou.core.base.event.UiEvent
+import com.axiel7.anihyou.core.model.FavoritesType
 
 @Immutable
 interface UserFavoritesEvent : UiEvent, PagedEvent {
     fun setType(value: FavoritesType)
+
+    fun updateAfterReorderSaved(result: List<*>)
 
     fun onRefresh()
 }

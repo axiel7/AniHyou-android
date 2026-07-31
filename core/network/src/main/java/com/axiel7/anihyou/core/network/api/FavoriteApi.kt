@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.network.api
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.axiel7.anihyou.core.network.ToggleFavouriteMutation
+import com.axiel7.anihyou.core.network.UpdateFavouriteOrderMutation
 import com.axiel7.anihyou.core.network.UserFavoritesAnimeQuery
 import com.axiel7.anihyou.core.network.UserFavoritesCharacterQuery
 import com.axiel7.anihyou.core.network.UserFavoritesMangaQuery
@@ -91,6 +92,33 @@ class FavoriteApi(
                 userId = Optional.present(userId),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage)
+            )
+        )
+
+    fun updateFavouriteOrderMutation(
+        animeIds: List<Int>?,
+        animeOrder: List<Int>?,
+        mangaIds: List<Int>?,
+        mangaOrder: List<Int>?,
+        characterIds: List<Int>?,
+        characterOrder: List<Int>?,
+        staffIds: List<Int>?,
+        staffOrder: List<Int>?,
+        studioIds: List<Int>?,
+        studioOrder: List<Int>?,
+    ) = client
+        .mutation(
+            UpdateFavouriteOrderMutation(
+                animeIds = Optional.presentIfNotNull(animeIds),
+                animeOrder = Optional.presentIfNotNull(animeOrder),
+                mangaIds = Optional.presentIfNotNull(mangaIds),
+                mangaOrder = Optional.presentIfNotNull(mangaOrder),
+                characterIds = Optional.presentIfNotNull(characterIds),
+                characterOrder = Optional.presentIfNotNull(characterOrder),
+                staffIds = Optional.presentIfNotNull(staffIds),
+                staffOrder = Optional.presentIfNotNull(staffOrder),
+                studioIds = Optional.presentIfNotNull(studioIds),
+                studioOrder = Optional.presentIfNotNull(studioOrder),
             )
         )
 }
