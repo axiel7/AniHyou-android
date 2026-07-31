@@ -1,6 +1,8 @@
 package com.axiel7.anihyou.feature.profile.favorites.reorder
 
-import com.axiel7.anihyou.core.base.event.PagedEvent
+
+import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.base.event.UiEvent
 
 interface ReorderFavoritesEvent : UiEvent, PagedEvent {
