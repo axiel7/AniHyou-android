@@ -5,6 +5,11 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.model.FavoritesType
+import com.axiel7.anihyou.core.network.UserFavoritesAnimeQuery
+import com.axiel7.anihyou.core.network.UserFavoritesCharacterQuery
+import com.axiel7.anihyou.core.network.UserFavoritesMangaQuery
+import com.axiel7.anihyou.core.network.UserFavoritesStaffQuery
+import com.axiel7.anihyou.core.network.UserFavoritesStudioQuery
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -26,6 +31,34 @@ class UserFavoritesViewModel(
     override fun setType(value: FavoritesType) {
         mutableUiState.update {
             it.copy(type = value, page = 1, hasNextPage = true)
+        }
+    }
+
+    override fun updateAfterReorderSaved(result: List<*>) {
+        mutableUiState.update { currentState ->
+            when (uiState.value.type) {
+                FavoritesType.ANIME -> {
+                    currentState.anime.clear()
+                    currentState.anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
+                }
+                FavoritesType.MANGA -> {
+                    currentState.manga.clear()
+                    currentState.manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
+                }
+                FavoritesType.CHARACTERS -> {
+                    currentState.characters.clear()
+                    currentState.characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
+                }
+                FavoritesType.STAFF -> {
+                    currentState.staff.clear()
+                    currentState.staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
+                }
+                FavoritesType.STUDIOS -> {
+                    currentState.studios.clear()
+                    currentState.studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
+                }
+            }
+            currentState
         }
     }
 

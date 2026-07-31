@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalCoroutinesApi::class)
-data class ReorderFavoritesViewModel(
+class ReorderFavoritesViewModel(
     private val favoritesRepository: FavoriteRepository
 ) : PagedUiStateViewModel<ReorderFavoritesUiState>(), ReorderFavoritesEvent {
     override val initialState = ReorderFavoritesUiState()
@@ -27,6 +27,17 @@ data class ReorderFavoritesViewModel(
 
     override fun onRefresh() {
         mutableUiState.update { it.copy(fetchFromNetwork = true, page = 1, hasNextPage = true) }
+    }
+
+    override fun onMove(from: Int, to: Int) {
+        val currentState = uiState.value
+        when (currentState.type) {
+            FavoritesType.ANIME -> currentState.anime.apply { add(to, removeAt(from)) }
+            FavoritesType.MANGA -> currentState.manga.apply { add(to, removeAt(from)) }
+            FavoritesType.CHARACTERS -> currentState.characters.apply { add(to, removeAt(from)) }
+            FavoritesType.STAFF -> currentState.staff.apply { add(to, removeAt(from)) }
+            FavoritesType.STUDIOS -> currentState.studios.apply { add(to, removeAt(from)) }
+        }
     }
 
     override fun saveNewOrder() {

@@ -155,7 +155,7 @@ object Routes {
     @Serializable
     @Immutable
     data class ReorderFavorites(
-        val userId: Int? = 0,
+        val userId: Int? = null,
         val type: FavoritesType
     ) : NavKey
 }

@@ -87,15 +87,7 @@ private fun ReorderFavoriteContent(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val reorderableLazyGridState = rememberReorderableLazyGridState(listState) { from, to ->
-        when (uiState.type) {
-            // type 1: uiState.anime.apply { add(to.index, removeAt(from.index)) }
-            // type 2: uiState.anime.apply { this[to.index] = this[from.index].also { this[from.index] = this[to.index] } }
-            FavoritesType.ANIME -> { uiState.anime.apply { add(to.index, removeAt(from.index)) } }
-            FavoritesType.MANGA -> { uiState.manga.apply { add(to.index, removeAt(from.index)) } }
-            FavoritesType.CHARACTERS -> { uiState.characters.apply { add(to.index, removeAt(from.index)) } }
-            FavoritesType.STAFF -> { uiState.staff.apply { add(to.index, removeAt(from.index)) } }
-            FavoritesType.STUDIOS -> { uiState.studios.apply { add(to.index, removeAt(from.index)) } }
-        }
+        event?.onMove(from.index, to.index)
     }
 
     if (!uiState.isLoading) {

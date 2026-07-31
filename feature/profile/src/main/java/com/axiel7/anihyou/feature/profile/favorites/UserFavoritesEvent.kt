@@ -9,5 +9,7 @@ import com.axiel7.anihyou.core.model.FavoritesType
 interface UserFavoritesEvent : UiEvent, PagedEvent {
     fun setType(value: FavoritesType)
 
+    fun updateAfterReorderSaved(result: List<*>)
+
     fun onRefresh()
 }

@@ -101,44 +101,14 @@ private fun UserFavoritesContent(
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     ResultEffect<List<*>> { result ->
-        when (uiState.type) {
-            FavoritesType.ANIME -> {
-                uiState.anime.apply {
-                    clear()
-                    addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
-                }
-            }
-            FavoritesType.MANGA -> {
-                uiState.manga.apply {
-                    clear()
-                    addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
-                }
-            }
-            FavoritesType.CHARACTERS -> {
-                uiState.characters.apply {
-                    clear()
-                    addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
-                }
-            }
-            FavoritesType.STAFF -> {
-                uiState.staff.apply {
-                    clear()
-                    addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
-                }
-            }
-            FavoritesType.STUDIOS -> {
-                uiState.studios.apply {
-                    clear()
-                    addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
-                }
-            }
-        }
+        event?.updateAfterReorderSaved(result)
     }
 
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { navActionManager.toReorder(userId = uiState.userId, uiState.type) },
+                onClick = { navActionManager.toReorderFavorites(userId = uiState.userId, type = uiState.type) },
+                modifier = Modifier.safeGesturesPadding(),
                 icon = { Icon(painter = painterResource(R.drawable.baseline_swap_vert_24), contentDescription = stringResource(R.string.reorder)) },
                 text = { Text(text = stringResource(R.string.reorder)) }
             )
@@ -157,7 +127,9 @@ private fun UserFavoritesContent(
             }
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
             ) {
                 Row(
                     modifier = Modifier
