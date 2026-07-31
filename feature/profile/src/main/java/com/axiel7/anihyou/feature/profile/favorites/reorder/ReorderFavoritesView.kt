@@ -2,6 +2,7 @@ package com.axiel7.anihyou.feature.profile.favorites.reorder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -31,6 +32,7 @@ import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -80,6 +82,7 @@ private fun ReorderFavoriteContent(
     modifier: Modifier,
     navActionManager: NavActionManager
 ) {
+    val snackbarManager = rememberSnackbarManager()
     val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -101,6 +104,7 @@ private fun ReorderFavoriteContent(
 
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(id = R.string.reorder),
+        snackbarHost = snackbarManager::SnackbarHost,
         navigationIcon = {
             BackIconButton(onClick = navActionManager::goBack)
         },
@@ -124,14 +128,10 @@ private fun ReorderFavoriteContent(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
             modifier = modifier
+                .padding(horizontal = 16.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = listState,
-            contentPadding = padding + PaddingValues(
-                start = 8.dp,
-                top = 8.dp,
-                end = 8.dp,
-                bottom = 80.dp
-            ),
+            contentPadding = padding + PaddingValues(top = 8.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
@@ -144,7 +144,11 @@ private fun ReorderFavoriteContent(
                 studios = uiState.studios,
                 isLoading = uiState.isLoading,
                 blurAdult = blurAdult,
-                reorderableState = reorderableLazyGridState
+                reorderableState = reorderableLazyGridState,
+                onMediaClick = { snackbarManager.showMessage(R.string.reorder_hint) },
+                onCharacterClick = { snackbarManager.showMessage(R.string.reorder_hint) },
+                onStaffClick = { snackbarManager.showMessage(R.string.reorder_hint) },
+                onStudioClick = { snackbarManager.showMessage(R.string.reorder_hint) },
             )
         }
     }

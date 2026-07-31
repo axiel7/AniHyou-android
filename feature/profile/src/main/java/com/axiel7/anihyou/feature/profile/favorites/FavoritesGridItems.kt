@@ -56,7 +56,7 @@ internal fun LazyGridScope.favoritesItems(
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .longPressDraggableHandle(),
-                            onClick = { }
+                            onClick = { onMediaClick(item.id) }
                         )
                     }
                 } else {
@@ -91,7 +91,7 @@ internal fun LazyGridScope.favoritesItems(
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .longPressDraggableHandle(),
-                            onClick = { }
+                            onClick = { onMediaClick(item.id) }
                         )
                     }
                 } else {
@@ -123,7 +123,7 @@ internal fun LazyGridScope.favoritesItems(
                             title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             modifier = Modifier.longPressDraggableHandle(),
-                            onClick = { }
+                            onClick = { onCharacterClick(item.id) }
                         )
                     }
                 } else {
@@ -153,7 +153,7 @@ internal fun LazyGridScope.favoritesItems(
                             title = item.name?.userPreferred.orEmpty(),
                             imageUrl = item.image?.large,
                             modifier = Modifier.longPressDraggableHandle(),
-                            onClick = { }
+                            onClick = { onStaffClick(item.id) }
                         )
                     }
                 } else {
@@ -183,7 +183,7 @@ internal fun LazyGridScope.favoritesItems(
                             modifier = Modifier
                                 .padding(horizontal = 4.dp)
                                 .longPressDraggableHandle(),
-                            onClick = { }
+                            onClick = { onStudioClick(item.id) }
                         ) {
                             Text(
                                 text = item.name,
