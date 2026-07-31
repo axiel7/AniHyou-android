@@ -11,5 +11,4 @@ android {
 dependencies {
     implementation(libs.reorderable)
     implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.ui)
 }
