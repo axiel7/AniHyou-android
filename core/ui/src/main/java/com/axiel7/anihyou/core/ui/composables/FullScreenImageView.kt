@@ -29,6 +29,8 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Routes.FullScreenImage
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -38,6 +40,7 @@ fun FullScreenImageView(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    val zoomState = rememberZoomState()
 
     Box(
         modifier = Modifier
@@ -49,7 +52,9 @@ fun FullScreenImageView(
         SubcomposeAsyncImage(
             model = arguments.imageUrl,
             contentDescription = "image",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .zoomable(zoomState),
             loading = {
                 Box(contentAlignment = Alignment.Center) {
                     LoadingIndicator(
@@ -59,6 +64,9 @@ fun FullScreenImageView(
             },
             error = {
                 Icon(painter = painterResource(R.drawable.cancel_24), contentDescription = null)
+            },
+            onSuccess = {
+                zoomState.setContentSize(it.painter.intrinsicSize)
             },
             contentScale = if (isCompactScreen) ContentScale.FillWidth else ContentScale.FillHeight
         )
