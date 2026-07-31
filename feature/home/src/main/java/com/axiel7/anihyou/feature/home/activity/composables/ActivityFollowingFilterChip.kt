@@ -51,19 +51,12 @@ fun ActivityFollowingFilterChip(
     )
 }
 
-private class FollowingLocalizable(val following: FollowingsQuery.Following) : Localizable {
+@JvmInline
+private value class FollowingLocalizable(
+    val following: FollowingsQuery.Following
+): Localizable {
     @Composable
     override fun localized(): String {
         return following.userFollow.name
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is FollowingLocalizable) return false
-        return following.userFollow.id == other.following.userFollow.id
-    }
-
-    override fun hashCode(): Int {
-        return following.userFollow.id.hashCode()
     }
 }
