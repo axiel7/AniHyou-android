@@ -128,7 +128,7 @@ private fun ReorderFavoriteContent(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
             modifier = modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 8.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = listState,
             contentPadding = padding + PaddingValues(top = 8.dp, bottom = 80.dp),
