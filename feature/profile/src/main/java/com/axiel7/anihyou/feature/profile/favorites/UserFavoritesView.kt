@@ -108,7 +108,6 @@ private fun UserFavoritesContent(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { navActionManager.toReorderFavorites(userId = uiState.userId, type = uiState.type) },
-                modifier = Modifier.safeGesturesPadding(),
                 icon = { Icon(painter = painterResource(R.drawable.baseline_swap_vert_24), contentDescription = stringResource(R.string.reorder)) },
                 text = { Text(text = stringResource(R.string.reorder)) }
             )
