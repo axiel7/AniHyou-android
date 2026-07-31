@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.network.ActivityFeedQuery
+import com.axiel7.anihyou.core.network.FollowingsQuery
 import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
@@ -12,6 +13,8 @@ data class ActivityFeedUiState(
     val activities: SnapshotStateList<ActivityFeedQuery.Activity> = mutableStateListOf(),
     val isFollowing: Boolean = true,
     val type: ActivityTypeGrouped = ActivityTypeGrouped.ALL,
+    val followingFilters: List<Int> = emptyList(),
+    val followingUsers: List<FollowingsQuery.Following>? = null,
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = false,

@@ -656,4 +656,5 @@
     <string name="downvote">Downvote Media</string>
     <string name="reorder">Reorder</string>
     <string name="reorder_hint">Long press to reorder</string>
+    <string name="activity_filter_following">From Following</string>
 </resources>

@@ -5,7 +5,9 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
+import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
 import com.axiel7.anihyou.core.network.type.ActivityType
@@ -21,7 +23,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityFeedViewModel(
     private val activityRepository: ActivityRepository,
+    private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<ActivityFeedUiState>(), ActivityFeedEvent {
 
     override val initialState = ActivityFeedUiState()
@@ -30,11 +34,41 @@ class ActivityFeedViewModel(
         mutableUiState.update {
             it.copy(isFollowing = value, page = 1, hasNextPage = true)
         }
+        if (value && mutableUiState.value.followingUsers == null) {
+            getUserFollowing()
+        }
     }
 
     override fun setType(value: ActivityTypeGrouped) {
         mutableUiState.update {
             it.copy(type = value, page = 1, hasNextPage = true)
+        }
+    }
+
+    override fun setFollowingFilters(value: List<Int>) {
+        mutableUiState.update {
+            it.copy(followingFilters = value, page = 1, hasNextPage = true)
+        }
+    }
+
+    override fun getUserFollowing() {
+        viewModelScope.launch {
+            defaultPreferencesRepository.userId.collect { userId ->
+                if (userId != null) {
+                    userRepository.getFollowing(
+                        userId = userId,
+                        page = 1,
+                        perPage = 50,
+                        fetchFromNetwork = false
+                    ).collect { result ->
+                        if (result is PagedResult.Success) {
+                            mutableUiState.update {
+                                it.copy(followingUsers = result.list)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -89,18 +123,25 @@ class ActivityFeedViewModel(
         //first load
         refreshList()
 
+        // get all following users
+        if (initialState.isFollowing) {
+            getUserFollowing()
+        }
+
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && old.isFollowing == new.isFollowing
                         && old.type == new.type
+                        && old.followingFilters == new.followingFilters
                         && !new.fetchFromNetwork
             }
             .flatMapLatest {
                 activityRepository.getActivityFeed(
                     isFollowing = it.isFollowing,
                     typeIn = it.type.value,
+                    userIdIn = if (it.isFollowing) it.followingFilters.takeIf { filters -> filters.isNotEmpty() } else null,
                     fetchFromNetwork = it.fetchFromNetwork,
                     page = it.page
                 )

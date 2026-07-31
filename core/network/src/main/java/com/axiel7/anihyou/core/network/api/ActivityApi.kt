@@ -18,6 +18,7 @@ class ActivityApi(
     fun activityFeedQuery(
         isFollowing: Boolean,
         typeIn: List<ActivityType>?,
+        userIdIn: List<Int>?,
         fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
@@ -28,6 +29,7 @@ class ActivityApi(
                 perPage = Optional.present(perPage),
                 isFollowing = Optional.present(isFollowing),
                 typeIn = Optional.presentIfNotNull(typeIn),
+                userIdIn = Optional.presentIfNotNull(userIdIn),
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
