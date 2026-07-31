@@ -1,12 +1,11 @@
 package com.axiel7.anihyou.feature.profile.favorites.reorder
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -14,14 +13,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,9 +37,9 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.feature.profile.favorites.favoritesItems
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.rememberReorderableLazyGridState
-import com.axiel7.anihyou.feature.profile.favorites.favoritesItems
 
 @Composable
 fun ReorderFavoritesView(
@@ -69,7 +68,7 @@ fun ReorderFavoritesView(
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
-        navigationBarOverride = navActionManager
+        navActionManager = navActionManager
     )
 }
 
@@ -79,11 +78,16 @@ private fun ReorderFavoriteContent(
     uiState: ReorderFavoritesUiState,
     event: ReorderFavoritesEvent?,
     modifier: Modifier,
-    navigationBarOverride: NavActionManager
+    navActionManager: NavActionManager
 ) {
     val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val isAtTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+    }
 
     val reorderableLazyGridState = rememberReorderableLazyGridState(listState) { from, to ->
         event?.onMove(from.index, to.index)
@@ -98,7 +102,7 @@ private fun ReorderFavoriteContent(
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(id = R.string.reorder),
         navigationIcon = {
-            BackIconButton(onClick = navigationBarOverride::goBack)
+            BackIconButton(onClick = navActionManager::goBack)
         },
         scrollBehavior = scrollBehavior,
         floatingActionButton = {
@@ -106,8 +110,14 @@ private fun ReorderFavoriteContent(
                 onClick = {
                     event?.saveNewOrder()
                 },
-                icon = { Icon(painter = painterResource(id = R.drawable.save_24), contentDescription = stringResource(R.string.save))},
-                text = { Text(text = stringResource(id = R.string.save)) }
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.save_24),
+                        contentDescription = stringResource(R.string.save)
+                    )
+                },
+                text = { Text(text = stringResource(id = R.string.save)) },
+                expanded = isAtTop,
             )
         }
     ) { padding ->
@@ -116,11 +126,11 @@ private fun ReorderFavoriteContent(
             modifier = modifier
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = listState,
-            contentPadding = PaddingValues(
-                start = padding.calculateStartPadding(LocalLayoutDirection.current) + 8.dp,
-                top = padding.calculateTopPadding() + 8.dp,
-                end = padding.calculateEndPadding(LocalLayoutDirection.current) + 8.dp,
-                bottom = padding.calculateBottomPadding() + 8.dp
+            contentPadding = padding + PaddingValues(
+                start = 8.dp,
+                top = 8.dp,
+                end = 8.dp,
+                bottom = 80.dp
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
@@ -150,7 +160,7 @@ private fun ReorderFavoriteViewPreview() {
                 uiState = ReorderFavoritesUiState(),
                 event = null,
                 modifier = Modifier,
-                navigationBarOverride = NavActionManager.rememberNavActionManager()
+                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

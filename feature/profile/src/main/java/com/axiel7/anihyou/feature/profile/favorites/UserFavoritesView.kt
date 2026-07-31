@@ -17,13 +17,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -77,6 +80,11 @@ private fun UserFavoritesContent(
     val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
+    val isAtTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+    }
 
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
@@ -91,9 +99,20 @@ private fun UserFavoritesContent(
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { navActionManager.toReorderFavorites(userId = uiState.userId, type = uiState.type) },
-                icon = { Icon(painter = painterResource(R.drawable.baseline_swap_vert_24), contentDescription = stringResource(R.string.reorder)) },
-                text = { Text(text = stringResource(R.string.reorder)) }
+                onClick = {
+                    navActionManager.toReorderFavorites(userId = uiState.userId, type = uiState.type)
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_swap_vert_24),
+                        contentDescription = stringResource(R.string.reorder)
+                    )
+                },
+                text = { Text(text = stringResource(R.string.reorder)) },
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = isAtTop,
+                    alignment = Alignment.BottomEnd,
+                )
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)

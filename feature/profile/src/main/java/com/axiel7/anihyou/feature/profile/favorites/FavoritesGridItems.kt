@@ -25,7 +25,7 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlacehold
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyGridState
 
-fun LazyGridScope.favoritesItems(
+internal fun LazyGridScope.favoritesItems(
     type: FavoritesType,
     anime: List<UserFavoritesAnimeQuery.Node>,
     manga: List<UserFavoritesMangaQuery.Node>,
