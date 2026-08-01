@@ -16,24 +16,24 @@ import com.axiel7.anihyou.core.domain.repository.StaffRepository
 import com.axiel7.anihyou.core.domain.repository.StudioRepository
 import com.axiel7.anihyou.core.domain.repository.ThreadRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.single
 
 val repositoryModule = module {
-    singleOf(::ActivityRepository)
-    singleOf(::CharacterRepository)
-    singleOf(::DefaultPreferencesRepository)
-    singleOf(::FavoriteRepository)
-    singleOf(::LikeRepository)
-    singleOf(::ListPreferencesRepository)
-    singleOf(::LoginRepository)
-    singleOf(::MediaListRepository)
-    singleOf(::MediaRepository)
-    singleOf(::NotificationRepository)
-    singleOf(::ReviewRepository)
-    singleOf(::SearchRepository)
-    singleOf(::StaffRepository)
-    singleOf(::StudioRepository)
-    singleOf(::ThreadRepository)
-    singleOf(::UserRepository)
+    single<ActivityRepository>()
+    single<CharacterRepository>()
+    single<DefaultPreferencesRepository>()
+    single<FavoriteRepository>()
+    single<LikeRepository>()
+    single<ListPreferencesRepository>()
+    single<LoginRepository>()
+    single<MediaListRepository>()
+    single<MediaRepository>()
+    single<NotificationRepository>()
+    single<ReviewRepository>()
+    single<SearchRepository>()
+    single<StaffRepository>()
+    single<StudioRepository>()
+    single<ThreadRepository>()
+    single<UserRepository>()
 }

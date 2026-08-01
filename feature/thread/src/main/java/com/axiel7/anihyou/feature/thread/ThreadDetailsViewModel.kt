@@ -16,10 +16,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ThreadDetailsViewModel(
-    private val arguments: Routes.ThreadDetails,
+    @InjectedParam private val arguments: Routes.ThreadDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val threadRepository: ThreadRepository,
     private val likeRepository: LikeRepository,

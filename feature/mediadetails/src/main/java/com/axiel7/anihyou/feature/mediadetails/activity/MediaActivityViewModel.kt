@@ -20,10 +20,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaActivityViewModel(
-    arguments: Routes.MediaActivity,
+    @InjectedParam arguments: Routes.MediaActivity,
     private val mediaRepository: MediaRepository,
     private val likeRepository: LikeRepository,
     private val activityRepository: ActivityRepository,

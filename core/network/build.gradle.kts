@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.apollo)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
@@ -26,6 +27,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.annotations)
     implementation(libs.koin.core)
 }
 

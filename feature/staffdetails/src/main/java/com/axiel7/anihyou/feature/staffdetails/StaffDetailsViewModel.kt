@@ -19,10 +19,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffDetailsViewModel(
-    private val arguments: Routes.StaffDetails,
+    @InjectedParam private val arguments: Routes.StaffDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val staffRepository: StaffRepository,
     private val favoriteRepository: FavoriteRepository,

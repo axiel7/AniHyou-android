@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.androidx.baselineprofile)
 }
 
@@ -189,6 +190,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.annotations)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)

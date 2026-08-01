@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
@@ -41,6 +42,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.annotations)
     implementation(libs.koin.android)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)

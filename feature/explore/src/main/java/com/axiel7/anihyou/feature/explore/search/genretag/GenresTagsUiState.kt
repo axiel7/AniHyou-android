@@ -16,8 +16,6 @@ data class GenresTagsUiState(
     val displayGenres: SnapshotStateList<SelectableGenre> = mutableStateListOf(),
     val displayTags: SnapshotStateList<SelectableGenre> = mutableStateListOf(),
     val minimumTagPercentage: Int = 18,
-    val externalGenre: SelectableGenre? = null,
-    val externalTag: SelectableGenre? = null,
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     override val error: String? = null,
     override val isLoading: Boolean = true
@@ -26,16 +24,16 @@ data class GenresTagsUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 
     private fun selectedGenres() =
-        genres.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }
+        genres.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }.toSet()
 
     private fun excludedGenres() =
-        genres.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }
+        genres.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }.toSet()
 
     private fun selectedTags() =
-        tags.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }
+        tags.filter { it.state == SelectableGenre.State.SELECTED }.map { it.name }.toSet()
 
     private fun excludedTags() =
-        tags.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }
+        tags.filter { it.state == SelectableGenre.State.EXCLUDED }.map { it.name }.toSet()
 
     fun genresAndTagsForSearch() = GenresAndTagsForSearch(
         genreIn = selectedGenres(),

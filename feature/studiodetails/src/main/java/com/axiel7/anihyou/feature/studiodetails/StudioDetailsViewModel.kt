@@ -15,10 +15,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StudioDetailsViewModel(
-    private val arguments: Routes.StudioDetails,
+    @InjectedParam private val arguments: Routes.StudioDetails,
     private val studioRepository: StudioRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<StudioDetailsUiState>(), StudioDetailsEvent {

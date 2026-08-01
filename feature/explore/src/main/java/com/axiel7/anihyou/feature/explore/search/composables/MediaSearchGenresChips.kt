@@ -25,25 +25,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.model.genre.Genre
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
-import com.axiel7.anihyou.core.model.genre.SelectableGenre
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
+import com.axiel7.anihyou.core.model.genre.Tag
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.InputChipError
 import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsSheet
 import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun MediaSearchGenresChips(
-    externalGenre: SelectableGenre?,
-    externalTag: SelectableGenre?,
+    externalGenre: Genre?,
+    externalTag: Tag?,
     clearedFilters: Boolean,
     onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {
-    val viewModel: GenresTagsViewModel = koinViewModel()
+    val viewModel: GenresTagsViewModel = koinViewModel {
+        parametersOf(externalGenre, externalTag)
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -52,16 +56,6 @@ fun MediaSearchGenresChips(
         enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
     )
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
-    // TODO: pass these by savedStateHandle?
-    LaunchedEffect(externalGenre) {
-        if (uiState.externalGenre == null && externalGenre != null)
-            viewModel.setExternalGenre(externalGenre)
-    }
-    LaunchedEffect(externalTag) {
-        if (uiState.externalTag == null && externalTag != null)
-            viewModel.setExternalTag(externalTag)
-    }
 
     LaunchedEffect(clearedFilters) {
         if (clearedFilters) viewModel.resetData()

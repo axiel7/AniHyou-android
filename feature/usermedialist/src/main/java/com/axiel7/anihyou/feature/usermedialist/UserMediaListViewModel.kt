@@ -42,10 +42,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserMediaListViewModel(
-    arguments: Routes.UserMediaList,
+    @InjectedParam arguments: Routes.UserMediaList,
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,

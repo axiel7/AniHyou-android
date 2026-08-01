@@ -10,9 +10,10 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 class ReviewDetailsViewModel(
-    private val arguments: Routes.ReviewDetails,
+    @InjectedParam private val arguments: Routes.ReviewDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val reviewRepository: ReviewRepository
 ) : UiStateViewModel<ReviewDetailsUiState>(), ReviewDetailsEvent {

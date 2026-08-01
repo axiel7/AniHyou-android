@@ -13,10 +13,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationsViewModel(
-    arguments: Routes.Notifications,
+    @InjectedParam arguments: Routes.Notifications,
     private val notificationRepository: NotificationRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
 

@@ -18,10 +18,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterDetailsViewModel(
-    private val arguments: Routes.CharacterDetails,
+    @InjectedParam private val arguments: Routes.CharacterDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val characterRepository: CharacterRepository,
     private val favoriteRepository: FavoriteRepository,

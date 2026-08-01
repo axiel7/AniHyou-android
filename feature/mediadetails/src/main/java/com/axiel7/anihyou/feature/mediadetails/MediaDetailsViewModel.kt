@@ -22,9 +22,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 class MediaDetailsViewModel(
-    private val arguments: Routes.MediaDetails,
+    @InjectedParam private val arguments: Routes.MediaDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,

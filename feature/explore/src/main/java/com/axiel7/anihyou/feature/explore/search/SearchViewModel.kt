@@ -25,11 +25,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel(
-    arguments: Routes.Search,
-    isLoggedIn: Boolean,
+    @InjectedParam arguments: Routes.Search,
+    @InjectedParam isLoggedIn: Boolean,
     private val searchRepository: SearchRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
@@ -42,8 +43,8 @@ class SearchViewModel(
             searchType = if (mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = mediaSort ?: MediaSort.SEARCH_MATCH,
             genresAndTagsForSearch = GenresAndTagsForSearch(
-                genreIn = arguments.genre?.let { listOf(it) } ?: emptyList(),
-                tagIn = arguments.tag?.let { listOf(it) } ?: emptyList()
+                genreIn = setOfNotNull(arguments.genre),
+                tagIn = setOfNotNull(arguments.tag),
             ),
             onMyList = arguments.onList,
             isLoggedIn = isLoggedIn,
@@ -237,10 +238,10 @@ class SearchViewModel(
                     mediaType = uiState.mediaType!!,
                     query = uiState.query,
                     sort = listOf(uiState.mediaSortForSearch),
-                    genreIn = uiState.genresAndTagsForSearch.genreIn,
-                    genreNotIn = uiState.genresAndTagsForSearch.genreNot,
-                    tagIn = uiState.genresAndTagsForSearch.tagIn,
-                    tagNotIn = uiState.genresAndTagsForSearch.tagNot,
+                    genreIn = uiState.genresAndTagsForSearch.genreIn.toList(),
+                    genreNotIn = uiState.genresAndTagsForSearch.genreNot.toList(),
+                    tagIn = uiState.genresAndTagsForSearch.tagIn.toList(),
+                    tagNotIn = uiState.genresAndTagsForSearch.tagNot.toList(),
                     minimumTagPercentage = uiState.genresAndTagsForSearch.minimumTagPercentage,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },

@@ -16,10 +16,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaChartViewModel(
-    arguments: Routes.MediaChartList,
+    @InjectedParam arguments: Routes.MediaChartList,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val mediaRepository: MediaRepository,
 ) : PagedUiStateViewModel<MediaChartUiState>(), MediaChartEvent {

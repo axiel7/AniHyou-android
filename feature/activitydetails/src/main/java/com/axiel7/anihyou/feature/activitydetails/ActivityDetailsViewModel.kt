@@ -17,10 +17,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityDetailsViewModel(
-    arguments: Routes.ActivityDetails,
+    @InjectedParam arguments: Routes.ActivityDetails,
     private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>(), ActivityDetailsEvent {

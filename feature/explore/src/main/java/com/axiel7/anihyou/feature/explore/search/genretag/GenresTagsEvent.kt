@@ -6,8 +6,6 @@ import com.axiel7.anihyou.core.model.genre.SelectableGenre
 
 @Immutable
 interface GenresTagsEvent {
-    fun setExternalGenre(value: SelectableGenre)
-    fun setExternalTag(value: SelectableGenre)
     fun onFilterChanged(value: String)
     fun onGenreUpdated(value: SelectableGenre)
     suspend fun onGenreRemoved(name: String): GenresAndTagsForSearch

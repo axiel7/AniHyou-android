@@ -20,10 +20,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModel(
-    private val arguments: Routes.UserDetails,
+    @InjectedParam private val arguments: Routes.UserDetails,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
     private val activityRepository: ActivityRepository,
