@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.feature.usermedialist
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -169,18 +167,6 @@ private fun LazyListGrid(
                 onLongClick = { onShowEditSheet(item) }
             )
         }
-        item(contentType = { 0 }) {
-            if (uiState.hasNextPage) {
-                Box {
-                    LoadingIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                LaunchedEffect(uiState.isLoading) {
-                    if (!uiState.isLoading) event?.onLoadMore()
-                }
-            }
-        }
     }
 }
 
@@ -292,19 +278,6 @@ private fun LazyListTablet(
 
             else -> {}
         }
-
-        item(contentType = { 0 }) {
-            if (uiState.hasNextPage) {
-                Box {
-                    LoadingIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                LaunchedEffect(uiState.isLoading) {
-                    if (!uiState.isLoading) event?.onLoadMore()
-                }
-            }
-        }
     }//: LazyVerticalGrid
 }
 
@@ -414,19 +387,6 @@ private fun LazyListPhone(
             }
 
             else -> {}
-        }
-
-        item(contentType = { 0 }) {
-            if (uiState.hasNextPage) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    LoadingIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                LaunchedEffect(uiState.isLoading) {
-                    if (!uiState.isLoading) event?.onLoadMore()
-                }
-            }
         }
     }//: LazyColumn
 }

@@ -6,7 +6,7 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isNullOrZero
-import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -50,7 +49,7 @@ class UserMediaListViewModel(
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
-) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
+) : UiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
     private val scoreFormat = arguments.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
     private val mediaType = MediaType.safeValueOf(arguments.mediaType)
@@ -143,8 +142,6 @@ class UserMediaListViewModel(
         mutableUiState.update {
             it.copy(
                 fetchFromNetwork = true,
-                page = 1,
-                hasNextPage = true,
                 isLoading = true
             )
         }
@@ -304,7 +301,7 @@ class UserMediaListViewModel(
             .distinctUntilChanged()
             .onEach { sort ->
                 mutableUiState.update {
-                    it.copy(sort = sort, page = 1, hasNextPage = true, isLoading = true)
+                    it.copy(sort = sort, isLoading = true)
                 }
             }
             .launchIn(viewModelScope)
@@ -323,10 +320,8 @@ class UserMediaListViewModel(
             .launchIn(viewModelScope)
 
         mutableUiState
-            .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
-                old.page == new.page
-                        && old.sort == new.sort
+                old.sort == new.sort
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
@@ -348,7 +343,7 @@ class UserMediaListViewModel(
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
-                        if (uiState.page == 1 || result.currentPage == 1) {
+                        if (result.currentPage == 1) {
                             uiState.lists.clear()
                             uiState.entries.clear()
                         }
@@ -375,19 +370,14 @@ class UserMediaListViewModel(
                         uiState.entries.addAll(newEntries)
                         val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
-                            page = if (loadMore) uiState.page + 1 else uiState.page,
-                            hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
                             isLoading = loadMore,
                         )
                     } else {
-                        result.toUiState(
-                            loadingWhen = uiState.page == 1
-                                    || (uiState.entries.isEmpty() && uiState.hasNextPage)
-                        ).copy(
-                            hasNextPage = if (result is PagedResult.Error) false
-                            else uiState.hasNextPage
-                        )
+                        if (result is PagedResult.Error) {
+                            uiState.setError(result.message)
+                        }
+                        uiState.setLoading(result is PagedResult.Loading)
                     }
                 }
             }
