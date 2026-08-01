@@ -2,12 +2,18 @@ package com.axiel7.anihyou.core.domain.repository
 
 import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.fetchPolicy
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.network.api.FavoriteApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class FavoriteRepository(
     private val api: FavoriteApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
+
+    private val _favoriteToggled = MutableSharedFlow<Boolean>(replay = 1)
+    val favoriteToggled = _favoriteToggled.asSharedFlow()
 
     suspend fun toggleFavorite(
         animeId: Int? = null,
@@ -20,6 +26,8 @@ class FavoriteRepository(
         .execute()
         .asDataResult {
             it.ToggleFavourite
+        }.also {
+            if (it is DataResult.Success) _favoriteToggled.emit(true)
         }
 
     fun getFavoriteAnime(

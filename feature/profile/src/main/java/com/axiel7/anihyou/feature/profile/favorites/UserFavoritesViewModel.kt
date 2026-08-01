@@ -11,12 +11,14 @@ import com.axiel7.anihyou.core.network.UserFavoritesMangaQuery
 import com.axiel7.anihyou.core.network.UserFavoritesStaffQuery
 import com.axiel7.anihyou.core.network.UserFavoritesStudioQuery
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -235,5 +237,14 @@ class UserFavoritesViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        if (isMyProfile) {
+            viewModelScope.launch {
+                favoriteRepository.favoriteToggled
+                    .collectLatest {
+                        if (it) onRefresh()
+                    }
+            }
+        }
     }
 }
