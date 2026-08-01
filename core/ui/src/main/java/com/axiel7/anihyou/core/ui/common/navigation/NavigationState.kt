@@ -102,7 +102,7 @@ class NavigationState(
             val decorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
                 rememberViewModelStoreNavEntryDecorator(),
-                rememberResultEventBusNavEntryDecorator<NavKey>()
+                rememberResultEventBusNavEntryDecorator()
             )
             rememberDecoratedNavEntries(
                 backStack = stack,

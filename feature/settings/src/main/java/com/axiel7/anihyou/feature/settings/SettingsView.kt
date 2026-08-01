@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.core.base.DISCORD_SERVER_URL
-import com.axiel7.anihyou.core.base.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.core.base.GITHUB_REPO_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.ContextUtils.getActivity

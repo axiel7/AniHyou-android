@@ -297,7 +297,6 @@ class UserMediaListViewModel(
             MediaType.MANGA -> listPreferencesRepository.mangaListSort
             else -> emptyFlow()
         }
-            .filterNotNull()
             .distinctUntilChanged()
             .onEach { sort ->
                 mutableUiState.update {
@@ -312,7 +311,6 @@ class UserMediaListViewModel(
             MediaType.MANGA -> defaultPreferencesRepository.mangaLists
             else -> emptyFlow()
         }
-            .filterNotNull()
             .distinctUntilChanged()
             .onEach { listNames ->
                 mutableUiState.update { it.copy(orderedListNames = listNames) }

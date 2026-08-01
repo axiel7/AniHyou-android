@@ -13,12 +13,12 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import kotlin.time.Duration.Companion.milliseconds
 
 class DiscoverViewModel(
     private val mediaRepository: MediaRepository,
@@ -225,7 +225,7 @@ class DiscoverViewModel(
         }
         viewModelScope.launch {
             // PullToRefresh needs a min delay when changing the isRefreshing state
-            delay(1000)
+            delay(1000.milliseconds)
             mutableUiState.update { it.copy(isLoading = false) }
         }
     }
@@ -241,7 +241,6 @@ class DiscoverViewModel(
 
     init {
         defaultPreferencesRepository.airingOnMyList
-            .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(airingOnMyList = value) }
             }

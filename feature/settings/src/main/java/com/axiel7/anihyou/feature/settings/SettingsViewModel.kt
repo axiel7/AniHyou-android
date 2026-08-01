@@ -294,7 +294,6 @@ class SettingsViewModel(
             .launchIn(viewModelScope)
 
         defaultPreferencesRepository.blurAdult
-            .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(blurAdultContent = value) }
             }

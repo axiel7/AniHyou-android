@@ -18,4 +18,8 @@
     <locale android:name="th-TH" />
     <locale android:name="tr-TR" />
     <locale android:name="uk-UA" />
+    <locale android:name="cs-CZ" />
+    <locale android:name="iw-IL" />
+    <locale android:name="sk-SK" />
+    <locale android:name="vi-VN" />
 </locale-config>

@@ -31,6 +31,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -63,7 +64,7 @@ fun IncrementOneButton(
 
     LaunchedEffect(isCountingDown, remainingTime) {
         if (isCountingDown && remainingTime > 0) {
-            delay(400)
+            delay(400.milliseconds)
             remainingTime -= 1f
         } else if (remainingTime <= 0 && isCountingDown) {
             isCountingDown = false
