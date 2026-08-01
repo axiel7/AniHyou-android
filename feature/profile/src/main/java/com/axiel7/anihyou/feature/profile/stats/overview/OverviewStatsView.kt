@@ -225,7 +225,7 @@ private fun OverviewUserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             OverviewStatsView(
-                uiState = UserStatsUiState(),
+                uiState = UserStatsUiState(userId = 0),
                 event = null,
             )
         }

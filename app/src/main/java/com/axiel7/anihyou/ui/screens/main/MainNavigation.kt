@@ -414,8 +414,7 @@ fun MainNavigation(
 
         entry<Routes.ReorderFavorites> {
             ReorderFavoritesView(
-                userId = it.userId,
-                type = it.type,
+                arguments = it,
                 navActionManager = navActionManager
             )
         }

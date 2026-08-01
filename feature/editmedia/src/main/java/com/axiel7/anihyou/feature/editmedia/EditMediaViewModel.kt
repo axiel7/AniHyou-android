@@ -22,19 +22,18 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 import java.time.LocalDate
 
 class EditMediaViewModel(
+    @InjectedParam mediaDetails: BasicMediaDetails,
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : UiStateViewModel<EditMediaUiState>(), EditMediaEvent {
 
-    override val initialState = EditMediaUiState()
+    override val initialState = EditMediaUiState(mediaDetails = mediaDetails)
 
     private val userId = defaultPreferencesRepository.userId
-
-    fun setMediaDetails(value: BasicMediaDetails) =
-        mutableUiState.update { it.copy(mediaDetails = value) }
 
     fun setListEntry(value: BasicMediaListEntry?) = mutableUiState.update {
         value?.advancedScoresMap()?.let { advancedScores ->
@@ -97,7 +96,7 @@ class EditMediaViewModel(
     }
 
     override fun onChangeProgress(value: Int?) {
-        val totalDuration = uiState.value.mediaDetails?.duration()
+        val totalDuration = uiState.value.mediaDetails.duration()
         if (canChangeProgressTo(value, totalDuration)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING
@@ -113,7 +112,7 @@ class EditMediaViewModel(
     }
 
     override fun onChangeVolumeProgress(value: Int?) {
-        val totalVolumes = uiState.value.mediaDetails?.volumes
+        val totalVolumes = uiState.value.mediaDetails.volumes
         if (canChangeProgressTo(value, totalVolumes)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING) {
@@ -195,7 +194,7 @@ class EditMediaViewModel(
         mutableUiState.value.run {
             mediaListRepository.updateEntry(
                 oldEntry = listEntry,
-                mediaId = mediaDetails!!.id,
+                mediaId = mediaDetails.id,
                 status = status,
                 score = score,
                 advancedScores = advancedScoresNames.mapNotNull { advancedScores[it] }
@@ -235,7 +234,7 @@ class EditMediaViewModel(
     override fun updateCustomLists(customsList: List<String>) {
         mediaListRepository
             .updateEntryCustomLists(
-                mediaId = uiState.value.mediaDetails!!.id,
+                mediaId = uiState.value.mediaDetails.id,
                 customLists = customsList
             ).onEach { result ->
                 mutableUiState.update {

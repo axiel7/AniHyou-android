@@ -13,7 +13,7 @@ import com.axiel7.anihyou.core.network.UserFavoritesStudioQuery
 
 @Stable
 data class ReorderFavoritesUiState(
-    val userId: Int? = null,
+    val userId: Int,
     val type: FavoritesType = FavoritesType.ANIME,
     val anime: SnapshotStateList<UserFavoritesAnimeQuery.Node> = mutableStateListOf(),
     val manga: SnapshotStateList<UserFavoritesMangaQuery.Node> = mutableStateListOf(),

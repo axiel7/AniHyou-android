@@ -94,7 +94,7 @@ private fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             GenresStatsView(
-                uiState = UserStatsUiState(),
+                uiState = UserStatsUiState(userId = 0),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )

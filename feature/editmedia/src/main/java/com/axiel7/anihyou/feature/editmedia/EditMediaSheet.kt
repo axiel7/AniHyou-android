@@ -50,6 +50,7 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.core.model.canUseAdvancedScoring
 import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.model.media.duration
+import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isAnime
 import com.axiel7.anihyou.core.model.media.isManga
@@ -77,6 +78,7 @@ import com.axiel7.anihyou.feature.editmedia.composables.EditMediaProgressRow
 import com.axiel7.anihyou.feature.editmedia.composables.ScoreView
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,12 +90,10 @@ fun EditMediaSheet(
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
-    val viewModel: EditMediaViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(mediaDetails) {
-        viewModel.setMediaDetails(mediaDetails)
+    val viewModel: EditMediaViewModel = koinViewModel(key = mediaDetails.id.toString()) {
+        parametersOf(mediaDetails)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(listEntry) {
         viewModel.setListEntry(listEntry)
@@ -228,7 +228,7 @@ private fun EditMediaSheetContent(
                     SelectableIconToggleButton(
                         icon = status.icon(),
                         tooltipText = status.localized(
-                            mediaType = uiState.mediaDetails?.type ?: MediaType.UNKNOWN__
+                            mediaType = uiState.mediaDetails.type ?: MediaType.UNKNOWN__
                         ),
                         value = status,
                         selectedValue = uiState.status,
@@ -242,22 +242,22 @@ private fun EditMediaSheetContent(
 
             // Progress
             EditMediaProgressRow(
-                label = if (uiState.mediaDetails?.isAnime() == true) stringResource(R.string.episodes)
+                label = if (uiState.mediaDetails.isAnime()) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
-                icon = if (uiState.mediaDetails?.isAnime() == true) R.drawable.play_arrow_24
+                icon = if (uiState.mediaDetails.isAnime()) R.drawable.play_arrow_24
                 else R.drawable.book_24,
                 progress = uiState.progress,
                 modifier = Modifier.padding(
                     start = 0.dp,
                     end = 16.dp
                 ),
-                totalProgress = uiState.mediaDetails?.duration(),
+                totalProgress = uiState.mediaDetails.duration(),
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },
                 onPlusClick = { event?.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
             )
 
-            if (uiState.mediaDetails?.isManga() == true) {
+            if (uiState.mediaDetails.isManga()) {
                 EditMediaProgressRow(
                     label = stringResource(R.string.volumes),
                     icon = R.drawable.bookmark_24,
@@ -439,7 +439,9 @@ private fun EditMediaSheetPreview() {
     AniHyouTheme {
         Surface {
             EditMediaSheetContent(
-                uiState = EditMediaUiState(),
+                uiState = EditMediaUiState(
+                    mediaDetails = exampleCommonMediaListEntry.media!!.basicMediaDetails
+                ),
                 event = null,
                 sheetState = rememberBottomSheetState(initialValue = SheetValue.Expanded),
                 onEntryUpdated = {},

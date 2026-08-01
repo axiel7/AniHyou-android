@@ -15,7 +15,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ import com.axiel7.anihyou.feature.profile.stats.studios.StudiosStatsView
 import com.axiel7.anihyou.feature.profile.stats.tags.TagsStatsView
 import com.axiel7.anihyou.feature.profile.stats.voiceactors.VoiceActorsStatsView
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserStatsView(
@@ -44,12 +44,10 @@ fun UserStatsView(
     nestedScrollConnection: NestedScrollConnection,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserStatsViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(userId) {
-        viewModel.setUserId(userId)
+    val viewModel: UserStatsViewModel = koinViewModel {
+        parametersOf(userId)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserStatsContent(
         uiState = uiState,
@@ -170,7 +168,7 @@ private fun UserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             UserStatsContent(
-                uiState = UserStatsUiState(),
+                uiState = UserStatsUiState(userId = 0),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager(),
                 nestedScrollConnection = rememberNestedScrollInteropConnection()

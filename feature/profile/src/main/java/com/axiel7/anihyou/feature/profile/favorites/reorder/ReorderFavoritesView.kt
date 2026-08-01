@@ -32,6 +32,7 @@ import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Routes
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -41,23 +42,20 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.favorites.favoritesItems
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun ReorderFavoritesView(
-    userId: Int?,
-    type: FavoritesType,
+    arguments: Routes.ReorderFavorites,
     navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ReorderFavoritesViewModel = koinViewModel()
+    val viewModel: ReorderFavoritesViewModel = koinViewModel {
+        parametersOf(arguments)
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val resultBus = LocalResultEventBus.current
-
-    LaunchedEffect(userId, type) {
-        viewModel.setUserId(userId)
-        viewModel.setType(type)
-    }
 
     LaunchedEffect(uiState.isSaved) {
         if (uiState.isSaved) {
@@ -161,7 +159,10 @@ private fun ReorderFavoriteViewPreview() {
     AniHyouTheme {
         Surface {
             ReorderFavoriteContent(
-                uiState = ReorderFavoritesUiState(),
+                uiState = ReorderFavoritesUiState(
+                    userId = 0,
+                    type = FavoritesType.ANIME,
+                ),
                 event = null,
                 modifier = Modifier,
                 navActionManager = NavActionManager.rememberNavActionManager()

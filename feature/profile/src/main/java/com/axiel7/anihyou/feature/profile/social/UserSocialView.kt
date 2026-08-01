@@ -17,7 +17,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +32,7 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserSocialView(
@@ -40,12 +40,10 @@ fun UserSocialView(
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserSocialViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(userId) {
-        viewModel.setUserId(userId)
+    val viewModel: UserSocialViewModel = koinViewModel {
+        parametersOf(userId)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserSocialContent(
         uiState = uiState,
@@ -160,7 +158,7 @@ private fun UserSocialViewPreview() {
     AniHyouTheme {
         Surface {
             UserSocialContent(
-                uiState = UserSocialUiState(),
+                uiState = UserSocialUiState(userId = 0),
                 event = null,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )

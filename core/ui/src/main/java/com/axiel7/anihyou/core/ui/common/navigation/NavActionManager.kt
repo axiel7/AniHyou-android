@@ -194,7 +194,7 @@ class NavActionManager(
     }
 
     fun toReorderFavorites(
-        userId: Int?,
+        userId: Int,
         type: FavoritesType
     ) {
         navigator.navigate(
