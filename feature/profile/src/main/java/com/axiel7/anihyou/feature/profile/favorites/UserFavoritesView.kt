@@ -47,19 +47,19 @@ import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserFavoritesView(
     userId: Int,
+    isMyProfile: Boolean,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
-    val viewModel: UserFavoritesViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(userId) {
-        viewModel.setUserId(userId)
+    val viewModel: UserFavoritesViewModel = koinViewModel(key = userId.toString()) {
+        parametersOf(userId, isMyProfile)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserFavoritesContent(
         uiState = uiState,
@@ -110,7 +110,7 @@ private fun UserFavoritesContent(
                 },
                 text = { Text(text = stringResource(R.string.reorder)) },
                 modifier = Modifier.animateFloatingActionButton(
-                    visible = isAtTop,
+                    visible = uiState.isMyProfile && isAtTop,
                     alignment = Alignment.BottomEnd,
                 )
             )
@@ -183,7 +183,7 @@ private fun UserFavoritesViewPreview() {
         Surface {
             CompositionLocalProvider(LocalResultEventBus provides ResultEventBus()) {
                 UserFavoritesContent(
-                    uiState = UserFavoritesUiState(),
+                    uiState = UserFavoritesUiState(userId = 0, isMyProfile = true),
                     event = null,
                     navActionManager = NavActionManager.rememberNavActionManager()
                 )

@@ -13,7 +13,8 @@ import com.axiel7.anihyou.core.model.FavoritesType
 
 @Stable
 data class UserFavoritesUiState(
-    val userId: Int? = null,
+    val userId: Int,
+    val isMyProfile: Boolean,
     val type: FavoritesType = FavoritesType.ANIME,
     val anime: SnapshotStateList<UserFavoritesAnimeQuery.Node> = mutableStateListOf(),
     val manga: SnapshotStateList<UserFavoritesMangaQuery.Node> = mutableStateListOf(),
