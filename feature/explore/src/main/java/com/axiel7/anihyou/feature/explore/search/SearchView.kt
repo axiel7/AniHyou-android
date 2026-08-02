@@ -332,6 +332,11 @@ fun SearchContentView(
                             score = item.meanScore ?: 0,
                             format = item.format ?: MediaFormat.UNKNOWN__,
                             year = item.startDate?.year,
+                            mediaStatus = item.status,
+                            episodes = item.episodes,
+                            chapters = item.chapters,
+                            duration = item.duration,
+                            genres = item.genres?.filterNotNull(),
                             onClick = {
                                 navActionManager.toMediaDetails(item.id)
                             },

@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
+import com.axiel7.anihyou.core.model.point100PrimaryColor
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalHideScores
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -24,6 +25,7 @@ fun SmallScoreIndicator(
     modifier: Modifier = Modifier,
 ) {
     if (!LocalHideScores.current) {
+        val tint = score.point100PrimaryColor()
         Row(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
@@ -32,13 +34,13 @@ fun SmallScoreIndicator(
                 painter = painterResource(R.drawable.star_filled_20),
                 contentDescription = stringResource(R.string.mean_score),
                 modifier = Modifier.padding(bottom = 2.dp),
-                tint = MaterialTheme.colorScheme.outline
+                tint = tint
             )
             Text(
                 text = "${score.format()}%",
                 modifier = Modifier.padding(horizontal = 4.dp),
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.outline,
+                color = tint,
             )
         }
     }

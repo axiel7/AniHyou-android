@@ -28,6 +28,11 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
             startDate {
                 year
             }
+            status
+            genres
+            episodes
+            chapters
+            duration
             mediaListEntry {
                 ...BasicMediaListEntry
             }

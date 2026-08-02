@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -29,18 +31,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
+import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaStatus
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.materialkolor.ktx.harmonize
 
 @Composable
@@ -90,6 +98,7 @@ fun MediaItemHorizontal(
     blurImage: Boolean,
     subtitle1: @Composable (ColumnScope.() -> Unit)? = null,
     subtitle2: @Composable (ColumnScope.() -> Unit)? = null,
+    subtitle3: @Composable (ColumnScope.() -> Unit)? = null,
     badgeContent: @Composable (RowScope.() -> Unit)? = null,
     badgeBackgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     topBadgeContent: @Composable (RowScope.() -> Unit)? = null,
@@ -142,11 +151,13 @@ fun MediaItemHorizontal(
         supportingContent = {
             if (subtitle1 != null) {
                 Column(
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .padding(vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     subtitle1()
                     if (subtitle2 != null) subtitle2()
+                    if (subtitle3 != null) subtitle3()
                 }
             }
         },
@@ -170,6 +181,11 @@ fun MediaItemHorizontal(
     score: Int,
     format: MediaFormat,
     year: Int?,
+    mediaStatus: MediaStatus?,
+    episodes: Int?,
+    chapters: Int?,
+    duration: Int?,
+    genres: List<String>?,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
     status: MediaListStatus? = null,
@@ -181,19 +197,60 @@ fun MediaItemHorizontal(
         imageUrl = imageUrl,
         blurImage = blurImage,
         subtitle1 = {
-            Text(
-                text = buildString {
-                    append(format.localized())
-                    if (year != null) append(" · $year")
-                },
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row {
+                Text(
+                    text = buildString {
+                        append(format.localized())
+                        year?.let { append(" · $year") }
+                        mediaStatus?.let { append(" · ${mediaStatus.localized()}") }
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         },
         subtitle2 = {
-            SmallScoreIndicator(
-                score = score,
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SmallScoreIndicator(
+                    score = score,
+                )
+                if (chapters != null) {
+                    Text(
+                        text = pluralStringResource(R.plurals.num_chapters, chapters, chapters),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                } else if (episodes == null || episodes <= 1) {
+                    duration?.let {
+                        Text(
+                            text = duration.toLong().minutesToLegibleText(),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                } else {
+                    Text(
+                        text = pluralStringResource(R.plurals.num_episodes, episodes, episodes),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+        },
+        subtitle3 = {
+            genres?.let {
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    genres.fastForEach { genre ->
+                        Text(
+                            text = genre.genreTagLocalized(),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
+            }
         },
         badgeContent = status?.let {
             {
@@ -275,9 +332,14 @@ private fun MediaItemHorizontalPreview() {
                             fontSize = 14.sp
                         )
                     },
+                    episodes = 0,
+                    chapters = 1,
+                    duration = 80,
                     score = 76,
                     format = MediaFormat.TV,
                     year = 2014,
+                    mediaStatus = MediaStatus.NOT_YET_RELEASED,
+                    genres = listOf("Adventure", "Drama", "Action", "Supernatural", "Romance"),
                     onClick = {}
                 )
                 MediaItemHorizontalPlaceholder()
