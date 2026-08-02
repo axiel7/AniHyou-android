@@ -1,19 +1,29 @@
 package com.axiel7.anihyou.feature.calendar
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,12 +34,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +58,6 @@ import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TabRowWithPager
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
-import com.axiel7.anihyou.core.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
@@ -90,11 +101,9 @@ private fun CalendarViewContent(
         title = stringResource(R.string.calendar),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
-            TriFilterChip(
-                text = stringResource(R.string.on_my_list),
-                value = onMyList,
-                onValueChanged = onMyListChanged,
-                modifier = Modifier.padding(horizontal = 8.dp),
+            AppBarActions(
+                onMyList = onMyList,
+                onMyListChanged = onMyListChanged,
             )
         },
         snackbarHost = snackbarManager::SnackbarHost,
@@ -228,6 +237,64 @@ private fun CalendarDayView(
             }
         }
     }//: LazyVerticalGrid
+}
+
+@Composable
+private fun AppBarActions(
+    onMyList: Boolean?,
+    onMyListChanged: (Boolean?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var menuOpened by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .wrapContentSize(Alignment.TopStart)
+    ) {
+        IconButton(
+            onClick = { menuOpened = !menuOpened },
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.more_vert_24),
+                contentDescription = stringResource(R.string.show_more),
+            )
+        }
+        DropdownMenuPopup(
+            expanded = menuOpened,
+            onDismissRequest = { menuOpened = false },
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+            ) {
+                DropdownMenuItem(
+                    checked = onMyList != null,
+                    onCheckedChange = {
+                        onMyListChanged(
+                            when (onMyList) {
+                                null -> true
+                                true -> false
+                                false -> null
+                            }
+                        )
+                        menuOpened = false
+                    },
+                    text = { Text(text = stringResource(R.string.on_my_list)) },
+                    shapes = MenuDefaults.itemShape(0, 1),
+                    checkedLeadingIcon = {
+                        if (onMyList != null) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (onMyList) R.drawable.check_20 else R.drawable.close_20
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                            )
+                        }
+                    },
+                )
+            }
+        }
+    }
 }
 
 @Preview

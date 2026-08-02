@@ -3,16 +3,17 @@ package com.axiel7.anihyou.feature.explore.season.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuGroup
@@ -22,21 +23,25 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.axiel7.anihyou.core.common.utils.DateUtils
@@ -48,6 +53,7 @@ import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +62,7 @@ fun SeasonChartFilterSheet(
     initialSeason: AnimeSeason,
     initialSort: MediaSort,
     scope: CoroutineScope,
+    sheetState: SheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden),
     onDismiss: () -> Unit,
     setSeason: (AnimeSeason) -> Unit,
     setSort: (MediaSort) -> Unit,
@@ -74,13 +81,14 @@ fun SeasonChartFilterSheet(
     ModalBottomSheet(
         onDismissed = onDismiss,
         scope = scope,
+        sheetState = sheetState,
         windowInsets = WindowInsets(0, 0, 0, 0)
     ) { dismiss ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(WindowInsets.navigationBars.asPaddingValues())
-                .padding(bottom = 48.dp),
+                .padding(bottom = 42.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -124,26 +132,61 @@ fun SeasonChartFilterSheet(
                 }
             }
 
-            LazyRow(
-                state = listState,
-                contentPadding = PaddingValues(horizontal = 8.dp)
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(DateUtils.seasonYears) {
-                    FilterChip(
-                        selected = selectedYear == it,
-                        onClick = { selectedYear = it },
-                        label = { Text(text = it.toString()) },
-                        modifier = Modifier.padding(start = 8.dp)
+                SortMenu(
+                    sort = selectedSort,
+                    setSort = { selectedSort = it }
+                )
+                YearMenu(
+                    year = selectedYear,
+                    setYear = { selectedYear = it }
+                )
+            }
+        }
+    }//: Column
+}
+
+@Composable
+fun YearMenu(
+    year: Int,
+    setYear: (Int) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        FilterChip(
+            selected = true,
+            onClick = { expanded = !expanded },
+            label = { Text(text = year.toString()) },
+        )
+        DropdownMenuPopup(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.heightIn(max = 300.dp)
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                DateUtils.seasonYears.fastForEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        checked = year == item,
+                        onCheckedChange = {
+                            setYear(item)
+                            expanded = false
+                        },
+                        text = { Text(text = item.toString()) },
+                        modifier = Modifier.padding(end = 8.dp),
+                        shapes = MenuDefaults.itemShape(index, DateUtils.seasonYears.size)
                     )
                 }
             }
-
-            SortMenu(
-                sort = selectedSort,
-                setSort = { selectedSort = it }
-            )
         }
-    }//: Column
+    }
 }
 
 private val seasonSortEntries = listOf(
@@ -161,25 +204,17 @@ private fun SortMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         AssistChip(
             onClick = { expanded = !expanded },
             label = { Text(text = sort.localized()) },
-            modifier = Modifier.padding(top = 8.dp),
             leadingIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.sort_24),
+                    painter = painterResource(R.drawable.sort_20),
                     contentDescription = stringResource(R.string.sort)
                 )
             },
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_drop_down_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
         )
         DropdownMenuPopup(
             expanded = expanded,
@@ -205,5 +240,23 @@ private fun SortMenu(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+private fun SeasonChartFilterSheetPreview() {
+    AniHyouTheme {
+        SeasonChartFilterSheet(
+            initialSeason = AnimeSeason(2026, MediaSeason.SPRING),
+            initialSort = MediaSort.POPULARITY_DESC,
+            scope = rememberCoroutineScope(),
+            sheetState = rememberBottomSheetState(initialValue = SheetValue.Expanded),
+            onDismiss = {},
+            setSeason = {},
+            setSort = {}
+        )
+        Box(modifier = Modifier.fillMaxSize())
     }
 }
