@@ -26,7 +26,6 @@ data class UserMediaListUiState(
     val sort: MediaListSort = MediaListSort.UPDATED_TIME_DESC,
     val listStyle: ListStyle = ListStyle.STANDARD,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,
-    val isCompactScreen: Boolean = true,
     val itemsPerRow: ItemsPerRow = ItemsPerRow.DEFAULT,
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,

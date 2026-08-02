@@ -13,12 +13,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -234,8 +231,9 @@ fun MainView(
                 )
             }
         },
-        contentWindowInsets = WindowInsets.systemBars
+        contentWindowInsets = if (isCompactScreen) WindowInsets.systemBars
             .only(WindowInsetsSides.Horizontal)
+        else WindowInsets(0, 0, 0, 0)
     ) { padding ->
         if (isCompactScreen) {
             MainNavigation(
@@ -254,7 +252,6 @@ fun MainView(
                 MainNavigationRail(
                     navigator = navigator,
                     onItemSelected = { event?.saveLastTab(it) },
-                    modifier = Modifier.safeDrawingPadding(),
                 )
                 MainNavigation(
                     navigator = navigator,
@@ -263,7 +260,6 @@ fun MainView(
                     isLoggedIn = isLoggedIn,
                     deepLink = deepLink,
                     homeTab = homeTab,
-                    padding = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues(),
                 )
             }
         }

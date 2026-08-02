@@ -61,7 +61,6 @@ class UserMediaListViewModel(
         UserMediaListUiState(
             mediaType = mediaType,
             scoreFormat = scoreFormat ?: ScoreFormat.POINT_10,
-            isCompactScreen = arguments.isCompactScreen,
             selectedListName = lastSelectedList,
             status = lastSelectedList?.asMediaListStatus(),
             userId = arguments.userId.takeIf { it != 0 },

@@ -26,7 +26,6 @@ object Routes {
         val mediaType: String,
         val userId: Int = 0,
         val scoreFormat: String? = null,
-        val isCompactScreen: Boolean = true,
     ): NavKey
 
     @Serializable

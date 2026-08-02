@@ -63,6 +63,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UserMediaListHostView(
     arguments: Routes.UserMediaList,
+    isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
@@ -75,6 +76,7 @@ fun UserMediaListHostView(
     UserMediaListHostContent(
         uiState = uiState,
         event = viewModel,
+        isCompactScreen = isCompactScreen,
         modifier = modifier,
         navActionManager = navActionManager,
     )
@@ -85,6 +87,7 @@ fun UserMediaListHostView(
 private fun UserMediaListHostContent(
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
+    isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
     navActionManager: NavActionManager,
 ) {
@@ -224,6 +227,7 @@ private fun UserMediaListHostContent(
             UserMediaListView(
                 uiState = uiState,
                 event = event,
+                isCompactScreen = isCompactScreen,
                 contentPadding = if (!uiState.isMyList)
                     PaddingValues(bottom = padding.calculateBottomPadding())
                 else PaddingValues(bottom = 8.dp),
@@ -249,6 +253,7 @@ private fun UserMediaListViewPreview() {
                     mediaType = MediaType.ANIME
                 ),
                 event = null,
+                isCompactScreen = true,
                 navActionManager = NavActionManager.rememberNavActionManager()
             )
         }

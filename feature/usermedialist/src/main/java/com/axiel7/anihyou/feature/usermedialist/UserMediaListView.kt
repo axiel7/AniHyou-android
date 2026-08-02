@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -47,6 +51,7 @@ import com.axiel7.anihyou.feature.usermedialist.composables.StandardUserMediaLis
 fun UserMediaListView(
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
+    isCompactScreen: Boolean,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     nestedScrollConnection: NestedScrollConnection,
     navActionManager: NavActionManager,
@@ -94,7 +99,7 @@ fun UserMediaListView(
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
             )
-        } else if (!uiState.isCompactScreen) {
+        } else if (!isCompactScreen) {
             LazyListTablet(
                 mediaList = uiState.entries,
                 uiState = uiState,
@@ -130,11 +135,12 @@ private fun LazyListGrid(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
 ) {
+    val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
         modifier = modifier,
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp) + navPadding,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
@@ -182,10 +188,11 @@ private fun LazyListTablet(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
 ) {
+    val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
-        contentPadding = contentPadding,
+        contentPadding = contentPadding + navPadding,
         horizontalArrangement = Arrangement.Center
     ) {
         if (uiState.status == MediaListStatus.PLANNING) {

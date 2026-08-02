@@ -171,8 +171,8 @@ fun MainNavigation(
                 UserMediaListHostView(
                     arguments = Routes.UserMediaList(
                         mediaType = MediaType.ANIME.rawValue,
-                        isCompactScreen = isCompactScreen
                     ),
+                    isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navActionManager = navActionManager,
                 )
@@ -188,8 +188,8 @@ fun MainNavigation(
                 UserMediaListHostView(
                     arguments = Routes.UserMediaList(
                         mediaType = MediaType.MANGA.rawValue,
-                        isCompactScreen = isCompactScreen
                     ),
+                    isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                     navActionManager = navActionManager,
                 )
@@ -236,7 +236,8 @@ fun MainNavigation(
 
         entry<Routes.UserMediaList> {
             UserMediaListHostView(
-                arguments = it.copy(isCompactScreen = isCompactScreen),
+                arguments = it,
+                isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
                 navActionManager = navActionManager,
             )
