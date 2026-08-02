@@ -53,7 +53,7 @@ query MediaDetails($mediaId: Int) {
                 ...FuzzyDate
             }
         }
-        source
+        source(version: 3)
         externalLinks {
             id
             url
