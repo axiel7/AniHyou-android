@@ -112,7 +112,8 @@ fun <T> HorizontalStatsBar(
         if (showTotal) {
             Text(
                 text = stringResource(R.string.total_entries).format(totalValue.toInt().format()),
-                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp),
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

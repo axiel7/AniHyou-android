@@ -12,9 +12,9 @@ import com.axiel7.anihyou.core.resources.stat_light_red
 import com.axiel7.anihyou.core.resources.stat_light_yellow
 
 fun MediaRankType.icon() = when (this) {
-    MediaRankType.RATED -> R.drawable.star_24
-    MediaRankType.POPULAR -> R.drawable.favorite_20
-    MediaRankType.UNKNOWN__ -> R.drawable.error_24
+    MediaRankType.RATED -> R.drawable.star_filled_20
+    MediaRankType.POPULAR -> R.drawable.favorite_filled_20
+    MediaRankType.UNKNOWN__ -> R.drawable.error_20
 }
 
 @Composable

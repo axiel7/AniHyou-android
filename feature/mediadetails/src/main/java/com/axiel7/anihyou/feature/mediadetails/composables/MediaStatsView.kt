@@ -26,7 +26,6 @@ import com.axiel7.anihyou.core.model.media.color
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaListStatus
-import com.axiel7.anihyou.core.network.type.MediaRankType
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.InfoTitle
@@ -80,9 +79,6 @@ fun MediaStatsView(
                             Icon(
                                 painter = painterResource(it.type.icon()),
                                 contentDescription = it.type.name,
-                                modifier = if (it.type == MediaRankType.POPULAR)
-                                    Modifier.padding(start = 2.dp)
-                                else Modifier,
                                 tint = it.type.color().harmonize(MaterialTheme.colorScheme.primary)
                             )
                         },
