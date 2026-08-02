@@ -22,31 +22,13 @@ import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
-import com.axiel7.anihyou.core.ui.composables.common.DialogWithRadioSelection
 
 @Composable
 fun MediaSearchSortChip(
     mediaSortSearch: MediaSortSearch,
     onSortChanged: (MediaSort) -> Unit,
 ) {
-    var openDialog by remember { mutableStateOf(false) }
     var isDescending by remember { mutableStateOf(true) }
-
-    if (openDialog) {
-        DialogWithRadioSelection(
-            values = MediaSortSearch.entries.toTypedArray(),
-            defaultValue = mediaSortSearch,
-            title = stringResource(R.string.sort),
-            isDeselectable = false,
-            onConfirm = {
-                onSortChanged(
-                    (if (isDescending) it?.desc else it?.asc) ?: MediaSort.SEARCH_MATCH
-                )
-                openDialog = false
-            },
-            onDismiss = { openDialog = false }
-        )
-    }
 
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
