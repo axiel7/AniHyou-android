@@ -113,7 +113,7 @@ fun ActivityTextView(
             }
             DefaultMarkdownText(
                 markdown = text,
-                fontSize = 17.sp,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 uriHandler = uriHandler,
             )
         }

@@ -93,15 +93,14 @@ fun ChildCommentView(
                             maxUnit = ChronoUnit.WEEKS,
                             isFutureDate = false
                         ),
-                    color = MaterialTheme.colorScheme.outline,
-                    fontSize = 14.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
             DefaultMarkdownText(
                 markdown = comment.comment.orEmpty(),
                 modifier = Modifier.padding(vertical = 8.dp),
-                fontSize = 15.sp,
-                lineHeight = 15.sp,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 uriHandler = uriHandler,
             )
             Row(

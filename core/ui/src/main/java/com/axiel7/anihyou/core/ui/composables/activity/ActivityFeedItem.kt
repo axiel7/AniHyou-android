@@ -126,7 +126,6 @@ fun ActivityFeedItem(
             DefaultMarkdownText(
                 markdown = text,
                 modifier = Modifier.padding(bottom = 4.dp),
-                lineHeight = 20.sp,
                 uriHandler = uriHandler,
             )
         } else {

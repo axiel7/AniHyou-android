@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
@@ -14,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -28,18 +27,14 @@ import com.mikepenz.markdown.m3.markdownTypography
 fun DefaultMarkdownText(
     markdown: String?,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = LocalTextStyle.current.fontSize,
-    lineHeight: TextUnit = LocalTextStyle.current.lineHeight,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     uriHandler: MarkdownUriHandler,
 ) {
     CompositionLocalProvider(LocalUriHandler provides uriHandler) {
         Markdown(
             content = markdown?.formatCompatibleMarkdown().orEmpty(),
             typography = markdownTypography(
-                text = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = fontSize,
-                    lineHeight = lineHeight,
-                )
+                text = textStyle
             ),
             modifier = modifier,
             imageTransformer = Coil3ImageTransformerImpl,

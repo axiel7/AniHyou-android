@@ -103,7 +103,7 @@ fun ActivityItem(
                     DefaultMarkdownText(
                         markdown = text,
                         modifier = Modifier.weight(1f),
-                        lineHeight = 20.sp,
+                        textStyle = MaterialTheme.typography.bodyMedium,
                         uriHandler = uriHandler,
                     )
                 } else {
@@ -112,9 +112,9 @@ fun ActivityItem(
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                             .weight(1f),
-                        lineHeight = 20.sp,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 3
+                        maxLines = 3,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
                 ActivityMenu(
@@ -135,8 +135,8 @@ fun ActivityItem(
                             isFutureDate = false
                         ),
                     modifier = Modifier.weight(1f),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium
                 )
                 CommentIconButton(
                     modifier = Modifier.width(78.dp),

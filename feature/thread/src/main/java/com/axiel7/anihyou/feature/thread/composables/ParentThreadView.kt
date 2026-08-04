@@ -49,20 +49,17 @@ fun ParentThreadView(
     ) {
         Text(
             text = thread.title.orEmpty(),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 24.sp
+            style = MaterialTheme.typography.titleLarge
         )
         Text(
             text = thread.createdAt.toLong().timestampToDateString(format = "MMM d, YYYY").orEmpty(),
             color = MaterialTheme.colorScheme.outline,
-            fontSize = 15.sp
+            style = MaterialTheme.typography.labelLarge
         )
 
         DefaultMarkdownText(
             markdown = thread.body,
             modifier = Modifier.padding(vertical = 8.dp),
-            fontSize = 17.sp,
             uriHandler = uriHandler,
         )
 
