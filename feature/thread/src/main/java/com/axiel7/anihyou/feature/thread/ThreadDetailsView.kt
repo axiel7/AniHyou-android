@@ -39,8 +39,8 @@ import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.thread.composables.ParentThreadView
 import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
-import com.axiel7.anihyou.feature.thread.composables.ThreadCommentView
-import com.axiel7.anihyou.feature.thread.composables.ThreadCommentViewPlaceholder
+import com.axiel7.anihyou.feature.thread.comment.ThreadCommentView
+import com.axiel7.anihyou.feature.thread.comment.ThreadCommentViewPlaceholder
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -163,6 +163,7 @@ private fun ThreadDetailsContent(
                         navigateToUserDetails = {
                             item.user?.id?.let(navActionManager::toUserDetails)
                         },
+                        navigateToDetails = navActionManager::toThreadCommentDetails,
                         navigateToPublishReply = { parentCommentId, id, text ->
                             uiState.details?.id?.let { threadId ->
                                 navActionManager.toPublishCommentReply(

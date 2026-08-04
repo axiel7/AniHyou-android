@@ -1,10 +1,5 @@
 package com.axiel7.anihyou.feature.thread.composables
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -53,13 +48,13 @@ fun ChildCommentView(
     modifier: Modifier = Modifier,
     toggleLike: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
+    navigateToDetails: (ChildComment) -> Unit,
     navigateToPublishReply: (parentCommentId: Int, Int?, String?) -> Unit,
     uriHandler: MarkdownUriHandler,
 ) {
     val isEnglishLocale = LocalIsLanguageEn.current
     val scope = rememberCoroutineScope()
     var isLiked by remember { mutableStateOf(comment.isLiked == true) }
-    var showChildComments by remember { mutableStateOf(false) }
     val hasComments = !comment.childComments.isNullOrEmpty()
 
     Row(
@@ -117,7 +112,7 @@ fun ChildCommentView(
                     CommentIconButton(
                         modifier = Modifier.width(78.dp),
                         commentCount = comment.childComments?.size ?: 0,
-                        onClick = { showChildComments = !showChildComments },
+                        onClick = { navigateToDetails(comment) },
                         fontSize = 14.sp,
                         iconSize = 20.dp,
                     )
@@ -139,27 +134,6 @@ fun ChildCommentView(
                     )
                 }
             }
-        }//:Column
-    }//:Row
-    if (hasComments) {
-        AnimatedVisibility(
-            visible = showChildComments,
-            enter = fadeIn() + slideInVertically(),
-            exit = slideOutVertically() + fadeOut(),
-        ) {
-            Column {
-                comment.childComments?.filterNotNull()?.forEach {
-                    ChildCommentView(
-                        comment = it,
-                        translatorApp = translatorApp,
-                        modifier = Modifier.padding(start = 16.dp),
-                        toggleLike = toggleLike,
-                        navigateToUserDetails = navigateToUserDetails,
-                        navigateToPublishReply = navigateToPublishReply,
-                        uriHandler = uriHandler,
-                    )
-                }
-            }
         }
     }
 }
@@ -174,6 +148,7 @@ private fun ChildCommentViewPreview() {
                 translatorApp = TranslatorApp.DEFAULT,
                 toggleLike = { true },
                 navigateToUserDetails = {},
+                navigateToDetails = {},
                 navigateToPublishReply = { _, _, _ -> },
                 uriHandler = MarkdownUriHandler(),
             )

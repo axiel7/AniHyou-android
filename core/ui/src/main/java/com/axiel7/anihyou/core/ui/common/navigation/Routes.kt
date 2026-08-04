@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.FavoritesType
+import com.axiel7.anihyou.core.model.thread.ChildComment
 import kotlinx.serialization.Serializable
 
 object Routes {
@@ -94,6 +95,10 @@ object Routes {
     @Serializable
     @Immutable
     data class ThreadDetails(val id: Int): NavKey
+
+    @Serializable
+    @Immutable
+    data class ThreadCommentDetails(val childComment: ChildComment): NavKey
 
     @Serializable
     @Immutable

@@ -59,6 +59,7 @@ import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.feature.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.feature.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.feature.thread.ThreadDetailsView
+import com.axiel7.anihyou.feature.thread.comment.ThreadCommentDetailsView
 import com.axiel7.anihyou.feature.thread.publish.PublishCommentView
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListHostView
 
@@ -320,6 +321,14 @@ fun MainNavigation(
 
         entry<Routes.ThreadDetails> {
             ThreadDetailsView(
+                arguments = it,
+                uriHandler = markdownUriHandler,
+                navActionManager = navActionManager,
+            )
+        }
+
+        entry<Routes.ThreadCommentDetails> {
+            ThreadCommentDetailsView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
                 navActionManager = navActionManager,
