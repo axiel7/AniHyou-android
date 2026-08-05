@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.UserActivityQuery
 import com.axiel7.anihyou.core.network.type.ActivityType
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.ProfileEvent
 import com.axiel7.anihyou.feature.profile.ProfileUiState
@@ -37,9 +37,9 @@ fun UserActivityView(
     uiState: ProfileUiState,
     event: ProfileEvent?,
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyListState()
     if (!uiState.isLoadingActivity) {
@@ -85,6 +85,7 @@ fun UserActivityView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
+                        blurImage = blurAdult && activity.media?.isAdult == true,
                         imageUrl = activity.media?.coverImage?.medium,
                         isLocked = activity.isLocked,
                         onClick = {
@@ -99,7 +100,6 @@ fun UserActivityView(
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -129,7 +129,6 @@ fun UserActivityView(
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -160,7 +159,6 @@ fun UserActivityView(
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -178,8 +176,6 @@ private fun UserActivityViewPreview() {
                 activities = emptyList(),
                 uiState = ProfileUiState(isMyProfile = false),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

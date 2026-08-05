@@ -10,6 +10,7 @@ query UserFavoritesAnime($userId: Int, $page: Int, $perPage: Int) {
                     coverImage {
                         large
                     }
+                    isAdult
                 }
                 pageInfo {
                     ...CommonPage

@@ -2,30 +2,64 @@ package com.axiel7.anihyou.feature.profile.favorites
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
-import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
+import com.axiel7.anihyou.core.model.FavoritesType
+import com.axiel7.anihyou.core.network.UserFavoritesAnimeQuery
+import com.axiel7.anihyou.core.network.UserFavoritesCharacterQuery
+import com.axiel7.anihyou.core.network.UserFavoritesMangaQuery
+import com.axiel7.anihyou.core.network.UserFavoritesStaffQuery
+import com.axiel7.anihyou.core.network.UserFavoritesStudioQuery
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserFavoritesViewModel(
+    @InjectedParam userId: Int,
+    @InjectedParam isMyProfile: Boolean,
     private val favoriteRepository: FavoriteRepository
 ) : PagedUiStateViewModel<UserFavoritesUiState>(), UserFavoritesEvent {
 
-    override val initialState = UserFavoritesUiState()
-
-    fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
+    override val initialState = UserFavoritesUiState(userId = userId, isMyProfile = isMyProfile)
 
     override fun setType(value: FavoritesType) {
         mutableUiState.update {
             it.copy(type = value, page = 1, hasNextPage = true)
+        }
+    }
+
+    override fun updateAfterReorderSaved(result: List<*>) {
+        with(uiState.value) {
+            when (type) {
+                FavoritesType.ANIME -> {
+                    anime.clear()
+                    anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
+                }
+                FavoritesType.MANGA -> {
+                    manga.clear()
+                    manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
+                }
+                FavoritesType.CHARACTERS -> {
+                    characters.clear()
+                    characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
+                }
+                FavoritesType.STAFF -> {
+                    staff.clear()
+                    staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
+                }
+                FavoritesType.STUDIOS -> {
+                    studios.clear()
+                    studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
+                }
+            }
         }
     }
 
@@ -39,20 +73,17 @@ class UserFavoritesViewModel(
             .filter {
                 it.type == FavoritesType.ANIME
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    favoriteRepository.getFavoriteAnime(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                favoriteRepository.getFavoriteAnime(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -76,20 +107,17 @@ class UserFavoritesViewModel(
             .filter {
                 it.type == FavoritesType.MANGA
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    favoriteRepository.getFavoriteManga(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                favoriteRepository.getFavoriteManga(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -113,20 +141,17 @@ class UserFavoritesViewModel(
             .filter {
                 it.type == FavoritesType.CHARACTERS
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    favoriteRepository.getFavoriteCharacters(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                favoriteRepository.getFavoriteCharacters(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -150,20 +175,17 @@ class UserFavoritesViewModel(
             .filter {
                 it.type == FavoritesType.STAFF
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    favoriteRepository.getFavoriteStaff(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                favoriteRepository.getFavoriteStaff(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -187,20 +209,17 @@ class UserFavoritesViewModel(
             .filter {
                 it.type == FavoritesType.STUDIOS
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    favoriteRepository.getFavoriteStudio(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                favoriteRepository.getFavoriteStudio(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -218,5 +237,14 @@ class UserFavoritesViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        if (isMyProfile) {
+            viewModelScope.launch {
+                favoriteRepository.favoriteToggled
+                    .collectLatest {
+                        if (it) onRefresh()
+                    }
+            }
+        }
     }
 }

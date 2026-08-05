@@ -49,7 +49,7 @@ fun MediaSearchDurationChip(
                 onValueChanged = setEpCh,
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.play_circle_24),
+                        painter = painterResource(R.drawable.play_circle_20),
                         contentDescription = stringResource(R.string.episodes),
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
                     )
@@ -64,7 +64,7 @@ fun MediaSearchDurationChip(
                 onValueChanged = setDuration,
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.timer_24),
+                        painter = painterResource(R.drawable.timer_20),
                         contentDescription = stringResource(R.string.duration),
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
                     )
@@ -80,7 +80,7 @@ fun MediaSearchDurationChip(
                 onValueChanged = setEpCh,
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.book_24),
+                        painter = painterResource(R.drawable.book_20),
                         contentDescription = stringResource(R.string.chapters),
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
                     )

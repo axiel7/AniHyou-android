@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.fragment.UserSettings
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.materialkolor.PaletteStyle
 
 @Immutable
@@ -20,6 +21,7 @@ data class SettingsUiState(
     val appColorMode: AppColorMode? = null,
     val appColor: Color? = null,
     val colorPaletteStyle: String = PaletteStyle.Expressive.name,
+    val blurAdultContent: Boolean = true,
     val useGeneralListStyle: Boolean? = null,
     val generalListStyle: ListStyle? = null,
     val gridItemsPerRow: ItemsPerRow? = null,
@@ -29,6 +31,8 @@ data class SettingsUiState(
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,
     val userSettings: UserSettings? = null,
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
+    val hideScores: Boolean = false,
     val isLoggedIn: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = false,

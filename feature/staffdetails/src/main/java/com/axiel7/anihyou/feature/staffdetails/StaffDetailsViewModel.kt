@@ -4,12 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.StaffRepository
 import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -18,10 +19,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffDetailsViewModel(
-    private val arguments: Routes.StaffDetails,
+    @InjectedParam private val arguments: Route.StaffDetails,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
     private val staffRepository: StaffRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<StaffDetailsUiState>(), StaffDetailsEvent {
@@ -182,6 +185,12 @@ class StaffDetailsViewModel(
                         )
                     }
                 }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.translatorApp
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
             }
             .launchIn(viewModelScope)
     }

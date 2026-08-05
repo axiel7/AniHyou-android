@@ -5,15 +5,13 @@ plugins {
 }
 
 val appPackageName: String by rootProject.extra
-val sdkVersion: Int by rootProject.extra
-val minSdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.core.ui"
-    compileSdk = sdkVersion
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = minSdkVersion
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     buildFeatures {
@@ -56,14 +54,22 @@ dependencies {
 
     api(libs.androidx.navigation3.runtime)
     api(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(libs.coil.compose)
+
+    implementation(libs.haze.blur)
+
+    implementation(libs.zoomable)
 
     implementation(libs.markdown.renderer)
     implementation(libs.markdown.renderer.material3)
     implementation(libs.markdown.renderer.coil3)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit)
 
     debugImplementation(libs.ui.tooling)
 }

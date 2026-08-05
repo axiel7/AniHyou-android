@@ -86,7 +86,6 @@ fun MinimalUserMediaListItem(
 
             AiringScheduleText(
                 item = item,
-                fontSize = 15.sp
             )
 
             Row(

@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">AniHyou</string>
     <string name="home">Home</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
@@ -153,6 +152,7 @@
     <string name="relation_source">Source</string>
     <string name="relation_compilation">Compilation</string>
     <string name="relation_contains">Contains</string>
+    <string name="relation_same_universe">Same universe</string>
     <string name="recommendations">Recommendations</string>
     <string name="settings">Settings</string>
     <string name="display">Display</string>
@@ -166,7 +166,7 @@
     <string name="account">Account</string>
     <string name="github_repository">GitHub repository</string>
     <string name="version">Version</string>
-    <string name="developed_by_axiel7">Developed by axiel7</string>
+    <string name="contributors">Contributors</string>
     <string name="anilist_account_settings">AniList account settings</string>
     <string name="logout">Log out</string>
     <string name="character_media">Media</string>
@@ -645,6 +645,16 @@
     <string name="app_installed_required">No nearby device detected, please install the latest AniHyou app version on your Android phone</string>
     <string name="minimum_tag_percentage">Minimum Tag Percentage</string>
     <string name="search_my_list">Search my list…</string>
+    <string name="notifications_submission">Submission</string>
+    <string name="translator_app">Translator</string>
+    <string name="google_translate" translatable="false">Google</string>
+    <string name="deepl" translatable="false">DeepL</string>
+    <string name="translate_you" translatable="false">TranslateYou</string>
+    <string name="blur_adult_content">Blur adult media</string>
+    <string name="hide_scores">Hide scores</string>
     <string name="upvote">Upvote Media</string>
     <string name="downvote">Downvote Media</string>
+    <string name="reorder">Reorder</string>
+    <string name="reorder_hint">Long press to reorder</string>
+    <string name="activity_filter_following">From Following</string>
 </resources>

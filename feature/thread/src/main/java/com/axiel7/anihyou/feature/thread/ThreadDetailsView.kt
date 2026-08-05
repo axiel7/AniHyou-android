@@ -27,28 +27,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_THREAD_URL
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.NotificationIconButton
 import com.axiel7.anihyou.core.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.feature.thread.comment.ThreadCommentView
+import com.axiel7.anihyou.feature.thread.comment.ThreadCommentViewPlaceholder
 import com.axiel7.anihyou.feature.thread.composables.ParentThreadView
 import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
-import com.axiel7.anihyou.feature.thread.composables.ThreadCommentView
-import com.axiel7.anihyou.feature.thread.composables.ThreadCommentViewPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ThreadDetailsView(
-    arguments: Routes.ThreadDetails,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager
+    arguments: Route.ThreadDetails,
 ) {
     val viewModel: ThreadDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -56,19 +53,16 @@ fun ThreadDetailsView(
     ThreadDetailsContent(
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ThreadDetailsContent(
     uiState: ThreadDetailsUiState,
     event: ThreadDetailsEvent?,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
@@ -127,6 +121,7 @@ private fun ThreadDetailsContent(
                         ParentThreadView(
                             thread = uiState.details.basicThreadDetails,
                             isLiked = uiState.isLiked,
+                            translatorApp = uiState.translatorApp,
                             onClickLike = { event?.toggleLikeThread() },
                             onClickReply = {
                                 navActionManager.toPublishThreadComment(
@@ -136,7 +131,6 @@ private fun ThreadDetailsContent(
                                 )
                             },
                             navigateToUserDetails = navActionManager::toUserDetails,
-                            uriHandler = uriHandler,
                         )
                     } else {
                         ParentThreadViewPlaceholder()
@@ -157,19 +151,22 @@ private fun ThreadDetailsContent(
                         isLocked = item.isLocked,
                         createdAt = item.createdAt,
                         childComments = item.childComments,
+                        translatorApp = uiState.translatorApp,
                         toggleLike = { event?.toggleLikeComment(item.id) ?: false },
                         navigateToUserDetails = {
-                            navActionManager.toUserDetails(item.user!!.id)
+                            item.user?.id?.let(navActionManager::toUserDetails)
                         },
+                        navigateToDetails = navActionManager::toThreadCommentDetails,
                         navigateToPublishReply = { parentCommentId, id, text ->
-                            navActionManager.toPublishCommentReply(
-                                threadId = uiState.details!!.id,
-                                parentCommentId = parentCommentId,
-                                commentId = id,
-                                text = text,
-                            )
+                            uiState.details?.id?.let { threadId ->
+                                navActionManager.toPublishCommentReply(
+                                    threadId = threadId,
+                                    parentCommentId = parentCommentId,
+                                    commentId = id,
+                                    text = text,
+                                )
+                            }
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
                 }
@@ -192,8 +189,6 @@ private fun ThreadDetailsViewPreview() {
             ThreadDetailsContent(
                 uiState = ThreadDetailsUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

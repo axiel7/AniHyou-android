@@ -7,9 +7,11 @@ import com.axiel7.anihyou.core.network.CharacterDetailsQuery
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.CommonVoiceActor
 import com.axiel7.anihyou.core.base.state.PagedUiState
+import com.axiel7.anihyou.core.model.TranslatorApp
 
 @Stable
 data class CharacterDetailsUiState(
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val character: CharacterDetailsQuery.Character? = null,
     val media: SnapshotStateList<CharacterMediaQuery.Edge> = mutableStateListOf(),
     val isLoadingMedia: Boolean = true,

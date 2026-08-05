@@ -6,7 +6,7 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isNullOrZero
-import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
@@ -15,15 +15,17 @@ import com.axiel7.anihyou.core.model.media.asMediaListStatus
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
+import com.axiel7.anihyou.core.model.media.plainName
 import com.axiel7.anihyou.core.model.media.titleComparator
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +33,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -40,14 +41,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserMediaListViewModel(
-    arguments: Routes.UserMediaList,
+    @InjectedParam arguments: Route.UserMediaList,
     private val mediaListRepository: MediaListRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val listPreferencesRepository: ListPreferencesRepository,
-) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
+) : UiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
 
     private val scoreFormat = arguments.scoreFormat?.let { ScoreFormat.safeValueOf(it) }
     private val mediaType = MediaType.safeValueOf(arguments.mediaType)
@@ -59,7 +61,6 @@ class UserMediaListViewModel(
         UserMediaListUiState(
             mediaType = mediaType,
             scoreFormat = scoreFormat ?: ScoreFormat.POINT_10,
-            isCompactScreen = arguments.isCompactScreen,
             selectedListName = lastSelectedList,
             status = lastSelectedList?.asMediaListStatus(),
             userId = arguments.userId.takeIf { it != 0 },
@@ -140,8 +141,6 @@ class UserMediaListViewModel(
         mutableUiState.update {
             it.copy(
                 fetchFromNetwork = true,
-                page = 1,
-                hasNextPage = true,
                 isLoading = true
             )
         }
@@ -229,34 +228,13 @@ class UserMediaListViewModel(
     }
 
     override fun getRandomPlannedEntry(chunk: Int) {
-        if (chunk == 1 && mutableUiState.value.plannedEntriesIds.isNotEmpty()) {
-            mutableUiState.update {
-                it.copy(randomEntryId = it.plannedEntriesIds.random())
+        uiState.value.run {
+            val plannedAndReleasedList = lists[MediaListStatus.PLANNING.plainName()]?.filter {
+                it.media?.status != MediaStatus.NOT_YET_RELEASED
             }
-        } else {
-            viewModelScope.launch {
-                var hasNextPage = false
-                mediaListRepository.getMediaListIds(
-                    userId = mutableUiState.value.userId ?: myUserId.first(),
-                    type = mutableUiState.value.mediaType,
-                    status = MediaListStatus.PLANNING,
-                    chunk = chunk
-                ).collectLatest { result ->
-                    mutableUiState.update {
-                        if (result is PagedResult.Success) {
-                            hasNextPage = result.hasNextPage
-                            val newList = it.plannedEntriesIds + result.list
-                            it.copy(
-                                plannedEntriesIds = newList,
-                                randomEntryId = if (!result.hasNextPage && newList.isNotEmpty())
-                                    newList.random() else null,
-                                isLoading = result.hasNextPage
-                            )
-                        } else result.toUiState()
-                    }
-                }
-                if (hasNextPage) {
-                    getRandomPlannedEntry(chunk + 1)
+            if (!plannedAndReleasedList.isNullOrEmpty()) {
+                mutableUiState.update {
+                    it.copy(randomEntryId = plannedAndReleasedList.random().mediaId)
                 }
             }
         }
@@ -318,11 +296,10 @@ class UserMediaListViewModel(
             MediaType.MANGA -> listPreferencesRepository.mangaListSort
             else -> emptyFlow()
         }
-            .filterNotNull()
             .distinctUntilChanged()
             .onEach { sort ->
                 mutableUiState.update {
-                    it.copy(sort = sort, page = 1, hasNextPage = true, isLoading = true)
+                    it.copy(sort = sort, isLoading = true)
                 }
             }
             .launchIn(viewModelScope)
@@ -333,7 +310,6 @@ class UserMediaListViewModel(
             MediaType.MANGA -> defaultPreferencesRepository.mangaLists
             else -> emptyFlow()
         }
-            .filterNotNull()
             .distinctUntilChanged()
             .onEach { listNames ->
                 mutableUiState.update { it.copy(orderedListNames = listNames) }
@@ -341,10 +317,8 @@ class UserMediaListViewModel(
             .launchIn(viewModelScope)
 
         mutableUiState
-            .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
-                old.page == new.page
-                        && old.sort == new.sort
+                old.sort == new.sort
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
@@ -366,7 +340,7 @@ class UserMediaListViewModel(
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
-                        if (uiState.page == 1 || result.currentPage == 1) {
+                        if (result.currentPage == 1 || result.currentPage == null) {
                             uiState.lists.clear()
                             uiState.entries.clear()
                         }
@@ -393,19 +367,14 @@ class UserMediaListViewModel(
                         uiState.entries.addAll(newEntries)
                         val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
-                            page = if (loadMore) uiState.page + 1 else uiState.page,
-                            hasNextPage = result.hasNextPage,
                             fetchFromNetwork = false,
                             isLoading = loadMore,
                         )
                     } else {
-                        result.toUiState(
-                            loadingWhen = uiState.page == 1
-                                    || (uiState.entries.isEmpty() && uiState.hasNextPage)
-                        ).copy(
-                            hasNextPage = if (result is PagedResult.Error) false
-                            else uiState.hasNextPage
-                        )
+                        if (result is PagedResult.Error) {
+                            uiState.setError(result.message)
+                        }
+                        uiState.setLoading(result is PagedResult.Loading)
                     }
                 }
             }

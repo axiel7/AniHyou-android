@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.model.media.AnimeSeason
@@ -20,6 +20,7 @@ import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +45,7 @@ class MediaListRepository (
     ) = api
         .mediaListCollection(userId, mediaType, sort, fetchFromNetwork, chunk, perChunk)
         .toFlow()
-        .asPagedResult(page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }) {
+        .asPagedResult(page = { CommonPage("", chunk, it.MediaListCollection?.hasNextChunk) }) {
             it.MediaListCollection?.lists.orEmpty()
         }
 
@@ -53,14 +54,23 @@ class MediaListRepository (
         mediaType: MediaType,
         statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
+        scoreFormat: ScoreFormat,
         fetchFromNetwork: Boolean = false,
         page: Int?,
         perPage: Int? = 25,
     ) = api
-        .userMediaList(userId, mediaType, statusIn, sort, fetchFromNetwork, page, perPage)
+        .userMediaList(userId, mediaType, statusIn, sort, scoreFormat, fetchFromNetwork, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            data.Page?.mediaList?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+            data.Page?.mediaList?.mapNotNull {
+                // this is needed because of a bug in the AniList API
+                // that sometimes returns the score in another format if we don't explicit send it
+                it?.commonMediaListEntry?.copy(
+                    basicMediaListEntry = it.commonMediaListEntry.basicMediaListEntry.copy(
+                        score = it.scoreFixed
+                    )
+                )
+            }.orEmpty()
         }
 
     fun getMySeasonalAnime(
@@ -195,7 +205,7 @@ class MediaListRepository (
         .fetchPolicy(FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(
-            page = { CommonPage(chunk, it.MediaListCollection?.hasNextChunk) }
+            page = { CommonPage("", chunk, it.MediaListCollection?.hasNextChunk) }
         ) { data ->
             data.MediaListCollection?.lists
                 ?.flatMap { list ->

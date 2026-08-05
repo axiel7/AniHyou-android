@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
@@ -46,6 +47,12 @@ interface SettingsEvent : UiEvent {
     fun setNotificationCheckInterval(value: NotificationInterval)
 
     fun setDisplayAdultContent(value: Boolean)
+
+    fun setBlurAdultContent(value: Boolean)
+
+    fun setHideScores(value: Boolean)
+
+    fun setTranslatorApp(value: TranslatorApp)
 
     fun setTitleLanguage(value: UserTitleLanguage)
 

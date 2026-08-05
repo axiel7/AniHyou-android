@@ -2,12 +2,12 @@ package com.axiel7.anihyou.core.domain.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ViewerOptionsQuery
 import com.axiel7.anihyou.core.network.api.response.errorString
-import androidx.core.net.toUri
 
 class LoginRepository (
     private val client: ApolloClient,

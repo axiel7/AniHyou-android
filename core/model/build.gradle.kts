@@ -1,18 +1,17 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 val appPackageName: String by rootProject.extra
-val sdkVersion: Int by rootProject.extra
-val minSdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.core.model"
-    compileSdk = sdkVersion
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = minSdkVersion
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     buildFeatures {

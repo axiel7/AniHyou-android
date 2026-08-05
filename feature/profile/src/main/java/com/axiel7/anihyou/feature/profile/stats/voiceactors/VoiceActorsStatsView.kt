@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.InfoTitle
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.profile.stats.UserStatsEvent
@@ -28,9 +28,9 @@ import com.axiel7.anihyou.feature.profile.stats.composables.PositionalStatItemVi
 fun VoiceActorsStatsView(
     uiState: UserStatsUiState,
     event: UserStatsEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     LazyColumn(
         modifier = modifier,
@@ -83,9 +83,8 @@ private fun GenresTagsStatsViewPreview() {
     AniHyouTheme {
         Surface {
             VoiceActorsStatsView(
-                uiState = UserStatsUiState(),
+                uiState = UserStatsUiState(userId = 0),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

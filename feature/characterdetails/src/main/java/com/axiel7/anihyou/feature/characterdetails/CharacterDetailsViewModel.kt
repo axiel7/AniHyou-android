@@ -5,10 +5,11 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.CharacterRepository
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -17,10 +18,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterDetailsViewModel(
-    private val arguments: Routes.CharacterDetails,
+    @InjectedParam private val arguments: Route.CharacterDetails,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
     private val characterRepository: CharacterRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<CharacterDetailsUiState>(), CharacterDetailsEvent {
@@ -121,6 +124,12 @@ class CharacterDetailsViewModel(
                         result.toUiState(loadingWhen = false)
                     }
                 }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.translatorApp
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
             }
             .launchIn(viewModelScope)
     }

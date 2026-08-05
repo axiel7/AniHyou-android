@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.core.base.CROWDIN_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -26,30 +26,30 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import java.util.Locale
 
 private val translations = mapOf(
-    "ar-SA" to "Hussain889, Hussain69o, WhiteCanvas, eyadalomar, sakugaky, Comikazie, mlvin, bobteen1",
-    "az-AZ" to "oolyvi",
+    "ar" to "Hussain889, Hussain69o, WhiteCanvas, eyadalomar, sakugaky, Comikazie, mlvin, bobteen1",
+    "az" to "oolyvi",
     "zh-Hans" to "hualiong, MareDevi, Andypsl8, bengerlorf",
     "zh-Hant" to "hualiong, jhih_yu_lin, web790709",
-    "fr-FR" to "0xybo, mamanamgae, frosqh, Eria78, nesquick",
-    "de-DE" to "LittleFreak, Secresa, MaximilianGT500, notsakin, x8laye4r",
-    "in-ID" to "Clxf12",
-    "it-IT" to "maicol07, DomeF",
-    "ja-JP" to "axiel7",
-    "pl-PL" to "xiggeush, YOGI_AOGI",
+    "fr" to "0xybo, mamanamgae, frosqh, Eria78, nesquick",
+    "de" to "LittleFreak, Secresa, MaximilianGT500, notsakin, x8laye4r",
+    "he" to "swaphat",
+    "in" to "Clxf12",
+    "it" to "maicol07, DomeF",
+    "ja" to "axiel7",
+    "pl" to "xiggeush, YOGI_AOGI",
     "pt-BR" to "Crono0, Torti, Ratolino, RickyM7, SamOak",
     "ro-RO" to "alexcsy",
-    "ru-RU" to "Ronner231, grin3671, Speech100",
+    "ru" to "Ronner231, grin3671, Speech100, venyavis",
     "es-ES" to "axiel7",
-    "th-TH" to "PiyaRawing",
-    "tr-TR" to "hsinankirdar",
-    "uk-UA" to "Syly_vibes, Sensetivity, magnariuk, DanielleTlumach",
+    "th" to "PiyaRawing",
+    "tr" to "hsinankirdar",
+    "uk" to "Syly_vibes, Sensetivity, magnariuk, DanielleTlumach",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TranslationsView(
-    navActionManager: NavActionManager,
-) {
+fun TranslationsView() {
+    val navActionManager = LocalNavActionManager.current
     val context = LocalContext.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = rememberTopAppBarState()
@@ -91,9 +91,7 @@ fun TranslationsView(
 private fun TranslationsViewPreview() {
     AniHyouTheme {
         Surface {
-            TranslationsView(
-                navActionManager = NavActionManager.rememberNavActionManager()
-            )
+            TranslationsView()
         }
     }
 }

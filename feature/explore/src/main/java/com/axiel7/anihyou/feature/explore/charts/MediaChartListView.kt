@@ -28,8 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.network.type.MediaFormat
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -38,35 +40,38 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaChartListView(
-    arguments: Routes.MediaChartList,
-    navActionManager: NavActionManager
+    isLoggedIn: Boolean,
+    arguments: Route.MediaChartList,
 ) {
     val viewModel: MediaChartViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MediaChartListContent(
+        isLoggedIn = isLoggedIn,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MediaChartListContent(
+    isLoggedIn: Boolean,
     uiState: MediaChartUiState,
     event: MediaChartEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
+    val snackbarManager = rememberSnackbarManager()
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
@@ -91,7 +96,8 @@ private fun MediaChartListContent(
         navigationIcon = {
             BackIconButton(onClick = navActionManager::goBack)
         },
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior,
+        snackbarHost = snackbarManager::SnackbarHost
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -113,16 +119,26 @@ private fun MediaChartListContent(
                 MediaItemHorizontal(
                     title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
+                    blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                     score = item.meanScore ?: 0,
                     format = item.format ?: MediaFormat.UNKNOWN__,
                     year = item.startDate?.year,
+                    mediaStatus = item.status,
+                    episodes = item.episodes,
+                    chapters = item.chapters,
+                    duration = item.duration,
+                    genres = item.genres?.filterNotNull(),
                     onClick = {
                         navActionManager.toMediaDetails(item.id)
                     },
                     onLongClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        event?.selectItem(item)
-                        showEditSheet = true
+                        if (isLoggedIn) {
+                            event?.selectItem(item)
+                            showEditSheet = true
+                        } else {
+                            snackbarManager.showNotLoggedInSnackbar()
+                        }
                     },
                     status = item.mediaListEntry?.basicMediaListEntry?.status,
                     topBadgeContent = {
@@ -149,9 +165,9 @@ private fun MediaChartListViewPreview() {
     AniHyouTheme {
         Surface {
             MediaChartListContent(
+                isLoggedIn = true,
                 uiState = MediaChartUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

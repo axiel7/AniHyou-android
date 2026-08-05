@@ -2,10 +2,10 @@ package com.axiel7.anihyou.feature.profile.stats
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
+import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.stats.StatDistributionType
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -13,16 +13,15 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserStatsViewModel(
+    @InjectedParam userId: Int,
     private val userRepository: UserRepository
 ) : UiStateViewModel<UserStatsUiState>(), UserStatsEvent {
 
-    override val initialState = UserStatsUiState()
-
-    fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
+    override val initialState = UserStatsUiState(userId = userId)
 
     override fun setType(value: UserStatType) = mutableUiState.update { it.copy(type = value) }
 
@@ -65,7 +64,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.OVERVIEW
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.mediaType == new.mediaType
@@ -74,7 +72,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getOverviewStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     mediaType = uiState.mediaType,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                 )
@@ -110,7 +108,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.GENRES
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.genresType == new.genresType
@@ -120,7 +117,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getGenresStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     mediaType = uiState.mediaType,
                     sort = uiState.genresType.userStatisticsSort(ascending = false),
                     fetchFromNetwork = uiState.fetchFromNetwork,
@@ -157,7 +154,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.TAGS
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.tagsType == new.tagsType
@@ -167,7 +163,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getTagsStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     mediaType = uiState.mediaType,
                     sort = uiState.tagsType.userStatisticsSort(ascending = false),
                     fetchFromNetwork = uiState.fetchFromNetwork,
@@ -204,7 +200,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.STAFF
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.staffType == new.staffType
@@ -214,7 +209,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getStaffStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     mediaType = uiState.mediaType,
                     sort = uiState.staffType.userStatisticsSort(ascending = false),
                     fetchFromNetwork = uiState.fetchFromNetwork,
@@ -251,7 +246,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.VOICE_ACTORS
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.voiceActorsType == new.voiceActorsType
@@ -260,7 +254,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getVoiceActorsStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     sort = uiState.voiceActorsType.userStatisticsSort(ascending = false),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                 )
@@ -284,7 +278,6 @@ class UserStatsViewModel(
         mutableUiState
             .filter {
                 it.type == UserStatType.STUDIOS
-                        && it.userId != null
             }
             .distinctUntilChanged { old, new ->
                 old.studiosType == new.studiosType
@@ -293,7 +286,7 @@ class UserStatsViewModel(
             }
             .flatMapLatest { uiState ->
                 userRepository.getStudiosStats(
-                    userId = uiState.userId!!,
+                    userId = uiState.userId,
                     sort = uiState.studiosType.userStatisticsSort(ascending = false),
                     fetchFromNetwork = uiState.fetchFromNetwork,
                 )

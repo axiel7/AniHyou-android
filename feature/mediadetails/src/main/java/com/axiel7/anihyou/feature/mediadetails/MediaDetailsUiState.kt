@@ -16,10 +16,12 @@ import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.fragment.MediaStaff
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.model.TranslatorApp
 
 @Immutable
 data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
 
     val details: MediaDetailsQuery.Media? = null,
     val openings: List<AnimeThemes.Theme>? = null,

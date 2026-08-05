@@ -4,11 +4,10 @@ plugins {
 }
 
 val appPackageName: String by rootProject.extra
-val sdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.baselineprofile"
-    compileSdk = sdkVersion
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -23,7 +22,7 @@ android {
 
     defaultConfig {
         minSdk = 28
-        targetSdk = sdkVersion
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

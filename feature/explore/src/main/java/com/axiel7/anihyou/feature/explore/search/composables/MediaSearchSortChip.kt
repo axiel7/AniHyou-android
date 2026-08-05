@@ -3,9 +3,10 @@ package com.axiel7.anihyou.feature.explore.search.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,53 +21,34 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.common.DialogWithRadioSelection
+import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
 
 @Composable
 fun MediaSearchSortChip(
     mediaSortSearch: MediaSortSearch,
     onSortChanged: (MediaSort) -> Unit,
 ) {
-    var openDialog by remember { mutableStateOf(false) }
     var isDescending by remember { mutableStateOf(true) }
-
-    if (openDialog) {
-        DialogWithRadioSelection(
-            values = MediaSortSearch.entries.toTypedArray(),
-            defaultValue = mediaSortSearch,
-            title = stringResource(R.string.sort),
-            isDeselectable = false,
-            onConfirm = {
-                onSortChanged(
-                    (if (isDescending) it?.desc else it?.asc) ?: MediaSort.SEARCH_MATCH
-                )
-                openDialog = false
-            },
-            onDismiss = { openDialog = false }
-        )
-    }
 
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        AssistChip(
-            onClick = { openDialog = !openDialog },
-            label = { Text(text = mediaSortSearch.localized()) },
+        AssistChipWithMenu(
+            values = MediaSortSearch.entries,
+            selectedValue = mediaSortSearch,
+            onValueSelected = {
+                onSortChanged((if (isDescending) it.desc else it.asc))
+            },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.sort_24),
-                    contentDescription = stringResource(R.string.sort)
+                    painter = painterResource(R.drawable.sort_20),
+                    contentDescription = stringResource(R.string.sort),
+                    modifier = Modifier.size(AssistChipDefaults.IconSize)
                 )
             },
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_drop_down_24),
-                    contentDescription = "dropdown",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            valueString = { it.localized() },
         )
 
         if (mediaSortSearch != MediaSortSearch.SEARCH_MATCH) {

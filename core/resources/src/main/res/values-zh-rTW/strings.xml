@@ -157,7 +157,6 @@
     <string name="account">帳號</string>
     <string name="github_repository">Github 倉庫</string>
     <string name="version">版本</string>
-    <string name="developed_by_axiel7">由 axiel7 開發</string>
     <string name="anilist_account_settings">AniList 帳戶設定</string>
     <string name="logout">登出</string>
     <string name="character_media">媒體</string>
@@ -613,4 +612,5 @@
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d分鐘</item>
     </plurals>
+    <string name="translator_app">翻譯</string>
 </resources>

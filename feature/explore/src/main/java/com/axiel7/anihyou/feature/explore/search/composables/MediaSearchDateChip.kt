@@ -16,7 +16,7 @@ import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.chip.ChipWithMenu
+import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable
@@ -39,7 +39,7 @@ fun MediaSearchDateChip(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ChipWithMenu(
+        FilterChipWithMenu(
             title = stringResource(R.string.from_year),
             values = startYears,
             selectedValue = startYear,
@@ -47,7 +47,7 @@ fun MediaSearchDateChip(
             valueString = { it.toString() },
         )
         Text(text = " - ")
-        ChipWithMenu(
+        FilterChipWithMenu(
             title = stringResource(R.string.to_year),
             values = endYears,
             selectedValue = endYear,
@@ -55,7 +55,7 @@ fun MediaSearchDateChip(
             valueString = { it.toString() },
         )
 
-        ChipWithMenu(
+        FilterChipWithMenu(
             title = stringResource(R.string.season),
             values = MediaSeason.knownEntries,
             selectedValue = season,

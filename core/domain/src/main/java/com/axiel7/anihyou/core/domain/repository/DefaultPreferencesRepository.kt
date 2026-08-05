@@ -15,6 +15,7 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.model.user.hexColor
 import com.axiel7.anihyou.core.network.ViewerOptionsQuery
@@ -81,6 +82,11 @@ class DefaultPreferencesRepository (
     val displayAdult = dataStore.getValue(DISPLAY_ADULT_KEY)
     suspend fun setDisplayAdult(value: Boolean) {
         dataStore.setValue(DISPLAY_ADULT_KEY, value)
+    }
+
+    val blurAdult = dataStore.getValue(BLUR_ADULT_KEY, default = true)
+    suspend fun setBlurAdult(value: Boolean) {
+        dataStore.setValue(BLUR_ADULT_KEY, value)
     }
 
     // profile info
@@ -210,7 +216,7 @@ class DefaultPreferencesRepository (
         dataStore.setValue(USE_BLACK_COLORS_KEY, value)
     }
 
-    val lastTab = dataStore.getValue(key = LAST_TAB_KEY, default = 0)
+    val lastTab = dataStore.getValue(key = LAST_TAB_KEY, default = DefaultTab.EXPLORE.ordinal - 1)
     suspend fun setLastTab(value: Int) {
         dataStore.setValue(LAST_TAB_KEY, value)
     }
@@ -225,7 +231,7 @@ class DefaultPreferencesRepository (
 
     // home
     val defaultHomeTab =
-        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.DISCOVER.ordinal)
+        dataStore.getValue(key = DEFAULT_HOME_TAB_KEY, default = HomeTab.CURRENT.ordinal)
             .map { HomeTab.valueOf(it) }
 
     suspend fun setDefaultHomeTab(value: HomeTab) {
@@ -288,12 +294,27 @@ class DefaultPreferencesRepository (
         dataStore.setValue(COLOR_PALETTE_KEY, value)
     }
 
+    val translatorApp = dataStore.getValue(TRANSLATOR_APP_KEY, default = TranslatorApp.DEFAULT.name)
+        .map { TranslatorApp.valueOf(it) }
+
+    suspend fun setTranslatorApp(value: TranslatorApp) {
+        dataStore.setValue(TRANSLATOR_APP_KEY, value.name)
+    }
+
+    val hideScores = dataStore.getValue(HIDE_SCORES_KEY, default = false)
+
+    suspend fun setHideScores(value: Boolean) {
+        dataStore.setValue(HIDE_SCORES_KEY, value)
+    }
+
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
 
         private val TITLE_LANGUAGE_KEY = stringPreferencesKey("title_language")
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
+        private val BLUR_ADULT_KEY = booleanPreferencesKey("blur_adult")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
@@ -320,5 +341,8 @@ class DefaultPreferencesRepository (
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
+
+        private val TRANSLATOR_APP_KEY = stringPreferencesKey("translator_app")
+        private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
     }
 }

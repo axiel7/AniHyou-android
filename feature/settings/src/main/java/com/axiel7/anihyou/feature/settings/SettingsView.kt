@@ -23,19 +23,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_ACCOUNT_SETTINGS_URL
 import com.axiel7.anihyou.core.base.DISCORD_SERVER_URL
-import com.axiel7.anihyou.core.base.GITHUB_PROFILE_URL
 import com.axiel7.anihyou.core.base.GITHUB_REPO_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.ContextUtils.getActivity
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openByDefaultSettings
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
-import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.entriesLocalized
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.model.user.entriesLocalized
@@ -43,7 +42,9 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.ListPreference
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
@@ -60,15 +61,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.materialkolor.PaletteStyle
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SettingsView(
-    navActionManager: NavActionManager
-) {
+fun SettingsView() {
     val viewModel: SettingsViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -79,19 +78,20 @@ fun SettingsView(
         uiState = uiState,
         event = viewModel,
         notificationPermission = notificationPermission,
-        navActionManager = navActionManager,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsContent(
     uiState: SettingsUiState,
     event: SettingsEvent?,
     notificationPermission: PermissionState?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val isEnglishLocale = LocalIsLanguageEn.current
     val context = LocalContext.current
+    val snackbarManager = rememberSnackbarManager()
     val isDarkTheme = (uiState.theme == Theme.FOLLOW_SYSTEM && isSystemInDarkTheme())
             || uiState.theme == Theme.DARK
 
@@ -109,6 +109,7 @@ private fun SettingsContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.settings),
+        snackbarHost = snackbarManager::SnackbarHost,
         navigationIcon = {
             BackIconButton(onClick = navActionManager::goBack)
         },
@@ -169,6 +170,18 @@ private fun SettingsContent(
 
             LanguagePreference()
 
+            if (!isEnglishLocale) {
+                ListPreference(
+                    title = stringResource(R.string.translator_app),
+                    entriesValues = TranslatorApp.entriesLocalized,
+                    preferenceValue = uiState.translatorApp,
+                    icon = R.drawable.translate_24,
+                    onValueChange = { value ->
+                        event?.setTranslatorApp(value)
+                    }
+                )
+            }
+
             if (uiState.isLoggedIn) {
                 ListPreference(
                     title = stringResource(R.string.title_language),
@@ -177,7 +190,7 @@ private fun SettingsContent(
                     icon = R.drawable.title_24,
                     onValueChange = { value ->
                         event?.setTitleLanguage(value)
-                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                        snackbarManager.showMessage(R.string.changes_will_take_effect_on_app_restart)
                     }
                 )
 
@@ -188,7 +201,7 @@ private fun SettingsContent(
                     icon = R.drawable.group_24,
                     onValueChange = { value ->
                         event?.setStaffNameLanguage(value)
-                        context.showToast(R.string.changes_will_take_effect_on_app_restart)
+                        snackbarManager.showMessage(R.string.changes_will_take_effect_on_app_restart)
                     }
                 )
 
@@ -256,6 +269,20 @@ private fun SettingsContent(
                     icon = R.drawable.no_adult_content_24,
                     onValueChange = { event?.setDisplayAdultContent(it) }
                 )
+                SwitchPreference(
+                    title = stringResource(R.string.blur_adult_content),
+                    preferenceValue = uiState.blurAdultContent,
+                    icon = R.drawable.blur_on_24,
+                    onValueChange = { event?.setBlurAdultContent(it) }
+                )
+
+                SwitchPreference(
+                    title = stringResource(R.string.hide_scores),
+                    preferenceValue = uiState.hideScores,
+                    icon = R.drawable.star_half_24,
+                    onValueChange = { event?.setHideScores(it) }
+                )
+
                 SwitchPreference(
                     title = stringResource(R.string.airing_on_my_list),
                     preferenceValue = uiState.airingOnMyList,
@@ -342,11 +369,9 @@ private fun SettingsContent(
             )
 
             PlainPreference(
-                title = stringResource(R.string.developed_by_axiel7),
+                title = stringResource(R.string.contributors),
                 icon = R.drawable.code_24,
-                onClick = {
-                    context.openActionView(GITHUB_PROFILE_URL)
-                }
+                onClick = navActionManager::toContributors
             )
 
             PlainPreference(
@@ -378,7 +403,6 @@ private fun SettingsViewPreview() {
                 uiState = SettingsUiState(isLoggedIn = true),
                 event = null,
                 notificationPermission = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

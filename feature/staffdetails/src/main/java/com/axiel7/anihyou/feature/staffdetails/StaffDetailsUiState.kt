@@ -7,9 +7,11 @@ import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffCharacterQuery
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.model.TranslatorApp
 
 @Stable
 data class StaffDetailsUiState(
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val details: StaffDetailsQuery.Staff? = null,
     val media: SnapshotStateList<Pair<Int, StaffMediaGrouped>> = mutableStateListOf(),
     val mediaOnMyList: Boolean? = null,

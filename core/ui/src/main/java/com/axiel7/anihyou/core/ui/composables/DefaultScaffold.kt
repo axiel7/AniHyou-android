@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 fun DefaultScaffoldWithMediumTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
+    snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
@@ -44,6 +45,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
                 scrollBehavior = scrollBehavior
             )
         },
+        snackbarHost = snackbarHost,
         floatingActionButton = floatingActionButton,
         contentWindowInsets = contentWindowInsets,
         content = content
@@ -55,6 +57,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
+    snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
@@ -79,6 +82,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
                 scrollBehavior = scrollBehavior
             )
         },
+        snackbarHost = snackbarHost,
         floatingActionButton = floatingActionButton,
         contentWindowInsets = contentWindowInsets,
         content = content

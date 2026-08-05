@@ -8,10 +8,15 @@ query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType
             startDate {
                 year
             }
+            status
             coverImage {
                 large
             }
             meanScore
+            genres
+            episodes
+            chapters
+            duration
             mediaListEntry {
                 ...BasicMediaListEntry
             }

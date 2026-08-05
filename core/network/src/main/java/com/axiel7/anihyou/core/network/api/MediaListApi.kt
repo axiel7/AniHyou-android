@@ -2,10 +2,10 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.api.CacheKey
-import com.apollographql.apollo.cache.normalized.apolloStore
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.api.CacheKey
+import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.DeleteMediaListMutation
 import com.axiel7.anihyou.core.network.MediaListCustomListsQuery
 import com.axiel7.anihyou.core.network.MediaListIdsQuery
@@ -22,6 +22,7 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 
 class MediaListApi(
     private val client: ApolloClient
@@ -50,6 +51,7 @@ class MediaListApi(
         mediaType: MediaType,
         statusIn: List<MediaListStatus>?,
         sort: List<MediaListSort>,
+        scoreFormat: ScoreFormat,
         fetchFromNetwork: Boolean,
         page: Int?,
         perPage: Int?,
@@ -60,6 +62,7 @@ class MediaListApi(
                 type = Optional.present(mediaType),
                 statusIn = Optional.presentIfNotNull(statusIn),
                 sort = Optional.present(sort),
+                scoreFormat = Optional.present(scoreFormat),
                 page = Optional.presentIfNotNull(page),
                 perPage = Optional.presentIfNotNull(perPage),
             )
@@ -90,7 +93,7 @@ class MediaListApi(
             .writeFragment(
                 fragment = BasicMediaListEntryImpl(),
                 cacheKey = CacheKey("${data.__typename}:${data.id} ${data.mediaId}"),
-                fragmentData = data,
+                data = data,
             )
     }
 

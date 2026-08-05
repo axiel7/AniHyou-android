@@ -36,7 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -47,37 +48,39 @@ import com.axiel7.anihyou.feature.home.current.CurrentUiState
 import com.axiel7.anihyou.feature.home.current.CurrentViewModel
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItemPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CurrentFullListView(
+    isLoggedIn: Boolean,
     listType: CurrentListType,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CurrentViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CurrentFullListContent(
+        isLoggedIn = isLoggedIn,
         listType = listType,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
         modifier = modifier
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CurrentFullListContent(
+    isLoggedIn: Boolean,
     listType: CurrentListType,
     uiState: CurrentUiState,
     event: CurrentEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier
 ) {
+    val navActionManager = LocalNavActionManager.current
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
+    val snackbarManager = rememberSnackbarManager()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -105,7 +108,6 @@ private fun CurrentFullListContent(
         SetScoreDialog(
             onDismiss = { event?.toggleSetScoreDialog(false) },
             onConfirm = { event?.setScore(it) },
-            scoreFormat = uiState.scoreFormat,
         )
     }
 
@@ -116,6 +118,7 @@ private fun CurrentFullListContent(
             BackIconButton(onClick = navActionManager::goBack)
         },
         scrollBehavior = topAppBarScrollBehavior,
+        snackbarHost = snackbarManager::SnackbarHost,
         contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
     ) { padding ->
         PullToRefreshBox(
@@ -144,7 +147,6 @@ private fun CurrentFullListContent(
                     CurrentListItem(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
-                        scoreFormat = uiState.scoreFormat,
                         isPlusEnabled = !uiState.isLoadingPlusOne,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onClickPlus = { increment ->
@@ -153,8 +155,12 @@ private fun CurrentFullListContent(
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            event?.selectItem(item, listType)
-                            showEditSheet = true
+                            if (isLoggedIn) {
+                                event?.selectItem(item, listType)
+                                showEditSheet = true
+                            } else {
+                                snackbarManager.showNotLoggedInSnackbar()
+                            }
                         },
                         blockPlus = { event?.blockPlusOne() }
                     )
@@ -186,6 +192,7 @@ private fun CurrentFullListViewPreview() {
     AniHyouTheme {
         Surface {
             CurrentFullListContent(
+                isLoggedIn = true,
                 listType = CurrentListType.AIRING,
                 uiState = CurrentUiState(
                     airingList = exampleList,
@@ -194,7 +201,6 @@ private fun CurrentFullListViewPreview() {
                     mangaList = exampleList
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

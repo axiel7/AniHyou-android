@@ -15,6 +15,7 @@ fragment CommonStudioMedia on MediaConnection {
         coverImage {
             large
         }
+        isAdult
         title {
             userPreferred
         }

@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -41,13 +42,12 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun StudioDetailsView(
-    arguments: Routes.StudioDetails,
-    navActionManager: NavActionManager
+    arguments: Route.StudioDetails,
 ) {
     val viewModel: StudioDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,7 +55,6 @@ fun StudioDetailsView(
     StudioDetailsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -64,8 +63,9 @@ fun StudioDetailsView(
 private fun StudioDetailsContent(
     uiState: StudioDetailsUiState,
     event: StudioDetailsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -112,6 +112,7 @@ private fun StudioDetailsContent(
                 MediaItemVertical(
                     title = item.title?.userPreferred.orEmpty(),
                     imageUrl = item.coverImage?.large,
+                    blurImage = blurAdult && item.isAdult == true,
                     modifier = Modifier.wrapContentWidth(),
                     subtitle = {
                         Text(
@@ -153,7 +154,6 @@ private fun StudioDetailsViewPreview() {
             StudioDetailsContent(
                 uiState = StudioDetailsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

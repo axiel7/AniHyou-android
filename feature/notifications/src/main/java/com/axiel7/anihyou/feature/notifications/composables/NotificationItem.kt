@@ -34,6 +34,7 @@ const val NOTIFICATION_IMAGE_SIZE = 48
 fun NotificationItem(
     title: String,
     modifier: Modifier = Modifier,
+    blurImage: Boolean = false,
     imageUrl: String?,
     subtitle: String?,
     isUnread: Boolean,
@@ -46,6 +47,7 @@ fun NotificationItem(
         leadingContent = {
             MediaPoster(
                 url = imageUrl,
+                enableBlur = blurImage,
                 modifier = Modifier
                     .size(ACTIVITY_IMAGE_SIZE.dp)
                     .clickable(onClick = onClickImage),

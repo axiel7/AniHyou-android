@@ -16,14 +16,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampToDateString
+import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.network.fragment.BasicThreadDetails
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ReplyButton
+import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
@@ -31,11 +34,12 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 fun ParentThreadView(
     thread: BasicThreadDetails,
     isLiked: Boolean,
+    translatorApp: TranslatorApp,
     onClickLike: () -> Unit,
     onClickReply: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
-    uriHandler: MarkdownUriHandler,
 ) {
+    val isEnglishLocale = LocalIsLanguageEn.current
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -43,21 +47,17 @@ fun ParentThreadView(
     ) {
         Text(
             text = thread.title.orEmpty(),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 24.sp
+            style = MaterialTheme.typography.titleLarge
         )
         Text(
             text = thread.createdAt.toLong().timestampToDateString(format = "MMM d, YYYY").orEmpty(),
             color = MaterialTheme.colorScheme.outline,
-            fontSize = 15.sp
+            style = MaterialTheme.typography.labelLarge
         )
 
         DefaultMarkdownText(
             markdown = thread.body,
             modifier = Modifier.padding(vertical = 8.dp),
-            fontSize = 17.sp,
-            uriHandler = uriHandler,
         )
 
         Row(
@@ -72,6 +72,12 @@ fun ParentThreadView(
                     thread.user?.id?.let(navigateToUserDetails)
                 }
             )
+            if (!isEnglishLocale) {
+                TranslateIconButton(
+                    text = thread.body?.htmlStripped(),
+                    app = translatorApp,
+                )
+            }
             FavoriteIconButton(
                 isFavorite = isLiked,
                 favoritesCount = thread.likeCount,
@@ -153,6 +159,7 @@ private fun ParentThreadViewPreview() {
             id = 1,
             name = "KOMBRAT",
             avatar = BasicThreadDetails.Avatar(
+                __typename = "",
                 medium = null
             ),
             __typename = "User"
@@ -166,10 +173,10 @@ private fun ParentThreadViewPreview() {
                 ParentThreadView(
                     thread = thread,
                     isLiked = true,
+                    translatorApp = TranslatorApp.DEFAULT,
                     onClickLike = {},
                     onClickReply = {},
                     navigateToUserDetails = {},
-                    uriHandler = MarkdownUriHandler()
                 )
                 ParentThreadViewPlaceholder()
             }

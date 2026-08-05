@@ -22,6 +22,7 @@ data class GenericActivity(
     val avatarUrl: String?,
     val mediaId: Int? = null,
     val mediaCoverUrl: String? = null,
+    val isAdultMedia: Boolean = false,
     val replies: List<ActivityReplyFragment>?,
     val listActivityFragment: ListActivityFragment? = null,
 ) {
@@ -60,6 +61,7 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     avatarUrl = user?.activityUser?.avatar?.medium,
     mediaId = listActivityFragment.media?.id,
     mediaCoverUrl = listActivityFragment.media?.coverImage?.medium,
+    isAdultMedia = listActivityFragment.media?.isAdult == true,
     replies = replies?.filterNotNull()?.map { it.activityReplyFragment },
     listActivityFragment = listActivityFragment,
 )
@@ -96,7 +98,7 @@ fun ActivityReplyFragment.toGenericActivity() = GenericActivity(
 
 val exampleActivityUser = ActivityUser(
     name = "HelloMyNameIsLong",
-    avatar = ActivityUser.Avatar(medium = "https://picsum.photos/200"),
+    avatar = ActivityUser.Avatar(__typename = "", medium = "https://picsum.photos/200"),
     __typename = "",
     id = 1,
 )

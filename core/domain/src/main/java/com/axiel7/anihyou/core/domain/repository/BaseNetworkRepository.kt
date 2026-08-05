@@ -19,6 +19,10 @@ import kotlinx.serialization.json.Json
 abstract class BaseNetworkRepository(
     protected val defaultPreferencesRepository: DefaultPreferencesRepository
 ) {
+    private val errorJson = Json {
+        ignoreUnknownKeys = true
+    }
+
     protected suspend fun <D : Operation.Data, R> ApolloResponse<D>.asDataResult(
         transform: (D) -> R
     ) = when {
@@ -121,7 +125,7 @@ abstract class BaseNetworkRepository(
                 val bodyString = body.readUtf8()
                 body.close()
                 runCatching {
-                    Json.decodeFromString<ErrorResponse>(bodyString)
+                    errorJson.decodeFromString<ErrorResponse>(bodyString)
                 }.getOrElse {
                     ErrorResponse(errors = listOf(ErrorResponse.Error(message = bodyString)))
                 }

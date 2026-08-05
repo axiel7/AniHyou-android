@@ -8,7 +8,7 @@ import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.model.activity.toGenericActivity
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.type.ActivityType
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,10 +17,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityDetailsViewModel(
-    arguments: Routes.ActivityDetails,
+    @InjectedParam arguments: Route.ActivityDetails,
     private val activityRepository: ActivityRepository,
     private val likeRepository: LikeRepository,
 ) : UiStateViewModel<ActivityDetailsUiState>(), ActivityDetailsEvent {

@@ -40,6 +40,14 @@ fun MediaSeason.icon() = when (this) {
     MediaSeason.UNKNOWN__ -> R.drawable.error_24
 }
 
+fun MediaSeason.iconSmall() = when (this) {
+    MediaSeason.WINTER -> R.drawable.ac_unit_20
+    MediaSeason.SPRING -> R.drawable.local_florist_20
+    MediaSeason.SUMMER -> R.drawable.sunny_20
+    MediaSeason.FALL -> R.drawable.rainy_20
+    MediaSeason.UNKNOWN__ -> R.drawable.error_20
+}
+
 fun LocalDateTime.season(): MediaSeason {
     return when (this.month) {
         Month.JANUARY, Month.FEBRUARY, Month.DECEMBER -> MediaSeason.WINTER

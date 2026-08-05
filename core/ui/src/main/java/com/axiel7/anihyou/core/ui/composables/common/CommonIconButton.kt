@@ -25,6 +25,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.common.utils.NumberUtils.abbreviated
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.ui.utils.TranslateUtils.openTranslator
 
 fun singleClick(onClick: () -> Unit): () -> Unit {
@@ -165,14 +166,13 @@ fun CommentIconButton(
 fun ReplyButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    fontSize: TextUnit = TextUnit.Unspecified,
     iconSize: Dp = 24.dp,
     tint: Color = LocalContentColor.current
 ) {
-    TextButton(
+    IconButton(
         onClick = onClick,
         modifier = modifier,
-        shapes = ButtonDefaults.shapes(),
+        shapes = IconButtonDefaults.shapes(),
     ) {
         Icon(
             painter = painterResource(R.drawable.reply_24),
@@ -182,11 +182,6 @@ fun ReplyButton(
                 .size(iconSize),
             tint = tint
         )
-        Text(
-            text = stringResource(R.string.reply),
-            color = tint,
-            fontSize = fontSize,
-        )
     }
 }
 
@@ -194,12 +189,13 @@ fun ReplyButton(
 @Composable
 fun TranslateIconButton(
     text: String?,
+    app: TranslatorApp,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     IconButton(
         onClick = {
-            text?.let { context.openTranslator(it) }
+            text?.let { context.openTranslator(app, it) }
         },
         modifier = modifier,
         shapes = IconButtonDefaults.shapes()

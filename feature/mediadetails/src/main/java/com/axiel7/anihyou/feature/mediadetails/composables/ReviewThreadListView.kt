@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,13 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.composables.InfoTitle
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.post.POST_ITEM_HEIGHT
@@ -45,8 +44,8 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun ReviewThreadListView(
     uiState: MediaDetailsUiState,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val reviewsListState = rememberLazyGridState()
     val threadsListState = rememberLazyListState()
     val activityListState = rememberLazyListState()
@@ -54,11 +53,11 @@ fun ReviewThreadListView(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        InfoTitle(text = stringResource(R.string.threads))
+        HorizontalListHeader(text = stringResource(R.string.threads))
         if (uiState.isLoadingThreads || uiState.threads.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 16.dp),
+                    .padding(bottom = 8.dp),
                 state = threadsListState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -78,16 +77,16 @@ fun ReviewThreadListView(
                             ) {
                                 TextIconHorizontal(
                                     text = item.basicThreadDetails.totalReplies?.format().orEmpty(),
-                                    icon = R.drawable.chat_bubble_24,
+                                    icon = R.drawable.chat_bubble_20,
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.labelMedium,
                                 )
                                 TextIconHorizontal(
                                     text = item.basicThreadDetails.viewCount?.format().orEmpty(),
-                                    icon = R.drawable.visibility_24,
+                                    icon = R.drawable.visibility_20,
                                     modifier = Modifier.padding(end = 8.dp),
                                     iconPadding = PaddingValues(start = 8.dp, end = 4.dp),
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.labelMedium,
                                 )
                             }
                         },
@@ -114,11 +113,11 @@ fun ReviewThreadListView(
         }
 
         if (uiState.isLoadingReviews || uiState.reviews.isNotEmpty()) {
-            InfoTitle(text = stringResource(R.string.reviews))
+            HorizontalListHeader(text = stringResource(R.string.reviews))
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(2),
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 16.dp)
+                    .padding(bottom = 8.dp)
                     .height((POST_ITEM_HEIGHT * 2).dp),
                 state = reviewsListState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
@@ -137,8 +136,8 @@ fun ReviewThreadListView(
                             TextIconHorizontal(
                                 text = item.score?.format().orEmpty(),
                                 icon = R.drawable.star_filled_20,
-                                iconPadding = PaddingValues(0.dp),
-                                fontSize = 15.sp
+                                iconPadding = PaddingValues(bottom = 2.dp, end = 1.dp),
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         },
                         onClick = {
@@ -163,7 +162,7 @@ fun ReviewThreadListView(
             )
             LazyRow(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 16.dp),
+                    .padding(bottom = 16.dp),
                 state = activityListState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -184,9 +183,9 @@ fun ReviewThreadListView(
                                         maxUnit = ChronoUnit.WEEKS,
                                         isFutureDate = false
                                     ),
-                                fontSize = 15.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         },
                         onClick = {
@@ -209,7 +208,6 @@ private fun ReviewThreadListViewPreview() {
                     isLoadingReviews = true,
                     isLoadingThreads = true
                 ),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

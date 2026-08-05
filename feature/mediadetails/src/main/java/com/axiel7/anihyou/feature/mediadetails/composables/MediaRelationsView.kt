@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.InfoTitle
 import com.axiel7.anihyou.core.ui.composables.UpvoteDownvoteHorizontalText
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
@@ -33,6 +33,7 @@ fun MediaRelationsView(
     navigateToDetails: (Int) -> Unit,
     onVoteClick: (Int, Int, RecommendationRating) -> Unit = { _, _, _ -> },
 ) {
+    val blurAdult = LocalBlurAdult.current
     val isLoading = uiState.relationsAndRecommendations == null
 
     LaunchedEffect(uiState.relationsAndRecommendations) {
@@ -59,12 +60,12 @@ fun MediaRelationsView(
                     MediaItemVertical(
                         title = item.mediaRelated.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRelated.node?.coverImage?.large,
+                        blurImage = blurAdult && item.mediaRelated.node?.basicMediaDetails?.isAdult == true,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             Text(
                                 text = item.mediaRelated.relationType?.localized().orEmpty(),
                                 color = MaterialTheme.colorScheme.outline,
-                                fontSize = 15.sp,
                             )
                         },
                         status = item.mediaRelated.node?.mediaListEntry?.basicMediaListEntry?.status,
@@ -103,6 +104,8 @@ fun MediaRelationsView(
                         title = item.mediaRecommended.mediaRecommendation?.basicMediaDetails
                             ?.title?.userPreferred.orEmpty(),
                         imageUrl = item.mediaRecommended.mediaRecommendation?.coverImage?.large,
+                        blurImage = blurAdult
+                                && item.mediaRecommended.mediaRecommendation?.basicMediaDetails?.isAdult == true,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         subtitle = {
                             UpvoteDownvoteHorizontalText(

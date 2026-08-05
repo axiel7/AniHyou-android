@@ -1,13 +1,19 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
+import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.network.api.FavoriteApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class FavoriteRepository(
     private val api: FavoriteApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
+
+    private val _favoriteToggled = MutableSharedFlow<Boolean>(replay = 1)
+    val favoriteToggled = _favoriteToggled.asSharedFlow()
 
     suspend fun toggleFavorite(
         animeId: Int? = null,
@@ -20,6 +26,8 @@ class FavoriteRepository(
         .execute()
         .asDataResult {
             it.ToggleFavourite
+        }.also {
+            if (it is DataResult.Success) _favoriteToggled.emit(true)
         }
 
     fun getFavoriteAnime(
@@ -86,4 +94,31 @@ class FavoriteRepository(
         .asPagedResult(page = { it.User?.favourites?.studios?.pageInfo?.commonPage }) {
             it.User?.favourites?.studios?.nodes?.filterNotNull().orEmpty()
         }
+
+    fun updateFavouriteOrder(
+        animeIds: List<Int>? = null,
+        animeOrder: List<Int>? = null,
+        mangaIds: List<Int>? = null,
+        mangaOrder: List<Int>? = null,
+        characterIds: List<Int>? = null,
+        characterOrder: List<Int>? = null,
+        staffIds: List<Int>? = null,
+        staffOrder: List<Int>? = null,
+        studioIds: List<Int>? = null,
+        studioOrder: List<Int>? = null
+    ) = api
+        .updateFavouriteOrderMutation(
+            animeIds,
+            animeOrder,
+            mangaIds,
+            mangaOrder,
+            characterIds,
+            characterOrder,
+            staffIds,
+            staffOrder,
+            studioIds,
+            studioOrder
+        )
+        .toFlow()
+        .asDataResult()
 }

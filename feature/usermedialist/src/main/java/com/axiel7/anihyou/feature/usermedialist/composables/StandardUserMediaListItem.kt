@@ -40,6 +40,7 @@ import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
@@ -63,6 +64,7 @@ fun StandardUserMediaListItem(
     blockPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     ListItem(
         onClick = onClick,
@@ -71,6 +73,7 @@ fun StandardUserMediaListItem(
             Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
+                    enableBlur = blurAdult && item.media?.basicMediaDetails?.isAdult == true,
                     showShadow = false,
                     modifier = Modifier
                         .size(
@@ -106,14 +109,12 @@ fun StandardUserMediaListItem(
                     modifier = Modifier
                         .padding(bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
                 AiringScheduleText(
                     item = item,
-                    fontSize = 16.sp
                 )
             }//:Column
             Column {

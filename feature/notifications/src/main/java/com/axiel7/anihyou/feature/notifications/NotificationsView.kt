@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.notifications
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -28,8 +30,9 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -39,14 +42,13 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItem
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItemPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.time.temporal.ChronoUnit
 
 @Composable
 fun NotificationsView(
-    arguments: Routes.Notifications,
-    navActionManager: NavActionManager,
+    arguments: Route.Notifications,
 ) {
     val viewModel: NotificationsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -54,7 +56,6 @@ fun NotificationsView(
     NotificationsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -63,8 +64,9 @@ fun NotificationsView(
 private fun NotificationsContent(
     uiState: NotificationsUiState,
     event: NotificationsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -93,11 +95,12 @@ private fun NotificationsContent(
                 bottom = padding.calculateBottomPadding()
             )
         ) {
-            item(
+            stickyHeader(
                 contentType = uiState.type
             ) {
                 Row(
                     modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp, end = 8.dp)
                 ) {
@@ -126,6 +129,7 @@ private fun NotificationsContent(
             ) { item ->
                 NotificationItem(
                     title = item.text,
+                    blurImage = blurAdult && item.isAdultMedia,
                     imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
                         ?.secondsToLegibleText(
@@ -196,7 +200,6 @@ private fun NotificationsViewPreview() {
             NotificationsContent(
                 uiState = NotificationsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

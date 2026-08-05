@@ -6,17 +6,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.PublishActivity
+import androidx.navigation3.runtime.result.LocalResultEventBus
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route.PublishActivity
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PublishActivityView(
     arguments: PublishActivity,
-    navActionManager: NavActionManager
 ) {
     val viewModel: PublishActivityViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -25,7 +25,6 @@ fun PublishActivityView(
         arguments = arguments,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -34,12 +33,23 @@ private fun PublishActivityContent(
     arguments: PublishActivity,
     uiState: PublishActivityUiState,
     event: PublishActivityEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val eventBus = LocalResultEventBus.current
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
-    LaunchedEffect(uiState.wasPublished) {
-        if (uiState.wasPublished == true) navActionManager.goBack()
+    LaunchedEffect(uiState.activity) {
+        if (uiState.activity != null) {
+            eventBus.sendResult(uiState.activity)
+            navActionManager.goBack()
+        }
+    }
+
+    LaunchedEffect(uiState.reply) {
+        if (uiState.reply != null) {
+            eventBus.sendResult(uiState.reply)
+            navActionManager.goBack()
+        }
     }
 
     PublishMarkdownView(
@@ -69,7 +79,6 @@ private fun PublishActivityViewPreview() {
                 ),
                 uiState = PublishActivityUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

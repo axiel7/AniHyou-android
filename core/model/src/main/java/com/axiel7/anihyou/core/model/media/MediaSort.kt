@@ -10,8 +10,8 @@ import com.axiel7.anihyou.core.resources.R
 fun MediaSort.localized() = when (this) {
     MediaSort.ID -> stringResource(R.string.id)
     MediaSort.ID_DESC -> stringResource(R.string.id)
-    MediaSort.TITLE_ROMAJI -> stringResource(R.string.title_romaji)
-    MediaSort.TITLE_ROMAJI_DESC -> stringResource(R.string.title_romaji)
+    MediaSort.TITLE_ROMAJI -> stringResource(R.string.sort_title)
+    MediaSort.TITLE_ROMAJI_DESC -> stringResource(R.string.sort_title)
     MediaSort.TITLE_ENGLISH -> stringResource(R.string.title_english)
     MediaSort.TITLE_ENGLISH_DESC -> stringResource(R.string.title_english)
     MediaSort.TITLE_NATIVE -> stringResource(R.string.title_native)
@@ -55,6 +55,10 @@ enum class MediaSortSearch(
     SEARCH_MATCH(
         asc = MediaSort.SEARCH_MATCH,
         desc = MediaSort.SEARCH_MATCH,
+    ),
+    TITLE(
+        asc = MediaSort.TITLE_ROMAJI,
+        desc = MediaSort.TITLE_ROMAJI_DESC,
     ),
     POPULARITY(
         asc = MediaSort.POPULARITY,

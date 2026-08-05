@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.koin.compiler)
 }
 
 val versionProps = Properties().also {
@@ -10,18 +11,15 @@ val versionProps = Properties().also {
 }
 
 val appPackageName: String by rootProject.extra
-val wearSdkVersion: Int by rootProject.extra
-val wearCompileSdkVersion: Int by rootProject.extra
-val wearMinSdkVersion: Int by rootProject.extra
 
 android {
     namespace = "$appPackageName.wear"
-    compileSdk = wearCompileSdkVersion
+    compileSdk = libs.versions.wear.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = appPackageName
-        minSdk = wearMinSdkVersion
-        targetSdk = wearSdkVersion
+        minSdk = libs.versions.wear.minSdk.get().toInt()
+        targetSdk = libs.versions.wear.targetSdk.get().toInt()
         versionCode = versionProps.getProperty("wear_code").toInt()
         versionName = versionProps.getProperty("wear_name")
     }
@@ -33,7 +31,6 @@ android {
             versionNameSuffix = "-DEBUG"
             isDebuggable = true
             isMinifyEnabled = false
-            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,7 +40,7 @@ android {
         release {
             isDebuggable = false
             isMinifyEnabled = true
-            isShrinkResources = false
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -101,7 +98,10 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.annotations)
+    implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)

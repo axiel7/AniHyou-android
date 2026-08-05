@@ -70,8 +70,11 @@ import com.axiel7.anihyou.core.model.media.siteUrlWithTitle
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalHideScores
+import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
@@ -87,9 +90,9 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
-import com.axiel7.anihyou.core.ui.utils.LocaleUtils.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.core.ui.utils.StringUtils.toAnnotatedString
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
@@ -98,13 +101,12 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaInformationView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaDetailsView(
-    arguments: Routes.MediaDetails,
-    navActionManager: NavActionManager,
+    arguments: Route.MediaDetails,
 ) {
     val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -112,19 +114,18 @@ fun MediaDetailsView(
     MediaDetailsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalMaterial3ExpressiveApi::class
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class
 )
 @Composable
 private fun MediaDetailsContent(
     uiState: MediaDetailsUiState,
     event: MediaDetailsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -147,6 +148,8 @@ private fun MediaDetailsContent(
         }
     }
     val isCurrentLanguageEn = LocalIsLanguageEn.current
+    val hideScores = LocalHideScores.current
+    var showScores by rememberSaveable { mutableStateOf(false) }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     val errorString = uiState.errorId?.let { stringResource(it) }
@@ -262,6 +265,7 @@ private fun MediaDetailsContent(
             Row {
                 MediaPoster(
                     url = uiState.details?.coverImage?.large,
+                    enableBlur = false,
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .size(
@@ -287,33 +291,36 @@ private fun MediaDetailsContent(
                                 },
                                 onClick = { }
                             ),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium
                     )
                     TextIconHorizontal(
                         text = uiState.details?.format?.localized()
                             ?: stringResource(R.string.unknown),
                         icon = if (uiState.details?.basicMediaDetails?.isAnime() == true)
-                            R.drawable.live_tv_24
-                        else R.drawable.book_24,
+                            R.drawable.live_tv_20
+                        else R.drawable.book_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                     TextIconHorizontal(
                         text = uiState.details?.basicMediaDetails?.durationText()
                             ?: stringResource(R.string.unknown),
-                        icon = R.drawable.timer_24,
+                        icon = R.drawable.timer_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                     TextIconHorizontal(
                         text = uiState.details?.status.localized(),
-                        icon = R.drawable.rss_feed_24,
+                        icon = R.drawable.rss_feed_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
+                            .defaultPlaceholder(visible = uiState.isLoading),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 }//:Column
             }//:Row
@@ -322,9 +329,10 @@ private fun MediaDetailsContent(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                val dividerHeight = 36
+                val dividerHeight = 28
                 uiState.details?.nextAiringEpisode?.let { nextAiringEpisode ->
                     TextSubtitleVertical(
                         text = stringResource(
@@ -343,6 +351,9 @@ private fun MediaDetailsContent(
                 TextSubtitleVertical(
                     text = "${uiState.details?.meanScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.mean_score),
+                    modifier = Modifier
+                        .clickable { showScores = !showScores }
+                        .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
                 VerticalDivider(
@@ -353,6 +364,9 @@ private fun MediaDetailsContent(
                 TextSubtitleVertical(
                     text = "${uiState.details?.averageScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.average_score),
+                    modifier = Modifier
+                        .clickable { showScores = !showScores }
+                        .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
                 VerticalDivider(
@@ -376,6 +390,26 @@ private fun MediaDetailsContent(
                     isLoading = uiState.isLoading
                 )
             }//: Row
+
+            // Genres
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 8.dp)
+            ) {
+                uiState.details?.genres?.filterNotNull()?.forEach { genre ->
+                    AssistChip(
+                        onClick = {
+                            uiState.details.basicMediaDetails.type?.let { mediaType ->
+                                navActionManager.toGenreTag(mediaType, genre, null)
+                            }
+                        },
+                        label = { Text(text = genre.genreTagLocalized()) },
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
 
             // Synopsis
             Text(
@@ -410,7 +444,8 @@ private fun MediaDetailsContent(
             ) {
                 if (!isCurrentLanguageEn) {
                     TranslateIconButton(
-                        text = uiState.details?.description?.htmlStripped()
+                        text = uiState.details?.description?.htmlStripped(),
+                        app = uiState.translatorApp,
                     )
                 } else {
                     Spacer(modifier = Modifier.size(48.dp))
@@ -441,26 +476,6 @@ private fun MediaDetailsContent(
                 }
             }//: Row
 
-            // Genres
-            Row(
-                modifier = Modifier
-                    .height(32.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 8.dp)
-            ) {
-                uiState.details?.genres?.filterNotNull()?.forEach { genre ->
-                    AssistChip(
-                        onClick = {
-                            uiState.details.basicMediaDetails.type?.let { mediaType ->
-                                navActionManager.toGenreTag(mediaType, genre, null)
-                            }
-                        },
-                        label = { Text(text = genre.genreTagLocalized()) },
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
-
             // Other info
             MediaInfoTabs(
                 event = event,
@@ -480,8 +495,7 @@ fun MediaInfoTabs(
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ConnectedButtonGroup(
@@ -537,7 +551,6 @@ fun MediaInfoTabs(
                 }
                 ReviewThreadListView(
                     uiState = uiState,
-                    navActionManager = navActionManager,
                 )
             }
         }
@@ -552,7 +565,6 @@ private fun MediaDetailsViewPreview() {
             MediaDetailsContent(
                 uiState = MediaDetailsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

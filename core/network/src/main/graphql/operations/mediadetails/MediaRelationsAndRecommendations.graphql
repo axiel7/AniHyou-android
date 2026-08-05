@@ -14,7 +14,7 @@ query MediaRelationsAndRecommendations($mediaId: Int) {
 }
 
 fragment MediaRelated on MediaEdge {
-    relationType(version: 2)
+    relationType(version: 3)
     node {
         ...BasicMediaDetails
         coverImage {

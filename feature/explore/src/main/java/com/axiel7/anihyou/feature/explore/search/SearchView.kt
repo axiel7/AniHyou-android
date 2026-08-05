@@ -15,8 +15,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -49,6 +53,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -56,14 +61,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.SearchType
-import com.axiel7.anihyou.core.model.genre.SelectableGenre
+import com.axiel7.anihyou.core.model.genre.Genre
+import com.axiel7.anihyou.core.model.genre.Tag
 import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
@@ -86,21 +94,22 @@ import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSourcesChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchStatusChip
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchView(
-    arguments: Routes.Search,
+    arguments: Route.Search,
     isLoggedIn: Boolean,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel: SearchViewModel = koinViewModel(parameters = { parametersOf(arguments, isLoggedIn) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var query by rememberSaveable { mutableStateOf("") }
+    val textFieldState = rememberTextFieldState()
     val performSearch = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
@@ -117,8 +126,7 @@ fun SearchView(
                 .fillMaxSize()
         ) {
             TextField(
-                value = query,
-                onValueChange = { query = it },
+                state = textFieldState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
@@ -133,10 +141,10 @@ fun SearchView(
                     BackIconButton(onClick = navActionManager::goBack)
                 },
                 trailingIcon = {
-                    if (query.isNotEmpty()) {
+                    if (textFieldState.text.isNotEmpty()) {
                         IconButton(
                             onClick = {
-                                query = ""
+                                textFieldState.clearText()
                                 performSearch.value = true
                             },
                             shapes = IconButtonDefaults.shapes()
@@ -149,10 +157,12 @@ fun SearchView(
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = { performSearch.value = true }
-                ),
-                singleLine = true,
+                onKeyboardAction = KeyboardActionHandler { defaultAction ->
+                    performSearch.value = true
+                    keyboardController?.hide()
+                    defaultAction()
+                },
+                lineLimits = TextFieldLineLimits.SingleLine,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -161,13 +171,12 @@ fun SearchView(
                 )
             )
             SearchContentView(
-                query = query,
+                textFieldState = textFieldState,
                 performSearch = performSearch,
                 initialGenre = arguments.genre,
                 initialTag = arguments.tag,
                 uiState = uiState,
                 event = viewModel,
-                navActionManager = navActionManager,
             )
         }//:Column
     }//:Surface
@@ -176,15 +185,17 @@ fun SearchView(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchContentView(
-    query: String,
+    textFieldState: TextFieldState,
     performSearch: MutableState<Boolean>,
     initialGenre: String?,
     initialTag: String?,
     uiState: SearchUiState,
     event: SearchEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val scope = rememberCoroutineScope()
+    val snackbarManager = rememberSnackbarManager()
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
@@ -195,7 +206,7 @@ fun SearchContentView(
         }
     }
 
-    var showMoreFilters by rememberSaveable { mutableStateOf(true) }
+    var showMoreFilters by rememberSaveable { mutableStateOf(false) }
 
     val haptic = LocalHapticFeedback.current
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
@@ -205,7 +216,7 @@ fun SearchContentView(
     LaunchedEffect(performSearch.value) {
         if (performSearch.value) {
             listState.scrollToItem(0)
-            event?.setQuery(query)
+            event?.setQuery(textFieldState.text.toString())
             performSearch.value = false
         }
     }
@@ -222,6 +233,7 @@ fun SearchContentView(
     }
 
     Scaffold(
+        snackbarHost = snackbarManager::SnackbarHost,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -315,16 +327,26 @@ fun SearchContentView(
                         MediaItemHorizontal(
                             title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                             imageUrl = item.coverImage?.large,
+                            blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                             score = item.meanScore ?: 0,
                             format = item.format ?: MediaFormat.UNKNOWN__,
                             year = item.startDate?.year,
+                            mediaStatus = item.status,
+                            episodes = item.episodes,
+                            chapters = item.chapters,
+                            duration = item.duration,
+                            genres = item.genres?.filterNotNull(),
                             onClick = {
                                 navActionManager.toMediaDetails(item.id)
                             },
                             onLongClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 event?.selectMediaItem(item)
-                                showEditSheet = true
+                                if (uiState.isLoggedIn) {
+                                    showEditSheet = true
+                                } else {
+                                    snackbarManager.showNotLoggedInSnackbar()
+                                }
                             },
                             status = item.mediaListEntry?.basicMediaListEntry?.status,
                         )
@@ -480,8 +502,8 @@ private fun MoreFilters(
         setDuration = { event?.setDuration(it) },
     )
     MediaSearchGenresChips(
-        externalGenre = initialGenre?.let { SelectableGenre(name = it) },
-        externalTag = initialTag?.let { SelectableGenre(name = it) },
+        externalGenre = initialGenre?.let { Genre(it) },
+        externalTag = initialTag?.let { Tag(it) },
         clearedFilters = uiState.clearedFilters,
         onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
     )
@@ -509,7 +531,7 @@ private fun SearchPreview() {
     AniHyouTheme {
         Surface {
             SearchContentView(
-                query = "",
+                textFieldState = rememberTextFieldState(),
                 performSearch = remember { mutableStateOf(false) },
                 initialGenre = null,
                 initialTag = null,
@@ -519,7 +541,6 @@ private fun SearchPreview() {
                     isLoggedIn = false
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

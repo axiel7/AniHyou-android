@@ -35,6 +35,7 @@ fun LocalDate.toFuzzyDateInput() = FuzzyDateInput(
 )
 
 fun LocalDate.toFuzzyDate() = FuzzyDate(
+    __typename = "FuzzyDate",
     year = year,
     month = monthValue,
     day = dayOfMonth

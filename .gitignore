@@ -2,6 +2,7 @@
 .gradle
 /local.properties
 /.idea
+!/.idea/icon.svg
 .DS_Store
 /build
 /app/release

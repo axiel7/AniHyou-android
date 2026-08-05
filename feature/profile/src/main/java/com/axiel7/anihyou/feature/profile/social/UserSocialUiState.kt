@@ -9,7 +9,7 @@ import com.axiel7.anihyou.core.base.state.PagedUiState
 
 @Stable
 data class UserSocialUiState(
-    val userId: Int? = null,
+    val userId: Int,
     val type: UserSocialType = UserSocialType.FOLLOWERS,
     val followers: SnapshotStateList<FollowersQuery.Follower> = mutableStateListOf(),
     val following: SnapshotStateList<FollowingsQuery.Following> = mutableStateListOf(),

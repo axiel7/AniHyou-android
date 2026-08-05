@@ -94,6 +94,7 @@ fun WebView(
 
             onDispose(it)
             it.stopLoading()
+            it.removeAllViews()
             it.destroy()
         }
     )

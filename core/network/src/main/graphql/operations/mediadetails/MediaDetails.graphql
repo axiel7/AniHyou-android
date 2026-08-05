@@ -53,7 +53,7 @@ query MediaDetails($mediaId: Int) {
                 ...FuzzyDate
             }
         }
-        source
+        source(version: 3)
         externalLinks {
             id
             url
@@ -98,4 +98,5 @@ fragment BasicMediaDetails on Media {
     chapters
     volumes
     type
+    isAdult
 }

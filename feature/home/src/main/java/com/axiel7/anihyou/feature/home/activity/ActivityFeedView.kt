@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.feature.home.activity
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -23,36 +23,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.model.activity.text
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
+import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingFilterChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityTypeChip
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
-    val viewModel: ActivityFeedViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
-    )
+    val viewModel: ActivityFeedViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ActivityFeedContent(
         modifier = modifier,
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -62,15 +59,19 @@ private fun ActivityFeedContent(
     modifier: Modifier = Modifier,
     uiState: ActivityFeedUiState,
     event: ActivityFeedEvent?,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
 
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
+    ResultEffect<TextActivityFragment> {
+        event?.refreshList()
+    }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
@@ -91,7 +92,9 @@ private fun ActivityFeedContent(
         ) {
             item {
                 Row(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ActivityTypeChip(
@@ -101,6 +104,12 @@ private fun ActivityFeedContent(
                     ActivityFollowingChip(
                         value = uiState.isFollowing,
                         onValueChanged = { event?.setIsFollowing(it) }
+                    )
+                    ActivityFollowingFilterChip(
+                        followingUsers = uiState.followingUsers,
+                        selectedIds = uiState.followingFilters,
+                        onValueChanged = { event?.setFollowingFilters(it) },
+                        enabled = uiState.isFollowing,
                     )
                 }
             }
@@ -126,6 +135,7 @@ private fun ActivityFeedContent(
                         replyCount = it.replyCount,
                         likeCount = it.likeCount,
                         isLiked = it.isLiked,
+                        blurCover = blurAdult && it.media?.isAdult == true,
                         mediaCoverUrl = it.media?.coverImage?.medium,
                         onClick = {
                             navActionManager.toActivityDetails(it.id)
@@ -139,7 +149,6 @@ private fun ActivityFeedContent(
                         onClickMedia = {
                             it.media?.id?.let(navActionManager::toMediaDetails)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -163,7 +172,6 @@ private fun ActivityFeedContent(
                         onClickLike = {
                             event?.toggleLikeActivity(it.id)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -180,8 +188,6 @@ private fun ActivityFeedViewPreview() {
             ActivityFeedContent(
                 uiState = ActivityFeedUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

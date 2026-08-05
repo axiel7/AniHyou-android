@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -35,6 +36,7 @@ import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
@@ -57,6 +59,7 @@ fun CompactUserMediaListItem(
     blockPlus: () -> Unit,
     onClickNotes: () -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     ListItem(
         onClick = onClick,
@@ -67,6 +70,7 @@ fun CompactUserMediaListItem(
             ) {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
+                    enableBlur = blurAdult && item.media?.basicMediaDetails?.isAdult == true,
                     showShadow = false,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.size(
@@ -93,7 +97,7 @@ fun CompactUserMediaListItem(
         }
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier.height((MEDIA_POSTER_COMPACT_WIDTH + 8).dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -107,7 +111,6 @@ fun CompactUserMediaListItem(
 
             AiringScheduleText(
                 item = item,
-                fontSize = 16.sp,
             )
 
             Row(

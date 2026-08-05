@@ -7,16 +7,44 @@ import android.util.Log
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.model.TranslatorApp
 
 object TranslateUtils {
 
-    fun Context.openTranslator(text: String) {
+    fun Context.openTranslator(app: TranslatorApp, text: String) {
+        when (app) {
+            TranslatorApp.DEFAULT -> openTranslator(text)
+            TranslatorApp.GOOGLE -> openGoogleTranslator(text)
+            TranslatorApp.DEEPL -> openDeepLTranslator(text)
+            TranslatorApp.TRANSLATE_YOU -> openTranslateYouTranslator(text)
+        }
+    }
+
+    private fun Context.openTranslator(text: String) {
         if (!openInTranslateYou(text)
             && !openInDeepLMini(text)
             && !openInDeepL(text)
             && !openInGoogleTranslateMini(text)
             && !openInGoogleTranslate(text)
         ) {
+            showToast(R.string.no_app_found_for_this_action)
+        }
+    }
+
+    private fun Context.openGoogleTranslator(text: String) {
+        if (!openInGoogleTranslateMini(text) && !openInGoogleTranslate(text)) {
+            showToast(R.string.no_app_found_for_this_action)
+        }
+    }
+
+    private fun Context.openDeepLTranslator(text: String) {
+        if (!openInDeepLMini(text) && !openInDeepL(text)) {
+            showToast(R.string.no_app_found_for_this_action)
+        }
+    }
+
+    private fun Context.openTranslateYouTranslator(text: String) {
+        if (!openInTranslateYou(text)) {
             showToast(R.string.no_app_found_for_this_action)
         }
     }

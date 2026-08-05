@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.model.character.localized
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -35,6 +36,7 @@ fun CharacterMediaView(
     showVoiceActorsSheet: (CharacterMediaQuery.Edge) -> Unit,
     showEditSheet: (CharacterMediaQuery.Edge) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()
     if (!isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = loadMore)
@@ -53,6 +55,7 @@ fun CharacterMediaView(
             MediaItemHorizontal(
                 title = item.node?.basicMediaDetails?.title?.userPreferred.orEmpty(),
                 imageUrl = item.node?.coverImage?.large,
+                blurImage = blurAdult && item.node?.basicMediaDetails?.isAdult == true,
                 subtitle1 = {
                     Text(
                         text = item.characterRole?.localized().orEmpty(),
@@ -74,7 +77,7 @@ fun CharacterMediaView(
                 },
                 status = item.node?.mediaListEntry?.basicMediaListEntry?.status,
                 onClick = {
-                    navigateToMediaDetails(item.node?.id!!)
+                    item.node?.id?.let(navigateToMediaDetails)
                 },
                 onLongClick = {
                     showEditSheet(item)

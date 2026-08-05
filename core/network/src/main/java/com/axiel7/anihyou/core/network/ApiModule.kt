@@ -13,21 +13,21 @@ import com.axiel7.anihyou.core.network.api.StaffApi
 import com.axiel7.anihyou.core.network.api.StudioApi
 import com.axiel7.anihyou.core.network.api.ThreadApi
 import com.axiel7.anihyou.core.network.api.UserApi
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.single
 
 val apiModule = module {
-    singleOf(::ActivityApi)
-    singleOf(::CharacterApi)
-    singleOf(::FavoriteApi)
-    singleOf(::LikeApi)
-    singleOf(::MalApi)
-    singleOf(::MediaApi)
-    singleOf(::MediaListApi)
-    singleOf(::NotificationsApi)
-    singleOf(::ReviewApi)
-    singleOf(::StaffApi)
-    singleOf(::StudioApi)
-    singleOf(::ThreadApi)
-    singleOf(::UserApi)
+    single<ActivityApi>()
+    single<CharacterApi>()
+    single<FavoriteApi>()
+    single<LikeApi>()
+    single<MalApi>()
+    single<MediaApi>()
+    single<MediaListApi>()
+    single<NotificationsApi>()
+    single<ReviewApi>()
+    single<StaffApi>()
+    single<StudioApi>()
+    single<ThreadApi>()
+    single<UserApi>()
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +41,7 @@ import com.materialkolor.ktx.harmonize
 fun AiringAnimeHorizontalItem(
     title: String,
     subtitle: String,
+    blurImage: Boolean = false,
     imageUrl: String?,
     score: Int? = null,
     status: MediaListStatus? = null,
@@ -62,6 +64,7 @@ fun AiringAnimeHorizontalItem(
             ) {
                 MediaPoster(
                     url = imageUrl,
+                    enableBlur = blurImage,
                     showShadow = false,
                     modifier = posterSizeModifier
                 )
@@ -93,20 +96,22 @@ fun AiringAnimeHorizontalItem(
         },
         contentPadding = PaddingValues(
             start = 8.dp,
-            top = 10.dp,
+            top = 0.dp,
             end = 16.dp,
-            bottom = 10.dp
+            bottom = 0.dp
         )
     ) {
         Column {
             Text(
                 text = title,
-                fontSize = 18.sp,
-                maxLines = 2,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
                 text = subtitle,
+                style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
             )

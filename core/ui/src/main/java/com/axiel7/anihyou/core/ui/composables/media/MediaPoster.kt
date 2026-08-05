@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import dev.chrisbanes.haze.blur.blurEffect
+import dev.chrisbanes.haze.hazeEffect
 
 const val MEDIA_POSTER_TINY_HEIGHT = 80
 const val MEDIA_POSTER_TINY_WIDTH = 80
@@ -34,6 +36,7 @@ const val MEDIA_POSTER_BIG_WIDTH = 120
 @Composable
 fun MediaPoster(
     url: String?,
+    enableBlur: Boolean,
     showShadow: Boolean = true,
     contentScale: ContentScale = ContentScale.Crop,
     modifier: Modifier
@@ -53,6 +56,10 @@ fun MediaPoster(
                 else Modifier
             )
             .clip(RoundedCornerShape(8.dp))
+            .then(
+                if (enableBlur) Modifier.hazeEffect { blurEffect {  } }
+                else Modifier
+            )
     )
 }
 
@@ -63,6 +70,7 @@ private fun MediaPosterPreview() {
         Surface {
             MediaPoster(
                 url = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-2WWJVXIAOG11.png",
+                enableBlur = false,
                 modifier = Modifier
                     .size(
                         width = MEDIA_POSTER_SMALL_WIDTH.dp,

@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.explore.search
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
@@ -15,20 +16,23 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel(
-    arguments: Routes.Search,
-    isLoggedIn: Boolean,
+    @InjectedParam arguments: Route.Search,
+    @InjectedParam isLoggedIn: Boolean,
     private val searchRepository: SearchRepository,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
 
     private val mediaType = arguments.mediaType?.let { MediaType.safeValueOf(it) }
@@ -39,8 +43,8 @@ class SearchViewModel(
             searchType = if (mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = mediaSort ?: MediaSort.SEARCH_MATCH,
             genresAndTagsForSearch = GenresAndTagsForSearch(
-                genreIn = arguments.genre?.let { listOf(it) } ?: emptyList(),
-                tagIn = arguments.tag?.let { listOf(it) } ?: emptyList()
+                genreIn = setOfNotNull(arguments.genre),
+                tagIn = setOfNotNull(arguments.tag),
             ),
             onMyList = arguments.onList,
             isLoggedIn = isLoggedIn,
@@ -198,6 +202,13 @@ class SearchViewModel(
     }
 
     init {
+        defaultPreferencesRepository.titleLanguage
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(titleLanguage = value) }
+            }
+            .launchIn(viewModelScope)
+
         // media search
         mutableUiState
             .filter { it.searchType.isSearchMedia && it.hasNextPage }
@@ -227,10 +238,10 @@ class SearchViewModel(
                     mediaType = uiState.mediaType!!,
                     query = uiState.query,
                     sort = listOf(uiState.mediaSortForSearch),
-                    genreIn = uiState.genresAndTagsForSearch.genreIn,
-                    genreNotIn = uiState.genresAndTagsForSearch.genreNot,
-                    tagIn = uiState.genresAndTagsForSearch.tagIn,
-                    tagNotIn = uiState.genresAndTagsForSearch.tagNot,
+                    genreIn = uiState.genresAndTagsForSearch.genreIn.toList(),
+                    genreNotIn = uiState.genresAndTagsForSearch.genreNot.toList(),
+                    tagIn = uiState.genresAndTagsForSearch.tagIn.toList(),
+                    tagNotIn = uiState.genresAndTagsForSearch.tagNot.toList(),
                     minimumTagPercentage = uiState.genresAndTagsForSearch.minimumTagPercentage,
                     formatIn = uiState.selectedMediaFormats.map { it.value },
                     statusIn = uiState.selectedMediaStatuses.map { it.value },

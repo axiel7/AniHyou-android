@@ -15,7 +15,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -35,26 +34,23 @@ import com.axiel7.anihyou.feature.profile.stats.staff.StaffStatsView
 import com.axiel7.anihyou.feature.profile.stats.studios.StudiosStatsView
 import com.axiel7.anihyou.feature.profile.stats.tags.TagsStatsView
 import com.axiel7.anihyou.feature.profile.stats.voiceactors.VoiceActorsStatsView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserStatsView(
     userId: Int,
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
-    navActionManager: NavActionManager,
 ) {
-    val viewModel: UserStatsViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(userId) {
-        viewModel.setUserId(userId)
+    val viewModel: UserStatsViewModel = koinViewModel {
+        parametersOf(userId)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserStatsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
         modifier = modifier,
         nestedScrollConnection = nestedScrollConnection
     )
@@ -65,10 +61,10 @@ fun UserStatsView(
 private fun UserStatsContent(
     uiState: UserStatsUiState,
     event: UserStatsEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
@@ -121,7 +117,6 @@ private fun UserStatsContent(
                     GenresStatsView(
                         uiState = uiState,
                         event = event,
-                        navActionManager = navActionManager,
                         modifier = Modifier.nestedScroll(nestedScrollConnection)
                     )
                 }
@@ -130,7 +125,6 @@ private fun UserStatsContent(
                     TagsStatsView(
                         uiState = uiState,
                         event = event,
-                        navActionManager = navActionManager,
                         modifier = Modifier.nestedScroll(nestedScrollConnection)
                     )
                 }
@@ -139,7 +133,6 @@ private fun UserStatsContent(
                     StaffStatsView(
                         uiState = uiState,
                         event = event,
-                        navActionManager = navActionManager,
                         modifier = Modifier.nestedScroll(nestedScrollConnection)
                     )
                 }
@@ -148,7 +141,6 @@ private fun UserStatsContent(
                     VoiceActorsStatsView(
                         uiState = uiState,
                         event = event,
-                        navActionManager = navActionManager,
                     )
                 }
 
@@ -156,7 +148,6 @@ private fun UserStatsContent(
                     StudiosStatsView(
                         uiState = uiState,
                         event = event,
-                        navActionManager = navActionManager,
                     )
                 }
             }
@@ -170,9 +161,8 @@ private fun UserStatsViewPreview() {
     AniHyouTheme {
         Surface {
             UserStatsContent(
-                uiState = UserStatsUiState(),
+                uiState = UserStatsUiState(userId = 0),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
                 nestedScrollConnection = rememberNestedScrollInteropConnection()
             )
         }

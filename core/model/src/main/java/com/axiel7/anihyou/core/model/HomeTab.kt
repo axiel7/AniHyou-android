@@ -7,7 +7,6 @@ import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
 
 enum class HomeTab : Localizable {
-    DISCOVER,
     CURRENT,
     ACTIVITY_FEED;
 
@@ -17,7 +16,6 @@ enum class HomeTab : Localizable {
     @get:StringRes
     val stringRes
         get() = when (this) {
-            DISCOVER -> R.string.discover
             ACTIVITY_FEED -> R.string.activity
             CURRENT -> R.string.current
         }

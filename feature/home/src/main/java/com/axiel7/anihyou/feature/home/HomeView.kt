@@ -1,9 +1,6 @@
 package com.axiel7.anihyou.feature.home
 
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
@@ -32,15 +29,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.IconButtonWithBadge
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.feature.home.activity.ActivityFeedView
 import com.axiel7.anihyou.feature.home.current.CurrentView
-import com.axiel7.anihyou.feature.home.discover.DiscoverView
 import com.axiel7.anihyou.feature.login.LoginView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,18 +44,15 @@ fun HomeView(
     isLoggedIn: Boolean,
     defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
-    val viewModel: HomeViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as AppCompatActivity
-    )
+    val navActionManager = LocalNavActionManager.current
+    val viewModel: HomeViewModel = koinActivityViewModel()
 
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultHomeTab.ordinal) }
+    val snackbarManager = rememberSnackbarManager()
 
     LaunchedEffect(selectedTabIndex) {
         viewModel.saveHomeTab(selectedTabIndex)
@@ -68,6 +61,7 @@ fun HomeView(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.home),
         modifier = modifier,
+        snackbarHost = snackbarManager::SnackbarHost,
         floatingActionButton = {
             if (selectedTabIndex == HomeTab.ACTIVITY_FEED.ordinal && isLoggedIn) {
                 FloatingActionButton(
@@ -117,19 +111,10 @@ fun HomeView(
                 }
             }
             when (HomeTab.entries[selectedTabIndex]) {
-                HomeTab.DISCOVER ->
-                    DiscoverView(
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = contentPadding,
-                        navActionManager = navActionManager,
-                    )
-
                 HomeTab.ACTIVITY_FEED -> {
                     if (isLoggedIn) {
                         ActivityFeedView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            uriHandler = uriHandler,
-                            navActionManager = navActionManager,
                         )
                     } else {
                         LoginView()
@@ -139,7 +124,7 @@ fun HomeView(
                 HomeTab.CURRENT -> {
                     if (isLoggedIn) {
                         CurrentView(
-                            navActionManager = navActionManager,
+                            isLoggedIn = true,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         )
                     } else {

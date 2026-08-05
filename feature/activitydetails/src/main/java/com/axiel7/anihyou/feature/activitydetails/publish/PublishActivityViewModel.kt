@@ -23,7 +23,7 @@ class PublishActivityViewModel(
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            wasPublished = result.data != null
+                            activity = result.data,
                         )
                     } else {
                         result.toUiState()
@@ -48,7 +48,7 @@ class PublishActivityViewModel(
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            wasPublished = result.data != null
+                            reply = result.data,
                         )
                     } else {
                         result.toUiState()

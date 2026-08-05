@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.apollo)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
@@ -26,11 +27,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.annotations)
     implementation(libs.koin.core)
 }
 
 apollo {
     val appPackageName: String by rootProject.extra
+    val cacheVersion = libs.versions.apolloCache.get()
     generateSourcesDuringGradleSync.set(false)
     service("service") {
         packageName.set("$appPackageName.core.network")
@@ -45,5 +48,7 @@ apollo {
             endpointUrl.set("https://graphql.anilist.co")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
         }
+        plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:$cacheVersion")
+        pluginArgument("com.apollographql.cache.packageName", packageName.get())
     }
 }

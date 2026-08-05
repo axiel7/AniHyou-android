@@ -2,23 +2,27 @@
 query ChildComments($page: Int, $perPage: Int, $threadId: Int) {
     Page(page: $page, perPage: $perPage) {
         threadComments(threadId: $threadId) {
-            id
-            comment
-            likeCount
-            isLiked
-            createdAt
-            isLocked
-            user {
-                id
-                name
-                avatar {
-                    medium
-                }
-            }
-            childComments
+            ...CommonThreadComment
         }
         pageInfo {
             ...CommonPage
         }
     }
+}
+
+fragment CommonThreadComment on ThreadComment {
+    id
+    comment
+    likeCount
+    isLiked
+    createdAt
+    isLocked
+    user {
+        id
+        name
+        avatar {
+            medium
+        }
+    }
+    childComments
 }

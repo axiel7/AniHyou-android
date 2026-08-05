@@ -14,20 +14,19 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.testTag
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.TopLevelBackStack
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainBottomNavBar(
-    topLevelBackStack: TopLevelBackStack<NavKey>,
-    navActionManager: NavActionManager,
+    currentTopRoute: Route,
     isVisible: Boolean,
     onItemSelected: (Int) -> Unit,
 ) {
+    val navActionManager = LocalNavActionManager.current
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -35,7 +34,7 @@ fun MainBottomNavBar(
     ) {
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
-                val isSelected = dest.route == topLevelBackStack.topLevelKey
+                val isSelected = dest.route == currentTopRoute
                 NavigationBarItem(
                     icon = {
                         dest.Icon(selected = isSelected)
@@ -62,7 +61,7 @@ fun MainBottomNavBar(
                             }
                         } else {
                             onItemSelected(index)
-                            topLevelBackStack.addTopLevel(dest.route)
+                            navActionManager.navigate(dest.route)
                         }
                     }
                 )

@@ -23,7 +23,6 @@ import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -42,6 +41,7 @@ fun ActivityFeedItem(
     replyCount: Int,
     likeCount: Int,
     isLiked: Boolean?,
+    blurCover: Boolean = false,
     mediaCoverUrl: String? = null,
     showMenu: Boolean = false,
     onClick: () -> Unit,
@@ -49,7 +49,6 @@ fun ActivityFeedItem(
     onClickLike: () -> Unit,
     onClickMedia: () -> Unit = {},
     onClickDelete: () -> Unit = {},
-    uriHandler: MarkdownUriHandler,
 ) {
     ListItem(
         onClick = onClick,
@@ -79,6 +78,7 @@ fun ActivityFeedItem(
             if (type == ActivityType.MEDIA_LIST) {
                 MediaPoster(
                     url = mediaCoverUrl,
+                    enableBlur = blurCover,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(
@@ -124,8 +124,6 @@ fun ActivityFeedItem(
             DefaultMarkdownText(
                 markdown = text,
                 modifier = Modifier.padding(bottom = 4.dp),
-                lineHeight = 20.sp,
-                uriHandler = uriHandler,
             )
         } else {
             Text(
@@ -157,7 +155,6 @@ private fun MediaActivityItemPreview() {
                 onClickUser = {},
                 onClickLike = {},
                 onClickMedia = {},
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

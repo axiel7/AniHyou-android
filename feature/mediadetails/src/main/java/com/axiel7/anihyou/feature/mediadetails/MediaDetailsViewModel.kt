@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.stats.overview.ScoreDistribution.Companion.asStat
@@ -14,16 +15,18 @@ import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 class MediaDetailsViewModel(
-    private val arguments: Routes.MediaDetails,
+    @InjectedParam private val arguments: Route.MediaDetails,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : UiStateViewModel<MediaDetailsUiState>(), MediaDetailsEvent {
@@ -282,6 +285,12 @@ class MediaDetailsViewModel(
                             fetchAnimeThemes(idMal)
                     }
                 }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.translatorApp
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
             }
             .launchIn(viewModelScope)
     }

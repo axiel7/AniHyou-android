@@ -6,21 +6,20 @@ import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserSocialViewModel(
+    @InjectedParam userId: Int,
     private val userRepository: UserRepository
 ) : PagedUiStateViewModel<UserSocialUiState>(), UserSocialEvent {
 
-    override val initialState = UserSocialUiState()
-
-    fun setUserId(value: Int) = mutableUiState.update { it.copy(userId = value) }
+    override val initialState = UserSocialUiState(userId = userId)
 
     override fun setType(value: UserSocialType) {
         mutableUiState.update {
@@ -38,17 +37,14 @@ class UserSocialViewModel(
             .filter {
                 it.type == UserSocialType.FOLLOWERS
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { _, new -> !new.fetchFromNetwork }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    userRepository.getFollowers(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                userRepository.getFollowers(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {
@@ -72,17 +68,14 @@ class UserSocialViewModel(
             .filter {
                 it.type == UserSocialType.FOLLOWING
                         && it.hasNextPage
-                        && it.userId != null
             }
             .distinctUntilChanged { _, new -> !new.fetchFromNetwork }
             .flatMapLatest { uiState ->
-                if (uiState.userId != null)
-                    userRepository.getFollowing(
-                        userId = uiState.userId,
-                        page = uiState.page,
-                        fetchFromNetwork = uiState.fetchFromNetwork,
-                    )
-                else emptyFlow()
+                userRepository.getFollowing(
+                    userId = uiState.userId,
+                    page = uiState.page,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
+                )
             }
             .onEach { result ->
                 mutableUiState.update {

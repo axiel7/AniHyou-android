@@ -1,0 +1,21 @@
+package com.axiel7.anihyou.feature.explore.discover
+
+import androidx.compose.runtime.Immutable
+import com.axiel7.anihyou.core.base.event.UiEvent
+import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
+import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+
+@Immutable
+interface DiscoverEvent : UiEvent {
+    fun addNextInfo()
+    fun fetchAiringAnime()
+    fun fetchAiringAnimeOnMyList()
+    fun fetchThisSeasonAnime()
+    fun fetchTrendingAnime()
+    fun fetchNextSeasonAnime()
+    fun fetchTrendingManga()
+    fun fetchNewlyAnime()
+    fun fetchNewlyManga()
+    fun refresh()
+    fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
+}

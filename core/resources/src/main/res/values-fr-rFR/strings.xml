@@ -164,7 +164,6 @@
     <string name="account">Compte</string>
     <string name="github_repository">Dépôt GitHub</string>
     <string name="version">Version</string>
-    <string name="developed_by_axiel7">Développé par axiel7</string>
     <string name="anilist_account_settings">Paramètres du compte AniList</string>
     <string name="logout">Se déconnecter</string>
     <string name="character_media">Média</string>
@@ -273,6 +272,7 @@
     <string name="update_interval">Intervalle de mise à jour</string>
     <string name="airing_anime_notifications">Notifications de diffusion d\'animé</string>
     <string name="color">Couleur </string>
+    <string name="color_palette">Palette de couleur</string>
     <string name="discover">Découvrir</string>
     <string name="default_home_tab">Onglet d\'accueil par défaut</string>
     <string name="text_status">Statut personnalisé</string>
@@ -628,4 +628,7 @@
     </plurals>
     <string name="login_required_in_phone">Pour utiliser cette application, vous devez d\'abord vous connecter en ouvrant l\'application AniHyou installée sur votre téléphone</string>
     <string name="app_installed_required">Aucun appareil à proximité n\'a été détecté, veuillez installer la dernière version de l\'application AniHyou sur votre téléphone Android</string>
+    <string name="minimum_tag_percentage">Pourcentage minimum de tags</string>
+    <string name="search_my_list">Rechercher dans ma liste…</string>
+    <string name="translator_app">Traducteur</string>
 </resources>

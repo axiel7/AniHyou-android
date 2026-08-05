@@ -20,5 +20,6 @@ fun MediaRelation.localized() = when (this) {
     MediaRelation.SOURCE -> stringResource(R.string.relation_source)
     MediaRelation.COMPILATION -> stringResource(R.string.relation_compilation)
     MediaRelation.CONTAINS -> stringResource(R.string.relation_contains)
+    MediaRelation.SAME_UNIVERSE -> stringResource(R.string.relation_same_universe)
     MediaRelation.UNKNOWN__ -> stringResource(R.string.unknown)
 }

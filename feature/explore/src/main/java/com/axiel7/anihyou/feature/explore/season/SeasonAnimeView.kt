@@ -49,8 +49,10 @@ import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
+import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -65,36 +67,38 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.season.composables.SeasonChartFilterSheet
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeasonAnimeView(
-    arguments: Routes.SeasonAnime,
-    navActionManager: NavActionManager
+    isLoggedIn: Boolean,
+    arguments: Route.SeasonAnime,
 ) {
     val viewModel: SeasonAnimeViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SeasonAnimeContent(
+        isLoggedIn = isLoggedIn,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SeasonAnimeContent(
+    isLoggedIn: Boolean,
     uiState: SeasonAnimeUiState,
     event: SeasonAnimeEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
 
     val scope = rememberCoroutineScope()
+    val snackbarManager = rememberSnackbarManager()
     val haptic = LocalHapticFeedback.current
     var showFilterSheet by rememberSaveable { mutableStateOf(false) }
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
@@ -126,6 +130,7 @@ private fun SeasonAnimeContent(
 
     DefaultScaffoldWithMediumTopAppBar(
         title = uiState.season?.localized().orEmpty(),
+        snackbarHost = snackbarManager::SnackbarHost,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showFilterSheet = true },
@@ -198,8 +203,12 @@ private fun SeasonAnimeContent(
                 },
                 onLongClickItem = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    event?.selectItem(it)
-                    showEditSheet = true
+                    if (isLoggedIn) {
+                        event?.selectItem(it)
+                        showEditSheet = true
+                    } else {
+                        snackbarManager.showNotLoggedInSnackbar()
+                    }
                 }
             )
         }
@@ -214,6 +223,7 @@ private fun SeasonalGrid(
     onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
     onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     LazyVerticalGrid(
@@ -231,6 +241,7 @@ private fun SeasonalGrid(
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
                     item.meanScore?.let { meanScore ->
@@ -259,6 +270,7 @@ private fun SeasonalList(
     onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
     onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
     LazyColumn(
@@ -272,6 +284,7 @@ private fun SeasonalList(
             MediaItemHorizontal(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 subtitle1 = {
                     item.nextAiringEpisode?.let { nextAiringEpisode ->
                         Text(
@@ -316,9 +329,9 @@ private fun SeasonAnimeViewPreview() {
     AniHyouTheme {
         Surface {
             SeasonAnimeContent(
+                isLoggedIn = true,
                 uiState = SeasonAnimeUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

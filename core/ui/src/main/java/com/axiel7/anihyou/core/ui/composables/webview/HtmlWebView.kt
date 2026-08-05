@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.ui.composables.webview
 
-import android.graphics.Color
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -8,13 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.graphics.drawable.toDrawable
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.resources.ColorUtils.hexToString
 
@@ -26,8 +22,8 @@ fun HtmlWebView(
 ) {
     val context = LocalContext.current
     val colorScheme = MaterialTheme.colorScheme
-    val htmlConverted by remember {
-        derivedStateOf { generateHtml(html, colorScheme) }
+    val htmlConverted = remember(html) {
+        generateHtml(html, colorScheme)
     }
     val webClient = remember {
         object : WebViewClient() {
@@ -46,7 +42,7 @@ fun HtmlWebView(
         modifier = modifier.fillMaxWidth(),
         hardwareEnabled = hardwareEnabled,
         onCreated = { webView ->
-            webView.background = Color.TRANSPARENT.toDrawable()
+            webView.background = null
             webView.isScrollContainer = false
             webView.isVerticalScrollBarEnabled = false
             webView.settings.useWideViewPort = true
@@ -71,13 +67,23 @@ fun generateHtml(
     </HTML>
 """.trimIndent()
 
+private val linkRegex = Regex("\\[([^]]+)]\\(([^)]+)\\)")
+private val boldRegex = Regex("__(.+?)__")
+private val codeRegex = Regex("`(.+?)`")
+private val strongRegex = Regex("\\*\\*(.+?)\\*\\*")
+
 fun formatCompatibleHtml(html: String): String {
     return html
-        // replace AniList markdown [text](link) with html <a>
-        .replace(Regex("\\[([^]]+)]\\(([^)]+)\\)"), $$"<a href=\"$2\">$1</a>")
-        // replace AniList markdown __bold__ with html <b>
-        .replace(Regex("__(.+)__"), $$"<b>$1</b>")
+        // replace AniList Markdown [text](link) with html <a>
+        .replace(linkRegex, $$"<a href=\"$2\">$1</a>")
+        // replace AniList Markdown __bold__ with html <b>
+        .replace(boldRegex, $$"<b>$1</b>")
+        // replace AniList Markdown `code` with html <code>
+        .replace(codeRegex, $$"<code>$1</code>")
+        // replace AniList Markdown **strong** with html <strong>
+        .replace(strongRegex, $$"<strong>$1</strong>")
         // escaped chars
+        .replace("\n", "<br>")
         .replace("&lt;", "<")
         .replace("&gt;", ">")
 }
@@ -106,8 +112,9 @@ fun baseCss(
     linkColor: String
 ) = """
     body {background-color: $backgroundColor;}
-    h1, h2, h3, h4, h5, h6, p, div, dl, ol, ul, pre, blockquote {text-align:left; line-height: 170%; font-family: 'Arial' !important; color: $fontColor; }
+    h1, h2, h3, h4, h5, h6, p, div, dl, ol, ul, pre, blockquote {line-height: 170%; font-family: 'Arial' !important; color: $fontColor; }
     iframe{width:100%; height:250px;}
+    img {max-width:100%;}
     a:link {color: $linkColor;}
     A {text-decoration: none;}
     .markdown_spoiler {color: $fontColor; background-color: $fontColor;}

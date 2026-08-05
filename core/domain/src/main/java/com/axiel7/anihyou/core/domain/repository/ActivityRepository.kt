@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.api.ActivityApi
 import com.axiel7.anihyou.core.network.type.ActivityType
@@ -14,6 +14,7 @@ class ActivityRepository(
     fun getActivityFeed(
         isFollowing: Boolean,
         typeIn: List<ActivityType>,
+        userIdIn: List<Int>? = null,
         fetchFromNetwork: Boolean = false,
         page: Int,
         perPage: Int = 25
@@ -21,6 +22,7 @@ class ActivityRepository(
         .activityFeedQuery(
             isFollowing = isFollowing,
             typeIn = typeIn,
+            userIdIn = userIdIn,
             fetchFromNetwork = fetchFromNetwork,
             page = page,
             perPage = perPage
@@ -53,7 +55,7 @@ class ActivityRepository(
         .updateTextActivityMutation(id, text)
         .execute()
         .asDataResult {
-            it.SaveTextActivity?.onTextActivity
+            it.SaveTextActivity?.onTextActivity?.textActivityFragment
         }
 
     suspend fun updateActivityReply(

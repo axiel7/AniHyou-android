@@ -27,27 +27,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_REVIEW_URL
+import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.model.review.userRatingsString
 import com.axiel7.anihyou.core.network.type.ReviewRating
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.LikeButton
 import com.axiel7.anihyou.core.ui.composables.common.OpenInBrowserIconButton
+import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.webview.HtmlWebView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReviewDetailsView(
-    arguments: Routes.ReviewDetails,
-    navActionManager: NavActionManager
+    arguments: Route.ReviewDetails,
 ) {
     val viewModel: ReviewDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,7 +57,6 @@ fun ReviewDetailsView(
     ReviewDetailsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -64,8 +65,9 @@ fun ReviewDetailsView(
 private fun ReviewDetailsContent(
     uiState: ReviewDetailsUiState,
     event: ReviewDetailsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val isEnglishLocale = LocalIsLanguageEn.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -76,6 +78,12 @@ private fun ReviewDetailsContent(
         title = uiState.details?.user?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
+            if (!isEnglishLocale) {
+                TranslateIconButton(
+                    text = uiState.details?.body?.htmlStripped(),
+                    app = uiState.translatorApp,
+                )
+            }
             OpenInBrowserIconButton(url = ANILIST_REVIEW_URL + uiState.details?.id)
         },
         scrollBehavior = topAppBarScrollBehavior
@@ -168,7 +176,6 @@ private fun ReviewDetailsViewPreview() {
             ReviewDetailsContent(
                 uiState = ReviewDetailsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

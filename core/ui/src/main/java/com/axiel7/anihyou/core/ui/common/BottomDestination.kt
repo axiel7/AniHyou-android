@@ -7,18 +7,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 
 sealed class BottomDestination(
     val index: Int,
-    val route: NavKey,
+    val route: Route,
     @param:StringRes val title: Int,
     @param:DrawableRes val icon: Int,
     @param:DrawableRes val iconSelected: Int,
 ) {
     data object Home : BottomDestination(
         index = 0,
-        route = Routes.Home,
+        route = Route.Home,
         title = R.string.home,
         icon = R.drawable.home_24,
         iconSelected = R.drawable.home_filled_24
@@ -26,7 +26,7 @@ sealed class BottomDestination(
 
     data object AnimeList : BottomDestination(
         index = 1,
-        route = Routes.AnimeTab,
+        route = Route.AnimeTab,
         title = R.string.anime,
         icon = R.drawable.live_tv_24,
         iconSelected = R.drawable.live_tv_filled_24
@@ -34,7 +34,7 @@ sealed class BottomDestination(
 
     data object MangaList : BottomDestination(
         index = 2,
-        route = Routes.MangaTab,
+        route = Route.MangaTab,
         title = R.string.manga,
         icon = R.drawable.book_24,
         iconSelected = R.drawable.book_filled_24
@@ -42,7 +42,7 @@ sealed class BottomDestination(
 
     data object Profile : BottomDestination(
         index = 3,
-        route = Routes.Profile,
+        route = Route.Profile,
         title = R.string.profile,
         icon = R.drawable.person_24,
         iconSelected = R.drawable.person_filled_24
@@ -50,7 +50,7 @@ sealed class BottomDestination(
 
     data object Explore : BottomDestination(
         index = 4,
-        route = Routes.Explore,
+        route = Route.Explore,
         title = R.string.explore,
         icon = R.drawable.explore_24,
         iconSelected = R.drawable.explore_filled_24
@@ -65,11 +65,13 @@ sealed class BottomDestination(
     }
 
     companion object {
+        val routes = setOf(Home.route, AnimeList.route, MangaList.route, Profile.route, Explore.route)
+
         val values = listOf(Home, AnimeList, MangaList, Profile, Explore)
 
         val railValues = listOf(Home, AnimeList, MangaList, Profile)
 
-        fun Int.toBottomDestinationRoute(): NavKey? = values.find { it.index == this }?.route
+        fun Int.toBottomDestinationRoute(): Route? = values.find { it.index == this }?.route
 
         fun NavKey.isBottomDestination() = values.any { it.route == this }
 

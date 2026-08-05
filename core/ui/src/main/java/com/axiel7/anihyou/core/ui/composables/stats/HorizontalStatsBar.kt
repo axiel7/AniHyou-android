@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
@@ -46,7 +48,7 @@ fun <T> HorizontalStatsBar(
         stats.map { it.value }.sum()
     }
     val screenWidth = with(LocalDensity.current) {
-        LocalWindowInfo.current.containerSize.width.toDp().value
+        (LocalWindowInfo.current.containerSize.width.toDp() - (horizontalPadding * 2)).value
     }
 
     Column(
@@ -93,11 +95,15 @@ fun <T> HorizontalStatsBar(
             }
         }
 
-        Row {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = horizontalPadding)
+                .clip(RoundedCornerShape(4.dp))
+        ) {
             stats.forEach {
                 Rectangle(
                     width = (it.value / totalValue * screenWidth).dp,
-                    height = 16.dp,
+                    height = 20.dp,
                     color = it.type.primaryColor().harmonize(MaterialTheme.colorScheme.primary)
                 )
             }
@@ -106,7 +112,8 @@ fun <T> HorizontalStatsBar(
         if (showTotal) {
             Text(
                 text = stringResource(R.string.total_entries).format(totalValue.toInt().format()),
-                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp),
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

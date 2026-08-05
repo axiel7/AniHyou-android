@@ -13,6 +13,7 @@ data class GenericNotification(
     val type: NotificationType?,
     val createdAt: Int?,
     val isUnread: Boolean = false,
+    val isAdultMedia: Boolean = false,
 ) {
     val isMedia
         get() = when (type) {
@@ -56,6 +57,7 @@ data class GenericNotification(
                             contentId = noti.animeId,
                             type = noti.type,
                             createdAt = noti.createdAt,
+                            isAdultMedia = noti.media?.isAdult == true,
                         )
                     )
                 }
@@ -224,6 +226,7 @@ data class GenericNotification(
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,
+                            isAdultMedia = noti.media?.isAdult == true,
                         )
                     )
                 }
@@ -237,6 +240,7 @@ data class GenericNotification(
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,
+                            isAdultMedia = noti.media?.isAdult == true,
                         )
                     )
                 }
@@ -250,6 +254,7 @@ data class GenericNotification(
                             contentId = noti.mediaId,
                             type = noti.type,
                             createdAt = noti.createdAt,
+                            isAdultMedia = noti.media?.isAdult == true,
                         )
                     )
                 }

@@ -24,10 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.MoreLessButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -50,7 +48,8 @@ fun InfoItemView(
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Column(
             modifier = Modifier
@@ -63,7 +62,8 @@ fun InfoItemView(
                     maxLines = maxLines,
                     onTextLayout = {
                         showExpand = it.hasVisualOverflow
-                    }
+                    },
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
             if (showExpand || isExpanded) {
@@ -91,7 +91,8 @@ fun <T> InfoClickableItemView(
         Text(
             text = title,
             modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Row(
             modifier = Modifier
@@ -127,8 +128,7 @@ fun InfoTitle(
     ) {
         Text(
             text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium
         )
         trailingIcon()
     }

@@ -28,8 +28,8 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +50,7 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.core.model.canUseAdvancedScoring
 import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.model.media.duration
+import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isAnime
 import com.axiel7.anihyou.core.model.media.isManga
@@ -60,12 +61,12 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
 import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
-import com.axiel7.anihyou.core.ui.composables.rememberSheetState
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -76,7 +77,8 @@ import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDatePicker
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaProgressRow
 import com.axiel7.anihyou.feature.editmedia.composables.ScoreView
 import kotlinx.coroutines.CoroutineScope
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,12 +90,10 @@ fun EditMediaSheet(
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
-    val viewModel: EditMediaViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(mediaDetails) {
-        viewModel.setMediaDetails(mediaDetails)
+    val viewModel: EditMediaViewModel = koinViewModel(key = mediaDetails.id.toString()) {
+        parametersOf(mediaDetails)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(listEntry) {
         viewModel.setListEntry(listEntry)
@@ -119,10 +119,11 @@ private fun EditMediaSheetContent(
     event: EditMediaEvent?,
     bottomPadding: Dp = 0.dp,
     scope: CoroutineScope = rememberCoroutineScope(),
-    sheetState: SheetState = rememberModalBottomSheetState(),
+    sheetState: SheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden),
     onEntryUpdated: (updatedListEntry: BasicMediaListEntry?) -> Unit,
     onDismissed: () -> Unit,
 ) {
+    val scoreFormat = LocalScoreFormat.current
     val haptic = LocalHapticFeedback.current
     val datePickerState = rememberDatePickerState()
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -227,7 +228,7 @@ private fun EditMediaSheetContent(
                     SelectableIconToggleButton(
                         icon = status.icon(),
                         tooltipText = status.localized(
-                            mediaType = uiState.mediaDetails?.type ?: MediaType.UNKNOWN__
+                            mediaType = uiState.mediaDetails.type ?: MediaType.UNKNOWN__
                         ),
                         value = status,
                         selectedValue = uiState.status,
@@ -241,22 +242,22 @@ private fun EditMediaSheetContent(
 
             // Progress
             EditMediaProgressRow(
-                label = if (uiState.mediaDetails?.isAnime() == true) stringResource(R.string.episodes)
+                label = if (uiState.mediaDetails.isAnime()) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
-                icon = if (uiState.mediaDetails?.isAnime() == true) R.drawable.play_arrow_24
+                icon = if (uiState.mediaDetails.isAnime()) R.drawable.play_arrow_24
                 else R.drawable.book_24,
                 progress = uiState.progress,
                 modifier = Modifier.padding(
                     start = 0.dp,
                     end = 16.dp
                 ),
-                totalProgress = uiState.mediaDetails?.duration(),
+                totalProgress = uiState.mediaDetails.duration(),
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },
                 onPlusClick = { event?.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
             )
 
-            if (uiState.mediaDetails?.isManga() == true) {
+            if (uiState.mediaDetails.isManga()) {
                 EditMediaProgressRow(
                     label = stringResource(R.string.volumes),
                     icon = R.drawable.bookmark_24,
@@ -283,10 +284,10 @@ private fun EditMediaSheetContent(
                 contentAlignment = Alignment.Center
             ) {
                 ScoreView(
-                    format = uiState.scoreFormat,
+                    format = scoreFormat,
                     rating = uiState.score,
                     onRatingChanged = { event?.onChangeScore(it) },
-                    modifier = when (uiState.scoreFormat) {
+                    modifier = when (scoreFormat) {
                         ScoreFormat.POINT_10,
                         ScoreFormat.POINT_10_DECIMAL,
                         ScoreFormat.POINT_100 -> Modifier.padding(top = 8.dp, end = 16.dp)
@@ -398,10 +399,10 @@ private fun EditMediaSheetContent(
                 )
             }
 
-            if (uiState.scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
+            if (scoreFormat.canUseAdvancedScoring() && uiState.advancedScoringEnabled) {
                 uiState.advancedScoresNames.forEach { score ->
                     RatingView(
-                        maxValue = uiState.scoreFormat.maxValue(),
+                        maxValue = scoreFormat.maxValue(),
                         modifier = Modifier
                             .padding(top = 8.dp, end = 8.dp),
                         label = score,
@@ -438,12 +439,11 @@ private fun EditMediaSheetPreview() {
     AniHyouTheme {
         Surface {
             EditMediaSheetContent(
-                uiState = EditMediaUiState(),
-                event = null,
-                sheetState = rememberSheetState(
-                    skipPartiallyExpanded = true,
-                    initialValue = SheetValue.Expanded
+                uiState = EditMediaUiState(
+                    mediaDetails = exampleCommonMediaListEntry.media!!.basicMediaDetails
                 ),
+                event = null,
+                sheetState = rememberBottomSheetState(initialValue = SheetValue.Expanded),
                 onEntryUpdated = {},
                 onDismissed = {}
             )

@@ -38,6 +38,7 @@ import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_HEIGHT
@@ -55,6 +56,7 @@ fun GridUserMediaListItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     Card(
         modifier = Modifier
@@ -68,6 +70,7 @@ fun GridUserMediaListItem(
             Box {
                 MediaPoster(
                     url = item.media?.coverImage?.large,
+                    enableBlur = blurAdult && item.media?.basicMediaDetails?.isAdult == true,
                     showShadow = false,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +101,6 @@ fun GridUserMediaListItem(
                         AiringScheduleText(
                             item = item,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            fontSize = 15.sp,
                             textAlign = TextAlign.Center
                         )
                     }

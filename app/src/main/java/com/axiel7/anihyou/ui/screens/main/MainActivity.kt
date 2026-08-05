@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.ui.screens.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.ReportDrawn
@@ -12,12 +13,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,7 +25,9 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.rememberNavBackStack
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
@@ -48,8 +47,13 @@ import com.axiel7.anihyou.core.resources.light_scrim
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.isBottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.toBottomDestinationRoute
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalHideScores
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.TopLevelBackStack
+import com.axiel7.anihyou.core.ui.common.navigation.Navigator
+import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
@@ -75,8 +79,11 @@ class MainActivity : AppCompatActivity() {
         val initialAppColor = viewModel.appColor.firstBlocking()
         val initialAppColorMode = viewModel.appColorMode.firstBlocking()
         val initialPaletteStyle = viewModel.paletteStyle.firstBlocking()
+        val initialBlurAdult = viewModel.blurAdultContent.firstBlocking()
+        val initialScoreFormat = viewModel.scoreFormat.firstBlocking()
+        val initialHideScores = viewModel.hideScores.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
-        val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.DISCOVER
+        val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -92,6 +99,9 @@ class MainActivity : AppCompatActivity() {
             )
             val paletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialPaletteStyle)
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle(initialIsLoggedIn)
+            val blurAdultContent by viewModel.blurAdultContent.collectAsStateWithLifecycle(initialBlurAdult)
+            val scoreFormat by viewModel.scoreFormat.collectAsStateWithLifecycle(initialScoreFormat)
+            val hideScores by viewModel.hideScores.collectAsStateWithLifecycle(initialHideScores)
 
             DisposableEffect(isDark) {
                 enableEdgeToEdge(
@@ -118,14 +128,25 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainView(
-                        windowSizeClass = windowSizeClass,
-                        isLoggedIn = isLoggedIn,
-                        tabToOpen = startTab,
-                        event = viewModel,
-                        homeTab = homeTab,
-                        deepLink = deepLink,
-                    )
+                    CompositionLocalProvider(
+                        LocalBlurAdult provides blurAdultContent,
+                        LocalScoreFormat provides scoreFormat,
+                        LocalHideScores provides hideScores,
+                    ) {
+                        MainView(
+                            windowSizeClass = windowSizeClass,
+                            isLoggedIn = isLoggedIn,
+                            tabToOpen = startTab,
+                            event = viewModel,
+                            homeTab = homeTab,
+                            deepLink = deepLink,
+                            setNavigationBarContrastEnforced = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    window.isNavigationBarContrastEnforced = it
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -183,63 +204,66 @@ fun MainView(
     event: MainEvent?,
     homeTab: HomeTab,
     deepLink: DeepLink?,
+    setNavigationBarContrastEnforced: (Boolean) -> Unit,
 ) {
     val startKey = remember(tabToOpen) {
         tabToOpen.toBottomDestinationRoute() ?: BottomDestination.Home.route
     }
-    val backStack = rememberNavBackStack(startKey)
-    val topLevelBackStack = remember { TopLevelBackStack(startKey, backStack) }
+    val navigationState = rememberNavigationState(startKey, BottomDestination.routes)
+    val navigator = remember { Navigator(navigationState) }
     val isBottomDestination by remember {
-        derivedStateOf { topLevelBackStack.backStack.lastOrNull()?.isBottomDestination() == true }
+        derivedStateOf { navigationState.getCurrentRoute()?.isBottomDestination() == true }
     }
-    val navActionManager = NavActionManager.rememberNavActionManager(topLevelBackStack)
+    val navActionManager = remember { NavActionManager(navigator) }
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
-    Scaffold(
-        bottomBar = {
+    LaunchedEffect(isBottomDestination) {
+        setNavigationBarContrastEnforced(!isBottomDestination)
+    }
+
+    CompositionLocalProvider(LocalNavActionManager provides navActionManager) {
+        Scaffold(
+            bottomBar = {
+                if (isCompactScreen) {
+                    MainBottomNavBar(
+                        currentTopRoute = navigator.state.topLevelRoute,
+                        isVisible = isBottomDestination,
+                        onItemSelected = { event?.saveLastTab(it) }
+                    )
+                }
+            },
+            contentWindowInsets = if (isCompactScreen) WindowInsets.systemBars
+                .only(WindowInsetsSides.Horizontal)
+            else WindowInsets(0, 0, 0, 0)
+        ) { padding ->
             if (isCompactScreen) {
-                MainBottomNavBar(
-                    topLevelBackStack = topLevelBackStack,
-                    navActionManager = navActionManager,
-                    isVisible = isBottomDestination,
-                    onItemSelected = { event?.saveLastTab(it) }
-                )
-            }
-        },
-        contentWindowInsets = WindowInsets.systemBars
-            .only(WindowInsetsSides.Horizontal)
-    ) { padding ->
-        if (isCompactScreen) {
-            MainNavigation(
-                topLevelBackStack = topLevelBackStack,
-                navActionManager = navActionManager,
-                isCompactScreen = true,
-                isLoggedIn = isLoggedIn,
-                deepLink = deepLink,
-                homeTab = homeTab,
-                padding = padding,
-            )
-        } else {
-            Row(
-                modifier = Modifier.padding(padding)
-            ) {
-                MainNavigationRail(
-                    topLevelBackStack = topLevelBackStack,
-                    onItemSelected = { event?.saveLastTab(it) },
-                    modifier = Modifier.safeDrawingPadding(),
-                )
                 MainNavigation(
-                    topLevelBackStack = topLevelBackStack,
-                    navActionManager = navActionManager,
-                    isCompactScreen = false,
+                    navigator = navigator,
+                    isCompactScreen = true,
                     isLoggedIn = isLoggedIn,
                     deepLink = deepLink,
                     homeTab = homeTab,
-                    padding = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues(),
+                    padding = padding,
                 )
+            } else {
+                Row(
+                    modifier = Modifier.padding(padding)
+                ) {
+                    MainNavigationRail(
+                        navigator = navigator,
+                        onItemSelected = { event?.saveLastTab(it) },
+                    )
+                    MainNavigation(
+                        navigator = navigator,
+                        isCompactScreen = false,
+                        isLoggedIn = isLoggedIn,
+                        deepLink = deepLink,
+                        homeTab = homeTab,
+                    )
+                }
             }
+            ReportDrawn()
         }
-        ReportDrawn()
     }
 }
 
@@ -255,8 +279,9 @@ private fun MainPreview() {
             isLoggedIn = false,
             tabToOpen = 0,
             event = null,
-            homeTab = HomeTab.DISCOVER,
-            deepLink = null
+            homeTab = HomeTab.CURRENT,
+            deepLink = null,
+            setNavigationBarContrastEnforced = {},
         )
     }
 }

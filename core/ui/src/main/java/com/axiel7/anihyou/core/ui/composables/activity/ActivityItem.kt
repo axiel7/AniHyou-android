@@ -41,7 +41,6 @@ import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -59,6 +58,7 @@ fun ActivityItem(
     likeCount: Int,
     isLiked: Boolean?,
     modifier: Modifier = Modifier,
+    blurImage: Boolean = false,
     imageUrl: String? = null,
     username: String? = null,
     isPrivate: Boolean? = null,
@@ -67,7 +67,6 @@ fun ActivityItem(
     onClickImage: () -> Unit = {},
     onClickLike: () -> Unit,
     onClickDelete: () -> Unit,
-    uriHandler: MarkdownUriHandler,
 ) {
     Row(
         modifier = modifier
@@ -77,6 +76,7 @@ fun ActivityItem(
         if (type == ActivityType.MEDIA_LIST) {
             MediaPoster(
                 url = imageUrl,
+                enableBlur = blurImage,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .size(ACTIVITY_IMAGE_SIZE.dp)
@@ -101,8 +101,7 @@ fun ActivityItem(
                     DefaultMarkdownText(
                         markdown = text,
                         modifier = Modifier.weight(1f),
-                        lineHeight = 20.sp,
-                        uriHandler = uriHandler,
+                        textStyle = MaterialTheme.typography.bodyMedium,
                     )
                 } else {
                     Text(
@@ -110,9 +109,9 @@ fun ActivityItem(
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                             .weight(1f),
-                        lineHeight = 20.sp,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 3
+                        maxLines = 3,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
                 ActivityMenu(
@@ -133,8 +132,8 @@ fun ActivityItem(
                             isFutureDate = false
                         ),
                     modifier = Modifier.weight(1f),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium
                 )
                 CommentIconButton(
                     modifier = Modifier.width(78.dp),
@@ -243,7 +242,6 @@ private fun ActivityItemPreview() {
                     onClick = {},
                     onClickLike = {},
                     onClickDelete = {},
-                    uriHandler = MarkdownUriHandler(),
                 )
                 ActivityItemPlaceholder(
                     modifier = Modifier.padding(8.dp)

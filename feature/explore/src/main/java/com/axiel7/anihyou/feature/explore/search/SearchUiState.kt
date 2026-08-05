@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.network.SearchUserQuery
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 
 @Stable
 data class SearchUiState(
@@ -50,6 +51,7 @@ data class SearchUiState(
     val sourcesChanged: Boolean = false,
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
     val clearedFilters: Boolean = false,
+    val titleLanguage: UserTitleLanguage = UserTitleLanguage.ROMAJI,
     val isLoggedIn: Boolean,
     override val page: Int = 0,
     override val hasNextPage: Boolean = false,
@@ -80,10 +82,32 @@ data class SearchUiState(
             || hasMediaStatusFilter
             || hasDateFilter
 
-    val mediaSortForSearch = if (mediaSort == MediaSort.SEARCH_MATCH && hasFiltersApplied) {
-        MediaSort.POPULARITY_DESC
-    } else {
-        mediaSort
+    val mediaSortForSearch = when (mediaSort) {
+        MediaSort.SEARCH_MATCH if hasFiltersApplied -> {
+            MediaSort.POPULARITY_DESC
+        }
+
+        MediaSort.TITLE_ROMAJI -> {
+            when (titleLanguage) {
+                UserTitleLanguage.ROMAJI, UserTitleLanguage.ROMAJI_STYLISED -> MediaSort.TITLE_ROMAJI
+                UserTitleLanguage.ENGLISH, UserTitleLanguage.ENGLISH_STYLISED -> MediaSort.TITLE_ENGLISH
+                UserTitleLanguage.NATIVE, UserTitleLanguage.NATIVE_STYLISED -> MediaSort.TITLE_NATIVE
+                UserTitleLanguage.UNKNOWN__ -> mediaSort
+            }
+        }
+
+        MediaSort.TITLE_ROMAJI_DESC -> {
+            when (titleLanguage) {
+                UserTitleLanguage.ROMAJI, UserTitleLanguage.ROMAJI_STYLISED -> MediaSort.TITLE_ROMAJI_DESC
+                UserTitleLanguage.ENGLISH, UserTitleLanguage.ENGLISH_STYLISED -> MediaSort.TITLE_ENGLISH_DESC
+                UserTitleLanguage.NATIVE, UserTitleLanguage.NATIVE_STYLISED -> MediaSort.TITLE_NATIVE_DESC
+                UserTitleLanguage.UNKNOWN__ -> mediaSort
+            }
+        }
+
+        else -> {
+            mediaSort
+        }
     }
 
     override fun setError(value: String?) = copy(error = value)

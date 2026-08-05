@@ -13,7 +13,7 @@ import com.axiel7.anihyou.core.base.state.UiState
 
 @Immutable
 data class UserStatsUiState(
-    val userId: Int? = null,
+    val userId: Int,
     val type: UserStatType = UserStatType.OVERVIEW,
     val mediaType: MediaType = MediaType.ANIME,
     val scoreType: StatDistributionType = StatDistributionType.TITLES,

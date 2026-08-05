@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.ui.composables.chip
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -92,6 +93,7 @@ fun ChipWithRange(
         ModalBottomSheet(
             onDismissed = { sheetOpened = false }
         ) {
+            Box(Modifier) {} // fix for a weird crash: AnchoredDraggableUninitializedException
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {

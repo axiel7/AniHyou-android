@@ -34,25 +34,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.model.activity.text
+import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextViewPlaceholder
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ActivityDetailsView(
-    arguments: Routes.ActivityDetails,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
+    arguments: Route.ActivityDetails,
 ) {
     val viewModel: ActivityDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,20 +61,18 @@ fun ActivityDetailsView(
         activityId = arguments.id,
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ActivityDetailsContent(
     activityId: Int,
     uiState: ActivityDetailsUiState,
     event: ActivityDetailsEvent?,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -85,6 +83,8 @@ private fun ActivityDetailsContent(
             listState.firstVisibleItemIndex == 0
         }
     }
+
+    ResultEffect<ActivityReplyFragment> { event?.refresh() }
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
@@ -147,6 +147,7 @@ private fun ActivityDetailsContent(
                                 ?: uiState.details.listActivityFragment?.text().orEmpty(),
                             username = uiState.details.username,
                             avatarUrl = uiState.details.avatarUrl,
+                            blurCover = blurAdult && uiState.details.isAdultMedia,
                             mediaCoverUrl = uiState.details.mediaCoverUrl,
                             createdAt = uiState.details.createdAt,
                             replyCount = uiState.details.replyCount,
@@ -162,7 +163,6 @@ private fun ActivityDetailsContent(
                             onClickLike = {
                                 event?.toggleLikeActivity()
                             },
-                            uriHandler = uriHandler,
                         )
                     } else {
                         ActivityTextViewPlaceholder()
@@ -190,7 +190,6 @@ private fun ActivityDetailsContent(
                         onClickLike = {
                             event?.toggleLikeReply(item.id)
                         },
-                        uriHandler = uriHandler,
                     )
                 }
             }
@@ -207,8 +206,6 @@ fun ActivityDetailsViewPreview() {
                 activityId = 1,
                 uiState = ActivityDetailsUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

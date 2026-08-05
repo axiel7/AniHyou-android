@@ -2,23 +2,17 @@ package com.axiel7.anihyou.core.model.notification
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.model.base.Localizable
+import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.resources.R
 
 enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localizable {
-    ALL(null) {
-        @Composable
-        override fun localized() = stringResource(R.string.notifications_all)
-    },
+    ALL(null),
     AIRING(
         arrayOf(
             NotificationType.AIRING
         )
-    ) {
-        @Composable
-        override fun localized() = stringResource(R.string.notifications_airing)
-    },
+    ),
     ACTIVITY(
         arrayOf(
             NotificationType.ACTIVITY_LIKE,
@@ -28,10 +22,7 @@ enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localiz
             NotificationType.ACTIVITY_MESSAGE,
             NotificationType.ACTIVITY_REPLY_SUBSCRIBED
         )
-    ) {
-        @Composable
-        override fun localized() = stringResource(R.string.activity)
-    },
+    ),
     FORUM(
         arrayOf(
             NotificationType.THREAD_LIKE,
@@ -40,18 +31,12 @@ enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localiz
             NotificationType.THREAD_COMMENT_MENTION,
             NotificationType.THREAD_SUBSCRIBED
         )
-    ) {
-        @Composable
-        override fun localized() = stringResource(R.string.forum)
-    },
+    ),
     FOLLOWS(
         arrayOf(
             NotificationType.FOLLOWING
         )
-    ) {
-        @Composable
-        override fun localized() = stringResource(R.string.following)
-    },
+    ),
     MEDIA(
         arrayOf(
             NotificationType.RELATED_MEDIA_ADDITION,
@@ -59,8 +44,23 @@ enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localiz
             NotificationType.MEDIA_MERGE,
             NotificationType.MEDIA_DELETION
         )
-    ) {
-        @Composable
-        override fun localized() = stringResource(R.string.notifications_media)
+    ),
+    SUBMISSION(
+        arrayOf(
+            NotificationType.MEDIA_SUBMISSION_UPDATE,
+            NotificationType.STAFF_SUBMISSION_UPDATE,
+            NotificationType.CHARACTER_SUBMISSION_UPDATE,
+        )
+    );
+
+    @Composable
+    override fun localized() = when (this) {
+        ALL -> stringResource(R.string.notifications_all)
+        AIRING -> stringResource(R.string.notifications_airing)
+        ACTIVITY -> stringResource(R.string.activity)
+        FORUM -> stringResource(R.string.forum)
+        FOLLOWS -> stringResource(R.string.following)
+        MEDIA -> stringResource(R.string.notifications_media)
+        SUBMISSION -> stringResource(R.string.notifications_submission)
     }
 }

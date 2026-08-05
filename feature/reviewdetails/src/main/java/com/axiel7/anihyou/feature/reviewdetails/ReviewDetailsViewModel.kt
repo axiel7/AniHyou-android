@@ -4,14 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.ReviewRepository
 import com.axiel7.anihyou.core.network.type.ReviewRating
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 
 class ReviewDetailsViewModel(
-    private val arguments: Routes.ReviewDetails,
+    @InjectedParam private val arguments: Route.ReviewDetails,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
     private val reviewRepository: ReviewRepository
 ) : UiStateViewModel<ReviewDetailsUiState>(), ReviewDetailsEvent {
 
@@ -48,6 +51,12 @@ class ReviewDetailsViewModel(
                         result.toUiState()
                     }
                 }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.translatorApp
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
             }
             .launchIn(viewModelScope)
     }

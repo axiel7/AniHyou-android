@@ -59,7 +59,7 @@ import com.axiel7.anihyou.wear.ui.composables.OnBottomReached
 import com.axiel7.anihyou.wear.ui.theme.AniHyouTheme
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable

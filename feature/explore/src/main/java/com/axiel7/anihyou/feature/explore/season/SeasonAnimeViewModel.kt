@@ -12,7 +12,7 @@ import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.SeasonAnime
+import com.axiel7.anihyou.core.ui.common.navigation.Route.SeasonAnime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -21,10 +21,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SeasonAnimeViewModel(
-    arguments: SeasonAnime,
+    @InjectedParam arguments: SeasonAnime,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val mediaRepository: MediaRepository,
     private val listPreferencesRepository: ListPreferencesRepository,

@@ -86,7 +86,7 @@ fun MediaCharacterStaffView(
                             imageUrl = item.node?.image?.medium,
                             subtitle = item.roleLocalized(),
                             onClick = {
-                                navigateToStaffDetails(item.node!!.id)
+                                item.node?.id?.let(navigateToStaffDetails)
                             }
                         )
                     }
@@ -127,7 +127,7 @@ fun MediaCharacterStaffView(
                                 imageUrl = item.node?.image?.medium,
                                 subtitle = item.role?.localized(),
                                 onClick = {
-                                    navigateToCharacterDetails(item.node!!.id)
+                                    item.node?.id?.let(navigateToCharacterDetails)
                                 }
                             )
                             if (!item.voiceActors.isNullOrEmpty()) {

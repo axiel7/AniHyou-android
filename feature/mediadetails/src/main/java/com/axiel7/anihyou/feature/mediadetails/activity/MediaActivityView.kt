@@ -30,23 +30,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaActivityView(
-    arguments: Routes.MediaActivity,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager
+    arguments: Route.MediaActivity,
 ) {
     val viewModel: MediaActivityViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -54,19 +52,17 @@ fun MediaActivityView(
     MediaActivityContent(
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun MediaActivityContent(
     uiState: MediaActivityUiState,
     event: MediaActivityEvent?,
-    uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -123,6 +119,7 @@ private fun MediaActivityContent(
                     replyCount = item.replyCount,
                     likeCount = item.likeCount,
                     isLiked = item.isLiked,
+                    blurCover = blurAdult && item.media?.isAdult == true,
                     mediaCoverUrl = item.media?.coverImage?.medium,
                     showMenu = uiState.isMine,
                     onClick = {
@@ -137,7 +134,6 @@ private fun MediaActivityContent(
                     onClickDelete = {
                         event?.deleteActivity(item.id)
                     },
-                    uriHandler = uriHandler,
                 )
                 HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
             }
@@ -165,8 +161,6 @@ private fun MediaActivityViewPreview() {
             MediaActivityContent(
                 uiState = MediaActivityUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

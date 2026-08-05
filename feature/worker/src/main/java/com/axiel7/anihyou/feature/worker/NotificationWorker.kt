@@ -33,6 +33,7 @@ import com.axiel7.anihyou.core.ui.utils.NotificationUtils.showNotification
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 class NotificationWorker(
     context: Context,
@@ -156,7 +157,7 @@ class NotificationWorker(
     private suspend fun setForegroundSafely() {
         try {
             setForeground(getForegroundInfo())
-            delay(500)
+            delay(500.milliseconds)
         } catch (e: IllegalStateException) {
             Log.e(TAG, "setForegroundSafely: ", e)
         }

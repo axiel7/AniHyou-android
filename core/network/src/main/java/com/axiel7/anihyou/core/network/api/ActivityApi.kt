@@ -2,9 +2,9 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.apolloStore
-import com.apollographql.apollo.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.ActivityFeedQuery
 import com.axiel7.anihyou.core.network.DeleteActivityMutation
@@ -18,6 +18,7 @@ class ActivityApi(
     fun activityFeedQuery(
         isFollowing: Boolean,
         typeIn: List<ActivityType>?,
+        userIdIn: List<Int>?,
         fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
@@ -28,6 +29,7 @@ class ActivityApi(
                 perPage = Optional.present(perPage),
                 isFollowing = Optional.present(isFollowing),
                 typeIn = Optional.presentIfNotNull(typeIn),
+                userIdIn = Optional.presentIfNotNull(userIdIn),
             )
         )
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
@@ -48,9 +50,10 @@ class ActivityApi(
                 operation = ActivityDetailsQuery(
                     activityId = Optional.present(id)
                 ),
-                operationData = ActivityDetailsQuery.Data(
+                data = ActivityDetailsQuery.Data(
                     Activity = activity
-                )
+                ),
+                publish = true
             )
         client.apolloStore.publish(result)
     }

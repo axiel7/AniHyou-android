@@ -6,9 +6,11 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.model.thread.ChildComment
 import com.axiel7.anihyou.core.network.ThreadDetailsQuery
 import com.axiel7.anihyou.core.base.state.PagedUiState
+import com.axiel7.anihyou.core.model.TranslatorApp
 
 @Stable
 data class ThreadDetailsUiState(
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val details: ThreadDetailsQuery.Thread? = null,
     val comments: SnapshotStateList<ChildComment> = mutableStateListOf(),
     val isLiked: Boolean = false,

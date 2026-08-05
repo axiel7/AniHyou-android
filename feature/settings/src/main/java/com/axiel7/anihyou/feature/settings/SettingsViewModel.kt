@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.Theme
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
@@ -154,6 +155,24 @@ class SettingsViewModel(
         }
     }
 
+    override fun setBlurAdultContent(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setBlurAdult(value)
+        }
+    }
+
+    override fun setHideScores(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setHideScores(value)
+        }
+    }
+
+    override fun setTranslatorApp(value: TranslatorApp) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setTranslatorApp(value)
+        }
+    }
+
     override fun setTitleLanguage(value: UserTitleLanguage) {
         viewModelScope.launch {
             updateUser(titleLanguage = value)
@@ -274,6 +293,12 @@ class SettingsViewModel(
             }
             .launchIn(viewModelScope)
 
+        defaultPreferencesRepository.blurAdult
+            .onEach { value ->
+                mutableUiState.update { it.copy(blurAdultContent = value) }
+            }
+            .launchIn(viewModelScope)
+
         defaultPreferencesRepository.defaultTab
             .filterNotNull()
             .onEach { value ->
@@ -320,6 +345,18 @@ class SettingsViewModel(
         defaultPreferencesRepository.notificationCheckInterval
             .onEach { value ->
                 mutableUiState.update { it.copy(notificationCheckInterval = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.translatorApp
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.hideScores
+            .onEach { value ->
+                mutableUiState.update { it.copy(hideScores = value) }
             }
             .launchIn(viewModelScope)
     }

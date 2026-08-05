@@ -2,7 +2,7 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.SearchStaffQuery
 import com.axiel7.anihyou.core.network.StaffCharacterQuery
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
@@ -37,7 +37,8 @@ class StaffApi (
                 operation = StaffDetailsQuery(
                     staffId = Optional.presentIfNotNull(data.Staff?.id)
                 ),
-                operationData = data
+                data = data,
+                publish = true,
             )
     }
 

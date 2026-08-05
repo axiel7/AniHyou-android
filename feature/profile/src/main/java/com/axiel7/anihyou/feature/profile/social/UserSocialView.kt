@@ -17,14 +17,13 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -32,26 +31,23 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVertical
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserSocialView(
     userId: Int,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
-    val viewModel: UserSocialViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(userId) {
-        viewModel.setUserId(userId)
+    val viewModel: UserSocialViewModel = koinViewModel {
+        parametersOf(userId)
     }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserSocialContent(
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
-        navActionManager = navActionManager,
     )
 }
 
@@ -61,8 +57,8 @@ private fun UserSocialContent(
     uiState: UserSocialUiState,
     event: UserSocialEvent?,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
@@ -160,9 +156,8 @@ private fun UserSocialViewPreview() {
     AniHyouTheme {
         Surface {
             UserSocialContent(
-                uiState = UserSocialUiState(),
+                uiState = UserSocialUiState(userId = 0),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

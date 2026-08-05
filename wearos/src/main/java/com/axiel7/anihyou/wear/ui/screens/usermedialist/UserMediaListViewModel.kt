@@ -9,6 +9,7 @@ import com.axiel7.anihyou.core.domain.repository.MediaListRepository
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -20,10 +21,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserMediaListViewModel(
-    mediaType: MediaType,
+    @InjectedParam mediaType: MediaType,
     private val mediaListRepository: MediaListRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<UserMediaListUiState>(), UserMediaListEvent {
@@ -57,6 +59,7 @@ class UserMediaListViewModel(
                     mediaType = uiState.mediaType,
                     statusIn = listOf(MediaListStatus.CURRENT, MediaListStatus.REPEATING),
                     sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                    scoreFormat = defaultPreferencesRepository.scoreFormat.first() ?: ScoreFormat.POINT_10_DECIMAL,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page,
                     perPage = 50,

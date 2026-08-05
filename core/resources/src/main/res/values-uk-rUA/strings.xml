@@ -40,13 +40,13 @@
     <string name="trending_now">Популярне зараз</string>
     <string name="next_season">Наступний сезон</string>
     <string name="trending_manga">Популярна манґа</string>
-    <string name="not_logged_text">Будь ласка, увійдіть, щоб скористатися цією функцією</string>
+    <string name="not_logged_text">Будь ласка, увійдіть, щоб скористатися цією функцією.</string>
     <string name="login">Увійти</string>
     <string name="current">Поточне</string>
     <string name="planning">Заплановані</string>
     <string name="completed">Завершені</string>
     <string name="dropped">Кинуті</string>
-    <string name="paused">Призупинені</string>
+    <string name="paused">Відкладені</string>
     <string name="repeating">Повторюю</string>
     <string name="anime_list">Каталог анiме</string>
     <string name="manga_list">Каталог манґи</string>
@@ -81,7 +81,7 @@
         <item quantity="many">%d розділів</item>
         <item quantity="other">%d розділів</item>
     </plurals>
-    <string name="finished">Завершено</string>
+    <string name="finished">За завершеним</string>
     <string name="releasing">Випускається</string>
     <string name="not_yet_released">Ще не випущено</string>
     <string name="cancelled">Скасовано</string>
@@ -92,10 +92,10 @@
     <string name="episode_in_time">Еп %d за %s</string>
     <string name="airing">Виходить</string>
     <plurals name="num_episodes_behind">
-        <item quantity="one">%d епізод позаду</item>
-        <item quantity="few">%d епізоди позаду</item>
-        <item quantity="many">%d епізодів позаду</item>
-        <item quantity="other">%d епізодів позаду</item>
+        <item quantity="one">%d новий епізод</item>
+        <item quantity="few">%d нові епізоди</item>
+        <item quantity="many">%d нових епізодів</item>
+        <item quantity="other">%d нових епізодів</item>
     </plurals>
     <string name="information">Відомості</string>
     <string name="duration">Тривалість</string>
@@ -104,7 +104,7 @@
     <string name="season">Сезон</string>
     <string name="studios">Студії</string>
     <string name="producers">Продюсери</string>
-    <string name="source">Першоджерело</string>
+    <string name="source">Першотвір</string>
     <string name="original">Оригінальне</string>
     <string name="light_novel">Ранобе</string>
     <string name="visual_novel">Візуальна новела</string>
@@ -130,7 +130,7 @@
     <string name="tags">Мітки</string>
     <string name="show_spoiler">Показати спойлер</string>
     <string name="hide_spoiler">Приховати спойлер</string>
-    <string name="anime_manga_and_more">Аніме, манґа, та інше</string>
+    <string name="anime_manga_and_more">Аніме, манґа та інше</string>
     <string name="characters">Персонажі</string>
     <string name="staff">Персонал</string>
     <string name="users">Користувачі</string>
@@ -150,7 +150,7 @@
     <string name="ascending">За зростанням</string>
     <string name="role_main">Головний</string>
     <string name="role_supporting">Другорядний</string>
-    <string name="role_background">Контекст</string>
+    <string name="role_background">Масовка</string>
     <string name="related">Пов\'язані</string>
     <string name="relation_adaptation">Адаптація</string>
     <string name="prequel">Передісторія</string>
@@ -178,9 +178,9 @@
     <string name="account">Акаунт</string>
     <string name="github_repository">Репозиторій GitHub</string>
     <string name="version">Версія</string>
-    <string name="developed_by_axiel7">Розробник — axiel7</string>
+    <string name="contributors">Співавтори</string>
     <string name="anilist_account_settings">Налаштування акаунту AniList</string>
-    <string name="logout">Вийти з акаунту</string>
+    <string name="logout">Вийти з акаунта</string>
     <string name="character_media">Медіа</string>
     <string name="birthday">День народження</string>
     <string name="age">Вік</string>
@@ -189,7 +189,7 @@
     <string name="years_active">Роки активності</string>
     <string name="present">Сьогодення</string>
     <string name="hometown">Рідне місто</string>
-    <string name="occupations">Професії</string>
+    <string name="occupations">Посади</string>
     <string name="no_information">Інформація відсутня</string>
     <string name="score">Оцінка</string>
     <string name="total_entries">Усього: %s</string>
@@ -222,9 +222,9 @@
     <string name="voice_actors">Актори озвучення</string>
     <string name="total">Усього</string>
     <string name="chapters_read">Прочитані розділи</string>
-    <string name="episodes_watched">Переглянуті серії</string>
+    <string name="episodes_watched">Переглянуті епізоди</string>
     <string name="days_watched">Днів перегляду</string>
-    <string name="volumes_read">Прочитані томи</string>
+    <string name="volumes_read">Прочитано томів</string>
     <string name="days_planned">Заплановано днів</string>
     <string name="chapters_planned">Заплановані розділи</string>
     <string name="standard_deviation">Стандартне відхилення</string>
@@ -240,7 +240,7 @@
     <string name="friday">П’ятниця</string>
     <string name="saturday">Субота</string>
     <string name="sunday">Неділя</string>
-    <string name="episode_airing_at">Серія %d виходить в %s</string>
+    <string name="episode_airing_at">Еп %d вийде о %s</string>
     <string name="filter">Фільтри</string>
     <string name="notifications">Сповіщення</string>
     <string name="threads">Обговорення</string>
@@ -252,9 +252,9 @@
     <string name="notifications_media">Медіа</string>
     <string name="content">Уміст</string>
     <string name="airing_on_my_list">Вихідні тайтли у моєму каталозі</string>
-    <string name="airing_on_my_list_summary">Показувати лише ті аніме, що вийдуть невдовзі та додані до мого каталогу.</string>
+    <string name="airing_on_my_list_summary">Показує лише ті аніме, що вийдуть невдовзі та додані до мого каталогу</string>
     <string name="follow">Підписатися</string>
-    <string name="follows_you">Підписується на вас</string>
+    <string name="follows_you">Підписаний(-а) на вас</string>
     <string name="view_anime_list">Переглянути каталог аніме</string>
     <string name="view_manga_list">Переглянути каталог манґи</string>
     <string name="upcoming">Незабаром</string>
@@ -263,7 +263,7 @@
     <string name="use_separated_list_styles">Використовувати окремі стилі каталогу</string>
     <string name="changes_will_take_effect_on_app_restart">Зміни набудуть чинності після перезавантаження</string>
     <string name="items_per_row">Елементів у рядку</string>
-    <string name="default_setting">Типово</string>
+    <string name="default_setting">Типовий</string>
     <string name="media_status">Статус</string>
     <string name="year">Рік</string>
     <string name="episode_aired_ago">Еп %d вийшов %s тому</string>
@@ -287,6 +287,7 @@
     <string name="update_interval">Частота оновлення</string>
     <string name="airing_anime_notifications">Сповіщення про вихід аніме</string>
     <string name="color">Колір</string>
+    <string name="color_palette">Кольорова палітра</string>
     <string name="discover">Огляд</string>
     <string name="default_home_tab">Типове головне меню</string>
     <string name="text_status">Текстовий статус</string>
@@ -349,6 +350,7 @@
     <string name="from_year">Від року</string>
     <string name="to_year">До року</string>
     <string name="staff_role_a_and_r_producer">Директор A&amp;R</string>
+    <string name="staff_role_adr_director">Режисер дубляжу</string>
     <string name="staff_role_accessory_design">Дизайн аксесуарів</string>
     <string name="staff_role_action_animator">Аніматор динаміки</string>
     <string name="staff_role_action_director">Режисер динамічних сцен</string>
@@ -491,11 +493,11 @@
     <string name="staff_role_music_supervisor">Наглядач за музикою</string>
     <string name="staff_role_music">Музика</string>
     <string name="staff_role_musical_instrument_supervisor">Наглядач за музичними інструментами</string>
-    <string name="staff_role_offline_editing_manager">Менеджер офлайн монтажу</string>
+    <string name="staff_role_offline_editing_manager">Керівник офлайн монтажу</string>
     <string name="staff_role_offline_editing">Офлайн монтаж</string>
-    <string name="staff_role_online_editing_manager">Менеджер онлайн монтажу</string>
+    <string name="staff_role_online_editing_manager">Керівник онлайн монтажу</string>
     <string name="staff_role_online_editing">Онлайн монтаж</string>
-    <string name="staff_role_online_hd_editing">Онлайн монтаж HD</string>
+    <string name="staff_role_online_hd_editing">Онлайн HD-монтаж</string>
     <string name="staff_role_optical_recording">Оптичне записування</string>
     <string name="staff_role_original_character_design">Оригінальний дизайн персонажів</string>
     <string name="staff_role_original_creator">Автор оригіналу</string>
@@ -584,7 +586,7 @@
     <string name="taiwan">Тайвань</string>
     <string name="country">Країна</string>
     <string name="custom_lists">Власні каталоги</string>
-    <string name="no_custom_lists">Немає користувацьких каталогів</string>
+    <string name="no_custom_lists">Немає власних каталогів</string>
     <string name="hours_watched_format">Годин перегляду: %s</string>
     <string name="chapters_read_format">Прочитані розділи: %s</string>
     <string name="mean_score_format">Серединна оцінка: %s</string>
@@ -617,7 +619,7 @@
     <string name="anime_behind">Аніме позаду</string>
     <string name="default_tab">Типове початкове меню</string>
     <string name="last_used">Останнє використане</string>
-    <string name="male">Чоловічий</string>
+    <string name="male">Чоловіча</string>
     <string name="female">Жіночий</string>
     <string name="non_binary">Небінарний</string>
     <string name="watched_episode_of">Переглядає %1$s епізод «%2$s»</string>
@@ -628,9 +630,9 @@
     <string name="plans_to_read_manga">Планує прочитати «%s»</string>
     <string name="completed_media">Завершує «%s»</string>
     <string name="dropped_media">Кидає «%s»</string>
-    <string name="paused_media">Призупиняє «%s»</string>
-    <string name="rewatched_media">Пере-переглянуто %s</string>
-    <string name="reread_media">Пере-перечитано %s</string>
+    <string name="paused_media">Відкладає «%s»</string>
+    <string name="rewatched_media">Пере-переглядає «%s»</string>
+    <string name="reread_media">Перечитує «%s»</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d год</item>
         <item quantity="few">%d год</item>
@@ -643,6 +645,14 @@
         <item quantity="many">%d хв</item>
         <item quantity="other">%d хв</item>
     </plurals>
-    <string name="login_required_in_phone">Щоб скористатися цим додатком, вам треба авторизуватися, відкривши додаток AniHyou, встановлений на вашому телефоні</string>
-    <string name="app_installed_required">Пристрої поблизу не виявлено, будь ласка, встановіть останню версію AniHyou на вашому телефоні Android</string>
+    <string name="login_required_in_phone">Щоб скористатися цим застосунком, вам потрібно авторизуватися, відкривши застосунок AniHyou, встановлений на вашому телефоні</string>
+    <string name="app_installed_required">Пристрою поблизу не виявлено, будь ласка, встановіть останню версію AniHyou на свій Android-телефон </string>
+    <string name="minimum_tag_percentage">Мінімальний відсоток міток</string>
+    <string name="search_my_list">Шукати в моєму каталозі…</string>
+    <string name="notifications_submission">Подання</string>
+    <string name="translator_app">Перекладач</string>
+    <string name="blur_adult_content">Розмиття вмісту для дорослих</string>
+    <string name="hide_scores">Приховати оцінки</string>
+    <string name="upvote">Доречно</string>
+    <string name="downvote">Недоречно</string>
 </resources>

@@ -42,7 +42,6 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMALL
@@ -59,6 +58,7 @@ fun ActivityTextView(
     text: String,
     username: String?,
     avatarUrl: String?,
+    blurCover: Boolean = false,
     mediaCoverUrl: String? = null,
     createdAt: Int,
     replyCount: Int?,
@@ -68,7 +68,6 @@ fun ActivityTextView(
     onClickUser: () -> Unit,
     onClickMedia: () -> Unit = {},
     onClickLike: () -> Unit,
-    uriHandler: MarkdownUriHandler,
 ) {
     var isLikesExpanded by remember { mutableStateOf(false) }
     Column(
@@ -103,6 +102,7 @@ fun ActivityTextView(
             if (mediaCoverUrl != null) {
                 MediaPoster(
                     url = mediaCoverUrl,
+                    enableBlur = blurCover,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(MEDIA_POSTER_TINY_HEIGHT.dp)
@@ -111,8 +111,7 @@ fun ActivityTextView(
             }
             DefaultMarkdownText(
                 markdown = text,
-                fontSize = 17.sp,
-                uriHandler = uriHandler,
+                textStyle = MaterialTheme.typography.bodyMedium,
             )
         }
 
@@ -206,7 +205,6 @@ fun ActivityTextViewPreview() {
                 isLiked = false,
                 onClickLike = {},
                 onClickUser = {},
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

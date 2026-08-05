@@ -157,7 +157,6 @@
     <string name="account">Akun</string>
     <string name="github_repository">Repositori GitHub</string>
     <string name="version">Versi</string>
-    <string name="developed_by_axiel7">Dibuat oleh axiel7</string>
     <string name="anilist_account_settings">Pengaturan akun AniList</string>
     <string name="logout">Keluar</string>
     <string name="character_media">Media</string>
@@ -618,4 +617,5 @@
     </plurals>
     <string name="login_required_in_phone">Untuk menggunakan aplikasi ini anda harus masuk dengan membuka aplikasi AniHyou yang terpasang di ponsel Anda</string>
     <string name="app_installed_required">Tidak ada perangkat terdekat yang terdeteksi, harap instal versi aplikasi AniHyou terbaru di ponsel Android Anda</string>
+    <string name="translator_app">Penerjemah</string>
 </resources>
