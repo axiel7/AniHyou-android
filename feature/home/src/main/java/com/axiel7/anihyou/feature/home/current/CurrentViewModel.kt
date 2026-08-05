@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.home.current
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
@@ -136,6 +137,12 @@ class CurrentViewModel(
                     if (it is DataResult.Success) toggleSetScoreDialog(false)
                 }
             }
+        }
+    }
+
+    private fun SnapshotStateList<CommonMediaListEntry>.setEntry(entry: BasicMediaListEntry) {
+        this.indexOfFirstOrNull { it.mediaId == entry.mediaId }?.let {
+            this[it] = this[it].copy(basicMediaListEntry = entry)
         }
     }
 
@@ -299,6 +306,20 @@ class CurrentViewModel(
                             )
                         }
                     }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        mediaListRepository
+            .lastUpdatedEntry
+            .filterNotNull()
+            .onEach { entry ->
+                mutableUiState.value.run {
+                    airingList.setEntry(entry)
+                    behindList.setEntry(entry)
+                    animeList.setEntry(entry)
+                    mangaList.setEntry(entry)
+                    nextSeasonAnimeList.setEntry(entry)
                 }
             }
             .launchIn(viewModelScope)
