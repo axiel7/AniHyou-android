@@ -151,6 +151,7 @@
     <string name="relation_source">Fuente</string>
     <string name="relation_compilation">Compilación</string>
     <string name="relation_contains">Contiene</string>
+    <string name="relation_same_universe">Mismo universo</string>
     <string name="recommendations">Recomendaciones</string>
     <string name="settings">Ajustes</string>
     <string name="display">Visualización</string>
