@@ -22,15 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.FullScreenImageView
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.SpoilerSheet
@@ -83,7 +84,6 @@ private val topNavigationTransitionSpec = NavDisplay.transitionSpec {
 @Composable
 fun MainNavigation(
     navigator: Navigator,
-    navActionManager: NavActionManager,
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
     homeTab: HomeTab,
@@ -91,6 +91,7 @@ fun MainNavigation(
     padding: PaddingValues = PaddingValues(),
 ) {
     val context = LocalContext.current
+    val navActionManager = LocalNavActionManager.current
     val bottomPadding by animateDpAsState(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
@@ -152,8 +153,8 @@ fun MainNavigation(
         }
     }
 
-    val entryProvider = entryProvider {
-        entry<Routes.Home>(
+    val entryProvider = entryProvider<NavKey> {
+        entry<Route.Home>(
             metadata = topNavigationTransitionSpec
         ) {
             HomeView(
@@ -161,53 +162,49 @@ fun MainNavigation(
                 defaultHomeTab = homeTab,
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.AnimeTab>(
+        entry<Route.AnimeTab>(
             metadata = topNavigationTransitionSpec
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
-                    arguments = Routes.UserMediaList(
+                    arguments = Route.UserMediaList(
                         mediaType = MediaType.ANIME.rawValue,
                     ),
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
             }
         }
 
-        entry<Routes.MangaTab>(
+        entry<Route.MangaTab>(
             metadata = topNavigationTransitionSpec
         ) {
             if (isLoggedIn) {
                 UserMediaListHostView(
-                    arguments = Routes.UserMediaList(
+                    arguments = Route.UserMediaList(
                         mediaType = MediaType.MANGA.rawValue,
                     ),
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
             }
         }
 
-        entry<Routes.Profile>(
+        entry<Route.Profile>(
             metadata = topNavigationTransitionSpec
         ) {
             if (isLoggedIn) {
                 ProfileView(
-                    arguments = Routes.UserDetails(null, null),
+                    arguments = Route.UserDetails(null, null),
                     modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
                     uriHandler = markdownUriHandler,
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView(
@@ -217,158 +214,133 @@ fun MainNavigation(
             }
         }
 
-        entry<Routes.Explore>(
+        entry<Route.Explore>(
             metadata = topNavigationTransitionSpec
         ) {
             DiscoverView(
                 isLoggedIn = isLoggedIn,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = bottomPadding) else PaddingValues(),
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.UserDetails> {
+        entry<Route.UserDetails> {
             ProfileView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.UserMediaList> {
+        entry<Route.UserMediaList> {
             UserMediaListHostView(
                 arguments = it,
                 isCompactScreen = isCompactScreen,
                 modifier = Modifier.padding(bottom = bottomPadding),
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.Search> {
+        entry<Route.Search> {
             SearchView(
                 arguments = it,
                 isLoggedIn = isLoggedIn,
                 modifier = Modifier.padding(bottom = bottomPadding),
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.Notifications> {
+        entry<Route.Notifications> {
             if (isLoggedIn) {
                 NotificationsView(
                     arguments = it,
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
             }
         }
 
-        entry<Routes.MediaDetails> {
+        entry<Route.MediaDetails> {
             MediaDetailsView(
                 arguments = it.copy(isLoggedIn = isLoggedIn),
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.MediaChartList> {
+        entry<Route.MediaChartList> {
             MediaChartListView(
                 arguments = it,
                 isLoggedIn = isLoggedIn,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.SeasonAnime> {
+        entry<Route.SeasonAnime> {
             SeasonAnimeView(
                 isLoggedIn = isLoggedIn,
                 arguments = it,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.Calendar> {
+        entry<Route.Calendar> {
             CalendarView(
                 isLoggedIn = isLoggedIn,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.CharacterDetails> {
+        entry<Route.CharacterDetails> {
             CharacterDetailsView(
                 isLoggedIn = isLoggedIn,
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.StaffDetails> {
+        entry<Route.StaffDetails> {
             StaffDetailsView(
                 isLoggedIn = isLoggedIn,
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.ReviewDetails> {
+        entry<Route.ReviewDetails> {
             ReviewDetailsView(
                 arguments = it,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.ThreadDetails> {
+        entry<Route.ThreadDetails> {
             ThreadDetailsView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.ThreadCommentDetails> {
+        entry<Route.ThreadCommentDetails> {
             ThreadCommentDetailsView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.StudioDetails> {
+        entry<Route.StudioDetails> {
             StudioDetailsView(
                 arguments = it,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.Settings> {
-            SettingsView(
-                navActionManager = navActionManager,
-            )
+        entry<Route.Settings> {
+            SettingsView()
         }
-        entry<Routes.ListStyleSettings> {
-            ListStyleSettingsView(
-                navActionManager = navActionManager,
-            )
+        entry<Route.ListStyleSettings> {
+            ListStyleSettingsView()
         }
-        entry<Routes.CustomLists> {
-            CustomListsView(
-                navActionManager = navActionManager,
-            )
+        entry<Route.CustomLists> {
+            CustomListsView()
         }
-        entry<Routes.Translations> {
-            TranslationsView(
-                navActionManager = navActionManager,
-            )
+        entry<Route.Translations> {
+            TranslationsView()
         }
-        entry<Routes.Contributors> {
-            ContributorsView(
-                navActionManager = navActionManager,
-            )
+        entry<Route.Contributors> {
+            ContributorsView()
         }
 
-        entry<Routes.FullScreenImage> {
+        entry<Route.FullScreenImage> {
             FullScreenImageView(
                 arguments = it,
                 isCompactScreen = isCompactScreen,
@@ -376,56 +348,50 @@ fun MainNavigation(
             )
         }
 
-        entry<Routes.ActivityDetails> {
+        entry<Route.ActivityDetails> {
             ActivityDetailsView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.PublishActivity> {
+        entry<Route.PublishActivity> {
             if (isLoggedIn) {
                 PublishActivityView(
                     arguments = it,
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
             }
         }
 
-        entry<Routes.PublishComment> {
+        entry<Route.PublishComment> {
             if (isLoggedIn) {
                 PublishCommentView(
                     arguments = it,
-                    navActionManager = navActionManager,
                 )
             } else {
                 LoginView()
             }
         }
 
-        entry<Routes.MediaActivity> {
+        entry<Route.MediaActivity> {
             MediaActivityView(
                 arguments = it,
                 uriHandler = markdownUriHandler,
-                navActionManager = navActionManager
             )
         }
 
-        entry<Routes.CurrentFullList> {
+        entry<Route.CurrentFullList> {
             CurrentFullListView(
                 isLoggedIn = isLoggedIn,
                 listType = it.listType,
-                navActionManager = navActionManager,
             )
         }
 
-        entry<Routes.ReorderFavorites> {
+        entry<Route.ReorderFavorites> {
             ReorderFavoritesView(
                 arguments = it,
-                navActionManager = navActionManager
             )
         }
     }

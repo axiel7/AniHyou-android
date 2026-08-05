@@ -16,17 +16,17 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
 import com.axiel7.anihyou.core.ui.common.BottomDestination
 import com.axiel7.anihyou.core.ui.common.BottomDestination.Companion.testTag
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Navigator
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainBottomNavBar(
-    navigator: Navigator,
-    navActionManager: NavActionManager,
+    currentTopRoute: Route,
     isVisible: Boolean,
     onItemSelected: (Int) -> Unit,
 ) {
+    val navActionManager = LocalNavActionManager.current
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -34,7 +34,7 @@ fun MainBottomNavBar(
     ) {
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
-                val isSelected = dest.route == navigator.state.topLevelRoute
+                val isSelected = dest.route == currentTopRoute
                 NavigationBarItem(
                     icon = {
                         dest.Icon(selected = isSelected)
@@ -61,7 +61,7 @@ fun MainBottomNavBar(
                             }
                         } else {
                             onItemSelected(index)
-                            navigator.navigate(dest.route)
+                            navActionManager.navigate(dest.route)
                         }
                     }
                 )

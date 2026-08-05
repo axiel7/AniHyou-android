@@ -69,8 +69,8 @@ import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -100,11 +100,11 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchView(
-    arguments: Routes.Search,
+    arguments: Route.Search,
     isLoggedIn: Boolean,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel: SearchViewModel = koinViewModel(parameters = { parametersOf(arguments, isLoggedIn) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -177,7 +177,6 @@ fun SearchView(
                 initialTag = arguments.tag,
                 uiState = uiState,
                 event = viewModel,
-                navActionManager = navActionManager,
             )
         }//:Column
     }//:Surface
@@ -192,8 +191,8 @@ fun SearchContentView(
     initialTag: String?,
     uiState: SearchUiState,
     event: SearchEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val scope = rememberCoroutineScope()
     val snackbarManager = rememberSnackbarManager()
@@ -542,7 +541,6 @@ private fun SearchPreview() {
                     isLoggedIn = false
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -31,8 +31,8 @@ import androidx.navigation3.runtime.result.LocalResultEventBus
 import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -47,28 +47,16 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun ReorderFavoritesView(
-    arguments: Routes.ReorderFavorites,
-    navActionManager: NavActionManager,
-    modifier: Modifier = Modifier,
+    arguments: Route.ReorderFavorites,
 ) {
     val viewModel: ReorderFavoritesViewModel = koinViewModel {
         parametersOf(arguments)
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val resultBus = LocalResultEventBus.current
-
-    LaunchedEffect(uiState.isSaved) {
-        if (uiState.isSaved) {
-            resultBus.sendResult(uiState.getList)
-            navActionManager.goBack()
-        }
-    }
 
     ReorderFavoriteContent(
         uiState = uiState,
         event = viewModel,
-        modifier = modifier,
-        navActionManager = navActionManager
     )
 }
 
@@ -77,9 +65,9 @@ fun ReorderFavoritesView(
 private fun ReorderFavoriteContent(
     uiState: ReorderFavoritesUiState,
     event: ReorderFavoritesEvent?,
-    modifier: Modifier,
-    navActionManager: NavActionManager
 ) {
+    val navActionManager = LocalNavActionManager.current
+    val resultBus = LocalResultEventBus.current
     val snackbarManager = rememberSnackbarManager()
     val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
@@ -96,6 +84,13 @@ private fun ReorderFavoriteContent(
 
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = {event?.onLoadMore() })
+    }
+
+    LaunchedEffect(uiState.isSaved) {
+        if (uiState.isSaved) {
+            resultBus.sendResult(uiState.getList)
+            navActionManager.goBack()
+        }
     }
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
@@ -125,7 +120,7 @@ private fun ReorderFavoriteContent(
     ) { padding ->
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
-            modifier = modifier
+            modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = listState,
@@ -164,8 +159,6 @@ private fun ReorderFavoriteViewPreview() {
                     type = FavoritesType.ANIME,
                 ),
                 event = null,
-                modifier = Modifier,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -43,7 +43,7 @@ import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.ListPreference
@@ -67,9 +67,7 @@ private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VE
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SettingsView(
-    navActionManager: NavActionManager
-) {
+fun SettingsView() {
     val viewModel: SettingsViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -80,7 +78,6 @@ fun SettingsView(
         uiState = uiState,
         event = viewModel,
         notificationPermission = notificationPermission,
-        navActionManager = navActionManager,
     )
 }
 
@@ -90,8 +87,8 @@ private fun SettingsContent(
     uiState: SettingsUiState,
     event: SettingsEvent?,
     notificationPermission: PermissionState?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val isEnglishLocale = LocalIsLanguageEn.current
     val context = LocalContext.current
     val snackbarManager = rememberSnackbarManager()
@@ -406,7 +403,6 @@ private fun SettingsViewPreview() {
                 uiState = SettingsUiState(isLoggedIn = true),
                 event = null,
                 notificationPermission = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

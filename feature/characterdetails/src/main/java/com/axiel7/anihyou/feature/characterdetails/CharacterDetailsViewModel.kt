@@ -9,7 +9,7 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -22,7 +22,7 @@ import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterDetailsViewModel(
-    @InjectedParam private val arguments: Routes.CharacterDetails,
+    @InjectedParam private val arguments: Route.CharacterDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val characterRepository: CharacterRepository,
     private val favoriteRepository: FavoriteRepository,

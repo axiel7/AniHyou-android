@@ -6,8 +6,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -15,8 +15,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PublishCommentView(
-    arguments: Routes.PublishComment,
-    navActionManager: NavActionManager,
+    arguments: Route.PublishComment,
 ) {
     val viewModel: PublishCommentViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -25,17 +24,16 @@ fun PublishCommentView(
         arguments = arguments,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
 @Composable
 private fun PublishCommentContent(
-    arguments: Routes.PublishComment,
+    arguments: Route.PublishComment,
     uiState: PublishCommentUiState,
     event: PublishCommentEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     LaunchedEffect(uiState.wasPublished) {
@@ -66,10 +64,9 @@ private fun PublishActivityViewPreview() {
     AniHyouTheme {
         Surface {
             PublishCommentContent(
-                arguments = Routes.PublishComment(),
+                arguments = Route.PublishComment(),
                 uiState = PublishCommentUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

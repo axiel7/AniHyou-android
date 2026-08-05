@@ -10,7 +10,7 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -24,7 +24,7 @@ import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaActivityViewModel(
-    @InjectedParam arguments: Routes.MediaActivity,
+    @InjectedParam arguments: Route.MediaActivity,
     private val mediaRepository: MediaRepository,
     private val likeRepository: LikeRepository,
     private val activityRepository: ActivityRepository,

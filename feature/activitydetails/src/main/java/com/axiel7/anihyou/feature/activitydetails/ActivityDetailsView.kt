@@ -37,8 +37,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -51,9 +51,8 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ActivityDetailsView(
-    arguments: Routes.ActivityDetails,
+    arguments: Route.ActivityDetails,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
     val viewModel: ActivityDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -63,7 +62,6 @@ fun ActivityDetailsView(
         uiState = uiState,
         event = viewModel,
         uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -74,8 +72,8 @@ private fun ActivityDetailsContent(
     uiState: ActivityDetailsUiState,
     event: ActivityDetailsEvent?,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -211,7 +209,6 @@ fun ActivityDetailsViewPreview() {
                 uiState = ActivityDetailsUiState(),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

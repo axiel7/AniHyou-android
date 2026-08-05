@@ -10,7 +10,7 @@ import com.axiel7.anihyou.core.domain.repository.StaffRepository
 import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -23,7 +23,7 @@ import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffDetailsViewModel(
-    @InjectedParam private val arguments: Routes.StaffDetails,
+    @InjectedParam private val arguments: Route.StaffDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val staffRepository: StaffRepository,
     private val favoriteRepository: FavoriteRepository,

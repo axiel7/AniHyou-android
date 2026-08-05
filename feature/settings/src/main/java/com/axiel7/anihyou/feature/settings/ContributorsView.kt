@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -32,9 +32,8 @@ private val contributors = mapOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContributorsView(
-    navActionManager: NavActionManager,
-) {
+fun ContributorsView() {
+    val navActionManager = LocalNavActionManager.current
     val context = LocalContext.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = rememberTopAppBarState()
@@ -66,8 +65,6 @@ fun ContributorsView(
 @Composable
 private fun ContributorsViewPreview() {
     AniHyouTheme {
-        ContributorsView(
-            navActionManager = NavActionManager.rememberNavActionManager()
-        )
+        ContributorsView()
     }
 }

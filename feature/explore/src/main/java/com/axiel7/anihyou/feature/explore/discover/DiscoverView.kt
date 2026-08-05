@@ -51,7 +51,7 @@ import com.axiel7.anihyou.core.model.media.nextAnimeSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -79,7 +79,6 @@ fun DiscoverView(
     isLoggedIn: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navActionManager: NavActionManager,
 ) {
     val viewModel: DiscoverViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -88,13 +87,11 @@ fun DiscoverView(
         topBar = {
             ExploreSearchBar(
                 isLoggedIn = isLoggedIn,
-                navActionManager = navActionManager
             )
         },
         isLoggedIn = isLoggedIn,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
         modifier = modifier,
         contentPadding = contentPadding,
     )
@@ -107,10 +104,10 @@ private fun DiscoverContent(
     isLoggedIn: Boolean,
     uiState: DiscoverUiState,
     event: DiscoverEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val navActionManager = LocalNavActionManager.current
     val snackbarManager = rememberSnackbarManager()
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyListState()
@@ -428,7 +425,6 @@ private fun DiscoverViewPreview() {
                     nextAnimeSeason = now.nextAnimeSeason(),
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

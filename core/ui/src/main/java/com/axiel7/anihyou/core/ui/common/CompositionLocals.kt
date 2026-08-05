@@ -2,7 +2,11 @@ package com.axiel7.anihyou.core.ui.common
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.axiel7.anihyou.core.network.type.ScoreFormat
+import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.PreviewNavigator
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.getCurrentLanguageTag
+
+val LocalNavActionManager = staticCompositionLocalOf { NavActionManager(PreviewNavigator()) }
 
 val LocalIsLanguageEn = staticCompositionLocalOf {
     getCurrentLanguageTag()?.startsWith("en") == true

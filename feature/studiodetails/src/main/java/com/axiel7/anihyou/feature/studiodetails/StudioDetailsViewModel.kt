@@ -6,7 +6,7 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.StudioRepository
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -19,7 +19,7 @@ import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StudioDetailsViewModel(
-    @InjectedParam private val arguments: Routes.StudioDetails,
+    @InjectedParam private val arguments: Route.StudioDetails,
     private val studioRepository: StudioRepository,
     private val favoriteRepository: FavoriteRepository,
 ) : PagedUiStateViewModel<StudioDetailsUiState>(), StudioDetailsEvent {

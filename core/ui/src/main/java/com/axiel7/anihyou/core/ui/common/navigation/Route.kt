@@ -7,19 +7,20 @@ import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.model.thread.ChildComment
 import kotlinx.serialization.Serializable
 
-object Routes {
+@Immutable
+sealed interface Route : NavKey {
 
     @Serializable
     @Immutable
-    object Home: NavKey
+    object Home: Route
 
     @Serializable
     @Immutable
-    object AnimeTab: NavKey
+    object AnimeTab: Route
 
     @Serializable
     @Immutable
-    object MangaTab: NavKey
+    object MangaTab: Route
 
     @Serializable
     @Immutable
@@ -27,21 +28,21 @@ object Routes {
         val mediaType: String,
         val userId: Int = 0,
         val scoreFormat: String? = null,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
-    object Profile: NavKey
+    object Profile: Route
 
     @Serializable
     @Immutable
     data class UserDetails(
         val id: Int?,
         val userName: String?
-    ): NavKey
+    ): Route
 
     @Serializable
-    object Explore: NavKey
+    object Explore: Route
 
     @Serializable
     @Immutable
@@ -52,84 +53,84 @@ object Routes {
         val tag: String? = null,
         val onList: Boolean? = null,
         val focus: Boolean = false,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
-    data class Notifications(val unreadCount: Int = 0): NavKey
+    data class Notifications(val unreadCount: Int = 0): Route
 
     @Serializable
     @Immutable
     data class MediaDetails(
         val id: Int,
         val isLoggedIn: Boolean = false,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
-    data class MediaChartList(val type: String): NavKey
+    data class MediaChartList(val type: String): Route
 
     @Serializable
     @Immutable
     data class SeasonAnime(
         val season: String,
         val year: Int,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
-    object Calendar: NavKey
+    object Calendar: Route
 
     @Serializable
     @Immutable
-    data class CharacterDetails(val id: Int): NavKey
+    data class CharacterDetails(val id: Int): Route
 
     @Serializable
     @Immutable
-    data class StaffDetails(val id: Int): NavKey
+    data class StaffDetails(val id: Int): Route
 
     @Serializable
     @Immutable
-    data class ReviewDetails(val id: Int): NavKey
+    data class ReviewDetails(val id: Int): Route
 
     @Serializable
     @Immutable
-    data class ThreadDetails(val id: Int): NavKey
+    data class ThreadDetails(val id: Int): Route
 
     @Serializable
     @Immutable
-    data class ThreadCommentDetails(val childComment: ChildComment): NavKey
+    data class ThreadCommentDetails(val childComment: ChildComment): Route
 
     @Serializable
     @Immutable
-    data class StudioDetails(val id: Int): NavKey
+    data class StudioDetails(val id: Int): Route
 
     @Serializable
     @Immutable
-    object Settings: NavKey
+    object Settings: Route
 
     @Serializable
     @Immutable
-    object ListStyleSettings: NavKey
+    object ListStyleSettings: Route
 
     @Serializable
-    object CustomLists: NavKey
-
-    @Serializable
-    @Immutable
-    object Translations: NavKey
+    object CustomLists: Route
 
     @Serializable
     @Immutable
-    object Contributors: NavKey
+    object Translations: Route
 
     @Serializable
     @Immutable
-    data class FullScreenImage(val imageUrl: String?): NavKey
+    object Contributors: Route
 
     @Serializable
     @Immutable
-    data class ActivityDetails(val id: Int): NavKey
+    data class FullScreenImage(val imageUrl: String?): Route
+
+    @Serializable
+    @Immutable
+    data class ActivityDetails(val id: Int): Route
 
     @Serializable
     @Immutable
@@ -137,7 +138,7 @@ object Routes {
         val activityId: Int?,
         val id: Int?,
         val text: String? = null
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
@@ -146,24 +147,24 @@ object Routes {
         val parentCommentId: Int = 0,
         val id: Int = 0,
         val text: String? = null,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
     data class MediaActivity(
         val mediaId: Int
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
     data class CurrentFullList(
         val listType: CurrentListType,
-    ): NavKey
+    ): Route
 
     @Serializable
     @Immutable
     data class ReorderFavorites(
         val userId: Int,
         val type: FavoritesType
-    ) : NavKey
+    ) : Route
 }

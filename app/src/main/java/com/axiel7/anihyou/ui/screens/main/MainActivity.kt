@@ -51,6 +51,7 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalHideScores
 import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager.Companion.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
 import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -213,57 +214,56 @@ fun MainView(
     val isBottomDestination by remember {
         derivedStateOf { navigationState.getCurrentRoute()?.isBottomDestination() == true }
     }
-    val navActionManager = NavActionManager.rememberNavActionManager(navigator)
+    val navActionManager = remember { NavActionManager(navigator) }
     val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     LaunchedEffect(isBottomDestination) {
         setNavigationBarContrastEnforced(!isBottomDestination)
     }
 
-    Scaffold(
-        bottomBar = {
+    CompositionLocalProvider(LocalNavActionManager provides navActionManager) {
+        Scaffold(
+            bottomBar = {
+                if (isCompactScreen) {
+                    MainBottomNavBar(
+                        currentTopRoute = navigator.state.topLevelRoute,
+                        isVisible = isBottomDestination,
+                        onItemSelected = { event?.saveLastTab(it) }
+                    )
+                }
+            },
+            contentWindowInsets = if (isCompactScreen) WindowInsets.systemBars
+                .only(WindowInsetsSides.Horizontal)
+            else WindowInsets(0, 0, 0, 0)
+        ) { padding ->
             if (isCompactScreen) {
-                MainBottomNavBar(
-                    navigator = navigator,
-                    navActionManager = navActionManager,
-                    isVisible = isBottomDestination,
-                    onItemSelected = { event?.saveLastTab(it) }
-                )
-            }
-        },
-        contentWindowInsets = if (isCompactScreen) WindowInsets.systemBars
-            .only(WindowInsetsSides.Horizontal)
-        else WindowInsets(0, 0, 0, 0)
-    ) { padding ->
-        if (isCompactScreen) {
-            MainNavigation(
-                navigator = navigator,
-                navActionManager = navActionManager,
-                isCompactScreen = true,
-                isLoggedIn = isLoggedIn,
-                deepLink = deepLink,
-                homeTab = homeTab,
-                padding = padding,
-            )
-        } else {
-            Row(
-                modifier = Modifier.padding(padding)
-            ) {
-                MainNavigationRail(
-                    navigator = navigator,
-                    onItemSelected = { event?.saveLastTab(it) },
-                )
                 MainNavigation(
                     navigator = navigator,
-                    navActionManager = navActionManager,
-                    isCompactScreen = false,
+                    isCompactScreen = true,
                     isLoggedIn = isLoggedIn,
                     deepLink = deepLink,
                     homeTab = homeTab,
+                    padding = padding,
                 )
+            } else {
+                Row(
+                    modifier = Modifier.padding(padding)
+                ) {
+                    MainNavigationRail(
+                        navigator = navigator,
+                        onItemSelected = { event?.saveLastTab(it) },
+                    )
+                    MainNavigation(
+                        navigator = navigator,
+                        isCompactScreen = false,
+                        isLoggedIn = isLoggedIn,
+                        deepLink = deepLink,
+                        homeTab = homeTab,
+                    )
+                }
             }
+            ReportDrawn()
         }
-        ReportDrawn()
     }
 }
 

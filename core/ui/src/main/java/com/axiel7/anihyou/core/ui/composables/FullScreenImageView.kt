@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.FullScreenImage
+import com.axiel7.anihyou.core.ui.common.navigation.Route.FullScreenImage
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import net.engawapg.lib.zoomable.rememberZoomState

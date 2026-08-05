@@ -32,8 +32,8 @@ import com.axiel7.anihyou.core.model.review.userRatingsString
 import com.axiel7.anihyou.core.network.type.ReviewRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -49,8 +49,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReviewDetailsView(
-    arguments: Routes.ReviewDetails,
-    navActionManager: NavActionManager
+    arguments: Route.ReviewDetails,
 ) {
     val viewModel: ReviewDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -58,7 +57,6 @@ fun ReviewDetailsView(
     ReviewDetailsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -67,8 +65,8 @@ fun ReviewDetailsView(
 private fun ReviewDetailsContent(
     uiState: ReviewDetailsUiState,
     event: ReviewDetailsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val isEnglishLocale = LocalIsLanguageEn.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -178,7 +176,6 @@ private fun ReviewDetailsViewPreview() {
             ReviewDetailsContent(
                 uiState = ReviewDetailsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

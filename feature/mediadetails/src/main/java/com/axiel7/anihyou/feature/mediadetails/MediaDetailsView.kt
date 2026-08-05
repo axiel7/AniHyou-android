@@ -72,8 +72,9 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalHideScores
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
@@ -105,8 +106,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaDetailsView(
-    arguments: Routes.MediaDetails,
-    navActionManager: NavActionManager,
+    arguments: Route.MediaDetails,
 ) {
     val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -114,7 +114,6 @@ fun MediaDetailsView(
     MediaDetailsContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -125,8 +124,8 @@ fun MediaDetailsView(
 private fun MediaDetailsContent(
     uiState: MediaDetailsUiState,
     event: MediaDetailsEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -567,7 +566,6 @@ private fun MediaDetailsViewPreview() {
             MediaDetailsContent(
                 uiState = MediaDetailsUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

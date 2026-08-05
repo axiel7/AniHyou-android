@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -54,7 +54,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CurrentFullListView(
     isLoggedIn: Boolean,
     listType: CurrentListType,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CurrentViewModel = koinViewModel()
@@ -65,7 +64,6 @@ fun CurrentFullListView(
         listType = listType,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
         modifier = modifier
     )
 }
@@ -77,9 +75,9 @@ private fun CurrentFullListContent(
     listType: CurrentListType,
     uiState: CurrentUiState,
     event: CurrentEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier
 ) {
+    val navActionManager = LocalNavActionManager.current
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
     val snackbarManager = rememberSnackbarManager()
@@ -203,7 +201,6 @@ private fun CurrentFullListViewPreview() {
                     mangaList = exampleList
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

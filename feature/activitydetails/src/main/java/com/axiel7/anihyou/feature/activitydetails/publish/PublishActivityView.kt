@@ -6,8 +6,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes.PublishActivity
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route.PublishActivity
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.markdown.PublishMarkdownView
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -16,7 +16,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun PublishActivityView(
     arguments: PublishActivity,
-    navActionManager: NavActionManager
 ) {
     val viewModel: PublishActivityViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -25,7 +24,6 @@ fun PublishActivityView(
         arguments = arguments,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -34,8 +32,8 @@ private fun PublishActivityContent(
     arguments: PublishActivity,
     uiState: PublishActivityUiState,
     event: PublishActivityEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     LaunchedEffect(uiState.wasPublished) {
@@ -69,7 +67,6 @@ private fun PublishActivityViewPreview() {
                 ),
                 uiState = PublishActivityUiState(),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -46,8 +46,8 @@ import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -62,10 +62,9 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserMediaListHostView(
-    arguments: Routes.UserMediaList,
+    arguments: Route.UserMediaList,
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
     val key = "${arguments.mediaType}${arguments.userId}"
     val viewModel: UserMediaListViewModel = if (arguments.userId == 0)
@@ -78,7 +77,6 @@ fun UserMediaListHostView(
         event = viewModel,
         isCompactScreen = isCompactScreen,
         modifier = modifier,
-        navActionManager = navActionManager,
     )
 }
 
@@ -89,8 +87,8 @@ private fun UserMediaListHostContent(
     event: UserMediaListEvent?,
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
@@ -254,7 +252,6 @@ private fun UserMediaListViewPreview() {
                 ),
                 event = null,
                 isCompactScreen = true,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

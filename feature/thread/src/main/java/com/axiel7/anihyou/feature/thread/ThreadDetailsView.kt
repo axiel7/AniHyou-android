@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.ANILIST_THREAD_URL
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -37,18 +37,17 @@ import com.axiel7.anihyou.core.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.feature.thread.composables.ParentThreadView
-import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentView
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentViewPlaceholder
+import com.axiel7.anihyou.feature.thread.composables.ParentThreadView
+import com.axiel7.anihyou.feature.thread.composables.ParentThreadViewPlaceholder
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ThreadDetailsView(
-    arguments: Routes.ThreadDetails,
+    arguments: Route.ThreadDetails,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager
 ) {
     val viewModel: ThreadDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,7 +56,6 @@ fun ThreadDetailsView(
         uiState = uiState,
         event = viewModel,
         uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -67,8 +65,8 @@ private fun ThreadDetailsContent(
     uiState: ThreadDetailsUiState,
     event: ThreadDetailsEvent?,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
@@ -198,7 +196,6 @@ private fun ThreadDetailsViewPreview() {
                 uiState = ThreadDetailsUiState(),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

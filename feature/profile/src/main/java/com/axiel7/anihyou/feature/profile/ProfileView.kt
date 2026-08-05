@@ -53,8 +53,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.user.hexColor
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
 import com.axiel7.anihyou.core.ui.composables.TopBannerView
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
@@ -78,10 +79,9 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ProfileView(
-    arguments: Routes.UserDetails,
+    arguments: Route.UserDetails,
     modifier: Modifier = Modifier,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
     val viewModel: ProfileViewModel = if (arguments.id == null && arguments.userName == null)
         koinActivityViewModel { parametersOf(arguments) }
@@ -93,7 +93,6 @@ fun ProfileView(
         event = viewModel,
         modifier = modifier,
         uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -104,8 +103,8 @@ private fun ProfileContent(
     event: ProfileEvent?,
     modifier: Modifier = Modifier,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -351,7 +350,6 @@ private fun ProfileViewPreview() {
                 uiState = ProfileUiState(isMyProfile = false),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -33,8 +33,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.explore.search.SearchContentView
 import com.axiel7.anihyou.feature.explore.search.SearchEvent
@@ -47,17 +47,15 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun ExploreSearchBar(
     isLoggedIn: Boolean,
-    navActionManager: NavActionManager
 ) {
     val viewModel: SearchViewModel = koinViewModel {
-        parametersOf(Routes.Search(), isLoggedIn)
+        parametersOf(Route.Search(), isLoggedIn)
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ExploreSearchBarContent(
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
     )
 }
 
@@ -66,8 +64,8 @@ fun ExploreSearchBar(
 private fun ExploreSearchBarContent(
     uiState: SearchUiState,
     event: SearchEvent?,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val performSearch = remember { mutableStateOf(false) }
@@ -165,7 +163,6 @@ private fun ExploreSearchBarContent(
                 initialTag = null,
                 uiState = uiState,
                 event = event,
-                navActionManager = navActionManager,
             )
         }
     }
@@ -183,7 +180,6 @@ fun ExploreSearchBarPreview() {
                     isLoggedIn = false,
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

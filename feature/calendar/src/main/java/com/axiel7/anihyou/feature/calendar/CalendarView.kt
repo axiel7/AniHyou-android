@@ -51,8 +51,8 @@ import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.SnackbarManager
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.TabRowWithPager
@@ -70,7 +70,6 @@ import java.time.LocalDate
 @Composable
 fun CalendarView(
     isLoggedIn: Boolean,
-    navActionManager: NavActionManager
 ) {
     val viewModel: CalendarHostViewModel = koinViewModel()
     val onMyList by viewModel.onMyList.collectAsStateWithLifecycle(initialValue = null)
@@ -79,7 +78,6 @@ fun CalendarView(
         isLoggedIn = isLoggedIn,
         onMyList = onMyList,
         onMyListChanged = viewModel::onMyListChanged,
-        navActionManager = navActionManager
     )
 }
 
@@ -89,8 +87,8 @@ private fun CalendarViewContent(
     isLoggedIn: Boolean,
     onMyList: Boolean?,
     onMyListChanged: (Boolean?) -> Unit,
-    navActionManager: NavActionManager
 ) {
+    val navActionManager = LocalNavActionManager.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
@@ -141,7 +139,6 @@ private fun CalendarViewContent(
                 uiState = uiState,
                 events = viewModel,
                 showEditSheet = showEditSheet,
-                navActionManager = navActionManager,
                 modifier = Modifier
                     .fillMaxHeight()
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
@@ -163,8 +160,8 @@ private fun CalendarDayView(
     showEditSheet: MutableState<Boolean>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val haptic = LocalHapticFeedback.current
 
@@ -308,7 +305,6 @@ private fun CalendarViewPreview() {
                 uiState = CalendarUiState(),
                 events = null,
                 showEditSheet = remember { mutableStateOf(false) },
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

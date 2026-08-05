@@ -31,8 +31,8 @@ import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
@@ -45,9 +45,8 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaActivityView(
-    arguments: Routes.MediaActivity,
+    arguments: Route.MediaActivity,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager
 ) {
     val viewModel: MediaActivityViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -56,7 +55,6 @@ fun MediaActivityView(
         uiState = uiState,
         event = viewModel,
         uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -66,8 +64,8 @@ private fun MediaActivityContent(
     uiState: MediaActivityUiState,
     event: MediaActivityEvent?,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -169,7 +167,6 @@ private fun MediaActivityViewPreview() {
                 uiState = MediaActivityUiState(),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

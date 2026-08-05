@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
-import com.axiel7.anihyou.core.ui.common.navigation.Routes
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -17,7 +17,7 @@ import org.koin.core.annotation.InjectedParam
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationsViewModel(
-    @InjectedParam arguments: Routes.Notifications,
+    @InjectedParam arguments: Route.Notifications,
     private val notificationRepository: NotificationRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
 
