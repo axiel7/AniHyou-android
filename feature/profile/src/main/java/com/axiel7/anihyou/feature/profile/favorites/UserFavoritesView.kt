@@ -39,7 +39,7 @@ import androidx.navigation3.runtime.result.ResultEventBus
 import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -53,7 +53,6 @@ fun UserFavoritesView(
     userId: Int,
     isMyProfile: Boolean,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
     val viewModel: UserFavoritesViewModel = koinViewModel(key = userId.toString()) {
         parametersOf(userId, isMyProfile)
@@ -64,7 +63,6 @@ fun UserFavoritesView(
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
-        navActionManager = navActionManager,
     )
 }
 
@@ -74,8 +72,8 @@ private fun UserFavoritesContent(
     uiState: UserFavoritesUiState,
     event: UserFavoritesEvent?,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
@@ -184,7 +182,6 @@ private fun UserFavoritesViewPreview() {
                 UserFavoritesContent(
                     uiState = UserFavoritesUiState(userId = 0, isMyProfile = true),
                     event = null,
-                    navActionManager = NavActionManager.rememberNavActionManager()
                 )
             }
         }

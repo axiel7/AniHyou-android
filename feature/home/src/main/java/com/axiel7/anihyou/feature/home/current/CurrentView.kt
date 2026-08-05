@@ -44,7 +44,7 @@ import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
@@ -59,7 +59,6 @@ import org.koin.compose.viewmodel.koinActivityViewModel
 @Composable
 fun CurrentView(
     isLoggedIn: Boolean,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CurrentViewModel = koinActivityViewModel()
@@ -69,7 +68,6 @@ fun CurrentView(
         isLoggedIn = isLoggedIn,
         uiState = uiState,
         event = viewModel,
-        navActionManager = navActionManager,
         modifier = modifier,
     )
 }
@@ -80,9 +78,9 @@ private fun CurrentContent(
     isLoggedIn: Boolean,
     uiState: CurrentUiState,
     event: CurrentEvent?,
-    navActionManager: NavActionManager,
     modifier: Modifier = Modifier,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
     val snackbarManager = rememberSnackbarManager()
@@ -248,7 +246,6 @@ private fun CurrentViewPreview() {
                     mangaList = exampleList
                 ),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager(),
             )
         }
     }

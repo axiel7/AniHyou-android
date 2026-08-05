@@ -551,7 +551,6 @@ fun MediaInfoTabs(
                 }
                 ReviewThreadListView(
                     uiState = uiState,
-                    navActionManager = navActionManager,
                 )
             }
         }

@@ -26,7 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -42,7 +42,6 @@ import org.koin.compose.viewmodel.koinActivityViewModel
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
     val viewModel: ActivityFeedViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,7 +51,6 @@ fun ActivityFeedView(
         uiState = uiState,
         event = viewModel,
         uriHandler = uriHandler,
-        navActionManager = navActionManager,
     )
 }
 
@@ -63,8 +61,8 @@ private fun ActivityFeedContent(
     uiState: ActivityFeedUiState,
     event: ActivityFeedEvent?,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
 
@@ -191,7 +189,6 @@ private fun ActivityFeedViewPreview() {
                 uiState = ActivityFeedUiState(),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

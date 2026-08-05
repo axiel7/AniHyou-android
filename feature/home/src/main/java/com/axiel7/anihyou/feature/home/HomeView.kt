@@ -118,7 +118,6 @@ fun HomeView(
                         ActivityFeedView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             uriHandler = uriHandler,
-                            navActionManager = navActionManager,
                         )
                     } else {
                         LoginView()
@@ -129,7 +128,6 @@ fun HomeView(
                     if (isLoggedIn) {
                         CurrentView(
                             isLoggedIn = true,
-                            navActionManager = navActionManager,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                         )
                     } else {

@@ -30,7 +30,7 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.post.POST_ITEM_HEIGHT
@@ -44,8 +44,8 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun ReviewThreadListView(
     uiState: MediaDetailsUiState,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val reviewsListState = rememberLazyGridState()
     val threadsListState = rememberLazyListState()
     val activityListState = rememberLazyListState()
@@ -208,7 +208,6 @@ private fun ReviewThreadListViewPreview() {
                     isLoadingReviews = true,
                     isLoadingThreads = true
                 ),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -71,7 +71,7 @@ sealed class BottomDestination(
 
         val railValues = listOf(Home, AnimeList, MangaList, Profile)
 
-        fun Int.toBottomDestinationRoute(): NavKey? = values.find { it.index == this }?.route
+        fun Int.toBottomDestinationRoute(): Route? = values.find { it.index == this }?.route
 
         fun NavKey.isBottomDestination() = values.any { it.route == this }
 

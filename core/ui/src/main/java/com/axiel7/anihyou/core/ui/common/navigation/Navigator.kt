@@ -16,14 +16,13 @@
 package com.axiel7.anihyou.core.ui.common.navigation
 
 import androidx.compose.runtime.Stable
-import androidx.navigation3.runtime.NavKey
 
 /**
  * Handles navigation events (forward and back) by updating the navigation state.
  */
 @Stable
 class Navigator(val state: NavigationState) : INavigator {
-    override fun navigate(route: NavKey) {
+    override fun navigate(route: Route) {
         if (route in state.backStacks.keys) {
             // This is a top level route, just switch to it
             state.topLevelRoute = route

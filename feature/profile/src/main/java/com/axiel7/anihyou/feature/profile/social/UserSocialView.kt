@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -38,7 +38,6 @@ import org.koin.core.parameter.parametersOf
 fun UserSocialView(
     userId: Int,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
     val viewModel: UserSocialViewModel = koinViewModel {
         parametersOf(userId)
@@ -49,7 +48,6 @@ fun UserSocialView(
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
-        navActionManager = navActionManager,
     )
 }
 
@@ -59,8 +57,8 @@ private fun UserSocialContent(
     uiState: UserSocialUiState,
     event: UserSocialEvent?,
     modifier: Modifier = Modifier,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyGridState()
     if (!uiState.isLoading) {
@@ -160,7 +158,6 @@ private fun UserSocialViewPreview() {
             UserSocialContent(
                 uiState = UserSocialUiState(userId = 0),
                 event = null,
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

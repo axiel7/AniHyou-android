@@ -22,7 +22,7 @@ import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.UserActivityQuery
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
@@ -39,8 +39,8 @@ fun UserActivityView(
     event: ProfileEvent?,
     modifier: Modifier = Modifier,
     uriHandler: MarkdownUriHandler,
-    navActionManager: NavActionManager,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val pullRefreshState = rememberPullToRefreshState()
     val listState = rememberLazyListState()
@@ -182,7 +182,6 @@ private fun UserActivityViewPreview() {
                 uiState = ProfileUiState(isMyProfile = false),
                 event = null,
                 uriHandler = MarkdownUriHandler(),
-                navActionManager = NavActionManager.rememberNavActionManager()
             )
         }
     }

@@ -217,7 +217,6 @@ private fun ProfileContent(
                             event = event,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             uriHandler = uriHandler,
-                            navActionManager = navActionManager,
                         )
                     }
 
@@ -225,7 +224,6 @@ private fun ProfileContent(
                         UserStatsView(
                             userId = uiState.userInfo.id,
                             nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
-                            navActionManager = navActionManager,
                         )
 
                     ProfileInfoType.FAVORITES ->
@@ -233,14 +231,12 @@ private fun ProfileContent(
                             userId = uiState.userInfo.id,
                             isMyProfile = uiState.isMyProfile,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navActionManager = navActionManager,
                         )
 
                     ProfileInfoType.SOCIAL ->
                         UserSocialView(
                             userId = uiState.userInfo.id,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            navActionManager = navActionManager,
                         )
                 }
             }
