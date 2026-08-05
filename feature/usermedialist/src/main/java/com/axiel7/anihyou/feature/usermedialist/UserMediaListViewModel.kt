@@ -340,7 +340,7 @@ class UserMediaListViewModel(
             .onEach { result ->
                 mutableUiState.update { uiState ->
                     if (result is PagedResult.Success) {
-                        if (result.currentPage == 1) {
+                        if (result.currentPage == 1 || result.currentPage == null) {
                             uiState.lists.clear()
                             uiState.entries.clear()
                         }
