@@ -24,10 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.thread.ChildComment
+import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -56,6 +58,10 @@ fun ThreadCommentDetailsView(
     val viewModel: ThreadCommentViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+
+    ResultEffect<CommonThreadComment> {
+        viewModel.onCommentPublished(it)
+    }
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",

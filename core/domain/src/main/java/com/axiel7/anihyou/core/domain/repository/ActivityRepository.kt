@@ -55,7 +55,7 @@ class ActivityRepository(
         .updateTextActivityMutation(id, text)
         .execute()
         .asDataResult {
-            it.SaveTextActivity?.onTextActivity
+            it.SaveTextActivity?.onTextActivity?.textActivityFragment
         }
 
     suspend fun updateActivityReply(

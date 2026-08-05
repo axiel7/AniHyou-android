@@ -2,10 +2,11 @@ package com.axiel7.anihyou.feature.thread.publish
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
 
 @Immutable
 data class PublishCommentUiState(
-    val wasPublished: Boolean? = null,
+    val savedComment: CommonThreadComment? = null,
     override val error: String? = null,
     override val isLoading: Boolean = false,
 ) : UiState() {

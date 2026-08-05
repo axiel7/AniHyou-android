@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route.PublishActivity
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -34,10 +35,21 @@ private fun PublishActivityContent(
     event: PublishActivityEvent?,
 ) {
     val navActionManager = LocalNavActionManager.current
+    val eventBus = LocalResultEventBus.current
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
-    LaunchedEffect(uiState.wasPublished) {
-        if (uiState.wasPublished == true) navActionManager.goBack()
+    LaunchedEffect(uiState.activity) {
+        if (uiState.activity != null) {
+            eventBus.sendResult(uiState.activity)
+            navActionManager.goBack()
+        }
+    }
+
+    LaunchedEffect(uiState.reply) {
+        if (uiState.reply != null) {
+            eventBus.sendResult(uiState.reply)
+            navActionManager.goBack()
+        }
     }
 
     PublishMarkdownView(

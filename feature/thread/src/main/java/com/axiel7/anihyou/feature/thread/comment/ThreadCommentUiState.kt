@@ -3,9 +3,11 @@ package com.axiel7.anihyou.feature.thread.comment
 import androidx.compose.runtime.Stable
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.TranslatorApp
+import com.axiel7.anihyou.core.model.thread.ChildComment
 
 @Stable
 data class ThreadCommentUiState(
+    val childComment: ChildComment,
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val isLiked: Boolean = false,
     override val error: String? = null,

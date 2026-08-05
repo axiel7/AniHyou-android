@@ -23,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.model.activity.text
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -66,6 +68,10 @@ private fun ActivityFeedContent(
     listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
+    ResultEffect<TextActivityFragment> {
+        event?.refreshList()
+    }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,

@@ -13,8 +13,8 @@ class PublishCommentViewModel(
 
     override val initialState = PublishCommentUiState()
 
-    override fun setWasPublished(value: Boolean) {
-        mutableUiState.update { it.copy(wasPublished = value) }
+    override fun setPublished() {
+        mutableUiState.update { it.copy(savedComment = null) }
     }
 
     override fun publishThreadComment(
@@ -34,7 +34,7 @@ class PublishCommentViewModel(
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            wasPublished = result.data != null
+                            savedComment = result.data,
                         )
                     } else {
                         result.toUiState()

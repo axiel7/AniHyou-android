@@ -1,7 +1,7 @@
 package com.axiel7.anihyou.core.model.thread
 
 import androidx.compose.runtime.Stable
-import com.axiel7.anihyou.core.network.ChildCommentsQuery
+import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
 import kotlinx.serialization.Serializable
 
 // This model is necessary because AniList API returns a JSON string for the `childComments` query
@@ -69,7 +69,7 @@ data class ChildComment(
             null
         }
 
-        fun ChildCommentsQuery.ThreadComment.toChildComment() =
+        fun CommonThreadComment.toChildComment() =
             ChildComment(
                 id = id,
                 comment = comment,

@@ -34,7 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.model.activity.text
+import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -81,6 +83,8 @@ private fun ActivityDetailsContent(
             listState.firstVisibleItemIndex == 0
         }
     }
+
+    ResultEffect<ActivityReplyFragment> { event?.refresh() }
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 

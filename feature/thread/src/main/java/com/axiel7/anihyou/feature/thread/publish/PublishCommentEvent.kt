@@ -5,7 +5,7 @@ import com.axiel7.anihyou.core.base.event.UiEvent
 
 @Immutable
 interface PublishCommentEvent: UiEvent {
-    fun setWasPublished(value: Boolean)
+    fun setPublished()
 
     fun publishThreadComment(
         threadId: Int?,
