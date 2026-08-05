@@ -44,5 +44,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.material3)
 
+    testImplementation(libs.junit)
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
