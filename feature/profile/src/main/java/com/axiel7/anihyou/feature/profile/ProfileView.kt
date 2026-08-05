@@ -63,7 +63,6 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -81,7 +80,6 @@ import org.koin.core.parameter.parametersOf
 fun ProfileView(
     arguments: Route.UserDetails,
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
 ) {
     val viewModel: ProfileViewModel = if (arguments.id == null && arguments.userName == null)
         koinActivityViewModel { parametersOf(arguments) }
@@ -92,7 +90,6 @@ fun ProfileView(
         uiState = uiState,
         event = viewModel,
         modifier = modifier,
-        uriHandler = uriHandler,
     )
 }
 
@@ -102,7 +99,6 @@ private fun ProfileContent(
     uiState: ProfileUiState,
     event: ProfileEvent?,
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -216,7 +212,6 @@ private fun ProfileContent(
                             uiState = uiState,
                             event = event,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            uriHandler = uriHandler,
                         )
                     }
 
@@ -345,7 +340,6 @@ private fun ProfileViewPreview() {
             ProfileContent(
                 uiState = ProfileUiState(isMyProfile = false),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

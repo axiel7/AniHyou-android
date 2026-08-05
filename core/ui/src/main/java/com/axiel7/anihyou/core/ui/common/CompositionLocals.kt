@@ -4,6 +4,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.PreviewNavigator
+import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.utils.LocaleUtils.getCurrentLanguageTag
 
 val LocalNavActionManager = staticCompositionLocalOf { NavActionManager(PreviewNavigator()) }
@@ -17,3 +18,5 @@ val LocalBlurAdult = staticCompositionLocalOf { true }
 val LocalScoreFormat = staticCompositionLocalOf { ScoreFormat.POINT_10_DECIMAL }
 
 val LocalHideScores = staticCompositionLocalOf { false }
+
+val LocalMarkdownUriHandler = staticCompositionLocalOf { MarkdownUriHandler() }

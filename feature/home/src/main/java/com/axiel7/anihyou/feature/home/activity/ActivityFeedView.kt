@@ -31,7 +31,6 @@ import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingFilterChip
@@ -41,7 +40,6 @@ import org.koin.compose.viewmodel.koinActivityViewModel
 @Composable
 fun ActivityFeedView(
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
 ) {
     val viewModel: ActivityFeedViewModel = koinActivityViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,7 +48,6 @@ fun ActivityFeedView(
         modifier = modifier,
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
     )
 }
 
@@ -60,7 +57,6 @@ private fun ActivityFeedContent(
     modifier: Modifier = Modifier,
     uiState: ActivityFeedUiState,
     event: ActivityFeedEvent?,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
@@ -147,7 +143,6 @@ private fun ActivityFeedContent(
                         onClickMedia = {
                             it.media?.id?.let(navActionManager::toMediaDetails)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -171,7 +166,6 @@ private fun ActivityFeedContent(
                         onClickLike = {
                             event?.toggleLikeActivity(it.id)
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -188,7 +182,6 @@ private fun ActivityFeedViewPreview() {
             ActivityFeedContent(
                 uiState = ActivityFeedUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

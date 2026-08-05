@@ -32,7 +32,6 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.staffdetails.content.StaffCharacterView
@@ -45,7 +44,6 @@ import org.koin.core.parameter.parametersOf
 fun StaffDetailsView(
     isLoggedIn: Boolean,
     arguments: Route.StaffDetails,
-    uriHandler: MarkdownUriHandler,
 ) {
     val viewModel: StaffDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -54,7 +52,6 @@ fun StaffDetailsView(
         isLoggedIn = isLoggedIn,
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
     )
 }
 
@@ -64,7 +61,6 @@ private fun StaffDetailsContent(
     isLoggedIn: Boolean,
     uiState: StaffDetailsUiState,
     event: StaffDetailsEvent?,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     val snackbarManager = rememberSnackbarManager()
@@ -131,7 +127,6 @@ private fun StaffDetailsContent(
                         contentPadding = PaddingValues(
                             bottom = padding.calculateBottomPadding()
                         ),
-                        uriHandler = uriHandler,
                         navigateToFullscreenImage = navActionManager::toFullscreenImage
                     )
 
@@ -187,7 +182,6 @@ private fun StaffDetailsViewPreview() {
                 isLoggedIn = true,
                 uiState = StaffDetailsUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

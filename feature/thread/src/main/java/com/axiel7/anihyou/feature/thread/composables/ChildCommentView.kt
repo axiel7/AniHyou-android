@@ -34,7 +34,6 @@ import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ReplyButton
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
@@ -50,7 +49,6 @@ fun ChildCommentView(
     navigateToUserDetails: () -> Unit,
     navigateToDetails: (ChildComment) -> Unit,
     navigateToPublishReply: (parentCommentId: Int, Int?, String?) -> Unit,
-    uriHandler: MarkdownUriHandler,
 ) {
     val isEnglishLocale = LocalIsLanguageEn.current
     val scope = rememberCoroutineScope()
@@ -96,7 +94,6 @@ fun ChildCommentView(
                 markdown = comment.comment.orEmpty(),
                 modifier = Modifier.padding(vertical = 8.dp),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                uriHandler = uriHandler,
             )
             Row(
                 modifier = Modifier.align(Alignment.End),
@@ -150,7 +147,6 @@ private fun ChildCommentViewPreview() {
                 navigateToUserDetails = {},
                 navigateToDetails = {},
                 navigateToPublishReply = { _, _, _ -> },
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

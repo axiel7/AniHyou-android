@@ -35,7 +35,6 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.NotificationIconButton
 import com.axiel7.anihyou.core.ui.composables.common.OpenInBrowserIconButton
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentView
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentViewPlaceholder
@@ -47,7 +46,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun ThreadDetailsView(
     arguments: Route.ThreadDetails,
-    uriHandler: MarkdownUriHandler,
 ) {
     val viewModel: ThreadDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,7 +53,6 @@ fun ThreadDetailsView(
     ThreadDetailsContent(
         uiState = uiState,
         event = viewModel,
-        uriHandler = uriHandler,
     )
 }
 
@@ -64,7 +61,6 @@ fun ThreadDetailsView(
 private fun ThreadDetailsContent(
     uiState: ThreadDetailsUiState,
     event: ThreadDetailsEvent?,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
@@ -135,7 +131,6 @@ private fun ThreadDetailsContent(
                                 )
                             },
                             navigateToUserDetails = navActionManager::toUserDetails,
-                            uriHandler = uriHandler,
                         )
                     } else {
                         ParentThreadViewPlaceholder()
@@ -172,7 +167,6 @@ private fun ThreadDetailsContent(
                                 )
                             }
                         },
-                        uriHandler = uriHandler,
                     )
                     HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
                 }
@@ -195,7 +189,6 @@ private fun ThreadDetailsViewPreview() {
             ThreadDetailsContent(
                 uiState = ThreadDetailsUiState(),
                 event = null,
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

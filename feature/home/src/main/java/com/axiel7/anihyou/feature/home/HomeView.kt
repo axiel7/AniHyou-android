@@ -33,7 +33,6 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.IconButtonWithBadge
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.feature.home.activity.ActivityFeedView
 import com.axiel7.anihyou.feature.home.current.CurrentView
 import com.axiel7.anihyou.feature.login.LoginView
@@ -45,7 +44,6 @@ fun HomeView(
     isLoggedIn: Boolean,
     defaultHomeTab: HomeTab,
     modifier: Modifier = Modifier,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     val viewModel: HomeViewModel = koinActivityViewModel()
@@ -117,7 +115,6 @@ fun HomeView(
                     if (isLoggedIn) {
                         ActivityFeedView(
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            uriHandler = uriHandler,
                         )
                     } else {
                         LoginView()

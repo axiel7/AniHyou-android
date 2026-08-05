@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.core.ui.common.LocalMarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.MarkdownUtils.formatCompatibleMarkdown
@@ -28,7 +29,7 @@ fun DefaultMarkdownText(
     markdown: String?,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    uriHandler: MarkdownUriHandler,
+    uriHandler: MarkdownUriHandler = LocalMarkdownUriHandler.current,
 ) {
     CompositionLocalProvider(LocalUriHandler provides uriHandler) {
         Markdown(

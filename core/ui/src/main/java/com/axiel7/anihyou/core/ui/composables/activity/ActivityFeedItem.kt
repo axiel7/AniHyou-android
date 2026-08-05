@@ -23,7 +23,6 @@ import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -50,7 +49,6 @@ fun ActivityFeedItem(
     onClickLike: () -> Unit,
     onClickMedia: () -> Unit = {},
     onClickDelete: () -> Unit = {},
-    uriHandler: MarkdownUriHandler,
 ) {
     ListItem(
         onClick = onClick,
@@ -126,7 +124,6 @@ fun ActivityFeedItem(
             DefaultMarkdownText(
                 markdown = text,
                 modifier = Modifier.padding(bottom = 4.dp),
-                uriHandler = uriHandler,
             )
         } else {
             Text(
@@ -158,7 +155,6 @@ private fun MediaActivityItemPreview() {
                 onClickUser = {},
                 onClickLike = {},
                 onClickMedia = {},
-                uriHandler = MarkdownUriHandler(),
             )
         }
     }

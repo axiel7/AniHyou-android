@@ -40,7 +40,6 @@ import com.axiel7.anihyou.core.ui.composables.common.ReplyButton
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
-import com.axiel7.anihyou.core.ui.composables.markdown.MarkdownUriHandler
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
@@ -52,7 +51,6 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun ThreadCommentDetailsView(
     arguments: Route.ThreadCommentDetails,
-    uriHandler: MarkdownUriHandler,
 ) {
     val navActionManager = LocalNavActionManager.current
     val viewModel: ThreadCommentViewModel = koinViewModel()
@@ -81,7 +79,6 @@ fun ThreadCommentDetailsView(
             },
             navigateToDetails = navActionManager::toThreadCommentDetails,
             navigateToPublishReply = navActionManager::toPublishThreadComment,
-            uriHandler = uriHandler,
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(scrollState),
@@ -105,7 +102,6 @@ fun ThreadCommentView(
     navigateToUserDetails: () -> Unit,
     navigateToDetails: (ChildComment) -> Unit,
     navigateToPublishReply: (parentCommentId: Int, Int?, String?) -> Unit,
-    uriHandler: MarkdownUriHandler,
     modifier: Modifier = Modifier,
 ) {
     val isEnglishLocale = LocalIsLanguageEn.current
@@ -145,7 +141,6 @@ fun ThreadCommentView(
             markdown = body,
             modifier = Modifier.padding(vertical = 8.dp),
             textStyle = MaterialTheme.typography.bodyMedium,
-            uriHandler = uriHandler,
         )
         Row(
             modifier = Modifier.align(Alignment.End)
@@ -180,7 +175,6 @@ fun ThreadCommentView(
                 navigateToUserDetails = navigateToUserDetails,
                 navigateToDetails = navigateToDetails,
                 navigateToPublishReply = navigateToPublishReply,
-                uriHandler = uriHandler,
             )
         }
     }
@@ -246,7 +240,6 @@ private fun ThreadCommentViewPreview() {
                     navigateToUserDetails = {},
                     navigateToDetails = {},
                     navigateToPublishReply = { _, _, _ -> },
-                    uriHandler = MarkdownUriHandler(),
                 )
                 ThreadCommentViewPlaceholder()
             }

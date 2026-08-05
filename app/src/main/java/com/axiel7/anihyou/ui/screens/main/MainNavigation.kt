@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.ui.common.LocalMarkdownUriHandler
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
 import com.axiel7.anihyou.core.ui.common.navigation.Route
@@ -161,7 +163,6 @@ fun MainNavigation(
                 isLoggedIn = isLoggedIn,
                 defaultHomeTab = homeTab,
                 modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -204,7 +205,6 @@ fun MainNavigation(
                 ProfileView(
                     arguments = Route.UserDetails(null, null),
                     modifier = if (isCompactScreen) Modifier.padding(bottom = bottomPadding) else Modifier,
-                    uriHandler = markdownUriHandler,
                 )
             } else {
                 LoginView(
@@ -226,7 +226,6 @@ fun MainNavigation(
         entry<Route.UserDetails> {
             ProfileView(
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -286,7 +285,6 @@ fun MainNavigation(
             CharacterDetailsView(
                 isLoggedIn = isLoggedIn,
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -294,7 +292,6 @@ fun MainNavigation(
             StaffDetailsView(
                 isLoggedIn = isLoggedIn,
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -307,14 +304,12 @@ fun MainNavigation(
         entry<Route.ThreadDetails> {
             ThreadDetailsView(
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
         entry<Route.ThreadCommentDetails> {
             ThreadCommentDetailsView(
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -351,7 +346,6 @@ fun MainNavigation(
         entry<Route.ActivityDetails> {
             ActivityDetailsView(
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -378,7 +372,6 @@ fun MainNavigation(
         entry<Route.MediaActivity> {
             MediaActivityView(
                 arguments = it,
-                uriHandler = markdownUriHandler,
             )
         }
 
@@ -396,30 +389,32 @@ fun MainNavigation(
         }
     }
 
-    NavDisplay(
-        entries = navigator.state.toDecoratedEntries(entryProvider),
-        modifier = Modifier.padding(
-            start = padding.calculateStartPadding(LocalLayoutDirection.current),
-            top = padding.calculateTopPadding(),
-            end = padding.calculateEndPadding(LocalLayoutDirection.current),
-        ),
-        transitionSpec = {
-            // Slide in from right when navigating forward
-            (slideInHorizontally(initialOffsetX = { it })) togetherWith
-                    (slideOutHorizontally(targetOffsetX = { -it })
-                            + fadeOut(animationSpec = tween()))
-        },
-        popTransitionSpec = {
-            // Slide in from left when navigating back
-            (slideInHorizontally(initialOffsetX = { -it }) + fadeIn()) togetherWith
-                    slideOutHorizontally(targetOffsetX = { it })
-        },
-        predictivePopTransitionSpec = {
-            // Slide in from left when navigating back
-            (slideInHorizontally(initialOffsetX = { -it })
-                    + fadeIn(animationSpec = tween())) togetherWith
-                    (slideOutHorizontally(targetOffsetX = { it }))
-        },
-        onBack = navigator::goBack,
-    )
+    CompositionLocalProvider(LocalMarkdownUriHandler provides markdownUriHandler) {
+        NavDisplay(
+            entries = navigator.state.toDecoratedEntries(entryProvider),
+            modifier = Modifier.padding(
+                start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                top = padding.calculateTopPadding(),
+                end = padding.calculateEndPadding(LocalLayoutDirection.current),
+            ),
+            transitionSpec = {
+                // Slide in from right when navigating forward
+                (slideInHorizontally(initialOffsetX = { it })) togetherWith
+                        (slideOutHorizontally(targetOffsetX = { -it })
+                                + fadeOut(animationSpec = tween()))
+            },
+            popTransitionSpec = {
+                // Slide in from left when navigating back
+                (slideInHorizontally(initialOffsetX = { -it }) + fadeIn()) togetherWith
+                        slideOutHorizontally(targetOffsetX = { it })
+            },
+            predictivePopTransitionSpec = {
+                // Slide in from left when navigating back
+                (slideInHorizontally(initialOffsetX = { -it })
+                        + fadeIn(animationSpec = tween())) togetherWith
+                        (slideOutHorizontally(targetOffsetX = { it }))
+            },
+            onBack = navigator::goBack,
+        )
+    }
 }
