@@ -59,6 +59,7 @@ import com.axiel7.anihyou.feature.settings.SettingsView
 import com.axiel7.anihyou.feature.settings.TranslationsView
 import com.axiel7.anihyou.feature.settings.customlists.CustomListsView
 import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsView
+import com.axiel7.anihyou.feature.settings.priority_colors.PriorityColorView
 import com.axiel7.anihyou.feature.staffdetails.StaffDetailsView
 import com.axiel7.anihyou.feature.studiodetails.StudioDetailsView
 import com.axiel7.anihyou.feature.thread.ThreadDetailsView
@@ -386,6 +387,10 @@ fun MainNavigation(
             ReorderFavoritesView(
                 arguments = it,
             )
+        }
+
+        entry<Route.PriorityColors> {
+            PriorityColorView()
         }
     }
 

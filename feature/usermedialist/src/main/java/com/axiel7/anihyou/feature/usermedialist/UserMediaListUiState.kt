@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.usermedialist
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
@@ -22,6 +23,9 @@ data class UserMediaListUiState(
     val status: MediaListStatus? = null,
     val isMyList: Boolean = true,
     val showLowPriority: Boolean = false,
+    val lowPriorityColor: Color = Color.Green,
+    val mediumPriorityColor: Color = Color.Yellow,
+    val highPriorityColor: Color = Color.Red,
     val userId: Int? = null,
     val selectedItem: CommonMediaListEntry? = null,
     val sort: MediaListSort = MediaListSort.UPDATED_TIME_DESC,

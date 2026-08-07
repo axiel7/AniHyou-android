@@ -20,6 +20,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -60,6 +61,9 @@ fun StandardUserMediaListItem(
     isMyList: Boolean,
     isPlusEnabled: Boolean,
     showLowPriority: Boolean,
+    lowPriorityColor: Color? = null,
+    mediumPriorityColor: Color? = null,
+    highPriorityColor: Color? = null,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -69,7 +73,6 @@ fun StandardUserMediaListItem(
     val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     val priority = item.basicMediaListEntry.priority
-    val correctStatus: Boolean = item.basicMediaListEntry.status == MediaListStatus.PLANNING || item.basicMediaListEntry.status == MediaListStatus.CURRENT
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -100,10 +103,13 @@ fun StandardUserMediaListItem(
                         scoreFormat = scoreFormat
                     )
                 }
-                if (priority != null && (priority > 0 || showLowPriority) && correctStatus) {
+                if (priority != null && (priority > 0 || showLowPriority)) {
                     PriorityIndicator(
                         modifier = Modifier.align(Alignment.TopEnd),
-                        priority = priority
+                        priority = priority,
+                        lowPriorityColor = lowPriorityColor,
+                        mediumPriorityColor = mediumPriorityColor,
+                        highPriorityColor = highPriorityColor,
                     )
                 }
             }

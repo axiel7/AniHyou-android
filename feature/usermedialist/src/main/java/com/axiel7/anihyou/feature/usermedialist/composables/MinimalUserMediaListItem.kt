@@ -57,7 +57,6 @@ fun MinimalUserMediaListItem(
 ) {
     val status = listStatus ?: item.basicMediaListEntry.status
     val priority = item.basicMediaListEntry.priority
-    val correctStatus: Boolean = item.basicMediaListEntry.status == MediaListStatus.PLANNING || item.basicMediaListEntry.status == MediaListStatus.CURRENT
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -122,7 +121,7 @@ fun MinimalUserMediaListItem(
                         modifier = Modifier.size(20.dp),
                     )
                 }
-                if (priority != null && (priority > 0 || showLowPriority) && correctStatus) {
+                if (priority != null && (priority > 0 || showLowPriority)) {
                     val iconId = when (priority) {
                         0 -> R.drawable.counter_0_24
                         1 -> R.drawable.counter_1_24

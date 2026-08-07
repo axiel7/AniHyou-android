@@ -31,6 +31,7 @@ import com.axiel7.anihyou.core.model.smileyOnPrimaryColor
 import com.axiel7.anihyou.core.model.smileyPrimaryColor
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
+import com.materialkolor.ktx.harmonize
 
 @Composable
 fun BadgeScoreIndicator(
@@ -181,7 +182,10 @@ fun MinimalScoreIndicator(
 @Composable
 fun PriorityIndicator(
     modifier: Modifier,
-    priority: Int
+    priority: Int,
+    lowPriorityColor: Color? = null,
+    mediumPriorityColor: Color? = null,
+    highPriorityColor: Color? = null,
 ) {
     val shape = RoundedCornerShape(topEnd = 8.dp, bottomStart = 16.dp)
     val iconId = when (priority) {
@@ -190,15 +194,19 @@ fun PriorityIndicator(
         2 -> R.drawable.counter_2_24
         else -> R.drawable.cancel_24 // invalid priority was set
     }
+    val backgroundColor = when (priority) {
+        0 -> lowPriorityColor ?: MaterialTheme.colorScheme.secondaryContainer
+        1 -> mediumPriorityColor ?: MaterialTheme.colorScheme.secondaryContainer
+        2 -> highPriorityColor ?: MaterialTheme.colorScheme.secondaryContainer
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }
     val icon = painterResource(iconId)
 
 
     Row(
         modifier = modifier
             .clip(shape)
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer
-            )
+            .background(backgroundColor.harmonize(MaterialTheme.colorScheme.primary))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -206,7 +214,7 @@ fun PriorityIndicator(
             painter = icon,
             contentDescription = stringResource(R.string.priority),
             modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.secondaryContainer
         )
     }
 }

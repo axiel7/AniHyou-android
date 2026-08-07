@@ -218,6 +218,10 @@ class NavActionManager(
         navigator.navigate(Route.Contributors)
     }
 
+    fun toPriorityColors() {
+        navigator.navigate(Route.PriorityColors)
+    }
+
     companion object {
         @Composable
         fun rememberNavActionManager(

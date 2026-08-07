@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
@@ -286,6 +287,24 @@ class UserMediaListViewModel(
             .distinctUntilChanged()
             .onEach { value ->
                 mutableUiState.update { it.copy(showLowPriority = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorLowPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(lowPriorityColor = Color(color)) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorMediumPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(mediumPriorityColor = Color(color)) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorHighPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(highPriorityColor = Color(color)) }
             }
             .launchIn(viewModelScope)
 

@@ -94,6 +94,25 @@ class DefaultPreferencesRepository (
         dataStore.setValue(SHOW_LOW_PRIORITY, value)
     }
 
+    // temporary hardcoded colors
+    val colorLowPriority = dataStore.getValue(COLOR_LOW_PRIORITY, default = Color.Green.toArgb())
+
+    suspend fun setColorLowPriority(color: Color) {
+        dataStore.setValue(COLOR_LOW_PRIORITY, color.toArgb())
+    }
+
+    val colorMediumPriority = dataStore.getValue(COLOR_MEDIUM_PRIORITY, default = Color.Yellow.toArgb())
+
+    suspend fun setColorMediumPriority(color: Color) {
+        dataStore.setValue(COLOR_MEDIUM_PRIORITY, color.toArgb())
+    }
+
+    val colorHighPriority = dataStore.getValue(COLOR_HIGH_PRIORITY, default = Color.Red.toArgb())
+
+    suspend fun setColorHighPriority(color: Color) {
+        dataStore.setValue(COLOR_HIGH_PRIORITY, color.toArgb())
+    }
+
     // profile info
     val profileColor = dataStore.getValue(PROFILE_COLOR_KEY).map {
         if (it != null) colorFromHex(it) else null
@@ -321,6 +340,9 @@ class DefaultPreferencesRepository (
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
         private val BLUR_ADULT_KEY = booleanPreferencesKey("blur_adult")
         private val SHOW_LOW_PRIORITY = booleanPreferencesKey("show_low_priority")
+        private val COLOR_LOW_PRIORITY = intPreferencesKey("color_low_priority")
+        private val COLOR_MEDIUM_PRIORITY = intPreferencesKey("color_medium_priority")
+        private val COLOR_HIGH_PRIORITY = intPreferencesKey("color_high_priority")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")

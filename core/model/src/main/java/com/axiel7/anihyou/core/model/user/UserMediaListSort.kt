@@ -41,6 +41,10 @@ enum class UserMediaListSort(
     REPEAT(
         asc = MediaListSort.REPEAT,
         desc = MediaListSort.REPEAT_DESC
+    ),
+    PRIORITY(
+        asc = MediaListSort.PRIORITY,
+        desc = MediaListSort.PRIORITY_DESC
     );
 
     @Composable
@@ -53,6 +57,7 @@ enum class UserMediaListSort(
         STARTED -> stringResource(R.string.start_date)
         FINISHED -> stringResource(R.string.end_date)
         REPEAT -> stringResource(R.string.repeat_count)
+        PRIORITY -> stringResource(R.string.priority)
     }
 
     companion object {
