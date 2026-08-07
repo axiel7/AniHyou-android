@@ -110,6 +110,7 @@ class MediaListApi(
         private: Boolean?,
         hiddenFromStatusLists: Boolean?,
         notes: String?,
+        priority: Int?,
     ) = client
         .mutation(
             UpdateEntryMutation(
@@ -125,6 +126,7 @@ class MediaListApi(
                 private = Optional.presentIfNotNull(private),
                 hiddenFromStatusLists = Optional.presentIfNotNull(hiddenFromStatusLists),
                 notes = Optional.presentIfNotNull(notes),
+                priority = Optional.presentIfNotNull(priority)
             )
         )
 

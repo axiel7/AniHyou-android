@@ -161,6 +161,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setShowLowPriority(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setShowLowPriority(value)
+        }
+    }
+
     override fun setHideScores(value: Boolean) {
         viewModelScope.launch {
             defaultPreferencesRepository.setHideScores(value)
@@ -296,6 +302,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.blurAdult
             .onEach { value ->
                 mutableUiState.update { it.copy(blurAdultContent = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.showLowPriority
+            .onEach { value ->
+                mutableUiState.update { it.copy(showLowPriority = value) }
             }
             .launchIn(viewModelScope)
 

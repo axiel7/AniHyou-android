@@ -64,6 +64,7 @@ val exampleBasicMediaListEntry = BasicMediaListEntry(
     private = false,
     hiddenFromStatusLists = false,
     notes = "This is a note",
+    priority = 0
 )
 
 val exampleCommonMediaListEntry = CommonMediaListEntry(

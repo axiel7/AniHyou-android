@@ -167,4 +167,7 @@ sealed interface Route : NavKey {
         val userId: Int,
         val type: FavoritesType
     ) : Route
+
+    @Serializable
+    object PriorityColors : Route
 }

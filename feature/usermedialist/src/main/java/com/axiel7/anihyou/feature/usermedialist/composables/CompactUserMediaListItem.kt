@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +44,7 @@ import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
+import com.axiel7.anihyou.core.ui.composables.scores.PriorityIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -53,6 +55,10 @@ fun CompactUserMediaListItem(
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
+    lowPriorityColor: Color? = null,
+    mediumPriorityColor: Color? = null,
+    highPriorityColor: Color? = null,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -61,6 +67,7 @@ fun CompactUserMediaListItem(
 ) {
     val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
+    val priority = item.basicMediaListEntry.priority
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -91,6 +98,16 @@ fun CompactUserMediaListItem(
                         modifier = Modifier.align(Alignment.BottomStart),
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
+                    )
+                }
+
+                if (priority != null && (priority > 0 || showLowPriority)) {
+                    PriorityIndicator(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        priority = priority,
+                        lowPriorityColor = lowPriorityColor,
+                        mediumPriorityColor = mediumPriorityColor,
+                        highPriorityColor = highPriorityColor,
                     )
                 }
             }//: Box
@@ -177,6 +194,7 @@ private fun CompactUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = true,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
@@ -194,6 +212,7 @@ private fun CompactUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = false,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

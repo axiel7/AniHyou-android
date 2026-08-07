@@ -25,7 +25,7 @@ import com.materialkolor.ktx.harmonize
 @Composable
 fun BoxScope.ListStatusBadgeIndicator(
     alignment: Alignment,
-    status: MediaListStatus,
+    status: MediaListStatus
 ) {
     val statusStat = remember(status) { status.asStat() }
     val shape = when (alignment) {

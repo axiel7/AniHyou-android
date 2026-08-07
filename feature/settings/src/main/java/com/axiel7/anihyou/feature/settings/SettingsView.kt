@@ -261,6 +261,19 @@ private fun SettingsContent(
                     onClick = navActionManager::toCustomLists
                 )
 
+                SwitchPreference(
+                    title = stringResource(R.string.show_low_priority),
+                    preferenceValue = uiState.showLowPriority,
+                    icon = R.drawable.counter_0_24,
+                    onValueChange = { event?.setShowLowPriority(it) }
+                )
+
+                PlainPreference(
+                    title = stringResource(R.string.priority_color_change),
+                    icon = R.drawable.colors_24,
+                    onClick = navActionManager::toPriorityColors
+                )
+
                 PreferencesTitle(text = stringResource(R.string.content))
 
                 SwitchPreference(
