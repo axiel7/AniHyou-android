@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.home.current
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
@@ -140,9 +139,14 @@ class CurrentViewModel(
         }
     }
 
-    private fun SnapshotStateList<CommonMediaListEntry>.setEntry(entry: BasicMediaListEntry) {
-        this.indexOfFirstOrNull { it.mediaId == entry.mediaId }?.let {
-            this[it] = this[it].copy(basicMediaListEntry = entry)
+    private fun findEntryAndListType(entry: BasicMediaListEntry): Pair<CommonMediaListEntry, CurrentListType>? {
+        val predicate: (CommonMediaListEntry) -> Boolean = { it.mediaId == entry.mediaId }
+        mutableUiState.value.run {
+            return airingList.find(predicate)?.let { it to CurrentListType.AIRING }
+                ?: behindList.find(predicate)?.let { it to CurrentListType.BEHIND }
+                ?: animeList.find(predicate)?.let { it to CurrentListType.ANIME }
+                ?: mangaList.find(predicate)?.let { it to CurrentListType.MANGA }
+                ?: nextSeasonAnimeList.find(predicate)?.let { it to CurrentListType.NEXT_SEASON }
         }
     }
 
@@ -314,12 +318,11 @@ class CurrentViewModel(
             .lastUpdatedEntry
             .filterNotNull()
             .onEach { entry ->
-                mutableUiState.value.run {
-                    airingList.setEntry(entry)
-                    behindList.setEntry(entry)
-                    animeList.setEntry(entry)
-                    mangaList.setEntry(entry)
-                    nextSeasonAnimeList.setEntry(entry)
+                findEntryAndListType(entry)?.let {
+                    val mediaEntry = it.first
+                    val listType = it.second
+                    selectItem(mediaEntry, listType)
+                    onUpdateListEntry(entry, listType)
                 }
             }
             .launchIn(viewModelScope)
