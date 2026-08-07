@@ -151,6 +151,7 @@
     <string name="relation_source">Kaynak</string>
     <string name="relation_compilation">Derleme</string>
     <string name="relation_contains">İçerik</string>
+    <string name="relation_same_universe">Aynı evren</string>
     <string name="recommendations">Tavsiyeler</string>
     <string name="settings">Ayarlar</string>
     <string name="display">Görüntüle</string>
@@ -637,5 +638,7 @@
     <string name="hide_scores">Puanları gizle</string>
     <string name="upvote">Beğen</string>
     <string name="downvote">Beğenme</string>
+    <string name="reorder">Yeniden sırala</string>
     <string name="reorder_hint">Yeniden düzenlemek için uzun dokunun</string>
+    <string name="activity_filter_following">Takip Edilenlerden</string>
 </resources>
