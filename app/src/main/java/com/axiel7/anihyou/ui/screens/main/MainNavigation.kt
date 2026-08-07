@@ -50,6 +50,7 @@ import com.axiel7.anihyou.feature.home.current.fulllist.CurrentFullListView
 import com.axiel7.anihyou.feature.login.LoginView
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsView
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityView
+import com.axiel7.anihyou.feature.mediadetails.characters.MediaCharactersView
 import com.axiel7.anihyou.feature.notifications.NotificationsView
 import com.axiel7.anihyou.feature.profile.ProfileView
 import com.axiel7.anihyou.feature.profile.favorites.reorder.ReorderFavoritesView
@@ -372,6 +373,12 @@ fun MainNavigation(
 
         entry<Route.MediaActivity> {
             MediaActivityView(
+                arguments = it,
+            )
+        }
+
+        entry<Route.MediaCharacters> {
+            MediaCharactersView(
                 arguments = it,
             )
         }

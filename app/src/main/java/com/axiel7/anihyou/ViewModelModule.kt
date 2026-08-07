@@ -16,6 +16,7 @@ import com.axiel7.anihyou.feature.home.activity.ActivityFeedViewModel
 import com.axiel7.anihyou.feature.home.current.CurrentViewModel
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsViewModel
 import com.axiel7.anihyou.feature.mediadetails.activity.MediaActivityViewModel
+import com.axiel7.anihyou.feature.mediadetails.characters.MediaCharactersViewModel
 import com.axiel7.anihyou.feature.notifications.NotificationsViewModel
 import com.axiel7.anihyou.feature.profile.ProfileViewModel
 import com.axiel7.anihyou.feature.profile.favorites.UserFavoritesViewModel
@@ -72,4 +73,5 @@ val viewModelModule = module {
     viewModel<UserMediaListViewModel>()
     viewModel<ReorderFavoritesViewModel>()
     viewModel<PriorityColorViewModel>()
+    viewModel<MediaCharactersViewModel>()
 }

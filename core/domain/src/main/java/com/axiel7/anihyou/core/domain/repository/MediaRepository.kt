@@ -197,6 +197,17 @@ class MediaRepository (
             data.Page?.activities?.mapNotNull { it?.listActivityFragment }.orEmpty()
         }
 
+    fun getMediaCharactersPage(
+        mediaId: Int,
+        page: Int,
+        perPage: Int = 25,
+    ) = api
+        .mediaCharactersQuery(mediaId, page, perPage)
+        .toFlow()
+        .asPagedResult(page = { it.Media?.characters?.pageInfo?.commonPage }) { data ->
+            data.Media?.characters?.edges?.mapNotNull { it?.mediaCharacter }.orEmpty()
+        }
+
     fun getBasicMediaDetails(mediaId: Int) = api
         .basicMediaDetails(mediaId)
         .toFlow()

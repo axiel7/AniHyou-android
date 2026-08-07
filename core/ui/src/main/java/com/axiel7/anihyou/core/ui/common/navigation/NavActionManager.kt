@@ -33,6 +33,10 @@ class NavActionManager(
         navigator.navigate(Route.MediaActivity(mediaId))
     }
 
+    fun toMediaCharacters(mediaId: Int) {
+        navigator.navigate(Route.MediaCharacters(mediaId))
+    }
+
     fun toCharacterDetails(id: Int) {
         navigator.navigate(Route.CharacterDetails(id))
     }

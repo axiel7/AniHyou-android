@@ -157,6 +157,12 @@ sealed interface Route : NavKey {
 
     @Serializable
     @Immutable
+    data class MediaCharacters(
+        val mediaId: Int
+    ): Route
+
+    @Serializable
+    @Immutable
     data class CurrentFullList(
         val listType: CurrentListType,
     ): Route

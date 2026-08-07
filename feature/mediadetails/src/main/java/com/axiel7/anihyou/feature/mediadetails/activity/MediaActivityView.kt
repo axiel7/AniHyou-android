@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -94,9 +95,8 @@ private fun MediaActivityContent(
     ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .padding(padding)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            contentPadding = PaddingValues(top = 8.dp)
+            contentPadding = PaddingValues(top = 8.dp) + padding
         ) {
             if (uiState.isLoading) {
                 items(10) {

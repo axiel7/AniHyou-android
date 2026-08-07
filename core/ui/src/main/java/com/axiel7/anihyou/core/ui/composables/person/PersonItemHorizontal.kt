@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,8 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
@@ -31,6 +34,7 @@ fun PersonItemHorizontal(
     title: String,
     modifier: Modifier = Modifier,
     imageUrl: String?,
+    imageSize: Dp = PERSON_IMAGE_SIZE_SMALL.dp,
     subtitle: String? = null,
     onClick: () -> Unit,
 ) {
@@ -41,7 +45,7 @@ fun PersonItemHorizontal(
             PersonImage(
                 url = imageUrl,
                 modifier = Modifier
-                    .size(PERSON_IMAGE_SIZE_SMALL.dp),
+                    .size(imageSize),
                 showShadow = true
             )
         },
@@ -59,6 +63,51 @@ fun PersonItemHorizontal(
         Text(
             text = title,
             color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 17.sp,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
+        )
+    }
+}
+
+@Composable
+fun PersonItemHorizontalMirrored(
+    title: String,
+    modifier: Modifier = Modifier,
+    imageUrl: String?,
+    imageSize: Dp = PERSON_IMAGE_SIZE_SMALL.dp,
+    subtitle: String? = null,
+    onClick: () -> Unit,
+) {
+    ListItem(
+        onClick = onClick,
+        modifier = modifier,
+        trailingContent = {
+            PersonImage(
+                url = imageUrl,
+                modifier = Modifier
+                    .size(imageSize),
+                showShadow = true
+            )
+        },
+        supportingContent = {
+            subtitle?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.End,
+                )
+            }
+        },
+        verticalAlignment = Alignment.CenterVertically,
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.End,
             fontSize = 17.sp,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
@@ -108,6 +157,12 @@ private fun PersonItemHorizontalPreview() {
         Surface {
             Column {
                 PersonItemHorizontal(
+                    title = "Asano Inio",
+                    imageUrl = null,
+                    subtitle = "Original Author",
+                    onClick = {}
+                )
+                PersonItemHorizontalMirrored(
                     title = "Asano Inio",
                     imageUrl = null,
                     subtitle = "Original Author",

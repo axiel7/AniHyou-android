@@ -1,0 +1,12 @@
+query MediaCharacters($mediaId: Int, $page: Int, $perPage: Int) {
+    Media(id: $mediaId) {
+        characters(page: $page, perPage: $perPage, sort: [RELEVANCE, ROLE, FAVOURITES_DESC]) {
+            edges {
+                ...MediaCharacter
+            }
+            pageInfo {
+                ...CommonPage
+            }
+        }
+    }
+}

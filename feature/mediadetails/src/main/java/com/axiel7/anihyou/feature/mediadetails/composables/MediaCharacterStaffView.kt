@@ -28,7 +28,8 @@ import com.axiel7.anihyou.core.model.character.localized
 import com.axiel7.anihyou.core.model.staff.roleLocalized
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.InfoTitle
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_SMALL
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontalPlaceholder
@@ -41,10 +42,9 @@ private const val GRID_HEIGHT = (PERSON_IMAGE_SIZE_SMALL + 16) * 2
 fun MediaCharacterStaffView(
     uiState: MediaDetailsUiState,
     fetchData: () -> Unit,
-    navigateToCharacterDetails: (Int) -> Unit,
-    navigateToStaffDetails: (Int) -> Unit,
     showVoiceActorsSheet: (MediaCharacter) -> Unit,
 ) {
+    val navActionManager = LocalNavActionManager.current
     val staffListState = rememberLazyGridState()
     val charactersListState = rememberLazyGridState()
 
@@ -59,7 +59,7 @@ fun MediaCharacterStaffView(
         val isLoadingStaff = uiState.staff == null
         val staff = uiState.staff.orEmpty()
         if (isLoadingStaff || staff.isNotEmpty()) {
-            InfoTitle(text = stringResource(R.string.staff))
+            HorizontalListHeader(text = stringResource(R.string.staff))
             Box(
                 modifier = Modifier
                     .height(GRID_HEIGHT.dp)
@@ -86,7 +86,7 @@ fun MediaCharacterStaffView(
                             imageUrl = item.node?.image?.medium,
                             subtitle = item.roleLocalized(),
                             onClick = {
-                                item.node?.id?.let(navigateToStaffDetails)
+                                item.node?.id?.let(navActionManager::toStaffDetails)
                             }
                         )
                     }
@@ -98,7 +98,12 @@ fun MediaCharacterStaffView(
         val isLoadingCharacters = uiState.characters == null
         val characters = uiState.characters.orEmpty()
         if (isLoadingCharacters || characters.isNotEmpty()) {
-            InfoTitle(text = stringResource(R.string.characters))
+            HorizontalListHeader(
+                text = stringResource(R.string.characters),
+                onClick = {
+                    uiState.details?.id?.let(navActionManager::toMediaCharacters)
+                }
+            )
             Box(
                 modifier = Modifier
                     .height(GRID_HEIGHT.dp)
@@ -127,7 +132,7 @@ fun MediaCharacterStaffView(
                                 imageUrl = item.node?.image?.medium,
                                 subtitle = item.role?.localized(),
                                 onClick = {
-                                    item.node?.id?.let(navigateToCharacterDetails)
+                                    item.node?.id?.let(navActionManager::toCharacterDetails)
                                 }
                             )
                             if (!item.voiceActors.isNullOrEmpty()) {
@@ -154,8 +159,6 @@ private fun MediaCharacterStaffViewPreview() {
             MediaCharacterStaffView(
                 uiState = MediaDetailsUiState(),
                 fetchData = {},
-                navigateToCharacterDetails = {},
-                navigateToStaffDetails = {},
                 showVoiceActorsSheet = {}
             )
         }

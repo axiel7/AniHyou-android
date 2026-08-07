@@ -519,8 +519,6 @@ fun MediaInfoTabs(
                 MediaCharacterStaffView(
                     uiState = uiState,
                     fetchData = { event?.fetchCharactersAndStaff() },
-                    navigateToCharacterDetails = navActionManager::toCharacterDetails,
-                    navigateToStaffDetails = navActionManager::toStaffDetails,
                     showVoiceActorsSheet = {
                         event?.showVoiceActorsSheet(it)
                     }

@@ -10,6 +10,7 @@ import com.axiel7.anihyou.core.network.BasicMediaDetailsQuery
 import com.axiel7.anihyou.core.network.GenreTagCollectionQuery
 import com.axiel7.anihyou.core.network.MediaActivityQuery
 import com.axiel7.anihyou.core.network.MediaCharactersAndStaffQuery
+import com.axiel7.anihyou.core.network.MediaCharactersQuery
 import com.axiel7.anihyou.core.network.MediaChartQuery
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.MediaFollowingQuery
@@ -286,6 +287,19 @@ class MediaApi(
             MediaActivityQuery(
                 mediaId = Optional.present(mediaId),
                 userId = Optional.presentIfNotNull(userId),
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
+            )
+        )
+
+    fun mediaCharactersQuery(
+        mediaId: Int,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            MediaCharactersQuery(
+                mediaId = Optional.present(mediaId),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage),
             )
