@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,12 +38,12 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
-import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
+import com.axiel7.anihyou.core.ui.composables.scores.PriorityIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,11 +52,14 @@ fun GridUserMediaListItem(
     item: CommonMediaListEntry,
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
+    showLowPriority: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
     val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
+    val priority = item.basicMediaListEntry.priority
+    val correctStatus: Boolean = item.basicMediaListEntry.status == MediaListStatus.PLANNING || item.basicMediaListEntry.status == MediaListStatus.CURRENT
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,18 +94,11 @@ fun GridUserMediaListItem(
                     )
                 }
 
-                if (item.media?.nextAiringEpisode != null) {
-                    ElevatedCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter)
-                    ) {
-                        AiringScheduleText(
-                            item = item,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                if (priority != null && (priority > 0 || showLowPriority) && correctStatus) {
+                    PriorityIndicator(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        priority = priority
+                    )
                 }
             }//:Box
 
@@ -158,6 +153,7 @@ fun GridUserMediaListItemPreview() {
                         ) else exampleCommonMediaListEntry,
                         listStatus = null,
                         scoreFormat = ScoreFormat.POINT_100,
+                        showLowPriority = true,
                         onClick = { },
                         onLongClick = { }
                     )

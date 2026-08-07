@@ -281,6 +281,14 @@ class UserMediaListViewModel(
             }
         }.launchIn(viewModelScope)
 
+        // get value from settings
+        defaultPreferencesRepository.showLowPriority
+            .distinctUntilChanged()
+            .onEach { value ->
+                mutableUiState.update { it.copy(showLowPriority = value) }
+            }
+            .launchIn(viewModelScope)
+
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()

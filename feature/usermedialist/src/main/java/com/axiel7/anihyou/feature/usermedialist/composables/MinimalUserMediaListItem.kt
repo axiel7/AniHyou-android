@@ -48,6 +48,7 @@ fun MinimalUserMediaListItem(
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -55,6 +56,8 @@ fun MinimalUserMediaListItem(
     onClickNotes: () -> Unit,
 ) {
     val status = listStatus ?: item.basicMediaListEntry.status
+    val priority = item.basicMediaListEntry.priority
+    val correctStatus: Boolean = item.basicMediaListEntry.status == MediaListStatus.PLANNING || item.basicMediaListEntry.status == MediaListStatus.CURRENT
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -119,6 +122,19 @@ fun MinimalUserMediaListItem(
                         modifier = Modifier.size(20.dp),
                     )
                 }
+                if (priority != null && (priority > 0 || showLowPriority) && correctStatus) {
+                    val iconId = when (priority) {
+                        0 -> R.drawable.counter_0_24
+                        1 -> R.drawable.counter_1_24
+                        2 -> R.drawable.counter_2_24
+                        else -> R.drawable.cancel_24 // invalid priority was set
+                    }
+                    Icon(
+                        painter = painterResource(iconId),
+                        contentDescription = stringResource(R.string.priority),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
                     RepeatIndicator(count = item.basicMediaListEntry.repeat ?: 0)
@@ -143,6 +159,7 @@ private fun MinimalUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = true,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
@@ -160,6 +177,7 @@ private fun MinimalUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = false,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

@@ -16,6 +16,7 @@ interface EditMediaEvent: UiEvent {
     fun onDateDialogOpen(dateType: Int)
     fun onDateDialogClosed()
     fun onChangeRepeatCount(value: Int?): Boolean
+    fun onChangePriority(value: Int)
     fun setIsPrivate(value: Boolean)
     fun setIsHiddenFromStatusLists(value: Boolean)
     fun setNotes(value: String)

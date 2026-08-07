@@ -21,6 +21,7 @@ data class UserMediaListUiState(
     val entries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val status: MediaListStatus? = null,
     val isMyList: Boolean = true,
+    val showLowPriority: Boolean = false,
     val userId: Int? = null,
     val selectedItem: CommonMediaListEntry? = null,
     val sort: MediaListSort = MediaListSort.UPDATED_TIME_DESC,

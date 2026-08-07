@@ -48,6 +48,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
+import com.axiel7.anihyou.core.ui.composables.scores.PriorityIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -58,6 +59,7 @@ fun StandardUserMediaListItem(
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -66,6 +68,8 @@ fun StandardUserMediaListItem(
 ) {
     val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
+    val priority = item.basicMediaListEntry.priority
+    val correctStatus: Boolean = item.basicMediaListEntry.status == MediaListStatus.PLANNING || item.basicMediaListEntry.status == MediaListStatus.CURRENT
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -94,6 +98,12 @@ fun StandardUserMediaListItem(
                         modifier = Modifier.align(Alignment.BottomStart),
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
+                    )
+                }
+                if (priority != null && (priority > 0 || showLowPriority) && correctStatus) {
+                    PriorityIndicator(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        priority = priority
                     )
                 }
             }
@@ -195,6 +205,7 @@ private fun StandardUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = false,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
@@ -212,6 +223,7 @@ private fun StandardUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = true,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

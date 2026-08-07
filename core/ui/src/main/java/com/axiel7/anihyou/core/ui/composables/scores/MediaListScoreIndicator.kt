@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -174,5 +175,38 @@ fun MinimalScoreIndicator(
 
             ScoreFormat.UNKNOWN__ -> {}
         }
+    }
+}
+
+@Composable
+fun PriorityIndicator(
+    modifier: Modifier,
+    priority: Int
+) {
+    val shape = RoundedCornerShape(topEnd = 8.dp, bottomStart = 16.dp)
+    val iconId = when (priority) {
+        0 -> R.drawable.counter_0_24
+        1 -> R.drawable.counter_1_24
+        2 -> R.drawable.counter_2_24
+        else -> R.drawable.cancel_24 // invalid priority was set
+    }
+    val icon = painterResource(iconId)
+
+
+    Row(
+        modifier = modifier
+            .clip(shape)
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = stringResource(R.string.priority),
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }

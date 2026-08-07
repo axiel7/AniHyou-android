@@ -657,4 +657,10 @@
     <string name="reorder">Reorder</string>
     <string name="reorder_hint">Long press to reorder</string>
     <string name="activity_filter_following">From Following</string>
+    <string name="priority">Priority</string>
+    <string name="show_low_priority">Show low priority</string>
+    <string name="priority_value">Priority: %s</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
 </resources>
