@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.InjectedParam
 import java.time.LocalDate
-import com.axiel7.anihyou.core.resources.R
 
 class EditMediaViewModel(
     @InjectedParam mediaDetails: BasicMediaDetails,
