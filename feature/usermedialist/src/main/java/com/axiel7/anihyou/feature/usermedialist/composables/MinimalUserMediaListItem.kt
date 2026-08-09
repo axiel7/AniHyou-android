@@ -30,6 +30,7 @@ import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.model.media.priorityIcon
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
@@ -48,6 +49,7 @@ fun MinimalUserMediaListItem(
     scoreFormat: ScoreFormat,
     isMyList: Boolean,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -55,6 +57,7 @@ fun MinimalUserMediaListItem(
     onClickNotes: () -> Unit,
 ) {
     val status = listStatus ?: item.basicMediaListEntry.status
+    val priority = item.basicMediaListEntry.priority
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
@@ -119,6 +122,13 @@ fun MinimalUserMediaListItem(
                         modifier = Modifier.size(20.dp),
                     )
                 }
+                if (priority != null && (priority > 0 || showLowPriority)) {
+                    Icon(
+                        painter = painterResource(priority.priorityIcon()),
+                        contentDescription = stringResource(R.string.priority),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
                     RepeatIndicator(count = item.basicMediaListEntry.repeat ?: 0)
@@ -143,6 +153,7 @@ private fun MinimalUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_100,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = true,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
@@ -160,6 +171,7 @@ private fun MinimalUserMediaListItemPreview() {
                     scoreFormat = ScoreFormat.POINT_3,
                     isMyList = true,
                     isPlusEnabled = true,
+                    showLowPriority = false,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

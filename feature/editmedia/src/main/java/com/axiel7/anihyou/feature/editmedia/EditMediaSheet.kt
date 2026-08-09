@@ -74,6 +74,7 @@ import com.axiel7.anihyou.feature.editmedia.composables.CustomListsDialog
 import com.axiel7.anihyou.feature.editmedia.composables.DeleteMediaEntryDialog
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDateField
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDatePicker
+import com.axiel7.anihyou.feature.editmedia.composables.EditMediaPriorityRow
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaProgressRow
 import com.axiel7.anihyou.feature.editmedia.composables.ScoreView
 import kotlinx.coroutines.CoroutineScope
@@ -321,6 +322,24 @@ private fun EditMediaSheetContent(
                 }
             )
 
+            // priority
+            EditMediaPriorityRow(
+                label = stringResource(
+                    R.string.priority_value,
+                    stringResource(uiState.getPriorityLocalized(uiState.priority))
+                ),
+                icon = R.drawable.priority_high_24,
+                modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
+                minusEnabled = uiState.priority > 0,
+                onMinusClick = {
+                    event?.onChangePriority(uiState.priority.minus(1))
+                },
+                plusEnabled = uiState.priority < 2,
+                onPlusClick = {
+                    event?.onChangePriority(uiState.priority.plus(1))
+                }
+            )
+
             // Repeat
             EditMediaProgressRow(
                 label = stringResource(R.string.repeat_count),
@@ -431,6 +450,7 @@ private fun EditMediaSheetContent(
         }//:Column
     }//:Sheet
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview

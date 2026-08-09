@@ -52,6 +52,7 @@ class EditMediaViewModel(
             isPrivate = value?.private,
             isHiddenFromStatusLists = value?.hiddenFromStatusLists,
             notes = value?.notes,
+            priority = value?.priority ?: 0,
         )
     }
 
@@ -207,6 +208,7 @@ class EditMediaViewModel(
                 private = isPrivate,
                 hiddenFromStatusLists = isHiddenFromStatusLists,
                 notes = notes,
+                priority = priority,
             ).onEach { result ->
                 mutableUiState.update {
                     if (result is DataResult.Success) {
@@ -310,6 +312,10 @@ class EditMediaViewModel(
 
     override fun setUpdateSuccess(value: Boolean) {
         mutableUiState.update { it.copy(updateSuccess = value) }
+    }
+
+    override fun onChangePriority(value: Int) {
+        mutableUiState.update { it.copy(priority = value) }
     }
 
     init {

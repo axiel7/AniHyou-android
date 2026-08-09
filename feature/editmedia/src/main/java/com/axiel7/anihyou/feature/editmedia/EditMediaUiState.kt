@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.editmedia
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -9,6 +10,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import java.time.LocalDate
+import com.axiel7.anihyou.core.resources.R
 
 @Immutable
 data class EditMediaUiState(
@@ -19,6 +21,7 @@ data class EditMediaUiState(
     val progress: Int? = null,
     val volumeProgress: Int? = null,
     val score: Double? = null,
+    val priority: Int = 0,
     val advancedScoresNames: List<String> = emptyList(),
     val advancedScores: SnapshotStateMap<String, Double> = mutableStateMapOf(),
     val startedAt: LocalDate? = null,
@@ -47,6 +50,16 @@ data class EditMediaUiState(
     fun mediaHasVolumes(): Int? {
         val volumes = mediaDetails.volumes
         return if (volumes != null && volumes > 0) volumes else null
+    }
+
+    @StringRes
+    fun getPriorityLocalized(value: Int) : Int {
+        return when (value) {
+            0 -> R.string.priority_low
+            1 -> R.string.priority_medium
+            2 -> R.string.priority_high
+            else -> R.string.unknown
+        }
     }
 
     override fun setError(value: String?) = copy(error = value)

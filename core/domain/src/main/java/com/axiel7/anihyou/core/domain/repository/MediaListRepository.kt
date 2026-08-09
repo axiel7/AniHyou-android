@@ -135,6 +135,7 @@ class MediaListRepository (
         private: Boolean? = null,
         hiddenFromStatusLists: Boolean? = null,
         notes: String? = null,
+        priority: Int? = null
     ) = api
         .updateEntryMutation(
             mediaId = mediaId,
@@ -151,6 +152,7 @@ class MediaListRepository (
             hiddenFromStatusLists = hiddenFromStatusLists
                 .takeIf { hiddenFromStatusLists != oldEntry?.hiddenFromStatusLists },
             notes = notes.takeIf { notes != oldEntry?.notes },
+            priority = priority.takeIf { priority != oldEntry?.priority }
         )
         .toFlow()
         .onEach {
