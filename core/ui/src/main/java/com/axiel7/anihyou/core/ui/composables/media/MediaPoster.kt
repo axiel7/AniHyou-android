@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import dev.chrisbanes.haze.blur.blurEffect
-import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.blur.hazeBlur
 
 const val MEDIA_POSTER_TINY_HEIGHT = 80
 const val MEDIA_POSTER_TINY_WIDTH = 80
@@ -57,7 +57,7 @@ fun MediaPoster(
             )
             .clip(RoundedCornerShape(8.dp))
             .then(
-                if (enableBlur) Modifier.hazeEffect { blurEffect {  } }
+                if (enableBlur) Modifier.hazeBlur(HazeInput.Content)
                 else Modifier
             )
     )
