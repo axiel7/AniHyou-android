@@ -16,28 +16,23 @@ class PriorityColorViewModel(
     override val initialState = PriorityColorUiState()
 
     override fun onHighPriorityColorChanged(color: Color) {
-        mutableUiState.update { it.copy(highPriorityColor = color) }
-    }
-
-    override fun onMediumPriorityColorChanged(color: Color) {
-        mutableUiState.update { it.copy(mediumPriorityColor = color) }
-    }
-
-    override fun onLowPriorityColorChanged(color: Color) {
-        mutableUiState.update { it.copy(lowPriorityColor = color) }
-    }
-
-    override fun updateColors(colorLow: Color, colorMedium: Color, colorHigh: Color) {
         viewModelScope.launch {
-            mutableUiState.update { it.copy(isLoading = true) }
-            defaultPreferencesRepository.setColorLowPriority(colorLow)
-            defaultPreferencesRepository.setColorMediumPriority(colorMedium)
-            defaultPreferencesRepository.setColorHighPriority(colorHigh)
-            mutableUiState.update { it.copy(isLoading = false) }
+            defaultPreferencesRepository.setColorHighPriority(color)
         }
     }
 
-    // set the correct colors from the settings
+    override fun onMediumPriorityColorChanged(color: Color) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setColorMediumPriority(color)
+        }
+    }
+
+    override fun onLowPriorityColorChanged(color: Color) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setColorLowPriority(color)
+        }
+    }
+
     init {
         defaultPreferencesRepository.colorLowPriority
             .onEach { color ->
