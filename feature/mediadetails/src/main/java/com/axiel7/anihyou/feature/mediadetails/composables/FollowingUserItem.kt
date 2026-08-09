@@ -67,7 +67,8 @@ fun FollowingUserItem(
                 MinimalScoreIndicator(
                     score = score,
                     scoreFormat = scoreFormat,
-                    modifier = Modifier.width(68.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    showTotal = true,
                 )
             } else {
                 Spacer(modifier = Modifier.width(68.dp))
@@ -87,8 +88,8 @@ private fun FollowingUserItemPreview() {
                     avatarUrl = null,
                     username = "axiel7",
                     status = MediaListStatus.CURRENT,
-                    score = 8.8,
-                    scoreFormat = ScoreFormat.POINT_10_DECIMAL,
+                    score = 100.0,
+                    scoreFormat = ScoreFormat.POINT_100,
                 )
                 FollowingUserItem(
                     mediaType = MediaType.MANGA,

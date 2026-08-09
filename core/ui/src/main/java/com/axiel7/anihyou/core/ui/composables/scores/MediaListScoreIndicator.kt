@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import com.axiel7.anihyou.core.common.utils.NumberUtils.formatPositiveValueOrUnknown
+import com.axiel7.anihyou.core.model.maxValue
 import com.axiel7.anihyou.core.model.point10DecimalOnPrimaryColor
 import com.axiel7.anihyou.core.model.point10DecimalPrimaryColor
 import com.axiel7.anihyou.core.model.scoreOnPrimaryColor
@@ -115,6 +116,7 @@ fun MinimalScoreIndicator(
     score: Double?,
     scoreFormat: ScoreFormat,
     modifier: Modifier = Modifier,
+    showTotal: Boolean = false,
 ) {
     Row(
         modifier = modifier.padding(horizontal = 8.dp),
@@ -123,11 +125,12 @@ fun MinimalScoreIndicator(
     ) {
         when (scoreFormat) {
             ScoreFormat.POINT_100, ScoreFormat.POINT_10, ScoreFormat.POINT_5 -> {
+                val color = score.scorePrimaryColor(format = scoreFormat)
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
                     contentDescription = "star",
                     modifier = Modifier.size(18.dp),
-                    tint = score.scorePrimaryColor(format = scoreFormat)
+                    tint = color,
                 )
                 Text(
                     text = if (score != null && score != 0.0) String.format(
@@ -135,24 +138,38 @@ fun MinimalScoreIndicator(
                         "%.0f",
                         score
                     ) else UNKNOWN_CHAR,
-                    color = score.scorePrimaryColor(format = scoreFormat),
+                    color = color,
                     fontSize = 14.sp
                 )
+                if (showTotal) {
+                    Text(
+                        text = "/${scoreFormat.maxValue().toInt()}",
+                        color = color,
+                        fontSize = 14.sp
+                    )
+                }
             }
 
             ScoreFormat.POINT_10_DECIMAL -> {
+                val color = score?.point10DecimalPrimaryColor() ?: MaterialTheme.colorScheme.outline
                 Icon(
                     painter = painterResource(R.drawable.star_filled_20),
                     contentDescription = "star",
                     modifier = Modifier.size(18.dp),
-                    tint = score?.point10DecimalPrimaryColor() ?: MaterialTheme.colorScheme.outline
+                    tint = color,
                 )
                 Text(
                     text = score.formatPositiveValueOrUnknown(),
-                    color = score?.point10DecimalPrimaryColor()
-                        ?: MaterialTheme.colorScheme.outline,
+                    color = color,
                     fontSize = 14.sp
                 )
+                if (showTotal) {
+                    Text(
+                        text = "/10",
+                        color = color,
+                        fontSize = 14.sp
+                    )
+                }
             }
 
             ScoreFormat.POINT_3 -> {
