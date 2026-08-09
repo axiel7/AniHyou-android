@@ -33,7 +33,6 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:model"))
     implementation(project(":core:resources"))
-    implementation(libs.androidx.compose.material3)
 
     implementation(libs.apollo.normalized.cache)
     implementation(libs.kotlinx.serialization.json)

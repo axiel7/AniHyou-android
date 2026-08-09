@@ -329,7 +329,7 @@ private fun EditMediaSheetContent(
                     stringResource(uiState.getPriorityLocalized(uiState.priority))
                 ),
                 icon = R.drawable.priority_high_24,
-                modifier = Modifier.padding(end = 16.dp, top = 8.dp),
+                modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
                 minusEnabled = uiState.priority > 0,
                 onMinusClick = {
                     event?.onChangePriority(uiState.priority.minus(1))

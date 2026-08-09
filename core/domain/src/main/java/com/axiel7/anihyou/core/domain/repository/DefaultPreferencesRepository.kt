@@ -95,19 +95,25 @@ class DefaultPreferencesRepository (
     }
 
     // temporary hardcoded colors
-    val colorLowPriority = dataStore.getValue(COLOR_LOW_PRIORITY, default = Color.Green.toArgb())
+    val colorLowPriority = dataStore.getValue(COLOR_LOW_PRIORITY).map {
+        it ?: 0xFF7CB342.toInt() // green
+    }
 
     suspend fun setColorLowPriority(color: Color) {
         dataStore.setValue(COLOR_LOW_PRIORITY, color.toArgb())
     }
 
-    val colorMediumPriority = dataStore.getValue(COLOR_MEDIUM_PRIORITY, default = Color.Yellow.toArgb())
+    val colorMediumPriority = dataStore.getValue(COLOR_MEDIUM_PRIORITY).map {
+        it ?: 0xFFF4D03F.toInt() // yellow
+    }
 
     suspend fun setColorMediumPriority(color: Color) {
         dataStore.setValue(COLOR_MEDIUM_PRIORITY, color.toArgb())
     }
 
-    val colorHighPriority = dataStore.getValue(COLOR_HIGH_PRIORITY, default = Color.Red.toArgb())
+    val colorHighPriority = dataStore.getValue(COLOR_HIGH_PRIORITY).map {
+        it ?: 0xFFD84315.toInt() // red
+    }
 
     suspend fun setColorHighPriority(color: Color) {
         dataStore.setValue(COLOR_HIGH_PRIORITY, color.toArgb())

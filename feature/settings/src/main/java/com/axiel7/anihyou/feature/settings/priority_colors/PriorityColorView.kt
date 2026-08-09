@@ -96,8 +96,7 @@ private fun PriorityColorContent(
     }
 
     // color picker
-    if (showColorPickerByPriority != null) {
-        val priority = showColorPickerByPriority!!
+    showColorPickerByPriority?.let { priority ->
         val initialColor = when (priority) {
             2 -> uiState.highPriorityColor
             1 -> uiState.mediumPriorityColor

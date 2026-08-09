@@ -30,6 +30,7 @@ import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.model.media.priorityIcon
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
@@ -122,14 +123,8 @@ fun MinimalUserMediaListItem(
                     )
                 }
                 if (priority != null && (priority > 0 || showLowPriority)) {
-                    val iconId = when (priority) {
-                        0 -> R.drawable.counter_0_24
-                        1 -> R.drawable.counter_1_24
-                        2 -> R.drawable.counter_2_24
-                        else -> R.drawable.cancel_24 // invalid priority was set
-                    }
                     Icon(
-                        painter = painterResource(iconId),
+                        painter = painterResource(priority.priorityIcon()),
                         contentDescription = stringResource(R.string.priority),
                         modifier = Modifier.size(20.dp)
                     )
