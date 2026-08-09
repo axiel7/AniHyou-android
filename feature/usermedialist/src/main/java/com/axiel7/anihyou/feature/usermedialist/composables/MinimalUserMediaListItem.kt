@@ -30,7 +30,6 @@ import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.localized
-import com.axiel7.anihyou.core.model.media.priorityIcon
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
@@ -38,6 +37,8 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
+import com.axiel7.anihyou.core.ui.composables.media.priorityIcon
 import com.axiel7.anihyou.core.ui.composables.scores.MinimalScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
@@ -47,6 +48,7 @@ fun MinimalUserMediaListItem(
     item: CommonMediaListEntry,
     listStatus: MediaListStatus?,
     scoreFormat: ScoreFormat,
+    allPriorityColors: AllPriorityColors,
     isMyList: Boolean,
     isPlusEnabled: Boolean,
     showLowPriority: Boolean,
@@ -126,7 +128,8 @@ fun MinimalUserMediaListItem(
                     Icon(
                         painter = painterResource(priority.priorityIcon()),
                         contentDescription = stringResource(R.string.priority),
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
+                        tint = allPriorityColors.forPriority(priority).background,
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -151,6 +154,7 @@ private fun MinimalUserMediaListItemPreview() {
                     item = exampleCommonMediaListEntry,
                     listStatus = MediaListStatus.CURRENT,
                     scoreFormat = ScoreFormat.POINT_100,
+                    allPriorityColors = AllPriorityColors.Default,
                     isMyList = true,
                     isPlusEnabled = true,
                     showLowPriority = true,
@@ -169,6 +173,7 @@ private fun MinimalUserMediaListItemPreview() {
                     ),
                     listStatus = null,
                     scoreFormat = ScoreFormat.POINT_3,
+                    allPriorityColors = AllPriorityColors.Default,
                     isMyList = true,
                     isPlusEnabled = true,
                     showLowPriority = false,

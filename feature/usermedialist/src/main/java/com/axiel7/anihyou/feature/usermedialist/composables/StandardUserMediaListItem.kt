@@ -20,7 +20,6 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,12 +43,13 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.core.ui.composables.media.PriorityIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
-import com.axiel7.anihyou.core.ui.composables.scores.PriorityIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -61,9 +61,7 @@ fun StandardUserMediaListItem(
     isMyList: Boolean,
     isPlusEnabled: Boolean,
     showLowPriority: Boolean,
-    lowPriorityColor: Color? = null,
-    mediumPriorityColor: Color? = null,
-    highPriorityColor: Color? = null,
+    allPriorityColors: AllPriorityColors,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -107,9 +105,7 @@ fun StandardUserMediaListItem(
                     PriorityIndicator(
                         modifier = Modifier.align(Alignment.TopEnd),
                         priority = priority,
-                        lowPriorityColor = lowPriorityColor,
-                        mediumPriorityColor = mediumPriorityColor,
-                        highPriorityColor = highPriorityColor,
+                        allPriorityColors = allPriorityColors,
                     )
                 }
             }
@@ -212,6 +208,7 @@ private fun StandardUserMediaListItemPreview() {
                     isMyList = true,
                     isPlusEnabled = true,
                     showLowPriority = false,
+                    allPriorityColors = AllPriorityColors.Default,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
@@ -230,6 +227,7 @@ private fun StandardUserMediaListItemPreview() {
                     isMyList = true,
                     isPlusEnabled = true,
                     showLowPriority = true,
+                    allPriorityColors = AllPriorityColors.Default,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
