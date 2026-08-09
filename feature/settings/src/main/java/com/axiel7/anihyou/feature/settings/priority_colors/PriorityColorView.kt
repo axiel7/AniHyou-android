@@ -123,7 +123,6 @@ private fun PriorityColorContent(
     }
 }
 
-// don't know where to put this
 @Composable
 private fun PriorityColorItem(
     title: String,

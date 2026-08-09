@@ -21,7 +21,7 @@ import com.materialkolor.ktx.harmonize
 
 @Composable
 fun PriorityIndicator(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     priority: Int,
     lowPriorityColor: Color? = null,
     mediumPriorityColor: Color? = null,

@@ -36,7 +36,7 @@ fun CommonColorPickerDialog(
     val controller = rememberColorPickerController()
 
     // set the color correctly
-    LaunchedEffect(Unit) {
+    LaunchedEffect(initialColor) {
         controller.selectByColor(initialColor, fromUser = false)
     }
 
