@@ -11,20 +11,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.materialkolor.ktx.toHex
 
 @Composable
 fun CommonColorPickerDialog(
@@ -34,10 +41,15 @@ fun CommonColorPickerDialog(
     onColorSelected: (Color) -> Unit,
 ) {
     val controller = rememberColorPickerController()
+    var textFieldValue by remember { mutableStateOf("") }
 
     // set the color correctly
     LaunchedEffect(initialColor) {
         controller.selectByColor(initialColor, fromUser = false)
+    }
+
+    LaunchedEffect(controller.selectedColor.value) {
+        textFieldValue = controller.selectedColor.value.toHex(includePrefix = false)
     }
 
     AlertDialog(
@@ -49,8 +61,6 @@ fun CommonColorPickerDialog(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
                 HsvColorPicker(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,6 +90,28 @@ fun CommonColorPickerDialog(
                         .clip(CircleShape)
                         .background(controller.selectedColor.value)
                         .align(Alignment.CenterHorizontally)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = textFieldValue,
+                    onValueChange = { value ->
+                        // support for the user to paste a color with the # prefix
+                        val maxLength = if (value.startsWith("#")) 7 else 6
+                        if (value.length <= maxLength) {
+                            textFieldValue = value
+                            if (value.length == maxLength) {
+                                val prefix = if (value.startsWith("#")) "" else "#"
+                                colorFromHex("$prefix$value")?.let { color ->
+                                    controller.selectByColor(color, true)
+                                }
+                            }
+                        }
+                    },
+                    label = { Text(text = "HEX") },
+                    prefix = { Text(text = "#") },
+                    singleLine = true,
                 )
             }
         },
