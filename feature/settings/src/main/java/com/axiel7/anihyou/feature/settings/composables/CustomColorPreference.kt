@@ -21,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.ColorUtils.hexCode
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.common.DialogWithTextInput
+import com.axiel7.anihyou.core.ui.composables.common.CommonColorPickerDialog
+import com.materialkolor.ktx.toHex
 
 @Composable
 fun CustomColorPreference(
@@ -33,7 +33,6 @@ fun CustomColorPreference(
     modifier: Modifier = Modifier
 ) {
     val hexString = remember(color) { "#" + color?.hexCode?.drop(2).orEmpty() }
-    var hexValue by remember { mutableStateOf(hexString.drop(1)) }
     var colorValue by remember { mutableStateOf(color) }
     var openDialog by remember { mutableStateOf(false) }
 
@@ -69,22 +68,14 @@ fun CustomColorPreference(
     }
 
     if (openDialog) {
-        DialogWithTextInput(
+        CommonColorPickerDialog(
             title = stringResource(R.string.custom_color),
-            label = "HEX",
-            prefix = "#",
-            value = hexValue,
-            onValueChange = { value ->
-                hexValue = value.replace("#", "")
-                colorFromHex("#$hexValue")?.let { color ->
-                    colorValue = color
-                }
-            },
-            onConfirm = {
-                openDialog = false
-                colorValue?.let { onColorChanged(it) }
-            },
-            onDismiss = { openDialog = false }
+            initialColor = colorValue ?: MaterialTheme.colorScheme.primary,
+            onDismissRequest = { openDialog = false },
+            onColorSelected = { color ->
+                colorValue = color
+                onColorChanged(color)
+            }
         )
     }
 }
