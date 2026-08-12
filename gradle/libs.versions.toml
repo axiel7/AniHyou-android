@@ -2,7 +2,7 @@
 android-compileSdk = "37"
 android-minSdk = "23"
 android-targetSdk = "37"
-wear-compileSdk = "36"
+wear-compileSdk = "37"
 wear-minSdk = "26"
 wear-targetSdk = "36"
 accompanist = "0.37.3"
