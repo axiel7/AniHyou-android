@@ -344,8 +344,8 @@ fun ScoreStepsPreferenceSheet(
         )
     }
 
-    val integerRegex = Regex("^\\d*$")
-    val decimalRegex = Regex("^\\d*\\.?\\d?$")
+    val integerRegex = remember { Regex("^\\d*$") }
+    val decimalRegex = remember { Regex("^\\d*\\.?\\d?$") }
 
     PlainPreference(
         title = title,
