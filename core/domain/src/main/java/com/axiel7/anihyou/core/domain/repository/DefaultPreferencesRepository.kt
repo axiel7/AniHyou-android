@@ -6,8 +6,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.axiel7.anihyou.core.domain.getValue
@@ -137,9 +137,9 @@ class DefaultPreferencesRepository (
         dataStore.setValue(SCORE_FORMAT_KEY, value.name)
     }
 
-    val scoreSteps = dataStore.getValue(SCORE_STEPS_KEY, default = 1.0f)
+    val scoreSteps = dataStore.getValue(SCORE_STEPS_KEY, default = 1.0)
 
-    suspend fun setScoreSteps(value: Float) {
+    suspend fun setScoreSteps(value: Double) {
         dataStore.setValue(SCORE_STEPS_KEY, value)
     }
 
@@ -358,7 +358,7 @@ class DefaultPreferencesRepository (
         private val COLOR_HIGH_PRIORITY_KEY = intPreferencesKey("color_high_priority")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
-        private val SCORE_STEPS_KEY = floatPreferencesKey("score_steps")
+        private val SCORE_STEPS_KEY = doublePreferencesKey("score_steps")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
         private val ANIME_SECTION_ORDER_KEY = stringPreferencesKey("anime_section_order")
         private val MANGA_SECTION_ORDER_KEY = stringPreferencesKey("manga_section_order")

@@ -45,11 +45,11 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
-import com.axiel7.anihyou.core.ui.composables.BottomSheetPreference
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.ListPreference
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.PreferencesTitle
+import com.axiel7.anihyou.core.ui.composables.ScoreStepsPreferenceSheet
 import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -218,7 +218,7 @@ private fun SettingsContent(
                     uiState.scoreFormat == ScoreFormat.POINT_10 ||
                     uiState.scoreFormat == ScoreFormat.POINT_100
                 ) {
-                    BottomSheetPreference(
+                    ScoreStepsPreferenceSheet(
                         title = stringResource(R.string.score_steps),
                         subtitle = stringResource(R.string.score_steps_subtitle),
                         changeValue = { event?.setScoreStep(it) },

@@ -28,7 +28,7 @@ data class SettingsUiState(
     val gridItemsPerRow: ItemsPerRow? = null,
     val airingOnMyList: Boolean? = null,
     val scoreFormat: ScoreFormat? = null,
-    val scoreStep: Float = 1.0f,
+    val scoreStep: Double = 1.0,
     val defaultTab: DefaultTab = DefaultTab.LAST_USED,
     val isNotificationsEnabled: Boolean? = null,
     val notificationCheckInterval: NotificationInterval = NotificationInterval.DAILY,

@@ -27,7 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -309,34 +309,34 @@ fun <T> ListPreference(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetPreference(
+fun ScoreStepsPreferenceSheet(
     title: String,
     subtitle: String?,
     @DrawableRes icon: Int? = null,
-    initialValue: Float = 1.0f,
+    initialValue: Double = 1.0,
     scoreFormat: ScoreFormat?,
-    changeValue: (Float) -> Unit
+    changeValue: (Double) -> Unit
 ) {
     val minValue = when (scoreFormat) {
-        ScoreFormat.POINT_100 -> 1f
-        ScoreFormat.POINT_10 -> 1f
-        ScoreFormat.POINT_10_DECIMAL -> 0.1f
-        else -> 1f
+        ScoreFormat.POINT_100 -> 1.0
+        ScoreFormat.POINT_10 -> 1.0
+        ScoreFormat.POINT_10_DECIMAL -> 0.1
+        else -> 1.0
     }
 
     val maxValue = when (scoreFormat) {
-        ScoreFormat.POINT_100 -> 100f
-        ScoreFormat.POINT_10 -> 10f
-        ScoreFormat.POINT_10_DECIMAL -> 10f
-        else -> 10f
+        ScoreFormat.POINT_100 -> 100.0
+        ScoreFormat.POINT_10 -> 10.0
+        ScoreFormat.POINT_10_DECIMAL -> 10.0
+        else -> 10.0
     }
 
     val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
 
     var openModal by remember { mutableStateOf(false) }
 
-    var value by remember(initialValue) {
-        mutableFloatStateOf(initialValue.coerceIn(minValue..maxValue))
+    var value by remember(initialValue, minValue, maxValue) {
+        mutableDoubleStateOf(initialValue.coerceIn(minValue..maxValue))
     }
 
     var textFieldValue by remember(initialValue) {
@@ -387,7 +387,7 @@ fun BottomSheetPreference(
                         }
 
                         if (isValid) {
-                            val asNumber = input.toFloatOrNull()
+                            val asNumber = input.toDoubleOrNull()
 
                             textFieldValue = if (asNumber == null || asNumber <= maxValue) input else textFieldValue
                             if (asNumber != null) {
@@ -398,7 +398,6 @@ fun BottomSheetPreference(
                     },
                     singleLine = true,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(bottom = 8.dp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = if (allowDecimal) KeyboardType.Decimal else KeyboardType.Number
@@ -406,16 +405,16 @@ fun BottomSheetPreference(
                 )
 
                 Slider(
-                    value = value.coerceIn(minValue..maxValue),
-                    valueRange = minValue..maxValue,
+                    value = value.toFloat(),
+                    valueRange = minValue.toFloat()..maxValue.toFloat(),
                     onValueChange = { input ->
                         if (allowDecimal) {
-                            val rounded = (input * 10f).roundToInt() / 10f
-                            value = rounded
+                            val rounded = (input * 10f).roundToInt() / 10.0
+                            value = rounded.coerceIn(minValue, maxValue)
                             textFieldValue = rounded.toString()
                         } else {
                             val roundedInt = input.roundToInt()
-                            value = roundedInt.toFloat()
+                            value = roundedInt.toDouble().coerceIn(minValue, maxValue)
                             textFieldValue = roundedInt.toString()
                         }
                     }
@@ -456,12 +455,12 @@ private fun PreferencesPreviews() {
                 onValueChange = {},
             )
 
-            BottomSheetPreference(
+            ScoreStepsPreferenceSheet(
                 title = "BottomSheet Preference",
                 subtitle = "Subtitle",
                 icon = R.drawable.settings_24,
                 scoreFormat = ScoreFormat.POINT_10_DECIMAL,
-                initialValue = 2.0f,
+                initialValue = 2.0,
                 changeValue = {}
             )
         }
