@@ -324,5 +324,11 @@ class EditMediaViewModel(
                 mutableUiState.update { it.copy(advancedScoringEnabled = value) }
             }
             .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.scoreSteps
+            .onEach { value ->
+                mutableUiState.update { it.copy(scoreStep = value) }
+            }
+            .launchIn(viewModelScope)
     }
 }

@@ -194,7 +194,14 @@ class SettingsViewModel(
     override fun setScoreFormat(value: ScoreFormat) {
         viewModelScope.launch {
             defaultPreferencesRepository.setScoreFormat(value)
+            defaultPreferencesRepository.setScoreSteps(1.0f) // reset to 1 when selecting new score format
             updateUser(scoreFormat = value)
+        }
+    }
+
+    override fun setScoreStep(value: Float) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setScoreSteps(value)
         }
     }
 
@@ -345,6 +352,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.scoreFormat
             .onEach { value ->
                 mutableUiState.update { it.copy(scoreFormat = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.scoreSteps
+            .onEach { value ->
+                mutableUiState.update { it.copy(scoreStep = value) }
             }
             .launchIn(viewModelScope)
 

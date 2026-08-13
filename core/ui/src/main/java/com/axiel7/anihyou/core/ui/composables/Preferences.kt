@@ -13,15 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,12 +38,15 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun PreferencesTitle(text: String) {
@@ -297,6 +306,125 @@ fun <T> ListPreference(
     )
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheetPreference(
+    title: String,
+    subtitle: String?,
+    @DrawableRes icon: Int? = null,
+    initialValue: Float = 1.0f,
+    scoreFormat: ScoreFormat?,
+    changeValue: (Float) -> Unit
+) {
+    val minValue = when (scoreFormat) {
+        ScoreFormat.POINT_100 -> 1f
+        ScoreFormat.POINT_10 -> 1f
+        ScoreFormat.POINT_10_DECIMAL -> 0.1f
+        else -> 1f
+    }
+
+    val maxValue = when (scoreFormat) {
+        ScoreFormat.POINT_100 -> 100f
+        ScoreFormat.POINT_10 -> 10f
+        ScoreFormat.POINT_10_DECIMAL -> 10f
+        else -> 10f
+    }
+
+    val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
+
+    var openModal by remember { mutableStateOf(false) }
+
+    var value by remember(initialValue) {
+        mutableFloatStateOf(initialValue.coerceIn(minValue..maxValue))
+    }
+
+    var textFieldValue by remember(initialValue) {
+        mutableStateOf(if (allowDecimal) initialValue.toString() else initialValue.roundToInt().toString()
+        )
+    }
+
+    val integerRegex = Regex("^\\d*$")
+    val decimalRegex = Regex("^\\d*\\.?\\d?$")
+
+    PlainPreference(
+        title = title,
+        subtitle = subtitle,
+        icon = icon,
+        onClick = {
+            openModal = true
+        }
+    )
+
+    if (openModal) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                openModal = false
+                changeValue(value)
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
+            ) {
+                Text(
+                    text = title
+                )
+                Text(
+                    text = "$minValue - $maxValue",
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                OutlinedTextField(
+                    value = textFieldValue,
+                    onValueChange = { input ->
+                        // maybe you have here a better idea here than me
+                        val isValid = if (allowDecimal) {
+                            input.isEmpty() || input.matches(decimalRegex)
+                        } else {
+                            input.isEmpty() || input.matches(integerRegex)
+                        }
+
+                        if (isValid) {
+                            val asNumber = input.toFloatOrNull()
+
+                            textFieldValue = if (asNumber == null || asNumber <= maxValue) input else textFieldValue
+                            if (asNumber != null) {
+                                val clamped = asNumber.coerceIn(minValue, maxValue)
+                                value = clamped
+                            }
+                        }
+                    },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = if (allowDecimal) KeyboardType.Decimal else KeyboardType.Number
+                    )
+                )
+
+                Slider(
+                    value = value.coerceIn(minValue..maxValue),
+                    valueRange = minValue..maxValue,
+                    onValueChange = { input ->
+                        if (allowDecimal) {
+                            val rounded = (input * 10f).roundToInt() / 10f
+                            value = rounded
+                            textFieldValue = rounded.toString()
+                        } else {
+                            val roundedInt = input.roundToInt()
+                            value = roundedInt.toFloat()
+                            textFieldValue = roundedInt.toString()
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PreferencesPreviews() {
@@ -326,6 +454,15 @@ private fun PreferencesPreviews() {
                 preferenceValue = null,
                 icon = R.drawable.settings_24,
                 onValueChange = {},
+            )
+
+            BottomSheetPreference(
+                title = "BottomSheet Preference",
+                subtitle = "Subtitle",
+                icon = R.drawable.settings_24,
+                scoreFormat = ScoreFormat.POINT_10_DECIMAL,
+                initialValue = 2.0f,
+                changeValue = {}
             )
         }
     }

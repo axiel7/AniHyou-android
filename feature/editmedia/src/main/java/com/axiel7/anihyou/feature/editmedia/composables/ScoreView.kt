@@ -15,6 +15,7 @@ fun ScoreView(
     onRatingChanged: (Double?) -> Unit,
     modifier: Modifier = Modifier,
     format: ScoreFormat = LocalScoreFormat.current,
+    increments: Float = 1.0f
 ) {
     when (format) {
         ScoreFormat.POINT_10,
@@ -26,7 +27,8 @@ fun ScoreView(
                 showIcon = true,
                 rating = rating,
                 showAsDecimal = format == ScoreFormat.POINT_10_DECIMAL,
-                onRatingChanged = onRatingChanged
+                onRatingChanged = onRatingChanged,
+                increments = increments
             )
         }
 

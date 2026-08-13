@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.axiel7.anihyou.core.domain.getValue
@@ -89,34 +90,34 @@ class DefaultPreferencesRepository (
         dataStore.setValue(BLUR_ADULT_KEY, value)
     }
 
-    val showLowPriority = dataStore.getValue(SHOW_LOW_PRIORITY, default = false)
+    val showLowPriority = dataStore.getValue(SHOW_LOW_PRIORITY_KEY, default = false)
     suspend fun setShowLowPriority(value: Boolean) {
-        dataStore.setValue(SHOW_LOW_PRIORITY, value)
+        dataStore.setValue(SHOW_LOW_PRIORITY_KEY, value)
     }
 
     // temporary hardcoded colors
-    val colorLowPriority = dataStore.getValue(COLOR_LOW_PRIORITY).map {
+    val colorLowPriority = dataStore.getValue(COLOR_LOW_PRIORITY_KEY).map {
         it ?: 0xFF7CB342.toInt() // green
     }
 
     suspend fun setColorLowPriority(color: Color) {
-        dataStore.setValue(COLOR_LOW_PRIORITY, color.toArgb())
+        dataStore.setValue(COLOR_LOW_PRIORITY_KEY, color.toArgb())
     }
 
-    val colorMediumPriority = dataStore.getValue(COLOR_MEDIUM_PRIORITY).map {
+    val colorMediumPriority = dataStore.getValue(COLOR_MEDIUM_PRIORITY_KEY).map {
         it ?: 0xFFF4D03F.toInt() // yellow
     }
 
     suspend fun setColorMediumPriority(color: Color) {
-        dataStore.setValue(COLOR_MEDIUM_PRIORITY, color.toArgb())
+        dataStore.setValue(COLOR_MEDIUM_PRIORITY_KEY, color.toArgb())
     }
 
-    val colorHighPriority = dataStore.getValue(COLOR_HIGH_PRIORITY).map {
+    val colorHighPriority = dataStore.getValue(COLOR_HIGH_PRIORITY_KEY).map {
         it ?: 0xFFD84315.toInt() // red
     }
 
     suspend fun setColorHighPriority(color: Color) {
-        dataStore.setValue(COLOR_HIGH_PRIORITY, color.toArgb())
+        dataStore.setValue(COLOR_HIGH_PRIORITY_KEY, color.toArgb())
     }
 
     // profile info
@@ -134,6 +135,12 @@ class DefaultPreferencesRepository (
 
     suspend fun setScoreFormat(value: ScoreFormat) {
         dataStore.setValue(SCORE_FORMAT_KEY, value.name)
+    }
+
+    val scoreSteps = dataStore.getValue(SCORE_STEPS_KEY, default = 1.0f)
+
+    suspend fun setScoreSteps(value: Float) {
+        dataStore.setValue(SCORE_STEPS_KEY, value)
     }
 
     val advancedScoringEnabled = dataStore.getValue(ADVANCED_SCORING_KEY, false)
@@ -345,12 +352,13 @@ class DefaultPreferencesRepository (
         private val TITLE_LANGUAGE_KEY = stringPreferencesKey("title_language")
         private val DISPLAY_ADULT_KEY = booleanPreferencesKey("display_adult")
         private val BLUR_ADULT_KEY = booleanPreferencesKey("blur_adult")
-        private val SHOW_LOW_PRIORITY = booleanPreferencesKey("show_low_priority")
-        private val COLOR_LOW_PRIORITY = intPreferencesKey("color_low_priority")
-        private val COLOR_MEDIUM_PRIORITY = intPreferencesKey("color_medium_priority")
-        private val COLOR_HIGH_PRIORITY = intPreferencesKey("color_high_priority")
+        private val SHOW_LOW_PRIORITY_KEY = booleanPreferencesKey("show_low_priority")
+        private val COLOR_LOW_PRIORITY_KEY = intPreferencesKey("color_low_priority")
+        private val COLOR_MEDIUM_PRIORITY_KEY = intPreferencesKey("color_medium_priority")
+        private val COLOR_HIGH_PRIORITY_KEY = intPreferencesKey("color_high_priority")
         private val PROFILE_COLOR_KEY = stringPreferencesKey("profile_color")
         private val SCORE_FORMAT_KEY = stringPreferencesKey("score_format")
+        private val SCORE_STEPS_KEY = floatPreferencesKey("score_steps")
         private val ADVANCED_SCORING_KEY = booleanPreferencesKey("advanced_scoring")
         private val ANIME_SECTION_ORDER_KEY = stringPreferencesKey("anime_section_order")
         private val MANGA_SECTION_ORDER_KEY = stringPreferencesKey("manga_section_order")
