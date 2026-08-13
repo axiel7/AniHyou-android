@@ -49,6 +49,7 @@ import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.ListPreference
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.PreferencesTitle
+import com.axiel7.anihyou.core.ui.composables.ScoreStepsPreferenceSheet
 import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -205,6 +206,7 @@ private fun SettingsContent(
                     }
                 )
 
+
                 ListPreference(
                     title = stringResource(R.string.score_format),
                     entriesValues = ScoreFormat.entriesLocalized,
@@ -212,6 +214,18 @@ private fun SettingsContent(
                     icon = R.drawable.star_24,
                     onValueChange = { event?.setScoreFormat(it) }
                 )
+                if (uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL ||
+                    uiState.scoreFormat == ScoreFormat.POINT_10 ||
+                    uiState.scoreFormat == ScoreFormat.POINT_100
+                ) {
+                    ScoreStepsPreferenceSheet(
+                        title = stringResource(R.string.score_steps),
+                        changeValue = { event?.setScoreStep(it) },
+                        scoreFormat = uiState.scoreFormat,
+                        initialValue = uiState.scoreStep
+                    )
+                }
+
 
                 ListPreference(
                     title = stringResource(R.string.default_tab),
@@ -255,6 +269,7 @@ private fun SettingsContent(
                         onValueChange = { event?.setGridItemsPerRow(it) }
                     )
                 }
+
                 PlainPreference(
                     title = stringResource(R.string.custom_lists),
                     icon = R.drawable.playlist_add_24,
