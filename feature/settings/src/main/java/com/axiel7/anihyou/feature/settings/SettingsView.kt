@@ -220,7 +220,6 @@ private fun SettingsContent(
                 ) {
                     ScoreStepsPreferenceSheet(
                         title = stringResource(R.string.score_steps),
-                        subtitle = stringResource(R.string.score_steps_subtitle),
                         changeValue = { event?.setScoreStep(it) },
                         scoreFormat = uiState.scoreFormat,
                         initialValue = uiState.scoreStep

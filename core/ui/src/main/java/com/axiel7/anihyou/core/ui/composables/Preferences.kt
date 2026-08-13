@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
@@ -311,7 +312,6 @@ fun <T> ListPreference(
 @Composable
 fun ScoreStepsPreferenceSheet(
     title: String,
-    subtitle: String?,
     @DrawableRes icon: Int? = null,
     initialValue: Double = 1.0,
     scoreFormat: ScoreFormat?,
@@ -349,7 +349,7 @@ fun ScoreStepsPreferenceSheet(
 
     PlainPreference(
         title = title,
-        subtitle = subtitle,
+        subtitle = value.format(),
         icon = icon,
         onClick = {
             openModal = true
@@ -368,13 +368,7 @@ fun ScoreStepsPreferenceSheet(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
             ) {
-                Text(
-                    text = title
-                )
-                Text(
-                    text = "$minValue - $maxValue",
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+
 
                 OutlinedTextField(
                     value = textFieldValue,
@@ -396,9 +390,19 @@ fun ScoreStepsPreferenceSheet(
                             }
                         }
                     },
+                    label = {
+                        Text(text = title)
+                    },
+                    supportingText = {
+                        Text(
+                            text = "$minValue - $maxValue",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    },
                     singleLine = true,
                     modifier = Modifier
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = 8.dp)
+                        .align(Alignment.CenterHorizontally),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = if (allowDecimal) KeyboardType.Decimal else KeyboardType.Number
                     )
@@ -457,7 +461,6 @@ private fun PreferencesPreviews() {
 
             ScoreStepsPreferenceSheet(
                 title = "BottomSheet Preference",
-                subtitle = "Subtitle",
                 icon = R.drawable.settings_24,
                 scoreFormat = ScoreFormat.POINT_10_DECIMAL,
                 initialValue = 2.0,
