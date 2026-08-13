@@ -63,6 +63,7 @@ interface SettingsEvent : UiEvent {
     fun setStaffNameLanguage(value: UserStaffNameLanguage)
 
     fun setScoreFormat(value: ScoreFormat)
+    fun setScoreStep(value: Float)
 
     fun setScoreStep(value: Double)
 
