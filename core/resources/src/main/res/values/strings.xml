@@ -667,4 +667,5 @@
     <string name="general">General</string>
     <string name="logout_confirm">Do you really want to log out?</string>
     <string name="empty_custom_list_error">Can not add a empty custom list!</string>
+    <string name="score_steps">Score steps</string>
 </resources>

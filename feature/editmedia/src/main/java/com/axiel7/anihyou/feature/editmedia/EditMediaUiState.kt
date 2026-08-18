@@ -9,8 +9,8 @@ import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
-import java.time.LocalDate
 import com.axiel7.anihyou.core.resources.R
+import java.time.LocalDate
 
 @Immutable
 data class EditMediaUiState(
@@ -21,6 +21,7 @@ data class EditMediaUiState(
     val progress: Int? = null,
     val volumeProgress: Int? = null,
     val score: Double? = null,
+    val scoreStep: Double = 1.0,
     val priority: Int = 0,
     val advancedScoresNames: List<String> = emptyList(),
     val advancedScores: SnapshotStateMap<String, Double> = mutableStateMapOf(),

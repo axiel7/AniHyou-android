@@ -273,7 +273,7 @@ class MediaApi(
                 page = Optional.present(page),
                 perPage = Optional.present(perPage),
                 mediaCategoryId = Optional.present(mediaId),
-                sort = Optional.present(listOf(ThreadSort.CREATED_AT_DESC))
+                sort = Optional.present(listOf(ThreadSort.ID_DESC))
             )
         )
 

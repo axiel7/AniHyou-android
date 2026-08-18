@@ -294,7 +294,8 @@ private fun EditMediaSheetContent(
                         ScoreFormat.POINT_100 -> Modifier.padding(top = 8.dp, end = 16.dp)
 
                         else -> Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp)
-                    }
+                    },
+                    increments = uiState.scoreStep
                 )
             }
 
