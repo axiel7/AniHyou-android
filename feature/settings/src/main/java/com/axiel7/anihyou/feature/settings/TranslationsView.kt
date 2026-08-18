@@ -11,6 +11,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -72,14 +73,16 @@ fun TranslationsView() {
                 icon = R.drawable.language_24,
                 onClick = {
                     context.openActionView(CROWDIN_URL)
-                }
+                },
+                containerColor = Color.Transparent
             )
             translations.forEach { (lang, users) ->
                 val displayName = remember { Locale.forLanguageTag(lang).displayName }
                 PlainPreference(
                     title = displayName,
                     subtitle = users,
-                    onClick = {}
+                    onClick = {},
+                    containerColor = Color.Transparent
                 )
             }
         }

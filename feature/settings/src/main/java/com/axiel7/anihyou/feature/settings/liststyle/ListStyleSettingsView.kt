@@ -13,6 +13,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -90,7 +91,8 @@ private fun ListStyleSettingsContent(
                     icon = status.icon(),
                     onValueChange = { value ->
                         event?.setAnimeListStyle(status, value)
-                    }
+                    },
+                    containerColor = Color.Transparent
                 )
             }
 
@@ -113,7 +115,8 @@ private fun ListStyleSettingsContent(
                     icon = status.icon(),
                     onValueChange = { value ->
                         event?.setMangaListStyle(status, value)
-                    }
+                    },
+                    containerColor = Color.Transparent
                 )
             }
         }

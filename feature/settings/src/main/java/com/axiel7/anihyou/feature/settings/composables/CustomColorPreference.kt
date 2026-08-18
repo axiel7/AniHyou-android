@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,45 +26,53 @@ import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.resources.ColorUtils.hexCode
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommonColorPickerDialog
-import com.materialkolor.ktx.toHex
 
 @Composable
 fun CustomColorPreference(
     color: Color?,
     onColorChanged: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp)
 ) {
     val hexString = remember(color) { "#" + color?.hexCode?.drop(2).orEmpty() }
     var colorValue by remember { mutableStateOf(color) }
     var openDialog by remember { mutableStateOf(false) }
 
-    Row(
-        modifier = modifier
+    Surface(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable { openDialog = true },
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
-        Spacer(
-            modifier = Modifier
-                .padding(16.dp)
-                .size(24.dp)
-        )
-
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable { openDialog = true },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(R.string.custom_color),
-                color = MaterialTheme.colorScheme.onSurface
+            Spacer(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(24.dp)
             )
 
-            if (color != null) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
                 Text(
-                    text = hexString,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+                    text = stringResource(R.string.custom_color),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+
+                if (color != null) {
+                    Text(
+                        text = hexString,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 13.sp
+                    )
+                }
             }
         }
     }

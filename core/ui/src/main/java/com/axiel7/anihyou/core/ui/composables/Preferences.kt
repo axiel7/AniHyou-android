@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,9 +46,9 @@ fun PreferencesTitle(text: String) {
     Text(
         text = text,
         modifier = Modifier
-            .padding(start = 72.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
+            .padding(start = 24.dp, top = 24.dp, end = 16.dp, bottom = 8.dp),
         color = MaterialTheme.colorScheme.secondary,
-        fontSize = 13.sp,
+        fontSize = 15.sp,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -62,59 +64,69 @@ fun PlainPreference(
     iconPadding: PaddingValues = PaddingValues(16.dp),
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
-    Row(
-        modifier = modifier
+    Surface(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = enabled, onClick = onClick),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = containerColor
     ) {
         Row(
-            horizontalArrangement = Arrangement.Start,
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (icon != null) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = title,
-                    modifier = Modifier.padding(iconPadding),
-                    tint = if (enabled) iconTint else iconTint.copy(alpha = 0.38f)
-                )
-            } else {
-                Spacer(
-                    modifier = Modifier
-                        .padding(iconPadding)
-                        .size(24.dp)
-                )
-            }
-
-            Column(
-                modifier = if (subtitle != null)
-                    Modifier.padding(16.dp)
-                else Modifier.padding(horizontal = 16.dp)
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = title,
-                    color = if (enabled) titleTint else titleTint.copy(alpha = 0.38f)
-                )
-
-                if (subtitle != null) {
-                    Text(
-                        text = subtitle,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 13.sp
+                if (icon != null) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = title,
+                        modifier = Modifier.padding(iconPadding),
+                        tint = if (enabled) iconTint else iconTint.copy(alpha = 0.38f)
+                    )
+                } else {
+                    Spacer(
+                        modifier = Modifier
+                            .padding(iconPadding)
+                            .size(24.dp)
                     )
                 }
-            }//: Column
+
+                Column(
+                    modifier = if (subtitle != null)
+                        Modifier.padding(16.dp)
+                    else Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = title,
+                        color = if (enabled) titleTint else titleTint.copy(alpha = 0.38f)
+                    )
+
+                    if (subtitle != null) {
+                        Text(
+                            text = subtitle,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 13.sp
+                        )
+                    }
+                }//: Column
+            }//: Row
+            if (isLoading) {
+                SmallCircularProgressIndicator(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }//: Row
-        if (isLoading) {
-            SmallCircularProgressIndicator(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-    }//: Row
+    }//: Surface
 }
 
 @Composable
@@ -126,66 +138,76 @@ fun SwitchPreference(
     @DrawableRes icon: Int? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     iconPadding: PaddingValues = PaddingValues(16.dp),
-    onValueChange: (Boolean) -> Unit
+    onValueChange: (Boolean) -> Unit,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
-    Row(
-        modifier = modifier
+    Surface(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onValueChange(preferenceValue?.not() ?: false)
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = containerColor
     ) {
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.Start,
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable {
+                    onValueChange(preferenceValue?.not() ?: false)
+                },
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (icon != null) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = title,
-                    modifier = Modifier.padding(iconPadding),
-                    tint = iconTint
-                )
-            } else {
-                Spacer(
-                    modifier = Modifier
-                        .padding(iconPadding)
-                        .size(24.dp)
-                )
-            }
-
-            Column(
-                modifier = if (subtitle != null)
-                    Modifier.padding(16.dp)
-                else Modifier.padding(horizontal = 16.dp)
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                if (subtitle != null) {
-                    Text(
-                        text = subtitle,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 13.sp,
-                        lineHeight = 14.sp
+                if (icon != null) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = title,
+                        modifier = Modifier.padding(iconPadding),
+                        tint = iconTint
+                    )
+                } else {
+                    Spacer(
+                        modifier = Modifier
+                            .padding(iconPadding)
+                            .size(24.dp)
                     )
                 }
-            }//: Column
-        }//: Row
 
-        Switch(
-            checked = preferenceValue ?: false,
-            onCheckedChange = {
-                onValueChange(it)
-            },
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-    }//: Row
+                Column(
+                    modifier = if (subtitle != null)
+                        Modifier.padding(16.dp)
+                    else Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = title,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    if (subtitle != null) {
+                        Text(
+                            text = subtitle,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 13.sp,
+                            lineHeight = 14.sp
+                        )
+                    }
+                }//: Column
+            }//: Row
+
+            Switch(
+                checked = preferenceValue ?: false,
+                onCheckedChange = {
+                    onValueChange(it)
+                },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }//: Row
+    }//: Surface
 }
 
 @Composable
@@ -196,49 +218,60 @@ fun <T> ListPreference(
     labelForValue: @Composable (T) -> String = { it.toString() },
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
-    onValueChange: (T) -> Unit
+    onValueChange: (T) -> Unit,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
     val windowInfo = LocalWindowInfo.current.containerSize
     var openDialog by remember { mutableStateOf(false) }
-    Row(
-        modifier = modifier
+
+    Surface(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable { openDialog = true },
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = containerColor
     ) {
-        if (icon != null) {
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = title,
-                modifier = Modifier.padding(16.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        } else {
-            Spacer(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(24.dp)
-            )
-        }
-
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable { openDialog = true },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = title,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            if (preferenceValue != null) {
-                Text(
-                    text = labelForValue(preferenceValue),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+            if (icon != null) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = title,
+                    modifier = Modifier.padding(16.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                Spacer(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(24.dp)
                 )
             }
-        }
-    }
+
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                if (preferenceValue != null) {
+                    Text(
+                        text = labelForValue(preferenceValue),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 13.sp
+                    )
+                }
+            }//: Column
+        }//: Row
+    }//: Surface
 
     if (openDialog) {
         AlertDialog(
@@ -282,19 +315,30 @@ fun <T> ListPreference(
     modifier: Modifier = Modifier,
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
-    onValueChange: (T) -> Unit
+    onValueChange: (T) -> Unit,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
-    ListPreference(
-        title = title,
-        values = entriesValues.entries.map { it.key },
-        labelForValue = { value ->
-            entriesValues[value]?.let { stringResource(it) }.orEmpty()
-        },
-        modifier = modifier,
-        preferenceValue = preferenceValue,
-        icon = icon,
-        onValueChange = onValueChange,
-    )
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = containerColor
+    ) {
+        ListPreference(
+            title = title,
+            values = entriesValues.entries.map { it.key },
+            labelForValue = { value ->
+                entriesValues[value]?.let { stringResource(it) }.orEmpty()
+            },
+            modifier = modifier,
+            preferenceValue = preferenceValue,
+            icon = icon,
+            onValueChange = onValueChange,
+            containerColor = Color.Transparent
+        )
+    }//: Surface
 }
 
 @Preview(showBackground = true)

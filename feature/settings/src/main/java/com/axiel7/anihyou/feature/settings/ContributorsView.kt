@@ -9,6 +9,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -54,7 +55,8 @@ fun ContributorsView() {
             contributors.forEach { (name, link) ->
                 PlainPreference(
                     title = name,
-                    onClick = { context.openActionView(link) }
+                    onClick = { context.openActionView(link) },
+                    containerColor = Color.Transparent
                 )
             }
         }

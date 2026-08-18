@@ -664,4 +664,7 @@
     <string name="priority_medium">Medium</string>
     <string name="priority_high">High</string>
     <string name="priority_color_change">Change priority colors</string>
+    <string name="general">General</string>
+    <string name="logout_confirm">Do you really want to log out?</string>
+    <string name="empty_custom_list_error">Can not add a empty custom list!</string>
 </resources>
