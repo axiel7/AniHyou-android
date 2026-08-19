@@ -1,17 +1,12 @@
 package com.axiel7.anihyou.feature.editmedia.composables
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -20,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentCompositeKeyHash
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
@@ -155,7 +149,7 @@ fun EditMediaProgressRow(
         ) {
             Icon(
                 painter = painterResource(R.drawable.remove_24),
-                contentDescription = if (singleEpisode) "Not watched" else stringResource(R.string.minus_one)
+                contentDescription = stringResource(R.string.minus_one)
             )
         }
         FilledTonalIconButton(
@@ -172,7 +166,7 @@ fun EditMediaProgressRow(
         ) {
             Icon(
                 painter = painterResource(if (singleEpisode) R.drawable.check_24 else R.drawable.add_24),
-                contentDescription = if (singleEpisode) "Watched" else stringResource(R.string.plus_one)
+                contentDescription = stringResource(R.string.plus_one)
             )
         }
     }
