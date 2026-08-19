@@ -22,8 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -329,26 +329,19 @@ fun <T> ListPreference(
     shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+    ListPreference(
+        title = title,
+        values = entriesValues.entries.map { it.key },
+        labelForValue = { value ->
+            entriesValues[value]?.let { stringResource(it) }.orEmpty()
+        },
+        modifier = modifier,
+        preferenceValue = preferenceValue,
+        icon = icon,
+        onValueChange = onValueChange,
         shape = shape,
-        color = containerColor
-    ) {
-        ListPreference(
-            title = title,
-            values = entriesValues.entries.map { it.key },
-            labelForValue = { value ->
-                entriesValues[value]?.let { stringResource(it) }.orEmpty()
-            },
-            modifier = modifier,
-            preferenceValue = preferenceValue,
-            icon = icon,
-            onValueChange = onValueChange,
-            containerColor = Color.Transparent
-        )
-    }//: Surface
+        containerColor = containerColor
+    )
 }
 
 
@@ -359,7 +352,8 @@ fun ScoreStepsPreferenceSheet(
     @DrawableRes icon: Int? = null,
     initialValue: Double = 1.0,
     scoreFormat: ScoreFormat?,
-    changeValue: (Double) -> Unit
+    changeValue: (Double) -> Unit,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp)
 ) {
     val minValue = when (scoreFormat) {
         ScoreFormat.POINT_100 -> 1.0
@@ -397,7 +391,8 @@ fun ScoreStepsPreferenceSheet(
         icon = icon,
         onClick = {
             openModal = true
-        }
+        },
+        shape = shape
     )
 
     if (openModal) {
@@ -485,6 +480,7 @@ private fun PreferencesPreviews() {
                 subtitle = "Subtitle",
                 icon = R.drawable.settings_24,
                 onClick = {},
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
             )
 
             SwitchPreference(
@@ -508,7 +504,8 @@ private fun PreferencesPreviews() {
                 icon = R.drawable.settings_24,
                 scoreFormat = ScoreFormat.POINT_10_DECIMAL,
                 initialValue = 2.0,
-                changeValue = {}
+                changeValue = {},
+                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
             )
         }
     }

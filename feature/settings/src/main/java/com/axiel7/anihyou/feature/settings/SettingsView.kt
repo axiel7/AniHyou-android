@@ -240,6 +240,20 @@ private fun SettingsContent(
                     shape = middleShape
                 )
 
+                if (uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL ||
+                    uiState.scoreFormat == ScoreFormat.POINT_10 ||
+                    uiState.scoreFormat == ScoreFormat.POINT_100
+                ) {
+                    ScoreStepsPreferenceSheet(
+                        title = stringResource(R.string.score_steps),
+                        icon = R.drawable.star_24,
+                        changeValue = { event?.setScoreStep(it) },
+                        scoreFormat = uiState.scoreFormat,
+                        initialValue = uiState.scoreStep,
+                        shape = middleShape
+                    )
+                }
+
                 ListPreference(
                     title = stringResource(R.string.staff_character_name_language),
                     entriesValues = UserStaffNameLanguage.entriesLocalized,
@@ -259,26 +273,6 @@ private fun SettingsContent(
                     onValueChange = { event?.setHideScores(it) },
                     shape = middleShape
                 )
-                
-                ListPreference(
-                    title = stringResource(R.string.score_format),
-                    entriesValues = ScoreFormat.entriesLocalized,
-                    preferenceValue = uiState.scoreFormat,
-                    icon = R.drawable.star_24,
-                    onValueChange = { event?.setScoreFormat(it) }
-                )
-                
-                if (uiState.scoreFormat == ScoreFormat.POINT_10_DECIMAL ||
-                    uiState.scoreFormat == ScoreFormat.POINT_10 ||
-                    uiState.scoreFormat == ScoreFormat.POINT_100
-                ) {
-                    ScoreStepsPreferenceSheet(
-                        title = stringResource(R.string.score_steps),
-                        changeValue = { event?.setScoreStep(it) },
-                        scoreFormat = uiState.scoreFormat,
-                        initialValue = uiState.scoreStep
-                    )
-                }
             }
 
 
