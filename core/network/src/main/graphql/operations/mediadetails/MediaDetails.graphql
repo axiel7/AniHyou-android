@@ -94,6 +94,7 @@ fragment BasicMediaDetails on Media {
     title {
         userPreferred
     }
+    duration
     episodes
     chapters
     volumes

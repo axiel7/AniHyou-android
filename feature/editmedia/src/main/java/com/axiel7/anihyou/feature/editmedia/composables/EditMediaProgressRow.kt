@@ -1,12 +1,17 @@
 package com.axiel7.anihyou.feature.editmedia.composables
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -15,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentCompositeKeyHash
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
@@ -40,9 +46,10 @@ fun EditMediaProgressRow(
     @DrawableRes icon: Int? = null,
     progress: Int?,
     totalProgress: Int?,
+    singleEpisode: Boolean = false,
     onValueChange: (String) -> Unit,
     onMinusClick: () -> Unit,
-    onPlusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     Row(
@@ -106,28 +113,66 @@ fun EditMediaProgressRow(
             )
         }
 
+        val isWatched = progress != null && progress > 0
+        val checkedColors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        )
+        val unwatchedInactiveColors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+        )
+        val watchedInactiveColors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+        val defaultColors = IconButtonDefaults.filledTonalIconButtonColors()
+
+        val leftBtnColors = when {
+            !singleEpisode -> defaultColors
+            isWatched -> unwatchedInactiveColors
+            else -> checkedColors
+        }
+
+        val rightBtnColors = when {
+            !singleEpisode -> defaultColors
+            isWatched -> checkedColors
+            else -> watchedInactiveColors
+        }
+
         FilledTonalIconButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onMinusClick()
+                if (singleEpisode) {
+                    if (isWatched) onValueChange("0")
+                } else {
+                    onMinusClick()
+                }
             },
+            colors = leftBtnColors,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
                 painter = painterResource(R.drawable.remove_24),
-                contentDescription = stringResource(R.string.minus_one)
+                contentDescription = if (singleEpisode) "Not watched" else stringResource(R.string.minus_one)
             )
         }
         FilledTonalIconButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onPlusClick()
+                if (singleEpisode) {
+                    if (!isWatched) onValueChange("1")
+                } else {
+                    onPlusClick()
+                }
             },
+            colors = rightBtnColors,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
-                painter = painterResource(R.drawable.add_24),
-                contentDescription = stringResource(R.string.plus_one)
+                painter = painterResource(if (singleEpisode) R.drawable.check_24 else R.drawable.add_24),
+                contentDescription = if (singleEpisode) "Watched" else stringResource(R.string.plus_one)
             )
         }
     }

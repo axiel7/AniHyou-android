@@ -665,4 +665,5 @@
     <string name="priority_high">High</string>
     <string name="priority_color_change">Change priority colors</string>
     <string name="score_steps">Score steps</string>
+    <string name="unknown_duration">Unknown duration</string>
 </resources>

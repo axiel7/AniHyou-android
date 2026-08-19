@@ -24,12 +24,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
-import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
-import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
@@ -40,6 +38,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -54,6 +53,7 @@ fun CurrentListItem(
 ) {
     val scoreFormat = LocalScoreFormat.current
     val blurAdult = LocalBlurAdult.current
+    val singleEpisode = item.media?.basicMediaDetails?.type == MediaType.ANIME && (item.media?.basicMediaDetails?.episodes == 1)
     ListItem(
         onClick = onClick,
         modifier = modifier,
@@ -107,18 +107,18 @@ fun CurrentListItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                val progress = item.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
-                val duration = item.duration()?.format()
-                Text(
-                    text = if (duration != null) "$progress/$duration" else "$progress",
-                    fontSize = 15.sp,
+                MediaProgressIndicator(
+                    item = item,
+                    singleEpisode = singleEpisode
                 )
-
                 IncrementOneButton(
                     onClickPlus = onClickPlus,
                     blockPlus = blockPlus,
                     enabled = isPlusEnabled,
+                    singleEpisode = singleEpisode
                 )
+
+
             }//:Row
         }//:Column
     }
