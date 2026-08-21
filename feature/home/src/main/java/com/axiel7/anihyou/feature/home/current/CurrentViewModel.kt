@@ -255,6 +255,13 @@ class CurrentViewModel(
             }
             .launchIn(viewModelScope)
 
+
+        defaultPreferencesRepository.scoreSteps
+            .onEach { value ->
+                mutableUiState.update { it.copy(scoreStep = value) }
+            }
+            .launchIn(viewModelScope)
+
         // next season on list
         mutableUiState
             .distinctUntilChanged { _, new ->

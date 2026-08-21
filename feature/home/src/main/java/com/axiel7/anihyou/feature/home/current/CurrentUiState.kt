@@ -17,6 +17,7 @@ data class CurrentUiState(
     val selectedItem: CommonMediaListEntry? = null,
     val selectedType: CurrentListType? = null,
     val openSetScoreDialog: Boolean = false,
+    val scoreStep: Double = 1.0,
     val isLoadingPlusOne: Boolean = false,
     val fetchFromNetwork: Boolean = false,
     override val error: String? = null,

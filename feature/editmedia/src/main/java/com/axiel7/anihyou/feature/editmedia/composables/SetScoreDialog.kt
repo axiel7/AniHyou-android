@@ -21,7 +21,8 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 fun SetScoreDialog(
     onDismiss: () -> Unit,
     onConfirm: (Double?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    increments: Double = 1.0
 ) {
     var score by remember { mutableStateOf<Double?>(null) }
     AlertDialog(
@@ -48,6 +49,7 @@ fun SetScoreDialog(
                 ScoreView(
                     rating = score,
                     onRatingChanged = { score = it },
+                    increments = increments
                 )
             }
         }
