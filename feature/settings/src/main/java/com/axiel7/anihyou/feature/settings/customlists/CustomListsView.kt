@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -103,22 +104,28 @@ fun CustomListsContent(
                 PlainPreference(
                     title = stringResource(R.string.add),
                     icon = R.drawable.add_24,
-                    onClick = { openDialog = true }
+                    onClick = { openDialog = true },
+                    containerColor = Color.Transparent
                 )
 
                 if (openDialog) {
                     var newList by remember { mutableStateOf("") }
+                    val emptyListError = stringResource(R.string.empty_custom_list_error)
                     DialogWithTextInput(
                         title = mediaType.localized(),
                         label = stringResource(R.string.list_name),
                         value = newList,
                         onValueChange = { newList = it },
                         onConfirm = {
-                            event?.onListAdded(newList, mediaType)
                             openDialog = false
+                            if (newList.isNotBlank()) {
+                                event?.onListAdded(newList, mediaType)
+                            } else {
+                                event?.showError(emptyListError)
+                            }
                             newList = ""
                         },
-                        onDismiss = { openDialog = false }
+                        onDismiss = { openDialog = false },
                     )
                 }
             }

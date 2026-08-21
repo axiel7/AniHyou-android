@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,7 +37,8 @@ import com.axiel7.anihyou.core.ui.utils.LocaleUtils.getAvailableLocales
 
 @Composable
 fun LanguagePreference(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp)
 ) {
     val context = LocalContext.current
     val windowInfo = LocalWindowInfo.current.containerSize
@@ -48,33 +51,41 @@ fun LanguagePreference(
         LocaleUtils.setDefaultLocale(currentLocale)
     }
 
-    Row(
-        modifier = modifier
+    Surface(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable { openDialog = true },
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
-        Icon(
-            painter = painterResource(R.drawable.language_24),
-            contentDescription = stringResource(R.string.language),
-            modifier = Modifier.padding(16.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable { openDialog = true },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(R.string.language),
-                color = MaterialTheme.colorScheme.onSurface
+            Icon(
+                painter = painterResource(R.drawable.language_24),
+                contentDescription = stringResource(R.string.language),
+                modifier = Modifier.padding(16.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
 
-            Text(
-                text = availableLocales[currentLocale] ?: stringResource(R.string.theme_system),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp
-            )
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.language),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    text = availableLocales[currentLocale] ?: stringResource(R.string.theme_system),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp
+                )
+            }
         }
     }
 
