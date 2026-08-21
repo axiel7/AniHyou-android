@@ -107,34 +107,7 @@ fun EditMediaProgressRow(
             )
         }
 
-        val isWatched = progress != null && progress > 0
-        val checkedColors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-        )
-        val unwatchedInactiveColors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-
-        )
-        val watchedInactiveColors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-        val defaultColors = IconButtonDefaults.filledTonalIconButtonColors()
-
-        val leftBtnColors = when {
-            !singleEpisode -> defaultColors
-            isWatched -> unwatchedInactiveColors
-            else -> checkedColors
-        }
-
-        val rightBtnColors = when {
-            !singleEpisode -> defaultColors
-            isWatched -> checkedColors
-            else -> watchedInactiveColors
-        }
-
+        val hasProgress = progress != null && progress > 0
         FilledTonalIconButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -144,7 +117,7 @@ fun EditMediaProgressRow(
                     onMinusClick()
                 }
             },
-            colors = leftBtnColors,
+            enabled = hasProgress,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
@@ -161,7 +134,7 @@ fun EditMediaProgressRow(
                     onPlusClick()
                 }
             },
-            colors = rightBtnColors,
+            enabled = if (singleEpisode) !hasProgress else true,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
