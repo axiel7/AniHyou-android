@@ -112,7 +112,7 @@ fun EditMediaProgressRow(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 if (singleEpisode) {
-                    if (isWatched) onValueChange("0")
+                    if (hasProgress) onValueChange("0")
                 } else {
                     onMinusClick()
                 }
@@ -129,7 +129,7 @@ fun EditMediaProgressRow(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 if (singleEpisode) {
-                    if (!isWatched) onValueChange("1")
+                    if (!hasProgress) onValueChange("1")
                 } else {
                     onPlusClick()
                 }
