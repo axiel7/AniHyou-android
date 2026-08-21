@@ -142,8 +142,8 @@ fun PriorityIndicator(
     modifier: Modifier = Modifier,
     priority: Int,
     allPriorityColors: AllPriorityColors,
+    shape: RoundedCornerShape = RoundedCornerShape(topEnd = 8.dp, bottomStart = 16.dp)
 ) {
-    val shape = RoundedCornerShape(topEnd = 8.dp, bottomStart = 16.dp)
     val priorityColors = allPriorityColors.forPriority(priority)
 
     Row(
