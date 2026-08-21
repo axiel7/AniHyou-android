@@ -58,8 +58,8 @@ fun PreferencesTitle(text: String) {
         modifier = Modifier
             .padding(start = 24.dp, top = 24.dp, end = 16.dp, bottom = 8.dp),
         color = MaterialTheme.colorScheme.secondary,
-        fontSize = 15.sp,
-        fontWeight = FontWeight.SemiBold
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Medium
     )
 }
 
@@ -78,6 +78,7 @@ fun PlainPreference(
     shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
+    val verticalPadding = if (subtitle == null) 8.dp else 1.dp
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,7 +89,8 @@ fun PlainPreference(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable(enabled = enabled, onClick = onClick),
+                .clickable(enabled = enabled, onClick = onClick)
+                .padding(vertical = verticalPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -152,6 +154,7 @@ fun SwitchPreference(
     shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
+    val verticalPadding = if (subtitle == null) 8.dp else 1.dp
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +167,8 @@ fun SwitchPreference(
                 .fillMaxWidth()
                 .clickable {
                     onValueChange(preferenceValue?.not() ?: false)
-                },
+                }
+                .padding(vertical = verticalPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -235,6 +239,7 @@ fun <T> ListPreference(
     val windowInfo = LocalWindowInfo.current.containerSize
     var openDialog by remember { mutableStateOf(false) }
 
+    val verticalPadding = if (preferenceValue == null) 8.dp else 1.dp
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -245,7 +250,8 @@ fun <T> ListPreference(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable { openDialog = true },
+                .clickable { openDialog = true }
+                .padding(vertical = verticalPadding),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
