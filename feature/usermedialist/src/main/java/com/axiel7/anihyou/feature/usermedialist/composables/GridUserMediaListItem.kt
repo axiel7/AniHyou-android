@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.ListStatusBadgeIndicator
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_HEIGHT
@@ -88,12 +92,41 @@ fun GridUserMediaListItem(
                     )
                 }
 
-                if (priority != null && (priority > 0 || showLowPriority)) {
-                    PriorityIndicator(
-                        modifier = Modifier.align(Alignment.TopEnd),
-                        priority = priority,
-                        allPriorityColors = allPriorityColors,
-                    )
+                Column(
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    val nextAiringEpisode = item.media?.nextAiringEpisode
+                    val hasPriorityBadge = priority != null && (priority > 0 || showLowPriority)
+
+                    if (nextAiringEpisode != null) {
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = if (hasPriorityBadge) {
+                                RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp, bottomStart = 12.dp)
+                            } else {
+                                RoundedCornerShape(12.dp)
+                            }
+                        ) {
+                            AiringScheduleText(
+                                item = item,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                textAlign = TextAlign.Left,
+                            )
+                        }
+                    }
+
+                    if (hasPriorityBadge) {
+                        PriorityIndicator(
+                            priority = priority,
+                            modifier = Modifier.align(Alignment.End),
+                            allPriorityColors = allPriorityColors,
+                            shape = if (nextAiringEpisode != null) {
+                                RoundedCornerShape(bottomStart = 16.dp)
+                            } else {
+                                RoundedCornerShape(topEnd = 8.dp, bottomStart = 16.dp)
+                            }
+                        )
+                    }
                 }
             }//:Box
 
