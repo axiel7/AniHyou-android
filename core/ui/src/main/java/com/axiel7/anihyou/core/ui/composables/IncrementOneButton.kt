@@ -114,13 +114,13 @@ fun IncrementOneButton(
                 contentColor = contentColor,
             )
         ) {
-            if(singleEpisode){
+            if (singleEpisode) {
                 Icon(
                     painter = painterResource(id = R.drawable.check_24),
                     contentDescription = stringResource(R.string.add),
                     modifier = Modifier.size(18.dp)
                 )
-            } else{
+            } else {
                 Text(text = stringResource(R.string.plus_one))
             }
         }
