@@ -25,17 +25,26 @@ fun AiringScheduleText(
             text =
             if (isBehind) {
                 val episodes = item.episodesBehind()
-                pluralStringResource(
-                    id = R.plurals.num_episodes_behind,
-                    count = episodes,
-                    episodes
-                )
+                if (item.media?.basicMediaDetails?.episodes != 1) {
+                    pluralStringResource(
+                        id = R.plurals.num_episodes_behind,
+                        count = episodes,
+                        episodes
+                    )
+                } else ""
             } else {
-                stringResource(
-                    R.string.episode_in_time,
-                    nextAiringEpisode.episode,
-                    nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
-                )
+                if (item.media?.basicMediaDetails?.episodes == 1) {
+                    stringResource(
+                        R.string.airing_in,
+                        nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                    )
+                } else {
+                    stringResource(
+                        R.string.episode_in_time,
+                        nextAiringEpisode.episode,
+                        nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                    )
+                }
             },
             modifier = modifier,
             color = if (isBehind) MaterialTheme.colorScheme.primary

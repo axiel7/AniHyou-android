@@ -40,9 +40,10 @@ fun EditMediaProgressRow(
     @DrawableRes icon: Int? = null,
     progress: Int?,
     totalProgress: Int?,
+    singleEpisode: Boolean = false,
     onValueChange: (String) -> Unit,
     onMinusClick: () -> Unit,
-    onPlusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     Row(
@@ -106,11 +107,17 @@ fun EditMediaProgressRow(
             )
         }
 
+        val hasProgress = progress != null && progress > 0
         FilledTonalIconButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onMinusClick()
+                if (singleEpisode) {
+                    if (hasProgress) onValueChange("0")
+                } else {
+                    onMinusClick()
+                }
             },
+            enabled = hasProgress,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
@@ -121,12 +128,17 @@ fun EditMediaProgressRow(
         FilledTonalIconButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onPlusClick()
+                if (singleEpisode) {
+                    if (!hasProgress) onValueChange("1")
+                } else {
+                    onPlusClick()
+                }
             },
+            enabled = if (singleEpisode) !hasProgress else true,
             shapes = IconButtonDefaults.shapes()
         ) {
             Icon(
-                painter = painterResource(R.drawable.add_24),
+                painter = painterResource(if (singleEpisode) R.drawable.check_24 else R.drawable.add_24),
                 contentDescription = stringResource(R.string.plus_one)
             )
         }

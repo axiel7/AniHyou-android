@@ -22,22 +22,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
-import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.exampleBasicMediaListEntry
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
-import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
+import com.axiel7.anihyou.core.model.media.isActive
 import com.axiel7.anihyou.core.model.media.localized
-import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
+import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
 import com.axiel7.anihyou.core.ui.composables.media.priorityIcon
 import com.axiel7.anihyou.core.ui.composables.scores.MinimalScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -60,17 +59,17 @@ fun MinimalUserMediaListItem(
 ) {
     val status = listStatus ?: item.basicMediaListEntry.status
     val priority = item.basicMediaListEntry.priority
+    val singleEpisode = item.media?.basicMediaDetails?.type == MediaType.ANIME && (item.media?.basicMediaDetails?.episodes == 1)
     ListItem(
         onClick = onClick,
         onLongClick = onLongClick,
-        trailingContent = if (isMyList
-            && (status == MediaListStatus.CURRENT || status == MediaListStatus.REPEATING)
-        ) {
+        trailingContent = if (isMyList && status?.isActive() == true) {
             {
                 IncrementOneButton(
                     onClickPlus = onClickPlus,
                     blockPlus = blockPlus,
                     enabled = isPlusEnabled,
+                    singleEpisode = singleEpisode
                 )
             }
         } else null,
@@ -98,19 +97,13 @@ fun MinimalUserMediaListItem(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                val progress = item.basicMediaListEntry.progressOrVolumes()?.format() ?: 0
-                val duration = item.duration()?.format()
-                Text(
-                    text = if (duration != null) "$progress/$duration" else "$progress",
+
+                MediaProgressIndicator(
+                    item = item,
+                    singleEpisode = singleEpisode,
                     fontSize = 15.sp,
-                    maxLines = 1
                 )
-                if (item.basicMediaListEntry.isUsingVolumeProgress()) {
-                    Icon(
-                        painter = painterResource(R.drawable.bookmark_20),
-                        contentDescription = stringResource(R.string.volumes),
-                    )
-                }
+
                 if (item.basicMediaListEntry.score?.isGreaterThanZero() == true) {
                     MinimalScoreIndicator(
                         score = item.basicMediaListEntry.score,

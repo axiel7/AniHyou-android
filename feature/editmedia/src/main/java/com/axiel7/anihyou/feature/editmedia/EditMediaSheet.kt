@@ -130,7 +130,7 @@ private fun EditMediaSheetContent(
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
-
+    val singleEpisode = uiState.mediaDetails.type == MediaType.ANIME && uiState.mediaDetails.episodes == 1
     if (uiState.openDatePicker) {
         EditMediaDatePicker(
             datePickerState = datePickerState,
@@ -245,7 +245,12 @@ private fun EditMediaSheetContent(
             EditMediaProgressRow(
                 label = if (uiState.mediaDetails.isAnime()) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
-                icon = if (uiState.mediaDetails.isAnime()) R.drawable.play_arrow_24
+                icon = if (uiState.mediaDetails.isAnime()) {
+                    when {
+                        singleEpisode -> R.drawable.movie_24
+                        else -> R.drawable.play_arrow_24
+                    }
+                }
                 else R.drawable.book_24,
                 progress = uiState.progress,
                 modifier = Modifier.padding(
@@ -253,6 +258,7 @@ private fun EditMediaSheetContent(
                     end = 16.dp
                 ),
                 totalProgress = uiState.mediaDetails.duration(),
+                singleEpisode = singleEpisode,
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },
                 onPlusClick = { event?.onChangeProgress(uiState.progress?.plus(1) ?: 1) }
