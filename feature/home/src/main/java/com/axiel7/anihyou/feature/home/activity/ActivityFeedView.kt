@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.result.ResultEffect
+import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
@@ -31,12 +32,12 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityFeedItem
 import com.axiel7.anihyou.core.ui.composables.activity.ActivityItemPlaceholder
+import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingFilterChip
-import com.axiel7.anihyou.feature.home.activity.composables.ActivityTypeChip
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
@@ -97,9 +98,11 @@ private fun ActivityFeedContent(
                         .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    ActivityTypeChip(
-                        value = uiState.type,
-                        onValueChanged = { event?.setType(it) }
+                    AssistChipWithMenu(
+                        values = ActivityTypeGrouped.entries,
+                        selectedValue = uiState.type,
+                        onValueSelected = { event?.setType(it) },
+                        valueString = { it.localized() },
                     )
                     ActivityFollowingChip(
                         value = uiState.isFollowing,
