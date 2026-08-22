@@ -77,6 +77,7 @@
     <string name="theme_black">Negro</string>
     <string name="account">Conta</string>
     <string name="version">Versão</string>
+    <string name="contributors">Contribuintes</string>
     <string name="score">Pontuação</string>
     <string name="total_entries">Total: %s</string>
     <string name="loading">Carregando</string>
@@ -143,4 +144,8 @@
     <string name="show_more">Mais</string>
     <string name="random">Aleatório</string>
     <string name="last_used">Último usado</string>
+    <string name="priority_value">Prioridade: %s</string>
+    <string name="priority_low">Baixo</string>
+    <string name="priority_medium">Médio</string>
+    <string name="priority_high">Alto</string>
 </resources>

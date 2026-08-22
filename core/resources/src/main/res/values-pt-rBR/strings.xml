@@ -164,6 +164,7 @@
     <string name="account">Conta</string>
     <string name="github_repository">Repositório GitHub</string>
     <string name="version">Versão</string>
+    <string name="contributors">Contribuidores</string>
     <string name="anilist_account_settings">Ajustes da conta AniList</string>
     <string name="logout">Deslogar</string>
     <string name="character_media">Mídia</string>
@@ -425,4 +426,11 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="hide_scores">Ocultar notas</string>
+    <string name="priority">Prioridade</string>
+    <string name="priority_value">Prioridade: %s</string>
+    <string name="priority_low">Baixo</string>
+    <string name="priority_medium">Médio</string>
+    <string name="priority_high">Alto</string>
+    <string name="general">Geral</string>
 </resources>

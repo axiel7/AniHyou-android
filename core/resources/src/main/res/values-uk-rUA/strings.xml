@@ -81,7 +81,7 @@
         <item quantity="many">%d розділів</item>
         <item quantity="other">%d розділів</item>
     </plurals>
-    <string name="finished">За завершеним</string>
+    <string name="finished">Завершене</string>
     <string name="releasing">Випускається</string>
     <string name="not_yet_released">Ще не випущено</string>
     <string name="cancelled">Скасовано</string>
@@ -165,6 +165,7 @@
     <string name="relation_source">Першотвір</string>
     <string name="relation_compilation">Збірка</string>
     <string name="relation_contains">Уміст</string>
+    <string name="relation_same_universe">Спільний всесвіт</string>
     <string name="recommendations">Рекомендації</string>
     <string name="settings">Налаштування</string>
     <string name="display">Дисплей</string>
@@ -293,7 +294,7 @@
     <string name="text_status">Текстовий статус</string>
     <string name="list_progress">Прогрес у каталозі</string>
     <string name="all">Усі</string>
-    <string name="global_feed">Загально</string>
+    <string name="global_feed">Глобальний</string>
     <string name="format_bold">Жирний</string>
     <string name="format_italic">Курсив</string>
     <string name="format_strikethrough">Закреслений</string>
@@ -655,4 +656,17 @@
     <string name="hide_scores">Приховати оцінки</string>
     <string name="upvote">Доречно</string>
     <string name="downvote">Недоречно</string>
+    <string name="reorder">Перевпорядкувати</string>
+    <string name="reorder_hint">Натисніть та утримуйте для перевпорядкування</string>
+    <string name="activity_filter_following">Від окремих</string>
+    <string name="priority">Пріоритет</string>
+    <string name="show_low_priority">Показувати низький пріоритет</string>
+    <string name="priority_value">Пріоритет: %s</string>
+    <string name="priority_low">Низький</string>
+    <string name="priority_medium">Середній</string>
+    <string name="priority_high">Високий</string>
+    <string name="priority_color_change">Змінити кольори пріоритету</string>
+    <string name="general">Загальне</string>
+    <string name="logout_confirm">Ви дійсно бажаєте вийти з акаунта?</string>
+    <string name="score_steps">Кроки зміни</string>
 </resources>

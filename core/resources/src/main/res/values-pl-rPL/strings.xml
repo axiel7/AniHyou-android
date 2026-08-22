@@ -165,6 +165,7 @@
     <string name="relation_source">Źródło</string>
     <string name="relation_compilation">Kompilacja</string>
     <string name="relation_contains">Zawiera</string>
+    <string name="relation_same_universe">To samo uniwersum</string>
     <string name="recommendations">Polecane</string>
     <string name="settings">Ustawienia</string>
     <string name="display">Widok</string>
@@ -178,6 +179,7 @@
     <string name="account">Konto</string>
     <string name="github_repository">Repozytorium GitHub</string>
     <string name="version">Wersja</string>
+    <string name="contributors">Współtwórcy</string>
     <string name="anilist_account_settings">Ustawienia konta AniList</string>
     <string name="logout">Wyloguj się</string>
     <string name="character_media">Media</string>
@@ -286,6 +288,7 @@
     <string name="update_interval">Częstotliwość aktualizacji</string>
     <string name="airing_anime_notifications">Powiadomienia o emisji anime</string>
     <string name="color">Kolor</string>
+    <string name="color_palette">Schemat kolorów</string>
     <string name="discover">Odkryj</string>
     <string name="default_home_tab">Domyślna główna zakładka</string>
     <string name="text_status">Status tekstowy</string>
@@ -348,10 +351,20 @@
     <string name="from_year">Od roku</string>
     <string name="to_year">Do roku</string>
     <string name="staff_role_a_and_r_producer">A&amp;R Producent</string>
+    <string name="staff_role_adr_director">Reżyser ADR</string>
+    <string name="staff_role_accessory_design">Projektowanie akcesoriów</string>
     <string name="staff_role_action_animator">Animator akcji</string>
+    <string name="staff_role_action_director">Reżyser scen akcji</string>
+    <string name="staff_role_action_animation_director">Reżyser animacji akcji</string>
+    <string name="staff_role_action_animation_supervisor">Inspektor Animacji Akcji</string>
     <string name="staff_role_advertising">Reklamowanie</string>
     <string name="staff_role_advertising_producer">Producent reklamowy</string>
+    <string name="staff_role_animation_director">Reżyser Animacji</string>
+    <string name="staff_role_animation_producer">Producent Animacji</string>
+    <string name="staff_role_animation_production_assistance">Wsparcie Przy Produkcji Animacji</string>
+    <string name="staff_role_animation_supervisor">Inspektor Animacji</string>
     <string name="staff_role_animation">Animacja</string>
+    <string name="staff_role_art">Grafika</string>
     <string name="staff_role_music">Muzyka</string>
     <string name="staff_role_planning">Planowane</string>
     <string name="hide_filters">Ukryj filtry</string>
@@ -419,4 +432,11 @@
         <item quantity="many">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="hide_scores">Ukryj oceny</string>
+    <string name="priority">Priorytet</string>
+    <string name="priority_value">Priorytet: %s</string>
+    <string name="priority_low">Niski</string>
+    <string name="priority_medium">Średni</string>
+    <string name="priority_high">Wysoki</string>
+    <string name="general">Ogólny</string>
 </resources>

@@ -21,6 +21,9 @@
     <plurals name="num_episodes">
         <item quantity="other">%d tập</item>
     </plurals>
+    <plurals name="num_chapters">
+        <item quantity="other">%d chương</item>
+    </plurals>
     <string name="finished">Đã hoàn tất</string>
     <string name="cancelled">Đã huỷ bỏ</string>
     <string name="favorites">Yêu thích</string>
@@ -110,6 +113,7 @@
     <string name="genre_romance">Lãng mạn</string>
     <string name="reading">Đang đọc</string>
     <string name="staff_role_a_and_r_producer">Sản xuất A&amp;R</string>
+    <string name="staff_role_adr_director">Giám đốc ADR</string>
     <string name="staff_role_advertising">Quảng cáo</string>
     <string name="staff_role_advertising_producer">Sản xuất quảng cáo</string>
     <string name="staff_role_animation_director">Giám đốc hoạt ảnh</string>
@@ -150,11 +154,24 @@
     <string name="progress">Tiến độ</string>
     <string name="random">Ngẫu nhiên</string>
     <string name="custom_color">Màu tuỳ chỉnh</string>
+    <string name="newly_manga">Manga mới thêm</string>
+    <string name="newly_anime">Anime mới thêm</string>
     <string name="anime_behind">Anime chưa xem</string>
     <string name="default_tab">Thẻ mặc định</string>
     <string name="male">Nam</string>
     <string name="female">Nữ</string>
+    <string name="watched_episode_of">Đã xem tập %1$s của %2$s</string>
+    <string name="rewatched_episode_of">Đã xem lại tập %1$s của %2$s</string>
+    <string name="read_chapter_of">Đã đọc chương %1$s của %2$s</string>
+    <string name="reread_chapter_of">Đã đọc lại chương %1$s của %2$s</string>
+    <string name="plans_to_watch_anime">Dự kiến xem %s</string>
+    <string name="plans_to_read_manga">Dự kiến đọc %s</string>
+    <string name="completed_media">Đã hoàn thành %s</string>
+    <string name="dropped_media">Đã bỏ %s</string>
+    <string name="paused_media">Đã tạm dừng %s</string>
+    <string name="reread_media">Đã đọc lại %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d h</item>
     </plurals>
+    <string name="general">Tổng quát</string>
 </resources>

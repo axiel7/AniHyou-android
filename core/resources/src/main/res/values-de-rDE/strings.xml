@@ -151,6 +151,7 @@
     <string name="relation_source">Quelle</string>
     <string name="relation_compilation">Zusammenstellung</string>
     <string name="relation_contains">Enthält</string>
+    <string name="relation_same_universe">Gleiches Universum</string>
     <string name="recommendations">Empfehlungen</string>
     <string name="settings">Einstellungen</string>
     <string name="display">Anzeigen</string>
@@ -164,6 +165,7 @@
     <string name="account">Benutzerkonto</string>
     <string name="github_repository">GitHub-Repository</string>
     <string name="version">Version</string>
+    <string name="contributors">Mitwirkende</string>
     <string name="anilist_account_settings">AniList-Accounteinstellungen</string>
     <string name="logout">Abmelden</string>
     <string name="character_media">Medien</string>
@@ -272,6 +274,7 @@
     <string name="update_interval">Aktualisierungsintervall</string>
     <string name="airing_anime_notifications">Benachrichtigungen über die Ausstrahlung von Anime</string>
     <string name="color">Farbe</string>
+    <string name="color_palette">Farbpalette</string>
     <string name="discover">Entdecken</string>
     <string name="default_home_tab">Standard-Registerkarte (Start)</string>
     <string name="text_status">Text-Status</string>
@@ -334,6 +337,7 @@
     <string name="from_year">Ab Jahr</string>
     <string name="to_year">Bis Jahr</string>
     <string name="staff_role_a_and_r_producer">A&amp;R Produzent</string>
+    <string name="staff_role_adr_director">ADR Regie</string>
     <string name="staff_role_accessory_design">Accessoire-Design</string>
     <string name="staff_role_action_animator">Action-Animator</string>
     <string name="staff_role_action_director">Action Regisseur</string>
@@ -438,8 +442,10 @@
     <string name="staff_role_2nd_key_animation">2. Key Animation</string>
     <string name="staff_role_music">Musik</string>
     <string name="staff_role_offline_editing">Offline-Bearbeitung</string>
+    <string name="staff_role_photography_assistance">Kameraassistenz</string>
     <string name="staff_role_photography_manager">Fotografie Manager</string>
     <string name="staff_role_photography">Fotografie</string>
+    <string name="staff_role_planning_assistance">Planungsassistenz</string>
     <string name="staff_role_planning">Planer</string>
     <string name="staff_role_producer">Produzent</string>
     <string name="staff_role_production_assistance">Produktionsassistenz</string>
@@ -449,6 +455,10 @@
     <string name="staff_role_production_desk">Produktionstisch</string>
     <string name="staff_role_production">Produktion</string>
     <string name="staff_role_prop_design">Requisiten-Design</string>
+    <string name="staff_role_recording_assistant">Tonassistenz</string>
+    <string name="staff_role_script">Drehbuch</string>
+    <string name="staff_role_script_assistance">Drehbuchassistenz</string>
+    <string name="staff_role_translator">Übersetzer</string>
     <string name="staff_role_video_editing">Videobearbeitung</string>
     <string name="staff_role_visual_director">Visueller Direktor</string>
     <string name="staff_role_visual_effects">Visuelle Effekte</string>
@@ -508,6 +518,8 @@
     <string name="completed_media">%s abgeschlossen</string>
     <string name="dropped_media">%s abgebrochen</string>
     <string name="paused_media">%s pausiert</string>
+    <string name="rewatched_media">Erneut ansehen %s</string>
+    <string name="reread_media">Erneut gelesen %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="one">%d h</item>
         <item quantity="other">%d h</item>
@@ -516,4 +528,27 @@
         <item quantity="one">%d Min</item>
         <item quantity="other">%d Min</item>
     </plurals>
+    <string name="login_required_in_phone">Um die App nutzen zu können, musst du dich zuerst anmelden, indem du die auf deinem Smartphone installierte AniHyou-App öffnest</string>
+    <string name="app_installed_required">Kein Gerät in der Nähe erkannt. Bitte installiere die neueste AniHyou App auf deinem Android Smartphone</string>
+    <string name="minimum_tag_percentage">Minimaler Tag-Prozentsatz</string>
+    <string name="search_my_list">Meine Liste durchsuchen…</string>
+    <string name="notifications_submission">Einsendung</string>
+    <string name="translator_app">Übersetzer</string>
+    <string name="blur_adult_content">Erwachseneninhalte zensieren</string>
+    <string name="hide_scores">Bewertungen verstecken</string>
+    <string name="upvote">Positiv Bewerten</string>
+    <string name="downvote">Negativ Bewerten</string>
+    <string name="reorder">Neu anordnen</string>
+    <string name="reorder_hint">Lange Drücken, um die Reihenfolge zu ändern</string>
+    <string name="activity_filter_following">Von Gefolgt</string>
+    <string name="priority">Priorität</string>
+    <string name="show_low_priority">Niedrige Priorität anzeigen</string>
+    <string name="priority_value">Priorität: %s</string>
+    <string name="priority_low">Niedrig</string>
+    <string name="priority_medium">Mittel</string>
+    <string name="priority_high">Hoch</string>
+    <string name="priority_color_change">Prioritätsfarben ändern</string>
+    <string name="general">Allgemein</string>
+    <string name="logout_confirm">Möchten sie sich wirklich abmelden?</string>
+    <string name="score_steps">Bewertungsschritte</string>
 </resources>

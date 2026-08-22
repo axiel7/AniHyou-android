@@ -436,4 +436,10 @@
         <item quantity="many">%dدقيقة</item>
         <item quantity="other">%dدقيقة</item>
     </plurals>
+    <string name="priority">الأولوية</string>
+    <string name="priority_value">الأولوية: %s</string>
+    <string name="priority_low">منخفض</string>
+    <string name="priority_medium">متوسط</string>
+    <string name="priority_high">عالي</string>
+    <string name="general">عام</string>
 </resources>

@@ -75,6 +75,7 @@
     <string name="theme_black">Čierny</string>
     <string name="account">Konto</string>
     <string name="version">Verzia</string>
+    <string name="contributors">Prispievatelia</string>
     <string name="score">Skóre</string>
     <string name="total_entries">Celkom: %s</string>
     <string name="loading">Načítavanie</string>
@@ -140,4 +141,8 @@
     <string name="show_more">Viac</string>
     <string name="random">Náhodné</string>
     <string name="last_used">Naposledy použité</string>
+    <string name="priority_value">Priorita: %s</string>
+    <string name="priority_low">Nízka</string>
+    <string name="priority_medium">Stredné</string>
+    <string name="priority_high">Vysoká</string>
 </resources>

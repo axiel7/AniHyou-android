@@ -157,6 +157,7 @@
     <string name="account">Akun</string>
     <string name="github_repository">Repositori GitHub</string>
     <string name="version">Versi</string>
+    <string name="contributors">Kontribusi</string>
     <string name="anilist_account_settings">Pengaturan akun AniList</string>
     <string name="logout">Keluar</string>
     <string name="character_media">Media</string>
@@ -327,6 +328,7 @@
     <string name="from_year">Dari tahun</string>
     <string name="to_year">Ke tahun</string>
     <string name="staff_role_a_and_r_producer">A&amp;R Produser</string>
+    <string name="staff_role_adr_director">Direktur ADR</string>
     <string name="staff_role_accessory_design">Desain Aksesori</string>
     <string name="staff_role_action_animator">Animator Aksi</string>
     <string name="staff_role_action_director">Direktur Aksi</string>
@@ -618,4 +620,11 @@
     <string name="login_required_in_phone">Untuk menggunakan aplikasi ini anda harus masuk dengan membuka aplikasi AniHyou yang terpasang di ponsel Anda</string>
     <string name="app_installed_required">Tidak ada perangkat terdekat yang terdeteksi, harap instal versi aplikasi AniHyou terbaru di ponsel Android Anda</string>
     <string name="translator_app">Penerjemah</string>
+    <string name="hide_scores">Sembunyikan skor</string>
+    <string name="priority">Prioritas</string>
+    <string name="priority_value">Prioritas: %s</string>
+    <string name="priority_low">Rendah</string>
+    <string name="priority_medium">Sedang</string>
+    <string name="priority_high">Tinggi</string>
+    <string name="general">Umum</string>
 </resources>

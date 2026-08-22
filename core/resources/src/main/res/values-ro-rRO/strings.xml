@@ -639,4 +639,6 @@
     <string name="minimum_tag_percentage">Procentul minim de etichete</string>
     <string name="search_my_list">Caută în lista mea…</string>
     <string name="translator_app">Traducător</string>
+    <string name="priority">Prioritate</string>
+    <string name="general">General</string>
 </resources>

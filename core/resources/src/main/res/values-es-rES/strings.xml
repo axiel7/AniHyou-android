@@ -151,6 +151,7 @@
     <string name="relation_source">Fuente</string>
     <string name="relation_compilation">Compilación</string>
     <string name="relation_contains">Contiene</string>
+    <string name="relation_same_universe">Mismo universo</string>
     <string name="recommendations">Recomendaciones</string>
     <string name="settings">Ajustes</string>
     <string name="display">Visualización</string>
@@ -640,4 +641,14 @@
     <string name="reorder">Reordenar</string>
     <string name="reorder_hint">Mantén pulsado para cambiar el orden</string>
     <string name="activity_filter_following">Usuarios</string>
+    <string name="priority">Prioridad</string>
+    <string name="show_low_priority">Mostrar prioridad baja</string>
+    <string name="priority_value">Prioridad: %s</string>
+    <string name="priority_low">Baja</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="priority_color_change">Cambiar colores de prioridad</string>
+    <string name="general">General</string>
+    <string name="logout_confirm">¿Quieres cerrar sesión?</string>
+    <string name="score_steps">Pasos para la puntuación</string>
 </resources>

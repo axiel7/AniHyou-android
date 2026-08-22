@@ -157,6 +157,7 @@
     <string name="account">帳號</string>
     <string name="github_repository">Github 倉庫</string>
     <string name="version">版本</string>
+    <string name="contributors">貢獻者</string>
     <string name="anilist_account_settings">AniList 帳戶設定</string>
     <string name="logout">登出</string>
     <string name="character_media">媒體</string>
@@ -327,6 +328,7 @@
     <string name="from_year">起始年份</string>
     <string name="to_year">結束年份</string>
     <string name="staff_role_a_and_r_producer">A&amp;R 製片人</string>
+    <string name="staff_role_adr_director">ADR監督</string>
     <string name="staff_role_accessory_design">配件設計</string>
     <string name="staff_role_action_animator">動畫師</string>
     <string name="staff_role_action_director">動作監督</string>
@@ -606,6 +608,8 @@
     <string name="completed_media">已完成《%s》</string>
     <string name="dropped_media">已放棄《%s》</string>
     <string name="paused_media">已暫停《%s》</string>
+    <string name="rewatched_media">重看了《%s》</string>
+    <string name="reread_media">重讀了《%s》</string>
     <plurals name="hour_abbreviation">
         <item quantity="other">%d小時</item>
     </plurals>
@@ -613,4 +617,11 @@
         <item quantity="other">%d分鐘</item>
     </plurals>
     <string name="translator_app">翻譯</string>
+    <string name="hide_scores">隱藏分數</string>
+    <string name="priority">优先级</string>
+    <string name="priority_value">優先程度: %s</string>
+    <string name="priority_low">低</string>
+    <string name="priority_medium">普通</string>
+    <string name="priority_high">高</string>
+    <string name="general">概況</string>
 </resources>

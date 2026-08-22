@@ -327,6 +327,7 @@
     <string name="from_year">ตั้งแต่ปี</string>
     <string name="to_year">ถึงปี</string>
     <string name="staff_role_a_and_r_producer">A&amp;R ผู้ผลิต</string>
+    <string name="staff_role_adr_director">ผู้กำกับ ADR</string>
     <string name="staff_role_accessory_design">ออกแบบเครื่องประดับ</string>
     <string name="staff_role_action_animator">นักอนิเมเตอร์</string>
     <string name="staff_role_action_director">ผู้กำกับ</string>
@@ -618,4 +619,5 @@
     <string name="login_required_in_phone">ในการใช้แอพนี้ครั้งแรก ต้องเข้าสู่ระบบก่อน โดยเปิดแอพ AniHyou</string>
     <string name="app_installed_required">ไม่พบอุปกรณ์ใกล้เคียง โปรดติดตั้งแอป AniHyou เวอร์ชันล่าสุด</string>
     <string name="translator_app">ผู้แปลภาษา</string>
+    <string name="general">ทั่วไป</string>
 </resources>

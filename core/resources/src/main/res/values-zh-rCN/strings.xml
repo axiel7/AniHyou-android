@@ -144,6 +144,7 @@
     <string name="relation_source">原作</string>
     <string name="relation_compilation">合辑</string>
     <string name="relation_contains">包含</string>
+    <string name="relation_same_universe">同一世界观</string>
     <string name="recommendations">推荐</string>
     <string name="settings">设置</string>
     <string name="display">显示</string>
@@ -157,6 +158,7 @@
     <string name="account">账号</string>
     <string name="github_repository">GitHub 仓库</string>
     <string name="version">版本号</string>
+    <string name="contributors">贡献者</string>
     <string name="anilist_account_settings">AniList 帐户设置</string>
     <string name="logout">注销</string>
     <string name="character_media">媒体</string>
@@ -268,7 +270,7 @@
     <string name="color_palette">调色板</string>
     <string name="discover">发现</string>
     <string name="default_home_tab">默认主页</string>
-    <string name="text_status">用户动态</string>
+    <string name="text_status">文字动态</string>
     <string name="list_progress">列表进度</string>
     <string name="all">全部</string>
     <string name="global_feed">全站</string>
@@ -623,4 +625,19 @@
     <string name="notifications_submission">提交</string>
     <string name="translator_app">翻译</string>
     <string name="blur_adult_content">模糊成人内容</string>
+    <string name="hide_scores">隐藏评分</string>
+    <string name="upvote">点赞作品</string>
+    <string name="downvote">点踩作品</string>
+    <string name="reorder">重新排序</string>
+    <string name="reorder_hint">长按以重新排序</string>
+    <string name="activity_filter_following">筛选关注</string>
+    <string name="priority">优先级</string>
+    <string name="show_low_priority">显示低优先级</string>
+    <string name="priority_value">优先级：%s</string>
+    <string name="priority_low">低</string>
+    <string name="priority_medium">中</string>
+    <string name="priority_high">高</string>
+    <string name="priority_color_change">更改优先级颜色</string>
+    <string name="general">概况</string>
+    <string name="score_steps">评分步长</string>
 </resources>
