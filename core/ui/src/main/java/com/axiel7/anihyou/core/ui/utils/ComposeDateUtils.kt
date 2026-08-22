@@ -27,7 +27,6 @@ object ComposeDateUtils {
     @Composable
     fun Long.secondsToLegibleText(
         maxUnit: ChronoUnit = ChronoUnit.YEARS,
-        isFutureDate: Boolean = true,
         buildPluralString: @Composable (id: Int, time: Long) -> String = { id, time ->
             pluralStringResource(id = id, count = time.toInt(), time)
         }
@@ -51,12 +50,14 @@ object ComposeDateUtils {
         if (hours > 0) parts.add(buildPluralString(R.plurals.hour_abbreviation, hours))
         if (minutes > 0) parts.add(buildPluralString(R.plurals.minutes_abbreviation, minutes))
 
-        if (!parts.isEmpty()) {
-            return parts.take(3).joinToString(" ")
-        }
-        // if parts empty fallback to date
+        return parts.take(2).joinToString(" ")
+    }
+
+    @Composable
+    fun Long.nonFutureDateToLegibleText(): String
+    {
         return LocalDateTime.now(DateUtils.defaultZoneOffset)
-            .plusSeconds(if (isFutureDate) this else -this)
+            .plusSeconds(-this)
             .toLocalized().orEmpty()
     }
 

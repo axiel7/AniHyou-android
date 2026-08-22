@@ -37,9 +37,8 @@ import com.axiel7.anihyou.core.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.post.PostItem
 import com.axiel7.anihyou.core.ui.composables.post.PostItemPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun ReviewThreadListView(
@@ -179,10 +178,7 @@ fun ReviewThreadListView(
                         subtitle = {
                             Text(
                                 text = item.createdAt.toLong().timestampIntervalSinceNow()
-                                    .secondsToLegibleText(
-                                        maxUnit = ChronoUnit.WEEKS,
-                                        isFutureDate = false
-                                    ),
+                                    .nonFutureDateToLegibleText(),
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = MaterialTheme.typography.labelMedium,
