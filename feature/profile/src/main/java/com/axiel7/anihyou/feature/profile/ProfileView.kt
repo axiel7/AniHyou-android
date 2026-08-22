@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.profile
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +17,11 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -299,16 +298,14 @@ private fun MainProfileInfo(
             }//:Column
 
             if (uiState.isMyProfile) {
-                OutlinedIconButton(
+                FilledTonalIconButton(
                     onClick = navActionManager::toSettings,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     shapes = IconButtonDefaults.shapes(),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.settings_24),
                         contentDescription = stringResource(R.string.settings),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             } else {

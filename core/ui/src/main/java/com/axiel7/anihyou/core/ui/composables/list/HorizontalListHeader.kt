@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +43,19 @@ fun HorizontalListHeader(
                 style = MaterialTheme.typography.titleMedium
             )
             if (onClick != null) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_forward_24),
-                    contentDescription = stringResource(R.string.see_all)
-                )
+                FilledTonalIconButton(
+                    onClick = onClick,
+                    modifier = Modifier.size(width = 28.dp, height = 32.dp),
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_forward_20),
+                        contentDescription = stringResource(R.string.see_all),
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
             }
         }
     }
