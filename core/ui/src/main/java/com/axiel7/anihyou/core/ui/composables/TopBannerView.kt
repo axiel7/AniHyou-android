@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -32,8 +31,7 @@ fun TopBannerView(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(height)
-            .padding(bottom = 16.dp),
+            .height(height),
         contentAlignment = Alignment.TopStart
     ) {
         if (imageUrl != null) {

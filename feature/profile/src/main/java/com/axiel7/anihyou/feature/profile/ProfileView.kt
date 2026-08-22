@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,10 +29,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -45,7 +42,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -104,9 +100,6 @@ private fun ProfileContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
-    val collapsedFraction by remember {
-        derivedStateOf { topAppBarScrollBehavior.state.collapsedFraction }
-    }
     val statusBarPadding = WindowInsets.statusBars.asPaddingValues()
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
@@ -122,48 +115,39 @@ private fun ProfileContent(
                 fallbackColor = colorFromHex(uiState.userInfo?.hexColor()),
                 height = statusBarPadding.calculateTopPadding() + 100.dp
             )
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    if (!uiState.isMyProfile) {
-                        BackIconButton(onClick = navActionManager::goBack)
-                    }
-                },
-                actions = {
-                    ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
-                },
-                windowInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
-                ),
-            )
-            TopAppBar(
-                title = {
-                    MainProfileInfo(
-                        uiState = uiState,
-                        event = event,
-                        navActionManager = navActionManager,
-                        modifier = Modifier.offset {
-                            val offset = collapsedFraction * 200
-                            IntOffset(
-                                x = 0,
-                                y = -offset.toInt()
-                            )
+            Column {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        if (!uiState.isMyProfile) {
+                            BackIconButton(onClick = navActionManager::goBack)
                         }
-                    )
-                },
-                modifier = Modifier
-                    .padding(
-                        top = statusBarPadding.calculateTopPadding() + 24.dp,
-                        bottom = 8.dp
+                    },
+                    actions = {
+                        ShareIconButton(url = uiState.userInfo?.siteUrl.orEmpty())
+                    },
+                    windowInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top),
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent,
                     ),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
-                ),
-                scrollBehavior = topAppBarScrollBehavior
-            )
+                )
+                TopAppBar(
+                    title = {
+                        MainProfileInfo(
+                            uiState = uiState,
+                            event = event,
+                            navActionManager = navActionManager,
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent,
+                    ),
+                    scrollBehavior = topAppBarScrollBehavior
+                )
+            }
         }
     ) { padding ->
         Column(
@@ -251,7 +235,7 @@ private fun MainProfileInfo(
         PersonImage(
             url = uiState.userInfo?.avatar?.large,
             modifier = Modifier
-                .padding(start = 8.dp, top = 16.dp, end = 16.dp)
+                .padding(start = 8.dp, end = 16.dp)
                 .size(PERSON_IMAGE_SIZE_SMALL.dp)
                 .clickable(onClick = singleClick {
                     uiState.userInfo?.avatar?.large?.let(navActionManager::toFullscreenImage)
