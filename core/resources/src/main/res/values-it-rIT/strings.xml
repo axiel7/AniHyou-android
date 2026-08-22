@@ -151,6 +151,7 @@
     <string name="relation_source">Fonte</string>
     <string name="relation_compilation">Compilation</string>
     <string name="relation_contains">Contiene</string>
+    <string name="relation_same_universe">Stesso universo</string>
     <string name="recommendations">Raccomandazioni</string>
     <string name="settings">Impostazioni</string>
     <string name="display">Schermo</string>
@@ -231,14 +232,14 @@
     <string name="notifications">Notifiche</string>
     <string name="threads">Discussioni</string>
     <string name="no_threads">Nessuna discussione</string>
-    <string name="notifications_all">Tutto</string>
+    <string name="notifications_all">Tutti</string>
     <string name="notifications_airing">In onda</string>
     <string name="activity">Attività</string>
     <string name="forum">Forum</string>
     <string name="notifications_media">Media</string>
     <string name="content">Contenuto</string>
     <string name="airing_on_my_list">In arrivo nella mia lista</string>
-    <string name="airing_on_my_list_summary">Mostra solo gli anime in onda prossimamente che sono nel tuo elenco</string>
+    <string name="airing_on_my_list_summary">Mostra solo gli anime in onda che sono nel tuo elenco</string>
     <string name="follow">Segui</string>
     <string name="follows_you">Ti segue</string>
     <string name="view_anime_list">Visualizza la lista degli anime</string>
@@ -278,7 +279,7 @@
     <string name="default_home_tab">Scheda Home predefinita</string>
     <string name="text_status">Stato del testo</string>
     <string name="list_progress">Progresso lista</string>
-    <string name="all">Tutto</string>
+    <string name="all">Tutti</string>
     <string name="global_feed">Globale</string>
     <string name="format_bold">Grassetto</string>
     <string name="format_italic">Corsivo</string>
@@ -491,6 +492,8 @@
     <string name="staff_role_supervisor">Supervisore</string>
     <string name="staff_role_supporting_staff">Personale di supporto</string>
     <string name="staff_role_technical_director">Direttore tecnico</string>
+    <string name="staff_role_title_logo_design_assistance">Assistenza nella progettazione del logo del titolo</string>
+    <string name="staff_role_title_logo_design">Progettazione del logo del titolo</string>
     <string name="staff_role_translator">Traduttore</string>
     <string name="staff_role_unit_director">Direttore dell\'unità</string>
     <string name="staff_role_video_editing">Editing video</string>
@@ -571,4 +574,15 @@
     <string name="translator_app">Traduttore</string>
     <string name="blur_adult_content">Sfocatura media per adulti</string>
     <string name="hide_scores">Nascondi punteggi</string>
+    <string name="upvote">Vota Media</string>
+    <string name="downvote">Downvota Media</string>
+    <string name="reorder">Riordina</string>
+    <string name="reorder_hint">Tieni premuto per riordinare</string>
+    <string name="activity_filter_following">Da \"Following\"</string>
+    <string name="priority">Priorità</string>
+    <string name="priority_value">Priorità: %s</string>
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="general">Generali</string>
 </resources>

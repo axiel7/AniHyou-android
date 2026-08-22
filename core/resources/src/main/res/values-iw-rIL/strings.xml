@@ -191,8 +191,10 @@
     <string name="genre_pyshological">פסיכולוגי</string>
     <string name="genre_sports">ספורט</string>
     <string name="genre_supernatural">על-טבעי</string>
+    <string name="watching">צופה</string>
     <string name="reading">קריאה</string>
     <string name="staff_role_a_and_r_producer">מפיק A&amp;R</string>
+    <string name="staff_role_adr_director">מנהל ADR</string>
     <string name="staff_role_accessory_design">עיצוב אביזרים</string>
     <string name="staff_role_action_animator">אנימטור אקשן</string>
     <string name="staff_role_action_director">מנהל אקשן</string>
@@ -412,4 +414,6 @@
     <string name="minimum_tag_percentage">אחוז התגים המינימלי</string>
     <string name="search_my_list">חפש ברשימה שלי…</string>
     <string name="blur_adult_content">טשטש מדיה למבוגרים</string>
+    <string name="priority">עדיפות</string>
+    <string name="general">כללי</string>
 </resources>

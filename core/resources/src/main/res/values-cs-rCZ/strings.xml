@@ -113,6 +113,7 @@
     <string name="theme_black">Černý</string>
     <string name="account">Účet</string>
     <string name="version">Verze</string>
+    <string name="contributors">K vývoji přispěli</string>
     <string name="age">Věk</string>
     <string name="hometown">Rodné město</string>
     <string name="score">Skóre</string>
@@ -255,4 +256,9 @@
     <string name="custom_color">Vlastní barva</string>
     <string name="default_tab">Výchozí karta</string>
     <string name="last_used">Naposledy použité</string>
+    <string name="completed_media">Dokončeno %s</string>
+    <string name="priority_value">Priorita: %s</string>
+    <string name="priority_low">Nízká</string>
+    <string name="priority_medium">Střední</string>
+    <string name="priority_high">Vysoká</string>
 </resources>

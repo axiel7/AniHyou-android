@@ -178,6 +178,7 @@
     <string name="account">Аккаунт</string>
     <string name="github_repository">Репозиторий на GitHub</string>
     <string name="version">Версия</string>
+    <string name="contributors">Вкладчики</string>
     <string name="anilist_account_settings">Настройки аккаунта AniList</string>
     <string name="logout">Выйти</string>
     <string name="character_media">Медиа</string>
@@ -651,4 +652,11 @@
     <string name="notifications_submission">Заявка</string>
     <string name="translator_app">Переводчик</string>
     <string name="blur_adult_content">Скрыть материалы 18+</string>
+    <string name="hide_scores">Скрыть оценки</string>
+    <string name="priority">Приоритет</string>
+    <string name="priority_value">Приоритет: %s</string>
+    <string name="priority_low">Низкий</string>
+    <string name="priority_medium">Средний</string>
+    <string name="priority_high">Высокая</string>
+    <string name="general">Основное</string>
 </resources>

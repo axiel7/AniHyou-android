@@ -351,4 +351,6 @@
         <item quantity="one">%ddəqiqə</item>
         <item quantity="other">%ddəqiqə</item>
     </plurals>
+    <string name="priority">Prioritet</string>
+    <string name="general">Ümumi</string>
 </resources>

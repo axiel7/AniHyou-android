@@ -164,6 +164,7 @@
     <string name="account">Compte</string>
     <string name="github_repository">Dépôt GitHub</string>
     <string name="version">Version</string>
+    <string name="contributors">Contributeurs</string>
     <string name="anilist_account_settings">Paramètres du compte AniList</string>
     <string name="logout">Se déconnecter</string>
     <string name="character_media">Média</string>
@@ -630,5 +631,13 @@
     <string name="app_installed_required">Aucun appareil à proximité n\'a été détecté, veuillez installer la dernière version de l\'application AniHyou sur votre téléphone Android</string>
     <string name="minimum_tag_percentage">Pourcentage minimum de tags</string>
     <string name="search_my_list">Rechercher dans ma liste…</string>
+    <string name="notifications_submission">Soumettre</string>
     <string name="translator_app">Traducteur</string>
+    <string name="blur_adult_content">Flouter le contenu pour adultes</string>
+    <string name="priority">Priorité</string>
+    <string name="priority_value">Priorité: %s</string>
+    <string name="priority_low">Bas</string>
+    <string name="priority_medium">Moyenne</string>
+    <string name="priority_high">Élevée</string>
+    <string name="general">Général</string>
 </resources>

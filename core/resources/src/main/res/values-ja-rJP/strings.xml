@@ -372,4 +372,6 @@
     <plurals name="minutes_abbreviation">
         <item quantity="other">%d分</item>
     </plurals>
+    <string name="priority">優先</string>
+    <string name="general">一般</string>
 </resources>
