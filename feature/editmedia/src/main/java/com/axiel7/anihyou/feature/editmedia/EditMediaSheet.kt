@@ -1,12 +1,15 @@
 package com.axiel7.anihyou.feature.editmedia
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -23,9 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetState
@@ -62,11 +66,10 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
-import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
-import com.axiel7.anihyou.core.ui.composables.SwitchPreference
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
+import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.composables.scores.RatingView
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -130,7 +133,8 @@ private fun EditMediaSheetContent(
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
-    val singleEpisode = uiState.mediaDetails.type == MediaType.ANIME && uiState.mediaDetails.episodes == 1
+    val singleEpisode =
+        uiState.mediaDetails.type == MediaType.ANIME && uiState.mediaDetails.episodes == 1
     if (uiState.openDatePicker) {
         EditMediaDatePicker(
             datePickerState = datePickerState,
@@ -250,8 +254,7 @@ private fun EditMediaSheetContent(
                         singleEpisode -> R.drawable.movie_24
                         else -> R.drawable.play_arrow_24
                     }
-                }
-                else R.drawable.book_24,
+                } else R.drawable.book_24,
                 progress = uiState.progress,
                 modifier = Modifier.padding(
                     start = 0.dp,
@@ -360,46 +363,27 @@ private fun EditMediaSheetContent(
             )
 
             // Custom lists
-            PlainPreference(
+            ClickableItem(
                 title = stringResource(R.string.custom_lists),
                 icon = R.drawable.list_alt_24,
-                iconTint = LocalContentColor.current,
-                iconPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                ),
-                isLoading = uiState.isLoading,
                 onClick = {
                     if (uiState.customLists == null) event?.getCustomLists()
                     else event?.toggleCustomListsDialog(true)
-                }
+                },
             )
 
-            SwitchPreference(
+            SwitchItem(
                 title = stringResource(R.string.hide_from_status_lists),
-                preferenceValue = uiState.isHiddenFromStatusLists,
+                checked = uiState.isHiddenFromStatusLists ?: false,
                 icon = R.drawable.visibility_off_24,
-                iconTint = LocalContentColor.current,
-                iconPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                ),
-                onValueChange = { event?.setIsHiddenFromStatusLists(it) },
+                onClick = { event?.setIsHiddenFromStatusLists(it) },
             )
 
-            SwitchPreference(
+            SwitchItem(
                 title = stringResource(R.string.list_private),
-                preferenceValue = uiState.isPrivate,
+                checked = uiState.isPrivate ?: false,
                 icon = R.drawable.lock_24,
-                iconTint = LocalContentColor.current,
-                iconPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                ),
-                onValueChange = { event?.setIsPrivate(it) },
+                onClick = { event?.setIsPrivate(it) },
             )
 
             // Notes
@@ -441,36 +425,97 @@ private fun EditMediaSheetContent(
             }
 
             // Delete
-            PlainPreference(
+            ClickableItem(
                 title = stringResource(R.string.delete),
-                titleTint = MaterialTheme.colorScheme.error,
                 icon = R.drawable.delete_24,
-                iconTint = MaterialTheme.colorScheme.error,
-                iconPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                ),
+                tint = MaterialTheme.colorScheme.error,
+                onClick = { event?.toggleDeleteDialog(true) },
                 enabled = !uiState.isNewEntry,
-                onClick = { event?.toggleDeleteDialog(true) }
             )
         }//:Column
     }//:Sheet
 }
 
+@Composable
+private fun ClickableItem(
+    title: String,
+    @DrawableRes icon: Int,
+    tint: Color = LocalContentColor.current,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = singleClick(onClick), enabled = enabled),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            tint = tint.copy(alpha = if (enabled) 1f else 0.38f),
+            modifier = Modifier.padding(start = 16.dp),
+        )
+
+        Text(
+            text = title,
+            color = tint.copy(alpha = if (enabled) 1f else 0.38f),
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Composable
+private fun SwitchItem(
+    title: String,
+    checked: Boolean,
+    onClick: (Boolean) -> Unit,
+    @DrawableRes icon: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = singleClick { onClick(!checked) }),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier.padding(start = 16.dp),
+        )
+
+        Text(
+            text = title,
+            modifier = Modifier.padding(16.dp),
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Switch(
+            checked = checked,
+            onCheckedChange = onClick,
+            modifier = Modifier.padding(end = 16.dp),
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 private fun EditMediaSheetPreview() {
     AniHyouTheme {
-        Surface {
+        Scaffold { _ ->
             EditMediaSheetContent(
                 uiState = EditMediaUiState(
                     mediaDetails = exampleCommonMediaListEntry.media!!.basicMediaDetails
                 ),
                 event = null,
-                sheetState = rememberBottomSheetState(initialValue = SheetValue.Expanded),
+                sheetState = rememberBottomSheetState(
+                    initialValue = SheetValue.Expanded,
+                    enabledValues = setOf(SheetValue.Expanded)
+                ),
                 onEntryUpdated = {},
                 onDismissed = {}
             )
