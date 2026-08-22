@@ -173,6 +173,7 @@ fun DialogWithTextInput(
     value: String,
     onValueChange: (String) -> Unit,
     onConfirm: () -> Unit,
+    confirmEnabled: Boolean = true,
     onDismiss: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -192,7 +193,7 @@ fun DialogWithTextInput(
             )
         },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(onClick = onConfirm, enabled = confirmEnabled) {
                 Text(text = stringResource(R.string.ok))
             }
         }

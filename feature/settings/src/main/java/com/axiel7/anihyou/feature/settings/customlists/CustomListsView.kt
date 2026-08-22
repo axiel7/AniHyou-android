@@ -111,7 +111,6 @@ fun CustomListsContent(
 
                 if (openDialog) {
                     var newList by remember { mutableStateOf("") }
-                    val emptyListError = stringResource(R.string.empty_custom_list_error)
                     DialogWithTextInput(
                         title = mediaType.localized(),
                         label = stringResource(R.string.list_name),
@@ -119,13 +118,10 @@ fun CustomListsContent(
                         onValueChange = { newList = it },
                         onConfirm = {
                             openDialog = false
-                            if (newList.isNotBlank()) {
-                                event?.onListAdded(newList, mediaType)
-                            } else {
-                                event?.showError(emptyListError)
-                            }
+                            event?.onListAdded(newList, mediaType)
                             newList = ""
                         },
+                        confirmEnabled = newList.isNotBlank(),
                         onDismiss = { openDialog = false },
                     )
                 }
