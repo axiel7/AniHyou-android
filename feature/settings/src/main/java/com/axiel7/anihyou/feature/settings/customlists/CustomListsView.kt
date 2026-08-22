@@ -37,7 +37,7 @@ import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
-import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithLargeTopAppBar
 import com.axiel7.anihyou.core.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.DialogWithTextInput
@@ -71,7 +71,7 @@ fun CustomListsContent(
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
-    DefaultScaffoldWithSmallTopAppBar(
+    DefaultScaffoldWithLargeTopAppBar(
         title = stringResource(R.string.custom_lists),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {

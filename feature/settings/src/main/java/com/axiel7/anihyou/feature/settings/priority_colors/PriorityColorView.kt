@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
-import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithLargeTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.CommonColorPickerDialog
 import com.axiel7.anihyou.core.ui.composables.preferenceShape
@@ -62,7 +62,7 @@ private fun PriorityColorContent(
         rememberTopAppBarState()
     )
 
-    DefaultScaffoldWithSmallTopAppBar(
+    DefaultScaffoldWithLargeTopAppBar(
         title = stringResource(R.string.priority_color_change),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior

@@ -21,7 +21,7 @@ import com.axiel7.anihyou.core.base.CROWDIN_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
-import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithLargeTopAppBar
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.preferenceShape
@@ -55,10 +55,10 @@ private val translations = sortedMapOf(
 fun TranslationsView() {
     val navActionManager = LocalNavActionManager.current
     val context = LocalContext.current
-    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         state = rememberTopAppBarState()
     )
-    DefaultScaffoldWithSmallTopAppBar(
+    DefaultScaffoldWithLargeTopAppBar(
         title = stringResource(R.string.translations),
         navigationIcon = {
             BackIconButton(onClick = navActionManager::goBack)

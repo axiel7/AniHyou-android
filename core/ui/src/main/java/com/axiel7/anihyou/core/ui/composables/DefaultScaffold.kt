@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -12,8 +13,36 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DefaultScaffoldWithLargeTopAppBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    snackbarHost: @Composable () -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable (RowScope.() -> Unit) = {},
+    scrollBehavior: TopAppBarScrollBehavior,
+    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            LargeTopAppBar(
+                title = { Text(text = title) },
+                navigationIcon = navigationIcon,
+                actions = actions,
+                scrollBehavior = scrollBehavior
+            )
+        },
+        snackbarHost = snackbarHost,
+        floatingActionButton = floatingActionButton,
+        contentWindowInsets = contentWindowInsets,
+        content = content
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,14 +61,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
         modifier = modifier,
         topBar = {
             MediumTopAppBar(
-                title = {
-                    Text(
-                        text = title,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.W400,
-                        lineHeight = 32.sp
-                    )
-                },
+                title = { Text(text = title) },
                 navigationIcon = navigationIcon,
                 actions = actions,
                 scrollBehavior = scrollBehavior
@@ -69,14 +91,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = title,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.W400,
-                        lineHeight = 28.sp
-                    )
-                },
+                title = { Text(text = title) },
                 navigationIcon = navigationIcon,
                 actions = actions,
                 scrollBehavior = scrollBehavior
