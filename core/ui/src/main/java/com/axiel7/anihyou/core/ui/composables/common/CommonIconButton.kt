@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -20,12 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.common.utils.NumberUtils.format
-import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.common.utils.NumberUtils.abbreviated
+import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.TranslatorApp
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.utils.TranslateUtils.openTranslator
 
 fun singleClick(onClick: () -> Unit): () -> Unit {
@@ -44,9 +45,12 @@ fun singleClick(onClick: () -> Unit): () -> Unit {
 fun BackIconButton(
     onClick: () -> Unit
 ) {
-    IconButton(
+    FilledTonalIconButton(
         onClick = singleClick(onClick),
-        shapes = IconButtonDefaults.shapes()
+        shapes = IconButtonDefaults.shapes(),
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        )
     ) {
         Icon(
             painter = painterResource(R.drawable.arrow_back_24),

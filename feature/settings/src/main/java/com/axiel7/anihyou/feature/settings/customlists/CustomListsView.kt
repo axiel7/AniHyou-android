@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -22,7 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,12 +38,12 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
-import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.DialogWithTextInput
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
+import com.axiel7.anihyou.core.ui.composables.preferenceShape
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -94,19 +98,16 @@ fun CustomListsContent(
                 var openDialog by remember { mutableStateOf(false) }
                 PreferencesTitle(text = mediaType.localized())
 
-                uiState.customLists(mediaType)?.forEach { list ->
+                val customLists = uiState.customLists(mediaType)
+                customLists?.forEachIndexed { index, list ->
                     ListItem(
                         list = list,
+                        shape = preferenceShape(index, customLists.size),
                         onClickDelete = { event?.onListRemoved(list, mediaType) }
                     )
                 }
 
-                PlainPreference(
-                    title = stringResource(R.string.add),
-                    icon = R.drawable.add_24,
-                    onClick = { openDialog = true },
-                    containerColor = Color.Transparent
-                )
+                AddButton(onClick = { openDialog = true })
 
                 if (openDialog) {
                     var newList by remember { mutableStateOf("") }
@@ -136,31 +137,55 @@ fun CustomListsContent(
 @Composable
 private fun ListItem(
     list: String,
+    shape: Shape,
     onClickDelete: () -> Unit,
 ) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(end = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 1.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
-        Spacer(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
-                .size(24.dp)
-        )
-        Text(
-            text = list,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .weight(1f)
-        )
-        IconButton(onClick = onClickDelete) {
-            Icon(
-                painter = painterResource(R.drawable.delete_24),
-                contentDescription = stringResource(R.string.delete)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = list,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .weight(1f)
             )
+            IconButton(onClick = onClickDelete) {
+                Icon(
+                    painter = painterResource(R.drawable.delete_24),
+                    contentDescription = stringResource(R.string.delete)
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun AddButton(
+    onClick: () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .padding(horizontal = 16.dp),
+        shapes = ButtonDefaults.shapes(),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.add_24),
+            contentDescription = stringResource(R.string.add),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = stringResource(R.string.add))
     }
 }
 

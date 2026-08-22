@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,11 +12,11 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.base.CROWDIN_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.resources.R
@@ -23,10 +24,12 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.PlainPreference
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.preferenceShape
+import com.axiel7.anihyou.core.ui.composables.topShape
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import java.util.Locale
 
-private val translations = mapOf(
+private val translations = sortedMapOf(
     "ar" to "Hussain889, Hussain69o, WhiteCanvas, eyadalomar, sakugaky, Comikazie, mlvin, bobteen1",
     "az" to "oolyvi",
     "zh-Hans" to "hualiong, MareDevi, Andypsl8, bengerlorf",
@@ -74,15 +77,17 @@ fun TranslationsView() {
                 onClick = {
                     context.openActionView(CROWDIN_URL)
                 },
-                containerColor = Color.Transparent
+                shape = topShape
             )
-            translations.forEach { (lang, users) ->
+            translations.toList().forEachIndexed { index, (lang, users) ->
                 val displayName = remember { Locale.forLanguageTag(lang).displayName }
                 PlainPreference(
                     title = displayName,
                     subtitle = users,
                     onClick = {},
-                    containerColor = Color.Transparent
+                    iconPadding = PaddingValues(vertical = 16.dp),
+                    showIconSpacer = false,
+                    shape = preferenceShape(index + 1, translations.size + 1)
                 )
             }
         }

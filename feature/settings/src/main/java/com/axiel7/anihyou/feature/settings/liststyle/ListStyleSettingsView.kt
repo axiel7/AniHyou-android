@@ -13,7 +13,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +29,7 @@ import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.ListPreference
 import com.axiel7.anihyou.core.ui.composables.PreferencesTitle
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.preferenceShape
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -73,7 +73,7 @@ private fun ListStyleSettingsContent(
             )
 
             PreferencesTitle(text = stringResource(R.string.anime_list))
-            MediaListStatus.knownEntries.forEach { status ->
+            MediaListStatus.knownEntries.forEachIndexed { index, status ->
                 val preference = when (status) {
                     MediaListStatus.CURRENT -> uiState.animeCurrentListStyle
                     MediaListStatus.PLANNING -> uiState.animePlanningListStyle
@@ -92,12 +92,12 @@ private fun ListStyleSettingsContent(
                     onValueChange = { value ->
                         event?.setAnimeListStyle(status, value)
                     },
-                    containerColor = Color.Transparent
+                    shape = preferenceShape(index, MediaListStatus.knownEntries.size),
                 )
             }
 
             PreferencesTitle(text = stringResource(R.string.manga_list))
-            MediaListStatus.knownEntries.forEach { status ->
+            MediaListStatus.knownEntries.forEachIndexed { index, status ->
                 val preference = when (status) {
                     MediaListStatus.CURRENT -> uiState.mangaCurrentListStyle
                     MediaListStatus.PLANNING -> uiState.mangaPlanningListStyle
@@ -116,7 +116,7 @@ private fun ListStyleSettingsContent(
                     onValueChange = { value ->
                         event?.setMangaListStyle(status, value)
                     },
-                    containerColor = Color.Transparent
+                    shape = preferenceShape(index, MediaListStatus.knownEntries.size),
                 )
             }
         }

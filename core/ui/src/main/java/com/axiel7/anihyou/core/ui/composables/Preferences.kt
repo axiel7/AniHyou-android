@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
@@ -50,6 +51,18 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlin.math.roundToInt
+
+val topShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+val bottomShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
+val middleShape = RoundedCornerShape(4.dp)
+val singleShape = RoundedCornerShape(24.dp)
+
+fun preferenceShape(index: Int, count: Int) = when {
+    count == 1 -> singleShape
+    index == 0 -> topShape
+    index == (count - 1) -> bottomShape
+    else -> middleShape
+}
 
 @Composable
 fun PreferencesTitle(text: String) {
@@ -72,6 +85,7 @@ fun PlainPreference(
     @DrawableRes icon: Int? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     iconPadding: PaddingValues = PaddingValues(16.dp),
+    showIconSpacer: Boolean = true,
     enabled: Boolean = true,
     isLoading: Boolean = false,
     onClick: () -> Unit,
@@ -106,10 +120,14 @@ fun PlainPreference(
                         tint = if (enabled) iconTint else iconTint.copy(alpha = 0.38f)
                     )
                 } else {
+                    val size = DpSize(
+                        width = if (showIconSpacer) 24.dp else 0.dp,
+                        height = 24.dp
+                    )
                     Spacer(
                         modifier = Modifier
                             .padding(iconPadding)
-                            .size(24.dp)
+                            .size(size)
                     )
                 }
 
