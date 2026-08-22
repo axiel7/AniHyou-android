@@ -32,7 +32,7 @@ object ComposeDateUtils {
         }
     ): String
     {
-        var remaining = this // so its clearer to see what this is
+        val remaining = this // so its clearer to see what this is
 
         val years = if (maxUnit >= ChronoUnit.YEARS) (remaining / 31556952).also { remaining %= 31556952 } else 0
         val months = if (maxUnit >= ChronoUnit.MONTHS) (remaining / 2629746).also { remaining %= 2629746 } else 0
@@ -54,8 +54,7 @@ object ComposeDateUtils {
     }
 
     @Composable
-    fun Long.nonFutureDateToLegibleText(): String
-    {
+    fun Long.nonFutureDateToLegibleText(): String {
         return LocalDateTime.now(DateUtils.defaultZoneOffset)
             .plusSeconds(-this)
             .toLocalized().orEmpty()
