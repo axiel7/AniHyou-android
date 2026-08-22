@@ -183,6 +183,7 @@ private fun SettingsContent(
                 SwitchPreference(
                     title = stringResource(R.string.black_theme_variant),
                     preferenceValue = uiState.useBlackColors,
+                    icon = R.drawable.contrast_24,
                     onValueChange = { event?.setUseBlackColors(it) },
                     shape = middleShape
                 )
@@ -300,6 +301,7 @@ private fun SettingsContent(
                     onValueChange = {
                         event?.setUseGeneralListStyle(it.not())
                     },
+                    icon = R.drawable.arrow_split_24,
                     shape = topShape
                 )
 
@@ -357,6 +359,7 @@ private fun SettingsContent(
                 SwitchPreference(
                     title = stringResource(R.string.airing_on_my_list),
                     preferenceValue = uiState.airingOnMyList,
+                    icon = R.drawable.rss_feed_24,
                     subtitle = stringResource(R.string.airing_on_my_list_summary),
                     onValueChange = { event?.setAiringOnMyList(it) },
                     shape = bottomShape
@@ -388,6 +391,7 @@ private fun SettingsContent(
                         title = stringResource(R.string.update_interval),
                         entriesValues = NotificationInterval.entriesLocalized,
                         preferenceValue = uiState.notificationCheckInterval,
+                        icon = R.drawable.update_24,
                         onValueChange = { event?.setNotificationCheckInterval(it) },
                         shape = middleShape
                     )
