@@ -19,10 +19,10 @@ object ComposeDateUtils {
 
     /**
      * Converts seconds to years, months, weeks, days, hours or minutes.
-     * Depending if there is enough time.
-     * Eg. If days greater than 1 and less than 6, returns "x days"
-     * @param maxUnit maximum time unit to display, if the time exceed the limit then it is showed as a date
-     * @param buildPluralString optional parameter to use in Glance. By default it uses compose [pluralStringResource]
+     * Depending on if there is enough time.
+     * It always takes the 3 biggest quantities available.
+     * @param maxUnit maximum time unit to display, if the time exceed the limit then it is shown as a date
+     * @param buildPluralString optional parameter to use in Glance. By default, it uses compose [pluralStringResource]
      */
     @Composable
     fun Long.secondsToLegibleText(
