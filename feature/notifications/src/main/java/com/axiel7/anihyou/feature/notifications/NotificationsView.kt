@@ -39,12 +39,11 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItem
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItemPlaceholder
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun NotificationsView(
@@ -132,10 +131,7 @@ private fun NotificationsContent(
                     blurImage = blurAdult && item.isAdultMedia,
                     imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()
-                        ?.secondsToLegibleText(
-                            maxUnit = ChronoUnit.WEEKS,
-                            isFutureDate = false
-                        ),
+                        ?.nonFutureDateToLegibleText(),
                     isUnread = item.isUnread,
                     onClick = {
                         when (item.type) {

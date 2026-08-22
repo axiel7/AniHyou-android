@@ -44,8 +44,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
-import java.time.temporal.ChronoUnit
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 
 const val ACTIVITY_IMAGE_SIZE = 48
 
@@ -127,10 +126,7 @@ fun ActivityItem(
             ) {
                 Text(
                     text = createdAt.toLong().timestampIntervalSinceNow()
-                        .secondsToLegibleText(
-                            maxUnit = ChronoUnit.WEEKS,
-                            isFutureDate = false
-                        ),
+                        .nonFutureDateToLegibleText(),
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium

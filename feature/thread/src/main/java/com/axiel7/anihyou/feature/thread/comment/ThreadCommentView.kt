@@ -44,11 +44,10 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 import com.axiel7.anihyou.feature.thread.composables.ChildCommentView
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun ThreadCommentDetailsView(
@@ -135,10 +134,7 @@ fun ThreadCommentView(
             )
             Text(
                 text = createdAt.toLong().timestampIntervalSinceNow()
-                    .secondsToLegibleText(
-                        maxUnit = ChronoUnit.WEEKS,
-                        isFutureDate = false
-                    ),
+                    .nonFutureDateToLegibleText(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelMedium
             )
