@@ -1,0 +1,19 @@
+name: Assemble android app
+
+on:
+  pull_request: 
+
+jobs:
+  build:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v7
+     
+     - name: Set up JDK
+       uses: actions/setup-java@v5
+       with:
+        java-version: 17
+        distribution: temurin
+
+     - name: Assemble FOSS debug
+       run: gradlew :app:assembleFossDebug
