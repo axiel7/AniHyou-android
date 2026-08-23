@@ -30,9 +30,8 @@ object ComposeDateUtils {
         buildPluralString: @Composable (id: Int, time: Long) -> String = { id, time ->
             pluralStringResource(id = id, count = time.toInt(), time)
         }
-    ): String
-    {
-        val remaining = this // so its clearer to see what this is
+    ): String {
+        var remaining = this
 
         val years = if (maxUnit >= ChronoUnit.YEARS) (remaining / 31556952).also { remaining %= 31556952 } else 0
         val months = if (maxUnit >= ChronoUnit.MONTHS) (remaining / 2629746).also { remaining %= 2629746 } else 0
