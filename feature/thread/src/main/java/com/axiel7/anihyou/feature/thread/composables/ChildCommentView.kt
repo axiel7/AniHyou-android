@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,8 +74,7 @@ fun ChildCommentView(
                     avatarUrl = comment.user?.avatar?.medium,
                     username = comment.user?.name,
                     isLocked = comment.isLocked,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    textStyle = MaterialTheme.typography.labelMedium,
                     onClick = navigateToUserDetails
                 )
                 Text(

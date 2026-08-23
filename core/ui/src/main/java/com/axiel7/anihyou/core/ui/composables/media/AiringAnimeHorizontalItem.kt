@@ -2,17 +2,15 @@ package com.axiel7.anihyou.core.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +35,7 @@ import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.materialkolor.ktx.harmonize
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AiringAnimeHorizontalItem(
     title: String,
@@ -48,12 +47,22 @@ fun AiringAnimeHorizontalItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
-    ListItem(
-        onClick = onClick,
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = Color.Transparent,
         modifier = Modifier
-            .sizeIn(maxWidth = 300.dp, minWidth = 250.dp),
-        onLongClick = onLongClick,
-        leadingContent = {
+            .sizeIn(maxWidth = 300.dp, minWidth = 250.dp)
+            .clip(MaterialTheme.shapes.large)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 8.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             val posterSizeModifier = Modifier
                 .size(
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
@@ -93,33 +102,29 @@ fun AiringAnimeHorizontalItem(
                     }
                 }
             }
-        },
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            top = 0.dp,
-            end = 16.dp,
-            bottom = 0.dp
-        )
-    ) {
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
 
-            if (score != null) {
-                SmallScoreIndicator(
-                    score = score
+            Column(
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                if (score != null) {
+                    SmallScoreIndicator(
+                        score = score
+                    )
+                }
             }
         }
     }

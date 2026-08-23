@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -83,6 +84,7 @@ fun MediaCharacterStaffView(
                     ) { item ->
                         PersonItemHorizontal(
                             title = item.node?.name?.userPreferred.orEmpty(),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             imageUrl = item.node?.image?.medium,
                             subtitle = item.roleLocalized(),
                             onClick = {
@@ -128,7 +130,9 @@ fun MediaCharacterStaffView(
                         ) {
                             PersonItemHorizontal(
                                 title = item.node?.name?.userPreferred.orEmpty(),
-                                modifier = Modifier.width(300.dp),
+                                modifier = Modifier
+                                    .width(300.dp)
+                                    .padding(horizontal = 16.dp),
                                 imageUrl = item.node?.image?.medium,
                                 subtitle = item.role?.localized(),
                                 onClick = {

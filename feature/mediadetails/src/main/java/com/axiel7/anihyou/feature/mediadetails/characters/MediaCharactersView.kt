@@ -107,7 +107,9 @@ fun MediaCharactersViewContent(
                 ) {
                     PersonItemHorizontal(
                         title = item.node?.name?.userPreferred.orEmpty(),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .weight(1f),
                         imageUrl = item.node?.image?.medium,
                         imageSize = 60.dp,
                         subtitle = item.role?.localized(),
@@ -121,7 +123,9 @@ fun MediaCharactersViewContent(
                         ?.let { voiceActor ->
                             PersonItemHorizontalMirrored(
                                 title = voiceActor.commonVoiceActor.name?.userPreferred.orEmpty(),
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .weight(1f),
                                 imageUrl = voiceActor.commonVoiceActor.image?.medium,
                                 imageSize = 60.dp,
                                 subtitle = voiceActor.commonVoiceActor.languageV2,

@@ -128,6 +128,7 @@ private fun NotificationsContent(
             ) { item ->
                 NotificationItem(
                     title = item.text,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                     blurImage = blurAdult && item.isAdultMedia,
                     imageUrl = item.imageUrl,
                     subtitle = item.createdAt?.toLong()?.timestampIntervalSinceNow()

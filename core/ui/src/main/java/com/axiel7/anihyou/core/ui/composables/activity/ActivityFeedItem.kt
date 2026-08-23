@@ -2,19 +2,19 @@ package com.axiel7.anihyou.core.ui.composables.activity
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +28,6 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ActivityFeedItem(
     modifier: Modifier = Modifier,
@@ -49,84 +48,94 @@ fun ActivityFeedItem(
     onClickMedia: () -> Unit = {},
     onClickDelete: () -> Unit = {},
 ) {
-    ListItem(
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = Color.Transparent,
         onClick = onClick,
-        modifier = modifier,
-        overlineContent = {
+    ) {
+        Column(modifier = modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 4.dp),
+                    .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 PersonItemSmall(
                     avatarUrl = avatarUrl,
                     username = username,
-                    onClick = onClickUser
+                    onClick = onClickUser,
+                    textStyle = MaterialTheme.typography.labelLarge,
                 )
                 Text(
                     text = createdAt.toLong().timestampIntervalSinceNow()
-                        .nonFutureDateToLegibleText()
+                        .nonFutureDateToLegibleText(),
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
-        },
-        leadingContent = {
-            if (type == ActivityType.MEDIA_LIST) {
-                MediaPoster(
-                    url = mediaCoverUrl,
-                    enableBlur = blurCover,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(
-                            width = 48.dp,
-                            height = 74.dp
-                        )
-                        .clickable(onClick = onClickMedia),
-                    showShadow = false
-                )
-            }
-        },
-        supportingContent = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                verticalAlignment = Alignment.Top
             ) {
-                CommentIconButton(
-                    modifier = Modifier.width(78.dp),
-                    commentCount = replyCount,
-                    onClick = onClick,
-                    fontSize = 14.sp,
-                    iconSize = 20.dp,
-                )
-                FavoriteIconButton(
-                    modifier = Modifier.width(78.dp),
-                    isFavorite = isLiked ?: false,
-                    favoritesCount = likeCount,
-                    onClick = onClickLike,
-                    fontSize = 14.sp,
-                    iconSize = 20.dp,
-                )
-                if (showMenu) {
-                    ActivityMenu(
-                        onClickDelete = onClickDelete
+                if (type == ActivityType.MEDIA_LIST) {
+                    MediaPoster(
+                        url = mediaCoverUrl,
+                        enableBlur = blurCover,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(
+                                width = 48.dp,
+                                height = 74.dp
+                            )
+                            .clickable(onClick = onClickMedia),
+                        showShadow = false
                     )
                 }
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    if (type == ActivityType.TEXT) {
+                        DefaultMarkdownText(
+                            markdown = text,
+                            modifier = Modifier.padding(bottom = 4.dp),
+                        )
+                    } else {
+                        Text(
+                            text = text,
+                            modifier = Modifier.padding(bottom = 4.dp),
+                            lineHeight = 20.sp
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        CommentIconButton(
+                            modifier = Modifier.width(78.dp),
+                            commentCount = replyCount,
+                            onClick = onClick,
+                            fontSize = 14.sp,
+                            iconSize = 20.dp,
+                        )
+                        FavoriteIconButton(
+                            modifier = Modifier.width(78.dp),
+                            isFavorite = isLiked ?: false,
+                            favoritesCount = likeCount,
+                            onClick = onClickLike,
+                            fontSize = 14.sp,
+                            iconSize = 20.dp,
+                        )
+                        if (showMenu) {
+                            ActivityMenu(
+                                onClickDelete = onClickDelete
+                            )
+                        }
+                    }
+                }
             }
-        },
-        contentPadding = PaddingValues()
-    ) {
-        if (type == ActivityType.TEXT) {
-            DefaultMarkdownText(
-                markdown = text,
-                modifier = Modifier.padding(bottom = 4.dp),
-            )
-        } else {
-            Text(
-                text = text,
-                modifier = Modifier.padding(bottom = 4.dp),
-                lineHeight = 20.sp
-            )
         }
     }
 }

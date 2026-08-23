@@ -132,7 +132,7 @@ fun ThreadCommentView(
                 avatarUrl = avatarUrl,
                 username = username,
                 isLocked = isLocked,
-                fontWeight = FontWeight.SemiBold,
+                textStyle = MaterialTheme.typography.labelMedium,
                 onClick = navigateToUserDetails
             )
             Text(
