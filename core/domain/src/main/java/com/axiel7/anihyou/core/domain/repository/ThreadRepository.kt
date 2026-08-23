@@ -34,8 +34,7 @@ class ThreadRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            data.Page?.threadComments?.filterNotNull().orEmpty()
-                .map { it.commonThreadComment.toChildComment() }
+            data.Page?.threadComments?.filterNotNull().orEmpty().map { it.toChildComment() }
         }
 
     suspend fun updateThreadComment(

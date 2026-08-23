@@ -48,13 +48,16 @@ import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleT
 import com.axiel7.anihyou.feature.thread.composables.ChildCommentView
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ThreadCommentDetailsView(
     arguments: Route.ThreadCommentDetails,
 ) {
     val navActionManager = LocalNavActionManager.current
-    val viewModel: ThreadCommentViewModel = koinViewModel()
+    val viewModel: ThreadCommentViewModel = koinViewModel {
+        parametersOf(arguments)
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
