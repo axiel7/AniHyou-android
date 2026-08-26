@@ -667,4 +667,5 @@
     <string name="general">General</string>
     <string name="logout_confirm">Do you really want to log out?</string>
     <string name="score_steps">Score steps</string>
+    <string name="recent">Recent</string>
 </resources>

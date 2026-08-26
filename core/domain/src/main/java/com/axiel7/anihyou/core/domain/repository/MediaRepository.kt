@@ -17,6 +17,7 @@ import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
+import com.axiel7.anihyou.core.network.type.RecommendationSort
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -241,6 +242,25 @@ class MediaRepository (
         mediaRecommendationId = mediaRecommendationId,
         rating = rating
     ).toFlow().asDataResult()
+
+
+    fun mediaRecommendations(
+        onList: Boolean?,
+        sort: List<RecommendationSort>?,
+        page: Int,
+        perPage: Int,
+    ) = api
+        .mediaRecommendationsQuery(
+            onList = onList,
+            sort = sort,
+            page = page,
+            perPage = perPage,
+        )
+        .fetchPolicy(FetchPolicy.NetworkOnly)
+        .toFlow()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
+            it.Page?.recommendations?.filterNotNull().orEmpty()
+        }
 
     // MyAnimeList endpoints
 

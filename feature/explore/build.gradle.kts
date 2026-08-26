@@ -10,4 +10,5 @@ android {
 
 dependencies {
     implementation(project(":feature:editmedia"))
+    implementation(project(":feature:login"))
 }

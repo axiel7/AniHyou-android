@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.network.MediaCharactersQuery
 import com.axiel7.anihyou.core.network.MediaChartQuery
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.MediaFollowingQuery
+import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.core.network.MediaReviewsQuery
 import com.axiel7.anihyou.core.network.MediaSortedQuery
@@ -32,6 +33,7 @@ import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
+import com.axiel7.anihyou.core.network.type.RecommendationSort
 import com.axiel7.anihyou.core.network.type.ThreadSort
 
 class MediaApi(
@@ -342,6 +344,21 @@ class MediaApi(
                 mediaId = Optional.present(mediaId),
                 mediaRecommendationId = Optional.present(mediaRecommendationId),
                 rating = Optional.present(rating)
+            )
+        )
+
+    fun mediaRecommendationsQuery(
+        onList: Boolean?,
+        sort: List<RecommendationSort>?,
+        page: Int,
+        perPage: Int,
+    ) = client
+        .query(
+            MediaRecommendationsQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
+                onList = Optional.present(onList),
+                sort = Optional.present(sort)
             )
         )
 }

@@ -36,6 +36,8 @@ class MainViewModel(
 
     val homeTab = defaultPreferencesRepository.defaultHomeTab
 
+    val exploreTab = defaultPreferencesRepository.defaultExploreTab
+
     val theme = defaultPreferencesRepository.theme
 
     val useBlackColors = defaultPreferencesRepository.useBlackColors
