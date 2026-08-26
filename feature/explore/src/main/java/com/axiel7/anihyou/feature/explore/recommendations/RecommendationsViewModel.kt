@@ -7,6 +7,7 @@ import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.RecommendationRating
@@ -120,24 +121,6 @@ class RecommendationsViewModel(
         }
     }
 
-    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
-        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
-
-        uiState.value.recommendations.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.recommendations
-                val oldValue = list[index]
-                uiState.value.recommendations[index] = oldValue.copy(
-                    media = oldValue.media?.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
-                        }
-                    )
-                )
-            }
-    }
-
     init {
         uiState
             .filter { it.hasNextPage }
@@ -175,5 +158,47 @@ class RecommendationsViewModel(
                 mutableUiState.update { it.copy(blurAdult = value) }
             }
             .launchIn(viewModelScope)
+    }
+
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        val recommendations = uiState.value.recommendations
+        recommendations.indexOfFirstOrNull { it.media?.basicMediaDetails?.id == selectedMediaId }
+            ?.let { index ->
+                val oldValue = recommendations[index]
+                recommendations[index] = oldValue.copy(
+                    media = oldValue.media?.copy(
+                        mediaListEntry = newListEntry?.let { entry ->
+                            oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = entry)
+                                ?: MediaRecommendationsQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = entry.id,
+                                    mediaId = entry.mediaId,
+                                    basicMediaListEntry = entry
+                                )
+                        }
+                    )
+                )
+            }
+
+        recommendations.indexOfFirstOrNull { it.mediaRecommendation?.basicMediaDetails?.id == selectedMediaId }
+            ?.let { index ->
+                val oldValue = recommendations[index]
+                recommendations[index] = oldValue.copy(
+                    mediaRecommendation = oldValue.mediaRecommendation?.copy(
+                        mediaListEntry = newListEntry?.let { entry ->
+                            oldValue.mediaRecommendation?.mediaListEntry?.copy(basicMediaListEntry = entry)
+                                ?: MediaRecommendationsQuery.MediaListEntry1(
+                                    __typename = "MediaListEntry",
+                                    id = entry.id,
+                                    mediaId = entry.mediaId,
+                                    basicMediaListEntry = entry
+                                )
+                        }
+                    )
+                )
+            }
     }
 }

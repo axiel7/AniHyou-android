@@ -7,6 +7,7 @@ import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -34,6 +35,12 @@ class MangaExploreViewModel(
                 list[index] = oldValue.copy(
                     mediaListEntry = newListEntry?.let {
                         oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                            ?: MediaSortedQuery.MediaListEntry(
+                                __typename = "MediaListEntry",
+                                id = it.id,
+                                mediaId = it.mediaId,
+                                basicMediaListEntry = it
+                            )
                     }
                 )
             }
@@ -45,6 +52,12 @@ class MangaExploreViewModel(
                 list[index] = oldValue.copy(
                     mediaListEntry = newListEntry?.let {
                         oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                            ?: MediaSortedQuery.MediaListEntry(
+                                __typename = "MediaListEntry",
+                                id = it.id,
+                                mediaId = it.mediaId,
+                                basicMediaListEntry = it
+                            )
                     }
                 )
             }

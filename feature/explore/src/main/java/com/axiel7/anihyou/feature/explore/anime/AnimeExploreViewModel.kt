@@ -11,6 +11,10 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.nextAnimeSeason
+import com.axiel7.anihyou.core.network.AiringAnimesQuery
+import com.axiel7.anihyou.core.network.AiringOnMyListQuery
+import com.axiel7.anihyou.core.network.MediaSortedQuery
+import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -43,6 +47,12 @@ class AnimeExploreViewModel(
                     list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
                             oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: AiringOnMyListQuery.MediaListEntry (
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
                         }
                     )
                 }
@@ -56,6 +66,12 @@ class AnimeExploreViewModel(
                         media = oldValue.media?.copy(
                             mediaListEntry = newListEntry?.let {
                                 oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
+                                    ?: AiringAnimesQuery.MediaListEntry (
+                                        __typename = "MediaListEntry",
+                                        id = it.id,
+                                        mediaId = it.mediaId,
+                                        basicMediaListEntry = it
+                                    )
                             }
                         )
                     )
@@ -69,6 +85,12 @@ class AnimeExploreViewModel(
                     list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
                             oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: SeasonalAnimeQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
                         }
                     )
                 }
@@ -81,6 +103,12 @@ class AnimeExploreViewModel(
                     list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
                             oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: MediaSortedQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
                         }
                     )
                 }
@@ -93,6 +121,12 @@ class AnimeExploreViewModel(
                     list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
                             oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: SeasonalAnimeQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
                         }
                     )
                 }
@@ -105,6 +139,12 @@ class AnimeExploreViewModel(
                     list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
                             oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: MediaSortedQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
                         }
                     )
                 }
