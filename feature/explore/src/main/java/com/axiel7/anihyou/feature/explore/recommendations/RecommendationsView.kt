@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.media.RecommendationSortSearch
@@ -39,6 +41,7 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItem
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItemPlaceHolder
@@ -236,5 +239,19 @@ fun RecommendationsFilterRow(
                 ?: RecommendationSortSearch.ID,
             onSortChanged = { onSortChange(it) },
         )
+    }
+}
+
+@Preview
+@Composable
+private fun RecommendationRowPreview() {
+    AniHyouTheme {
+        Surface {
+            RecommendationsContent(
+                isLoggedIn = true,
+                uiState = RecommendationsUiState(),
+                event = null
+            )
+        }
     }
 }

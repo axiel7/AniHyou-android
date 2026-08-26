@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.explore.anime
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -26,6 +28,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,10 +38,13 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.media.ChartType
+import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.iconSmall
+import com.axiel7.anihyou.core.model.media.nextAnimeSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
@@ -46,11 +52,13 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.discover.content.AiringContent
 import com.axiel7.anihyou.feature.explore.discover.content.DiscoverMediaContent
 import com.axiel7.anihyou.feature.explore.discover.content.SeasonAnimeContent
 import org.koin.compose.viewmodel.koinActivityViewModel
+import java.time.LocalDateTime
 
 enum class AnimeDiscoverInfo {
     AIRING,
@@ -308,6 +316,30 @@ private fun AnimeDiscoverContent(
                     }
                 }
             }
+        }
+    }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Preview
+@Composable
+private fun AnimeDiscoverInfoPreview() {
+    val now = LocalDateTime.now()
+    AniHyouTheme {
+        Surface {
+            AnimeDiscoverContent(
+                isLoggedIn = true,
+                uiState = AnimeExploreUiState(
+                    infos = mutableStateListOf(
+                        AnimeDiscoverInfo.AIRING,
+                        AnimeDiscoverInfo.THIS_SEASON,
+                        AnimeDiscoverInfo.TRENDING_ANIME
+                    ),
+                    nowAnimeSeason = now.currentAnimeSeason(),
+                    nextAnimeSeason = now.nextAnimeSeason(),
+                ),
+                event = null
+            )
         }
     }
 }

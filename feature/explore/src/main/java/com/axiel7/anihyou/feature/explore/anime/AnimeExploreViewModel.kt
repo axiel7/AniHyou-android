@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.explore.anime
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
@@ -26,80 +28,88 @@ class AnimeExploreViewModel(
     private val defaultPreferencesRepository: DefaultPreferencesRepository
 ) : UiStateViewModel<AnimeExploreUiState>(), AnimeExploreEvent {
 
-    // idk how this could be made any simpler than this.
     override fun onUpdateListEntry(
         newListEntry: BasicMediaListEntry?
     ) {
         val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
         mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
 
-        uiState.value.airingAnimeOnMyList.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.airingAnimeOnMyList
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                    }
-                )
-            }
-
-        uiState.value.airingAnime.indexOfFirstOrNull { it.media?.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.airingAnime
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    media = oldValue.media?.copy(
+        uiState.value.run {
+            airingAnimeOnMyList.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = airingAnimeOnMyList
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
                         mediaListEntry = newListEntry?.let {
-                            oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
                         }
                     )
-                )
-            }
+                }
 
-        uiState.value.thisSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.thisSeasonAnime
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                    }
-                )
-            }
+            airingAnime.indexOfFirstOrNull { it.media?.id == selectedMediaId }
+                ?.let { index ->
+                    val list = airingAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.media}")
+                    list[index] = oldValue.copy(
+                        media = oldValue.media?.copy(
+                            mediaListEntry = newListEntry?.let {
+                                oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
+                            }
+                        )
+                    )
+                }
 
-        uiState.value.trendingAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.trendingAnime
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                    }
-                )
-            }
+            thisSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = thisSeasonAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                        }
+                    )
+                }
 
-        uiState.value.nextSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.nextSeasonAnime
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                    }
-                )
-            }
+            trendingAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = trendingAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                        }
+                    )
+                }
 
-        uiState.value.newlyAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.newlyAnime
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                    }
-                )
-            }
+            nextSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = nextSeasonAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                        }
+                    )
+                }
+
+            newlyAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = newlyAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                        }
+                    )
+                }
+        }
+
     }
 
     private val now = LocalDateTime.now()

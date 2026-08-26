@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.explore.recommendations
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
@@ -120,7 +121,21 @@ class RecommendationsViewModel(
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        // TODO("Not yet implemented")
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        uiState.value.recommendations.indexOfFirstOrNull { it.id == selectedMediaId }
+            ?.let { index ->
+                val list = uiState.value.recommendations
+                val oldValue = list[index]
+                uiState.value.recommendations[index] = oldValue.copy(
+                    media = oldValue.media?.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
+                        }
+                    )
+                )
+            }
     }
 
     init {
