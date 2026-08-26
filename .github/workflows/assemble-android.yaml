@@ -16,4 +16,4 @@ jobs:
         distribution: temurin
 
      - name: Assemble FOSS debug
-       run: gradlew :app:assembleFossDebug
+       run: ./gradlew :app:assembleFossDebug
