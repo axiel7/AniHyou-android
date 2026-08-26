@@ -2,7 +2,9 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
@@ -361,4 +363,5 @@ class MediaApi(
                 sort = Optional.present(sort)
             )
         )
+        .fetchPolicy(FetchPolicy.NetworkOnly)
 }

@@ -11,7 +11,7 @@ interface RecommendationsEvent : UiEvent, PagedEvent {
     fun onVoteClick(recommendedMediaId: Int, baseMediaId: Int, recommendationId: Int,rating: RecommendationRating)
     fun refresh()
     fun onSortChange(value: RecommendationSort)
-    fun onMyListChange(value: Boolean?)
+    fun onMyListChange(value: Boolean)
     fun clearErrorId()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)

@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.ui.composables.UpvoteDownvoteHorizontalText
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
+import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable
@@ -100,6 +101,30 @@ fun RecommendationItem(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun RecommendationItemPlaceHolder() {
+    Card(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            MediaItemHorizontalPlaceholder()
+            Spacer(modifier = Modifier.height(4.dp))
+            MediaItemHorizontalPlaceholder()
+            Spacer(modifier = Modifier.height(4.dp))
+            UpvoteDownvoteHorizontalText(
+                ratingText = "",
+                isUpvoted = false,
+                isDownvoted = false,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onUpvoteClick = {},
+                onDownvoteClick = {}
+            )
         }
     }
 }

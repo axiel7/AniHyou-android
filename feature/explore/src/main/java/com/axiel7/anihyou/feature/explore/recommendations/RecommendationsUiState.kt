@@ -12,21 +12,19 @@ import com.axiel7.anihyou.core.network.type.RecommendationSort
 @Stable
 data class RecommendationsUiState(
     val recommendations: SnapshotStateList<MediaRecommendationsQuery.Recommendation> = mutableStateListOf(),
-    val onMyList: Boolean? = null,
-    val displayAdult: Boolean = false,
+    val onMyList: Boolean = false,
+    val blurAdult: Boolean = false,
     val sort: RecommendationSort = RecommendationSort.ID_DESC,
     val errorId: Int? = null,
     val selectedMediaDetails: BasicMediaDetails? = null,
     val selectedMediaListEntry: BasicMediaListEntry? = null,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
-    override val isLoading: Boolean = false,
+    override val isLoading: Boolean = true,
     override val error: String? = null,
 ) : PagedUiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setPage(value: Int) = copy(page = value)
     override fun setHasNextPage(value: Boolean) = copy(hasNextPage = value)
-
-    val isAdult = displayAdult.takeIf { !it }
 }

@@ -256,7 +256,6 @@ class MediaRepository (
             page = page,
             perPage = perPage,
         )
-        .fetchPolicy(FetchPolicy.NetworkOnly)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
             it.Page?.recommendations?.filterNotNull().orEmpty()

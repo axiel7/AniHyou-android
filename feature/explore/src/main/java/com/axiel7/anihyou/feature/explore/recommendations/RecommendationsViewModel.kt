@@ -89,7 +89,7 @@ class RecommendationsViewModel(
         }
     }
 
-    override fun onMyListChange(value: Boolean?) {
+    override fun onMyListChange(value: Boolean) {
         mutableUiState.update {
             it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
         }
@@ -133,7 +133,7 @@ class RecommendationsViewModel(
             }
             .flatMapLatest {
                 mediaRepository.mediaRecommendations(
-                    onList = it.onMyList,
+                    onList = if (it.onMyList) true else null, // onMyList false seems to be broken
                     sort = listOf(it.sort),
                     page = it.page,
                     perPage = 25,
@@ -155,9 +155,9 @@ class RecommendationsViewModel(
             }
             .launchIn(viewModelScope)
 
-        defaultPreferencesRepository.displayAdult
+        defaultPreferencesRepository.blurAdult
             .onEach { value ->
-                mutableUiState.update { it.copy(displayAdult = value ?: false) }
+                mutableUiState.update { it.copy(blurAdult = value) }
             }
             .launchIn(viewModelScope)
     }

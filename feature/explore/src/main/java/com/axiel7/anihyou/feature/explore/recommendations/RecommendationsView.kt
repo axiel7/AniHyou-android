@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.explore.recommendations
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -35,10 +38,10 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
-import com.axiel7.anihyou.core.ui.composables.common.TriFilterChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItem
+import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItemPlaceHolder
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationsSearchChip
 import com.axiel7.anihyou.feature.login.LoginView
 import org.koin.compose.viewmodel.koinViewModel
@@ -123,12 +126,12 @@ private fun RecommendationsContent(
         modifier = modifier,
         contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0)
     ) { padding ->
-        if (!isLoggedIn && uiState.onMyList == true) {
+        if (!isLoggedIn && uiState.onMyList) {
             RecommendationsFilterRow(
                 onMyList = true,
                 sort = uiState.sort,
                 onSortChange = { event?.onSortChange(it) },
-                onMyListChange = { event?.onMyListChange(it) }
+                onMyListChange = { event?.onMyListChange(it == true) }
             )
             LoginView(modifier = Modifier.padding(padding))
         } else {
@@ -157,7 +160,7 @@ private fun RecommendationsContent(
                             onMyList = uiState.onMyList,
                             sort = uiState.sort,
                             onSortChange = { event?.onSortChange(it) },
-                            onMyListChange = { event?.onMyListChange(it) }
+                            onMyListChange = { event?.onMyListChange(it == true) }
                         )
                     }
 
@@ -184,8 +187,21 @@ private fun RecommendationsContent(
                                     rating
                                 )
                             },
-                            blurAdult = uiState.displayAdult
+                            blurAdult = uiState.blurAdult
                         )
+                    }
+
+                    if (uiState.isLoading) {
+                        items(10) {
+                            RecommendationItemPlaceHolder()
+                        }
+                    } else if (uiState.recommendations.isEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.no_information),
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -195,22 +211,26 @@ private fun RecommendationsContent(
 
 @Composable
 fun RecommendationsFilterRow(
-    onMyList: Boolean?,
+    onMyList: Boolean,
     sort: RecommendationSort,
     onSortChange: (RecommendationSort) -> Unit,
     onMyListChange: (Boolean?) -> Unit,
 ) {
     Row (
         modifier = Modifier
-            .horizontalScroll(rememberScrollState()),
-        verticalAlignment = Alignment.CenterVertically
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TriFilterChip(
-            text = stringResource(R.string.on_my_list),
-            value = onMyList,
-            onValueChanged = { onMyListChange(it) },
-            modifier = Modifier.padding(start = 16.dp)
+        FilterChip(
+            selected = onMyList,
+            onClick = { onMyListChange(!onMyList) },
+            label = {
+                Text(text = stringResource(R.string.on_my_list))
+            }
         )
+
         RecommendationsSearchChip(
             recommendationSortSearch = RecommendationSortSearch.valueOf(sort)
                 ?: RecommendationSortSearch.ID,

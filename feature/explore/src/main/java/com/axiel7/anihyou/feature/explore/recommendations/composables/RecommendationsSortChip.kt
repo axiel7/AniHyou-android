@@ -2,7 +2,6 @@ package com.axiel7.anihyou.feature.explore.recommendations.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -31,7 +30,6 @@ fun RecommendationsSearchChip(
     var isDescending by remember { mutableStateOf(true) }
 
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
