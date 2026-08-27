@@ -28,6 +28,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.model.DeepLink
+import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.common.LocalMarkdownUriHandler
@@ -42,7 +43,7 @@ import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityView
 import com.axiel7.anihyou.feature.calendar.CalendarView
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.feature.explore.charts.MediaChartListView
-import com.axiel7.anihyou.feature.explore.discover.DiscoverView
+import com.axiel7.anihyou.feature.explore.discover.ExploreView
 import com.axiel7.anihyou.feature.explore.search.SearchView
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.feature.home.HomeView
@@ -91,6 +92,7 @@ fun MainNavigation(
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
     homeTab: HomeTab,
+    exploreTab: ExploreTab,
     deepLink: DeepLink?,
     padding: PaddingValues = PaddingValues(),
 ) {
@@ -219,7 +221,8 @@ fun MainNavigation(
         entry<Route.Explore>(
             metadata = topNavigationTransitionSpec
         ) {
-            DiscoverView(
+            ExploreView(
+                defaultExploreTab = exploreTab,
                 isLoggedIn = isLoggedIn,
                 contentPadding = if (isCompactScreen) PaddingValues(bottom = bottomPadding) else PaddingValues(),
             )

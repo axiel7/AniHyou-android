@@ -2,7 +2,9 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
@@ -14,6 +16,7 @@ import com.axiel7.anihyou.core.network.MediaCharactersQuery
 import com.axiel7.anihyou.core.network.MediaChartQuery
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.MediaFollowingQuery
+import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.core.network.MediaReviewsQuery
 import com.axiel7.anihyou.core.network.MediaSortedQuery
@@ -32,6 +35,7 @@ import com.axiel7.anihyou.core.network.type.MediaSource
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
+import com.axiel7.anihyou.core.network.type.RecommendationSort
 import com.axiel7.anihyou.core.network.type.ThreadSort
 
 class MediaApi(
@@ -344,4 +348,21 @@ class MediaApi(
                 rating = Optional.present(rating)
             )
         )
+
+    fun mediaRecommendationsQuery(
+        onList: Boolean?,
+        sort: List<RecommendationSort>?,
+        page: Int,
+        perPage: Int,
+        fetchFromNetwork: Boolean
+    ) = client
+        .query(
+            MediaRecommendationsQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
+                onList = Optional.present(onList),
+                sort = Optional.present(sort)
+            )
+        )
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 }

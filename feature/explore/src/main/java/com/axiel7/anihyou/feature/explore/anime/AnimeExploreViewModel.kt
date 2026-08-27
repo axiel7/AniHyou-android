@@ -1,13 +1,20 @@
-package com.axiel7.anihyou.feature.explore.discover
+package com.axiel7.anihyou.feature.explore.anime
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.nextAnimeSeason
+import com.axiel7.anihyou.core.network.AiringAnimesQuery
+import com.axiel7.anihyou.core.network.AiringOnMyListQuery
+import com.axiel7.anihyou.core.network.MediaSortedQuery
+import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -20,19 +27,139 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlin.time.Duration.Companion.milliseconds
 
-class DiscoverViewModel(
+class AnimeExploreViewModel(
     private val mediaRepository: MediaRepository,
-    defaultPreferencesRepository: DefaultPreferencesRepository,
-) : UiStateViewModel<DiscoverUiState>(), DiscoverEvent {
+    private val defaultPreferencesRepository: DefaultPreferencesRepository
+) : UiStateViewModel<AnimeExploreUiState>(), AnimeExploreEvent {
+
+    override fun onUpdateListEntry(
+        newListEntry: BasicMediaListEntry?
+    ) {
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        uiState.value.run {
+            airingAnimeOnMyList.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = airingAnimeOnMyList
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: AiringOnMyListQuery.MediaListEntry (
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
+                        }
+                    )
+                }
+
+            airingAnime.indexOfFirstOrNull { it.media?.id == selectedMediaId }
+                ?.let { index ->
+                    val list = airingAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.media}")
+                    list[index] = oldValue.copy(
+                        media = oldValue.media?.copy(
+                            mediaListEntry = newListEntry?.let {
+                                oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
+                                    ?: AiringAnimesQuery.MediaListEntry (
+                                        __typename = "MediaListEntry",
+                                        id = it.id,
+                                        mediaId = it.mediaId,
+                                        basicMediaListEntry = it
+                                    )
+                            }
+                        )
+                    )
+                }
+
+            thisSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = thisSeasonAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: SeasonalAnimeQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
+                        }
+                    )
+                }
+
+            trendingAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = trendingAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: MediaSortedQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
+                        }
+                    )
+                }
+
+            nextSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = nextSeasonAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: SeasonalAnimeQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
+                        }
+                    )
+                }
+
+            newlyAnime.indexOfFirstOrNull { it.id == selectedMediaId }
+                ?.let { index ->
+                    val list = newlyAnime
+                    val oldValue = list[index]
+                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
+                    list[index] = oldValue.copy(
+                        mediaListEntry = newListEntry?.let {
+                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
+                                ?: MediaSortedQuery.MediaListEntry(
+                                    __typename = "MediaListEntry",
+                                    id = it.id,
+                                    mediaId = it.mediaId,
+                                    basicMediaListEntry = it
+                                )
+                        }
+                    )
+                }
+        }
+
+    }
 
     private val now = LocalDateTime.now()
 
     override val initialState =
-        DiscoverUiState(
+        AnimeExploreUiState(
             infos = mutableStateListOf(
-                DiscoverInfo.AIRING,
-                DiscoverInfo.THIS_SEASON,
-                DiscoverInfo.TRENDING_ANIME
+                AnimeDiscoverInfo.AIRING,
+                AnimeDiscoverInfo.THIS_SEASON,
+                AnimeDiscoverInfo.TRENDING_ANIME
             ),
             nowAnimeSeason = now.currentAnimeSeason(),
             nextAnimeSeason = now.nextAnimeSeason(),
@@ -40,8 +167,9 @@ class DiscoverViewModel(
 
     override fun addNextInfo() {
         mutableUiState.value.run {
-            if (infos.size < DiscoverInfo.entries.size)
-                infos.add(DiscoverInfo.entries[infos.size])
+            if (infos.size < AnimeDiscoverInfo.entries.size) {
+                infos.add(AnimeDiscoverInfo.entries[infos.size])
+            }
         }
     }
 
@@ -144,27 +272,6 @@ class DiscoverViewModel(
         }
     }
 
-    override fun fetchTrendingManga() {
-        if (mutableUiState.value.trendingManga.isEmpty()) {
-            mediaRepository.getMediaSortedPage(
-                mediaType = MediaType.MANGA,
-                sort = listOf(MediaSort.TRENDING_DESC),
-                isAdult = uiState.value.isAdult,
-                page = 1
-            ).onEach { result ->
-                mutableUiState.update {
-                    if (result is PagedResult.Success) {
-                        it.trendingManga.addAll(result.list)
-                    }
-                    it.copy(
-                        isLoadingTrendingManga = result is PagedResult.Loading,
-                        error = (result as? PagedResult.Error)?.message
-                    )
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
     override fun fetchNewlyAnime() {
         if (mutableUiState.value.newlyAnime.isEmpty()) {
             mediaRepository.getMediaSortedPage(
@@ -186,27 +293,6 @@ class DiscoverViewModel(
         }
     }
 
-    override fun fetchNewlyManga() {
-        if (mutableUiState.value.newlyManga.isEmpty()) {
-            mediaRepository.getMediaSortedPage(
-                mediaType = MediaType.MANGA,
-                sort = listOf(MediaSort.ID_DESC),
-                isAdult = uiState.value.isAdult,
-                page = 1
-            ).onEach { result ->
-                mutableUiState.update {
-                    if (result is PagedResult.Success) {
-                        it.newlyManga.addAll(result.list)
-                    }
-                    it.copy(
-                        isLoadingNewlyManga = result is PagedResult.Loading,
-                        error = (result as? PagedResult.Error)?.message
-                    )
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
     override fun refresh() {
         mutableUiState.update { it.copy(isLoading = true) }
         mutableUiState.value.run {
@@ -215,7 +301,6 @@ class DiscoverViewModel(
             thisSeasonAnime.clear()
             trendingAnime.clear()
             nextSeasonAnime.clear()
-            trendingManga.clear()
             newlyAnime.clear()
             newlyManga.clear()
             if (airingOnMyList == true) fetchAiringAnimeOnMyList()
@@ -230,11 +315,14 @@ class DiscoverViewModel(
         }
     }
 
-    override fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
+    override fun selectItem(
+        details: BasicMediaDetails?,
+        listEntry: BasicMediaListEntry?,
+    ) {
         mutableUiState.update {
             it.copy(
                 selectedMediaDetails = details,
-                selectedMediaListEntry = listEntry
+                selectedMediaListEntry = listEntry,
             )
         }
     }

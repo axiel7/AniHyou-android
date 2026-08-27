@@ -272,23 +272,22 @@ private fun SettingsContent(
                     onValueChange = { event?.setHideScores(it) },
                     shape = middleShape
                 )
+
+                SwitchPreference(
+                    title = stringResource(R.string.display_adult_content),
+                    preferenceValue = uiState.userSettings?.options?.displayAdultContent,
+                    icon = R.drawable.no_adult_content_24,
+                    onValueChange = { event?.setDisplayAdultContent(it) },
+                    shape = middleShape
+                )
             }
-
-
-            SwitchPreference(
-                title = stringResource(R.string.display_adult_content),
-                preferenceValue = uiState.userSettings?.options?.displayAdultContent,
-                icon = R.drawable.no_adult_content_24,
-                onValueChange = { event?.setDisplayAdultContent(it) },
-                shape = if (uiState.isLoggedIn) middleShape else topShape
-            )
 
             SwitchPreference(
                 title = stringResource(R.string.blur_adult_content),
                 preferenceValue = uiState.blurAdultContent,
                 icon = R.drawable.blur_on_24,
                 onValueChange = { event?.setBlurAdultContent(it) },
-                shape = bottomShape
+                shape = if (uiState.isLoggedIn) bottomShape else singleShape
             )
 
 

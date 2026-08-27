@@ -235,3 +235,35 @@ private fun TextIconVerticalPreview() {
         }
     }
 }
+
+@Preview
+@Composable
+private fun UpvoteDownvoteHorizontalTextPreviewUp() {
+    AniHyouTheme {
+        Surface {
+            UpvoteDownvoteHorizontalText(
+                ratingText = "999999",
+                isUpvoted = true,
+                isDownvoted = false,
+                onUpvoteClick = {},
+                onDownvoteClick = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun UpvoteDownvoteHorizontalTextPreviewDown() {
+    AniHyouTheme {
+        Surface {
+            UpvoteDownvoteHorizontalText(
+                ratingText = "999999",
+                isUpvoted = false,
+                isDownvoted = true,
+                onUpvoteClick = {},
+                onDownvoteClick = {}
+            )
+        }
+    }
+}
