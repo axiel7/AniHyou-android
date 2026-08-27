@@ -157,6 +157,7 @@ class RecommendationsViewModel(
                 old.page == new.page
                         && old.onMyList == new.onMyList
                         && old.sort == new.sort
+                        && !new.fetchFromNetwork
             }
             .flatMapLatest {
                 mediaRepository.mediaRecommendations(
@@ -164,6 +165,7 @@ class RecommendationsViewModel(
                     sort = listOf(it.sort),
                     page = it.page,
                     perPage = 25,
+                    fetchFromNetwork = it.fetchFromNetwork,
                 )
             }
             .onEach { result ->
