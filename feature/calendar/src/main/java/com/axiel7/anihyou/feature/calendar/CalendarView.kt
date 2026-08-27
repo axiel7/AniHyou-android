@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -263,9 +263,9 @@ private fun AppBarActions(
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShapes(),
             ) {
-                DropdownMenuItem(
-                    checked = onMyList != null,
-                    onCheckedChange = {
+                SelectableDropdownMenuItem(
+                    selected = onMyList != null,
+                    onClick = {
                         onMyListChanged(
                             when (onMyList) {
                                 null -> true
@@ -277,7 +277,7 @@ private fun AppBarActions(
                     },
                     text = { Text(text = stringResource(R.string.on_my_list)) },
                     shapes = MenuDefaults.itemShape(0, 1),
-                    checkedLeadingIcon = {
+                    selectedLeadingIcon = {
                         if (onMyList != null) {
                             Icon(
                                 painter = painterResource(

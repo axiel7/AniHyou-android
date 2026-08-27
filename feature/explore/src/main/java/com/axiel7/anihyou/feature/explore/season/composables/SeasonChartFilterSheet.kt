@@ -17,13 +17,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -173,9 +173,9 @@ fun YearMenu(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 DateUtils.seasonYears.fastForEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        checked = year == item,
-                        onCheckedChange = {
+                    SelectableDropdownMenuItem(
+                        selected = year == item,
+                        onClick = {
                             setYear(item)
                             expanded = false
                         },
@@ -227,9 +227,9 @@ private fun SortMenu(
                 shapes = MenuDefaults.groupShapes()
             ) {
                 seasonSortEntries.fastForEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        checked = sort == item,
-                        onCheckedChange = {
+                    SelectableDropdownMenuItem(
+                        selected = sort == item,
+                        onClick = {
                             setSort(item)
                             expanded = false
                         },

@@ -159,10 +159,8 @@ fun ActivityTextView(
                         ) {
                             likes.fastForEach { user ->
                                 DropdownMenuItem(
-                                    checked = false,
-                                    onCheckedChange = {},
+                                    onClick = {},
                                     text = { Text(text = user.name) },
-                                    shapes = MenuDefaults.itemShapes(),
                                     leadingIcon = {
                                         PersonImage(
                                             url = user.avatar?.medium,

@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -173,13 +172,11 @@ fun ActivityMenu(
             onDismissRequest = { moreExpanded = false }
         ) {
             DropdownMenuItem(
-                checked = false,
-                onCheckedChange = {
+                onClick = {
                     moreExpanded = false
                     onClickDelete()
                 },
                 text = { Text(text = stringResource(R.string.delete)) },
-                shapes = MenuDefaults.itemShapes(),
             )
         }
     }
