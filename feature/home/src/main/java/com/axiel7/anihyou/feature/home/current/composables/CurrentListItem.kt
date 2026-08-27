@@ -5,8 +5,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,9 +37,9 @@ import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -97,7 +97,7 @@ fun CurrentListItem(
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 0.dp)
-                    .height(MEDIA_POSTER_COMPACT_HEIGHT.dp),
+                    .height(IntrinsicSize.Min),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -105,17 +105,18 @@ fun CurrentListItem(
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
+                    minLines = 2,
                     maxLines = 2
                 )
-
-                Spacer(modifier = Modifier.weight(1f))
-
+                
                 AiringScheduleText(
                     item = item,
                 )
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
