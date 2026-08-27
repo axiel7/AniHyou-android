@@ -438,6 +438,11 @@
     <string name="staff_role_finishing_production">Abschlussproduktion</string>
     <string name="staff_role_finishing">Abschluss</string>
     <string name="staff_role_illustration">Illustration</string>
+    <string name="staff_role_hd_editing">HD-Bearbeitung</string>
+    <string name="staff_role_in_between_animation_assistance">Assistenz Zwischenphasenanimation</string>
+    <string name="staff_role_in_between_animation">Zwischenphasenanimation</string>
+    <string name="staff_role_in_betweens_check">Zwischenphasenprüfung</string>
+    <string name="staff_role_in_betweens_manager">Zwischenphasenmanager</string>
     <string name="staff_role_1st_key_animation">1. Key Animation Regisseur</string>
     <string name="staff_role_1st_key_assistant">1. Key Animation Regieassistenz</string>
     <string name="staff_role_2nd_key_animation">2. Key Animation</string>
@@ -459,7 +464,7 @@
     <string name="staff_role_recording_assistant">Tonassistenz</string>
     <string name="staff_role_script">Drehbuch</string>
     <string name="staff_role_script_assistance">Drehbuchassistenz</string>
-    <string name="staff_role_setting_design">Einstellungsdesign</string>
+    <string name="staff_role_setting_design">Weltendesign</string>
     <string name="staff_role_translator">Übersetzer</string>
     <string name="staff_role_video_editing">Videobearbeitung</string>
     <string name="staff_role_visual_director">Visueller Direktor</string>
