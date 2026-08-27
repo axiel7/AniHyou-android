@@ -45,8 +45,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItem
 import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationItemPlaceHolder
-import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationsSearchChip
-import com.axiel7.anihyou.feature.login.LoginView
+import com.axiel7.anihyou.feature.explore.recommendations.composables.RecommendationsSearchChips
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -129,82 +128,73 @@ private fun RecommendationsContent(
         modifier = modifier,
         contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0)
     ) { padding ->
-        if (!isLoggedIn && uiState.onMyList) {
-            RecommendationsFilterRow(
-                onMyList = true,
-                sort = uiState.sort,
-                onSortChange = { event?.onSortChange(it) },
-                onMyListChange = { event?.onMyListChange(it == true) }
-            )
-            LoginView(modifier = Modifier.padding(padding))
-        } else {
-            PullToRefreshBox(
-                isRefreshing = uiState.isLoading,
-                onRefresh = { event?.refresh() },
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                state = pullToRefreshState,
-                indicator = {
-                    PullToRefreshDefaults.LoadingIndicator(
-                        state = pullToRefreshState,
-                        isRefreshing = uiState.isLoading,
-                        modifier = Modifier.align(Alignment.TopCenter)
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = { event?.refresh() },
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
+            state = pullToRefreshState,
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullToRefreshState,
+                    isRefreshing = uiState.isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                contentPadding = contentPadding
+            ) {
+                item {
+                    RecommendationsFilterRow(
+                        isLoggedIn = isLoggedIn,
+                        onMyList = uiState.onMyList,
+                        sort = uiState.sort,
+                        onSortChange = { event?.onSortChange(it) },
+                        onMyListChange = { event?.onMyListChange(it == true) }
                     )
                 }
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    state = listState,
-                    contentPadding = contentPadding
-                ) {
-                    item {
-                        RecommendationsFilterRow(
-                            onMyList = uiState.onMyList,
-                            sort = uiState.sort,
-                            onSortChange = { event?.onSortChange(it) },
-                            onMyListChange = { event?.onMyListChange(it == true) }
-                        )
-                    }
 
 
-                    items(
-                        items = uiState.recommendations,
-                        key = { it.id },
-                        contentType = { it }
-                    ) { item ->
-                        RecommendationItem(
-                            recommendation = item,
-                            modifier = Modifier.fillMaxWidth(),
-                            onClickMedia = navActionManager::toMediaDetails,
-                            onLongClickMedia = { details, listEntry ->
-                                event?.selectItem(details, listEntry)
-                                showEditSheetAction()
-                            },
-                            onClickMediaRecommended = navActionManager::toMediaDetails,
-                            onVoteClick = { recommendedMediaId, baseMediaId, recommendationId, rating ->
-                                event?.onVoteClick(
-                                    recommendedMediaId,
-                                    baseMediaId,
-                                    recommendationId,
-                                    rating
-                                )
-                            },
-                            blurAdult = uiState.blurAdult
-                        )
-                    }
-
-                    if (uiState.isLoading) {
-                        items(10) {
-                            RecommendationItemPlaceHolder()
-                        }
-                    } else if (uiState.recommendations.isEmpty()) {
-                        item {
-                            Text(
-                                text = stringResource(R.string.no_information),
-                                modifier = Modifier.padding(16.dp)
+                items(
+                    items = uiState.recommendations,
+                    key = { it.id },
+                    contentType = { it }
+                ) { item ->
+                    RecommendationItem(
+                        recommendation = item,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClickMedia = navActionManager::toMediaDetails,
+                        onLongClickMedia = { details, listEntry ->
+                            event?.selectItem(details, listEntry)
+                            showEditSheetAction()
+                        },
+                        onClickMediaRecommended = navActionManager::toMediaDetails,
+                        onVoteClick = { recommendedMediaId, baseMediaId, recommendationId, rating ->
+                            event?.onVoteClick(
+                                recommendedMediaId,
+                                baseMediaId,
+                                recommendationId,
+                                rating
                             )
-                        }
+                        },
+                        blurAdult = uiState.blurAdult
+                    )
+                }
+
+                if (uiState.isLoading) {
+                    items(10) {
+                        RecommendationItemPlaceHolder()
+                    }
+                } else if (uiState.recommendations.isEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.no_information),
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }
@@ -214,6 +204,7 @@ private fun RecommendationsContent(
 
 @Composable
 fun RecommendationsFilterRow(
+    isLoggedIn: Boolean,
     onMyList: Boolean,
     sort: RecommendationSort,
     onSortChange: (RecommendationSort) -> Unit,
@@ -226,15 +217,17 @@ fun RecommendationsFilterRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        FilterChip(
-            selected = onMyList,
-            onClick = { onMyListChange(!onMyList) },
-            label = {
-                Text(text = stringResource(R.string.on_my_list))
-            }
-        )
+        if (isLoggedIn) {
+            FilterChip(
+                selected = onMyList,
+                onClick = { onMyListChange(!onMyList) },
+                label = {
+                    Text(text = stringResource(R.string.on_my_list))
+                }
+            )
+        }
 
-        RecommendationsSearchChip(
+        RecommendationsSearchChips(
             recommendationSortSearch = RecommendationSortSearch.valueOf(sort)
                 ?: RecommendationSortSearch.ID,
             onSortChanged = { onSortChange(it) },

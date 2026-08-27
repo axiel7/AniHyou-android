@@ -1,9 +1,11 @@
 package com.axiel7.anihyou.feature.explore.manga
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 
+@Immutable
 interface MangaExploreEvent : UiEvent {
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
     fun addNextInfo()

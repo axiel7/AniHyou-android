@@ -354,6 +354,7 @@ class MediaApi(
         sort: List<RecommendationSort>?,
         page: Int,
         perPage: Int,
+        fetchFromNetwork: Boolean
     ) = client
         .query(
             MediaRecommendationsQuery(
@@ -363,5 +364,5 @@ class MediaApi(
                 sort = Optional.present(sort)
             )
         )
-        .fetchPolicy(FetchPolicy.NetworkOnly)
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 }

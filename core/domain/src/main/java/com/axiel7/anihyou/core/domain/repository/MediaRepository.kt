@@ -249,12 +249,14 @@ class MediaRepository (
         sort: List<RecommendationSort>?,
         page: Int,
         perPage: Int,
+        fetchFromNetwork: Boolean = false,
     ) = api
         .mediaRecommendationsQuery(
             onList = onList,
             sort = sort,
             page = page,
             perPage = perPage,
+            fetchFromNetwork = fetchFromNetwork
         )
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {

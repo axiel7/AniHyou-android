@@ -82,6 +82,7 @@ class RecommendationsViewModel(
                 page = 1,
                 hasNextPage = true,
                 isLoading = true,
+                fetchFromNetwork = true,
             )
         }
         viewModelScope.launch {
@@ -145,6 +146,7 @@ class RecommendationsViewModel(
                         it.copy(
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
+                            fetchFromNetwork = false,
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)

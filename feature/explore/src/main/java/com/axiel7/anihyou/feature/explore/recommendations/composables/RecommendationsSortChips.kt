@@ -23,7 +23,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
 
 @Composable
-fun RecommendationsSearchChip(
+fun RecommendationsSearchChips(
     recommendationSortSearch: RecommendationSortSearch,
     onSortChanged: (RecommendationSort) -> Unit,
 ) {

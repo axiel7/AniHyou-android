@@ -18,6 +18,7 @@ data class RecommendationsUiState(
     val errorId: Int? = null,
     val selectedMediaDetails: BasicMediaDetails? = null,
     val selectedMediaListEntry: BasicMediaListEntry? = null,
+    val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,
