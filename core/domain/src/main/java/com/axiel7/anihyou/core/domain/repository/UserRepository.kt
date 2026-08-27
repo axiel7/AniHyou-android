@@ -6,6 +6,7 @@ import com.apollographql.cache.normalized.fetchPolicy
 import com.apollographql.cache.normalized.refetchPolicy
 import com.axiel7.anihyou.core.model.stats.overview.toOverviewStats
 import com.axiel7.anihyou.core.network.api.UserApi
+import com.axiel7.anihyou.core.network.fragment.UserFollow
 import com.axiel7.anihyou.core.network.type.ActivitySort
 import com.axiel7.anihyou.core.network.type.MediaListOptionsInput
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -13,6 +14,8 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserStatisticsSort
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 
@@ -20,6 +23,9 @@ class UserRepository(
     private val api: UserApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
+
+    private val _lastFollowed = MutableStateFlow<UserFollow?>(null)
+    val lastFollowed = _lastFollowed.asStateFlow()
 
     fun getUnreadNotificationCount() = api
         .unreadNotificationCountQuery()
@@ -99,8 +105,9 @@ class UserRepository(
     suspend fun toggleFollow(userId: Int) = api
         .toggleFollowMutation(userId)
         .execute()
+        .also { _lastFollowed.emit(it.data?.ToggleFollow?.userFollow) }
         .asDataResult {
-            it.ToggleFollow
+            it.ToggleFollow?.userFollow
         }
 
     fun getUserActivity(

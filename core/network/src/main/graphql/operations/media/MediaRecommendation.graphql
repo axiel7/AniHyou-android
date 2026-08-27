@@ -1,0 +1,44 @@
+query MediaRecommendations($onList: Boolean, $sort: [RecommendationSort], $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+        recommendations(onList: $onList, sort: $sort) {
+            id
+            rating
+            userRating
+            media {
+                ...BasicMediaDetails
+                mediaListEntry {
+                    ...BasicMediaListEntry
+                }
+                coverImage {
+                    large
+                }
+                startDate {
+                    year
+                }
+                meanScore
+                genres
+                status(version: 2)
+                format
+            }
+            mediaRecommendation {
+                ...BasicMediaDetails
+                mediaListEntry {
+                    ...BasicMediaListEntry
+                }
+                coverImage {
+                    large
+                }
+                startDate {
+                    year
+                }
+                meanScore
+                genres
+                status(version: 2)
+                format
+            }
+        }
+        pageInfo {
+            ...CommonPage
+        }
+    }
+}

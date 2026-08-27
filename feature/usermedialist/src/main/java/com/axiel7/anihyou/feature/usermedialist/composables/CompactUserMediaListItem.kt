@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.usermedialist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,14 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,7 @@ import com.axiel7.anihyou.core.ui.composables.media.PriorityIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CompactUserMediaListItem(
     item: CommonMediaListEntry,
@@ -61,11 +62,24 @@ fun CompactUserMediaListItem(
     val blurAdult = LocalBlurAdult.current
     val status = listStatus ?: item.basicMediaListEntry.status
     val priority = item.basicMediaListEntry.priority
-    val singleEpisode = item.media?.basicMediaDetails?.type == MediaType.ANIME && (item.media?.basicMediaDetails?.episodes == 1)
-    ListItem(
-        onClick = onClick,
-        onLongClick = onLongClick,
-        leadingContent = {
+    val singleEpisode =
+        item.media?.basicMediaDetails?.type == MediaType.ANIME && (item.media?.basicMediaDetails?.episodes == 1)
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = Color.Transparent,
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.large)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
                 contentAlignment = Alignment.Center,
             ) {
@@ -103,62 +117,64 @@ fun CompactUserMediaListItem(
                     )
                 }
             }//: Box
-        }
-    ) {
-        Column(
-            modifier = Modifier.height((MEDIA_POSTER_COMPACT_WIDTH + 8).dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 16.sp,
-                lineHeight = 19.sp,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
-            )
 
-            AiringScheduleText(
-                item = item,
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .height((MEDIA_POSTER_COMPACT_WIDTH + 8).dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-
-                MediaProgressIndicator(
-                    item = item,
-                    singleEpisode = singleEpisode,
-                    fontSize = 15.sp,
+                Text(
+                    text = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 16.sp,
+                    lineHeight = 19.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = if (item.media?.nextAiringEpisode != null) 1 else 2
                 )
 
+                AiringScheduleText(
+                    item = item,
+                )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
-                        RepeatIndicator(
-                            count = item.basicMediaListEntry.repeat ?: 0,
-                        )
+
+                    MediaProgressIndicator(
+                        item = item,
+                        singleEpisode = singleEpisode,
+                        fontSize = 15.sp,
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        if (item.basicMediaListEntry.repeat.isGreaterThanZero()) {
+                            RepeatIndicator(
+                                count = item.basicMediaListEntry.repeat ?: 0,
+                            )
+                        }
+                        if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
+                            NotesIndicator(
+                                modifier = Modifier.padding(bottom = 2.dp),
+                                onClick = onClickNotes
+                            )
+                        }
+                        if (isMyList && status?.isActive() == true) {
+                            IncrementOneButton(
+                                onClickPlus = onClickPlus,
+                                blockPlus = blockPlus,
+                                enabled = isPlusEnabled,
+                                singleEpisode = singleEpisode
+                            )
+                        }
                     }
-                    if (!item.basicMediaListEntry.notes.isNullOrBlank()) {
-                        NotesIndicator(
-                            modifier = Modifier.padding(bottom = 2.dp),
-                            onClick = onClickNotes
-                        )
-                    }
-                    if (isMyList && status?.isActive() == true) {
-                        IncrementOneButton(
-                            onClickPlus = onClickPlus,
-                            blockPlus = blockPlus,
-                            enabled = isPlusEnabled,
-                            singleEpisode = singleEpisode
-                        )
-                    }
-                }
-            }//:Row
-        }//:Column
+                }//:Row
+            }//:Column
+        }
     }
 }
 

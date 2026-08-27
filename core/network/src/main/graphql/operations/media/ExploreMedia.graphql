@@ -1,0 +1,16 @@
+fragment ExploreMedia on Media {
+    ...BasicMediaDetails
+    coverImage {
+        large
+    }
+    meanScore
+    nextAiringEpisode {
+        episode
+        airingAt
+        timeUntilAiring
+    }
+    genres
+    mediaListEntry {
+        ...BasicMediaListEntry
+    }
+}

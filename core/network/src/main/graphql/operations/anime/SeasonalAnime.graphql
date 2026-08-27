@@ -1,19 +1,7 @@
 query SeasonalAnime($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear: Int, $sort: [MediaSort], $isAdult: Boolean) {
     Page(page: $page, perPage: $perPage) {
         media(season: $season, seasonYear: $seasonYear, sort: $sort, isAdult: $isAdult) {
-            ...BasicMediaDetails
-            coverImage {
-                large
-            }
-            meanScore
-            nextAiringEpisode {
-                episode
-                timeUntilAiring
-            }
-            genres
-            mediaListEntry {
-                ...BasicMediaListEntry
-            }
+            ...ExploreMedia
         }
         pageInfo {
             ...CommonPage

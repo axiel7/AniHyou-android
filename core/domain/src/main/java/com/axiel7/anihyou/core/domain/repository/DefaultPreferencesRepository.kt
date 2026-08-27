@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.domain.getValue
 import com.axiel7.anihyou.core.domain.setValue
 import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
+import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
@@ -275,6 +276,14 @@ class DefaultPreferencesRepository (
         dataStore.setValue(DEFAULT_HOME_TAB_KEY, value.ordinal)
     }
 
+    val defaultExploreTab =
+        dataStore.getValue(key = DEFAULT_EXPLORE_TAB_KEY, default = ExploreTab.ANIME.ordinal)
+            .map { ExploreTab.valueOf(it) }
+
+    suspend fun setDefaultExploreTab(value: ExploreTab) {
+        dataStore.setValue(DEFAULT_EXPLORE_TAB_KEY, value.ordinal)
+    }
+
     val airingOnMyList = dataStore.getValue(key = AIRING_ON_MY_LIST_KEY, default = false)
     suspend fun setAiringOnMyList(value: Boolean) {
         dataStore.setValue(AIRING_ON_MY_LIST_KEY, value)
@@ -371,6 +380,7 @@ class DefaultPreferencesRepository (
         private val DEFAULT_TAB_KEY = intPreferencesKey("default_tab")
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
+        private val DEFAULT_EXPLORE_TAB_KEY = intPreferencesKey("default_explore_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")
         private val CALENDAR_ON_MY_LIST_KEY = booleanPreferencesKey("calendar_on_my_list")
 

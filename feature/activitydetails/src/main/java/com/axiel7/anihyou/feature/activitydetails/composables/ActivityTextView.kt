@@ -48,8 +48,7 @@ import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMAL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
-import java.time.temporal.ChronoUnit
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -84,10 +83,7 @@ fun ActivityTextView(
             )
             Text(
                 text = createdAt.toLong().timestampIntervalSinceNow()
-                    .secondsToLegibleText(
-                        maxUnit = ChronoUnit.WEEKS,
-                        isFutureDate = false
-                    ),
+                    .nonFutureDateToLegibleText(),
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = 15.sp
             )

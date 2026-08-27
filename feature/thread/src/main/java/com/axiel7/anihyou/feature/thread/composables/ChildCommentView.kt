@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,9 +35,8 @@ import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
 import kotlinx.coroutines.launch
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun ChildCommentView(
@@ -76,16 +74,12 @@ fun ChildCommentView(
                     avatarUrl = comment.user?.avatar?.medium,
                     username = comment.user?.name,
                     isLocked = comment.isLocked,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    textStyle = MaterialTheme.typography.labelMedium,
                     onClick = navigateToUserDetails
                 )
                 Text(
                     text = comment.createdAt.toLong().timestampIntervalSinceNow()
-                        .secondsToLegibleText(
-                            maxUnit = ChronoUnit.WEEKS,
-                            isFutureDate = false
-                        ),
+                        .nonFutureDateToLegibleText(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                 )

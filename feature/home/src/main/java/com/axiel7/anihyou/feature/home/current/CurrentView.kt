@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -187,12 +188,14 @@ private fun CurrentLazyGrid(
     blockPlus: () -> Unit,
 ) {
     val state = rememberLazyGridState()
+    val fontScale = LocalDensity.current.fontScale
     val rows = if (items.size == 1) 1 else 2
+    val rowPadding = 20 * fontScale
     LazyHorizontalGrid(
         rows = GridCells.Fixed(rows),
         modifier = Modifier
             .heightIn(
-                max = (MEDIA_POSTER_COMPACT_HEIGHT * rows + 20).dp
+                max = ((MEDIA_POSTER_COMPACT_HEIGHT * fontScale) * rows + rowPadding).dp
             ),
         state = state,
         contentPadding = PaddingValues(end = 32.dp),

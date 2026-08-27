@@ -1,14 +1,7 @@
-query MediaSorted($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $isAdult: Boolean) {
+query MediaSorted($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $country: CountryCode, $isAdult: Boolean) {
     Page(page: $page, perPage: $perPage) {
-        media(type: $type, sort: $sort, isAdult: $isAdult) {
-            ...BasicMediaDetails
-            coverImage {
-                large
-            }
-            meanScore
-            mediaListEntry {
-                ...BasicMediaListEntry
-            }
+        media(type: $type, sort: $sort, countryOfOrigin: $country, isAdult: $isAdult) {
+            ...ExploreMedia
         }
         pageInfo {
             ...CommonPage

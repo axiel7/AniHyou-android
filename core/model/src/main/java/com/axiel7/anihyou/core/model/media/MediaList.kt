@@ -1,12 +1,15 @@
 package com.axiel7.anihyou.core.model.media
 
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
+import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.RecommendationRating
 
 /**
  * @return `episodes`, `chapters` or `volumes` depending on the current user entry progress.
@@ -122,4 +125,49 @@ val exampleAiringWidgetEntry = AiringWidgetQuery.Medium(
         mediaId = 1,
         status = MediaListStatus.CURRENT,
     ),
+)
+val exampleBasicMediaDetails = BasicMediaDetails(
+    __typename = "",
+    id = 1,
+    title = BasicMediaDetails.Title(
+        __typename = "",
+        userPreferred = "Guild no Uketsukejou desu ga, Zangyou wa Iya nanode Boss wo Solo Toubatsu Shiyou to Omoimasu"
+    ),
+    duration = 24,
+    episodes = 1095,
+    chapters = null,
+    volumes = null,
+    type = MediaType.ANIME,
+    isAdult = false,
+)
+
+val recommendationsSampleItem = MediaRecommendationsQuery.Recommendation(
+    __typename = "",
+    id = 1,
+    rating = 1,
+    userRating = RecommendationRating.RATE_UP,
+    media = MediaRecommendationsQuery.Media(
+        __typename = "",
+        mediaListEntry = null,
+        coverImage = MediaRecommendationsQuery.CoverImage(__typename = "", large = null),
+        startDate = MediaRecommendationsQuery.StartDate(__typename = "", year = 2026),
+        meanScore = 80,
+        genres = listOf("Comedy", "Drama", "Romance"),
+        status = MediaStatus.FINISHED,
+        format = MediaFormat.SPECIAL,
+        id = 1,
+        basicMediaDetails = exampleBasicMediaDetails
+    ),
+    mediaRecommendation = MediaRecommendationsQuery.MediaRecommendation(
+        __typename = "",
+        mediaListEntry = null,
+        coverImage = MediaRecommendationsQuery.CoverImage1(__typename = "", large = null),
+        startDate = MediaRecommendationsQuery.StartDate1(__typename = "", year = 2020),
+        meanScore = 60,
+        genres = null,
+        status = null,
+        format = null,
+        id = 2,
+        basicMediaDetails = exampleBasicMediaDetails,
+    )
 )

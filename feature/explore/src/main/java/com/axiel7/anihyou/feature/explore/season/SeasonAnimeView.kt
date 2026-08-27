@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -220,8 +220,8 @@ private fun SeasonalGrid(
     uiState: SeasonAnimeUiState,
     event: SeasonAnimeEvent?,
     modifier: Modifier,
-    onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
-    onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+    onClickItem: (ExploreMedia) -> Unit,
+    onLongClickItem: (ExploreMedia) -> Unit,
 ) {
     val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyGridState()
@@ -267,8 +267,8 @@ private fun SeasonalList(
     uiState: SeasonAnimeUiState,
     event: SeasonAnimeEvent?,
     modifier: Modifier,
-    onClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
-    onLongClickItem: (SeasonalAnimeQuery.Medium) -> Unit,
+    onClickItem: (ExploreMedia) -> Unit,
+    onLongClickItem: (ExploreMedia) -> Unit,
 ) {
     val blurAdult = LocalBlurAdult.current
     val listState = rememberLazyListState()

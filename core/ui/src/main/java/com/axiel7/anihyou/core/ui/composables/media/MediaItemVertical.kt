@@ -2,20 +2,19 @@ package com.axiel7.anihyou.core.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -80,7 +79,7 @@ fun MediaItemVertical(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaItemVertical(
     title: String,
@@ -94,16 +93,19 @@ fun MediaItemVertical(
     onClick: () -> Unit = {},
     onLongClick: (() -> Unit)? = null,
 ) {
-    ListItem(
-        onClick = onClick,
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        color = Color.Transparent,
         modifier = modifier
             .sizeIn(
                 maxWidth = MEDIA_POSTER_SMALL_WIDTH.dp,
                 minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
-            ),
-        onLongClick = onLongClick,
-        supportingContent = subtitle,
-        contentPadding = PaddingValues()
+            )
+            .clip(MaterialTheme.shapes.small)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         Column {
             val posterSizeModifier = Modifier
@@ -144,6 +146,12 @@ fun MediaItemVertical(
                 maxLines = 2,
                 minLines = minLines
             )
+            subtitle?.let {
+                ProvideTextStyle(
+                    value = MaterialTheme.typography.labelMedium,
+                    content = it,
+                )
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.ui.composables.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,10 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -90,7 +88,7 @@ fun MediaItemHorizontal(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaItemHorizontal(
     title: String,
@@ -106,10 +104,22 @@ fun MediaItemHorizontal(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
-    ListItem(
-        onClick = onClick,
-        onLongClick = onLongClick,
-        leadingContent = {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = Color.Transparent,
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.large)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             val posterSizeModifier = Modifier
                 .size(
                     width = MEDIA_POSTER_SMALL_WIDTH.dp,
@@ -147,29 +157,33 @@ fun MediaItemHorizontal(
                     )
                 }
             }
-        },
-        supportingContent = {
-            if (subtitle1 != null) {
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    subtitle1()
-                    if (subtitle2 != null) subtitle2()
-                    if (subtitle3 != null) subtitle3()
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+                if (subtitle1 != null) {
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        subtitle1()
+                        if (subtitle2 != null) subtitle2()
+                        if (subtitle3 != null) subtitle3()
+                    }
                 }
             }
-        },
-        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-    ) {
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyLarge,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2
-        )
+        }
     }
 }
 

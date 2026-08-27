@@ -1,7 +1,11 @@
 package com.axiel7.anihyou.feature.explore
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AppBarWithSearch
@@ -12,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarScrollBehavior
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -33,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.explore.search.SearchContentView
@@ -47,6 +50,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun ExploreSearchBar(
     isLoggedIn: Boolean,
+    scrollBehavior: SearchBarScrollBehavior,
 ) {
     val viewModel: SearchViewModel = koinViewModel {
         parametersOf(Route.Search(), isLoggedIn)
@@ -56,6 +60,7 @@ fun ExploreSearchBar(
     ExploreSearchBarContent(
         uiState = uiState,
         event = viewModel,
+        scrollBehavior = scrollBehavior,
     )
 }
 
@@ -64,8 +69,8 @@ fun ExploreSearchBar(
 private fun ExploreSearchBarContent(
     uiState: SearchUiState,
     event: SearchEvent?,
+    scrollBehavior: SearchBarScrollBehavior
 ) {
-    val navActionManager = LocalNavActionManager.current
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val performSearch = remember { mutableStateOf(false) }
@@ -76,7 +81,6 @@ private fun ExploreSearchBarContent(
         }
     }
     val textFieldState = rememberTextFieldState()
-    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
     val appBarWithSearchColors =
         SearchBarDefaults.appBarWithSearchColors(
             searchBarColors = SearchBarDefaults.containedColors(state = searchBarState)
@@ -141,30 +145,27 @@ private fun ExploreSearchBarContent(
             )
         }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    AppBarWithSearch(
+        state = searchBarState,
+        inputField = inputField,
+        colors = appBarWithSearchColors,
+        contentPadding = WindowInsets.statusBars.asPaddingValues(),
+        windowInsets = SearchBarDefaults.windowInsets.only(WindowInsetsSides.Horizontal),
+        scrollBehavior = scrollBehavior,
+    )
+    ExpandedFullScreenSearchBar(
+        state = searchBarState,
+        inputField = inputField,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        AppBarWithSearch(
-            scrollBehavior = scrollBehavior,
-            state = searchBarState,
-            colors = appBarWithSearchColors,
-            inputField = inputField,
+        SearchContentView(
+            textFieldState = textFieldState,
+            performSearch = performSearch,
+            initialGenre = null,
+            initialTag = null,
+            uiState = uiState,
+            event = event,
         )
-        ExpandedFullScreenSearchBar(
-            state = searchBarState,
-            inputField = inputField,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            SearchContentView(
-                textFieldState = textFieldState,
-                performSearch = performSearch,
-                initialGenre = null,
-                initialTag = null,
-                uiState = uiState,
-                event = event,
-            )
-        }
     }
 }
 
@@ -180,6 +181,7 @@ fun ExploreSearchBarPreview() {
                     isLoggedIn = false,
                 ),
                 event = null,
+                scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior(),
             )
         }
     }

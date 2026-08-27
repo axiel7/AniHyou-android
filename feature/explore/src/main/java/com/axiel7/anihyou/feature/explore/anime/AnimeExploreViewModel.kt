@@ -1,8 +1,9 @@
-package com.axiel7.anihyou.feature.explore.discover
+package com.axiel7.anihyou.feature.explore.anime
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.nextAnimeSeason
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.delay
@@ -20,19 +22,19 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlin.time.Duration.Companion.milliseconds
 
-class DiscoverViewModel(
+class AnimeExploreViewModel(
     private val mediaRepository: MediaRepository,
-    defaultPreferencesRepository: DefaultPreferencesRepository,
-) : UiStateViewModel<DiscoverUiState>(), DiscoverEvent {
+    defaultPreferencesRepository: DefaultPreferencesRepository
+) : UiStateViewModel<AnimeExploreUiState>(), AnimeExploreEvent {
 
     private val now = LocalDateTime.now()
 
     override val initialState =
-        DiscoverUiState(
+        AnimeExploreUiState(
             infos = mutableStateListOf(
-                DiscoverInfo.AIRING,
-                DiscoverInfo.THIS_SEASON,
-                DiscoverInfo.TRENDING_ANIME
+                AnimeDiscoverInfo.AIRING,
+                AnimeDiscoverInfo.THIS_SEASON,
+                AnimeDiscoverInfo.TRENDING_ANIME
             ),
             nowAnimeSeason = now.currentAnimeSeason(),
             nextAnimeSeason = now.nextAnimeSeason(),
@@ -40,8 +42,9 @@ class DiscoverViewModel(
 
     override fun addNextInfo() {
         mutableUiState.value.run {
-            if (infos.size < DiscoverInfo.entries.size)
-                infos.add(DiscoverInfo.entries[infos.size])
+            if (infos.size < AnimeDiscoverInfo.entries.size) {
+                infos.add(AnimeDiscoverInfo.entries[infos.size])
+            }
         }
     }
 
@@ -144,20 +147,20 @@ class DiscoverViewModel(
         }
     }
 
-    override fun fetchTrendingManga() {
-        if (mutableUiState.value.trendingManga.isEmpty()) {
+    override fun fetchPopularAnime() {
+        if (mutableUiState.value.popularAnime.isEmpty()) {
             mediaRepository.getMediaSortedPage(
-                mediaType = MediaType.MANGA,
-                sort = listOf(MediaSort.TRENDING_DESC),
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.POPULARITY_DESC),
                 isAdult = uiState.value.isAdult,
                 page = 1
             ).onEach { result ->
                 mutableUiState.update {
                     if (result is PagedResult.Success) {
-                        it.trendingManga.addAll(result.list)
+                        it.popularAnime.addAll(result.list)
                     }
                     it.copy(
-                        isLoadingTrendingManga = result is PagedResult.Loading,
+                        isLoadingPopularAnime = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
                     )
                 }
@@ -186,27 +189,6 @@ class DiscoverViewModel(
         }
     }
 
-    override fun fetchNewlyManga() {
-        if (mutableUiState.value.newlyManga.isEmpty()) {
-            mediaRepository.getMediaSortedPage(
-                mediaType = MediaType.MANGA,
-                sort = listOf(MediaSort.ID_DESC),
-                isAdult = uiState.value.isAdult,
-                page = 1
-            ).onEach { result ->
-                mutableUiState.update {
-                    if (result is PagedResult.Success) {
-                        it.newlyManga.addAll(result.list)
-                    }
-                    it.copy(
-                        isLoadingNewlyManga = result is PagedResult.Loading,
-                        error = (result as? PagedResult.Error)?.message
-                    )
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
     override fun refresh() {
         mutableUiState.update { it.copy(isLoading = true) }
         mutableUiState.value.run {
@@ -215,9 +197,7 @@ class DiscoverViewModel(
             thisSeasonAnime.clear()
             trendingAnime.clear()
             nextSeasonAnime.clear()
-            trendingManga.clear()
             newlyAnime.clear()
-            newlyManga.clear()
             if (airingOnMyList == true) fetchAiringAnimeOnMyList()
             else fetchAiringAnime()
             fetchThisSeasonAnime()
@@ -230,12 +210,37 @@ class DiscoverViewModel(
         }
     }
 
-    override fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?) {
+    override fun selectItem(
+        details: BasicMediaDetails?,
+        listEntry: BasicMediaListEntry?,
+    ) {
         mutableUiState.update {
             it.copy(
                 selectedMediaDetails = details,
-                selectedMediaListEntry = listEntry
+                selectedMediaListEntry = listEntry,
             )
+        }
+    }
+
+    override fun onUpdateListEntry(
+        newListEntry: BasicMediaListEntry?
+    ) {
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        uiState.value.allLists.forEach { list ->
+            list.indexOfFirstOrNull { it.id == selectedMediaId }?.let { index ->
+                list[index] = list[index].copy(
+                    mediaListEntry = newListEntry?.let {
+                        ExploreMedia.MediaListEntry(
+                            __typename = "ExploreMedia.MediaListEntry",
+                            id = it.id,
+                            mediaId = it.mediaId,
+                            basicMediaListEntry = it,
+                        )
+                    }
+                )
+            }
         }
     }
 

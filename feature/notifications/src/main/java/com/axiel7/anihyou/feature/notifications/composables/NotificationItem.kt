@@ -8,17 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +26,6 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 const val NOTIFICATION_IMAGE_SIZE = 48
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NotificationItem(
     title: String,
@@ -41,10 +37,16 @@ fun NotificationItem(
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
 ) {
-    ListItem(
+    val background = if (isUnread) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = background,
         onClick = onClick,
-        modifier = modifier,
-        leadingContent = {
+    ) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             MediaPoster(
                 url = imageUrl,
                 enableBlur = blurImage,
@@ -53,27 +55,26 @@ fun NotificationItem(
                     .clickable(onClick = onClickImage),
                 showShadow = false
             )
-        },
-        supportingContent = {
-            subtitle?.let {
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
+            ) {
                 Text(
-                    text = it,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = title,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    lineHeight = 20.sp,
                 )
+                subtitle?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
             }
-        },
-        colors = ListItemDefaults.colors(
-            containerColor = if (isUnread) MaterialTheme.colorScheme.surfaceVariant else Color.Unspecified
-        )
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier.padding(bottom = 4.dp),
-            lineHeight = 20.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 3
-        )
+        }
     }
 }
 

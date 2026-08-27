@@ -59,7 +59,9 @@ fun StaffCharacterView(
             item.characters?.forEach { character ->
                 PersonItemHorizontal(
                     title = character?.name?.userPreferred.orEmpty(),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
                     imageUrl = character?.image?.large,
                     subtitle = item.node?.title?.userPreferred.orEmpty(),
                     onClick = {

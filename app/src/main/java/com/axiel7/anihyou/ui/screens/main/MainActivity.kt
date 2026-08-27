@@ -40,6 +40,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
+import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.resources.dark_scrim
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         val initialHideScores = viewModel.hideScores.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
+        val exploreTab = viewModel.exploreTab.firstBlocking() ?: ExploreTab.ANIME
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -139,6 +141,7 @@ class MainActivity : AppCompatActivity() {
                             tabToOpen = startTab,
                             event = viewModel,
                             homeTab = homeTab,
+                            exploreTab = exploreTab,
                             deepLink = deepLink,
                             setNavigationBarContrastEnforced = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -162,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             // Widget intent
             intent.action == "media_details" -> {
                 DeepLink(
-                    type = DeepLink.Type.ANIME,// does not mather ANIME or MANGA
+                    type = DeepLink.Type.ANIME,// does not matter ANIME or MANGA
                     id = intent.getIntExtra("media_id", 0).toString()
                 )
             }
@@ -203,6 +206,7 @@ fun MainView(
     tabToOpen: Int,
     event: MainEvent?,
     homeTab: HomeTab,
+    exploreTab: ExploreTab,
     deepLink: DeepLink?,
     setNavigationBarContrastEnforced: (Boolean) -> Unit,
 ) {
@@ -243,6 +247,7 @@ fun MainView(
                     isLoggedIn = isLoggedIn,
                     deepLink = deepLink,
                     homeTab = homeTab,
+                    exploreTab = exploreTab,
                     padding = padding,
                 )
             } else {
@@ -259,6 +264,7 @@ fun MainView(
                         isLoggedIn = isLoggedIn,
                         deepLink = deepLink,
                         homeTab = homeTab,
+                        exploreTab = exploreTab
                     )
                 }
             }
@@ -280,6 +286,7 @@ private fun MainPreview() {
             tabToOpen = 0,
             event = null,
             homeTab = HomeTab.CURRENT,
+            exploreTab = ExploreTab.ANIME,
             deepLink = null,
             setNavigationBarContrastEnforced = {},
         )

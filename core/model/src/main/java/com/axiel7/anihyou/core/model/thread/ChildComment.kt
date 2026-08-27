@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.model.thread
 
 import androidx.compose.runtime.Stable
+import com.axiel7.anihyou.core.network.ChildCommentsQuery
 import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
 import kotlinx.serialization.Serializable
 
@@ -69,7 +70,7 @@ data class ChildComment(
             null
         }
 
-        fun CommonThreadComment.toChildComment() =
+        fun ChildCommentsQuery.ThreadComment.toChildComment() =
             ChildComment(
                 id = id,
                 comment = comment,
@@ -89,6 +90,26 @@ data class ChildComment(
                 childComments = (childComments as? ArrayList<*>?)?.mapNotNull {
                     (it as? LinkedHashMap<String, Any?>)?.toChildComment()
                 }
+            )
+
+        fun CommonThreadComment.toChildComment() =
+            ChildComment(
+                id = id,
+                comment = comment,
+                likeCount = likeCount,
+                isLiked = isLiked,
+                isLocked = isLocked,
+                createdAt = createdAt,
+                user = user?.let { user ->
+                    User(
+                        id = user.id,
+                        name = user.name,
+                        avatar = user.avatar?.let { avatar ->
+                            User.Avatar(medium = avatar.medium)
+                        }
+                    )
+                },
+                childComments = null,
             )
 
         val preview = ChildComment(

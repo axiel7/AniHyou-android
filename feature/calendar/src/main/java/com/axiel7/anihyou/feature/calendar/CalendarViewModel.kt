@@ -3,11 +3,11 @@ package com.axiel7.anihyou.feature.calendar
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.utils.DateUtils.thisWeekdayTimestamp
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
-import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
-import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -45,23 +45,21 @@ class CalendarViewModel(
                 val index = weeklyAnime.indexOf(selectedItem)
                 if (index != -1) {
                     weeklyAnime[index] = selectedItem.copy(
-                        media = selectedItem.media?.copy(
-                            mediaListEntry = newListEntry?.let {
-                                AiringAnimesQuery.MediaListEntry(
-                                    __typename = "AiringAnimesQuery.MediaListEntry",
-                                    id = newListEntry.id,
-                                    mediaId = newListEntry.mediaId,
-                                    basicMediaListEntry = newListEntry
-                                )
-                            }
-                        ),
+                        mediaListEntry = newListEntry?.let {
+                            ExploreMedia.MediaListEntry(
+                                __typename = "ExploreMedia.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
                     )
                 }
             }
         }
     }
 
-    override fun selectItem(value: AiringAnimesQuery.AiringSchedule?) {
+    override fun selectItem(value: ExploreMedia?) {
         mutableUiState.update {
             it.copy(selectedItem = value)
         }
