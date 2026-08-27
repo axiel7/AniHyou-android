@@ -3,8 +3,10 @@ package com.axiel7.anihyou.core.ui.composables.activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,7 +55,7 @@ fun ActivityFeedItem(
         color = Color.Transparent,
         onClick = onClick,
     ) {
-        Column(modifier = modifier) {
+        Column(modifier = modifier.height(IntrinsicSize.Min)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -82,7 +84,7 @@ fun ActivityFeedItem(
                         url = mediaCoverUrl,
                         enableBlur = blurCover,
                         modifier = Modifier
-                            .padding(end = 16.dp)
+                            .padding(end = 16.dp, bottom = 8.dp)
                             .size(
                                 width = 48.dp,
                                 height = 74.dp
@@ -109,7 +111,9 @@ fun ActivityFeedItem(
                     }
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
