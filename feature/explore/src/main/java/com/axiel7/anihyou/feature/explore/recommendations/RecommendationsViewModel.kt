@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -167,6 +168,7 @@ class RecommendationsViewModel(
                 mediaRepository.mediaRecommendations(
                     onList = if (it.onMyList) true else null, // onMyList false seems to be broken
                     sort = listOf(it.sort),
+                    displayAdult = defaultPreferencesRepository.displayAdult.first(),
                     page = it.page,
                     perPage = 25,
                     fetchFromNetwork = it.fetchFromNetwork,

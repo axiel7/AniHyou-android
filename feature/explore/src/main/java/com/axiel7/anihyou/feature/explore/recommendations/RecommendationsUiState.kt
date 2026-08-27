@@ -13,10 +13,10 @@ import com.axiel7.anihyou.core.network.type.RecommendationSort
 data class RecommendationsUiState(
     val recommendations: SnapshotStateList<MediaRecommendationsQuery.Recommendation> = mutableStateListOf(),
     val onMyList: Boolean = false,
-    val blurAdult: Boolean = false,
     val sort: RecommendationSort = RecommendationSort.ID_DESC,
     val selectedMediaDetails: BasicMediaDetails? = null,
     val selectedMediaListEntry: BasicMediaListEntry? = null,
+    val blurAdult: Boolean = true,
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,

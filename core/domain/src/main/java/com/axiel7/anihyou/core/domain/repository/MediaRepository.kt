@@ -250,6 +250,7 @@ class MediaRepository (
     fun mediaRecommendations(
         onList: Boolean?,
         sort: List<RecommendationSort>?,
+        displayAdult: Boolean?,
         page: Int,
         perPage: Int,
         fetchFromNetwork: Boolean = false,
@@ -262,8 +263,13 @@ class MediaRepository (
             fetchFromNetwork = fetchFromNetwork
         )
         .toFlow()
-        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
-            it.Page?.recommendations?.filterNotNull().orEmpty()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.recommendations?.mapNotNull {
+                // recommendations endpoint doesn't have a isAdult param so we filter locally
+                val hasAdult = it?.media?.basicMediaDetails?.isAdult == true
+                        || it?.mediaRecommendation?.basicMediaDetails?.isAdult == true
+                if (displayAdult == false && hasAdult) null else it
+            }.orEmpty()
         }
 
     // MyAnimeList endpoints
