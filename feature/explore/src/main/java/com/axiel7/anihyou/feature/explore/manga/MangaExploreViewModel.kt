@@ -7,6 +7,7 @@ import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
@@ -26,8 +27,9 @@ class MangaExploreViewModel(
 
     override val initialState = MangaExploreUiState(
         infos = mutableStateListOf(
-            MangaDiscoverInfo.NEWLY_MANGA,
             MangaDiscoverInfo.TRENDING_MANGA,
+            MangaDiscoverInfo.POPULAR_MANGA,
+            MangaDiscoverInfo.POPULAR_MANHWA,
         )
     )
 
@@ -53,6 +55,49 @@ class MangaExploreViewModel(
                     }
                     it.copy(
                         isLoadingTrendingManga = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun fetchPopularManga() {
+        if (mutableUiState.value.popularManga.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.MANGA,
+                sort = listOf(MediaSort.POPULARITY_DESC),
+                isAdult = uiState.value.isAdult,
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.popularManga.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingPopularManga = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    override fun fetchPopularManhwa() {
+        if (mutableUiState.value.popularManhwa.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.MANGA,
+                sort = listOf(MediaSort.POPULARITY_DESC),
+                country = CountryOfOriginDto.SOUTH_KOREA,
+                isAdult = uiState.value.isAdult,
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.popularManhwa.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingPopularManhwa = result is PagedResult.Loading,
                         error = (result as? PagedResult.Error)?.message
                     )
                 }

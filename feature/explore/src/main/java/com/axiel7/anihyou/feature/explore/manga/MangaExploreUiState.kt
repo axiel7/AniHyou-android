@@ -12,8 +12,12 @@ import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 data class MangaExploreUiState(
     val infos: SnapshotStateList<MangaDiscoverInfo>,
     val trendingManga: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val popularManga: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val popularManhwa: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val newlyManga: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val isLoadingTrendingManga: Boolean = true,
+    val isLoadingPopularManga: Boolean = true,
+    val isLoadingPopularManhwa: Boolean = true,
     val isLoadingNewlyManga: Boolean = true,
     val displayAdult: Boolean = false,
     val selectedMediaDetails: BasicMediaDetails? = null,
@@ -27,5 +31,5 @@ data class MangaExploreUiState(
     val isAdult = displayAdult.takeIf { !it }
 
     val allLists
-        get() = listOf(trendingManga, newlyManga)
+        get() = listOf(trendingManga, newlyManga, popularManga, popularManhwa)
 }

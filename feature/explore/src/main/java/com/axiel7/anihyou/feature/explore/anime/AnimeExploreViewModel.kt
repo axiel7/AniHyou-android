@@ -147,6 +147,27 @@ class AnimeExploreViewModel(
         }
     }
 
+    override fun fetchPopularAnime() {
+        if (mutableUiState.value.popularAnime.isEmpty()) {
+            mediaRepository.getMediaSortedPage(
+                mediaType = MediaType.ANIME,
+                sort = listOf(MediaSort.POPULARITY_DESC),
+                isAdult = uiState.value.isAdult,
+                page = 1
+            ).onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        it.popularAnime.addAll(result.list)
+                    }
+                    it.copy(
+                        isLoadingPopularAnime = result is PagedResult.Loading,
+                        error = (result as? PagedResult.Error)?.message
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
     override fun fetchNewlyAnime() {
         if (mutableUiState.value.newlyAnime.isEmpty()) {
             mediaRepository.getMediaSortedPage(

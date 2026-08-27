@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.model.base.Localizable
+import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
 import com.axiel7.anihyou.core.resources.R
 
 enum class ChartType : Localizable {
@@ -18,6 +19,7 @@ enum class ChartType : Localizable {
     TOP_MOVIES,
     TOP_MANGA,
     POPULAR_MANGA,
+    POPULAR_MANHWA,
     UPCOMING_MANGA,
     PUBLISHING_MANGA;
 
@@ -30,6 +32,7 @@ enum class ChartType : Localizable {
         TOP_MOVIES -> stringResource(R.string.top_movies)
         TOP_MANGA -> stringResource(R.string.top_100)
         POPULAR_MANGA -> stringResource(R.string.top_popular)
+        POPULAR_MANHWA -> stringResource(R.string.popular_manhwa)
         UPCOMING_MANGA -> stringResource(R.string.upcoming)
         PUBLISHING_MANGA -> stringResource(R.string.publishing)
     }
@@ -43,6 +46,7 @@ enum class ChartType : Localizable {
         TOP_MOVIES -> R.drawable.movie_20
         TOP_MANGA -> R.drawable.star_20
         POPULAR_MANGA -> R.drawable.trending_up_20
+        POPULAR_MANHWA -> R.drawable.trending_up_20
         UPCOMING_MANGA -> R.drawable.schedule_20
         PUBLISHING_MANGA -> R.drawable.rss_feed_20
     }
@@ -57,6 +61,7 @@ enum class ChartType : Localizable {
 
             TOP_MANGA,
             POPULAR_MANGA,
+            POPULAR_MANHWA,
             UPCOMING_MANGA,
             PUBLISHING_MANGA -> MediaType.MANGA
         }
@@ -72,6 +77,7 @@ enum class ChartType : Localizable {
             POPULAR_ANIME,
             UPCOMING_ANIME,
             POPULAR_MANGA,
+            POPULAR_MANHWA,
             UPCOMING_MANGA -> MediaSort.POPULARITY_DESC
         }
 
@@ -92,13 +98,19 @@ enum class ChartType : Localizable {
             else -> null
         }
 
+    val country
+        get() = when (this) {
+            POPULAR_MANHWA -> CountryOfOriginDto.SOUTH_KOREA
+            else -> null
+        }
+
     companion object {
         val animeCharts = listOf(
-            TOP_ANIME, POPULAR_ANIME, UPCOMING_ANIME, AIRING_ANIME, TOP_MOVIES
+            TOP_ANIME, TOP_MOVIES, UPCOMING_ANIME, AIRING_ANIME,
         )
 
         val mangaCharts = listOf(
-            TOP_MANGA, POPULAR_MANGA, UPCOMING_MANGA, PUBLISHING_MANGA
+            TOP_MANGA, UPCOMING_MANGA, PUBLISHING_MANGA
         )
     }
 }

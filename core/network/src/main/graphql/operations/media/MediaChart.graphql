@@ -1,8 +1,8 @@
 query MediaChart($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType,
-    $status: MediaStatus, $format: MediaFormat, $isAdult: Boolean
+    $status: MediaStatus, $format: MediaFormat, $country: CountryCode, $isAdult: Boolean
 ) {
     Page(page: $page, perPage: $perPage) {
-        media(sort: $sort, type: $type, status: $status, format: $format, isAdult: $isAdult) {
+        media(sort: $sort, type: $type, status: $status, format: $format, countryOfOrigin: $country, isAdult: $isAdult) {
             ...BasicMediaDetails
             format
             startDate {

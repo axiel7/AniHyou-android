@@ -10,6 +10,8 @@ interface MangaExploreEvent : UiEvent {
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
     fun addNextInfo()
     fun fetchTrendingManga()
+    fun fetchPopularManga()
+    fun fetchPopularManhwa()
     fun fetchNewlyManga()
     fun refresh()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)

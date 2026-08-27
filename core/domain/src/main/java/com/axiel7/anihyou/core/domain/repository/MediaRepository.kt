@@ -12,6 +12,7 @@ import com.axiel7.anihyou.core.model.media.isActive
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.api.MalApi
 import com.axiel7.anihyou.core.network.api.MediaApi
+import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -87,11 +88,12 @@ class MediaRepository (
     fun getMediaSortedPage(
         mediaType: MediaType,
         sort: List<MediaSort>,
+        country: CountryOfOriginDto? = null,
         isAdult: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = api
-        .mediaSortedQuery(mediaType, sort, isAdult, page, perPage)
+        .mediaSortedQuery(mediaType, sort, country, isAdult, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.media?.mapNotNull { it?.exploreMedia }.orEmpty()
@@ -108,6 +110,7 @@ class MediaRepository (
             sort = listOf(type.mediaSort),
             status = type.mediaStatus,
             format = type.mediaFormat,
+            country = type.country,
             isAdult = isAdult,
             page = page,
             perPage = perPage

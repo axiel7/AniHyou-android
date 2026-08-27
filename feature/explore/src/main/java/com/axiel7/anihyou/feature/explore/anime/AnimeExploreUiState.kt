@@ -20,6 +20,7 @@ data class AnimeExploreUiState(
     val thisSeasonAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val trendingAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val nextSeasonAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val popularAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val newlyAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val nowAnimeSeason: AnimeSeason,
     val nextAnimeSeason: AnimeSeason,
@@ -31,6 +32,7 @@ data class AnimeExploreUiState(
     val isLoadingThisSeason: Boolean = true,
     val isLoadingTrendingAnime: Boolean = true,
     val isLoadingNextSeason: Boolean = true,
+    val isLoadingPopularAnime: Boolean = true,
     val isLoadingNewlyAnime: Boolean = true,
     override val isLoading: Boolean = false,
     override val error: String? = null,
@@ -47,6 +49,7 @@ data class AnimeExploreUiState(
             thisSeasonAnime,
             trendingAnime,
             nextSeasonAnime,
+            popularAnime,
             newlyAnime,
         )
 }

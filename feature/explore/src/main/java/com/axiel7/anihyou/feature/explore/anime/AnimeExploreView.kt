@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.explore.anime
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -66,6 +65,7 @@ enum class AnimeDiscoverInfo {
     THIS_SEASON,
     TRENDING_ANIME,
     NEXT_SEASON,
+    POPULAR_ANIME,
     NEWLY_ANIME
 }
 
@@ -286,6 +286,28 @@ private fun AnimeDiscoverContent(
                                     showEditSheetAction()
                                 },
                                 navigateToAnimeSeason = navActionManager::toAnimeSeason,
+                                navigateToMediaDetails = navActionManager::toMediaDetails,
+                            )
+                        }
+
+                        AnimeDiscoverInfo.POPULAR_ANIME -> {
+                            LaunchedEffect(MediaType.ANIME) {
+                                event?.fetchPopularAnime()
+                            }
+                            DiscoverMediaContent(
+                                title = stringResource(R.string.top_popular),
+                                media = uiState.popularAnime,
+                                isLoading = uiState.isLoadingPopularAnime,
+                                onLongClickItem = {
+                                    event?.selectItem(
+                                        details = it.basicMediaDetails,
+                                        listEntry = it.mediaListEntry?.basicMediaListEntry,
+                                    )
+                                    showEditSheetAction()
+                                },
+                                onClickHeader = {
+                                    navActionManager.toMediaChart(ChartType.POPULAR_ANIME)
+                                },
                                 navigateToMediaDetails = navActionManager::toMediaDetails,
                             )
                         }

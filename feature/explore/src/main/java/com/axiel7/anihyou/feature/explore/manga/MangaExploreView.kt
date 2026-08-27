@@ -53,8 +53,10 @@ import com.axiel7.anihyou.feature.explore.discover.content.DiscoverMediaContent
 import org.koin.compose.viewmodel.koinViewModel
 
 enum class MangaDiscoverInfo {
-    NEWLY_MANGA,
     TRENDING_MANGA,
+    POPULAR_MANGA,
+    POPULAR_MANHWA,
+    NEWLY_MANGA,
 }
 
 @Composable
@@ -184,6 +186,50 @@ fun MangaDiscoverContent(
                                         MediaType.MANGA,
                                         MediaSort.TRENDING_DESC
                                     )
+                                },
+                                navigateToMediaDetails = navActionManager::toMediaDetails,
+                            )
+                        }
+
+                        MangaDiscoverInfo.POPULAR_MANGA -> {
+                            LaunchedEffect(MediaType.MANGA) {
+                                event?.fetchPopularManga()
+                            }
+                            DiscoverMediaContent(
+                                title = stringResource(R.string.top_popular),
+                                media = uiState.popularManga,
+                                isLoading = uiState.isLoadingPopularManga,
+                                onLongClickItem = {
+                                    event?.selectItem(
+                                        details = it.basicMediaDetails,
+                                        listEntry = it.mediaListEntry?.basicMediaListEntry
+                                    )
+                                    showEditSheetAction()
+                                },
+                                onClickHeader = {
+                                    navActionManager.toMediaChart(ChartType.POPULAR_MANGA)
+                                },
+                                navigateToMediaDetails = navActionManager::toMediaDetails,
+                            )
+                        }
+
+                        MangaDiscoverInfo.POPULAR_MANHWA -> {
+                            LaunchedEffect(MediaType.MANGA) {
+                                event?.fetchPopularManhwa()
+                            }
+                            DiscoverMediaContent(
+                                title = stringResource(R.string.popular_manhwa),
+                                media = uiState.popularManhwa,
+                                isLoading = uiState.isLoadingPopularManhwa,
+                                onLongClickItem = {
+                                    event?.selectItem(
+                                        details = it.basicMediaDetails,
+                                        listEntry = it.mediaListEntry?.basicMediaListEntry
+                                    )
+                                    showEditSheetAction()
+                                },
+                                onClickHeader = {
+                                    navActionManager.toMediaChart(ChartType.POPULAR_MANHWA)
                                 },
                                 navigateToMediaDetails = navActionManager::toMediaDetails,
                             )

@@ -183,6 +183,7 @@ class MediaApi(
     fun mediaSortedQuery(
         mediaType: MediaType,
         sort: List<MediaSort>,
+        country: CountryOfOriginDto?,
         isAdult: Boolean?,
         page: Int,
         perPage: Int,
@@ -193,6 +194,7 @@ class MediaApi(
                 perPage = Optional.present(perPage),
                 type = Optional.present(mediaType),
                 sort = Optional.present(sort),
+                country = Optional.presentIfNotNull(country),
                 isAdult = Optional.presentIfNotNull(isAdult),
             )
         )
@@ -314,6 +316,7 @@ class MediaApi(
         sort: List<MediaSort>,
         status: MediaStatus?,
         format: MediaFormat?,
+        country: CountryOfOriginDto?,
         isAdult: Boolean?,
         page: Int,
         perPage: Int,
@@ -326,6 +329,7 @@ class MediaApi(
                 type = Optional.present(type),
                 status = Optional.presentIfNotNull(status),
                 format = Optional.presentIfNotNull(format),
+                country = Optional.presentIfNotNull(country),
                 isAdult = Optional.presentIfNotNull(isAdult),
             )
         )

@@ -13,6 +13,7 @@ interface AnimeExploreEvent : UiEvent {
     fun fetchThisSeasonAnime()
     fun fetchTrendingAnime()
     fun fetchNextSeasonAnime()
+    fun fetchPopularAnime()
     fun fetchNewlyAnime()
     fun refresh()
     fun selectItem(details: BasicMediaDetails?, listEntry: BasicMediaListEntry?)
