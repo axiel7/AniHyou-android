@@ -17,9 +17,9 @@
         <item quantity="other">%d日</item>
     </plurals>
     <string name="unknown">不明</string>
-    <string name="airing_soon">まもなく配信中</string>
+    <string name="airing_soon">まもなく配信</string>
     <string name="mean_score">スコア</string>
-    <string name="airing_in">%sで配信中</string>
+    <string name="airing_in">%s後に配信</string>
     <string name="winter">冬</string>
     <string name="spring">春</string>
     <string name="summer">夏</string>
@@ -30,7 +30,7 @@
     <string name="trending_manga">人気マンガ</string>
     <string name="not_logged_text">この機能を使用するには、ログインしてください。</string>
     <string name="login">ログイン</string>
-    <string name="current">今時</string>
+    <string name="current">今シーズン</string>
     <string name="planning">視聴予定</string>
     <string name="completed">完了</string>
     <string name="dropped">視聴を中断</string>
@@ -80,7 +80,7 @@
     <string name="duration">放送時間</string>
     <string name="start_date">公開日</string>
     <string name="end_date">終了日</string>
-    <string name="season">季節</string>
+    <string name="season">シーズン</string>
     <string name="studios">スタジオ</string>
     <string name="producers">プロデューサー</string>
     <string name="source">原作</string>
@@ -206,6 +206,7 @@
     <string name="days_planned">視聴予定時間</string>
     <string name="standard_deviation">標準偏差</string>
     <string name="title_count">タイトル数</string>
+    <string name="time_spent">視聴時間</string>
     <string name="format_distribution">形式の内訳</string>
     <string name="notes">メモ</string>
     <string name="calendar">カレンダー</string>
@@ -358,6 +359,7 @@
     <string name="newly_anime">新着アニメ</string>
     <string name="openings">オープニング</string>
     <string name="endings">エンディング</string>
+    <string name="anime_behind">追っかけ</string>
     <string name="last_used">前回使用</string>
     <string name="watched_episode_of">%2$sの第%1$s話を見ました</string>
     <string name="read_chapter_of">%2$sの第%1$s話を読みました</string>
