@@ -55,7 +55,9 @@ fun RecommendationsView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    val viewModel: RecommendationsViewModel = koinViewModel()
+    val viewModel: RecommendationsViewModel = koinViewModel {
+        parametersOf(isLoggedIn)
+    }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     RecommendationsContent(

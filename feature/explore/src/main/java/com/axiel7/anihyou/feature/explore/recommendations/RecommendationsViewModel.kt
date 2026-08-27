@@ -21,15 +21,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RecommendationsViewModel(
+    @InjectedParam isLoggedIn: Boolean,
     private val mediaRepository: MediaRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<RecommendationsUiState>(), RecommendationsEvent {
 
-    override val initialState = RecommendationsUiState()
+    override val initialState = RecommendationsUiState(
+        onMyList = isLoggedIn
+    )
 
     override fun onVoteClick(
         item: MediaRecommendationsQuery.Recommendation,
