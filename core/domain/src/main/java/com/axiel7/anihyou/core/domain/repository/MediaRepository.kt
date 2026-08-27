@@ -9,10 +9,10 @@ import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.core.model.media.MediaRelationsAndRecommendations
 import com.axiel7.anihyou.core.model.media.isActive
-import com.axiel7.anihyou.core.network.AiringAnimesQuery
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.api.MalApi
 import com.axiel7.anihyou.core.network.api.MediaApi
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -45,12 +45,12 @@ class MediaRepository (
         )
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            val list = data.Page?.airingSchedules?.filterNotNull().orEmpty()
-            fun AiringAnimesQuery.AiringSchedule.adultFilter() =
-                if (!isAdult) media?.isAdult == false else true
+            val list = data.Page?.airingSchedules?.mapNotNull { it?.media?.exploreMedia }.orEmpty()
+            fun ExploreMedia.adultFilter() =
+                if (!isAdult) basicMediaDetails.isAdult == false else true
             when (onMyList) {
-                true -> list.filter { it.media?.mediaListEntry != null && it.adultFilter() }
-                false -> list.filter { it.media?.mediaListEntry == null && it.adultFilter() }
+                true -> list.filter { it.mediaListEntry != null && it.adultFilter() }
+                false -> list.filter { it.mediaListEntry == null && it.adultFilter() }
                 null -> list.filter { it.adultFilter() }
             }
         }
@@ -62,7 +62,7 @@ class MediaRepository (
         .airingOnMyListQuery(page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
-            data.Page?.media?.filterNotNull()
+            data.Page?.media?.mapNotNull { it?.exploreMedia }
                 ?.filter {
                     it.nextAiringEpisode != null
                             && it.mediaListEntry?.basicMediaListEntry?.status?.isActive() == true
@@ -80,8 +80,8 @@ class MediaRepository (
     ) = api
         .seasonalAnimeQuery(animeSeason.toDto(), sort, isAdult, page, perPage)
         .toFlow()
-        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
-            it.Page?.media?.filterNotNull().orEmpty()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.media?.mapNotNull { it?.exploreMedia }.orEmpty()
         }
 
     fun getMediaSortedPage(
@@ -93,8 +93,8 @@ class MediaRepository (
     ) = api
         .mediaSortedQuery(mediaType, sort, isAdult, page, perPage)
         .toFlow()
-        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) {
-            it.Page?.media?.filterNotNull().orEmpty()
+        .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
+            data.Page?.media?.mapNotNull { it?.exploreMedia }.orEmpty()
         }
 
     fun getMediaChartPage(

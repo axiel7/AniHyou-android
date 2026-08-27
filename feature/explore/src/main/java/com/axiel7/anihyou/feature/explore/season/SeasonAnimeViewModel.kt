@@ -8,8 +8,8 @@ import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.media.AnimeSeason
-import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.ui.common.navigation.Route.SeasonAnime
@@ -49,7 +49,7 @@ class SeasonAnimeViewModel(
         }
     }
 
-    override fun selectItem(value: SeasonalAnimeQuery.Medium?) {
+    override fun selectItem(value: ExploreMedia?) {
         mutableUiState.update {
             it.copy(selectedItem = value)
         }
@@ -62,8 +62,8 @@ class SeasonAnimeViewModel(
                 if (index != -1) {
                     animeSeasonal[index] = selectedItem.copy(
                         mediaListEntry = newListEntry?.let {
-                            SeasonalAnimeQuery.MediaListEntry(
-                                __typename = "SeasonalAnimeQuery.MediaListEntry",
+                            ExploreMedia.MediaListEntry(
+                                __typename = "ExploreMedia.MediaListEntry",
                                 id = newListEntry.id,
                                 mediaId = newListEntry.mediaId,
                                 basicMediaListEntry = newListEntry

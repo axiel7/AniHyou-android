@@ -4,15 +4,15 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.base.state.UiState
-import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 
 @Stable
 data class MangaExploreUiState(
     val infos: SnapshotStateList<MangaDiscoverInfo>,
-    val trendingManga: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
-    val newlyManga: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
+    val trendingManga: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val newlyManga: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val isLoadingTrendingManga: Boolean = true,
     val isLoadingNewlyManga: Boolean = true,
     val displayAdult: Boolean = false,
@@ -25,4 +25,7 @@ data class MangaExploreUiState(
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 
     val isAdult = displayAdult.takeIf { !it }
+
+    val allLists
+        get() = listOf(trendingManga, newlyManga)
 }

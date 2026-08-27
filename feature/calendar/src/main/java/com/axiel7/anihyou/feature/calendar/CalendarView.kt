@@ -170,10 +170,10 @@ private fun CalendarDayView(
         events?.onLoadMore()
     }
 
-    if (showEditSheet.value && uiState.selectedItem?.media != null) {
+    if (showEditSheet.value && uiState.selectedItem != null) {
         EditMediaSheet(
-            mediaDetails = uiState.selectedItem.media!!.basicMediaDetails,
-            listEntry = uiState.selectedItem.media!!.mediaListEntry?.basicMediaListEntry,
+            mediaDetails = uiState.selectedItem.basicMediaDetails,
+            listEntry = uiState.selectedItem.mediaListEntry?.basicMediaListEntry,
             onEntryUpdated = {
                 events?.onUpdateListEntry(it)
             },
@@ -196,26 +196,26 @@ private fun CalendarDayView(
             contentType = { it }
         ) { item ->
             MediaItemVertical(
-                title = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
-                imageUrl = item.media?.coverImage?.large,
-                blurImage = blurAdult && item.media?.isAdult == true,
+                title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
+                imageUrl = item.coverImage?.large,
+                blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
                     Text(
                         text = stringResource(
                             R.string.episode_airing_at,
-                            item.episode,
-                            item.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
+                            item.nextAiringEpisode?.episode ?: UNKNOWN_CHAR,
+                            item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: UNKNOWN_CHAR
                         ),
                         color = MaterialTheme.colorScheme.outline,
                         fontSize = 14.sp,
                         lineHeight = 17.sp
                     )
                 },
-                status = item.media?.mediaListEntry?.basicMediaListEntry?.status,
+                status = item.mediaListEntry?.basicMediaListEntry?.status,
                 minLines = 1,
                 onClick = {
-                    navActionManager.toMediaDetails(item.mediaId)
+                    navActionManager.toMediaDetails(item.id)
                 },
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)

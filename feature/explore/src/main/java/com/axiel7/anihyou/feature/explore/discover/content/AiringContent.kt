@@ -6,10 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
-import com.axiel7.anihyou.core.network.AiringAnimesQuery
-import com.axiel7.anihyou.core.network.AiringOnMyListQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
@@ -22,8 +21,8 @@ import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 @Composable
 fun AiringContent(
     airingOnMyList: Boolean?,
-    airingAnime: List<AiringAnimesQuery.AiringSchedule>,
-    airingAnimeOnMyList: List<AiringOnMyListQuery.Medium>,
+    airingAnime: List<ExploreMedia>,
+    airingAnimeOnMyList: List<ExploreMedia>,
     isLoading: Boolean,
     onLongClickItem: (BasicMediaDetails, BasicMediaListEntry?) -> Unit,
     navigateToCalendar: () -> Unit,
@@ -82,24 +81,21 @@ fun AiringContent(
                     contentType = { it }
                 ) { item ->
                     AiringAnimeHorizontalItem(
-                        title = item.media?.basicMediaDetails?.title?.userPreferred.orEmpty(),
+                        title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                         subtitle = stringResource(
                             R.string.airing_in,
-                            item.timeUntilAiring.toLong().secondsToLegibleText()
+                            item.nextAiringEpisode?.timeUntilAiring?.toLong()
+                                ?.secondsToLegibleText() ?: UNKNOWN_CHAR
                         ),
-                        imageUrl = item.media?.coverImage?.large,
-                        score = item.media?.meanScore,
-                        status = item.media?.mediaListEntry?.basicMediaListEntry?.status,
-                        onClick = {
-                            item.media?.id?.let(navigateToMediaDetails)
-                        },
+                        imageUrl = item.coverImage?.large,
+                        score = item.meanScore,
+                        status = item.mediaListEntry?.basicMediaListEntry?.status,
+                        onClick = { item.id.let(navigateToMediaDetails) },
                         onLongClick = {
-                            item.media?.let { media ->
-                                onLongClickItem(
-                                    media.basicMediaDetails,
-                                    media.mediaListEntry?.basicMediaListEntry
-                                )
-                            }
+                            onLongClickItem(
+                                item.basicMediaDetails,
+                                item.mediaListEntry?.basicMediaListEntry
+                            )
                         }
                     )
                 }

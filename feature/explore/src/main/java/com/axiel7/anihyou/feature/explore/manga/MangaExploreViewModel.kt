@@ -7,9 +7,9 @@ import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
-import com.axiel7.anihyou.core.network.MediaSortedQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.delay
@@ -23,45 +23,6 @@ class MangaExploreViewModel(
     private val mediaRepository: MediaRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository
 ) : UiStateViewModel<MangaExploreUiState>(), MangaExploreEvent {
-
-    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
-        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
-        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
-
-        uiState.value.trendingManga.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.trendingManga
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                            ?: MediaSortedQuery.MediaListEntry(
-                                __typename = "MediaListEntry",
-                                id = it.id,
-                                mediaId = it.mediaId,
-                                basicMediaListEntry = it
-                            )
-                    }
-                )
-            }
-
-        uiState.value.newlyManga.indexOfFirstOrNull { it.id == selectedMediaId }
-            ?.let { index ->
-                val list = uiState.value.newlyManga
-                val oldValue = list[index]
-                list[index] = oldValue.copy(
-                    mediaListEntry = newListEntry?.let {
-                        oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                            ?: MediaSortedQuery.MediaListEntry(
-                                __typename = "MediaListEntry",
-                                id = it.id,
-                                mediaId = it.mediaId,
-                                basicMediaListEntry = it
-                            )
-                    }
-                )
-            }
-    }
 
     override val initialState = MangaExploreUiState(
         infos = mutableStateListOf(
@@ -144,6 +105,26 @@ class MangaExploreViewModel(
                 selectedMediaDetails = details,
                 selectedMediaListEntry = listEntry,
             )
+        }
+    }
+
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        uiState.value.allLists.forEach { list ->
+            list.indexOfFirstOrNull { it.id == selectedMediaId }?.let { index ->
+                list[index] = list[index].copy(
+                    mediaListEntry = newListEntry?.let {
+                        ExploreMedia.MediaListEntry(
+                            __typename = "ExploreMedia.MediaListEntry",
+                            id = it.id,
+                            mediaId = it.mediaId,
+                            basicMediaListEntry = it,
+                        )
+                    }
+                )
+            }
         }
     }
 

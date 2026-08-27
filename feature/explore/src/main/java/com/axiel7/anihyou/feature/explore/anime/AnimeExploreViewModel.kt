@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.explore.anime
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
@@ -11,12 +9,9 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
 import com.axiel7.anihyou.core.model.media.nextAnimeSeason
-import com.axiel7.anihyou.core.network.AiringAnimesQuery
-import com.axiel7.anihyou.core.network.AiringOnMyListQuery
-import com.axiel7.anihyou.core.network.MediaSortedQuery
-import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.coroutines.delay
@@ -31,126 +26,6 @@ class AnimeExploreViewModel(
     private val mediaRepository: MediaRepository,
     defaultPreferencesRepository: DefaultPreferencesRepository
 ) : UiStateViewModel<AnimeExploreUiState>(), AnimeExploreEvent {
-
-    override fun onUpdateListEntry(
-        newListEntry: BasicMediaListEntry?
-    ) {
-        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
-        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
-
-        uiState.value.run {
-            airingAnimeOnMyList.indexOfFirstOrNull { it.id == selectedMediaId }
-                ?.let { index ->
-                    val list = airingAnimeOnMyList
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
-                    list[index] = oldValue.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                                ?: AiringOnMyListQuery.MediaListEntry (
-                                    __typename = "MediaListEntry",
-                                    id = it.id,
-                                    mediaId = it.mediaId,
-                                    basicMediaListEntry = it
-                                )
-                        }
-                    )
-                }
-
-            airingAnime.indexOfFirstOrNull { it.media?.id == selectedMediaId }
-                ?.let { index ->
-                    val list = airingAnime
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.media}")
-                    list[index] = oldValue.copy(
-                        media = oldValue.media?.copy(
-                            mediaListEntry = newListEntry?.let {
-                                oldValue.media?.mediaListEntry?.copy(basicMediaListEntry = it)
-                                    ?: AiringAnimesQuery.MediaListEntry (
-                                        __typename = "MediaListEntry",
-                                        id = it.id,
-                                        mediaId = it.mediaId,
-                                        basicMediaListEntry = it
-                                    )
-                            }
-                        )
-                    )
-                }
-
-            thisSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-                ?.let { index ->
-                    val list = thisSeasonAnime
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
-                    list[index] = oldValue.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                                ?: SeasonalAnimeQuery.MediaListEntry(
-                                    __typename = "MediaListEntry",
-                                    id = it.id,
-                                    mediaId = it.mediaId,
-                                    basicMediaListEntry = it
-                                )
-                        }
-                    )
-                }
-
-            trendingAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-                ?.let { index ->
-                    val list = trendingAnime
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
-                    list[index] = oldValue.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                                ?: MediaSortedQuery.MediaListEntry(
-                                    __typename = "MediaListEntry",
-                                    id = it.id,
-                                    mediaId = it.mediaId,
-                                    basicMediaListEntry = it
-                                )
-                        }
-                    )
-                }
-
-            nextSeasonAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-                ?.let { index ->
-                    val list = nextSeasonAnime
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
-                    list[index] = oldValue.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                                ?: SeasonalAnimeQuery.MediaListEntry(
-                                    __typename = "MediaListEntry",
-                                    id = it.id,
-                                    mediaId = it.mediaId,
-                                    basicMediaListEntry = it
-                                )
-                        }
-                    )
-                }
-
-            newlyAnime.indexOfFirstOrNull { it.id == selectedMediaId }
-                ?.let { index ->
-                    val list = newlyAnime
-                    val oldValue = list[index]
-                    Log.d(TAG, "onUpdateListEntry: ${oldValue.mediaListEntry}")
-                    list[index] = oldValue.copy(
-                        mediaListEntry = newListEntry?.let {
-                            oldValue.mediaListEntry?.copy(basicMediaListEntry = it)
-                                ?: MediaSortedQuery.MediaListEntry(
-                                    __typename = "MediaListEntry",
-                                    id = it.id,
-                                    mediaId = it.mediaId,
-                                    basicMediaListEntry = it
-                                )
-                        }
-                    )
-                }
-        }
-
-    }
 
     private val now = LocalDateTime.now()
 
@@ -302,7 +177,6 @@ class AnimeExploreViewModel(
             trendingAnime.clear()
             nextSeasonAnime.clear()
             newlyAnime.clear()
-            newlyManga.clear()
             if (airingOnMyList == true) fetchAiringAnimeOnMyList()
             else fetchAiringAnime()
             fetchThisSeasonAnime()
@@ -324,6 +198,28 @@ class AnimeExploreViewModel(
                 selectedMediaDetails = details,
                 selectedMediaListEntry = listEntry,
             )
+        }
+    }
+
+    override fun onUpdateListEntry(
+        newListEntry: BasicMediaListEntry?
+    ) {
+        val selectedMediaId = uiState.value.selectedMediaDetails?.id ?: return
+        mutableUiState.update { it.copy(selectedMediaListEntry = newListEntry) }
+
+        uiState.value.allLists.forEach { list ->
+            list.indexOfFirstOrNull { it.id == selectedMediaId }?.let { index ->
+                list[index] = list[index].copy(
+                    mediaListEntry = newListEntry?.let {
+                        ExploreMedia.MediaListEntry(
+                            __typename = "ExploreMedia.MediaListEntry",
+                            id = it.id,
+                            mediaId = it.mediaId,
+                            basicMediaListEntry = it,
+                        )
+                    }
+                )
+            }
         }
     }
 

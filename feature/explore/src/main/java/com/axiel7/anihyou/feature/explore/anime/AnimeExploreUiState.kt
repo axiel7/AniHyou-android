@@ -6,25 +6,21 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.currentAnimeSeason
-import com.axiel7.anihyou.core.network.AiringAnimesQuery
-import com.axiel7.anihyou.core.network.AiringOnMyListQuery
-import com.axiel7.anihyou.core.network.MediaSortedQuery
-import com.axiel7.anihyou.core.network.SeasonalAnimeQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import java.time.LocalDateTime
 
 @Stable
-data class AnimeExploreUiState (
+data class AnimeExploreUiState(
     val currentSeason: AnimeSeason = LocalDateTime.now().currentAnimeSeason(),
     val infos: SnapshotStateList<AnimeDiscoverInfo>,
-    val airingAnime: SnapshotStateList<AiringAnimesQuery.AiringSchedule> = mutableStateListOf(),
-    val airingAnimeOnMyList: SnapshotStateList<AiringOnMyListQuery.Medium> = mutableStateListOf(),
-    val thisSeasonAnime: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
-    val trendingAnime: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
-    val nextSeasonAnime: SnapshotStateList<SeasonalAnimeQuery.Medium> = mutableStateListOf(),
-    val newlyAnime: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
-    val newlyManga: SnapshotStateList<MediaSortedQuery.Medium> = mutableStateListOf(),
+    val airingAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val airingAnimeOnMyList: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val thisSeasonAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val trendingAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val nextSeasonAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
+    val newlyAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val nowAnimeSeason: AnimeSeason,
     val nextAnimeSeason: AnimeSeason,
     val airingOnMyList: Boolean? = null,
@@ -43,4 +39,14 @@ data class AnimeExploreUiState (
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 
     val isAdult = displayAdult.takeIf { !it }
+
+    val allLists
+        get() = listOf(
+            airingAnimeOnMyList,
+            airingAnime,
+            thisSeasonAnime,
+            trendingAnime,
+            nextSeasonAnime,
+            newlyAnime,
+        )
 }
