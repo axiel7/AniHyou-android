@@ -15,4 +15,6 @@ fragment UserFollow on User {
     avatar {
         large
     }
+    isFollowing
+    isFollower
 }

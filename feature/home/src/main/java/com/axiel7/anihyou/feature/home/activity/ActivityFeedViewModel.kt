@@ -12,8 +12,11 @@ import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
 import com.axiel7.anihyou.core.network.type.ActivityType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,18 +56,16 @@ class ActivityFeedViewModel(
 
     override fun getUserFollowing() {
         viewModelScope.launch {
-            defaultPreferencesRepository.userId.collect { userId ->
-                if (userId != null) {
-                    userRepository.getFollowing(
-                        userId = userId,
-                        page = 1,
-                        perPage = 50,
-                        fetchFromNetwork = false
-                    ).collect { result ->
-                        if (result is PagedResult.Success) {
-                            mutableUiState.update {
-                                it.copy(followingUsers = result.list)
-                            }
+            defaultPreferencesRepository.userId.first()?.let { userId ->
+                userRepository.getFollowing(
+                    userId = userId,
+                    page = 1,
+                    perPage = 50,
+                    fetchFromNetwork = true
+                ).collectLatest { result ->
+                    if (result is PagedResult.Success) {
+                        mutableUiState.update {
+                            it.copy(followingUsers = result.list)
                         }
                     }
                 }
@@ -161,6 +162,11 @@ class ActivityFeedViewModel(
                     }
                 }
             }
+            .launchIn(viewModelScope)
+
+        userRepository.lastFollowed
+            .filterNotNull()
+            .onEach { getUserFollowing() }
             .launchIn(viewModelScope)
     }
 }
