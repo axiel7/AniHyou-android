@@ -130,6 +130,7 @@
     <string name="search_match">Übereinstimmungen suchen</string>
     <string name="top_100">Top 100</string>
     <string name="top_popular">Top Beliebtheit</string>
+    <string name="popular_manhwa">Beliebte Manhwa</string>
     <string name="apply">Übernehmen</string>
     <string name="sort_default">Standard</string>
     <string name="descending">Absteigend</string>
@@ -458,6 +459,7 @@
     <string name="staff_role_recording_assistant">Tonassistenz</string>
     <string name="staff_role_script">Drehbuch</string>
     <string name="staff_role_script_assistance">Drehbuchassistenz</string>
+    <string name="staff_role_setting_design">Einstellungsdesign</string>
     <string name="staff_role_translator">Übersetzer</string>
     <string name="staff_role_video_editing">Videobearbeitung</string>
     <string name="staff_role_visual_director">Visueller Direktor</string>
@@ -551,4 +553,5 @@
     <string name="general">Allgemein</string>
     <string name="logout_confirm">Möchten sie sich wirklich abmelden?</string>
     <string name="score_steps">Bewertungsschritte</string>
+    <string name="recent">Kürzlich</string>
 </resources>

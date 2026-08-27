@@ -130,6 +130,7 @@
     <string name="search_match">Eşleşen Arama</string>
     <string name="top_100">En İyi 100</string>
     <string name="top_popular">En Popüler</string>
+    <string name="popular_manhwa">Popüler Manhwa</string>
     <string name="apply">Uygula</string>
     <string name="sort_default">Varsayılan</string>
     <string name="descending">Azalan</string>
@@ -647,7 +648,9 @@
     <string name="priority_low">Düşük</string>
     <string name="priority_medium">Normal</string>
     <string name="priority_high">Yüksek</string>
+    <string name="priority_color_change">Öncelik renklerini değiştir</string>
     <string name="general">Genel</string>
     <string name="logout_confirm">Çıkış yapmak istediğine emin misin?</string>
     <string name="score_steps">Puanlama adımları</string>
+    <string name="recent">En son</string>
 </resources>

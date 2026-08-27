@@ -130,6 +130,7 @@
     <string name="search_match">Coincidencias de búsqueda</string>
     <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popular</string>
+    <string name="popular_manhwa">Manhwa Popular</string>
     <string name="apply">Aplicar</string>
     <string name="sort_default">Por defecto</string>
     <string name="descending">Descendente</string>
@@ -651,4 +652,5 @@
     <string name="general">General</string>
     <string name="logout_confirm">¿Quieres cerrar sesión?</string>
     <string name="score_steps">Pasos para la puntuación</string>
+    <string name="recent">Reciente</string>
 </resources>

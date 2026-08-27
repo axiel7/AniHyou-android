@@ -144,6 +144,7 @@
     <string name="search_match">Пошук збігів</string>
     <string name="top_100">Найкраща сотня</string>
     <string name="top_popular">Найбільш популярні</string>
+    <string name="popular_manhwa">Популярна Манхва</string>
     <string name="apply">Застосувати</string>
     <string name="sort_default">Типовий</string>
     <string name="descending">За спаданням</string>
@@ -669,4 +670,5 @@
     <string name="general">Загальне</string>
     <string name="logout_confirm">Ви дійсно бажаєте вийти з акаунта?</string>
     <string name="score_steps">Кроки зміни</string>
+    <string name="recent">Нещодавні</string>
 </resources>
