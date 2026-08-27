@@ -443,6 +443,7 @@
     <string name="staff_role_in_between_animation">Zwischenphasenanimation</string>
     <string name="staff_role_in_betweens_check">Zwischenphasenprüfung</string>
     <string name="staff_role_in_betweens_manager">Zwischenphasenmanager</string>
+    <string name="staff_role_key_animation">Schlüsselanimation</string>
     <string name="staff_role_1st_key_animation">1. Key Animation Regisseur</string>
     <string name="staff_role_1st_key_assistant">1. Key Animation Regieassistenz</string>
     <string name="staff_role_2nd_key_animation">2. Key Animation</string>
