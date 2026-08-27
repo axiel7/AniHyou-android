@@ -55,9 +55,7 @@ fun RecommendationsView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    val viewModel: RecommendationsViewModel = koinViewModel {
-        parametersOf(isLoggedIn)
-    }
+    val viewModel: RecommendationsViewModel = koinViewModel()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     RecommendationsContent(
@@ -109,18 +107,7 @@ private fun RecommendationsContent(
         )
     }
 
-
-    val errorString = uiState.errorId?.let { stringResource(uiState.errorId) }
-
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
-
-    // I hope this error handling is okay like that
-    LaunchedEffect(errorString) {
-        errorString?.let {
-            event?.showError(it)
-            event?.clearErrorId() // needed otherwise the login error would only appear on the first time
-        }
-    }
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -158,7 +145,6 @@ private fun RecommendationsContent(
                     )
                 }
 
-
                 items(
                     items = uiState.recommendations,
                     key = { it.id },
@@ -173,13 +159,9 @@ private fun RecommendationsContent(
                             showEditSheetAction()
                         },
                         onClickMediaRecommended = navActionManager::toMediaDetails,
-                        onVoteClick = { recommendedMediaId, baseMediaId, recommendationId, rating ->
-                            event?.onVoteClick(
-                                recommendedMediaId,
-                                baseMediaId,
-                                recommendationId,
-                                rating
-                            )
+                        onVoteClick = { rating ->
+                            if (isLoggedIn) event?.onVoteClick(item, rating)
+                            else snackbarManager.showNotLoggedInSnackbar()
                         },
                         blurAdult = uiState.blurAdult
                     )

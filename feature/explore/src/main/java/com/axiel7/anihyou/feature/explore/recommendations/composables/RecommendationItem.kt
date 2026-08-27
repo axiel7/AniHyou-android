@@ -39,7 +39,7 @@ fun RecommendationItem(
     onClickMedia: (Int) -> Unit,
     onLongClickMedia: (BasicMediaDetails, BasicMediaListEntry?) -> Unit,
     onClickMediaRecommended: (Int) -> Unit,
-    onVoteClick: (Int, Int, Int, RecommendationRating) -> Unit = { _, _, _, _ -> },
+    onVoteClick: (RecommendationRating) -> Unit = {},
     blurAdult: Boolean,
 ) {
     val media = recommendation.media
@@ -94,19 +94,12 @@ fun RecommendationItem(
                     }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                val recMediaId = mediaRecommended.basicMediaDetails.id
-                val mediaId = media.basicMediaDetails.id
-                val recId = recommendation.id
                 RecommendationVoting(
                     ratingText = recommendation.rating?.toString().orEmpty(),
                     isUpvoted = recommendation.userRating == RecommendationRating.RATE_UP,
                     isDownvoted = recommendation.userRating == RecommendationRating.RATE_DOWN,
-                    onUpvoteClick = {
-                        onVoteClick(recMediaId, mediaId, recId, RecommendationRating.RATE_UP)
-                    },
-                    onDownvoteClick = {
-                        onVoteClick(recMediaId, mediaId, recId, RecommendationRating.RATE_DOWN)
-                    },
+                    onUpvoteClick = { onVoteClick(RecommendationRating.RATE_UP) },
+                    onDownvoteClick = { onVoteClick(RecommendationRating.RATE_DOWN) },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                 )

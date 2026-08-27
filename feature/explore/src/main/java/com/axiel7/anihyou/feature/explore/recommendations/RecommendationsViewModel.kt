@@ -12,7 +12,6 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.network.type.RecommendationSort
-import com.axiel7.anihyou.core.resources.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -22,28 +21,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.annotation.InjectedParam
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RecommendationsViewModel(
-    @InjectedParam private val isLoggedIn: Boolean,
     private val mediaRepository: MediaRepository,
-    private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<RecommendationsUiState>(), RecommendationsEvent {
 
     override val initialState = RecommendationsUiState()
 
     override fun onVoteClick(
-        recommendedMediaId: Int,
-        baseMediaId: Int,
-        recommendationId: Int,
+        item: MediaRecommendationsQuery.Recommendation,
         rating: RecommendationRating
     ) {
-        if (!isLoggedIn) {
-            mutableUiState.update { it.copy(errorId = R.string.not_logged_text) }
-            return
-        }
+        val mediaRecommendationId = item.mediaRecommendation?.basicMediaDetails?.id ?: return
+        val mediaId = item.media?.basicMediaDetails?.id ?: return
+        val recommendationId = item.id
 
         val recommendations = uiState.value.recommendations
         val targetNode = recommendations.find { it.id == recommendationId } ?: return
@@ -52,8 +46,8 @@ class RecommendationsViewModel(
         val newRating = if (previousUserRating == rating) RecommendationRating.NO_RATING else rating
 
         mediaRepository.saveRecommendation(
-            mediaId = baseMediaId,
-            mediaRecommendationId = recommendedMediaId,
+            mediaId = mediaId,
+            mediaRecommendationId = mediaRecommendationId,
             rating = newRating
         ).onEach { result ->
             if (result is DataResult.Success) {
@@ -69,9 +63,7 @@ class RecommendationsViewModel(
                     state
                 }
             } else if (result is DataResult.Error) {
-                mutableUiState.update { state ->
-                    state.copy(error = result.message)
-                }
+                result.toUiState()
             }
         }.launchIn(viewModelScope)
     }
@@ -104,62 +96,16 @@ class RecommendationsViewModel(
         }
     }
 
-    override fun clearErrorId() {
-        mutableUiState.update {
-            it.copy(errorId = null)
-        }
-    }
-
     override fun selectItem(
         details: BasicMediaDetails?,
-        listEntry: BasicMediaListEntry?)
-    {
+        listEntry: BasicMediaListEntry?
+    ) {
         mutableUiState.update {
             it.copy(
                 selectedMediaDetails = details,
                 selectedMediaListEntry = listEntry,
             )
         }
-    }
-
-    init {
-        uiState
-            .filter { it.hasNextPage }
-            .distinctUntilChanged { old, new ->
-                old.page == new.page
-                        && old.onMyList == new.onMyList
-                        && old.sort == new.sort
-            }
-            .flatMapLatest {
-                mediaRepository.mediaRecommendations(
-                    onList = if (it.onMyList) true else null, // onMyList false seems to be broken
-                    sort = listOf(it.sort),
-                    page = it.page,
-                    perPage = 25,
-                )
-            }
-            .onEach { result ->
-                mutableUiState.update {
-                    if (result is PagedResult.Success) {
-                        if (it.page == 1) it.recommendations.clear()
-                        it.recommendations.addAll(result.list)
-                        it.copy(
-                            hasNextPage = result.hasNextPage,
-                            isLoading = false,
-                            fetchFromNetwork = false,
-                        )
-                    } else {
-                        result.toUiState(loadingWhen = it.page == 1)
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        defaultPreferencesRepository.blurAdult
-            .onEach { value ->
-                mutableUiState.update { it.copy(blurAdult = value) }
-            }
-            .launchIn(viewModelScope)
     }
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
@@ -202,5 +148,45 @@ class RecommendationsViewModel(
                     )
                 )
             }
+    }
+
+    init {
+        uiState
+            .filter { it.hasNextPage }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.onMyList == new.onMyList
+                        && old.sort == new.sort
+            }
+            .flatMapLatest {
+                mediaRepository.mediaRecommendations(
+                    onList = if (it.onMyList) true else null, // onMyList false seems to be broken
+                    sort = listOf(it.sort),
+                    page = it.page,
+                    perPage = 25,
+                )
+            }
+            .onEach { result ->
+                mutableUiState.update {
+                    if (result is PagedResult.Success) {
+                        if (it.page == 1) it.recommendations.clear()
+                        it.recommendations.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                            fetchFromNetwork = false,
+                        )
+                    } else {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.blurAdult
+            .onEach { value ->
+                mutableUiState.update { it.copy(blurAdult = value) }
+            }
+            .launchIn(viewModelScope)
     }
 }

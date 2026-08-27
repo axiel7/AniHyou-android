@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class MangaExploreViewModel(
     private val mediaRepository: MediaRepository,
-    private val defaultPreferencesRepository: DefaultPreferencesRepository
+    defaultPreferencesRepository: DefaultPreferencesRepository
 ) : UiStateViewModel<MangaExploreUiState>(), MangaExploreEvent {
 
     override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {

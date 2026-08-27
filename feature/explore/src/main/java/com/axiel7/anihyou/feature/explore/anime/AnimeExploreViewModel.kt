@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class AnimeExploreViewModel(
     private val mediaRepository: MediaRepository,
-    private val defaultPreferencesRepository: DefaultPreferencesRepository
+    defaultPreferencesRepository: DefaultPreferencesRepository
 ) : UiStateViewModel<AnimeExploreUiState>(), AnimeExploreEvent {
 
     override fun onUpdateListEntry(

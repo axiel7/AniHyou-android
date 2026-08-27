@@ -15,7 +15,6 @@ data class RecommendationsUiState(
     val onMyList: Boolean = false,
     val blurAdult: Boolean = false,
     val sort: RecommendationSort = RecommendationSort.ID_DESC,
-    val errorId: Int? = null,
     val selectedMediaDetails: BasicMediaDetails? = null,
     val selectedMediaListEntry: BasicMediaListEntry? = null,
     val fetchFromNetwork: Boolean = false,
