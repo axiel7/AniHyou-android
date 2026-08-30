@@ -1,8 +1,6 @@
 package com.axiel7.anihyou.core.ui.common.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.remember
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.model.media.AnimeSeason
@@ -224,14 +222,5 @@ class NavActionManager(
 
     fun toPriorityColors() {
         navigator.navigate(Route.PriorityColors)
-    }
-
-    companion object {
-        @Composable
-        fun rememberNavActionManager(
-            navigator: INavigator
-        ) = remember {
-            NavActionManager(navigator)
-        }
     }
 }

@@ -4,6 +4,8 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -478,6 +480,7 @@ private fun SettingsContent(
                     shape = bottomShape
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }//: Column
     }//: Scaffold
 
