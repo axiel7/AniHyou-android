@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -24,13 +25,20 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.preferenceShape
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-private val contributors = sortedMapOf(
-    "axiel7" to "https://github.com/axiel7",
-    "uragiristereo" to "https://github.com/uragiristereo",
-    "x8laye4r" to "https://github.com/x8laye4r",
-    "fewwan" to "https://github.com/fewwan",
-    "Kramoule" to "https://github.com/Kramoule",
-    "CrazyDiamond4444" to "https://github.com/CrazyDiamond4444",
+@Stable
+data class Contributor(
+    val name: String,
+    val url: String,
+)
+
+private val contributors = listOf(
+    Contributor("axiel7", "https://github.com/axiel7"),
+    Contributor("x8laye4r", "https://github.com/x8laye4r"),
+    Contributor("uragiristereo", "https://github.com/uragiristereo"),
+    Contributor("MagnarIUK", "https://github.com/MagnarIUK"),
+    Contributor("fewwan", "https://github.com/fewwan"),
+    Contributor("Kramoule", "https://github.com/Kramoule"),
+    Contributor("CrazyDiamond4444", "https://github.com/CrazyDiamond4444"),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,10 +62,10 @@ fun ContributorsView() {
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
         ) {
-            contributors.toList().forEachIndexed { index, (name, link) ->
+            contributors.forEachIndexed { index, item ->
                 PlainPreference(
-                    title = name,
-                    onClick = { context.openActionView(link) },
+                    title = item.name,
+                    onClick = { context.openActionView(item.url) },
                     iconPadding = PaddingValues(vertical = 16.dp),
                     showIconSpacer = false,
                     shape = preferenceShape(index, contributors.size),

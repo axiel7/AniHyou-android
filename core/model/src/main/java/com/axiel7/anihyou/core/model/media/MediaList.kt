@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.model.media
 
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
 import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
+import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
@@ -100,7 +101,16 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             volumes = null,
             type = MediaType.ANIME,
             isAdult = false,
-        )
+        ),
+        title = CommonMediaListEntry.Title(
+            __typename = "",
+            romaji = null,
+            english = null,
+            native = null,
+        ),
+        format = MediaFormat.TV,
+        countryOfOrigin = CountryOfOriginDto.JAPAN,
+        seasonYear = 2020,
     ),
     id = 1,
     basicMediaListEntry = exampleBasicMediaListEntry

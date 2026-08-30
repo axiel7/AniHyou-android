@@ -2,9 +2,12 @@ package com.axiel7.anihyou.feature.usermedialist
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent
+import com.axiel7.anihyou.core.model.media.CountryOfOrigin
+import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
+import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 
 @Immutable
@@ -38,7 +41,19 @@ interface UserMediaListEvent : UiEvent {
 
     fun toggleScoreDialog(open: Boolean)
 
-    fun getRandomPlannedEntry(chunk: Int = 1)
+    fun getRandomEntry()
 
     fun onRandomEntryOpened()
+
+    fun onSearch(query: String)
+
+    fun setMediaFormat(value: MediaFormatLocalizable?)
+
+    fun setMediaStatus(value: MediaStatus?)
+
+    fun setCountry(value: CountryOfOrigin?)
+
+    fun setYear(value: Int?)
+
+    fun clearFilters()
 }

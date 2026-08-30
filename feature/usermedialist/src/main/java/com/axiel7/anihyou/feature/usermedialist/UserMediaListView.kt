@@ -3,19 +3,17 @@ package com.axiel7.anihyou.feature.usermedialist
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -26,7 +24,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,9 +34,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
-import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
-import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
@@ -48,7 +43,6 @@ import com.axiel7.anihyou.core.ui.composables.media.PriorityColors.Companion.toP
 import com.axiel7.anihyou.feature.usermedialist.composables.CompactUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.MinimalUserMediaListItem
-import com.axiel7.anihyou.feature.usermedialist.composables.RandomEntryButton
 import com.axiel7.anihyou.feature.usermedialist.composables.StandardUserMediaListItem
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -61,6 +55,8 @@ fun UserMediaListView(
     nestedScrollConnection: NestedScrollConnection,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
 ) {
     val isDark = isSystemInDarkTheme()
     val haptic = LocalHapticFeedback.current
@@ -83,15 +79,6 @@ fun UserMediaListView(
             high = highPriorityColors,
         )
     }
-
-    LaunchedEffect(uiState.randomEntryId) {
-        uiState.randomEntryId?.let { id ->
-            event?.onRandomEntryOpened()
-            navActionManager.toMediaDetails(id)
-        }
-    }
-
-    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     val onClickPlus: (Int, CommonMediaListEntry) -> Unit = { increment, item ->
         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -123,6 +110,7 @@ fun UserMediaListView(
                 modifier = listModifier,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
+                listState = lazyGridState,
             )
         } else if (!isCompactScreen) {
             LazyListTablet(
@@ -135,6 +123,7 @@ fun UserMediaListView(
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
                 onClickPlus = onClickPlus,
+                listState = lazyGridState,
             )
         } else {
             LazyListPhone(
@@ -147,6 +136,7 @@ fun UserMediaListView(
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
                 onClickPlus = onClickPlus,
+                listState = lazyListState,
             )
         }
     }//: Box
@@ -162,28 +152,18 @@ private fun LazyListGrid(
     modifier: Modifier,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    listState: LazyGridState,
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
         modifier = modifier,
+        state = listState,
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp) + navPadding,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        if (uiState.status == MediaListStatus.PLANNING) {
-            item(
-                span = { GridItemSpan(maxLineSpan) }
-            ) {
-                Row {
-                    RandomEntryButton(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        onClick = { event?.getRandomPlannedEntry() }
-                    )
-                }
-            }
-        }
         if (uiState.isLoading) {
             items(10) {
                 MediaItemVerticalPlaceholder()
@@ -218,26 +198,16 @@ private fun LazyListTablet(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
+    listState: LazyGridState,
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
+        state = listState,
         contentPadding = contentPadding + navPadding,
         horizontalArrangement = Arrangement.Center
     ) {
-        if (uiState.status == MediaListStatus.PLANNING) {
-            item(
-                span = { GridItemSpan(maxLineSpan) }
-            ) {
-                Row {
-                    RandomEntryButton(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        onClick = { event?.getRandomPlannedEntry() }
-                    )
-                }
-            }
-        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
                 if (uiState.isLoading) {
@@ -337,21 +307,13 @@ private fun LazyListPhone(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
+    listState: LazyListState,
 ) {
     LazyColumn(
         modifier = modifier,
+        state = listState,
         contentPadding = contentPadding,
     ) {
-        if (uiState.status == MediaListStatus.PLANNING) {
-            item {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    RandomEntryButton(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        onClick = { event?.getRandomPlannedEntry() }
-                    )
-                }
-            }
-        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
                 if (uiState.isLoading) {

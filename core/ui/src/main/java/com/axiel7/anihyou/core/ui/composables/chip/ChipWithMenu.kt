@@ -9,12 +9,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
@@ -43,6 +44,7 @@ fun <T> FilterChipWithMenu(
     trailingIcon: @Composable (() -> Unit)? = null,
     valueString: @Composable (T) -> String = { it.toString() },
     valueIcon: (T) -> Int? = { null },
+    containerColor: Color = MenuDefaults.groupStandardContainerColor,
 ) {
     val windowHeight = with(LocalDensity.current) {
         LocalWindowInfo.current.containerSize.height.toDp()
@@ -67,18 +69,19 @@ fun <T> FilterChipWithMenu(
         ) {
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShapes(),
+                containerColor = containerColor,
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 values.fastForEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        checked = selectedValue == item,
-                        onCheckedChange = {
+                    SelectableDropdownMenuItem(
+                        selected = selectedValue == item,
+                        onClick = {
                             onValueSelected(item.takeIf { it != selectedValue })
                             menuOpened = false
                         },
                         text = { Text(text = valueString(item)) },
                         shapes = MenuDefaults.itemShape(index, values.size),
-                        checkedLeadingIcon = {
+                        selectedLeadingIcon = {
                             Icon(
                                 painter = painterResource(R.drawable.check_20),
                                 contentDescription = null,
@@ -136,15 +139,15 @@ fun <T> AssistChipWithMenu(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 values.fastForEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        checked = selectedValue == item,
-                        onCheckedChange = {
+                    SelectableDropdownMenuItem(
+                        selected = selectedValue == item,
+                        onClick = {
                             onValueSelected(item)
                             menuOpened = false
                         },
                         text = { Text(text = valueString(item)) },
                         shapes = MenuDefaults.itemShape(index, values.size),
-                        checkedLeadingIcon = {
+                        selectedLeadingIcon = {
                             Icon(
                                 painter = painterResource(R.drawable.check_20),
                                 contentDescription = null,

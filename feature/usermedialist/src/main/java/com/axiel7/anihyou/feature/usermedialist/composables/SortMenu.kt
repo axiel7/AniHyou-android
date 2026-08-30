@@ -2,11 +2,11 @@ package com.axiel7.anihyou.feature.usermedialist.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,9 +33,9 @@ fun SortMenu(
             shapes = MenuDefaults.groupShapes()
         ) {
             UserMediaListSort.entries.fastForEachIndexed { index, item ->
-                DropdownMenuItem(
-                    checked = sort == item.asc || sort == item.desc,
-                    onCheckedChange = {
+                SelectableDropdownMenuItem(
+                    selected = sort == item.asc || sort == item.desc,
+                    onClick = {
                         onDismiss(if (sort == item.desc) item.asc else item.desc)
                     },
                     text = { Text(text = item.localized()) },

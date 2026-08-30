@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -19,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -179,22 +179,20 @@ private fun LanguageButtonMenu(
             ) {
                 uiState.availableLanguages.orEmpty().fastForEachIndexed { index, item ->
                     val checked = uiState.selectedLanguage == item
-                    DropdownMenuItem(
-                        checked = checked,
-                        onCheckedChange = {
+                    SelectableDropdownMenuItem(
+                        selected = checked,
+                        onClick = {
                             event?.onLanguageSelect(item)
                             expanded = false
                         },
                         text = { Text(text = item) },
                         shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
                         modifier = Modifier.padding(end = 8.dp),
-                        leadingIcon = {
-                            if (checked) {
-                                Icon(
-                                    painter = painterResource(R.drawable.check_20),
-                                    contentDescription = null,
-                                )
-                            }
+                        selectedLeadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.check_20),
+                                contentDescription = null,
+                            )
                         }
                     )
                 }

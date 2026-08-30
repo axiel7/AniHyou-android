@@ -11,12 +11,13 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
+import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.ListType
+import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.model.media.asMediaListStatus
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
-import com.axiel7.anihyou.core.model.media.plainName
 import com.axiel7.anihyou.core.model.media.titleComparator
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
@@ -27,6 +28,7 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.ui.common.navigation.Route
+import com.axiel7.anihyou.core.resources.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -228,14 +230,25 @@ class UserMediaListViewModel(
         mutableUiState.update { it.copy(openSetScoreDialog = open) }
     }
 
-    override fun getRandomPlannedEntry(chunk: Int) {
+    override fun getRandomEntry() {
         uiState.value.run {
-            val plannedAndReleasedList = lists[MediaListStatus.PLANNING.plainName()]?.filter {
-                it.media?.status != MediaStatus.NOT_YET_RELEASED
+            mutableUiState.update { it.copy(isLoadingRandom = true) }
+            val filteredList = entries.filter { entry ->
+                formatMatch(entry)
+                        && statusMatch(entry)
+                        && countryMatch(entry)
+                        && yearMatch(entry)
             }
-            if (!plannedAndReleasedList.isNullOrEmpty()) {
+            if (filteredList.isNotEmpty()) {
                 mutableUiState.update {
-                    it.copy(randomEntryId = plannedAndReleasedList.random().mediaId)
+                    it.copy(
+                        randomEntryId = filteredList.random().mediaId,
+                        isLoadingRandom = false,
+                    )
+                }
+            } else {
+                mutableUiState.update {
+                    it.copy(errorId = R.string.no_media, isLoadingRandom = false)
                 }
             }
         }
@@ -244,6 +257,71 @@ class UserMediaListViewModel(
     override fun onRandomEntryOpened() {
         mutableUiState.update { it.copy(randomEntryId = null) }
     }
+
+    override fun onSearch(query: String) {
+        mutableUiState.value.run {
+            if (filterCount > 0 || query.isNotBlank()) {
+                entries.retainAll { entry ->
+                    val titleMatch = entry.media?.title?.let {
+                        it.romaji?.contains(query, true) == true
+                                || it.english?.contains(query, true) == true
+                                || it.native?.contains(query, true) == true
+                    } == true
+
+                    return@retainAll titleMatch
+                            && formatMatch(entry)
+                            && statusMatch(entry)
+                            && countryMatch(entry)
+                            && yearMatch(entry)
+                }
+            } else if (query.isEmpty()) {
+                entries.clear()
+                if (selectedListName != null) {
+                    entries.addAll(lists[selectedListName].orEmpty())
+                } else {
+                    entries.addAll(lists.values.flatten())
+                }
+            }
+        }
+    }
+
+    override fun setMediaFormat(value: MediaFormatLocalizable?) {
+        mutableUiState.update { it.copy(mediaFormat = value) }
+    }
+
+    override fun setMediaStatus(value: MediaStatus?) {
+        mutableUiState.update { it.copy(mediaStatus = value) }
+    }
+
+    override fun setCountry(value: CountryOfOrigin?) {
+        mutableUiState.update { it.copy(country = value) }
+    }
+
+    override fun setYear(value: Int?) {
+        mutableUiState.update { it.copy(year = value) }
+    }
+
+    override fun clearFilters() {
+        mutableUiState.update {
+            it.copy(mediaFormat = null, mediaStatus = null, country = null, year = null)
+        }
+    }
+
+    override fun onErrorDisplayed() {
+        mutableUiState.update { it.copy(error = null, errorId = null) }
+    }
+
+    private fun UserMediaListUiState.formatMatch(entry: CommonMediaListEntry) =
+        mediaFormat?.value?.let { entry.media?.format == it } ?: true
+
+    private fun UserMediaListUiState.statusMatch(entry: CommonMediaListEntry) =
+        mediaStatus?.let { entry.media?.status == it } ?: true
+
+    private fun UserMediaListUiState.countryMatch(entry: CommonMediaListEntry) =
+        country?.toDto()?.let { entry.media?.countryOfOrigin == it } ?: true
+
+    private fun UserMediaListUiState.yearMatch(entry: CommonMediaListEntry) =
+        year?.let { entry.media?.seasonYear == it } ?: true
 
     init {
         // score format
