@@ -144,7 +144,7 @@
     <string name="search_match">Пошук збігів</string>
     <string name="top_100">Найкраща сотня</string>
     <string name="top_popular">Найбільш популярні</string>
-    <string name="popular_manhwa">Популярна Манхва</string>
+    <string name="popular_manhwa">Популярна манхва</string>
     <string name="apply">Застосувати</string>
     <string name="sort_default">Типовий</string>
     <string name="descending">За спаданням</string>
@@ -170,12 +170,12 @@
     <string name="recommendations">Рекомендації</string>
     <string name="settings">Налаштування</string>
     <string name="display">Дисплей</string>
-    <string name="theme">Тема</string>
+    <string name="theme">Тло</string>
     <string name="language">Мова</string>
     <string name="theme_system">Як у системі</string>
-    <string name="theme_light">Світла</string>
-    <string name="theme_dark">Темна</string>
-    <string name="theme_black">Чорна</string>
+    <string name="theme_light">Світле</string>
+    <string name="theme_dark">Темне</string>
+    <string name="theme_black">Чорне</string>
     <string name="open_al_links_in_the_app">Відкривати посилання AniList у застосунку</string>
     <string name="account">Акаунт</string>
     <string name="github_repository">Репозиторій GitHub</string>
@@ -281,7 +281,7 @@
     <string name="no_media">Немає медіа</string>
     <string name="every_six_hours">Кожні 6 годин</string>
     <string name="every_twelve_hours">Кожні 12 годин</string>
-    <string name="daily">Щоденно</string>
+    <string name="daily">Щодня</string>
     <string name="every_two_days">Кожні 2 дні</string>
     <string name="every_three_days">Кожні 3 дні</string>
     <string name="weekly">Щотижня</string>
@@ -310,7 +310,7 @@
     <string name="format_quote">Цитата</string>
     <string name="format_code">Код</string>
     <string name="write_something">Напишіть щось…</string>
-    <string name="paste_your_link">Вставте ваше посилання тут</string>
+    <string name="paste_your_link">Вставте тут своє посилання</string>
     <string name="publish">Опублікувати</string>
     <string name="reply">Відповісти</string>
     <string name="locked">Заблоковано</string>
@@ -607,7 +607,7 @@
     <string name="show_more">Більше</string>
     <string name="continue_watching">Продовжити перегляд</string>
     <string name="hide_from_status_lists">Приховати з каталогів статусу</string>
-    <string name="black_theme_variant">Варіант темної теми</string>
+    <string name="black_theme_variant">Варіант темного тла</string>
     <string name="random">Випадкове</string>
     <string name="every_five_teen_minutes">Кожні 15 хвилин</string>
     <string name="every_thirty_minutes">Кожні 30 хвилин</string>
@@ -668,7 +668,7 @@
     <string name="priority_high">Високий</string>
     <string name="priority_color_change">Змінити кольори пріоритету</string>
     <string name="general">Загальне</string>
-    <string name="logout_confirm">Ви дійсно бажаєте вийти з акаунта?</string>
+    <string name="logout_confirm">Ви дійсно хочете вийти з акаунта?</string>
     <string name="score_steps">Кроки зміни</string>
     <string name="recent">Нещодавні</string>
 </resources>
