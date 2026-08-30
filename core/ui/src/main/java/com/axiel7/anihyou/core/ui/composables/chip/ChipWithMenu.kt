@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
@@ -43,6 +44,7 @@ fun <T> FilterChipWithMenu(
     trailingIcon: @Composable (() -> Unit)? = null,
     valueString: @Composable (T) -> String = { it.toString() },
     valueIcon: (T) -> Int? = { null },
+    containerColor: Color = MenuDefaults.groupStandardContainerColor,
 ) {
     val windowHeight = with(LocalDensity.current) {
         LocalWindowInfo.current.containerSize.height.toDp()
@@ -67,6 +69,7 @@ fun <T> FilterChipWithMenu(
         ) {
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShapes(),
+                containerColor = containerColor,
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 values.fastForEachIndexed { index, item ->

@@ -7,9 +7,12 @@ import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
+import com.axiel7.anihyou.core.model.media.CountryOfOrigin
+import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 
@@ -32,16 +35,25 @@ data class UserMediaListUiState(
     val listStyle: ListStyle = ListStyle.STANDARD,
     val scoreFormat: ScoreFormat = ScoreFormat.POINT_10,
     val itemsPerRow: ItemsPerRow = ItemsPerRow.DEFAULT,
+    val isSearchActive: Boolean = false,
+    val mediaFormat: MediaFormatLocalizable? = null,
+    val mediaStatus: MediaStatus? = null,
+    val country: CountryOfOrigin? = null,
+    val year: Int? = null,
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
     val openSetScoreDialog: Boolean = false,
     val plannedEntriesIds: List<Int> = emptyList(),
     val randomEntryId: Int? = null,
+    val isLoadingRandom: Boolean = false,
     val isLoadingPlusOne: Boolean = false,
+    val errorId: Int? = null,
     override val error: String? = null,
     override val isLoading: Boolean = true,
 ) : UiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
+
+    val filterCount = listOf(mediaFormat, mediaStatus, country).count { it != null }
 }

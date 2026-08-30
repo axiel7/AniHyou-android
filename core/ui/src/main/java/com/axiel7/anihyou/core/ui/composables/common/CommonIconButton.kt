@@ -13,6 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openLink
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.common.utils.NumberUtils.abbreviated
@@ -29,13 +34,14 @@ import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.utils.TranslateUtils.openTranslator
 
+@Composable
 fun singleClick(onClick: () -> Unit): () -> Unit {
-    var latest = 0L
-    return {
+    var latest by remember { mutableLongStateOf(value = 0L) }
+    return dropUnlessResumed {
         val now = System.currentTimeMillis()
-        if (now - latest >= 1000) {
-            onClick()
+        if (now - latest >= 500) {
             latest = now
+            onClick()
         }
     }
 }

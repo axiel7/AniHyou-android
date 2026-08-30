@@ -57,5 +57,13 @@ fragment CommonMediaListEntry on MediaList {
             timeUntilAiring
         }
         status
+        title {
+            romaji
+            english
+            native
+        }
+        format
+        countryOfOrigin
+        seasonYear
     }
 }
