@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.genretag
+package com.axiel7.anihyou.feature.genrestags
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf

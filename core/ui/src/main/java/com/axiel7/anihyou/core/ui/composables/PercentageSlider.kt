@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.composables
+package com.axiel7.anihyou.core.ui.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

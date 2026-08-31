@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
+import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.ListType
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
@@ -27,8 +28,8 @@ import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
-import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -238,6 +239,8 @@ class UserMediaListViewModel(
                         && statusMatch(entry)
                         && countryMatch(entry)
                         && yearMatch(entry)
+                        && genreMatch(entry)
+                        && tagMatch(entry)
             }
             if (filteredList.isNotEmpty()) {
                 mutableUiState.update {
@@ -273,6 +276,8 @@ class UserMediaListViewModel(
                             && statusMatch(entry)
                             && countryMatch(entry)
                             && yearMatch(entry)
+                            && genreMatch(entry)
+                            && tagMatch(entry)
                 }
             } else if (query.isEmpty()) {
                 entries.clear()
@@ -301,9 +306,22 @@ class UserMediaListViewModel(
         mutableUiState.update { it.copy(year = value) }
     }
 
+    override fun onGenreTagStateChanged(value: GenresAndTagsForSearch) {
+        mutableUiState.update {
+            it.copy(genresAndTagsForSearch = value, clearedFilters = false)
+        }
+    }
+
     override fun clearFilters() {
         mutableUiState.update {
-            it.copy(mediaFormat = null, mediaStatus = null, country = null, year = null)
+            it.copy(
+                mediaFormat = null,
+                mediaStatus = null,
+                country = null,
+                year = null,
+                genresAndTagsForSearch = GenresAndTagsForSearch(),
+                clearedFilters = true,
+            )
         }
     }
 
@@ -322,6 +340,40 @@ class UserMediaListViewModel(
 
     private fun UserMediaListUiState.yearMatch(entry: CommonMediaListEntry) =
         year?.let { entry.media?.seasonYear == it } ?: true
+
+    private fun UserMediaListUiState.genreMatch(entry: CommonMediaListEntry) =
+        genresAndTagsForSearch.genreMatch(entry)
+
+    private fun UserMediaListUiState.tagMatch(entry: CommonMediaListEntry) =
+        genresAndTagsForSearch.tagMatch(entry)
+
+    private fun GenresAndTagsForSearch.genreMatch(entry: CommonMediaListEntry): Boolean {
+        val genres = entry.media?.genres ?: return true
+        val genreInMatch = if (genreIn.isNotEmpty()) {
+            genres.any { genreIn.contains(it) }
+        } else true
+
+        val genreNotMatch = if (genreNot.isNotEmpty()) {
+            !genres.any { genreNot.contains(it) }
+        } else true
+
+        return genreInMatch && genreNotMatch
+    }
+
+    private fun GenresAndTagsForSearch.tagMatch(entry: CommonMediaListEntry): Boolean {
+        val tags = entry.media?.tags
+            ?.filter { (it?.rank ?: 0) >= minimumTagPercentage } ?: return true
+
+        val tagInMatch = if (tagIn.isNotEmpty()) {
+            tags.any { tagIn.contains(it?.name) }
+        } else true
+
+        val tagNotMatch = if (tagNot.isNotEmpty()) {
+            !tags.any { tagNot.contains(it?.name) }
+        } else true
+
+        return tagInMatch && tagNotMatch
+    }
 
     init {
         // score format

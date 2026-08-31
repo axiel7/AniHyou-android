@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.composables
+package com.axiel7.anihyou.feature.genrestags.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -17,7 +17,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,23 +31,21 @@ import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLoc
 import com.axiel7.anihyou.core.model.genre.Tag
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.InputChipError
-import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsSheet
-import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsViewModel
+import com.axiel7.anihyou.feature.genrestags.GenresTagsSheet
+import com.axiel7.anihyou.feature.genrestags.GenresTagsViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun MediaSearchGenresChips(
-    externalGenre: Genre?,
-    externalTag: Tag?,
+fun SearchGenresTagsChips(
+    externalGenre: Genre? = null,
+    externalTag: Tag? = null,
+    viewModel: GenresTagsViewModel = koinViewModel { parametersOf(externalGenre, externalTag) },
     clearedFilters: Boolean,
     onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {
-    val viewModel: GenresTagsViewModel = koinViewModel {
-        parametersOf(externalGenre, externalTag)
-    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -57,7 +55,7 @@ fun MediaSearchGenresChips(
     )
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    LaunchedEffect(clearedFilters) {
+    SideEffect(clearedFilters) {
         if (clearedFilters) viewModel.resetData()
     }
 
@@ -156,7 +154,7 @@ fun MediaSearchGenresChips(
         }
         AssistChip(
             onClick = { scope.launch { sheetState.show() } },
-            label = { Text(text = stringResource(R.string.add_genre)) },
+            label = { Text(text = stringResource(R.string.genres)) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.add_20),

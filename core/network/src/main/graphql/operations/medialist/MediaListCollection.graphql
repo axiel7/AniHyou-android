@@ -65,5 +65,10 @@ fragment CommonMediaListEntry on MediaList {
         format
         countryOfOrigin
         seasonYear
+        genres
+        tags {
+            name
+            rank
+        }
     }
 }

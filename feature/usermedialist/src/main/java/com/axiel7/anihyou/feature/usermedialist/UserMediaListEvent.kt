@@ -2,6 +2,7 @@ package com.axiel7.anihyou.feature.usermedialist
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent
+import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
@@ -54,6 +55,8 @@ interface UserMediaListEvent : UiEvent {
     fun setCountry(value: CountryOfOrigin?)
 
     fun setYear(value: Int?)
+
+    fun onGenreTagStateChanged(value: GenresAndTagsForSearch)
 
     fun clearFilters()
 }

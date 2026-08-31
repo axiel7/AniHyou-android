@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -20,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -31,9 +34,12 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_MEDIUM_WIDTH
@@ -168,6 +174,16 @@ private fun LazyListGrid(
             items(10) {
                 MediaItemVerticalPlaceholder()
             }
+        } else if (mediaList.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Text(
+                    text = stringResource(R.string.no_media),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
         items(
             items = mediaList,
@@ -208,13 +224,23 @@ private fun LazyListTablet(
         contentPadding = contentPadding + navPadding,
         horizontalArrangement = Arrangement.Center
     ) {
+        if (uiState.isLoading) {
+            items(10) {
+                MediaItemHorizontalPlaceholder()
+            }
+        } else if (mediaList.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Text(
+                    text = stringResource(R.string.no_media),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }
@@ -237,11 +263,6 @@ private fun LazyListTablet(
             }
 
             ListStyle.COMPACT -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }
@@ -264,11 +285,6 @@ private fun LazyListTablet(
             }
 
             ListStyle.MINIMAL -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }
@@ -314,13 +330,23 @@ private fun LazyListPhone(
         state = listState,
         contentPadding = contentPadding,
     ) {
+        if (uiState.isLoading) {
+            items(10) {
+                MediaItemHorizontalPlaceholder()
+            }
+        } else if (mediaList.isEmpty()) {
+            item {
+                Text(
+                    text = stringResource(R.string.no_media),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
         when (uiState.listStyle) {
             ListStyle.STANDARD -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }
@@ -344,11 +370,6 @@ private fun LazyListPhone(
             }
 
             ListStyle.COMPACT -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }
@@ -372,11 +393,6 @@ private fun LazyListPhone(
             }
 
             ListStyle.MINIMAL -> {
-                if (uiState.isLoading) {
-                    items(10) {
-                        MediaItemHorizontalPlaceholder()
-                    }
-                }
                 items(
                     items = mediaList,
                     contentType = { it.basicMediaListEntry }

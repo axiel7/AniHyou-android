@@ -12,8 +12,8 @@ import com.axiel7.anihyou.feature.explore.discover.ExploreViewModel
 import com.axiel7.anihyou.feature.explore.manga.MangaExploreViewModel
 import com.axiel7.anihyou.feature.explore.recommendations.RecommendationsViewModel
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel
-import com.axiel7.anihyou.feature.explore.search.genretag.GenresTagsViewModel
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeViewModel
+import com.axiel7.anihyou.feature.genrestags.GenresTagsViewModel
 import com.axiel7.anihyou.feature.home.HomeViewModel
 import com.axiel7.anihyou.feature.home.activity.ActivityFeedViewModel
 import com.axiel7.anihyou.feature.home.current.CurrentViewModel

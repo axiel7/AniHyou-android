@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.genretag
+package com.axiel7.anihyou.feature.genrestags
 
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch

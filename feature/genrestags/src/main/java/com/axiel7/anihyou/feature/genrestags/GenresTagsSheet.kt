@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.genretag
+package com.axiel7.anihyou.feature.genrestags
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,11 +50,11 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.ConnectedButtonGroup
+import com.axiel7.anihyou.core.ui.composables.PercentageSlider
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.TextTriCheckbox
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.feature.explore.search.composables.PercentageSlider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,7 +106,7 @@ private fun GenresTagsSheetContent(
         onDismissed = onDismiss,
         sheetState = sheetState,
         sheetGesturesEnabled = isAtTop,
-        windowInsets = WindowInsets(0, 0, 0, 0)
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
     ) {
         Column(
             modifier = Modifier

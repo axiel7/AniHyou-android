@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
+import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
@@ -40,11 +41,12 @@ data class UserMediaListUiState(
     val mediaStatus: MediaStatus? = null,
     val country: CountryOfOrigin? = null,
     val year: Int? = null,
+    val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
     val openSetScoreDialog: Boolean = false,
-    val plannedEntriesIds: List<Int> = emptyList(),
+    val clearedFilters: Boolean = false,
     val randomEntryId: Int? = null,
     val isLoadingRandom: Boolean = false,
     val isLoadingPlusOne: Boolean = false,
@@ -55,5 +57,7 @@ data class UserMediaListUiState(
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
 
-    val filterCount = listOf(mediaFormat, mediaStatus, country).count { it != null }
+    val filterCount =
+        listOf(mediaFormat, mediaStatus, country).count { it != null } +
+                genresAndTagsForSearch.totalSize
 }

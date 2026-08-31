@@ -111,6 +111,8 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
         format = MediaFormat.TV,
         countryOfOrigin = CountryOfOriginDto.JAPAN,
         seasonYear = 2020,
+        genres = null,
+        tags = null,
     ),
     id = 1,
     basicMediaListEntry = exampleBasicMediaListEntry

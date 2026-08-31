@@ -150,6 +150,7 @@ dependencies {
     implementation(project(":feature:calendar"))
     implementation(project(":feature:characterdetails"))
     implementation(project(":feature:editmedia"))
+    implementation(project(":feature:genrestags"))
     implementation(project(":feature:explore"))
     implementation(project(":feature:home"))
     implementation(project(":feature:login"))

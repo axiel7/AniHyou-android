@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.search.genretag
+package com.axiel7.anihyou.feature.genrestags
 
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.TabRowItem

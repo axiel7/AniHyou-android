@@ -86,10 +86,10 @@ import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchCountryC
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDateChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDurationChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchFormatChip
-import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchGenresChips
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSourcesChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchStatusChip
+import com.axiel7.anihyou.feature.genrestags.composables.SearchGenresTagsChips
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -520,7 +520,7 @@ private fun MoreFilters(
         setEpCh = { event?.setEpCh(it) },
         setDuration = { event?.setDuration(it) },
     )
-    MediaSearchGenresChips(
+    SearchGenresTagsChips(
         externalGenre = initialGenre?.let { Genre(it) },
         externalTag = initialTag?.let { Tag(it) },
         clearedFilters = uiState.clearedFilters,

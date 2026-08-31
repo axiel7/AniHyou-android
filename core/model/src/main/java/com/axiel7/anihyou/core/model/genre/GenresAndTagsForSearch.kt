@@ -6,4 +6,6 @@ data class GenresAndTagsForSearch(
     val tagIn: Set<String> = emptySet(),
     val tagNot: Set<String> = emptySet(),
     val minimumTagPercentage: Int = 18,
-)
+) {
+    val totalSize get() = genreIn.size + genreNot.size + tagIn.size + tagNot.size
+}

@@ -1,6 +1,7 @@
-package com.axiel7.anihyou.feature.explore.search.genretag
+package com.axiel7.anihyou.feature.genrestags
 
 import android.content.Context
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.annotation.InjectedParam
 import kotlin.time.Duration.Companion.milliseconds
 
+@Stable
 @OptIn(FlowPreview::class)
 class GenresTagsViewModel(
     @InjectedParam private val externalGenre: Genre? = null,
