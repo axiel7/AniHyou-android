@@ -1,10 +1,10 @@
 package com.axiel7.anihyou.feature.explore.search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,11 +69,11 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
-import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.common.TriFilterChip
+import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
@@ -135,7 +135,15 @@ fun SearchView(
                     }
                 },
                 leadingIcon = {
-                    BackIconButton(onClick = navActionManager::goBack)
+                    IconButton(
+                        onClick = singleClick(navActionManager::goBack),
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_back_24),
+                            contentDescription = stringResource(R.string.action_back)
+                        )
+                    }
                 },
                 trailingIcon = {
                     if (textFieldState.text.isNotEmpty()) {
@@ -250,12 +258,10 @@ fun SearchContentView(
             }
         },
         containerColor = Color.Transparent,
-        contentWindowInsets = WindowInsets(0)
     ) { padding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxHeight(),
+            modifier = Modifier.fillMaxHeight(),
+            contentPadding = padding,
             state = listState
         ) {
             item(key = "filters", contentType = "header") {
@@ -284,8 +290,10 @@ fun SearchContentView(
                                 event?.setMediaSort(it)
                             }
                         )
-                        if (showMoreFilters) {
-                            MoreFilters(uiState, event, initialGenre, initialTag)
+                        AnimatedVisibility(showMoreFilters) {
+                            Column {
+                                MoreFilters(uiState, event, initialGenre, initialTag)
+                            }
                         }
                         Row(
                             modifier = Modifier.padding(horizontal = 8.dp),

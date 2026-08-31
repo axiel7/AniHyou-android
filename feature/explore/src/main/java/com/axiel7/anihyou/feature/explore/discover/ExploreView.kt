@@ -13,10 +13,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +45,7 @@ fun ExploreView(
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultExploreTab.ordinal) }
     val viewModel: ExploreViewModel = koinActivityViewModel()
-    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     LaunchedEffect(selectedTabIndex) {
         viewModel.saveExploreTab(selectedTabIndex)

@@ -7,7 +7,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -242,7 +244,15 @@ fun MainNavigation(
             )
         }
 
-        entry<Route.Search> {
+        entry<Route.Search>(
+            metadata = NavDisplay.transitionSpec {
+                (slideInVertically { -it } + fadeIn()) togetherWith fadeOut()
+            } + NavDisplay.popTransitionSpec {
+                fadeIn() togetherWith (slideOutVertically { -it } + fadeOut())
+            } + NavDisplay.predictivePopTransitionSpec {
+                fadeIn() togetherWith (slideOutVertically { -it } + fadeOut())
+            }
+        ) {
             SearchView(
                 arguments = it,
                 isLoggedIn = isLoggedIn,

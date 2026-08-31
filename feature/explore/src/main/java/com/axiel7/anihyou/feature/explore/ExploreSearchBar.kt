@@ -1,25 +1,39 @@
 package com.axiel7.anihyou.feature.explore
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AppBarWithSearch
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarScrollBehavior
 import androidx.compose.material3.SearchBarValue
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,30 +42,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.common.navigation.Route
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
+import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.explore.search.SearchContentView
 import com.axiel7.anihyou.feature.explore.search.SearchEvent
 import com.axiel7.anihyou.feature.explore.search.SearchUiState
-import com.axiel7.anihyou.feature.explore.search.SearchViewModel
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ExploreSearchBar(
     isLoggedIn: Boolean,
-    scrollBehavior: SearchBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    CustomSearchBar(
+        scrollBehavior = scrollBehavior,
+    )
+    // ExpandedSearchBar has a bug that prevents returning from a navigation destination
+    // TODO: revert back when the bug is fixed
+    /*
     val viewModel: SearchViewModel = koinViewModel {
         parametersOf(Route.Search(), isLoggedIn)
     }
@@ -60,6 +79,49 @@ fun ExploreSearchBar(
     ExploreSearchBarContent(
         uiState = uiState,
         event = viewModel,
+        scrollBehavior = scrollBehavior,
+    )*/
+}
+
+@Composable
+private fun CustomSearchBar(
+    scrollBehavior: TopAppBarScrollBehavior
+) {
+    val navActionManager = LocalNavActionManager.current
+    TopAppBar(
+        title = {
+            Card(
+                onClick = singleClick { navActionManager.toSearch() },
+                modifier = Modifier
+                    .widthIn(min = 360.dp, max = 720.dp)
+                    .height(56.dp)
+                    .padding(end = 8.dp),
+                shape = RoundedCornerShape(50),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.search_24),
+                        contentDescription = stringResource(R.string.search),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(R.string.anime_manga_and_more),
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+        },
         scrollBehavior = scrollBehavior,
     )
 }
@@ -107,10 +169,7 @@ private fun ExploreSearchBarContent(
                     if (isSearchExpanded) {
                         IconButton(
                             onClick = {
-                                scope.launch {
-                                    textFieldState.clearText()
-                                    searchBarState.animateToCollapsed()
-                                }
+                                scope.launch { searchBarState.animateToCollapsed() }
                             },
                             shapes = IconButtonDefaults.shapes()
                         ) {
@@ -173,7 +232,7 @@ private fun ExploreSearchBarContent(
 @Composable
 fun ExploreSearchBarPreview() {
     AniHyouTheme {
-        Surface {
+        Column {
             ExploreSearchBarContent(
                 uiState = SearchUiState(
                     searchType = SearchType.ANIME,
@@ -182,6 +241,9 @@ fun ExploreSearchBarPreview() {
                 ),
                 event = null,
                 scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior(),
+            )
+            CustomSearchBar(
+                scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
             )
         }
     }
