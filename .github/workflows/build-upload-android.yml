@@ -18,6 +18,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
 
@@ -53,3 +55,36 @@ jobs:
         with:
           name: assets
           path: ${{github.workspace}}/app/build/outputs/apk/foss/release/*.apk
+
+      - name: Extract version
+        id: get_version
+        run: |
+          VERSION=$(grep 'name =' version.properties | cut -d'=' -f2 | xargs)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check for Release/Beta prefix
+        id: check_prefix
+        run: |
+          MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          if [[ $MSG == beta:* ]]; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-beta" >> $GITHUB_OUTPUT
+          elif [[ $MSG == release:* ]]; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "tag_suffix=" >> $GITHUB_OUTPUT
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        if: steps.check_prefix.outputs.is_release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}${{ steps.check_prefix.outputs.tag_suffix }}
+          name: AniHyou v${{ steps.get_version.outputs.version }}${{ steps.check_prefix.outputs.tag_suffix }}
+          prerelease: ${{ steps.check_prefix.outputs.is_prerelease == 'true' }}
+          files: app/build/outputs/apk/foss/release/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
