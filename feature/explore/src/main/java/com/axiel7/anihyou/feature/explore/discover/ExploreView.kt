@@ -111,17 +111,3 @@ fun ExploreView(
         }
     }
 }
-
-@Preview
-@Composable
-private fun ExploreViewPreview() {
-    //TODO fix this preview
-    AniHyouTheme {
-        Surface {
-            ExploreView(
-                defaultExploreTab = ExploreTab.ANIME,
-                isLoggedIn = true,
-            )
-        }
-    }
-}
