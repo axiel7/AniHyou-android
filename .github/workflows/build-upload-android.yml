@@ -50,17 +50,13 @@ jobs:
           KEY_ALIAS: ${{secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: assets
-          path: ${{github.workspace}}/app/build/outputs/apk/foss/release/*.apk
-
       - name: Extract version
         id: get_version
         run: |
-          VERSION=$(grep 'name =' version.properties | cut -d'=' -f2 | xargs)
+          VERSION=$(grep '^name =' version.properties | cut -d'=' -f2 | xargs)
+          CODE=$(grep '^code =' version.properties | cut -d'=' -f2 | xargs)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "code=$CODE" >> $GITHUB_OUTPUT
 
       - name: Check for Release/Beta prefix
         id: check_prefix
@@ -69,11 +65,11 @@ jobs:
           if [[ $MSG == beta:* ]]; then
             echo "is_release=true" >> $GITHUB_OUTPUT
             echo "is_prerelease=true" >> $GITHUB_OUTPUT
-            echo "tag_suffix=-beta" >> $GITHUB_OUTPUT
+            echo "tag_name=beta-${{ steps.get_version.outputs.code }}" >> $GITHUB_OUTPUT
           elif [[ $MSG == release:* ]]; then
             echo "is_release=true" >> $GITHUB_OUTPUT
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
-            echo "tag_suffix=" >> $GITHUB_OUTPUT
+            echo "tag_name=v${{ steps.get_version.outputs.version }}" >> $GITHUB_OUTPUT
           else
             echo "is_release=false" >> $GITHUB_OUTPUT
           fi
@@ -82,8 +78,8 @@ jobs:
         if: steps.check_prefix.outputs.is_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}${{ steps.check_prefix.outputs.tag_suffix }}
-          name: AniHyou v${{ steps.get_version.outputs.version }}${{ steps.check_prefix.outputs.tag_suffix }}
+          tag_name: ${{ steps.check_prefix.outputs.tag_name }}
+          name: AniHyou ${{ steps.check_prefix.outputs.tag_name }}
           prerelease: ${{ steps.check_prefix.outputs.is_prerelease == 'true' }}
           files: app/build/outputs/apk/foss/release/*.apk
         env:
