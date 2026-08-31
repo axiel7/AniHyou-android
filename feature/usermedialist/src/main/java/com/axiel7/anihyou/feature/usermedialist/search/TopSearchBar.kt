@@ -105,10 +105,7 @@ internal fun TopSearchBar(
                     if (isSearchExpanded) {
                         IconButton(
                             onClick = {
-                                scope.launch {
-                                    textFieldState.clearText()
-                                    searchBarState.animateToCollapsed()
-                                }
+                                scope.launch { searchBarState.animateToCollapsed() }
                             },
                             shapes = IconButtonDefaults.shapes()
                         ) {
