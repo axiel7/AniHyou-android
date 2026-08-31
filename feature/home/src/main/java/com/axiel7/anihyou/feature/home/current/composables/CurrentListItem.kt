@@ -77,7 +77,7 @@ fun CurrentListItem(
                     url = item.media?.coverImage?.large,
                     enableBlur = blurAdult && item.media?.basicMediaDetails?.isAdult == true,
                     showShadow = false,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(
                             width = MEDIA_POSTER_COMPACT_WIDTH.dp,
