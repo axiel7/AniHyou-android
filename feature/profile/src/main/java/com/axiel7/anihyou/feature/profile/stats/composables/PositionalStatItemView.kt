@@ -27,7 +27,7 @@ import com.axiel7.anihyou.core.ui.composables.TextSubtitleVertical
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 
 @Composable
 fun PositionalStatItemView(
@@ -96,7 +96,7 @@ fun PositionalStatItemView(
             )
             if (minutesWatched != null) {
                 TextSubtitleVertical(
-                    text = (minutesWatched * 60L).nonFutureDateToLegibleText(),
+                    text = (minutesWatched * 60L).secondsToLegibleText(),
                     subtitle = stringResource(R.string.time_spent)
                 )
             } else if (chaptersRead != null) {

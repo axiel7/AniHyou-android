@@ -19,6 +19,7 @@
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
     </plurals>
+    <string name="just_now">Just now</string>
     <string name="unknown">Unknown</string>
     <string name="airing_soon">Airing Soon</string>
     <string name="mean_score">Mean score</string>

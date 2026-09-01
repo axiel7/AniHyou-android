@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.common.utils.DateUtils
-import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.network.fragment.FuzzyDate
 import com.axiel7.anihyou.core.resources.R
 import java.time.DateTimeException
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -53,10 +53,29 @@ object ComposeDateUtils {
     }
 
     @Composable
-    fun Long.nonFutureDateToLegibleText(): String {
-        return LocalDateTime.now(DateUtils.defaultZoneOffset)
-            .plusSeconds(-this)
-            .toLocalized().orEmpty()
+    fun Long.dateToRelativeText(): String {
+        val now = LocalDateTime.now(DateUtils.defaultZoneOffset)
+        val past = LocalDateTime.ofInstant(Instant.ofEpochSecond(this), DateUtils.defaultZoneOffset)
+
+        val years = ChronoUnit.YEARS.between(past, now).toInt()
+        if (years > 0) return pluralStringResource(R.plurals.num_years, years, years)
+
+        val months = ChronoUnit.MONTHS.between(past, now).toInt()
+        if (months > 0) return pluralStringResource(R.plurals.num_months, months, months)
+
+        val weeks = ChronoUnit.WEEKS.between(past, now).toInt()
+        if (weeks > 0) return pluralStringResource(R.plurals.num_weeks, weeks, weeks)
+
+        val days = ChronoUnit.DAYS.between(past, now).toInt()
+        if (days > 0) return pluralStringResource(R.plurals.num_days, days, days)
+
+        val hours = ChronoUnit.HOURS.between(past, now).toInt()
+        if (hours > 0) return pluralStringResource(R.plurals.hour_abbreviation, hours, hours)
+
+        val minutes = ChronoUnit.MINUTES.between(past, now).toInt()
+        if (minutes > 0) return pluralStringResource(R.plurals.minutes_abbreviation, minutes, minutes)
+
+        return stringResource(R.string.just_now)
     }
 
     @Composable

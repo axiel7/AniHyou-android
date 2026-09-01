@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.resources.R
@@ -37,7 +36,7 @@ import com.axiel7.anihyou.core.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.post.PostItem
 import com.axiel7.anihyou.core.ui.composables.post.PostItemPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
 
 @Composable
@@ -177,8 +176,7 @@ fun ReviewThreadListView(
                         avatarUrl = item.user?.activityUser?.avatar?.medium.orEmpty(),
                         subtitle = {
                             Text(
-                                text = item.createdAt.toLong().timestampIntervalSinceNow()
-                                    .nonFutureDateToLegibleText(),
+                                text = item.createdAt.toLong().dateToRelativeText(),
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = MaterialTheme.typography.labelMedium,

@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
@@ -28,7 +27,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 
 @Composable
 fun ActivityFeedItem(
@@ -70,8 +69,7 @@ fun ActivityFeedItem(
                     textStyle = MaterialTheme.typography.labelLarge,
                 )
                 Text(
-                    text = createdAt.toLong().timestampIntervalSinceNow()
-                        .nonFutureDateToLegibleText(),
+                    text = createdAt.toLong().dateToRelativeText(),
                     style = MaterialTheme.typography.labelMedium,
                 )
             }

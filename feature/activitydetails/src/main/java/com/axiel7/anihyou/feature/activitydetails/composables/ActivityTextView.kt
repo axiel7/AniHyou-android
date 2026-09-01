@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.model.activity.exampleActivityUser
 import com.axiel7.anihyou.core.network.fragment.ActivityUser
 import com.axiel7.anihyou.core.resources.R
@@ -48,7 +47,7 @@ import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMAL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -82,8 +81,7 @@ fun ActivityTextView(
                 onClick = onClickUser
             )
             Text(
-                text = createdAt.toLong().timestampIntervalSinceNow()
-                    .nonFutureDateToLegibleText(),
+                text = createdAt.toLong().dateToRelativeText(),
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = 15.sp
             )

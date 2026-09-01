@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.common.utils.DateUtils.timestampIntervalSinceNow
 import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.thread.ChildComment
@@ -35,7 +34,7 @@ import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.nonFutureDateToLegibleText
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,8 +77,7 @@ fun ChildCommentView(
                     onClick = navigateToUserDetails
                 )
                 Text(
-                    text = comment.createdAt.toLong().timestampIntervalSinceNow()
-                        .nonFutureDateToLegibleText(),
+                    text = comment.createdAt.toLong().dateToRelativeText(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                 )
