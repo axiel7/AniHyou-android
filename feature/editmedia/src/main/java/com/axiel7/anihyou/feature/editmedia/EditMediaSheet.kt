@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
@@ -308,7 +309,8 @@ private fun EditMediaSheetContent(
                 )
             }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             // Dates
             EditMediaDateField(
