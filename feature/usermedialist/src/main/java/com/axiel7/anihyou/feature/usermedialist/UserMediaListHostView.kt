@@ -1,7 +1,21 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -13,11 +27,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,23 +54,33 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.common.utils.DateUtils
+import com.axiel7.anihyou.core.model.media.CountryOfOrigin
+import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
+import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
+import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
+import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
+import com.axiel7.anihyou.feature.genrestags.composables.SearchGenresTagsChips
 import com.axiel7.anihyou.feature.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.search.TopSearchBar
@@ -241,11 +268,153 @@ private fun UserMediaListHostContent(
                 },
                 lazyListState = listState,
                 lazyGridState = gridState,
+                stickyHeaderContent = {
+                    FilterBlock(
+                        uiState = uiState,
+                        isSearchFocused = isSearchFocused,
+                        event = event
+                    )
+                }
             )
         }//: Column
     }//: Scaffold
 }
 
+
+@Composable
+private fun FilterBlock(
+    uiState: UserMediaListUiState,
+    isSearchFocused: Boolean,
+    event: UserMediaListEvent?
+    ){
+    val fastSize = spring<IntSize>(stiffness = Spring.StiffnessMedium)
+    val fastAlpha = tween<Float>(100)
+    val isPreview = LocalInspectionMode.current
+    Column(
+            modifier = Modifier.animateContentSize(animationSpec = fastSize)
+        ) {
+            val chipEnter = fadeIn(fastAlpha) + expandHorizontally(fastSize)
+            val chipExit = fadeOut(fastAlpha) + shrinkHorizontally(fastSize)
+
+            val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
+            val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
+
+
+            AnimatedVisibility(
+                visible = isSearchFocused || uiState.filterCount > 0,
+                enter = rowEnter,
+                exit = rowExit
+            ) {
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .animateContentSize(animationSpec = fastSize),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    AnimatedVisibility(
+                        visible = isSearchFocused || uiState.mediaFormat != null,
+                        enter = chipEnter, exit = chipExit
+                    ) {
+                        FilterChipWithMenu(
+                            title = stringResource(R.string.format),
+                            values = if (uiState.mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
+                            else MediaFormatLocalizable.mangaEntries,
+                            selectedValue = uiState.mediaFormat,
+                            onValueSelected = { event?.setMediaFormat(it) },
+                            valueString = { it.localized() },
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = isSearchFocused || uiState.mediaStatus != null,
+                        enter = chipEnter, exit = chipExit
+                    ) {
+                        FilterChipWithMenu(
+                            title = stringResource(R.string.media_status),
+                            values = MediaStatus.knownEntries,
+                            selectedValue = uiState.mediaStatus,
+                            onValueSelected = { event?.setMediaStatus(it) },
+                            valueString = { it.localized() },
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = isSearchFocused || uiState.country != null,
+                        enter = chipEnter, exit = chipExit
+                    ) {
+                        FilterChipWithMenu(
+                            title = stringResource(R.string.country),
+                            values = CountryOfOrigin.entries,
+                            selectedValue = uiState.country,
+                            onValueSelected = { event?.setCountry(it) },
+                            valueString = { it.localized() },
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = isSearchFocused || uiState.year != null,
+                        enter = chipEnter, exit = chipExit
+                    ) {
+                        FilterChipWithMenu(
+                            title = stringResource(R.string.year),
+                            values = DateUtils.seasonYears,
+                            selectedValue = uiState.year,
+                            onValueSelected = { event?.setYear(it) },
+                            valueString = { it.toString() },
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = isSearchFocused,
+                        enter = chipEnter, exit = chipExit
+                    ) {
+                        FilterChip(
+                            selected = false,
+                            onClick = singleClick { event?.getRandomEntry() },
+                            label = { Text(text = stringResource(R.string.random)) },
+                            trailingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.shuffle_24),
+                                    contentDescription = stringResource(R.string.random),
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            enabled = !uiState.isLoadingRandom,
+                        )
+                    }
+                }
+            }
+
+            val hasGenreTags = uiState.genresAndTagsForSearch.genreIn.isNotEmpty() ||
+                    uiState.genresAndTagsForSearch.genreNot.isNotEmpty() ||
+                    uiState.genresAndTagsForSearch.tagIn.isNotEmpty() ||
+                    uiState.genresAndTagsForSearch.tagNot.isNotEmpty()
+
+            AnimatedVisibility(
+                visible = !isPreview && (isSearchFocused || hasGenreTags),
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                SearchGenresTagsChips(
+                    clearedFilters = uiState.clearedFilters,
+                    onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+                )
+            }
+
+            AnimatedVisibility(
+                visible = uiState.filterCount > 0,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                ErrorTextButton(
+                    text = stringResource(R.string.clear),
+                    onClick = { event?.clearFilters() },
+                )
+            }
+        }
+    }
 @Composable
 private fun FloatingActionButton(
     uiState: UserMediaListUiState,
