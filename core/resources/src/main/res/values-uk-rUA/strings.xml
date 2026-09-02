@@ -28,6 +28,7 @@
         <item quantity="many">%d днів</item>
         <item quantity="other">%d днів</item>
     </plurals>
+    <string name="just_now">Щойно</string>
     <string name="unknown">Невідомо</string>
     <string name="airing_soon">Невдовзі виходитиме</string>
     <string name="mean_score">Серединна оцінка</string>
