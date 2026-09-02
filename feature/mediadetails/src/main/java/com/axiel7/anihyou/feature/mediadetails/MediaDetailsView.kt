@@ -349,8 +349,8 @@ private fun MediaDetailsContent(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
-                    subtitle = stringResource(R.string.mean_score),
+                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.average_score),
                     modifier = Modifier
                         .clickable { showScores = !showScores }
                         .spoilerPlaceholder(visible = hideScores && !showScores),
@@ -362,8 +362,8 @@ private fun MediaDetailsContent(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
-                    subtitle = stringResource(R.string.average_score),
+                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.mean_score),
                     modifier = Modifier
                         .clickable { showScores = !showScores }
                         .spoilerPlaceholder(visible = hideScores && !showScores),

@@ -56,8 +56,8 @@ fun DiscoverMediaContent(
                         testTag = "MediaItem"
                     },
                 subtitle = {
-                    item.meanScore?.let { meanScore ->
-                        SmallScoreIndicator(score = meanScore)
+                    item.averageScore?.let { score ->
+                        SmallScoreIndicator(score = score)
                     } ?: run {
                         Spacer(modifier = Modifier.size(20.dp))
                     }

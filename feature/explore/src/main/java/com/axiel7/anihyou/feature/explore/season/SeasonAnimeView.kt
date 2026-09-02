@@ -244,8 +244,8 @@ private fun SeasonalGrid(
                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
-                    item.meanScore?.let { meanScore ->
-                        SmallScoreIndicator(score = meanScore)
+                    item.averageScore?.let { score ->
+                        SmallScoreIndicator(score = score)
                     }
                 },
                 status = item.mediaListEntry?.basicMediaListEntry?.status,
@@ -298,8 +298,8 @@ private fun SeasonalList(
                     }
                 },
                 subtitle2 = {
-                    item.meanScore?.let { meanScore ->
-                        SmallScoreIndicator(score = meanScore)
+                    item.averageScore?.let { score ->
+                        SmallScoreIndicator(score = score)
                     }
                     if (!item.genres.isNullOrEmpty()) {
                         Text(
