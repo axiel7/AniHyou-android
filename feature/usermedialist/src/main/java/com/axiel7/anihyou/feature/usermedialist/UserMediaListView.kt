@@ -63,6 +63,7 @@ fun UserMediaListView(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     lazyListState: LazyListState,
     lazyGridState: LazyGridState,
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     val isDark = isSystemInDarkTheme()
     val haptic = LocalHapticFeedback.current
@@ -117,6 +118,7 @@ fun UserMediaListView(
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
                 listState = lazyGridState,
+                stickyHeaderContent = stickyHeaderContent,
             )
         } else if (!isCompactScreen) {
             LazyListTablet(
@@ -130,6 +132,7 @@ fun UserMediaListView(
                 onShowEditSheet = onShowEditSheet,
                 onClickPlus = onClickPlus,
                 listState = lazyGridState,
+                stickyHeaderContent = stickyHeaderContent,
             )
         } else {
             LazyListPhone(
@@ -143,6 +146,7 @@ fun UserMediaListView(
                 onShowEditSheet = onShowEditSheet,
                 onClickPlus = onClickPlus,
                 listState = lazyListState,
+                stickyHeaderContent = stickyHeaderContent,
             )
         }
     }//: Box
@@ -159,8 +163,10 @@ private fun LazyListGrid(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     listState: LazyGridState,
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
+
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
@@ -170,6 +176,10 @@ private fun LazyListGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
+        stickyHeader {
+            stickyHeaderContent()
+        }
+
         if (uiState.isLoading) {
             items(10) {
                 MediaItemVerticalPlaceholder()
@@ -215,6 +225,7 @@ private fun LazyListTablet(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
     listState: LazyGridState,
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
@@ -224,6 +235,10 @@ private fun LazyListTablet(
         contentPadding = contentPadding + navPadding,
         horizontalArrangement = Arrangement.Center
     ) {
+        stickyHeader {
+            stickyHeaderContent()
+        }
+
         if (uiState.isLoading) {
             items(10) {
                 MediaItemHorizontalPlaceholder()
@@ -324,12 +339,17 @@ private fun LazyListPhone(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
     listState: LazyListState,
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     LazyColumn(
         modifier = modifier,
         state = listState,
         contentPadding = contentPadding,
     ) {
+        stickyHeader {
+            stickyHeaderContent()
+        }
+
         if (uiState.isLoading) {
             items(10) {
                 MediaItemHorizontalPlaceholder()

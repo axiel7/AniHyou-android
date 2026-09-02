@@ -46,7 +46,7 @@ interface UserMediaListEvent : UiEvent {
 
     fun onRandomEntryOpened()
 
-    fun onSearch(query: String)
+    fun setQuery(query: String)
 
     fun setMediaFormat(value: MediaFormatLocalizable?)
 

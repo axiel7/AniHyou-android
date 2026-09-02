@@ -261,33 +261,8 @@ class UserMediaListViewModel(
         mutableUiState.update { it.copy(randomEntryId = null) }
     }
 
-    override fun onSearch(query: String) {
-        mutableUiState.value.run {
-            if (filterCount > 0 || query.isNotBlank()) {
-                entries.retainAll { entry ->
-                    val titleMatch = entry.media?.title?.let {
-                        it.romaji?.contains(query, true) == true
-                                || it.english?.contains(query, true) == true
-                                || it.native?.contains(query, true) == true
-                    } == true
-
-                    return@retainAll titleMatch
-                            && formatMatch(entry)
-                            && statusMatch(entry)
-                            && countryMatch(entry)
-                            && yearMatch(entry)
-                            && genreMatch(entry)
-                            && tagMatch(entry)
-                }
-            } else if (query.isEmpty()) {
-                entries.clear()
-                if (selectedListName != null) {
-                    entries.addAll(lists[selectedListName].orEmpty())
-                } else {
-                    entries.addAll(lists.values.flatten())
-                }
-            }
-        }
+    override fun setQuery(query: String) {
+        mutableUiState.update { it.copy(query = query) }
     }
 
     override fun setMediaFormat(value: MediaFormatLocalizable?) {
@@ -376,6 +351,54 @@ class UserMediaListViewModel(
     }
 
     init {
+        //search
+        mutableUiState
+            .distinctUntilChanged { old, new ->
+                old.query == new.query
+                        && old.mediaFormat == new.mediaFormat
+                        && old.mediaStatus == new.mediaStatus
+                        && old.country == new.country
+                        && old.year == new.year
+                        && old.genresAndTagsForSearch == new.genresAndTagsForSearch
+                        && old.clearedFilters == new.clearedFilters
+            }
+            .onEach {
+                mutableUiState.update { uiState ->
+                    uiState.entries.clear()
+
+                    if (uiState.selectedListName != null) {
+                        uiState.entries.addAll(uiState.lists[uiState.selectedListName].orEmpty())
+                    } else {
+                        val uniqueEntries = uiState.lists.values
+                            .flatten()
+                            .distinctBy { it.mediaId }
+                        uiState.entries.addAll(uniqueEntries)
+                    }
+
+                    if (uiState.filterCount > 0 || uiState.query.isNotBlank()) {
+                        uiState.entries.retainAll { entry ->
+                            val titleMatch = if (uiState.query.isNotBlank()) {
+                                entry.media?.title?.let {
+                                    it.romaji?.contains(uiState.query, true) == true
+                                            || it.english?.contains(uiState.query, true) == true
+                                            || it.native?.contains(uiState.query, true) == true
+                                } == true
+                            } else true
+
+                            titleMatch
+                                    && uiState.formatMatch(entry)
+                                    && uiState.statusMatch(entry)
+                                    && uiState.countryMatch(entry)
+                                    && uiState.yearMatch(entry)
+                                    && uiState.genreMatch(entry)
+                                    && uiState.tagMatch(entry)
+                        }
+                    }
+                    uiState
+                }
+            }
+            .launchIn(viewModelScope)
+
         // score format
         mutableUiState
             .distinctUntilChangedBy { it.isMyList }
