@@ -141,7 +141,6 @@ private fun UserMediaListHostContent(
 
     val textFieldState = rememberTextFieldState()
 
-
     @OptIn(FlowPreview::class)
     LaunchedEffect(textFieldState) {
         snapshotFlow { textFieldState.text.toString() }
@@ -239,7 +238,6 @@ private fun UserMediaListHostContent(
                     else padding.calculateBottomPadding()
                 )
         ) {
-
             val isScrolled by remember {
                 derivedStateOf {
                     listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
@@ -290,7 +288,6 @@ private fun UserMediaListHostContent(
     }//: Scaffold
 }
 
-
 @Composable
 private fun FilterBlock(
     uiState: UserMediaListUiState,
@@ -312,7 +309,6 @@ private fun FilterBlock(
         val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
         val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
 
-
         AnimatedVisibility(
             visible = isSearchFocused || uiState.filterCount > 0,
             enter = rowEnter,
@@ -325,10 +321,10 @@ private fun FilterBlock(
                     .animateContentSize(animationSpec = fastSize),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaFormat != null,
-                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.format),
@@ -342,7 +338,8 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaStatus != null,
-                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.media_status),
@@ -355,7 +352,8 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.country != null,
-                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.country),
@@ -368,7 +366,8 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.year != null,
-                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.year),
@@ -381,7 +380,8 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused,
-                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChip(
                         selected = false,

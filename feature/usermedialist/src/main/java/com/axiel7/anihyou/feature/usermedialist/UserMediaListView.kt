@@ -63,7 +63,7 @@ fun UserMediaListView(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     lazyListState: LazyListState,
     lazyGridState: LazyGridState,
-    stickyHeaderContent: (@Composable () -> Unit)? = null
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     val isDark = isSystemInDarkTheme()
     val haptic = LocalHapticFeedback.current
@@ -163,7 +163,7 @@ private fun LazyListGrid(
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     listState: LazyGridState,
-    stickyHeaderContent: (@Composable () -> Unit)? = null
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
 
@@ -176,10 +176,8 @@ private fun LazyListGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        stickyHeaderContent?.let { header ->
-            stickyHeader {
-                header()
-            }
+        stickyHeader {
+            stickyHeaderContent()
         }
 
         if (uiState.isLoading) {
@@ -227,9 +225,8 @@ private fun LazyListTablet(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
     listState: LazyGridState,
-    stickyHeaderContent: (@Composable () -> Unit)? = null
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
-
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -238,10 +235,8 @@ private fun LazyListTablet(
         contentPadding = contentPadding + navPadding,
         horizontalArrangement = Arrangement.Center
     ) {
-        stickyHeaderContent?.let { header ->
-            stickyHeader {
-               header()
-            }
+        stickyHeader {
+            stickyHeaderContent()
         }
 
         if (uiState.isLoading) {
@@ -344,21 +339,16 @@ private fun LazyListPhone(
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
     listState: LazyListState,
-    stickyHeaderContent: (@Composable () -> Unit)? = null
+    stickyHeaderContent: (@Composable () -> Unit)
 ) {
-
     LazyColumn(
         modifier = modifier,
         state = listState,
         contentPadding = contentPadding,
     ) {
-
-        stickyHeaderContent?.let { header ->
-            stickyHeader {
-                header()
-            }
+        stickyHeader {
+            stickyHeaderContent()
         }
-
 
         if (uiState.isLoading) {
             items(10) {

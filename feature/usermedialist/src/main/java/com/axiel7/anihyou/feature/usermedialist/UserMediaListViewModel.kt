@@ -351,7 +351,6 @@ class UserMediaListViewModel(
     }
 
     init {
-
         //search
         mutableUiState
             .distinctUntilChanged { old, new ->
@@ -399,7 +398,6 @@ class UserMediaListViewModel(
                 }
             }
             .launchIn(viewModelScope)
-
 
         // score format
         mutableUiState
