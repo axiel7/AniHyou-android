@@ -147,7 +147,7 @@ private fun UserMediaListHostContent(
     LaunchedEffect(textFieldState) {
         snapshotFlow { textFieldState.text.toString() }
             .collectLatest { query ->
-                event?.onSearch(query)
+                event?.setQuery(query)
             }
     }
 
