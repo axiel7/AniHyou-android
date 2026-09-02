@@ -70,6 +70,7 @@ fun ActivityFeedItem(
                 )
                 Text(
                     text = createdAt.toLong().dateToRelativeText(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
@@ -115,6 +116,11 @@ fun ActivityFeedItem(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
+                        if (showMenu) {
+                            ActivityMenu(
+                                onClickDelete = onClickDelete
+                            )
+                        }
                         CommentIconButton(
                             modifier = Modifier.width(78.dp),
                             commentCount = replyCount,
@@ -130,11 +136,6 @@ fun ActivityFeedItem(
                             fontSize = 14.sp,
                             iconSize = 20.dp,
                         )
-                        if (showMenu) {
-                            ActivityMenu(
-                                onClickDelete = onClickDelete
-                            )
-                        }
                     }
                 }
             }

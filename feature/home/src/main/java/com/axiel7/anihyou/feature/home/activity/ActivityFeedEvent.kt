@@ -13,4 +13,5 @@ interface ActivityFeedEvent : UiEvent, PagedEvent {
     fun getUserFollowing()
     fun refreshList()
     fun toggleLikeActivity(id: Int)
+    fun deleteActivity(id: Int)
 }
