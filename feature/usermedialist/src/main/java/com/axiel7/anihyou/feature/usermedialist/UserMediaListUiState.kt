@@ -42,6 +42,7 @@ data class UserMediaListUiState(
     val country: CountryOfOrigin? = null,
     val year: Int? = null,
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
+    val query: String = "",
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,

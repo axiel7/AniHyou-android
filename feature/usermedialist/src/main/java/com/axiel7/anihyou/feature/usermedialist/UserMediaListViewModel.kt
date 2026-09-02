@@ -262,40 +262,7 @@ class UserMediaListViewModel(
     }
 
     override fun onSearch(query: String) {
-        mutableUiState.update { state ->
-            state.entries.clear()
-            if (state.selectedListName != null) {
-                state.entries.addAll(state.lists[state.selectedListName].orEmpty())
-            } else {
-                val uniqueEntries = state.lists.values
-                    .flatten()
-                    .distinctBy { it.mediaId }
-
-                state.entries.addAll(uniqueEntries)
-            }
-
-            if (state.filterCount > 0 || query.isNotBlank()) {
-                state.entries.retainAll { entry ->
-                    val titleMatch = if (query.isNotBlank()) {
-                        entry.media?.title?.let {
-                            it.romaji?.contains(query, true) == true
-                                    || it.english?.contains(query, true) == true
-                                    || it.native?.contains(query, true) == true
-                        } == true
-                    } else true
-
-                    titleMatch
-                            && state.formatMatch(entry)
-                            && state.statusMatch(entry)
-                            && state.countryMatch(entry)
-                            && state.yearMatch(entry)
-                            && state.genreMatch(entry)
-                            && state.tagMatch(entry)
-                }
-            }
-
-            state
-        }
+        mutableUiState.update { it.copy(query = query) }
     }
 
     override fun setMediaFormat(value: MediaFormatLocalizable?) {
@@ -384,6 +351,56 @@ class UserMediaListViewModel(
     }
 
     init {
+
+        //search
+        mutableUiState
+            .distinctUntilChanged { old, new ->
+                old.query == new.query
+                        && old.mediaFormat == new.mediaFormat
+                        && old.mediaStatus == new.mediaStatus
+                        && old.country == new.country
+                        && old.year == new.year
+                        && old.genresAndTagsForSearch == new.genresAndTagsForSearch
+                        && old.clearedFilters == new.clearedFilters
+            }
+            .onEach {
+                mutableUiState.update { uiState ->
+                    uiState.entries.clear()
+
+                    if (uiState.selectedListName != null) {
+                        uiState.entries.addAll(uiState.lists[uiState.selectedListName].orEmpty())
+                    } else {
+                        val uniqueEntries = uiState.lists.values
+                            .flatten()
+                            .distinctBy { it.mediaId }
+                        uiState.entries.addAll(uniqueEntries)
+                    }
+
+                    if (uiState.filterCount > 0 || uiState.query.isNotBlank()) {
+                        uiState.entries.retainAll { entry ->
+                            val titleMatch = if (uiState.query.isNotBlank()) {
+                                entry.media?.title?.let {
+                                    it.romaji?.contains(uiState.query, true) == true
+                                            || it.english?.contains(uiState.query, true) == true
+                                            || it.native?.contains(uiState.query, true) == true
+                                } == true
+                            } else true
+
+                            titleMatch
+                                    && uiState.formatMatch(entry)
+                                    && uiState.statusMatch(entry)
+                                    && uiState.countryMatch(entry)
+                                    && uiState.yearMatch(entry)
+                                    && uiState.genreMatch(entry)
+                                    && uiState.tagMatch(entry)
+                        }
+                    }
+                    uiState
+                }
+            }
+            .launchIn(viewModelScope)
+
+
         // score format
         mutableUiState
             .distinctUntilChangedBy { it.isMyList }

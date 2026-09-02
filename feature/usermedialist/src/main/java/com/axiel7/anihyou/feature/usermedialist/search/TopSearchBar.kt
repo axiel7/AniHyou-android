@@ -40,11 +40,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import kotlinx.coroutines.flow.drop
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,11 +57,22 @@ internal fun TopSearchBar(
     textFieldState: TextFieldState,
     isSearchFocused: Boolean,
     onFocusChange: (Boolean) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior)
-{
+    scrollBehavior: TopAppBarScrollBehavior
+) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(isSearchFocused) {
+        if (!isSearchFocused) return@LaunchedEffect
+
+        snapshotFlow { scrollBehavior.state.contentOffset }
+            .drop(1)
+            .collect {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            }
+    }
 
     BackHandler(enabled = isSearchFocused) {
         focusManager.clearFocus()
@@ -140,7 +154,8 @@ internal fun TopSearchBar(
                                 .fillMaxWidth()
                                 .onFocusChanged { onFocusChange(it.isFocused) }
                                 .focusRequester(focusRequester)
-                        )                        }
+                        )
+                    }
                     if (textFieldState.text.isNotEmpty()) {
                         IconButton(
                             onClick = { textFieldState.clearText() },

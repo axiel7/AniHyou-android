@@ -47,7 +47,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -86,13 +85,10 @@ import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.search.TopSearchBar
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinActivityViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun UserMediaListHostView(
@@ -141,24 +137,12 @@ private fun UserMediaListHostContent(
     var isSearchFocused by rememberSaveable { mutableStateOf(false) }
 
     val textFieldState = rememberTextFieldState()
-    val currentUiState by rememberUpdatedState(uiState)
 
 
     @OptIn(FlowPreview::class)
     LaunchedEffect(textFieldState) {
-        snapshotFlow {
-            textFieldState.text.toString() to listOf(
-                currentUiState.mediaFormat,
-                currentUiState.mediaStatus,
-                currentUiState.country,
-                currentUiState.year,
-                currentUiState.genresAndTagsForSearch,
-                currentUiState.clearedFilters
-            )
-        }
-            .distinctUntilChanged()
-            .debounce(300.milliseconds)
-            .collectLatest { (query, _) ->
+        snapshotFlow { textFieldState.text.toString() }
+            .collectLatest { query ->
                 event?.onSearch(query)
             }
     }
@@ -286,135 +270,136 @@ private fun FilterBlock(
     uiState: UserMediaListUiState,
     isSearchFocused: Boolean,
     event: UserMediaListEvent?
-    ){
+) {
     val fastSize = spring<IntSize>(stiffness = Spring.StiffnessMedium)
     val fastAlpha = tween<Float>(100)
     val isPreview = LocalInspectionMode.current
     Column(
-            modifier = Modifier.animateContentSize(animationSpec = fastSize)
+        modifier = Modifier.animateContentSize(animationSpec = fastSize)
+    ) {
+        val chipEnter = fadeIn(fastAlpha) + expandHorizontally(fastSize)
+        val chipExit = fadeOut(fastAlpha) + shrinkHorizontally(fastSize)
+
+        val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
+        val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
+
+
+        AnimatedVisibility(
+            visible = isSearchFocused || uiState.filterCount > 0,
+            enter = rowEnter,
+            exit = rowExit
         ) {
-            val chipEnter = fadeIn(fastAlpha) + expandHorizontally(fastSize)
-            val chipExit = fadeOut(fastAlpha) + shrinkHorizontally(fastSize)
-
-            val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
-            val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
-
-
-            AnimatedVisibility(
-                visible = isSearchFocused || uiState.filterCount > 0,
-                enter = rowEnter,
-                exit = rowExit
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .animateContentSize(animationSpec = fastSize),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .animateContentSize(animationSpec = fastSize),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+
+                AnimatedVisibility(
+                    visible = isSearchFocused || uiState.mediaFormat != null,
+                    enter = chipEnter, exit = chipExit
                 ) {
+                    FilterChipWithMenu(
+                        title = stringResource(R.string.format),
+                        values = if (uiState.mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
+                        else MediaFormatLocalizable.mangaEntries,
+                        selectedValue = uiState.mediaFormat,
+                        onValueSelected = { event?.setMediaFormat(it) },
+                        valueString = { it.localized() },
+                    )
+                }
 
-                    AnimatedVisibility(
-                        visible = isSearchFocused || uiState.mediaFormat != null,
-                        enter = chipEnter, exit = chipExit
-                    ) {
-                        FilterChipWithMenu(
-                            title = stringResource(R.string.format),
-                            values = if (uiState.mediaType == MediaType.ANIME) MediaFormatLocalizable.animeEntries
-                            else MediaFormatLocalizable.mangaEntries,
-                            selectedValue = uiState.mediaFormat,
-                            onValueSelected = { event?.setMediaFormat(it) },
-                            valueString = { it.localized() },
-                        )
-                    }
+                AnimatedVisibility(
+                    visible = isSearchFocused || uiState.mediaStatus != null,
+                    enter = chipEnter, exit = chipExit
+                ) {
+                    FilterChipWithMenu(
+                        title = stringResource(R.string.media_status),
+                        values = MediaStatus.knownEntries,
+                        selectedValue = uiState.mediaStatus,
+                        onValueSelected = { event?.setMediaStatus(it) },
+                        valueString = { it.localized() },
+                    )
+                }
 
-                    AnimatedVisibility(
-                        visible = isSearchFocused || uiState.mediaStatus != null,
-                        enter = chipEnter, exit = chipExit
-                    ) {
-                        FilterChipWithMenu(
-                            title = stringResource(R.string.media_status),
-                            values = MediaStatus.knownEntries,
-                            selectedValue = uiState.mediaStatus,
-                            onValueSelected = { event?.setMediaStatus(it) },
-                            valueString = { it.localized() },
-                        )
-                    }
+                AnimatedVisibility(
+                    visible = isSearchFocused || uiState.country != null,
+                    enter = chipEnter, exit = chipExit
+                ) {
+                    FilterChipWithMenu(
+                        title = stringResource(R.string.country),
+                        values = CountryOfOrigin.entries,
+                        selectedValue = uiState.country,
+                        onValueSelected = { event?.setCountry(it) },
+                        valueString = { it.localized() },
+                    )
+                }
 
-                    AnimatedVisibility(
-                        visible = isSearchFocused || uiState.country != null,
-                        enter = chipEnter, exit = chipExit
-                    ) {
-                        FilterChipWithMenu(
-                            title = stringResource(R.string.country),
-                            values = CountryOfOrigin.entries,
-                            selectedValue = uiState.country,
-                            onValueSelected = { event?.setCountry(it) },
-                            valueString = { it.localized() },
-                        )
-                    }
+                AnimatedVisibility(
+                    visible = isSearchFocused || uiState.year != null,
+                    enter = chipEnter, exit = chipExit
+                ) {
+                    FilterChipWithMenu(
+                        title = stringResource(R.string.year),
+                        values = DateUtils.seasonYears,
+                        selectedValue = uiState.year,
+                        onValueSelected = { event?.setYear(it) },
+                        valueString = { it.toString() },
+                    )
+                }
 
-                    AnimatedVisibility(
-                        visible = isSearchFocused || uiState.year != null,
-                        enter = chipEnter, exit = chipExit
-                    ) {
-                        FilterChipWithMenu(
-                            title = stringResource(R.string.year),
-                            values = DateUtils.seasonYears,
-                            selectedValue = uiState.year,
-                            onValueSelected = { event?.setYear(it) },
-                            valueString = { it.toString() },
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = isSearchFocused,
-                        enter = chipEnter, exit = chipExit
-                    ) {
-                        FilterChip(
-                            selected = false,
-                            onClick = singleClick { event?.getRandomEntry() },
-                            label = { Text(text = stringResource(R.string.random)) },
-                            trailingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.shuffle_24),
-                                    contentDescription = stringResource(R.string.random),
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                )
-                            },
-                            enabled = !uiState.isLoadingRandom,
-                        )
-                    }
+                AnimatedVisibility(
+                    visible = isSearchFocused,
+                    enter = chipEnter, exit = chipExit
+                ) {
+                    FilterChip(
+                        selected = false,
+                        onClick = singleClick { event?.getRandomEntry() },
+                        label = { Text(text = stringResource(R.string.random)) },
+                        trailingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.shuffle_24),
+                                contentDescription = stringResource(R.string.random),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                            )
+                        },
+                        enabled = !uiState.isLoadingRandom,
+                    )
                 }
             }
+        }
 
-            val hasGenreTags = uiState.genresAndTagsForSearch.genreIn.isNotEmpty() ||
-                    uiState.genresAndTagsForSearch.genreNot.isNotEmpty() ||
-                    uiState.genresAndTagsForSearch.tagIn.isNotEmpty() ||
-                    uiState.genresAndTagsForSearch.tagNot.isNotEmpty()
+        val hasGenreTags = uiState.genresAndTagsForSearch.genreIn.isNotEmpty() ||
+                uiState.genresAndTagsForSearch.genreNot.isNotEmpty() ||
+                uiState.genresAndTagsForSearch.tagIn.isNotEmpty() ||
+                uiState.genresAndTagsForSearch.tagNot.isNotEmpty()
 
-            AnimatedVisibility(
-                visible = !isPreview && (isSearchFocused || hasGenreTags),
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                SearchGenresTagsChips(
-                    clearedFilters = uiState.clearedFilters,
-                    onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
-                )
-            }
+        AnimatedVisibility(
+            visible = !isPreview && (isSearchFocused || hasGenreTags),
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            SearchGenresTagsChips(
+                clearedFilters = uiState.clearedFilters,
+                onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+            )
+        }
 
-            AnimatedVisibility(
-                visible = uiState.filterCount > 0,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                ErrorTextButton(
-                    text = stringResource(R.string.clear),
-                    onClick = { event?.clearFilters() },
-                )
-            }
+        AnimatedVisibility(
+            visible = uiState.filterCount > 0,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            ErrorTextButton(
+                text = stringResource(R.string.clear),
+                onClick = { event?.clearFilters() },
+            )
         }
     }
+}
+
 @Composable
 private fun FloatingActionButton(
     uiState: UserMediaListUiState,

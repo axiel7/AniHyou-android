@@ -139,7 +139,7 @@ fun UserMediaListView(
                 onClickPlus = onClickPlus,
                 listState = lazyGridState,
                 stickyHeaderContent = stickyHeaderContent,
-                )
+            )
         } else {
             LazyListPhone(
                 mediaList = uiState.entries,
@@ -153,7 +153,7 @@ fun UserMediaListView(
                 onClickPlus = onClickPlus,
                 listState = lazyListState,
                 stickyHeaderContent = stickyHeaderContent,
-                )
+            )
         }
     }//: Box
 }
