@@ -262,31 +262,39 @@ class UserMediaListViewModel(
     }
 
     override fun onSearch(query: String) {
-        mutableUiState.value.run {
-            if (filterCount > 0 || query.isNotBlank()) {
-                entries.retainAll { entry ->
-                    val titleMatch = entry.media?.title?.let {
-                        it.romaji?.contains(query, true) == true
-                                || it.english?.contains(query, true) == true
-                                || it.native?.contains(query, true) == true
-                    } == true
+        mutableUiState.update { state ->
+            state.entries.clear()
+            if (state.selectedListName != null) {
+                state.entries.addAll(state.lists[state.selectedListName].orEmpty())
+            } else {
+                val uniqueEntries = state.lists.values
+                    .flatten()
+                    .distinctBy { it.mediaId }
 
-                    return@retainAll titleMatch
-                            && formatMatch(entry)
-                            && statusMatch(entry)
-                            && countryMatch(entry)
-                            && yearMatch(entry)
-                            && genreMatch(entry)
-                            && tagMatch(entry)
-                }
-            } else if (query.isEmpty()) {
-                entries.clear()
-                if (selectedListName != null) {
-                    entries.addAll(lists[selectedListName].orEmpty())
-                } else {
-                    entries.addAll(lists.values.flatten())
+                state.entries.addAll(uniqueEntries)
+            }
+
+            if (state.filterCount > 0 || query.isNotBlank()) {
+                state.entries.retainAll { entry ->
+                    val titleMatch = if (query.isNotBlank()) {
+                        entry.media?.title?.let {
+                            it.romaji?.contains(query, true) == true
+                                    || it.english?.contains(query, true) == true
+                                    || it.native?.contains(query, true) == true
+                        } == true
+                    } else true
+
+                    titleMatch
+                            && state.formatMatch(entry)
+                            && state.statusMatch(entry)
+                            && state.countryMatch(entry)
+                            && state.yearMatch(entry)
+                            && state.genreMatch(entry)
+                            && state.tagMatch(entry)
                 }
             }
+
+            state
         }
     }
 

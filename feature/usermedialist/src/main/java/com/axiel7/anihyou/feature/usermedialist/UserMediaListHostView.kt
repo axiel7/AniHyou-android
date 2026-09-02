@@ -13,23 +13,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -53,10 +57,15 @@ import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
 import com.axiel7.anihyou.feature.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.search.TopSearchBar
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinActivityViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun UserMediaListHostView(
@@ -92,16 +101,40 @@ private fun UserMediaListHostContent(
     val snackbarManager = rememberSnackbarManager(scope)
     val listState = rememberLazyListState()
     val gridState = rememberLazyGridState()
-    val searchBarScrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val hasScrolledUp by remember {
         derivedStateOf {
-            searchBarScrollBehavior.scrollState.scrollOffset != searchBarScrollBehavior.scrollState.scrollOffsetLimit
+            scrollBehavior.state.collapsedFraction > 0.5f || listState.firstVisibleItemIndex == 0
         }
     }
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     var showListsSheet by rememberSaveable { mutableStateOf(false) }
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
+    var isSearchFocused by rememberSaveable { mutableStateOf(false) }
+
+    val textFieldState = rememberTextFieldState()
+    val currentUiState by rememberUpdatedState(uiState)
+
+
+    @OptIn(FlowPreview::class)
+    LaunchedEffect(textFieldState) {
+        snapshotFlow {
+            textFieldState.text.toString() to listOf(
+                currentUiState.mediaFormat,
+                currentUiState.mediaStatus,
+                currentUiState.country,
+                currentUiState.year,
+                currentUiState.genresAndTagsForSearch,
+                currentUiState.clearedFilters
+            )
+        }
+            .distinctUntilChanged()
+            .debounce(300.milliseconds)
+            .collectLatest { (query, _) ->
+                event?.onSearch(query)
+            }
+    }
 
     if (uiState.openNotesDialog) {
         NotesDialog(
@@ -159,7 +192,10 @@ private fun UserMediaListHostContent(
             TopSearchBar(
                 uiState = uiState,
                 event = event,
-                scrollBehavior = searchBarScrollBehavior,
+                textFieldState = textFieldState,
+                isSearchFocused = isSearchFocused,
+                onFocusChange = { isSearchFocused = it },
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
@@ -196,7 +232,7 @@ private fun UserMediaListHostContent(
                 contentPadding = if (!uiState.isMyList)
                     PaddingValues(bottom = 58.dp + padding.calculateBottomPadding())
                 else PaddingValues(bottom = 58.dp),
-                nestedScrollConnection = searchBarScrollBehavior.nestedScrollConnection,
+                nestedScrollConnection = scrollBehavior.nestedScrollConnection,
                 navActionManager = navActionManager,
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
