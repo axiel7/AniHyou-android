@@ -25,7 +25,7 @@ fun AniHyouTheme(
     blackColors: Boolean = false,
     appColor: Color? = null,
     appColorMode: AppColorMode = AppColorMode.DEFAULT,
-    paletteStyle: PaletteStyle = PaletteStyle.Expressive,
+    paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
