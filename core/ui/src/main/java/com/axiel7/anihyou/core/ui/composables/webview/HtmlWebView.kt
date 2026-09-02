@@ -71,11 +71,14 @@ private val linkRegex = Regex("\\[([^]]+)]\\(([^)]+)\\)")
 private val boldRegex = Regex("__(.+?)__")
 private val codeRegex = Regex("`(.+?)`")
 private val strongRegex = Regex("\\*\\*(.+?)\\*\\*")
+private val youtubeRegex = Regex("<div class=['\"]youtube['\"] id=['\"]([^'\"]+)['\"]></div>")
 
 fun formatCompatibleHtml(html: String): String {
     return html
         // replace AniList Markdown [text](link) with html <a>
         .replace(linkRegex, $$"<a href=\"$2\">$1</a>")
+        // YouTube div
+        .replace(youtubeRegex, ::transformYouTubeDiv)
         // replace AniList Markdown __bold__ with html <b>
         .replace(boldRegex, $$"<b>$1</b>")
         // replace AniList Markdown `code` with html <code>
@@ -83,7 +86,6 @@ fun formatCompatibleHtml(html: String): String {
         // replace AniList Markdown **strong** with html <strong>
         .replace(strongRegex, $$"<strong>$1</strong>")
         // escaped chars
-        .replace("\n", "<br>")
         .replace("&lt;", "<")
         .replace("&gt;", ">")
 }
@@ -114,10 +116,21 @@ fun baseCss(
     body {background-color: $backgroundColor;}
     h1, h2, h3, h4, h5, h6, p, div, dl, ol, ul, pre, blockquote {line-height: 170%; font-family: 'Arial' !important; color: $fontColor; }
     iframe{width:100%; height:250px;}
-    img {max-width:100%;}
+    img, video {max-width:100%;}
     a:link {color: $linkColor;}
     A {text-decoration: none;}
     .markdown_spoiler {color: $fontColor; background-color: $fontColor;}
     .markdown_spoiler:not(:hover):not(:focus):not(:active) a:link {color: $fontColor;}
     .markdown_spoiler:hover, .markdown_spoiler:focus, .markdown_spoiler:active {background-color: transparent;}
 """.trimIndent()
+
+private fun transformYouTubeDiv(matchResult: MatchResult): CharSequence {
+    val url = matchResult.groupValues[1]
+    val videoId = when {
+        url.contains("youtu.be/") -> url.substringAfterLast("/").substringBefore("?")
+        url.contains("watch?v=") -> url.substringAfter("watch?v=").substringBefore("&")
+        url.contains("embed/") -> url.substringAfter("embed/").substringBefore("?")
+        else -> url.substringAfterLast("/")
+    }
+    return "<a href=\"https://www.youtube.com/watch?v=$videoId\"><img src=\"https://img.youtube.com/vi/$videoId/hqdefault.jpg\" alt=\"YouTube Video\" /></a>"
+}

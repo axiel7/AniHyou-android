@@ -120,7 +120,30 @@ class ActivityFeedViewModel(
         }
     }
 
+    override fun deleteActivity(id: Int) {
+        viewModelScope.launch {
+            activityRepository.deleteActivity(id).let { result ->
+                if (result is DataResult.Success && result.data == true) {
+                    mutableUiState.value.run {
+                        findActivityIndex(id)?.let { foundIndex ->
+                            activities.removeAt(foundIndex)
+                        }
+                    }
+                } else if (result is DataResult.Error) {
+                    mutableUiState.update { it.copy(error = result.message) }
+                }
+            }
+        }
+    }
+
     init {
+        defaultPreferencesRepository.userId
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(userId = value) }
+            }
+            .launchIn(viewModelScope)
+
         //first load
         refreshList()
 

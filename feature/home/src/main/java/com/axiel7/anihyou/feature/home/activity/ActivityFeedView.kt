@@ -140,18 +140,12 @@ private fun ActivityFeedContent(
                         isLiked = it.isLiked,
                         blurCover = blurAdult && it.media?.isAdult == true,
                         mediaCoverUrl = it.media?.coverImage?.medium,
-                        onClick = {
-                            navActionManager.toActivityDetails(it.id)
-                        },
-                        onClickUser = {
-                            it.userId?.let(navActionManager::toUserDetails)
-                        },
-                        onClickLike = {
-                            event?.toggleLikeActivity(it.id)
-                        },
-                        onClickMedia = {
-                            it.media?.id?.let(navActionManager::toMediaDetails)
-                        },
+                        showMenu = it.userId == uiState.userId,
+                        onClick = { navActionManager.toActivityDetails(it.id) },
+                        onClickUser = { it.userId?.let(navActionManager::toUserDetails) },
+                        onClickLike = { event?.toggleLikeActivity(it.id) },
+                        onClickMedia = { it.media?.id?.let(navActionManager::toMediaDetails) },
+                        onClickDelete = { event?.deleteActivity(it.id) }
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }
@@ -166,15 +160,11 @@ private fun ActivityFeedContent(
                         replyCount = it.replyCount,
                         likeCount = it.likeCount,
                         isLiked = it.isLiked,
-                        onClick = {
-                            navActionManager.toActivityDetails(it.id)
-                        },
-                        onClickUser = {
-                            it.userId?.let(navActionManager::toUserDetails)
-                        },
-                        onClickLike = {
-                            event?.toggleLikeActivity(it.id)
-                        },
+                        showMenu = it.userId == uiState.userId,
+                        onClick = { navActionManager.toActivityDetails(it.id) },
+                        onClickUser = { it.userId?.let(navActionManager::toUserDetails) },
+                        onClickLike = { event?.toggleLikeActivity(it.id) },
+                        onClickDelete = { event?.deleteActivity(it.id) }
                     )
                     HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
                 }

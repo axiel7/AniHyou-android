@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -17,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -111,9 +113,10 @@ fun ActivityItem(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-                ActivityMenu(
-                    modifier = Modifier.align(Alignment.Top),
-                    onClickDelete = onClickDelete
+                Text(
+                    text = createdAt.toLong().dateToRelativeText(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
 
@@ -122,11 +125,9 @@ fun ActivityItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = createdAt.toLong().dateToRelativeText(),
-                    modifier = Modifier.weight(1f),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.labelMedium
+                ActivityMenu(
+                    modifier = Modifier.align(Alignment.Top),
+                    onClickDelete = onClickDelete
                 )
                 CommentIconButton(
                     modifier = Modifier.width(78.dp),
@@ -169,13 +170,17 @@ fun ActivityMenu(
             expanded = moreExpanded,
             onDismissRequest = { moreExpanded = false }
         ) {
-            DropdownMenuItem(
-                onClick = {
-                    moreExpanded = false
-                    onClickDelete()
-                },
-                text = { Text(text = stringResource(R.string.delete)) },
-            )
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        moreExpanded = false
+                        onClickDelete()
+                    },
+                    text = { Text(text = stringResource(R.string.delete)) },
+                )
+            }
         }
     }
 }

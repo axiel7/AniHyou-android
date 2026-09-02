@@ -46,6 +46,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -272,6 +273,7 @@ private fun MediaDetailsContent(
                             width = MEDIA_POSTER_BIG_WIDTH.dp,
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
                         )
+                        .clip(MaterialTheme.shapes.small)
                         .clickable(onClick = singleClick {
                             uiState.details?.coverImage?.extraLarge
                                 ?.let(navActionManager::toFullscreenImage)
@@ -349,10 +351,11 @@ private fun MediaDetailsContent(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
-                    subtitle = stringResource(R.string.mean_score),
+                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.average_score),
                     modifier = Modifier
-                        .clickable { showScores = !showScores }
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .clickable(enabled = hideScores) { showScores = !showScores }
                         .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
@@ -362,10 +365,11 @@ private fun MediaDetailsContent(
                         .height(dividerHeight.dp)
                 )
                 TextSubtitleVertical(
-                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
-                    subtitle = stringResource(R.string.average_score),
+                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.mean_score),
                     modifier = Modifier
-                        .clickable { showScores = !showScores }
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .clickable(enabled = hideScores) { showScores = !showScores }
                         .spoilerPlaceholder(visible = hideScores && !showScores),
                     isLoading = uiState.isLoading
                 )
@@ -426,6 +430,7 @@ private fun MediaDetailsContent(
                 },
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                    .clip(MaterialTheme.shapes.extraSmall)
                     .clickable { isSynopsisExpanded = !isSynopsisExpanded }
                     .animateContentSize()
                     .defaultPlaceholder(visible = uiState.isLoading),

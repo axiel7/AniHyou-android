@@ -20,7 +20,7 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
             isLicensed: $isLicensed, isAdult: $isAdult, countryOfOrigin: $country, source_in: $source_in
         ) {
             ...BasicMediaDetails
-            meanScore
+            averageScore
             format
             coverImage {
                 large

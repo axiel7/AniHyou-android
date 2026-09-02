@@ -51,8 +51,8 @@ fun SeasonAnimeContent(
                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.padding(horizontal = 8.dp),
                 subtitle = {
-                    item.meanScore?.let { meanScore ->
-                        SmallScoreIndicator(score = meanScore)
+                    item.averageScore?.let { score ->
+                        SmallScoreIndicator(score = score)
                     } ?: run {
                         Spacer(modifier = Modifier.size(20.dp))
                     }
