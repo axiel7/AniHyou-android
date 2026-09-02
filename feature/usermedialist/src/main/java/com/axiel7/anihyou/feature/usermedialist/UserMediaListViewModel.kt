@@ -266,7 +266,7 @@ class UserMediaListViewModel(
         mutableUiState.update { it.copy(randomEntryId = null) }
     }
 
-    override fun onSearch(query: String) {
+    override fun setQuery(query: String) {
         mutableUiState.update { it.copy(query = query) }
     }
 
@@ -356,7 +356,6 @@ class UserMediaListViewModel(
     }
 
     init {
-
         //search
         mutableUiState
             .distinctUntilChanged { old, new ->
@@ -464,7 +463,6 @@ class UserMediaListViewModel(
                 }
             }
             .launchIn(viewModelScope)
-
 
         // score format
         mutableUiState

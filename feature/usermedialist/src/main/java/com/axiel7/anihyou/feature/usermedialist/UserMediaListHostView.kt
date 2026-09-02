@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -38,6 +39,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -143,12 +145,11 @@ private fun UserMediaListHostContent(
 
     val textFieldState = rememberTextFieldState()
 
-
     @OptIn(FlowPreview::class)
     LaunchedEffect(textFieldState) {
         snapshotFlow { textFieldState.text.toString() }
             .collectLatest { query ->
-                event?.onSearch(query)
+                event?.setQuery(query)
             }
     }
 
@@ -241,7 +242,6 @@ private fun UserMediaListHostContent(
                     else padding.calculateBottomPadding()
                 )
         ) {
-
             val isScrolled by remember {
                 derivedStateOf {
                     listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
@@ -292,7 +292,6 @@ private fun UserMediaListHostContent(
     }//: Scaffold
 }
 
-
 @Composable
 private fun FilterBlock(
     uiState: UserMediaListUiState,
@@ -314,6 +313,7 @@ private fun FilterBlock(
         val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
         val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
 
+        val scrollState = rememberScrollState()
 
         AnimatedVisibility(
             visible = isSearchFocused || uiState.filterCount > 0,
@@ -322,12 +322,12 @@ private fun FilterBlock(
         ) {
             Row(
                 modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .horizontalScroll(scrollState)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
                     .animateContentSize(animationSpec = fastSize),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaFormat != null,
                     enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
@@ -346,7 +346,7 @@ private fun FilterBlock(
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaStatus != null,
                     enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
-                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
+                    exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.media_status),
@@ -398,6 +398,7 @@ private fun FilterBlock(
                             Icon(
                                 painter = painterResource(R.drawable.shuffle_24),
                                 contentDescription = stringResource(R.string.random),
+                                modifier = Modifier.size(20.dp),
                                 tint = MaterialTheme.colorScheme.onSurface,
                             )
                         },
@@ -407,11 +408,10 @@ private fun FilterBlock(
             }
         }
 
-        val hasGenreTags = uiState.genresAndTagsForSearch.genreIn.isNotEmpty() ||
-                uiState.genresAndTagsForSearch.genreNot.isNotEmpty() ||
-                uiState.genresAndTagsForSearch.tagIn.isNotEmpty() ||
-                uiState.genresAndTagsForSearch.tagNot.isNotEmpty()
 
+        val hasGenreTags = remember(uiState.genresAndTagsForSearch) {
+            uiState.genresAndTagsForSearch.totalSize > 0
+        }
         AnimatedVisibility(
             visible = !isPreview && (isSearchFocused || hasGenreTags),
             enter = fadeIn() + expandVertically(),
@@ -431,7 +431,13 @@ private fun FilterBlock(
             ErrorTextButton(
                 text = stringResource(R.string.clear),
                 onClick = { event?.clearFilters() },
+                modifier = Modifier.padding(start = 16.dp),
             )
+        }
+
+
+        if (isSearchFocused || uiState.filterCount > 0) {
+            HorizontalDivider()
         }
     }
 }
