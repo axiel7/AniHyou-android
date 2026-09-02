@@ -1,8 +1,10 @@
 package com.axiel7.anihyou.feature.usermedialist
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -236,6 +239,23 @@ private fun UserMediaListHostContent(
                     else padding.calculateBottomPadding()
                 )
         ) {
+
+            val isScrolled by remember {
+                derivedStateOf {
+                    listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
+                }
+            }
+
+            val headerColor by animateColorAsState(
+                targetValue = if (isScrolled) MaterialTheme.colorScheme.surfaceContainer
+                else MaterialTheme.colorScheme.surface,
+                label = "headerColor"
+            )
+
+            val headerElevation by animateDpAsState(
+                targetValue = if (isScrolled) 4.dp else 0.dp,
+                label = "headerElevation"
+            )
             UserMediaListView(
                 uiState = uiState,
                 event = event,
@@ -253,11 +273,17 @@ private fun UserMediaListHostContent(
                 lazyListState = listState,
                 lazyGridState = gridState,
                 stickyHeaderContent = {
-                    FilterBlock(
-                        uiState = uiState,
-                        isSearchFocused = isSearchFocused,
-                        event = event
-                    )
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = headerColor,
+                        shadowElevation = headerElevation
+                    ) {
+                        FilterBlock(
+                            uiState = uiState,
+                            isSearchFocused = isSearchFocused,
+                            event = event
+                        )
+                    }
                 }
             )
         }//: Column
@@ -278,7 +304,10 @@ private fun FilterBlock(
         modifier = Modifier.animateContentSize(animationSpec = fastSize)
     ) {
         val chipEnter = fadeIn(fastAlpha) + expandHorizontally(fastSize)
+        val chipEnterV = fadeIn(fastAlpha) + expandVertically(fastSize)
+
         val chipExit = fadeOut(fastAlpha) + shrinkHorizontally(fastSize)
+        val chipExitV = fadeOut(fastAlpha) + shrinkVertically(fastSize)
 
         val rowEnter = fadeIn(fastAlpha) + expandVertically(fastSize)
         val rowExit = fadeOut(fastAlpha) + shrinkVertically(fastSize)
@@ -299,7 +328,7 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaFormat != null,
-                    enter = chipEnter, exit = chipExit
+                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.format),
@@ -313,7 +342,7 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaStatus != null,
-                    enter = chipEnter, exit = chipExit
+                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.media_status),
@@ -326,7 +355,7 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.country != null,
-                    enter = chipEnter, exit = chipExit
+                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.country),
@@ -339,7 +368,7 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.year != null,
-                    enter = chipEnter, exit = chipExit
+                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.year),
@@ -352,7 +381,7 @@ private fun FilterBlock(
 
                 AnimatedVisibility(
                     visible = isSearchFocused,
-                    enter = chipEnter, exit = chipExit
+                    enter = if(uiState.filterCount > 0) chipEnter else chipEnterV, exit = if(uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChip(
                         selected = false,

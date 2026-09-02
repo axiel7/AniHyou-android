@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.feature.usermedialist
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -25,14 +22,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -172,23 +166,6 @@ private fun LazyListGrid(
     stickyHeaderContent: (@Composable () -> Unit)? = null
 ) {
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
-    val isScrolled by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
-        }
-    }
-
-    val headerColor by animateColorAsState(
-        targetValue = if (isScrolled) MaterialTheme.colorScheme.surfaceContainer
-        else MaterialTheme.colorScheme.surface,
-        label = "headerColor"
-    )
-
-    val headerElevation by animateDpAsState(
-        targetValue = if (isScrolled) 4.dp else 0.dp,
-        label = "headerElevation"
-    )
-
 
     LazyVerticalGrid(
         columns = if (uiState.itemsPerRow.value > 0) GridCells.Fixed(uiState.itemsPerRow.value)
@@ -201,13 +178,7 @@ private fun LazyListGrid(
     ) {
         stickyHeaderContent?.let { header ->
             stickyHeader {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = headerColor,
-                    shadowElevation = headerElevation
-                ) {
-                    header()
-                }
+                header()
             }
         }
 
@@ -259,23 +230,6 @@ private fun LazyListTablet(
     stickyHeaderContent: (@Composable () -> Unit)? = null
 ) {
 
-    val isScrolled by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
-        }
-    }
-
-    val headerColor by animateColorAsState(
-        targetValue = if (isScrolled) MaterialTheme.colorScheme.surfaceContainer
-        else MaterialTheme.colorScheme.surface,
-        label = "headerColor"
-    )
-
-    val headerElevation by animateDpAsState(
-        targetValue = if (isScrolled) 4.dp else 0.dp,
-        label = "headerElevation"
-    )
-
     val navPadding = WindowInsets.navigationBars.asPaddingValues()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -286,13 +240,7 @@ private fun LazyListTablet(
     ) {
         stickyHeaderContent?.let { header ->
             stickyHeader {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = headerColor,
-                    shadowElevation = headerElevation
-                ) {
-                    header()
-                }
+               header()
             }
         }
 
@@ -399,23 +347,6 @@ private fun LazyListPhone(
     stickyHeaderContent: (@Composable () -> Unit)? = null
 ) {
 
-    val isScrolled by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
-        }
-    }
-
-    val headerColor by animateColorAsState(
-        targetValue = if (isScrolled) MaterialTheme.colorScheme.surfaceContainer
-        else MaterialTheme.colorScheme.surface,
-        label = "headerColor"
-    )
-
-    val headerElevation by animateDpAsState(
-        targetValue = if (isScrolled) 4.dp else 0.dp,
-        label = "headerElevation"
-    )
-
     LazyColumn(
         modifier = modifier,
         state = listState,
@@ -424,13 +355,7 @@ private fun LazyListPhone(
 
         stickyHeaderContent?.let { header ->
             stickyHeader {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = headerColor,
-                    shadowElevation = headerElevation
-                ) {
-                    header()
-                }
+                header()
             }
         }
 
