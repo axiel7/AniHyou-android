@@ -62,6 +62,7 @@ fragment CommonMediaListEntry on MediaList {
             english
             native
         }
+        synonyms
         format
         countryOfOrigin
         seasonYear
