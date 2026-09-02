@@ -20,6 +20,7 @@
         <item quantity="one">%d gün</item>
         <item quantity="other">%d gün</item>
     </plurals>
+    <string name="just_now">Az önce</string>
     <string name="unknown">Bilinmiyor</string>
     <string name="airing_soon">Yakında Yayında</string>
     <string name="mean_score">Ortalama Puan</string>
