@@ -7,8 +7,8 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isNullOrZero
-import com.axiel7.anihyou.core.common.utils.StringUtils.fuzzyScore
-import com.axiel7.anihyou.core.common.utils.StringUtils.whiteSpaceRegex
+import com.axiel7.anihyou.core.common.utils.SearchUtils.fuzzyScore
+import com.axiel7.anihyou.core.common.utils.SearchUtils.whiteSpaceRegex
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
@@ -50,7 +50,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.InjectedParam
-import kotlin.collections.emptyList
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class UserMediaListViewModel(
@@ -356,7 +355,6 @@ class UserMediaListViewModel(
     }
 
     init {
-
         defaultPreferencesRepository.useFuzzySearch
             .distinctUntilChanged()
             .onEach { isEnabled ->
@@ -375,14 +373,8 @@ class UserMediaListViewModel(
                         && old.genresAndTagsForSearch == new.genresAndTagsForSearch
                         && old.clearedFilters == new.clearedFilters
             }
-
-
             .debounce { uiState ->
-                val totalItems = if (uiState.selectedListName != null) {
-                    uiState.lists[uiState.selectedListName].orEmpty().size
-                } else {
-                    uiState.lists.values.sumOf { it.size }
-                }
+                val totalItems = uiState.entries.size
 
                 when {
                     totalItems <= 20 -> 0L
@@ -391,8 +383,6 @@ class UserMediaListViewModel(
                 }
             }
             .onEach { uiState ->
-                val startTime = System.currentTimeMillis()
-
                 val filteredList = withContext(Dispatchers.Default) {
 
                     val queryText = uiState.query.trim().lowercase()
@@ -437,13 +427,9 @@ class UserMediaListViewModel(
                                     val maxScore =
                                         maxOf(romajiScore, englishScore, nativeScore, synonymScore)
 
-                                    if (maxScore > 0) {
-                                        Pair(entry, maxScore)
-                                    } else {
-                                        null
-                                    }
+                                    (entry to maxScore).takeIf { maxScore > 0 }
                                 } else {
-                                    Pair(entry, 0)
+                                    entry to 0
                                 }
                             }
                             if (isQueryNotBlank) {
@@ -451,7 +437,6 @@ class UserMediaListViewModel(
                             } else {
                                 scoredEntries.map { it.first }
                             }
-
                         } else {
                             baseEntries.filter { entry ->
                                 val matchesFilters = uiState.formatMatch(entry)
@@ -487,17 +472,10 @@ class UserMediaListViewModel(
                                 }
                             }
                         }
-
                     } else {
                         baseEntries
                     }
                 }
-                val executionTimeMs = System.currentTimeMillis() - startTime
-                android.util.Log.d(
-                    "SearchPerf",
-                    "Query: '${uiState.query}' | Results: ${filteredList.size} | Time: ${executionTimeMs}ms"
-                )
-
                 mutableUiState.update { state ->
                     state.entries.apply {
                         clear()
