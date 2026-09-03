@@ -2,6 +2,8 @@ package com.axiel7.anihyou
 
 import android.app.Application
 import android.os.Build.VERSION.SDK_INT
+import androidx.core.performance.DefaultDevicePerformance
+import androidx.core.performance.DevicePerformance
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -20,6 +22,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class App : Application(), SingletonImageLoader.Factory {
 
@@ -32,7 +35,13 @@ class App : Application(), SingletonImageLoader.Factory {
             }
             androidContext(this@App)
             workManagerFactory()
+
+            val coreModule = module {
+                single<DevicePerformance> { DefaultDevicePerformance() }
+            }
+
             modules(
+                coreModule,
                 dataStoreModule,
                 networkModule,
                 apiModule,

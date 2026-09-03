@@ -356,12 +356,11 @@ class DefaultPreferencesRepository(
 
     // search
 
-    val useFuzzySearch = dataStore.getValue(USE_FUZZY_SEARCH_KEY, default = DeviceUtils.isDevicePowerfulEnough())
+    val useFuzzySearch = dataStore.getValue(USE_FUZZY_SEARCH_KEY)
 
     suspend fun setUseFuzzySearch(value: Boolean) {
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
     }
-
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")

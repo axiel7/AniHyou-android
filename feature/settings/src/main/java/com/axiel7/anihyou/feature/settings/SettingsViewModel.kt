@@ -393,6 +393,7 @@ class SettingsViewModel(
             .launchIn(viewModelScope)
 
         defaultPreferencesRepository.useFuzzySearch
+            .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(useFuzzySearch = value) }
             }

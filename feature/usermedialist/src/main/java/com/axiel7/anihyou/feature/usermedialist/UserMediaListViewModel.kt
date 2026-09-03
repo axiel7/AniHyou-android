@@ -356,6 +356,7 @@ class UserMediaListViewModel(
 
     init {
         defaultPreferencesRepository.useFuzzySearch
+            .filterNotNull()
             .distinctUntilChanged()
             .onEach { isEnabled ->
                 mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }

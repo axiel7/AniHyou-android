@@ -3,6 +3,7 @@ package com.axiel7.anihyou.ui.screens.main
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.core.performance.DevicePerformance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.ANIHYOU_AUTH_RESPONSE
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.core.base.ANIHYOU_SCHEME
 import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_AUTH
 import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_CALLBACK_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
+import com.axiel7.anihyou.core.common.utils.DeviceUtils
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.model.DefaultTab
@@ -28,6 +30,7 @@ class MainViewModel(
     private val networkVariables: NetworkVariables,
     private val loginRepository: LoginRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val devicePerformance: DevicePerformance,
 ) : ViewModel(), MainEvent {
 
     val accessToken = defaultPreferencesRepository.accessToken
@@ -102,5 +105,14 @@ class MainViewModel(
         accessToken
             .onEach { setToken(it) }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            // initial fuzzy search setting based on device specs
+            if (defaultPreferencesRepository.useFuzzySearch.first() == null) {
+                defaultPreferencesRepository.setUseFuzzySearch(
+                    value = DeviceUtils.isDevicePowerfulEnough(devicePerformance.mediaPerformanceClass)
+                )
+            }
+        }
     }
 }

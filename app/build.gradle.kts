@@ -171,6 +171,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.core.performance)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

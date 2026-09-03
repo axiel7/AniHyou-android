@@ -2,18 +2,15 @@ package com.axiel7.anihyou.core.common.utils
 
 import android.os.Build
 import android.util.Log
-import androidx.core.performance.DefaultDevicePerformance
 
 object DeviceUtils {
 
     private const val RAM_GB_LIMIT = 5
     private const val CPU_CORES_LIMIT = 6
 
-    fun isDevicePowerfulEnough(): Boolean {
-        val perfClass = DefaultDevicePerformance().mediaPerformanceClass
-
-        if (perfClass >= Build.VERSION_CODES.S) {
-            Log.d("PerfCheck", "Passed via Performance Class: $perfClass")
+    fun isDevicePowerfulEnough(mediaPerformanceClass: Int): Boolean {
+        if (mediaPerformanceClass >= Build.VERSION_CODES.S) {
+            Log.d("PerfCheck", "Passed via Performance Class: $mediaPerformanceClass")
             return true
         }
 
@@ -35,7 +32,7 @@ object DeviceUtils {
 
         Log.d(
             "PerfCheck",
-            "PerfClass was $perfClass. Fallback -> Cores: $cores | RAM: ${String.format("%.2f", totalRamGb)} GB"
+            "PerfClass was $mediaPerformanceClass. Fallback -> Cores: $cores | RAM: ${String.format("%.2f", totalRamGb)} GB"
         )
 
         return totalRamGb >= RAM_GB_LIMIT && cores >= CPU_CORES_LIMIT
