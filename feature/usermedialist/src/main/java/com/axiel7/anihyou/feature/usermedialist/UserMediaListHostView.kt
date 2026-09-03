@@ -49,6 +49,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -133,8 +134,7 @@ private fun UserMediaListHostContent(
     val listState = rememberLazyListState()
     val gridState = rememberLazyGridState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-    val isScrollingUp = rememberIsScrollingUp(listState = listState, gridState = gridState)
+    val isScrollingUp by rememberIsScrollingUp(listState = listState, gridState = gridState)
 
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -483,7 +483,7 @@ private fun FloatingActionButton(
 private fun rememberIsScrollingUp(
     listState: LazyListState,
     gridState: LazyGridState,
-): Boolean {
+): State<Boolean> {
     var lastListIndex by remember { mutableIntStateOf(listState.firstVisibleItemIndex) }
     var lastListOffset by remember { mutableIntStateOf(listState.firstVisibleItemScrollOffset) }
     var lastGridIndex by remember { mutableIntStateOf(gridState.firstVisibleItemIndex) }
@@ -524,9 +524,8 @@ private fun rememberIsScrollingUp(
                 listScrollingUp || gridScrollingUp
             }
         }
-    }.value
+    }
 }
-
 
 @Preview
 @Composable
