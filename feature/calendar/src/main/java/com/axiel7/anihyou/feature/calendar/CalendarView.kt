@@ -201,16 +201,18 @@ private fun CalendarDayView(
                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
-                    Text(
-                        text = stringResource(
-                            R.string.episode_airing_at,
-                            item.nextAiringEpisode?.episode ?: UNKNOWN_CHAR,
-                            item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: UNKNOWN_CHAR
-                        ),
-                        color = MaterialTheme.colorScheme.outline,
-                        fontSize = 14.sp,
-                        lineHeight = 17.sp
-                    )
+                    item.nextAiringEpisode?.let { nextAiringEpisode ->
+                        Text(
+                            text = stringResource(
+                                R.string.episode_airing_at,
+                                nextAiringEpisode.episode,
+                                nextAiringEpisode.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
+                            ),
+                            color = MaterialTheme.colorScheme.outline,
+                            fontSize = 14.sp,
+                            lineHeight = 17.sp
+                        )
+                    }
                 },
                 status = item.mediaListEntry?.basicMediaListEntry?.status,
                 minLines = 1,
