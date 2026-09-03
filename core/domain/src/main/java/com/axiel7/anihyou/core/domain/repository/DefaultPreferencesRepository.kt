@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.axiel7.anihyou.core.common.utils.DeviceUtils
 import com.axiel7.anihyou.core.domain.getValue
 import com.axiel7.anihyou.core.domain.setValue
 import com.axiel7.anihyou.core.model.AppColorMode
@@ -355,7 +356,7 @@ class DefaultPreferencesRepository(
 
     // search
 
-    val useFuzzySearch = dataStore.getValue(USE_FUZZY_SEARCH_KEY, default = false)
+    val useFuzzySearch = dataStore.getValue(USE_FUZZY_SEARCH_KEY, default = DeviceUtils.isDevicePowerfulEnough())
 
     suspend fun setUseFuzzySearch(value: Boolean) {
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)

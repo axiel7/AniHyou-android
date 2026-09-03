@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":core:base"))
     implementation(project(":core:resources"))
 
+    implementation(libs.androidx.core.performance)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel)
