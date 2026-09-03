@@ -69,6 +69,7 @@ class SettingsViewModel(
                 AppColorMode.PROFILE -> {
                     profileColor.firstOrNull()?.let { setAppColor(it) }
                 }
+
                 AppColorMode.CUSTOM -> {}
             }
         }
@@ -111,6 +112,12 @@ class SettingsViewModel(
     override fun setAiringOnMyList(value: Boolean) {
         viewModelScope.launch {
             defaultPreferencesRepository.setAiringOnMyList(value)
+        }
+    }
+
+    override fun setUseFuzzySearch(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setUseFuzzySearch(value)
         }
     }
 
@@ -382,6 +389,12 @@ class SettingsViewModel(
         defaultPreferencesRepository.hideScores
             .onEach { value ->
                 mutableUiState.update { it.copy(hideScores = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.useFuzzySearch
+            .onEach { value ->
+                mutableUiState.update { it.copy(useFuzzySearch = value) }
             }
             .launchIn(viewModelScope)
     }

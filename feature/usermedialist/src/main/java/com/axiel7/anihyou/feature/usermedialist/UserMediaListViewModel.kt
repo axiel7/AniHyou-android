@@ -356,6 +356,14 @@ class UserMediaListViewModel(
     }
 
     init {
+
+        defaultPreferencesRepository.useFuzzySearch
+            .distinctUntilChanged()
+            .onEach { isEnabled ->
+                mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }
+            }
+            .launchIn(viewModelScope)
+
         //search
         mutableUiState
             .distinctUntilChanged { old, new ->
@@ -390,10 +398,6 @@ class UserMediaListViewModel(
                     val queryText = uiState.query.trim().lowercase()
                     val isQueryNotBlank = queryText.isNotBlank()
 
-                    val queryTokens = if (isQueryNotBlank) {
-                        queryText.split(whiteSpaceRegex).filter { it.isNotEmpty() }
-                    } else emptyList()
-
                     val baseEntries = if (uiState.selectedListName != null) {
                         uiState.lists[uiState.selectedListName].orEmpty()
                     } else {
@@ -401,49 +405,89 @@ class UserMediaListViewModel(
                     }
 
                     if (uiState.filterCount > 0 || isQueryNotBlank) {
+                        if (uiState.isFuzzySearchEnabled) {
+                            val queryTokens = if (isQueryNotBlank) {
+                                queryText.split(whiteSpaceRegex).filter { it.isNotEmpty() }
+                            } else emptyList()
 
-                        val scoredEntries = baseEntries.mapNotNull { entry ->
+                            val scoredEntries = baseEntries.mapNotNull { entry ->
 
-                            val matchesFilters = uiState.formatMatch(entry)
-                                    && uiState.statusMatch(entry)
-                                    && uiState.countryMatch(entry)
-                                    && uiState.yearMatch(entry)
-                                    && uiState.genreMatch(entry)
-                                    && uiState.tagMatch(entry)
+                                val matchesFilters = uiState.formatMatch(entry)
+                                        && uiState.statusMatch(entry)
+                                        && uiState.countryMatch(entry)
+                                        && uiState.yearMatch(entry)
+                                        && uiState.genreMatch(entry)
+                                        && uiState.tagMatch(entry)
 
-                            if (!matchesFilters) return@mapNotNull null
+                                if (!matchesFilters) return@mapNotNull null
 
-                            if (isQueryNotBlank) {
-                                val title = entry.media?.title
-                                val romajiScore =
-                                    title?.romaji.fuzzyScore(queryText, queryTokens) ?: 0
-                                val englishScore =
-                                    title?.english.fuzzyScore(queryText, queryTokens) ?: 0
-                                val nativeScore =
-                                    title?.native.fuzzyScore(queryText, queryTokens) ?: 0
+                                if (isQueryNotBlank) {
+                                    val title = entry.media?.title
+                                    val romajiScore =
+                                        title?.romaji.fuzzyScore(queryText, queryTokens)
+                                    val englishScore =
+                                        title?.english.fuzzyScore(queryText, queryTokens)
+                                    val nativeScore =
+                                        title?.native.fuzzyScore(queryText, queryTokens)
 
-                                val synonymScore = entry.media?.synonyms?.maxOfOrNull { syn ->
-                                    syn.fuzzyScore(queryText, queryTokens)
-                                } ?: 0
+                                    val synonymScore = entry.media?.synonyms?.maxOfOrNull { syn ->
+                                        syn.fuzzyScore(queryText, queryTokens)
+                                    } ?: 0
 
-                                val maxScore =
-                                    maxOf(romajiScore, englishScore, nativeScore, synonymScore)
+                                    val maxScore =
+                                        maxOf(romajiScore, englishScore, nativeScore, synonymScore)
 
-                                if (maxScore > 0) {
-                                    Pair(entry, maxScore)
+                                    if (maxScore > 0) {
+                                        Pair(entry, maxScore)
+                                    } else {
+                                        null
+                                    }
                                 } else {
-                                    null
+                                    Pair(entry, 0)
                                 }
+                            }
+                            if (isQueryNotBlank) {
+                                scoredEntries.sortedByDescending { it.second }.map { it.first }
                             } else {
-                                Pair(entry, 0)
+                                scoredEntries.map { it.first }
+                            }
+
+                        } else {
+                            baseEntries.filter { entry ->
+                                val matchesFilters = uiState.formatMatch(entry)
+                                        && uiState.statusMatch(entry)
+                                        && uiState.countryMatch(entry)
+                                        && uiState.yearMatch(entry)
+                                        && uiState.genreMatch(entry)
+                                        && uiState.tagMatch(entry)
+
+                                if (!matchesFilters) return@filter false
+
+                                if (isQueryNotBlank) {
+                                    val title = entry.media?.title
+                                    val romajiMatch = title?.romaji?.contains(
+                                        queryText,
+                                        ignoreCase = true
+                                    ) == true
+                                    val englishMatch = title?.english?.contains(
+                                        queryText,
+                                        ignoreCase = true
+                                    ) == true
+                                    val nativeMatch = title?.native?.contains(
+                                        queryText,
+                                        ignoreCase = true
+                                    ) == true
+                                    val synonymMatch = entry.media?.synonyms?.any { syn ->
+                                        syn?.contains(queryText, ignoreCase = true) == true
+                                    } == true
+
+                                    romajiMatch || englishMatch || nativeMatch || synonymMatch
+                                } else {
+                                    true
+                                }
                             }
                         }
 
-                        if (isQueryNotBlank) {
-                            scoredEntries.sortedByDescending { it.second }.map { it.first }
-                        } else {
-                            scoredEntries.map { it.first }
-                        }
                     } else {
                         baseEntries
                     }

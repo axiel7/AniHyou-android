@@ -43,6 +43,7 @@ data class UserMediaListUiState(
     val year: Int? = null,
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val query: String = "",
+    val isFuzzySearchEnabled: Boolean = false,
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
@@ -57,7 +58,6 @@ data class UserMediaListUiState(
 ) : UiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
-
     val filterCount =
         listOf(mediaFormat, mediaStatus, country).count { it != null } +
                 genresAndTagsForSearch.totalSize

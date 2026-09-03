@@ -49,7 +49,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -244,7 +243,7 @@ private fun UserMediaListHostContent(
         ) {
             val isScrolled by remember {
                 derivedStateOf {
-                    listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
+                    listState.firstVisibleItemIndex > 1 || listState.firstVisibleItemScrollOffset > 1
                 }
             }
 
@@ -346,7 +345,7 @@ private fun FilterBlock(
                 AnimatedVisibility(
                     visible = isSearchFocused || uiState.mediaStatus != null,
                     enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
-                    exit = if(uiState.filterCount > 0) chipExit else chipExitV
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.media_status),

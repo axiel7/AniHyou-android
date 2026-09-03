@@ -37,6 +37,8 @@ interface SettingsEvent : UiEvent {
 
     fun setAiringOnMyList(value: Boolean)
 
+    fun setUseFuzzySearch(value: Boolean)
+
     @OptIn(ExperimentalPermissionsApi::class)
     fun setNotificationsEnabled(
         isEnabled: Boolean,
