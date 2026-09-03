@@ -108,6 +108,7 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             english = null,
             native = null,
         ),
+        synonyms = listOf(),
         format = MediaFormat.TV,
         countryOfOrigin = CountryOfOriginDto.JAPAN,
         seasonYear = 2020,

@@ -29,6 +29,8 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -47,8 +49,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -130,11 +134,9 @@ private fun UserMediaListHostContent(
     val listState = rememberLazyListState()
     val gridState = rememberLazyGridState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val hasScrolledUp by remember {
-        derivedStateOf {
-            scrollBehavior.state.collapsedFraction > 0.5f || listState.firstVisibleItemIndex == 0
-        }
-    }
+
+    val isScrollingUp = rememberIsScrollingUp(listState = listState, gridState = gridState)
+
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     var showListsSheet by rememberSaveable { mutableStateOf(false) }
@@ -216,7 +218,7 @@ private fun UserMediaListHostContent(
         floatingActionButton = {
             FloatingActionButton(
                 uiState = uiState,
-                hasScrolledUp = hasScrolledUp,
+                isScrollingUp = isScrollingUp,
                 showListsSheet = { showListsSheet = true },
                 scrollToTop = {
                     scope.launch {
@@ -406,10 +408,10 @@ private fun FilterBlock(
             }
         }
 
+
         val hasGenreTags = remember(uiState.genresAndTagsForSearch) {
             uiState.genresAndTagsForSearch.totalSize > 0
         }
-
         AnimatedVisibility(
             visible = !isPreview && (isSearchFocused || hasGenreTags),
             enter = fadeIn() + expandVertically(),
@@ -433,6 +435,7 @@ private fun FilterBlock(
             )
         }
 
+
         if (isSearchFocused || uiState.filterCount > 0) {
             HorizontalDivider()
         }
@@ -442,16 +445,16 @@ private fun FilterBlock(
 @Composable
 private fun FloatingActionButton(
     uiState: UserMediaListUiState,
-    hasScrolledUp: Boolean,
+    isScrollingUp: Boolean,
     showListsSheet: () -> Unit,
     scrollToTop: () -> Unit,
 ) {
     ExtendedFloatingActionButton(
         onClick = {
-            if (hasScrolledUp) showListsSheet()
-            else scrollToTop()
+            if (isScrollingUp) scrollToTop()
+            else showListsSheet()
         },
-        expanded = hasScrolledUp,
+        expanded = !isScrollingUp,
         text = {
             Text(
                 text = uiState.status?.localized(uiState.mediaType)
@@ -459,7 +462,7 @@ private fun FloatingActionButton(
             )
         },
         icon = {
-            if (!hasScrolledUp) {
+            if (isScrollingUp) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_upward_24),
                     contentDescription = null,
@@ -476,6 +479,55 @@ private fun FloatingActionButton(
         }
     )
 }
+
+@Composable
+private fun rememberIsScrollingUp(
+    listState: LazyListState,
+    gridState: LazyGridState,
+): Boolean {
+    var lastListIndex by remember { mutableIntStateOf(listState.firstVisibleItemIndex) }
+    var lastListOffset by remember { mutableIntStateOf(listState.firstVisibleItemScrollOffset) }
+    var lastGridIndex by remember { mutableIntStateOf(gridState.firstVisibleItemIndex) }
+    var lastGridOffset by remember { mutableIntStateOf(gridState.firstVisibleItemScrollOffset) }
+
+    return remember(listState, gridState) {
+        derivedStateOf {
+            val listAtTop =
+                listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+            val gridAtTop =
+                gridState.firstVisibleItemIndex == 0 && gridState.firstVisibleItemScrollOffset == 0
+
+            if (listAtTop && gridAtTop) {
+                lastListIndex = 0
+                lastListOffset = 0
+                lastGridIndex = 0
+                lastGridOffset = 0
+                false
+            } else {
+                val listScrollingUp = if (listState.firstVisibleItemIndex != lastListIndex) {
+                    listState.firstVisibleItemIndex < lastListIndex
+                } else {
+                    listState.firstVisibleItemScrollOffset < lastListOffset
+                }.also {
+                    lastListIndex = listState.firstVisibleItemIndex
+                    lastListOffset = listState.firstVisibleItemScrollOffset
+                }
+
+                val gridScrollingUp = if (gridState.firstVisibleItemIndex != lastGridIndex) {
+                    gridState.firstVisibleItemIndex < lastGridIndex
+                } else {
+                    gridState.firstVisibleItemScrollOffset < lastGridOffset
+                }.also {
+                    lastGridIndex = gridState.firstVisibleItemIndex
+                    lastGridOffset = gridState.firstVisibleItemScrollOffset
+                }
+
+                listScrollingUp || gridScrollingUp
+            }
+        }
+    }.value
+}
+
 
 @Preview
 @Composable
