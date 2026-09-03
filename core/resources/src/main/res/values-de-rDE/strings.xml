@@ -20,6 +20,7 @@
         <item quantity="one">%d Tag</item>
         <item quantity="other">%d Tage</item>
     </plurals>
+    <string name="just_now">Gerade jetzt</string>
     <string name="unknown">Unbekannt</string>
     <string name="airing_soon">Erscheint bald</string>
     <string name="mean_score">Durchschnitt</string>

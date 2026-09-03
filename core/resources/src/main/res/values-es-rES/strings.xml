@@ -20,6 +20,7 @@
         <item quantity="one">%d día</item>
         <item quantity="other">%d días</item>
     </plurals>
+    <string name="just_now">Justo ahora</string>
     <string name="unknown">Desconocido</string>
     <string name="airing_soon">En emisión</string>
     <string name="mean_score">Puntuación</string>
