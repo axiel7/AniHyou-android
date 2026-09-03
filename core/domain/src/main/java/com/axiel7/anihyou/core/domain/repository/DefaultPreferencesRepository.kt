@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.axiel7.anihyou.core.common.utils.DeviceUtils
 import com.axiel7.anihyou.core.domain.getValue
 import com.axiel7.anihyou.core.domain.setValue
 import com.axiel7.anihyou.core.model.AppColorMode
@@ -30,7 +31,7 @@ import com.axiel7.anihyou.core.resources.ColorUtils.hexToString
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
-class DefaultPreferencesRepository (
+class DefaultPreferencesRepository(
     private val dataStore: DataStore<Preferences>
 ) {
 
@@ -353,6 +354,13 @@ class DefaultPreferencesRepository (
         dataStore.setValue(HIDE_SCORES_KEY, value)
     }
 
+    // search
+
+    val useFuzzySearch = dataStore.getValue(USE_FUZZY_SEARCH_KEY)
+
+    suspend fun setUseFuzzySearch(value: Boolean) {
+        dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
+    }
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
@@ -396,5 +404,7 @@ class DefaultPreferencesRepository (
 
         private val TRANSLATOR_APP_KEY = stringPreferencesKey("translator_app")
         private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
+
+        private val USE_FUZZY_SEARCH_KEY = booleanPreferencesKey("use_fuzzy_search")
     }
 }

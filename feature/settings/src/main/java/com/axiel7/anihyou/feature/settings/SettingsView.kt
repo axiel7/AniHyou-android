@@ -365,6 +365,17 @@ private fun SettingsContent(
                     onValueChange = { event?.setAiringOnMyList(it) },
                     shape = bottomShape
                 )
+
+                PreferencesTitle(text = stringResource(R.string.search))
+
+                SwitchPreference(
+                    title = stringResource(R.string.use_fuzzy_search),
+                    preferenceValue = uiState.useFuzzySearch,
+                    icon = R.drawable.search_insights_24,
+                    onValueChange = { event?.setUseFuzzySearch(it) },
+                    subtitle = stringResource(R.string.fuzzy_search_description),
+                    shape = singleShape
+                )
             }
 
 

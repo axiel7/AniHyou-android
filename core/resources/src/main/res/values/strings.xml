@@ -670,4 +670,6 @@
     <string name="logout_confirm">Do you really want to log out?</string>
     <string name="score_steps">Score steps</string>
     <string name="recent">Recent</string>
+    <string name="use_fuzzy_search">Use fuzzy search</string>
+    <string name="fuzzy_search_description">Matches typos, out-of-order words, and acronyms (e.g., \"aot\"). May impact performance on older devices.</string>
 </resources>
