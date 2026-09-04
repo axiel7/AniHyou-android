@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +35,13 @@ import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
+import com.axiel7.anihyou.core.ui.composables.media.PriorityColors.Companion.toPriorityColors
+import com.axiel7.anihyou.core.ui.composables.media.PriorityIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
@@ -47,6 +51,8 @@ fun CurrentListItem(
     modifier: Modifier = Modifier,
     item: CommonMediaListEntry,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
+    allPriorityColors: AllPriorityColors,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -90,6 +96,14 @@ fun CurrentListItem(
                         modifier = Modifier.align(Alignment.BottomStart),
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
+                    )
+                }
+
+                if (item.basicMediaListEntry.priority != null && (item.basicMediaListEntry.priority!! > 0 || showLowPriority)) {
+                    PriorityIndicator(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        priority = item.basicMediaListEntry.priority!!,
+                        allPriorityColors = allPriorityColors,
                     )
                 }
             }
@@ -189,9 +203,31 @@ private fun CurrentListItemPreview() {
     AniHyouTheme {
         Surface {
             Column {
+                val priorityNoneColor = MaterialTheme.colorScheme.secondaryContainer
+
+                val lowPriorityColors = remember(false) {
+                    priorityNoneColor.toPriorityColors(false)
+                }
+                val mediumPriorityColors = remember(false) {
+                    Color.Yellow.toPriorityColors(false)
+                }
+                val highPriorityColors = remember(false) {
+                    Color.Red.toPriorityColors(false)
+                }
+
+                val allPriorityColors = remember(lowPriorityColors, mediumPriorityColors, highPriorityColors) {
+                    AllPriorityColors(
+                        low = lowPriorityColors,
+                        medium = mediumPriorityColors,
+                        high = highPriorityColors,
+                    )
+                }
+
                 CurrentListItem(
                     item = exampleCommonMediaListEntry,
                     isPlusEnabled = true,
+                    showLowPriority = true,
+                    allPriorityColors = allPriorityColors,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},

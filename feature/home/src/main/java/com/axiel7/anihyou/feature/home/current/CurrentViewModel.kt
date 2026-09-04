@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.home.current
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
@@ -183,7 +184,10 @@ class CurrentViewModel(
                                 .filter {
                                     it.media?.status == MediaStatus.RELEASING && it.isBehind()
                                 }
-                                .sortedBy { it.episodesBehind() }
+                                .sortedWith(
+                                    compareByDescending<CommonMediaListEntry> { it.basicMediaListEntry.priority }
+                                        .thenByDescending { it.episodesBehind() }
+                                )
                             val animeList = result.list
                                 .filter { it.media?.status != MediaStatus.RELEASING }
                             uiState.airingList.clear()
@@ -252,6 +256,32 @@ class CurrentViewModel(
                         }
                     }
                 }
+            }
+            .launchIn(viewModelScope)
+
+
+        defaultPreferencesRepository.showLowPriority
+            .distinctUntilChanged()
+            .onEach { value ->
+                mutableUiState.update { it.copy(showLowPriority = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorLowPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(lowPriorityColor = Color(color)) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorMediumPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(mediumPriorityColor = Color(color)) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.colorHighPriority
+            .onEach { color ->
+                mutableUiState.update { it.copy(highPriorityColor = Color(color)) }
             }
             .launchIn(viewModelScope)
 
