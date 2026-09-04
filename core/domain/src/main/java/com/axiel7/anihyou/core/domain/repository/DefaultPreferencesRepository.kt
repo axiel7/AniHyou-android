@@ -341,6 +341,12 @@ class DefaultPreferencesRepository(
         dataStore.setValue(COLOR_PALETTE_KEY, value)
     }
 
+    val coloredMedia = dataStore.getValue(COLORED_MEDIA, true)
+
+    suspend fun setColoredMedia(value: Boolean) {
+        dataStore.setValue(COLORED_MEDIA, value)
+    }
+
     val translatorApp = dataStore.getValue(TRANSLATOR_APP_KEY, default = TranslatorApp.DEFAULT.name)
         .map { TranslatorApp.valueOf(it) }
 
@@ -401,6 +407,8 @@ class DefaultPreferencesRepository(
         private val APP_COLOR_KEY = stringPreferencesKey("app_color")
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
+
+        private val COLORED_MEDIA = booleanPreferencesKey("colored_media")
 
         private val TRANSLATOR_APP_KEY = stringPreferencesKey("translator_app")
         private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")

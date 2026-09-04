@@ -91,6 +91,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setColoredMedia(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setColoredMedia(value)
+        }
+    }
+
     override fun setUseGeneralListStyle(value: Boolean) {
         viewModelScope.launch {
             listPreferencesRepository.setUseGeneralListStyle(value)
@@ -310,6 +316,12 @@ class SettingsViewModel(
             .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(colorPaletteStyle = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.coloredMedia
+            .onEach { value ->
+                mutableUiState.update { it.copy(coloredMedia = value) }
             }
             .launchIn(viewModelScope)
 

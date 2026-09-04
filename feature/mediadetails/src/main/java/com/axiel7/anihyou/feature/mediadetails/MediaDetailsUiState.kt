@@ -22,6 +22,7 @@ import com.axiel7.anihyou.core.model.TranslatorApp
 data class MediaDetailsUiState(
     val isLoggedIn: Boolean = false,
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
+    val coloredMedia: Boolean = true,
 
     val details: MediaDetailsQuery.Media? = null,
     val openings: List<AnimeThemes.Theme>? = null,

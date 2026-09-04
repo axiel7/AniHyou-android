@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -102,20 +103,39 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaInformationView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
+import com.materialkolor.PaletteStyle
+import com.materialkolor.dynamicColorScheme
+import com.materialkolor.dynamiccolor.ColorSpec
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MediaDetailsView(
     arguments: Route.MediaDetails,
+    blackColors: Boolean,
+    paletteStyle: PaletteStyle,
 ) {
     val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    MediaDetailsContent(
-        uiState = uiState,
-        event = viewModel,
-    )
+    MaterialTheme(
+        colorScheme = if (uiState.coloredMedia) {
+            uiState.details?.coverImage?.color?.let(::colorFromHex)?.let { color ->
+                dynamicColorScheme(
+                    seedColor = color,
+                    isDark = isSystemInDarkTheme(),
+                    isAmoled = blackColors,
+                    style = paletteStyle,
+                    specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                )
+            } ?: MaterialTheme.colorScheme
+        } else MaterialTheme.colorScheme
+    ) {
+        MediaDetailsContent(
+            uiState = uiState,
+            event = viewModel,
+        )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
@@ -225,7 +245,7 @@ private fun MediaDetailsContent(
             )
         },
         floatingActionButton = {
-            if (uiState.isLoggedIn) {
+            if (uiState.isLoggedIn && uiState.details != null) {
                 ExtendedFloatingActionButton(onClick = { showEditSheet = true }) {
                     Icon(
                         painter = painterResource(
@@ -236,7 +256,7 @@ private fun MediaDetailsContent(
                     )
                     Text(
                         text = if (uiState.isNewEntry) stringResource(R.string.add)
-                        else uiState.details?.mediaListEntry?.basicMediaListEntry?.status?.localized(
+                        else uiState.details.mediaListEntry?.basicMediaListEntry?.status?.localized(
                             mediaType = uiState.details.basicMediaDetails.type
                                 ?: MediaType.UNKNOWN__
                         ) ?: stringResource(R.string.edit),

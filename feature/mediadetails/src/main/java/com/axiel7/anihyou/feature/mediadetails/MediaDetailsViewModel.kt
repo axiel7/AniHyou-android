@@ -268,6 +268,12 @@ class MediaDetailsViewModel(
     }
 
     init {
+        defaultPreferencesRepository.coloredMedia
+            .onEach { value ->
+                mutableUiState.update { it.copy(coloredMedia = value) }
+            }
+            .launchIn(viewModelScope)
+
         mediaRepository.getMediaDetails(mediaId = arguments.id)
             .onEach { result ->
                 mutableUiState.updateAndGet {

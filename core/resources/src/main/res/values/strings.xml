@@ -672,4 +672,6 @@
     <string name="recent">Recent</string>
     <string name="use_fuzzy_search">Use fuzzy search</string>
     <string name="fuzzy_search_description">Matches typos, out-of-order words, and acronyms (e.g., \"aot\"). May impact performance on older devices.</string>
+    <string name="colored_media_title">Colored media details</string>
+    <string name="colored_media_desc">Changes the app color based on the media image color</string>
 </resources>
