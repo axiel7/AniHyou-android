@@ -10,4 +10,5 @@ plugins {
     alias(libs.plugins.androidx.baselineprofile) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.koin.compiler) apply false
+    alias(libs.plugins.stability.analyzer) apply false
 }

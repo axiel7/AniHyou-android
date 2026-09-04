@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.buildlogic
 
 import com.android.build.api.dsl.LibraryExtension
+import com.skydoves.compose.stability.gradle.StabilityAnalyzerExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -8,6 +9,7 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 @Suppress("unused")
@@ -18,6 +20,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("io.insert-koin.compiler.plugin")
+                apply("com.github.skydoves.compose.stability.analyzer")
             }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().find("libs").get()
@@ -62,7 +65,17 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("koin-compose-viewmodel").get())
                 add("implementation", libs.findLibrary("koin-compose-navigation3").get())
 
+                add("implementation", libs.findLibrary("collections-immutable").get())
+
                 add("coreLibraryDesugaring", libs.findLibrary("desugar_jdk_libs").get())
+            }
+
+            extensions.configure<ComposeCompilerGradlePluginExtension> {
+                stabilityConfigurationFiles.add(isolated.rootProject.projectDirectory.file("stability_config.conf"))
+            }
+
+            extensions.configure<StabilityAnalyzerExtension> {
+                stabilityConfigurationFiles.add(isolated.rootProject.projectDirectory.file("stability_config.conf"))
             }
         }
     }

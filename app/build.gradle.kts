@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.compose)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.androidx.baselineprofile)
+    alias(libs.plugins.stability.analyzer)
 }
 
 val appPackageName: String by rootProject.extra
@@ -211,4 +212,8 @@ dependencies {
 
     implementation(libs.androidx.profileinstaller)
     "baselineProfile"(project(":baselineprofile"))
+}
+
+composeStabilityAnalyzer {
+    stabilityConfigurationFiles.add(isolated.rootProject.projectDirectory.file("stability_config.conf"))
 }
