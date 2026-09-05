@@ -61,6 +61,7 @@ import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.feature.settings.ContributorsView
 import com.axiel7.anihyou.feature.settings.SettingsView
 import com.axiel7.anihyou.feature.settings.TranslationsView
+import com.axiel7.anihyou.feature.settings.customlinks.CustomLinksView
 import com.axiel7.anihyou.feature.settings.customlists.CustomListsView
 import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.feature.settings.priority_colors.PriorityColorView
@@ -347,6 +348,9 @@ fun MainNavigation(
         }
         entry<Route.CustomLists> {
             CustomListsView()
+        }
+        entry<Route.CustomLinks> {
+            CustomLinksView()
         }
         entry<Route.Translations> {
             TranslationsView()

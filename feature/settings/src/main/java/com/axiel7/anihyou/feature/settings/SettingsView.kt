@@ -305,6 +305,13 @@ private fun SettingsContent(
                 icon = R.drawable.rss_feed_24,
                 subtitle = stringResource(R.string.airing_on_my_list_summary),
                 onValueChange = { event?.setAiringOnMyList(it) },
+                shape = middleShape
+            )
+
+            PlainPreference(
+                title = stringResource(R.string.custom_links),
+                icon = R.drawable.add_link_24,
+                onClick = navActionManager::toCustomLinks,
                 shape = bottomShape
             )
 

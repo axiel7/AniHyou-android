@@ -27,6 +27,7 @@ data class MediaDetailsUiState(
     val details: MediaDetailsQuery.Media? = null,
     val openings: List<AnimeThemes.Theme>? = null,
     val endings: List<AnimeThemes.Theme>? = null,
+    val customLinks: Set<String> = emptySet(),
 
     val staff: List<MediaStaff>? = null,
     val characters: List<MediaCharacter>? = null,

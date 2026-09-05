@@ -7,6 +7,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +15,17 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -27,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,8 +66,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.common.utils.StringUtils.orUnknown
@@ -92,6 +102,8 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
+import com.axiel7.anihyou.core.ui.composables.sheet.SelectionSheet
+import com.axiel7.anihyou.core.ui.composables.sheet.SelectionSheetItem
 import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
@@ -138,7 +150,8 @@ fun MediaDetailsView(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -436,30 +449,32 @@ private fun MediaDetailsContent(
             }
 
             // Synopsis
-            Text(
-                text = when {
-                    uiState.isLoading -> buildAnnotatedString {
-                        append(stringResource(R.string.lorem_ipsun))
-                    }
+            SelectionContainer {
+                Text(
+                    text = when {
+                        uiState.isLoading -> buildAnnotatedString {
+                            append(stringResource(R.string.lorem_ipsun))
+                        }
 
-                    uiState.details?.description.isNullOrBlank() -> buildAnnotatedString {
-                        append(stringResource(R.string.no_description))
-                    }
+                        uiState.details?.description.isNullOrBlank() -> buildAnnotatedString {
+                            append(stringResource(R.string.no_description))
+                        }
 
-                    else -> uiState.details.description!!.htmlDecoded().toAnnotatedString()
-                },
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
-                    .clickable { isSynopsisExpanded = !isSynopsisExpanded }
-                    .animateContentSize()
-                    .defaultPlaceholder(visible = uiState.isLoading),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 15.sp,
-                lineHeight = 18.sp,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = maxLinesSynopsis
-            )
+                        else -> uiState.details.description!!.htmlDecoded().toAnnotatedString()
+                    },
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .clickable { isSynopsisExpanded = !isSynopsisExpanded }
+                        .animateContentSize()
+                        .defaultPlaceholder(visible = uiState.isLoading),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp,
+                    lineHeight = 18.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = maxLinesSynopsis
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -486,18 +501,10 @@ private fun MediaDetailsContent(
                     )
                 }
 
-                IconButton(
-                    onClick = {
-                        uiState.details?.description?.let {
-                            context.copyToClipBoard(it.htmlStripped())
-                        }
-                    },
-                    shapes = IconButtonDefaults.shapes()
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.content_copy_24),
-                        contentDescription = stringResource(R.string.copy)
-                    )
+                if (uiState.customLinks.isNotEmpty()) {
+                    CustomLinksButton(uiState)
+                } else {
+                    Spacer(modifier = Modifier.size(48.dp))
                 }
             }//: Row
 
@@ -554,7 +561,13 @@ fun MediaInfoTabs(
                     uiState = uiState,
                     fetchData = { event?.fetchRelationsAndRecommendations() },
                     navigateToDetails = navActionManager::toMediaDetails,
-                    onVoteClick = { mediaId, recId, rating -> event?.onVoteClick(mediaId, recId, rating) },
+                    onVoteClick = { mediaId, recId, rating ->
+                        event?.onVoteClick(
+                            mediaId,
+                            recId,
+                            rating
+                        )
+                    },
                 )
 
             MediaDetailsType.STATS ->
@@ -578,6 +591,99 @@ fun MediaInfoTabs(
             }
         }
     }//: Column
+}
+
+@Composable
+private fun CustomLinksButton(
+    uiState: MediaDetailsUiState,
+) {
+    val context = LocalContext.current
+    var linksExpanded by remember { mutableStateOf(false) }
+    var titleSheetExpanded by remember { mutableStateOf(false) }
+    var selectedLink by remember { mutableStateOf<String?>(null) }
+
+    Box(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        IconButton(
+            onClick = { linksExpanded = !linksExpanded },
+            shapes = IconButtonDefaults.shapes()
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.link_24),
+                contentDescription = stringResource(R.string.custom_links),
+            )
+        }
+
+        DropdownMenuPopup(
+            expanded = linksExpanded,
+            onDismissRequest = { linksExpanded = false },
+            modifier = Modifier.heightIn(max = 300.dp)
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                uiState.customLinks.forEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        text = {
+                            val uri = runCatching { item.toUri() }.getOrNull()
+                            Text(text = uri?.host ?: item)
+                        },
+                        onClick = {
+                            selectedLink = item
+                            titleSheetExpanded = true
+                            linksExpanded = false
+                        },
+                        shape = when (index) {
+                            0 -> MenuDefaults.leadingItemShape
+                            uiState.customLinks.size - 1 -> MenuDefaults.trailingItemShape
+                            else -> MenuDefaults.middleItemShape
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    selectedLink?.let { selectedLink ->
+        if (titleSheetExpanded) {
+            fun openSite(title: String) {
+                val separator = selectedLink.first()
+                val link = selectedLink.substring(1)
+                val finalLink = link.replace(
+                    CUSTOM_URL_NAME_PLACEHOLDER,
+                    title.replace(' ', separator)
+                )
+                context.openActionView(finalLink)
+            }
+
+            SelectionSheet(
+                onDismiss = { titleSheetExpanded = false },
+                bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+                    .calculateBottomPadding(),
+            ) {
+                uiState.details?.title?.romaji?.let { title ->
+                    SelectionSheetItem(
+                        name = title,
+                        onClick = { openSite(title) }
+                    )
+                }
+                uiState.details?.title?.english?.let { title ->
+                    SelectionSheetItem(
+                        name = title,
+                        onClick = { openSite(title) }
+                    )
+                }
+                uiState.details?.title?.native?.let { title ->
+                    SelectionSheetItem(
+                        name = title,
+                        onClick = { openSite(title) }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview
