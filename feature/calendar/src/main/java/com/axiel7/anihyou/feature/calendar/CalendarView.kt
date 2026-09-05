@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.calendar
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -111,8 +110,6 @@ private fun CalendarViewContent(
         }
     }
 
-
-
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
     if (showEditSheet && uiState.selectedItem != null) {
@@ -131,12 +128,7 @@ private fun CalendarViewContent(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
         navigationIcon = {
-            BackIconButton(
-                onClick = {
-                    uiState.run { copy(fetchFromNetwork = false) } // check if this is so okay
-                    navActionManager::goBack.invoke()
-                }
-            )
+            BackIconButton(onClick = navActionManager::goBack)
         },
         actions = {
             AppBarActions(
@@ -164,8 +156,7 @@ private fun CalendarViewContent(
         PullToRefreshBox(
             isRefreshing = uiState.isLoading,
             onRefresh = { event?.refresh() },
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             state = pullToRefreshState,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
@@ -181,9 +172,8 @@ private fun CalendarViewContent(
                     .padding(padding)
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 state = listState,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                uiState.weeklyAnime.entries.forEachIndexed { index, (date, mediaList) ->
+                uiState.weeklyAnime.entries.forEach { (date, mediaList) ->
                     stickyHeader {
                         val titleId = when (date.dayOfWeek) {
                             DayOfWeek.MONDAY -> R.string.monday
@@ -211,9 +201,7 @@ private fun CalendarViewContent(
                             onLongClick = {
                                 event?.refreshDay(date)
                             },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
 
@@ -221,6 +209,9 @@ private fun CalendarViewContent(
                         items = mediaList,
                         contentType = { it }
                     ) { item ->
+                        val isLast = mediaList.lastOrNull() == item
+                        val isFirst = mediaList.firstOrNull() == item
+
                         CalendarAiringHorizontalItem(
                             title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                             subtitle = item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: stringResource(R.string.unknown),
@@ -235,19 +226,24 @@ private fun CalendarViewContent(
                                 event?.selectItem(item)
                                 showEditSheetAction()
                             },
+                            modifier = Modifier.padding(bottom = if (isLast) 24.dp else 8.dp, top = if (isFirst) 8.dp else 0.dp)
                         )
                     }
                 }
 
                 if (uiState.isLoading) {
                     item {
-                        CalendarBannerPlaceholder()
+                        CalendarBannerPlaceholder(
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
                     }
                     items(
                         count = 20,
                         contentType = { "placeholder" }
                     ) {
-                        CalendarAiringHorizontalItemPlaceholder()
+                        CalendarAiringHorizontalItemPlaceholder(
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
                     }
                 }
             }

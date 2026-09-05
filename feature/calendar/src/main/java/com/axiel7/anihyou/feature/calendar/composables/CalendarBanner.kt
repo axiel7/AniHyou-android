@@ -47,10 +47,8 @@ fun CalendarBanner(
             .combinedClickable(
                 onClick = {},
                 onLongClick = {
-                    if (onLongClick != null) {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onLongClick()
-                    }
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongClick()
                 }
             )
     ) {

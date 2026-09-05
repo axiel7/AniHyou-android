@@ -47,6 +47,7 @@ fun CalendarAiringHorizontalItem(
     subtitle: String,
     blurImage: Boolean = false,
     imageUrl: String?,
+    modifier: Modifier = Modifier,
     score: Int? = null,
     status: MediaListStatus? = null,
     onClick: () -> Unit = {},
@@ -55,7 +56,7 @@ fun CalendarAiringHorizontalItem(
     Surface(
         shape = MaterialTheme.shapes.large,
         color = Color.Transparent,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
             .combinedClickable(
@@ -141,9 +142,11 @@ fun CalendarAiringHorizontalItem(
 }
 
 @Composable
-fun CalendarAiringHorizontalItemPlaceholder() {
+fun CalendarAiringHorizontalItemPlaceholder(
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))

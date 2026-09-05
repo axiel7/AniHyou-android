@@ -62,12 +62,6 @@ class CalendarViewModel(
         }
     }
 
-    override fun setOnMyList(value: Boolean?) {
-        mutableUiState.update {
-            it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true, weeklyAnime = mutableMapOf())
-        }
-    }
-
     override fun selectItem(value: ExploreMedia?) {
         mutableUiState.update {
             it.copy(selectedItem = value)
@@ -171,7 +165,6 @@ class CalendarViewModel(
                         page = 1,
                         hasNextPage = true,
                         isLoading = true,
-                        fetchFromNetwork = uiState.value.onMyList == true
                     )
                 }
             }
@@ -192,22 +185,20 @@ class CalendarViewModel(
                 mediaRepository.getAiringAnimesPage(
                     airingAtGreater = start,
                     airingAtLesser = end,
-                    onMyList = uiState.onMyList,
+                    onMyList = onMyList.first(),
                     isAdult = displayAdult == true,
                     page = uiState.page,
                     perPage = 50,
-                    fetchFromNetwork = uiState.onMyList == true || uiState.fetchFromNetwork,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
                 )
             }
             .onEach { result ->
                 if (result is PagedResult.Success) {
                     mutableUiState.update { state ->
                         val localeDate = state.day.toLocalDate()
-                        val currentList = if (state.page == 1) {
-                            emptyList()
-                        } else {
-                            state.weeklyAnime[localeDate] ?: emptyList()
-                        }
+                        val currentList = state.weeklyAnime[localeDate]
+                            .takeIf { state.page > 1 }
+                            .orEmpty()
                         val updatedList = currentList + result.list
                         val updatedMap = state.weeklyAnime.toMutableMap()
                         updatedMap[localeDate] = updatedList

@@ -13,7 +13,6 @@ interface CalendarEvent : UiEvent, PagedEvent {
     fun onUpdateListEntry(viewListEntry: BasicMediaListEntry?)
     fun selectItem(value: ExploreMedia?)
     fun nextDay()
-    fun setOnMyList(value: Boolean?)
     fun refresh()
     fun refreshDay(date: LocalDate)
 }
