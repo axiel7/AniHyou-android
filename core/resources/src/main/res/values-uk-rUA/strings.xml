@@ -672,6 +672,4 @@
     <string name="logout_confirm">Ви дійсно хочете вийти з акаунта?</string>
     <string name="score_steps">Кроки зміни</string>
     <string name="recent">Нещодавні</string>
-    <string name="use_fuzzy_search">Використовувати нечіткий пошук</string>
-    <string name="fuzzy_search_description">Розпізнає описки, скорочення та слова не за порядком. Може сповільнювати старіші пристрої.</string>
 </resources>
