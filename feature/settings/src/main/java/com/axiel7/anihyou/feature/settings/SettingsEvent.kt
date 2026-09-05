@@ -66,8 +66,6 @@ interface SettingsEvent : UiEvent {
 
     fun setScoreStep(value: Double)
 
-    fun setScoreStep(value: Double)
-
     fun setDefaultTab(value: DefaultTab)
 
     fun setAiringNotification(value: Boolean)

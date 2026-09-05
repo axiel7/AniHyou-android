@@ -8,7 +8,8 @@ import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 
 @Immutable
 interface CalendarEvent : UiEvent, PagedEvent {
-    fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
-
+    fun onUpdateListEntry(viewListEntry: BasicMediaListEntry?)
     fun selectItem(value: ExploreMedia?)
+    fun nextDay()
+    fun setOnMyList(value: Boolean?)
 }
