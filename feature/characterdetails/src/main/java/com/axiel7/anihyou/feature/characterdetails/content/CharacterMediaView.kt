@@ -24,10 +24,11 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CharacterMediaView(
-    media: List<CharacterMediaQuery.Edge>,
+    media: ImmutableList<CharacterMediaQuery.Edge>,
     isLoading: Boolean,
     loadMore: () -> Unit,
     modifier: Modifier = Modifier,

@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.axiel7.anihyou.core.common.utils.DeviceUtils
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.axiel7.anihyou.core.domain.getValue
 import com.axiel7.anihyou.core.domain.setValue
 import com.axiel7.anihyou.core.model.AppColorMode
@@ -24,11 +24,13 @@ import com.axiel7.anihyou.core.model.user.hexColor
 import com.axiel7.anihyou.core.network.ViewerOptionsQuery
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListOptions
 import com.axiel7.anihyou.core.network.fragment.UserInfo
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.ColorUtils.hexToString
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 
 class DefaultPreferencesRepository(
@@ -341,6 +343,12 @@ class DefaultPreferencesRepository(
         dataStore.setValue(COLOR_PALETTE_KEY, value)
     }
 
+    val coloredMedia = dataStore.getValue(COLORED_MEDIA, true)
+
+    suspend fun setColoredMedia(value: Boolean) {
+        dataStore.setValue(COLORED_MEDIA, value)
+    }
+
     val translatorApp = dataStore.getValue(TRANSLATOR_APP_KEY, default = TranslatorApp.DEFAULT.name)
         .map { TranslatorApp.valueOf(it) }
 
@@ -360,6 +368,24 @@ class DefaultPreferencesRepository(
 
     suspend fun setUseFuzzySearch(value: Boolean) {
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
+    }
+
+    val animeCustomLinks = dataStore.getValue(ANIME_CUSTOM_LINKS_KEY)
+
+    suspend fun setAnimeCustomLinks(value: Set<String>) {
+        dataStore.setValue(ANIME_CUSTOM_LINKS_KEY, value)
+    }
+
+    val mangaCustomLinks = dataStore.getValue(MANGA_CUSTOM_LINKS_KEY)
+
+    suspend fun setMangaCustomLinks(value: Set<String>) {
+        dataStore.setValue(MANGA_CUSTOM_LINKS_KEY, value)
+    }
+
+    fun customLinks(mediaType: MediaType) = when (mediaType) {
+        MediaType.ANIME -> animeCustomLinks
+        MediaType.MANGA -> mangaCustomLinks
+        else -> emptyFlow()
     }
 
     companion object {
@@ -402,9 +428,14 @@ class DefaultPreferencesRepository(
 
         private val COLOR_PALETTE_KEY = stringPreferencesKey("color_palette")
 
+        private val COLORED_MEDIA = booleanPreferencesKey("colored_media")
+
         private val TRANSLATOR_APP_KEY = stringPreferencesKey("translator_app")
         private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
 
         private val USE_FUZZY_SEARCH_KEY = booleanPreferencesKey("use_fuzzy_search")
+
+        private val ANIME_CUSTOM_LINKS_KEY = stringSetPreferencesKey("anime_custom_links")
+        private val MANGA_CUSTOM_LINKS_KEY = stringSetPreferencesKey("manga_custom_links")
     }
 }

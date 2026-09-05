@@ -223,4 +223,8 @@ class NavActionManager(
     fun toPriorityColors() {
         navigator.navigate(Route.PriorityColors)
     }
+
+    fun toCustomLinks() {
+        navigator.navigate(Route.CustomLinks)
+    }
 }

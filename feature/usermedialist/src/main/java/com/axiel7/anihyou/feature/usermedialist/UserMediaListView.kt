@@ -57,8 +57,8 @@ fun UserMediaListView(
     uiState: UserMediaListUiState,
     event: UserMediaListEvent?,
     isCompactScreen: Boolean,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
-    nestedScrollConnection: NestedScrollConnection,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     lazyListState: LazyListState,
@@ -105,16 +105,14 @@ fun UserMediaListView(
             )
         }
     ) {
-        val listModifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
+
         if (uiState.listStyle == ListStyle.GRID) {
             LazyListGrid(
                 mediaList = uiState.entries,
                 uiState = uiState,
                 event = event,
                 allPriorityColors = allPriorityColors,
-                modifier = listModifier,
+                modifier = modifier,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
                 listState = lazyGridState,
@@ -126,7 +124,7 @@ fun UserMediaListView(
                 uiState = uiState,
                 event = event,
                 allPriorityColors = allPriorityColors,
-                modifier = listModifier,
+                modifier = modifier,
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
@@ -140,7 +138,7 @@ fun UserMediaListView(
                 uiState = uiState,
                 event = event,
                 allPriorityColors = allPriorityColors,
-                modifier = listModifier,
+                modifier = modifier,
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,

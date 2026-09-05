@@ -26,8 +26,13 @@ fun MediaListStatus.localized(
     MediaListStatus.UNKNOWN__ -> stringResource(R.string.unknown)
 }
 
-fun MediaListStatus.plainName() = when (this) {
-    MediaListStatus.CURRENT -> "Current"
+fun MediaListStatus.plainName(mediaType: MediaType?) = when (this) {
+    MediaListStatus.CURRENT -> when (mediaType) {
+        MediaType.ANIME -> "Watching"
+        MediaType.MANGA -> "Reading"
+        else -> "Current"
+    }
+
     MediaListStatus.PLANNING -> "Planning"
     MediaListStatus.COMPLETED -> "Completed"
     MediaListStatus.DROPPED -> "Dropped"

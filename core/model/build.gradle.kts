@@ -38,6 +38,7 @@ dependencies {
     implementation(project(":core:network"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.collections.immutable)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

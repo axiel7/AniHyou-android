@@ -2,6 +2,7 @@ package com.axiel7.anihyou.feature.home.current
 
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -19,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,7 +51,9 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
+import com.axiel7.anihyou.core.ui.composables.media.PriorityColors.Companion.toPriorityColors
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
@@ -88,6 +92,25 @@ private fun CurrentContent(
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
+    val isDark = isSystemInDarkTheme()
+
+    val priorityNoneColor = MaterialTheme.colorScheme.secondaryContainer
+    val lowPriorityColors = remember(uiState.lowPriorityColor, isDark) {
+        (uiState.lowPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val mediumPriorityColors = remember(uiState.mediumPriorityColor, isDark) {
+        (uiState.mediumPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val highPriorityColors = remember(uiState.highPriorityColor, isDark) {
+        (uiState.highPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val allPriorityColors = remember(lowPriorityColors, mediumPriorityColors, highPriorityColors) {
+        AllPriorityColors(
+            low = lowPriorityColors,
+            medium = mediumPriorityColors,
+            high = highPriorityColors,
+        )
+    }
 
     if (showEditSheet && uiState.selectedItem?.media != null && uiState.selectedType != null) {
         EditMediaSheet(
@@ -146,6 +169,8 @@ private fun CurrentContent(
                             items = list,
                             isLoading = uiState.isLoading,
                             isPlusEnabled = !uiState.isLoadingPlusOne,
+                            showLowPriority = uiState.showLowPriority,
+                            allPriorityColors = allPriorityColors,
                             onClick = { navActionManager.toMediaDetails(it.mediaId) },
                             onClickPlus = { increment, item ->
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -160,7 +185,7 @@ private fun CurrentContent(
                                     snackbarManager.showNotLoggedInSnackbar()
                                 }
                             },
-                            blockPlus = { event?.blockPlusOne() }
+                            blockPlus = { event?.blockPlusOne() },
                         )
                     }
                 }
@@ -182,6 +207,8 @@ private fun CurrentLazyGrid(
     items: List<CommonMediaListEntry>,
     isLoading: Boolean,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
+    allPriorityColors: AllPriorityColors,
     onClick: (CommonMediaListEntry) -> Unit,
     onLongClick: (CommonMediaListEntry) -> Unit,
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
@@ -191,6 +218,7 @@ private fun CurrentLazyGrid(
     val fontScale = LocalDensity.current.fontScale
     val rows = if (items.size == 1) 1 else 2
     val rowPadding = 20 * fontScale
+
     LazyHorizontalGrid(
         rows = GridCells.Fixed(rows),
         modifier = Modifier
@@ -212,6 +240,8 @@ private fun CurrentLazyGrid(
                 modifier = Modifier.width(350.dp),
                 item = item,
                 isPlusEnabled = isPlusEnabled,
+                showLowPriority = showLowPriority,
+                allPriorityColors = allPriorityColors,
                 onClick = { onClick(item) },
                 onLongClick = { onLongClick(item) },
                 onClickPlus = { onClickPlus(it, item) },

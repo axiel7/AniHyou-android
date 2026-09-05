@@ -58,6 +58,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
+import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -143,6 +144,8 @@ class MainActivity : AppCompatActivity() {
                             homeTab = homeTab,
                             exploreTab = exploreTab,
                             deepLink = deepLink,
+                            blackColors = useBlackColors,
+                            paletteStyle = paletteStyle,
                             setNavigationBarContrastEnforced = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                     window.isNavigationBarContrastEnforced = it
@@ -208,6 +211,8 @@ fun MainView(
     homeTab: HomeTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
+    blackColors: Boolean,
+    paletteStyle: PaletteStyle,
     setNavigationBarContrastEnforced: (Boolean) -> Unit,
 ) {
     val startKey = remember(tabToOpen) {
@@ -248,6 +253,8 @@ fun MainView(
                     deepLink = deepLink,
                     homeTab = homeTab,
                     exploreTab = exploreTab,
+                    blackColors = blackColors,
+                    paletteStyle = paletteStyle,
                     padding = padding,
                 )
             } else {
@@ -264,7 +271,9 @@ fun MainView(
                         isLoggedIn = isLoggedIn,
                         deepLink = deepLink,
                         homeTab = homeTab,
-                        exploreTab = exploreTab
+                        exploreTab = exploreTab,
+                        blackColors = blackColors,
+                        paletteStyle = paletteStyle,
                     )
                 }
             }
@@ -288,6 +297,8 @@ private fun MainPreview() {
             homeTab = HomeTab.CURRENT,
             exploreTab = ExploreTab.ANIME,
             deepLink = null,
+            blackColors = false,
+            paletteStyle = PaletteStyle.TonalSpot,
             setNavigationBarContrastEnforced = {},
         )
     }

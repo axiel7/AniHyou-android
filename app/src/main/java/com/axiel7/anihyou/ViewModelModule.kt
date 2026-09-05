@@ -27,6 +27,7 @@ import com.axiel7.anihyou.feature.profile.social.UserSocialViewModel
 import com.axiel7.anihyou.feature.profile.stats.UserStatsViewModel
 import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsViewModel
 import com.axiel7.anihyou.feature.settings.SettingsViewModel
+import com.axiel7.anihyou.feature.settings.customlinks.CustomLinksViewModel
 import com.axiel7.anihyou.feature.settings.customlists.CustomListsViewModel
 import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsViewModel
 import com.axiel7.anihyou.feature.settings.priority_colors.PriorityColorViewModel
@@ -68,6 +69,7 @@ val viewModelModule = module {
     viewModel<ReviewDetailsViewModel>()
     viewModel<SettingsViewModel>()
     viewModel<CustomListsViewModel>()
+    viewModel<CustomLinksViewModel>()
     viewModel<ListStyleSettingsViewModel>()
     viewModel<StaffDetailsViewModel>()
     viewModel<StudioDetailsViewModel>()

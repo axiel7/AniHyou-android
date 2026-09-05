@@ -48,6 +48,8 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -61,7 +63,7 @@ fun ActivityTextView(
     createdAt: Int,
     replyCount: Int?,
     likeCount: Int,
-    likes: List<ActivityUser>?,
+    likes: ImmutableList<ActivityUser>?,
     isLiked: Boolean?,
     onClickUser: () -> Unit,
     onClickMedia: () -> Unit = {},
@@ -193,7 +195,7 @@ fun ActivityTextViewPreview() {
                 createdAt = 12312321,
                 replyCount = 999,
                 likeCount = 999,
-                likes = listOf(exampleActivityUser, exampleActivityUser, exampleActivityUser),
+                likes = listOf(exampleActivityUser, exampleActivityUser, exampleActivityUser).toImmutableList(),
                 isLiked = false,
                 onClickLike = {},
                 onClickUser = {},

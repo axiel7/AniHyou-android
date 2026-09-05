@@ -17,7 +17,10 @@ import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
@@ -268,6 +271,12 @@ class MediaDetailsViewModel(
     }
 
     init {
+        defaultPreferencesRepository.coloredMedia
+            .onEach { value ->
+                mutableUiState.update { it.copy(coloredMedia = value) }
+            }
+            .launchIn(viewModelScope)
+
         mediaRepository.getMediaDetails(mediaId = arguments.id)
             .onEach { result ->
                 mutableUiState.updateAndGet {
@@ -291,6 +300,18 @@ class MediaDetailsViewModel(
         defaultPreferencesRepository.translatorApp
             .onEach { value ->
                 mutableUiState.update { it.copy(translatorApp = value) }
+            }
+            .launchIn(viewModelScope)
+
+        mutableUiState
+            .mapNotNull { it.details?.basicMediaDetails?.type }
+            .distinctUntilChanged()
+            .onEach { mediaType ->
+                defaultPreferencesRepository.customLinks(mediaType)
+                    .filterNotNull()
+                    .collectLatest { value ->
+                        mutableUiState.update { it.copy(customLinks = value) }
+                    }
             }
             .launchIn(viewModelScope)
     }

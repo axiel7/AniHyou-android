@@ -6,6 +6,8 @@ import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.core.network.fragment.ActivityUser
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 data class GenericActivity(
@@ -15,7 +17,7 @@ data class GenericActivity(
     val text: String?,
     val isLiked: Boolean?,
     val likeCount: Int,
-    val likes: List<ActivityUser>?,
+    val likes: ImmutableList<ActivityUser>?,
     val replyCount: Int?,
     val userId: Int?,
     val username: String?,
@@ -25,12 +27,7 @@ data class GenericActivity(
     val isAdultMedia: Boolean = false,
     val replies: List<ActivityReplyFragment>?,
     val listActivityFragment: ListActivityFragment? = null,
-) {
-    fun updateLikeStatus(isLiked: Boolean) = copy(
-        isLiked = isLiked,
-        likeCount = if (isLiked) likeCount + 1 else likeCount - 1
-    )
-}
+)
 
 fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     id = textActivityFragment.id,
@@ -39,7 +36,7 @@ fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     text = textActivityFragment.text,
     isLiked = textActivityFragment.isLiked,
     likeCount = textActivityFragment.likeCount,
-    likes = textActivityFragment.likes?.mapNotNull { it?.activityUser },
+    likes = textActivityFragment.likes?.mapNotNull { it?.activityUser }?.toImmutableList(),
     replyCount = textActivityFragment.replyCount,
     userId = textActivityFragment.user?.id,
     username = textActivityFragment.user?.activityUser?.name,
@@ -54,7 +51,7 @@ fun ActivityDetailsQuery.OnListActivity.toGenericActivity() = GenericActivity(
     text = null,
     isLiked = listActivityFragment.isLiked,
     likeCount = listActivityFragment.likeCount,
-    likes = listActivityFragment.likes?.mapNotNull { it?.activityUser },
+    likes = listActivityFragment.likes?.mapNotNull { it?.activityUser }?.toImmutableList(),
     replyCount = listActivityFragment.replyCount,
     userId = user?.id,
     username = user?.activityUser?.name,
@@ -73,7 +70,7 @@ fun ActivityDetailsQuery.OnMessageActivity.toGenericActivity() = GenericActivity
     text = messageActivityFragment.message,
     isLiked = messageActivityFragment.isLiked,
     likeCount = messageActivityFragment.likeCount,
-    likes = messageActivityFragment.likes?.mapNotNull { it?.activityUser },
+    likes = messageActivityFragment.likes?.mapNotNull { it?.activityUser }?.toImmutableList(),
     replyCount = messageActivityFragment.replyCount,
     userId = messageActivityFragment.messenger?.id,
     username = messageActivityFragment.messenger?.activityUser?.name,
@@ -88,7 +85,7 @@ fun ActivityReplyFragment.toGenericActivity() = GenericActivity(
     text = text,
     isLiked = isLiked,
     likeCount = likeCount,
-    likes = likes?.mapNotNull { it?.activityUser },
+    likes = likes?.mapNotNull { it?.activityUser }?.toImmutableList(),
     replyCount = null,
     userId = user?.id,
     username = user?.activityUser?.name,

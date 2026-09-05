@@ -39,6 +39,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -151,7 +152,7 @@ private fun CharacterDetailsContent(
                         if (uiState.page == 0) event?.onLoadMore()
                     }
                     CharacterMediaView(
-                        media = uiState.media,
+                        media = uiState.media.toImmutableList(),
                         isLoading = uiState.isLoadingMedia,
                         loadMore = { event?.onLoadMore() },
                         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),

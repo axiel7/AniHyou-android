@@ -169,7 +169,6 @@ private fun SettingsContent(
                 shape = bottomShape
             )
 
-
             PreferencesTitle(text = stringResource(R.string.display))
 
             ListPreference(
@@ -215,7 +214,6 @@ private fun SettingsContent(
                 onValueChange = { event?.setColorPalette(it) },
                 shape = bottomShape
             )
-
 
             PreferencesTitle(text = stringResource(R.string.content))
 
@@ -289,9 +287,33 @@ private fun SettingsContent(
                 preferenceValue = uiState.blurAdultContent,
                 icon = R.drawable.blur_on_24,
                 onValueChange = { event?.setBlurAdultContent(it) },
-                shape = if (uiState.isLoggedIn) bottomShape else singleShape
+                shape = middleShape
             )
 
+            SwitchPreference(
+                title = stringResource(R.string.colored_media_title),
+                subtitle = stringResource(R.string.colored_media_desc),
+                preferenceValue = uiState.coloredMedia,
+                icon = R.drawable.format_color_fill_24,
+                onValueChange = { event?.setColoredMedia(it) },
+                shape = middleShape
+            )
+
+            SwitchPreference(
+                title = stringResource(R.string.airing_on_my_list),
+                preferenceValue = uiState.airingOnMyList,
+                icon = R.drawable.rss_feed_24,
+                subtitle = stringResource(R.string.airing_on_my_list_summary),
+                onValueChange = { event?.setAiringOnMyList(it) },
+                shape = middleShape
+            )
+
+            PlainPreference(
+                title = stringResource(R.string.custom_links),
+                icon = R.drawable.add_link_24,
+                onClick = navActionManager::toCustomLinks,
+                shape = bottomShape
+            )
 
             if (uiState.isLoggedIn) {
                 PreferencesTitle(text = stringResource(R.string.list))
@@ -358,26 +380,14 @@ private fun SettingsContent(
                 )
 
                 SwitchPreference(
-                    title = stringResource(R.string.airing_on_my_list),
-                    preferenceValue = uiState.airingOnMyList,
-                    icon = R.drawable.rss_feed_24,
-                    subtitle = stringResource(R.string.airing_on_my_list_summary),
-                    onValueChange = { event?.setAiringOnMyList(it) },
-                    shape = bottomShape
-                )
-
-                PreferencesTitle(text = stringResource(R.string.search))
-
-                SwitchPreference(
                     title = stringResource(R.string.use_fuzzy_search),
                     preferenceValue = uiState.useFuzzySearch,
                     icon = R.drawable.search_insights_24,
                     onValueChange = { event?.setUseFuzzySearch(it) },
                     subtitle = stringResource(R.string.fuzzy_search_description),
-                    shape = singleShape
+                    shape = bottomShape
                 )
             }
-
 
             if (uiState.isLoggedIn) {
                 PreferencesTitle(text = stringResource(R.string.notifications))
@@ -417,7 +427,6 @@ private fun SettingsContent(
                     )
                 }
 
-
                 PreferencesTitle(text = stringResource(R.string.account))
 
                 PlainPreference(
@@ -435,7 +444,6 @@ private fun SettingsContent(
                     shape = bottomShape
                 )
             }
-
 
             PreferencesTitle(text = stringResource(R.string.information))
 

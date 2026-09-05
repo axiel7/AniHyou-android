@@ -61,6 +61,7 @@ import com.axiel7.anihyou.feature.reviewdetails.ReviewDetailsView
 import com.axiel7.anihyou.feature.settings.ContributorsView
 import com.axiel7.anihyou.feature.settings.SettingsView
 import com.axiel7.anihyou.feature.settings.TranslationsView
+import com.axiel7.anihyou.feature.settings.customlinks.CustomLinksView
 import com.axiel7.anihyou.feature.settings.customlists.CustomListsView
 import com.axiel7.anihyou.feature.settings.liststyle.ListStyleSettingsView
 import com.axiel7.anihyou.feature.settings.priority_colors.PriorityColorView
@@ -70,6 +71,7 @@ import com.axiel7.anihyou.feature.thread.ThreadDetailsView
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentDetailsView
 import com.axiel7.anihyou.feature.thread.publish.PublishCommentView
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListHostView
+import com.materialkolor.PaletteStyle
 
 private val topNavigationTransitionSpec = NavDisplay.transitionSpec {
     ContentTransform(
@@ -96,6 +98,8 @@ fun MainNavigation(
     homeTab: HomeTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
+    blackColors: Boolean,
+    paletteStyle: PaletteStyle,
     padding: PaddingValues = PaddingValues(),
 ) {
     val context = LocalContext.current
@@ -273,6 +277,8 @@ fun MainNavigation(
         entry<Route.MediaDetails> {
             MediaDetailsView(
                 arguments = it.copy(isLoggedIn = isLoggedIn),
+                blackColors = blackColors,
+                paletteStyle = paletteStyle,
             )
         }
 
@@ -342,6 +348,9 @@ fun MainNavigation(
         }
         entry<Route.CustomLists> {
             CustomListsView()
+        }
+        entry<Route.CustomLinks> {
+            CustomLinksView()
         }
         entry<Route.Translations> {
             TranslationsView()

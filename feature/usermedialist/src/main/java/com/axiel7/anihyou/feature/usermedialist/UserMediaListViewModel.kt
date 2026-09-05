@@ -21,9 +21,11 @@ import com.axiel7.anihyou.core.model.media.asMediaListStatus
 import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
+import com.axiel7.anihyou.core.model.media.plainName
 import com.axiel7.anihyou.core.model.media.titleComparator
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaListSort
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaStatus
@@ -184,28 +186,46 @@ class UserMediaListViewModel(
         mutableUiState.value.run {
             selectedItem?.let { selectedItem ->
                 if (selectedItem.basicMediaListEntry != newListEntry) {
+                    val selectedListName = selectedListName ?: return
+                    val list = lists[selectedListName]?.toMutableList() ?: return
                     if (newListEntry != null) {
-                        entries.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }
+                        list.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }
                             ?.let { index ->
-                                val oldValue = entries[index]
+                                val oldValue = list[index]
+                                val newEntry = oldValue.copy(basicMediaListEntry = newListEntry)
                                 if (newListEntry.status != oldValue.basicMediaListEntry.status) {
-                                    entries.removeAt(index)
-                                    if (newListEntry.status == MediaListStatus.COMPLETED
-                                        && newListEntry.score.isNullOrZero()
-                                    ) {
-                                        mutableUiState.update { it.copy(openSetScoreDialog = true) }
+                                    list.removeAt(index)
+                                    newListEntry.status?.let { status ->
+                                        oldValue.media?.format?.let { mediaFormat ->
+                                            oldValue.media?.basicMediaDetails?.type?.let { mediaType ->
+                                                findListForEntry(status, mediaType, mediaFormat)
+                                                    ?.let { newList ->
+                                                        lists[newList] =
+                                                            lists[newList].orEmpty()
+                                                                .plus(newEntry)
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    val openSetScoreDialog =
+                                        newListEntry.status == MediaListStatus.COMPLETED
+                                            && newListEntry.score.isNullOrZero()
+                                    mutableUiState.update {
+                                        it.copy(
+                                            openSetScoreDialog = openSetScoreDialog,
+                                            selectedItem = newEntry
+                                        )
                                     }
                                 } else {
-                                    entries[index] =
-                                        oldValue.copy(basicMediaListEntry = newListEntry)
+                                    list[index] = newEntry
                                 }
                             }
                     } else {
-                        entries.remove(selectedItem)
+                        list.remove(selectedItem)
                     }
-                    selectedListName?.let { selectedListName ->
-                        lists[selectedListName] = entries
-                    }
+                    lists[selectedListName] = list
+                    onChangeList(selectedListName)
                 }
             }
         }
@@ -306,6 +326,21 @@ class UserMediaListViewModel(
 
     override fun onErrorDisplayed() {
         mutableUiState.update { it.copy(error = null, errorId = null) }
+    }
+
+    private fun findListForEntry(
+        status: MediaListStatus,
+        mediaType: MediaType,
+        mediaFormat: MediaFormat
+    ): String? {
+        mutableUiState.value.run {
+            return lists.keys.find {
+                val listName = it.uppercase()
+                val statusName = status.plainName(mediaType).uppercase()
+                val mediaFormatName = mediaFormat.rawValue.replace('_', ' ').uppercase()
+                return@find listName == statusName || listName == "$statusName $mediaFormatName"
+            }
+        }
     }
 
     private fun UserMediaListUiState.formatMatch(entry: CommonMediaListEntry) =

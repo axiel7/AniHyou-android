@@ -1,8 +1,11 @@
-extend schema
-@link(url: "https://specs.apollo.dev/cache/v0.4", import: ["@typePolicy", "@fieldPolicy"])
+extend schema @link(
+    url: "https://specs.apollo.dev/cache/v0.4",
+    import: ["@typePolicy", "@fieldPolicy", "@connection"]
+)
 
 extend type User @typePolicy(keyFields: "id")
 extend type Media @typePolicy(keyFields: "id")
+extend type AiringSchedule @typePolicy(keyFields: "id")
 extend type Character @typePolicy(keyFields: "id")
 extend type Staff @typePolicy(keyFields: "id")
 extend type Studio @typePolicy(keyFields: "id")
@@ -16,8 +19,21 @@ extend type ThreadComment @typePolicy(keyFields: "id")
 extend type Recommendation @typePolicy(keyFields: "id")
 extend type Review @typePolicy(keyFields: "id")
 
+extend type MediaConnection @connection
+extend type AiringScheduleConnection @connection
+extend type CharacterConnection @connection
+extend type StaffConnection @connection
+extend type StudioConnection @connection
+extend type ReviewConnection @connection
+extend type RecommendationConnection @connection
+
 extend type Query @fieldPolicy(forField: "User", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Media", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Character", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Staff", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Studio", keyArgs: "id")
+extend type Query @fieldPolicy(forField: "Activity", keyArgs: "id")
+extend type Query @fieldPolicy(forField: "ActivityReply", keyArgs: "id")
+extend type Query @fieldPolicy(forField: "Thread", keyArgs: "id")
+extend type Query @fieldPolicy(forField: "ThreadComment", keyArgs: "id")
+extend type Query @fieldPolicy(forField: "Review", keyArgs: "id")

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.home.current.fulllist
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -40,6 +42,8 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
+import com.axiel7.anihyou.core.ui.composables.media.PriorityColors.Companion.toPriorityColors
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
@@ -87,6 +91,26 @@ private fun CurrentFullListContent(
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     var showEditSheet by rememberSaveable { mutableStateOf(false) }
+
+    val isDark = isSystemInDarkTheme()
+
+    val priorityNoneColor = MaterialTheme.colorScheme.secondaryContainer
+    val lowPriorityColors = remember(uiState.lowPriorityColor, isDark) {
+        (uiState.lowPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val mediumPriorityColors = remember(uiState.mediumPriorityColor, isDark) {
+        (uiState.mediumPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val highPriorityColors = remember(uiState.highPriorityColor, isDark) {
+        (uiState.highPriorityColor ?: priorityNoneColor).toPriorityColors(isDark)
+    }
+    val allPriorityColors = remember(lowPriorityColors, mediumPriorityColors, highPriorityColors) {
+        AllPriorityColors(
+            low = lowPriorityColors,
+            medium = mediumPriorityColors,
+            high = highPriorityColors,
+        )
+    }
 
     val items = remember(listType) {
         uiState.getListFromType(listType)
@@ -148,6 +172,8 @@ private fun CurrentFullListContent(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
                         isPlusEnabled = !uiState.isLoadingPlusOne,
+                        showLowPriority = uiState.showLowPriority,
+                        allPriorityColors = allPriorityColors,
                         onClick = { navActionManager.toMediaDetails(item.mediaId) },
                         onClickPlus = { increment ->
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)

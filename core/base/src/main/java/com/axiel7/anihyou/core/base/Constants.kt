@@ -38,5 +38,6 @@ const val DISCORD_SERVER_URL = "https://discord.gg/CTv3WdfxHh"
 const val CROWDIN_URL = "https://crowdin.com/project/anihyou"
 
 const val UNKNOWN_CHAR = "─"
+const val CUSTOM_URL_NAME_PLACEHOLDER = "{name}"
 
 const val UTF_8 = "UTF-8"

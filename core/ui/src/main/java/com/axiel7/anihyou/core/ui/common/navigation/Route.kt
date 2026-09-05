@@ -117,6 +117,9 @@ sealed interface Route : NavKey {
     object CustomLists: Route
 
     @Serializable
+    object CustomLinks: Route
+
+    @Serializable
     @Immutable
     object Translations: Route
 

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
@@ -61,6 +62,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -261,10 +263,12 @@ private fun UserMediaListHostContent(
                 uiState = uiState,
                 event = event,
                 isCompactScreen = isCompactScreen,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
                 contentPadding = if (!uiState.isMyList)
                     PaddingValues(bottom = 58.dp + padding.calculateBottomPadding())
                 else PaddingValues(bottom = 58.dp),
-                nestedScrollConnection = scrollBehavior.nestedScrollConnection,
                 navActionManager = navActionManager,
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
