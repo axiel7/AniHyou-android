@@ -2,7 +2,6 @@ package com.axiel7.anihyou
 
 import com.axiel7.anihyou.feature.activitydetails.ActivityDetailsViewModel
 import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityViewModel
-import com.axiel7.anihyou.feature.calendar.CalendarHostViewModel
 import com.axiel7.anihyou.feature.calendar.CalendarViewModel
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsViewModel
 import com.axiel7.anihyou.feature.editmedia.EditMediaViewModel
@@ -47,7 +46,6 @@ val viewModelModule = module {
     viewModel<ActivityDetailsViewModel>()
     viewModel<PublishActivityViewModel>()
     viewModel<CalendarViewModel>()
-    viewModel<CalendarHostViewModel>()
     viewModel<CharacterDetailsViewModel>()
     viewModel<EditMediaViewModel>()
     viewModel<SearchViewModel>()

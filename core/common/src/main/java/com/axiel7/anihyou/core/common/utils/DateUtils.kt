@@ -48,6 +48,14 @@ object DateUtils {
         null
     }
 
+    fun LocalDateTime.toLocalized(
+        pattern: String,
+    ): String? = try {
+        this.format(DateTimeFormatter.ofPattern(pattern))
+    } catch (_: DateTimeException) {
+        null
+    }
+
     private fun LocalDateTime.toCalendar(): GregorianCalendar =
         GregorianCalendar.from(this.atZone(ZoneId.systemDefault()))
 
@@ -73,6 +81,15 @@ object DateUtils {
             weekdayDate.plusDays(1).atStartOfDay().minusNanos(1).toEpochSecond(defaultZoneOffset)
         } else {
             weekdayDate.atStartOfDay().minusNanos(1).toEpochSecond(defaultZoneOffset)
+        }
+    }
+
+    fun LocalDateTime.toTimestamp(isEndOfDay: Boolean): Long {
+        val localDate = this.toLocalDate()
+        return if (isEndOfDay) {
+            localDate.plusDays(1).atStartOfDay().minusNanos(1).toEpochSecond(defaultZoneOffset)
+        } else {
+            localDate.atStartOfDay().toEpochSecond(defaultZoneOffset)
         }
     }
 

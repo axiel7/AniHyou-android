@@ -36,6 +36,7 @@ class MediaRepository (
         isAdult: Boolean = false,
         page: Int,
         perPage: Int = 25,
+        fetchFromNetwork: Boolean = false,
     ) = api
         .airingAnimesQuery(
             airingAtGreater = airingAtGreater,
@@ -43,6 +44,7 @@ class MediaRepository (
             sort = sort,
             page = page,
             perPage = perPage,
+            fetchFromNetwork = fetchFromNetwork,
         )
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
