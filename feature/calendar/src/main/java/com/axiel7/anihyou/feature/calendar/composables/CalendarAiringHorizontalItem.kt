@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.calendar.composables
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,8 +31,9 @@ import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.core.network.type.MediaListStatus
+import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
-import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
@@ -69,7 +71,7 @@ fun CalendarAiringHorizontalItem(
             val posterSizeModifier = Modifier
                 .size(
                     width = MEDIA_POSTER_COMPACT_WIDTH.dp,
-                    height = MEDIA_POSTER_COMPACT_HEIGHT.dp
+                    height = MEDIA_POSTER_COMPACT_WIDTH.dp
                 )
             Box(
                 modifier = posterSizeModifier
@@ -116,17 +118,22 @@ fun CalendarAiringHorizontalItem(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                if (score != null) {
-                    SmallScoreIndicator(
-                        score = score
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    TextIconHorizontal(
+                        text = subtitle,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        icon = R.drawable.schedule_20,
                     )
+                    if (score != null) {
+                        SmallScoreIndicator(
+                            score = score
+                        )
+                    }
                 }
             }
         }
@@ -143,7 +150,8 @@ fun CalendarAiringHorizontalItemPlaceholder() {
     ) {
         Box(
             modifier = Modifier
-                .size(width = MEDIA_POSTER_COMPACT_WIDTH.dp, height = MEDIA_POSTER_COMPACT_HEIGHT.dp)
+                .size(width = MEDIA_POSTER_COMPACT_WIDTH.dp, height = MEDIA_POSTER_COMPACT_WIDTH.dp)
+                .align(Alignment.CenterVertically)
                 .background(
                     color = MaterialTheme.colorScheme.outline,
                     shape = RoundedCornerShape(8.dp)
@@ -167,15 +175,24 @@ fun CalendarAiringHorizontalItemPlaceholder() {
                     .defaultPlaceholder(visible = true)
             )
 
-            Text(
-                text = "Loading",
-                modifier = Modifier.defaultPlaceholder(visible = true)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                TextIconHorizontal(
+                    text = "12:40",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .defaultPlaceholder(visible = true),
+                    icon = R.drawable.schedule_20,
+                )
+                SmallScoreIndicator(
+                    score = 0,
+                )
+            }
 
-            SmallScoreIndicator(
-                score = 0,
-                modifier = Modifier.padding(top = 8.dp)
-            )
         }
     }
 }
@@ -187,7 +204,7 @@ private fun AiringAnimeHorizontalItemPreview() {
         Surface {
             CalendarAiringHorizontalItem(
                 title = "Kimetsu no Yaiba: Katanakaji no Sato-hen",
-                subtitle = "Airing in 12 min",
+                subtitle = "12:10",
                 imageUrl = null,
                 score = 79,
                 status = MediaListStatus.COMPLETED,

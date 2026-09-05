@@ -12,11 +12,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -92,6 +94,72 @@ class CalendarViewModel(
         }
     }
 
+    override fun refresh() {
+        mutableUiState.update {
+            it.copy(
+                fetchFromNetwork = true,
+                day = LocalDateTime.now(),
+                weeklyAnime = mutableMapOf(),
+                page = 1,
+                hasNextPage = true,
+                isLoading = true,
+            )
+        }
+    }
+
+    override fun refreshDay(date: LocalDate) {
+        val start = date.atStartOfDay().toTimestamp(isEndOfDay = false)
+        val end = date.atStartOfDay().toTimestamp(isEndOfDay = true)
+        viewModelScope.launch {
+            val animes = mutableListOf<ExploreMedia>()
+            var currentPage = 1
+            var hasNextPage = true
+            var fetchFailed = false
+
+            mutableUiState.update {
+                it.copy(isLoading = true)
+            }
+
+            while (hasNextPage) {
+                mediaRepository.getAiringAnimesPage(
+                    airingAtGreater = start,
+                    airingAtLesser = end,
+                    onMyList = mutableUiState.value.onMyList,
+                    isAdult = displayAdult.first() == true,
+                    page = currentPage,
+                    perPage = 50,
+                    fetchFromNetwork = true,
+                ).collect { result ->
+                    if (result is PagedResult.Success) {
+                        animes.addAll(result.list)
+                        hasNextPage = result.hasNextPage
+                        currentPage++
+                    } else if (result is PagedResult.Error) {
+                        fetchFailed = true
+                        hasNextPage = false
+                        mutableUiState.update {
+                            result.toUiState(loadingWhen = it.page == 1)
+                        }
+                    }
+                }
+                if (fetchFailed) return@launch
+            }
+
+            mutableUiState.update { state ->
+                val updatedMap = state.weeklyAnime.toMutableMap()
+                if (animes.isNotEmpty()) {
+                    updatedMap[date] = animes
+                } else {
+                    updatedMap.remove(date)
+                }
+                state.copy(
+                    weeklyAnime = updatedMap,
+                    isLoading = false,
+                )
+            }
+        }
+    }
+
     init {
         onMyList.onEach { onMyListVal ->
             if (mutableUiState.value.onMyList != onMyListVal) {
@@ -102,7 +170,8 @@ class CalendarViewModel(
                         day = LocalDateTime.now(),
                         page = 1,
                         hasNextPage = true,
-                        isLoading = true
+                        isLoading = true,
+                        fetchFromNetwork = uiState.value.onMyList == true
                     )
                 }
             }
@@ -110,26 +179,24 @@ class CalendarViewModel(
 
         mutableUiState
             .filter { it.hasNextPage }
-            .distinctUntilChanged { old, new ->
-                old.page == new.page
-                        && old.day == new.day
-                        && old.onMyList == new.onMyList
-            }
             .combine(displayAdult, ::Pair)
+            .distinctUntilChanged { (oldState, oldAdult), (newState, newAdult) ->
+                oldState.page == newState.page &&
+                        oldState.day == newState.day &&
+                        oldState.onMyList == newState.onMyList &&
+                        oldAdult == newAdult
+            }
             .flatMapLatest { (uiState, displayAdult) ->
-                val start = uiState.day.toTimestamp(
-                    isEndOfDay = false
-                )
-                val end = uiState.day.toTimestamp(
-                    isEndOfDay = true
-                )
+                val start = uiState.day.toTimestamp(isEndOfDay = false)
+                val end = uiState.day.toTimestamp(isEndOfDay = true)
                 mediaRepository.getAiringAnimesPage(
                     airingAtGreater = start,
                     airingAtLesser = end,
                     onMyList = uiState.onMyList,
                     isAdult = displayAdult == true,
                     page = uiState.page,
-                    perPage = 25,
+                    perPage = 50,
+                    fetchFromNetwork = uiState.onMyList == true || uiState.fetchFromNetwork,
                 )
             }
             .onEach { result ->
@@ -143,16 +210,19 @@ class CalendarViewModel(
                         }
                         val updatedList = currentList + result.list
                         val updatedMap = state.weeklyAnime.toMutableMap()
-                        if (updatedList.isNotEmpty() || state.onMyList != true) {
-                            updatedMap[localeDate] = updatedList
-                        }
+                        updatedMap[localeDate] = updatedList
+
                         state.copy(
                             weeklyAnime = updatedMap,
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
                         )
                     }
-                } else {
+                } else if (result is PagedResult.Loading) {
+                    if (mutableUiState.value.page == 1) {
+                        mutableUiState.update { it.copy(isLoading = true) }
+                    }
+                } else if (result is PagedResult.Error) {
                     mutableUiState.update {
                         result.toUiState(loadingWhen = it.page == 1)
                     }

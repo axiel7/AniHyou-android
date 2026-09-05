@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +22,9 @@ import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -73,7 +77,7 @@ fun CalendarView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun CalendarViewContent(
     isLoggedIn: Boolean,
@@ -83,11 +87,12 @@ private fun CalendarViewContent(
     event: CalendarEvent?
 ) {
     val navActionManager = LocalNavActionManager.current
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
     val scope = rememberCoroutineScope()
     val snackbarManager = rememberSnackbarManager()
+    val pullToRefreshState = rememberPullToRefreshState()
     var showEditSheet by remember { mutableStateOf(false) }
     val blurAdult = LocalBlurAdult.current
     val haptic = LocalHapticFeedback.current
@@ -125,7 +130,14 @@ private fun CalendarViewContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = {
+                    uiState.run { copy(fetchFromNetwork = false) } // check if this is so okay
+                    navActionManager::goBack.invoke()
+                }
+            )
+        },
         actions = {
             AppBarActions(
                 onMyList = onMyList,
@@ -149,81 +161,94 @@ private fun CalendarViewContent(
             }
         }
     ) { padding ->
-        LazyColumn(
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = { event?.refresh() },
             modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = listState,
-            contentPadding = padding,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            uiState.weeklyAnime.entries.forEachIndexed { index, (date, mediaList) ->
-                stickyHeader {
-                    val titleId = when (date.dayOfWeek) {
-                        DayOfWeek.MONDAY -> R.string.monday
-                        DayOfWeek.TUESDAY -> R.string.tuesday
-                        DayOfWeek.WEDNESDAY -> R.string.wednesday
-                        DayOfWeek.THURSDAY -> R.string.thursday
-                        DayOfWeek.FRIDAY -> R.string.friday
-                        DayOfWeek.SATURDAY -> R.string.saturday
-                        DayOfWeek.SUNDAY -> R.string.sunday
-                    }
-                    val title = stringResource(id = titleId)
-                    val media = mediaList.maxWithOrNull(
-                        compareBy<ExploreMedia> { it.popularity ?: Int.MIN_VALUE }
-                            .thenBy { it.averageScore ?: Int.MIN_VALUE } // if popularity is the same, fallback to score
-                    )
-                    val banner = media?.bannerImage ?: mediaList.firstNotNullOfOrNull { it.bannerImage }
-                    val imageColor = colorFromHex(media?.coverImage?.color)
-
-                    CalendarBanner(
-                        title = title,
-                        date = date.atStartOfDay(),
-                        imageUrl = banner,
-                        height = 120.dp,
-                        color = imageColor,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = if (index > 0) 24.dp else 0.dp,
-                                bottom = 8.dp
-                            )
-                    )
-                }
-
-                items(
-                    items = mediaList,
-                    contentType = { it }
-                ) { item ->
-                    CalendarAiringHorizontalItem(
-                        title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                        subtitle = stringResource(
-                            R.string.airing_at,
-                            item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: stringResource(R.string.unknown)
-                        ),
-                        blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
-                        imageUrl = item.coverImage?.large,
-                        score = item.averageScore,
-                        status = item.mediaListEntry?.basicMediaListEntry?.status,
-                        onClick = {
-                            navActionManager.toMediaDetails(item.id)
-                        },
-                        onLongClick = {
-                            // TODO show edit sheet
-                        }
-                    )
-                }
+                .fillMaxSize(),
+            state = pullToRefreshState,
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullToRefreshState,
+                    isRefreshing = uiState.isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                uiState.weeklyAnime.entries.forEachIndexed { index, (date, mediaList) ->
+                    stickyHeader {
+                        val titleId = when (date.dayOfWeek) {
+                            DayOfWeek.MONDAY -> R.string.monday
+                            DayOfWeek.TUESDAY -> R.string.tuesday
+                            DayOfWeek.WEDNESDAY -> R.string.wednesday
+                            DayOfWeek.THURSDAY -> R.string.thursday
+                            DayOfWeek.FRIDAY -> R.string.friday
+                            DayOfWeek.SATURDAY -> R.string.saturday
+                            DayOfWeek.SUNDAY -> R.string.sunday
+                        }
+                        val title = stringResource(id = titleId)
+                        val media = mediaList.maxWithOrNull(
+                            compareBy<ExploreMedia> { it.popularity ?: Int.MIN_VALUE }
+                                .thenBy { it.averageScore ?: Int.MIN_VALUE } // if popularity is the same, fallback to score
+                        )
+                        val banner = media?.bannerImage ?: mediaList.firstNotNullOfOrNull { it.bannerImage }
+                        val imageColor = colorFromHex(media?.coverImage?.color)
 
-            if (uiState.isLoading) {
-                item {
-                    CalendarBannerPlaceholder()
+                        CalendarBanner(
+                            title = title,
+                            date = date.atStartOfDay(),
+                            imageUrl = banner,
+                            height = 120.dp,
+                            color = imageColor,
+                            onLongClick = {
+                                event?.refreshDay(date)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp)
+                        )
+                    }
+
+                    items(
+                        items = mediaList,
+                        contentType = { it }
+                    ) { item ->
+                        CalendarAiringHorizontalItem(
+                            title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
+                            subtitle = item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: stringResource(R.string.unknown),
+                            blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
+                            imageUrl = item.coverImage?.large,
+                            score = item.averageScore,
+                            status = item.mediaListEntry?.basicMediaListEntry?.status,
+                            onClick = {
+                                navActionManager.toMediaDetails(item.id)
+                            },
+                            onLongClick = {
+                                event?.selectItem(item)
+                                showEditSheetAction()
+                            },
+                        )
+                    }
                 }
-                items(
-                    count = 6,
-                    contentType = { "placeholder" }
-                ) {
-                    CalendarAiringHorizontalItemPlaceholder()
+
+                if (uiState.isLoading) {
+                    item {
+                        CalendarBannerPlaceholder()
+                    }
+                    items(
+                        count = 20,
+                        contentType = { "placeholder" }
+                    ) {
+                        CalendarAiringHorizontalItemPlaceholder()
+                    }
                 }
             }
         }

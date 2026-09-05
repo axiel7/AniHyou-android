@@ -12,6 +12,7 @@ data class CalendarUiState(
     val selectedItem: ExploreMedia? = null,
     val day: LocalDateTime = LocalDateTime.now(),
     val weeklyAnime: MutableMap<LocalDate, List<ExploreMedia>> = mutableMapOf(),
+    val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,

@@ -1,5 +1,7 @@
 package com.axiel7.anihyou.feature.calendar.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -24,6 +28,7 @@ import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import java.time.LocalDateTime
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarBanner(
     title: String,
@@ -32,36 +37,53 @@ fun CalendarBanner(
     height: Dp,
     imageUrl: String? = null,
     color: Color? = null,
+    onLongClick: () -> Unit,
 ) {
-    Box(
-        modifier = modifier.fillMaxWidth()
+    val haptic = LocalHapticFeedback.current
+    Surface(
+        color = Color.Transparent,
+        modifier = modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {},
+                onLongClick = {
+                    if (onLongClick != null) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
+                    }
+                }
+            )
     ) {
-        CalendarBannerView(
-            imageUrl = imageUrl,
-            height = height,
-            modifier = Modifier.fillMaxWidth(),
-            gradientColor = color?.copy(alpha = 0.6f)
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // TODO `contentColorFor` does not work with custom colors
-            Text(
-                text = date.toLocalized(pattern = "d MMM") ?: "",
-                style = MaterialTheme.typography.labelMedium,
-                color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
+            CalendarBannerView(
+                imageUrl = imageUrl,
+                height = height,
+                modifier = Modifier.fillMaxWidth(),
+                gradientColor = color?.copy(alpha = 0.6f)
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
-            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                // TODO `contentColorFor` does not work with custom colors
+                Text(
+                    text = date.toLocalized(pattern = "d MMM") ?: "",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
+                )
+            }
         }
     }
 }
@@ -115,7 +137,8 @@ private fun CalendarBannerPreview() {
                 date = LocalDateTime.now(),
                 height = 120.dp,
                 imageUrl = null,
-                color = null
+                color = null,
+                onLongClick = {}
             )
         }
     }
