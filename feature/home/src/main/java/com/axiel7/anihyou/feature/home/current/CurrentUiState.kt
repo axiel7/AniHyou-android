@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.home.current
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
@@ -13,6 +14,10 @@ data class CurrentUiState(
     val behindList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val animeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val mangaList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val showLowPriority: Boolean = false,
+    val lowPriorityColor: Color? = null,
+    val mediumPriorityColor: Color? = null,
+    val highPriorityColor: Color? = null,
     val nextSeasonAnimeList: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val selectedItem: CommonMediaListEntry? = null,
     val selectedType: CurrentListType? = null,

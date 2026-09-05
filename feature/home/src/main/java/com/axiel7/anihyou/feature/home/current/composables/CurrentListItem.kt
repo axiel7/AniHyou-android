@@ -34,10 +34,12 @@ import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.composables.IncrementOneButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.AiringScheduleText
+import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.media.MediaProgressIndicator
+import com.axiel7.anihyou.core.ui.composables.media.PriorityIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
@@ -47,6 +49,8 @@ fun CurrentListItem(
     modifier: Modifier = Modifier,
     item: CommonMediaListEntry,
     isPlusEnabled: Boolean,
+    showLowPriority: Boolean,
+    allPriorityColors: AllPriorityColors,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickPlus: (Int) -> Unit,
@@ -91,6 +95,16 @@ fun CurrentListItem(
                         score = item.basicMediaListEntry.score,
                         scoreFormat = scoreFormat
                     )
+                }
+
+                item.basicMediaListEntry.priority?.let { priority ->
+                    if (priority > 0 || showLowPriority) {
+                        PriorityIndicator(
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            priority = priority,
+                            allPriorityColors = allPriorityColors,
+                        )
+                    }
                 }
             }
 
@@ -192,6 +206,8 @@ private fun CurrentListItemPreview() {
                 CurrentListItem(
                     item = exampleCommonMediaListEntry,
                     isPlusEnabled = true,
+                    showLowPriority = true,
+                    allPriorityColors = AllPriorityColors.Default,
                     onClick = {},
                     onLongClick = {},
                     onClickPlus = {},
