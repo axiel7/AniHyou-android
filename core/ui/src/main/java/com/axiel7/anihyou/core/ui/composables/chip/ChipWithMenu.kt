@@ -104,6 +104,77 @@ fun <T> FilterChipWithMenu(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun <T> FilterChipWithMenu(
+    title: String,
+    values: List<T>,
+    selectedValues: List<T>,
+    onValuesChanged: (List<T>) -> Unit,
+    modifier: Modifier = Modifier,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    valueString: @Composable (T) -> String = { it.toString() },
+    valueIcon: (T) -> Int? = { null },
+    containerColor: Color = MenuDefaults.groupStandardContainerColor,
+) {
+    val windowHeight = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.height.toDp()
+    }
+    var menuOpened by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .wrapContentSize(Alignment.TopStart)
+    ) {
+        FilterChip(
+            selected = selectedValues.isNotEmpty(),
+            onClick = { menuOpened = true },
+            label = { Text(text = title) },
+            trailingIcon = trailingIcon,
+        )
+        DropdownMenuPopup(
+            expanded = menuOpened,
+            onDismissRequest = { menuOpened = false },
+            modifier = Modifier.requiredSizeIn(maxHeight = windowHeight / 2)
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+                containerColor = containerColor,
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                values.fastForEachIndexed { index, item ->
+                    val selected = selectedValues.contains(item)
+                    SelectableDropdownMenuItem(
+                        selected = selected,
+                        onClick = {
+                            val values = if (selected) selectedValues - item
+                            else selectedValues + item
+                            onValuesChanged(values)
+                        },
+                        text = { Text(text = valueString(item)) },
+                        shapes = MenuDefaults.itemShape(index, values.size),
+                        selectedLeadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.check_20),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.TrailingIconSize)
+                            )
+                        },
+                        leadingIcon = {
+                            valueIcon(item)?.let { iconRes ->
+                                Icon(
+                                    painter = painterResource(iconRes),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun <T> AssistChipWithMenu(
     values: List<T>,
