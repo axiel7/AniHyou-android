@@ -40,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.base.UNKNOWN_CHAR
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampToTimeString
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
@@ -214,7 +215,13 @@ private fun CalendarViewContent(
 
                         CalendarAiringHorizontalItem(
                             title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                            subtitle = item.nextAiringEpisode?.airingAt?.toLong()?.timestampToTimeString() ?: stringResource(R.string.unknown),
+                            subtitle = item.nextAiringEpisode?.let { nextAiringEpisode ->
+                                stringResource(
+                                    R.string.episode_airing_at,
+                                    nextAiringEpisode.episode,
+                                    nextAiringEpisode.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
+                                )
+                            } ?: stringResource(R.string.unknown),
                             blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                             imageUrl = item.coverImage?.large,
                             score = item.averageScore,

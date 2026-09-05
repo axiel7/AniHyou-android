@@ -31,8 +31,6 @@ import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.core.network.type.MediaListStatus
-import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_COMPACT_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
@@ -123,12 +121,11 @@ fun CalendarAiringHorizontalItem(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    TextIconHorizontal(
+                    Text(
                         text = subtitle,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 8.dp),
-                        icon = R.drawable.schedule_20,
                     )
                     if (score != null) {
                         SmallScoreIndicator(
@@ -182,14 +179,13 @@ fun CalendarAiringHorizontalItemPlaceholder(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                TextIconHorizontal(
-                    text = "12:40",
+                Text(
+                    text = "Ep 11 airing at 11:30",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .defaultPlaceholder(visible = true),
-                    icon = R.drawable.schedule_20,
                 )
                 SmallScoreIndicator(
                     score = 0,
@@ -207,7 +203,7 @@ private fun AiringAnimeHorizontalItemPreview() {
         Surface {
             CalendarAiringHorizontalItem(
                 title = "Kimetsu no Yaiba: Katanakaji no Sato-hen",
-                subtitle = "12:10",
+                subtitle = "Ep 11 airing at 11:30",
                 imageUrl = null,
                 score = 79,
                 status = MediaListStatus.COMPLETED,
