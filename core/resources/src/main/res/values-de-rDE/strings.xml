@@ -654,4 +654,13 @@
     <string name="logout_confirm">Möchten sie sich wirklich abmelden?</string>
     <string name="score_steps">Bewertungsschritte</string>
     <string name="recent">Kürzlich</string>
+    <string name="use_fuzzy_search">Fuzzy-Suche verwenden</string>
+    <string name="fuzzy_search_description">Erkennt Tippfehler, umgestellte Wörter und Akronyme (z.B. \"aot\"). Kann auf älteren Geräten die Leistung beeinträchtigen.</string>
+    <string name="move_to_top">Zum Anfang springen</string>
+    <string name="colored_media_title">Farbige Mediendetails</string>
+    <string name="colored_media_desc">Ändert die App-Farbe basierend auf der Medienbildfarbe</string>
+    <string name="custom_links">Benutzerdefinierte Links</string>
+    <string name="space_separator">Leerzeichen Trennzeichen</string>
+    <string name="custom_link_url_error_name">Die URL muss ein {name} enthalten</string>
+    <string name="invalid_url_error">Ungültige URL</string>
 </resources>
