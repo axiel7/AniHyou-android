@@ -673,5 +673,12 @@
     <string name="score_steps">Кроки зміни</string>
     <string name="recent">Нещодавні</string>
     <string name="use_fuzzy_search">Використовувати нечіткий пошук</string>
-    <string name="fuzzy_search_description">Розпізнає описки, скорочення та слова не за порядком. Може сповільнювати старіші пристрої.</string>
+    <string name="fuzzy_search_description">Розпізнає описки, скорочення (наприклад, \"aot\") та слова не за порядком. Може сповільнювати старіші пристрої.</string>
+    <string name="move_to_top">На початок</string>
+    <string name="colored_media_title">Забарвлення сторінки медіа</string>
+    <string name="colored_media_desc">Змінює колір додатка згідно з кольором зображення медіа</string>
+    <string name="custom_links">Власні посилання</string>
+    <string name="space_separator">Розділювач пробілів</string>
+    <string name="custom_link_url_error_name">Посилання повинне містити {name}</string>
+    <string name="invalid_url_error">Некоректне посилання</string>
 </resources>

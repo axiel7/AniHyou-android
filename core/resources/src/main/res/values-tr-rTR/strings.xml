@@ -654,4 +654,12 @@
     <string name="logout_confirm">Çıkış yapmak istediğine emin misin?</string>
     <string name="score_steps">Puanlama adımları</string>
     <string name="recent">En son</string>
+    <string name="use_fuzzy_search">Fuzzy arama kullan</string>
+    <string name="fuzzy_search_description">Yazım hatalarını, kelime sıralamasının bozuk olmasını ve kısaltmaları (örneğin, \"aot\") eşleştirir. Eski cihazlarda performansı etkileyebilir.</string>
+    <string name="colored_media_title">Renklendirilmiş medya detayları</string>
+    <string name="colored_media_desc">Uygulama rengini, medya görselinin rengine göre değiştirir</string>
+    <string name="custom_links">Özel bağlantılar</string>
+    <string name="space_separator">Boşluk ayracı</string>
+    <string name="custom_link_url_error_name">URL {name} içermeli</string>
+    <string name="invalid_url_error">Geçersiz URL</string>
 </resources>

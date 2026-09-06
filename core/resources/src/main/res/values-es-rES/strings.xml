@@ -654,4 +654,13 @@
     <string name="logout_confirm">¿Quieres cerrar sesión?</string>
     <string name="score_steps">Pasos para la puntuación</string>
     <string name="recent">Reciente</string>
+    <string name="use_fuzzy_search">Usar búsqueda aproximada</string>
+    <string name="fuzzy_search_description">Detecta errores ortográficos, palabras desordenadas y acrónimos (p. ej., «aot»). Puede afectar al rendimiento en dispositivos más antiguos.</string>
+    <string name="move_to_top">Mover al principio</string>
+    <string name="colored_media_title">Detalle de anime/manga coloreado</string>
+    <string name="colored_media_desc">Cambia el color de la aplicación en función del color de la imagen de portada</string>
+    <string name="custom_links">Enlaces personalizados</string>
+    <string name="space_separator">Separador de espacios</string>
+    <string name="custom_link_url_error_name">La URL debe contener {name}</string>
+    <string name="invalid_url_error">URL no válida</string>
 </resources>
