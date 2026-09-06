@@ -1,15 +1,14 @@
 package com.axiel7.anihyou.feature.activitydetails.composables
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
@@ -69,7 +68,6 @@ fun ActivityTextView(
     onClickMedia: () -> Unit = {},
     onClickLike: () -> Unit,
 ) {
-    var isLikesExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -112,65 +110,75 @@ fun ActivityTextView(
         }
 
         Row(
-            modifier = Modifier.align(Alignment.End),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .align(Alignment.End)
+                .fillMaxWidth(0.6f),
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (replyCount != null) {
                 CommentIconButton(
-                    modifier = Modifier.width(78.dp),
                     commentCount = replyCount,
                     onClick = { },
                     fontSize = 14.sp,
                     iconSize = 20.dp,
                 )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
             }
-            FavoriteIconButton(
-                modifier = Modifier
-                    .width(78.dp)
-                    .combinedClickable(onClick = {}, onLongClick = { isLikesExpanded = true }),
-                isFavorite = isLiked == true,
-                favoritesCount = likeCount,
-                onClick = onClickLike,
-                fontSize = 14.sp,
-                iconSize = 20.dp,
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                FavoriteIconButton(
+                    isFavorite = isLiked == true,
+                    favoritesCount = likeCount,
+                    onClick = onClickLike,
+                    fontSize = 14.sp,
+                    iconSize = 20.dp,
+                )
+                if (!likes.isNullOrEmpty()) {
+                    ExpandLikesButton(likes)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandLikesButton(
+    likes: ImmutableList<ActivityUser>,
+) {
+    var isLikesExpanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier.wrapContentSize(Alignment.TopStart)
+    ) {
+        IconButton(
+            onClick = { isLikesExpanded = !isLikesExpanded },
+            shapes = IconButtonDefaults.shapes()
+        ) {
+            Icon(
+                painter = painterResource(
+                    id = if (isLikesExpanded) R.drawable.expand_less_24 else R.drawable.expand_more_24
+                ),
+                contentDescription = null
             )
-            if (!likes.isNullOrEmpty()) {
-                Box(
-                    modifier = Modifier.wrapContentSize(Alignment.TopStart)
-                ) {
-                    IconButton(
-                        onClick = { isLikesExpanded = !isLikesExpanded },
-                        shapes = IconButtonDefaults.shapes()
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (isLikesExpanded) R.drawable.expand_less_24 else R.drawable.expand_more_24
-                            ),
-                            contentDescription = null
-                        )
-                    }
-                    DropdownMenuPopup(
-                        expanded = isLikesExpanded,
-                        onDismissRequest = { isLikesExpanded = false }
-                    ) {
-                        DropdownMenuGroup(
-                            shapes = MenuDefaults.groupShapes()
-                        ) {
-                            likes.fastForEach { user ->
-                                DropdownMenuItem(
-                                    onClick = {},
-                                    text = { Text(text = user.name) },
-                                    leadingIcon = {
-                                        PersonImage(
-                                            url = user.avatar?.medium,
-                                            modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-                                        )
-                                    }
-                                )
-                            }
+        }
+        DropdownMenuPopup(
+            expanded = isLikesExpanded,
+            onDismissRequest = { isLikesExpanded = false }
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes()
+            ) {
+                likes.fastForEach { user ->
+                    DropdownMenuItem(
+                        onClick = {},
+                        text = { Text(text = user.name) },
+                        leadingIcon = {
+                            PersonImage(
+                                url = user.avatar?.medium,
+                                modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
+                            )
                         }
-                    }
+                    )
                 }
             }
         }
