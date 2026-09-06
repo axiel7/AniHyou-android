@@ -129,6 +129,7 @@ class MediaApi(
         sort: List<AiringSort>,
         page: Int,
         perPage: Int,
+        fetchFromNetwork: Boolean = false,
     ) = client
         .query(
             AiringAnimesQuery(
@@ -138,7 +139,7 @@ class MediaApi(
                 airingAtGreater = Optional.presentIfNotNull(airingAtGreater?.toInt()),
                 airingAtLesser = Optional.presentIfNotNull(airingAtLesser?.toInt()),
             )
-        )
+        ).fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 
     fun airingOnMyListQuery(
         page: Int,
