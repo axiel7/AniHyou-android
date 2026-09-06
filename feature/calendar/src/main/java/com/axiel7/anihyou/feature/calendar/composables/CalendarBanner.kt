@@ -26,6 +26,11 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.ui.composables.CalendarBannerView
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.blend
+import com.materialkolor.ktx.fixIfDisliked
+import com.materialkolor.ktx.from
+import com.materialkolor.ktx.toneColor
+import com.materialkolor.palettes.TonalPalette
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,9 +45,8 @@ fun CalendarBanner(
     onLongClick: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    Surface(
-        color = Color.Transparent,
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {},
@@ -52,36 +56,34 @@ fun CalendarBanner(
                 }
             )
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            CalendarBannerView(
-                imageUrl = imageUrl,
-                height = height,
-                modifier = Modifier.fillMaxWidth(),
-                gradientColor = color?.copy(alpha = 0.6f)
-            )
+        CalendarBannerView(
+            imageUrl = imageUrl,
+            height = height,
+            modifier = Modifier.fillMaxWidth(),
+            gradientColor = color,
+        )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomStart)
-                    .padding(16.dp)
-            ) {
-                // TODO `contentColorFor` does not work with custom colors
-                Text(
-                    text = date.toLocalized(pattern = "d MMM") ?: "",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = contentColorFor(color ?: MaterialTheme.colorScheme.outline)
-                )
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            val contentColor = color?.let {
+                TonalPalette.from(it).toneColor(90)
+            } ?: MaterialTheme.colorScheme.outline
+            Text(
+                text = date.toLocalized(pattern = "d MMM").orEmpty(),
+                style = MaterialTheme.typography.labelMedium,
+                color = contentColor
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = contentColor
+            )
         }
     }
 }
@@ -135,7 +137,7 @@ private fun CalendarBannerPreview() {
                 date = LocalDateTime.now(),
                 height = 120.dp,
                 imageUrl = null,
-                color = null,
+                color = Color(0xFFC1F54E),
                 onLongClick = {}
             )
         }

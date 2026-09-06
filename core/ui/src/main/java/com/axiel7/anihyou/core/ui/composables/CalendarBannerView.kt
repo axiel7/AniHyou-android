@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.axiel7.anihyou.core.resources.banner_shadow_color
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.materialkolor.ktx.darken
 
 @Composable
 fun CalendarBannerView(
@@ -57,7 +58,10 @@ fun CalendarBannerView(
                 .fillMaxSize()
                 .background(
                     Brush.linearGradient(
-                        listOf(gradientColor ?: banner_shadow_color, MaterialTheme.colorScheme.surface),
+                        colors = listOf(
+                            (gradientColor?.darken(2f) ?: banner_shadow_color).copy(alpha = 0.7f),
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                        ),
                         start = Offset(x = 0f, y = Float.POSITIVE_INFINITY),
                         end = Offset(x = Float.POSITIVE_INFINITY, y = 0f)
                     )
