@@ -1,6 +1,8 @@
 package com.axiel7.anihyou.feature.calendar
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -48,6 +51,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
+import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
@@ -128,9 +132,7 @@ private fun CalendarViewContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.calendar),
-        navigationIcon = {
-            BackIconButton(onClick = navActionManager::goBack)
-        },
+        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             AppBarActions(
                 onMyList = onMyList,
@@ -141,11 +143,7 @@ private fun CalendarViewContent(
         scrollBehavior = topAppBarScrollBehavior,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    scope.launch {
-                        listState.animateScrollToItem(0)
-                    }
-                },
+                onClick = { scope.launch { listState.animateScrollToItem(0) } },
             ) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_upward_24),
@@ -155,9 +153,11 @@ private fun CalendarViewContent(
         }
     ) { padding ->
         PullToRefreshBox(
-            isRefreshing = uiState.isLoading,
+            isRefreshing = uiState.fetchFromNetwork && uiState.isLoading,
             onRefresh = { event?.refresh() },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = padding.calculateTopPadding()),
             state = pullToRefreshState,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
@@ -170,8 +170,12 @@ private fun CalendarViewContent(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                contentPadding = PaddingValues(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    end = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    bottom = padding.calculateBottomPadding(),
+                ),
                 state = listState,
             ) {
                 uiState.weeklyAnime.entries.forEach { (date, mediaList) ->
@@ -233,7 +237,10 @@ private fun CalendarViewContent(
                                 event?.selectItem(item)
                                 showEditSheetAction()
                             },
-                            modifier = Modifier.padding(bottom = if (isLast) 24.dp else 8.dp, top = if (isFirst) 8.dp else 0.dp)
+                            modifier = Modifier.padding(
+                                bottom = if (isLast) 24.dp else 8.dp,
+                                top = if (isFirst) 8.dp else 0.dp,
+                            )
                         )
                     }
                 }
