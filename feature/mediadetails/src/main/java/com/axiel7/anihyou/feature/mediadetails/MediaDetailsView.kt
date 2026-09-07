@@ -118,7 +118,6 @@ import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.materialkolor.dynamiccolor.ColorSpec
-import com.materialkolor.ktx.animateColorScheme
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -130,22 +129,23 @@ fun MediaDetailsView(
 ) {
     val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isDark = isSystemInDarkTheme()
 
-    val colorScheme = animateColorScheme(
-        colorScheme = if (uiState.coloredMedia) {
+    val colorScheme = remember(uiState.coloredMedia, uiState.details) {
+        if (uiState.coloredMedia) {
             uiState.details?.coverImage?.color?.let(::colorFromHex)?.let { color ->
                 dynamicColorScheme(
                     seedColor = color,
-                    isDark = isSystemInDarkTheme(),
+                    isDark = isDark,
                     isAmoled = blackColors,
                     style = paletteStyle,
                     specVersion = ColorSpec.SpecVersion.SPEC_2025,
                 )
-            } ?: MaterialTheme.colorScheme
-        } else MaterialTheme.colorScheme
-    )
+            }
+        } else null
+    }
 
-    MaterialTheme(colorScheme = colorScheme) {
+    MaterialTheme(colorScheme = colorScheme ?: MaterialTheme.colorScheme) {
         MediaDetailsContent(
             uiState = uiState,
             event = viewModel,
