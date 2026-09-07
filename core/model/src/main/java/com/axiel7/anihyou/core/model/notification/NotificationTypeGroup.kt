@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.core.model.notification
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.resources.R
@@ -53,14 +55,32 @@ enum class NotificationTypeGroup(val values: Array<NotificationType>?) : Localiz
         )
     );
 
+    @get:StringRes
+    val stringRes
+        get() = when (this) {
+            ALL -> R.string.notifications_all
+            AIRING -> R.string.notifications_airing
+            ACTIVITY -> R.string.activity
+            FORUM -> R.string.forum
+            FOLLOWS -> R.string.following
+            MEDIA -> R.string.notifications_media
+            SUBMISSION -> R.string.notifications_submission
+        }
+
     @Composable
-    override fun localized() = when (this) {
-        ALL -> stringResource(R.string.notifications_all)
-        AIRING -> stringResource(R.string.notifications_airing)
-        ACTIVITY -> stringResource(R.string.activity)
-        FORUM -> stringResource(R.string.forum)
-        FOLLOWS -> stringResource(R.string.following)
-        MEDIA -> stringResource(R.string.notifications_media)
-        SUBMISSION -> stringResource(R.string.notifications_submission)
+    override fun localized() = stringResource(stringRes)
+
+    companion object {
+        fun NotificationType.asGroup() = entries.find { it.values?.contains(this) == true }
+
+        fun NotificationTypeGroup.asDeepLinkType() = when (this) {
+            ALL -> null
+            AIRING -> DeepLink.Type.ANIME
+            ACTIVITY -> DeepLink.Type.ACTIVITY
+            FORUM -> DeepLink.Type.THREAD
+            FOLLOWS -> DeepLink.Type.USER
+            MEDIA -> DeepLink.Type.ANIME
+            SUBMISSION -> null
+        }
     }
 }

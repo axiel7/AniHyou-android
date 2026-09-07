@@ -14,6 +14,7 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.common.utils.DeviceUtils
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
+import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.network.NetworkVariables
 import com.axiel7.anihyou.core.network.type.ScoreFormat
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val networkVariables: NetworkVariables,
     private val loginRepository: LoginRepository,
+    private val notificationRepository: NotificationRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
     private val devicePerformance: DevicePerformance,
 ) : ViewModel(), MainEvent {
@@ -87,6 +89,10 @@ class MainViewModel(
                 data.toString().contains(ANIHYOU_WEAR_AUTH) -> sendAuthTokenToWearable(context)
             }
         }
+    }
+
+    fun markNotificationsAsRead() = viewModelScope.launch {
+        notificationRepository.resetNotificationCount()
     }
 
     private fun sendAuthTokenToWearable(context: Context) {

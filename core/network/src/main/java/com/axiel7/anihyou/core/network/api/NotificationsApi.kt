@@ -22,4 +22,13 @@ class NotificationsApi (
                 resetCount = Optional.present(resetCount)
             )
         )
+
+    fun resetNotificationCount() = client
+        .query(
+            NotificationsQuery(
+                page = Optional.present(1),
+                perPage = Optional.present(1),
+                resetCount = Optional.present(true),
+            )
+        )
 }

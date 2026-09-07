@@ -22,8 +22,10 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
-import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
+import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
+import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup.Companion.asDeepLinkType
+import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup.Companion.asGroup
 import com.axiel7.anihyou.core.network.NetworkVariables
 import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.resources.R
@@ -75,61 +77,61 @@ class NotificationWorker(
                         defaultPreferencesRepository.setLastNotificationCreatedAt(createdAt)
                     }
                 }
-                newNotifications.forEach {
-                    var pendingIntent: PendingIntent? = null
-                    // if the notification contains a media, open details on click
-                    // TODO: handle user, activity and thread
-                    if (it.type == NotificationType.AIRING
-                        || NotificationTypeGroup.MEDIA.values?.contains(it.type) == true
-                    ) {
-                        val intent = applicationContext.packageManager
-                            .getLaunchIntentForPackage(APP_PACKAGE_NAME)
-                            ?.apply {
-                                action = "media_details"
-                                putExtra("media_id", it.contentId)
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            }
-                        pendingIntent = PendingIntent.getActivity(
-                            applicationContext, it.id, intent,
-                            PendingIntent.FLAG_IMMUTABLE
+                newNotifications.groupBy { it.type }.forEach { (type, notifications) ->
+                    val group = type?.asGroup() ?: NotificationTypeGroup.ALL
+                    notifications.forEach {
+                        var pendingIntent: PendingIntent? = null
+                        val deepLinkType = group.asDeepLinkType()
+                        if (deepLinkType != null) {
+                            applicationContext.packageManager
+                                .getLaunchIntentForPackage(APP_PACKAGE_NAME)
+                                ?.apply {
+                                    action = deepLinkType.intentAction
+                                    putExtra("content_id", it.contentId)
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }?.let { intent ->
+                                    pendingIntent = PendingIntent.getActivity(
+                                        applicationContext, it.id, intent,
+                                        PendingIntent.FLAG_IMMUTABLE
+                                    )
+                                }
+                        }
+
+                        val image = (it.largeImageUrl ?: it.imageUrl)?.let { url ->
+                            applicationContext.getBitmapFromUrl(url)
+                        }
+
+                        val title = if (it.type == NotificationType.AIRING) {
+                            it.mediaTitle() ?: it.text
+                        } else it.text
+
+                        val text = if (it.type == NotificationType.AIRING) {
+                            it.numEpisode()?.let { ep -> "Episode $ep aired" }.orEmpty()
+                        } else ""
+
+                        applicationContext.showNotification(
+                            notificationId = it.id,
+                            channelId = group.channelId,
+                            title = title,
+                            text = text,
+                            largeIcon = image,
+                            bigPicture = image.takeIf { _ -> it.isMedia },
+                            pendingIntent = pendingIntent,
+                            group = group.name
                         )
                     }
-
-                    val image = (it.largeImageUrl ?: it.imageUrl)?.let { url ->
-                        applicationContext.getBitmapFromUrl(url)
+                    if (notifications.size > 1) {
+                        applicationContext.showNotification(
+                            notificationId = 1,
+                            channelId = group.channelId,
+                            title = "${applicationContext.getString(group.stringRes)} (${newNotifications.size})",
+                            text = "",
+                            group = group.name,
+                            isGroupSummary = true
+                        )
                     }
-
-                    val title = if (it.type == NotificationType.AIRING) {
-                        it.mediaTitle() ?: it.text
-                    } else it.text
-
-                    val text = if (it.type == NotificationType.AIRING) {
-                        it.numEpisode()?.let { ep -> "Episode $ep aired" }.orEmpty()
-                    } else ""
-
-                    applicationContext.showNotification(
-                        notificationId = it.id,
-                        channelId = DEFAULT_CHANNEL_ID,
-                        title = title,
-                        text = text,
-                        largeIcon = image,
-                        bigPicture = image.takeIf { _ -> it.isMedia },
-                        pendingIntent = pendingIntent,
-                        group = "default"
-                    )
                 }
-                if (newNotifications.size > 1) {
-                    applicationContext.showNotification(
-                        notificationId = 1,
-                        channelId = DEFAULT_CHANNEL_ID,
-                        title = "${newNotifications.size} ${applicationContext.getString(R.string.notifications)}",
-                        text = "",
-                        group = "default",
-                        isGroupSummary = true
-                    )
-                }
-
                 Result.success()
             } else Result.retry()
         } catch (e: Exception) {
@@ -168,15 +170,35 @@ class NotificationWorker(
         private const val WORK_NAME = "default_notifications"
 
         const val DEFAULT_CHANNEL_ID = "default_channel_id"
+        const val AIRING_CHANNEL_ID = "airing_channel_id"
+        const val ACTIVITY_CHANNEL_ID = "activity_channel_id"
+        const val FORUM_CHANNEL_ID = "forum_channel_id"
+        const val FOLLOWING_CHANNEL_ID = "following_channel_id"
+        const val MEDIA_CHANNEL_ID = "media_channel_id"
+        const val SUBMISSION_CHANNEL_ID = "submission_channel_id"
         const val SYNC_CHANNEL_ID = "sync_channel_id"
+
+        val NotificationTypeGroup.channelId
+            get() = when (this) {
+                NotificationTypeGroup.ALL -> DEFAULT_CHANNEL_ID
+                NotificationTypeGroup.AIRING -> AIRING_CHANNEL_ID
+                NotificationTypeGroup.ACTIVITY -> ACTIVITY_CHANNEL_ID
+                NotificationTypeGroup.FORUM -> FORUM_CHANNEL_ID
+                NotificationTypeGroup.FOLLOWS -> FOLLOWING_CHANNEL_ID
+                NotificationTypeGroup.MEDIA -> MEDIA_CHANNEL_ID
+                NotificationTypeGroup.SUBMISSION -> SUBMISSION_CHANNEL_ID
+            }
 
         fun Context.createDefaultNotificationChannels() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // TODO: create different channels for every NotificationType?
-                createNotificationChannel(
-                    id = DEFAULT_CHANNEL_ID,
-                    name = getString(R.string.default_setting)
-                )
+                NotificationTypeGroup.entries.forEach { type ->
+                    val stringRes = if (type == NotificationTypeGroup.ALL) R.string.default_setting
+                    else type.stringRes
+                    createNotificationChannel(
+                        id = type.channelId,
+                        name = getString(stringRes)
+                    )
+                }
                 createNotificationChannel(
                     id = SYNC_CHANNEL_ID,
                     name = getString(R.string.update_interval)

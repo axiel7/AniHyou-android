@@ -34,6 +34,7 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.common.utils.DateUtils.timestampToDateString
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.media.exampleAiringWidgetEntry
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
 import com.axiel7.anihyou.core.network.NetworkVariables
@@ -118,8 +119,9 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         LocalContext.current.packageManager
                             .getLaunchIntentForPackage(APP_PACKAGE_NAME)
                             ?.apply {
-                                action = "media_details"
-                                putExtra("media_id", item.id)
+                                action = DeepLink.Type.ANIME.intentAction
+                                putExtra("content_id", item.id)
+                                putExtra("widget", true)
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 addCategory(item.id.toString())

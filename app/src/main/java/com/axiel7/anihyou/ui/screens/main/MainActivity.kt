@@ -164,19 +164,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findDeepLink(): DeepLink? {
+        val type = DeepLink.Type.entries.find { it.intentAction == intent.action }
         return when {
-            // Widget intent
-            intent.action == "media_details" -> {
+            // Comes from notification intent (or widget)
+            type != null -> {
+                val isFromWidget = intent.getBooleanExtra("widget", false)
+                if (!isFromWidget && type != DeepLink.Type.SEARCH) {
+                    viewModel.markNotificationsAsRead()
+                }
                 DeepLink(
-                    type = DeepLink.Type.ANIME,// does not matter ANIME or MANGA
-                    id = intent.getIntExtra("media_id", 0).toString()
-                )
-            }
-            // Search shortcut
-            intent.action == "search" -> {
-                DeepLink(
-                    type = DeepLink.Type.SEARCH,
-                    id = "search"
+                    type = type,
+                    id = intent.getIntExtra("content_id", 0).toString()
                 )
             }
             // Login intent or anilist link

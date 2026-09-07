@@ -39,6 +39,11 @@ class NotificationRepository(
             notifications
         }
 
+    suspend fun resetNotificationCount() = api
+        .resetNotificationCount()
+        .execute()
+        .asDataResult { it.Page?.notifications?.filterNotNull() }
+
     suspend fun getNewNotifications(unreadCount: Int) = api
         .notificationsQuery(
             typeIn = null,
