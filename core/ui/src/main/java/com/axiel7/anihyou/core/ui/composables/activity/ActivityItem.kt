@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,7 +47,8 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 
-const val ACTIVITY_IMAGE_SIZE = 48
+const val ACTIVITY_IMAGE_WIDTH = 48
+const val ACTIVITY_IMAGE_HEIGHT = 64
 
 @Composable
 fun ActivityItem(
@@ -67,6 +69,7 @@ fun ActivityItem(
     onClickLike: () -> Unit,
     onClickDelete: () -> Unit,
 ) {
+    val isTextOrMessage = type == ActivityType.TEXT || type == ActivityType.MESSAGE
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
@@ -78,7 +81,10 @@ fun ActivityItem(
                 enableBlur = blurImage,
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(ACTIVITY_IMAGE_SIZE.dp)
+                    .size(
+                        width = ACTIVITY_IMAGE_WIDTH.dp,
+                        height = ACTIVITY_IMAGE_HEIGHT.dp,
+                    )
                     .clickable(onClick = onClickImage),
                 showShadow = false
             )
@@ -87,16 +93,31 @@ fun ActivityItem(
         Column(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
-                if (type == ActivityType.TEXT || type == ActivityType.MESSAGE) {
+            if (isTextOrMessage) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     PersonItemSmall(
                         avatarUrl = imageUrl,
                         username = username,
-                        modifier = Modifier.padding(bottom = 8.dp),
                         isPrivate = isPrivate,
                         isLocked = isLocked,
+                        textStyle = MaterialTheme.typography.labelLarge,
                         onClick = onClickImage
                     )
+                    Text(
+                        text = createdAt.toLong().dateToRelativeText(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+            Row {
+                if (isTextOrMessage) {
                     DefaultMarkdownText(
                         markdown = text,
                         modifier = Modifier.weight(1f),
@@ -112,12 +133,12 @@ fun ActivityItem(
                         maxLines = 3,
                         style = MaterialTheme.typography.bodyMedium,
                     )
+                    Text(
+                        text = createdAt.toLong().dateToRelativeText(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
-                Text(
-                    text = createdAt.toLong().dateToRelativeText(),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.labelMedium
-                )
             }
 
             Row(
@@ -179,6 +200,13 @@ fun ActivityMenu(
                         onClickDelete()
                     },
                     text = { Text(text = stringResource(R.string.delete)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.delete_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
                 )
             }
         }
@@ -195,7 +223,10 @@ fun ActivityItemPlaceholder(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .size(ACTIVITY_IMAGE_SIZE.dp)
+                .size(
+                    width = ACTIVITY_IMAGE_WIDTH.dp,
+                    height = ACTIVITY_IMAGE_HEIGHT.dp,
+                )
                 .defaultPlaceholder(visible = true)
         )
 
@@ -234,6 +265,19 @@ private fun ActivityItemPreview() {
                     likeCount = 999,
                     isLiked = false,
                     imageUrl = "",
+                    modifier = Modifier.padding(8.dp),
+                    onClick = {},
+                    onClickLike = {},
+                    onClickDelete = {},
+                )
+                ActivityItem(
+                    type = ActivityType.MESSAGE,
+                    text = "Hello this is a message activity to test",
+                    createdAt = 1927389,
+                    replyCount = 999,
+                    likeCount = 999,
+                    isLiked = false,
+                    username = "thisisaverylongusername",
                     modifier = Modifier.padding(8.dp),
                     onClick = {},
                     onClickLike = {},

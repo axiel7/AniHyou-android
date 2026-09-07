@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.axiel7.anihyou.core.ui.composables.activity.ACTIVITY_IMAGE_SIZE
+import com.axiel7.anihyou.core.ui.composables.activity.ACTIVITY_IMAGE_WIDTH
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -51,7 +51,7 @@ fun NotificationItem(
                 url = imageUrl,
                 enableBlur = blurImage,
                 modifier = Modifier
-                    .size(ACTIVITY_IMAGE_SIZE.dp)
+                    .size(ACTIVITY_IMAGE_WIDTH.dp)
                     .clickable(onClick = onClickImage),
                 showShadow = false
             )
