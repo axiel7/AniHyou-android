@@ -23,6 +23,7 @@ import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -51,11 +52,11 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
-import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.core.ui.composables.list.rememberIsScrollingUp
 import com.axiel7.anihyou.feature.calendar.composables.CalendarAiringHorizontalItem
 import com.axiel7.anihyou.feature.calendar.composables.CalendarAiringHorizontalItemPlaceholder
 import com.axiel7.anihyou.feature.calendar.composables.CalendarBanner
@@ -64,6 +65,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.DayOfWeek
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun CalendarView(
@@ -102,7 +104,8 @@ private fun CalendarViewContent(
     val haptic = LocalHapticFeedback.current
 
     val listState = rememberLazyListState()
-    listState.OnBottomReached(buffer = 0) {
+    val isScrollingUp by listState.rememberIsScrollingUp()
+    listState.OnBottomReached(buffer = 0, debounceDuration = 500.milliseconds) {
         event?.onLoadMore()
     }
 
@@ -144,6 +147,10 @@ private fun CalendarViewContent(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = isScrollingUp,
+                    alignment = Alignment.BottomEnd
+                )
             ) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_upward_24),
@@ -179,6 +186,7 @@ private fun CalendarViewContent(
                 state = listState,
             ) {
                 uiState.weeklyAnime.entries.forEach { (date, mediaList) ->
+                    if (mediaList.isEmpty()) return@forEach
                     stickyHeader {
                         val titleId = when (date.dayOfWeek) {
                             DayOfWeek.MONDAY -> R.string.monday
@@ -238,8 +246,8 @@ private fun CalendarViewContent(
                                 showEditSheetAction()
                             },
                             modifier = Modifier.padding(
-                                bottom = if (isLast) 24.dp else 8.dp,
-                                top = if (isFirst) 8.dp else 0.dp,
+                                bottom = if (isLast) 16.dp else 8.dp,
+                                top = if (isFirst) 16.dp else 0.dp,
                             )
                         )
                     }
@@ -297,11 +305,7 @@ private fun AppBarActions(
                     selected = onMyList != null,
                     onClick = {
                         onMyListChanged(
-                            when (onMyList) {
-                                null -> true
-                                true -> false
-                                false -> null
-                            }
+                            if (onMyList == true) null else true
                         )
                         menuOpened = false
                     },

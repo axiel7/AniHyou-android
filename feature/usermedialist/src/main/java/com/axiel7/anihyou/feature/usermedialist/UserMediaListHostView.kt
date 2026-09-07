@@ -87,6 +87,7 @@ import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
+import com.axiel7.anihyou.core.ui.composables.list.rememberIsScrollingUp
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
@@ -481,54 +482,6 @@ private fun FloatingActionButton(
             }
         }
     )
-}
-
-@Composable
-private fun rememberIsScrollingUp(
-    listState: LazyListState,
-    gridState: LazyGridState,
-): State<Boolean> {
-    var lastListIndex by remember { mutableIntStateOf(listState.firstVisibleItemIndex) }
-    var lastListOffset by remember { mutableIntStateOf(listState.firstVisibleItemScrollOffset) }
-    var lastGridIndex by remember { mutableIntStateOf(gridState.firstVisibleItemIndex) }
-    var lastGridOffset by remember { mutableIntStateOf(gridState.firstVisibleItemScrollOffset) }
-
-    return remember(listState, gridState) {
-        derivedStateOf {
-            val listAtTop =
-                listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
-            val gridAtTop =
-                gridState.firstVisibleItemIndex == 0 && gridState.firstVisibleItemScrollOffset == 0
-
-            if (listAtTop && gridAtTop) {
-                lastListIndex = 0
-                lastListOffset = 0
-                lastGridIndex = 0
-                lastGridOffset = 0
-                false
-            } else {
-                val listScrollingUp = if (listState.firstVisibleItemIndex != lastListIndex) {
-                    listState.firstVisibleItemIndex < lastListIndex
-                } else {
-                    listState.firstVisibleItemScrollOffset < lastListOffset
-                }.also {
-                    lastListIndex = listState.firstVisibleItemIndex
-                    lastListOffset = listState.firstVisibleItemScrollOffset
-                }
-
-                val gridScrollingUp = if (gridState.firstVisibleItemIndex != lastGridIndex) {
-                    gridState.firstVisibleItemIndex < lastGridIndex
-                } else {
-                    gridState.firstVisibleItemScrollOffset < lastGridOffset
-                }.also {
-                    lastGridIndex = gridState.firstVisibleItemIndex
-                    lastGridOffset = gridState.firstVisibleItemScrollOffset
-                }
-
-                listScrollingUp || gridScrollingUp
-            }
-        }
-    }
 }
 
 @Preview
