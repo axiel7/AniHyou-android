@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.settings.customlinks
 
-import android.webkit.URLUtil
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.core.net.toUri
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -120,7 +120,8 @@ fun CustomLinkDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    isUrlValid = URLUtil.isValidUrl(urlValue)
+                    val uri = urlValue.toUri()
+                    isUrlValid = uri.scheme != null && uri.host != null
                     if (isUrlValid) {
                         onConfirm(selectedSeparator.value + urlValue)
                     }

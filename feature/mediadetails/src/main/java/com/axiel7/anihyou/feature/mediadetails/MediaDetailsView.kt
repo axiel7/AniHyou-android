@@ -630,8 +630,14 @@ private fun CustomLinksButton(
                 uiState.customLinks.forEachIndexed { index, item ->
                     DropdownMenuItem(
                         text = {
-                            val uri = runCatching { item.toUri() }.getOrNull()
-                            Text(text = uri?.host ?: item)
+                            val urlString = item.substring(1)
+                            val uri = urlString.toUri()
+                            val scheme = uri.scheme
+                                ?.takeIf { !it.startsWith("http") }
+                                ?.plus("://")
+                            val name = if (uri.host != null) scheme.orEmpty() + uri.host else urlString
+
+                            Text(text = name)
                         },
                         onClick = {
                             selectedLink = item
