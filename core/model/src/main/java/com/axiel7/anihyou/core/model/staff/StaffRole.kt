@@ -14,9 +14,9 @@ internal fun String.parseStaffRole() =
 
 @Composable
 fun MediaStaff.roleLocalized(): String? {
-    if (role == null) return null
-    val roleParsed = role?.parseStaffRole()
-    val roleLocalized = when (roleParsed?.first ?: role) {
+    val role = role ?: return null
+    val roleParsed = role.parseStaffRole()
+    val roleLocalized = when (roleParsed.first) {
         "A&R Producer" -> stringResource(R.string.staff_role_a_and_r_producer)
         "ADR Director" -> stringResource(R.string.staff_role_adr_director)
         "Accessory Design" -> stringResource(R.string.staff_role_accessory_design)
@@ -249,5 +249,5 @@ fun MediaStaff.roleLocalized(): String? {
         else -> role
     }
 
-    return roleLocalized + roleParsed?.second.orEmpty()
+    return roleLocalized + roleParsed.second
 }

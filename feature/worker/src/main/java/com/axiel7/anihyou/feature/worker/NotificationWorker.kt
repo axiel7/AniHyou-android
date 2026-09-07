@@ -169,14 +169,14 @@ class NotificationWorker(
         private const val TAG = "NotificationWorker"
         private const val WORK_NAME = "default_notifications"
 
-        const val DEFAULT_CHANNEL_ID = "default_channel_id"
-        const val AIRING_CHANNEL_ID = "airing_channel_id"
-        const val ACTIVITY_CHANNEL_ID = "activity_channel_id"
-        const val FORUM_CHANNEL_ID = "forum_channel_id"
-        const val FOLLOWING_CHANNEL_ID = "following_channel_id"
-        const val MEDIA_CHANNEL_ID = "media_channel_id"
-        const val SUBMISSION_CHANNEL_ID = "submission_channel_id"
-        const val SYNC_CHANNEL_ID = "sync_channel_id"
+        private const val DEFAULT_CHANNEL_ID = "default_channel_id"
+        private const val AIRING_CHANNEL_ID = "airing_channel_id"
+        private const val ACTIVITY_CHANNEL_ID = "activity_channel_id"
+        private const val FORUM_CHANNEL_ID = "forum_channel_id"
+        private const val FOLLOWING_CHANNEL_ID = "following_channel_id"
+        private const val MEDIA_CHANNEL_ID = "media_channel_id"
+        private const val SUBMISSION_CHANNEL_ID = "submission_channel_id"
+        private const val SYNC_CHANNEL_ID = "sync_channel_id"
 
         val NotificationTypeGroup.channelId
             get() = when (this) {
