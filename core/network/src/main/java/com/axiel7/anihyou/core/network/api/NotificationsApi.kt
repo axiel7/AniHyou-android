@@ -2,6 +2,8 @@ package com.axiel7.anihyou.core.network.api
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.NotificationsQuery
 import com.axiel7.anihyou.core.network.type.NotificationType
 
@@ -11,6 +13,7 @@ class NotificationsApi (
     fun notificationsQuery(
         typeIn: List<NotificationType>?,
         resetCount: Boolean,
+        fetchFromNetwork: Boolean,
         page: Int,
         perPage: Int,
     ) = client
@@ -22,6 +25,7 @@ class NotificationsApi (
                 resetCount = Optional.present(resetCount)
             )
         )
+        .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
 
     fun resetNotificationCount() = client
         .query(

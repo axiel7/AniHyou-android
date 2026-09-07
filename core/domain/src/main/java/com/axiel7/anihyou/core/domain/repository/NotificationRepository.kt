@@ -14,12 +14,14 @@ class NotificationRepository(
         type: NotificationTypeGroup,
         resetCount: Boolean,
         initialUnreadCount: Int,
+        fetchFromNetwork: Boolean = false,
         page: Int,
         perPage: Int = 25,
     ) = api
         .notificationsQuery(
             typeIn = type.values?.toList(),
             resetCount = resetCount,
+            fetchFromNetwork = fetchFromNetwork,
             page = page,
             perPage = perPage
         )
@@ -48,10 +50,10 @@ class NotificationRepository(
         .notificationsQuery(
             typeIn = null,
             resetCount = false,
+            fetchFromNetwork = true,
             page = 1,
             perPage = unreadCount
         )
-        .fetchPolicy(FetchPolicy.NetworkFirst)
         .execute()
         .asDataResult { it.Page?.notifications?.filterNotNull()?.toGenericNotifications() }
 }

@@ -31,18 +31,24 @@ class NotificationsViewModel(
         }
     }
 
+    override fun refresh() {
+        mutableUiState.update { it.copy(page = 1, hasNextPage = true, fetchFromNetwork = true) }
+    }
+
     init {
         mutableUiState
             .filter { it.hasNextPage }
             .distinctUntilChanged { old, new ->
                 old.page == new.page
                         && old.type == new.type
+                        && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
                 notificationRepository.getNotificationsPage(
                     type = uiState.type,
                     resetCount = resetCount,
                     initialUnreadCount = arguments.unreadCount,
+                    fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page
                 ).also {
                     resetCount = false // only reset on first call
@@ -55,7 +61,8 @@ class NotificationsViewModel(
                         it.notifications.addAll(result.list)
                         it.copy(
                             hasNextPage = result.hasNextPage,
-                            isLoading = false
+                            isLoading = false,
+                            fetchFromNetwork = false,
                         )
                     } else {
                         result.toUiState(loadingWhen = it.page == 1)

@@ -8,4 +8,5 @@ import com.axiel7.anihyou.core.base.event.UiEvent
 @Immutable
 interface NotificationsEvent : UiEvent, PagedEvent {
     fun setType(value: NotificationTypeGroup)
+    fun refresh()
 }
