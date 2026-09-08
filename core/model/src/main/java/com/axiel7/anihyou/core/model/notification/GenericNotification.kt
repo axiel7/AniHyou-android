@@ -291,7 +291,12 @@ data class GenericNotification(
             NotificationType.AIRING -> {
                 val episode = numEpisode() ?: 0
                 val title = mediaTitle().orEmpty()
-                resources.getString(R.string.notification_episode_aired, episode, title)
+                resources.getQuantityString(
+                    R.plurals.notification_episode_aired,
+                    episode,
+                    episode,
+                    title
+                )
             }
 
             NotificationType.ACTIVITY_LIKE -> {
