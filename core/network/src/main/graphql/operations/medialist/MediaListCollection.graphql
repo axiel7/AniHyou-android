@@ -65,7 +65,9 @@ fragment CommonMediaListEntry on MediaList {
         synonyms
         format
         countryOfOrigin
-        seasonYear
+        startDate {
+            year
+        }
         genres
         tags {
             name
