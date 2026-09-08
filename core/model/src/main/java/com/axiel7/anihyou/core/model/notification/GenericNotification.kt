@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.core.model.notification
 
+import android.content.res.Resources
 import com.axiel7.anihyou.core.network.NotificationsQuery
 import com.axiel7.anihyou.core.network.type.NotificationType
+import com.axiel7.anihyou.core.resources.R
 
 data class GenericNotification(
     val id: Int,
@@ -272,6 +274,99 @@ data class GenericNotification(
                 }
             }
             return tempList
+        }
+
+        private val activityLikedRegex = "(.+) liked your activity\\.".toRegex()
+        private val activityReplyLikedRegex = "(.+) liked your activity reply\\.".toRegex()
+        private val activityReplyRegex = "(.+) replied to your activity\\.".toRegex()
+        private val activityMessageRegex = "(.+) sent you a message\\.".toRegex()
+        private val activityMentionRegex = "(.+) mentioned you in their activity\\.".toRegex()
+        private val followingRegex = "(.+) started following you\\.".toRegex()
+        private val mediaAddedRegex = "(.+) was recently added to the site\\.".toRegex()
+        private val mediaChangedRegex = "(.+) received site data changes".toRegex()
+        private val mediaDeletedRegex = "(.+) was deleted from the site".toRegex()
+        private val forumMentionRegex = "(.+) mentioned you, in the forum thread (.+)".toRegex()
+
+        fun GenericNotification.localizedText(resources: Resources) = when (type) {
+            NotificationType.AIRING -> {
+                val episode = numEpisode() ?: 0
+                val title = mediaTitle().orEmpty()
+                resources.getQuantityString(
+                    R.plurals.notification_episode_aired,
+                    episode,
+                    episode,
+                    title
+                )
+            }
+
+            NotificationType.ACTIVITY_LIKE -> {
+                activityLikedRegex.find(text)?.let {
+                    resources.getString(R.string.notification_activity_liked, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.ACTIVITY_REPLY_LIKE -> {
+                activityReplyLikedRegex.find(text)?.let {
+                    resources.getString(
+                        R.string.notification_activity_reply_liked,
+                        it.groupValues[1]
+                    )
+                } ?: text
+            }
+
+            NotificationType.ACTIVITY_REPLY, NotificationType.ACTIVITY_REPLY_SUBSCRIBED -> {
+                activityReplyRegex.find(text)?.let {
+                    resources.getString(R.string.notification_activity_reply, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.ACTIVITY_MESSAGE -> {
+                activityMessageRegex.find(text)?.let {
+                    resources.getString(R.string.notification_activity_message, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.ACTIVITY_MENTION -> {
+                activityMentionRegex.find(text)?.let {
+                    resources.getString(R.string.notification_activity_mention, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.FOLLOWING -> {
+                followingRegex.find(text)?.let {
+                    resources.getString(R.string.notification_following, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.RELATED_MEDIA_ADDITION -> {
+                mediaAddedRegex.find(text)?.let {
+                    resources.getString(R.string.notification_media_added, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.MEDIA_DATA_CHANGE, NotificationType.MEDIA_MERGE -> {
+                mediaChangedRegex.find(text)?.let {
+                    resources.getString(R.string.notification_media_changed, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.MEDIA_DELETION -> {
+                mediaDeletedRegex.find(text)?.let {
+                    resources.getString(R.string.notification_media_deleted, it.groupValues[1])
+                } ?: text
+            }
+
+            NotificationType.THREAD_COMMENT_MENTION -> {
+                forumMentionRegex.find(text)?.let {
+                    resources.getString(
+                        R.string.notification_forum_mention,
+                        it.groupValues[1],
+                        it.groupValues[2]
+                    )
+                } ?: text
+            }
+
+            else -> text
         }
     }
 }

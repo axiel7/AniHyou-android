@@ -25,6 +25,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
@@ -176,17 +178,22 @@ fun DialogWithTextInput(
     confirmEnabled: Boolean = true,
     onDismiss: () -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = title?.let { { Text(text = title) } },
         text = {
             OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
+                value = textFieldValue,
+                onValueChange = {
+                    textFieldValue = it
+                    onValueChange(it.text)
+                },
                 modifier = Modifier.focusRequester(focusRequester),
                 label = label?.let { { Text(text = label) } },
                 prefix = prefix?.let { { Text(text = prefix) } },

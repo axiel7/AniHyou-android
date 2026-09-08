@@ -356,7 +356,7 @@ class UserMediaListViewModel(
         country?.toDto()?.let { entry.media?.countryOfOrigin == it } ?: true
 
     private fun UserMediaListUiState.yearMatch(entry: CommonMediaListEntry) =
-        year?.let { entry.media?.seasonYear == it } ?: true
+        year?.let { entry.media?.startDate?.year == it } ?: true
 
     private fun UserMediaListUiState.genreMatch(entry: CommonMediaListEntry) =
         genresAndTagsForSearch.genreMatch(entry)

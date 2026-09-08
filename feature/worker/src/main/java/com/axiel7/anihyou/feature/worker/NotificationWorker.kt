@@ -22,12 +22,12 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
+import com.axiel7.anihyou.core.model.notification.GenericNotification.Companion.localizedText
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup.Companion.asDeepLinkType
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup.Companion.asGroup
 import com.axiel7.anihyou.core.network.NetworkVariables
-import com.axiel7.anihyou.core.network.type.NotificationType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.utils.ImageUtils.getBitmapFromUrl
 import com.axiel7.anihyou.core.ui.utils.NotificationUtils.createNotificationChannel
@@ -102,19 +102,13 @@ class NotificationWorker(
                             applicationContext.getBitmapFromUrl(url)
                         }
 
-                        val title = if (it.type == NotificationType.AIRING) {
-                            it.mediaTitle() ?: it.text
-                        } else it.text
-
-                        val text = if (it.type == NotificationType.AIRING) {
-                            it.numEpisode()?.let { ep -> "Episode $ep aired" }.orEmpty()
-                        } else ""
+                        val localizedText = it.localizedText(applicationContext.resources)
 
                         applicationContext.showNotification(
                             notificationId = it.id,
                             channelId = group.channelId,
-                            title = title,
-                            text = text,
+                            title = localizedText,
+                            text = "",
                             largeIcon = image,
                             bigPicture = image.takeIf { _ -> it.isMedia },
                             pendingIntent = pendingIntent,

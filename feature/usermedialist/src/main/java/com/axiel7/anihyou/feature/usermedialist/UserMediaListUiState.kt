@@ -62,6 +62,6 @@ data class UserMediaListUiState(
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     val filterCount =
-        listOf(mediaFormat, mediaStatus, year, country).count { it != null } +
+        listOf(mediaFormat, mediaStatus, country, year).count { it != null } +
                 genresAndTagsForSearch.totalSize
 }

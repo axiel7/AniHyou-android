@@ -23,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -60,7 +62,15 @@ fun CustomLinkDialog(
             value?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
         )
     }
-    var urlValue by remember { mutableStateOf(value?.substring(1).orEmpty()) }
+    var urlValue by remember {
+        val text = value?.substring(1).orEmpty()
+        mutableStateOf(
+            TextFieldValue(
+                text = text,
+                selection = TextRange(text.length)
+            )
+        )
+    }
     var urlHasPlaceholder by remember { mutableStateOf(true) }
     var isUrlValid by remember { mutableStateOf(true) }
 
@@ -79,7 +89,7 @@ fun CustomLinkDialog(
                     value = urlValue,
                     onValueChange = {
                         urlValue = it
-                        urlHasPlaceholder = it.contains(CUSTOM_URL_NAME_PLACEHOLDER)
+                        urlHasPlaceholder = it.text.contains(CUSTOM_URL_NAME_PLACEHOLDER)
                     },
                     modifier = Modifier.focusRequester(focusRequester),
                     label = { Text(text = "URL") },
@@ -120,13 +130,13 @@ fun CustomLinkDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val uri = urlValue.toUri()
+                    val uri = urlValue.text.toUri()
                     isUrlValid = uri.scheme != null && uri.host != null
                     if (isUrlValid) {
-                        onConfirm(selectedSeparator.value + urlValue)
+                        onConfirm(selectedSeparator.value + urlValue.text)
                     }
                 },
-                enabled = urlHasPlaceholder && urlValue.isNotBlank()
+                enabled = urlHasPlaceholder && urlValue.text.isNotBlank()
             ) {
                 Text(text = stringResource(R.string.ok))
             }

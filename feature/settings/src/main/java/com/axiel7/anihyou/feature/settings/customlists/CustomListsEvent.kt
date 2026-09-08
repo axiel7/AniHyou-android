@@ -8,5 +8,6 @@ import com.axiel7.anihyou.core.network.type.MediaType
 interface CustomListsEvent : UiEvent {
     fun onListAdded(list: String, mediaType: MediaType)
     fun onListRemoved(list: String, mediaType: MediaType)
+    fun onListEdited(prev: String, new: String, mediaType: MediaType)
     fun updateCustomLists()
 }

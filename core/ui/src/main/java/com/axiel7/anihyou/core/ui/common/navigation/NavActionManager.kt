@@ -75,8 +75,8 @@ class NavActionManager(
         navigator.navigate(Route.FullScreenImage(url))
     }
 
-    fun toSearch() {
-        navigator.navigate(Route.Search(focus = true))
+    fun toSearch(mediaType: MediaType? = null) {
+        navigator.navigate(Route.Search(mediaType = mediaType?.rawValue, focus = true))
     }
 
     fun toSearchOnMyList(mediaType: MediaType) {

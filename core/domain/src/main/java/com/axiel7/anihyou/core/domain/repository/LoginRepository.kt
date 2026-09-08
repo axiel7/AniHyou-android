@@ -6,12 +6,14 @@ import androidx.core.net.toUri
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.fetchPolicy
+import com.axiel7.anihyou.core.network.NetworkVariables
 import com.axiel7.anihyou.core.network.ViewerOptionsQuery
 import com.axiel7.anihyou.core.network.api.response.errorString
 
 class LoginRepository (
     private val client: ApolloClient,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val networkVariables: NetworkVariables,
 ) {
 
     // login
@@ -41,6 +43,7 @@ class LoginRepository (
     }
 
     suspend fun logOut() {
+        networkVariables.accessToken = null
         defaultPreferencesRepository.removeViewerInfo()
     }
 }
