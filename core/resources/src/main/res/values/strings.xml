@@ -679,4 +679,15 @@
     <string name="space_separator">Space separator</string>
     <string name="custom_link_url_error_name">URL must contain {name}</string>
     <string name="invalid_url_error">Invalid URL</string>
+    <string name="notification_episode_aired">Episode %d of %s aired.</string>
+    <string name="notification_activity_liked">%s liked your activity.</string>
+    <string name="notification_activity_reply_liked">%s liked your activity reply.</string>
+    <string name="notification_activity_reply">%s replied to your activity.</string>
+    <string name="notification_activity_message">%s sent you a message.</string>
+    <string name="notification_activity_mention">%s mentioned you in their activity.</string>
+    <string name="notification_following">%s started following you.</string>
+    <string name="notification_media_added">%s was recently added to the site.</string>
+    <string name="notification_media_changed">%s received site data changes</string>
+    <string name="notification_media_deleted">%s was deleted from the site</string>
+    <string name="notification_forum_mention">%s mentioned you, in the forum thread %s</string>
 </resources>
