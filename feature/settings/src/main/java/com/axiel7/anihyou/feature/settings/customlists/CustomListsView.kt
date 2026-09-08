@@ -96,6 +96,8 @@ fun CustomListsContent(
         ) {
             MediaType.knownEntries.forEach { mediaType ->
                 var openDialog by remember { mutableStateOf(false) }
+                var selectedItem by remember { mutableStateOf<String?>(null) }
+
                 PreferencesTitle(text = mediaType.localized())
 
                 val customLists = uiState.customLists(mediaType)
@@ -103,6 +105,10 @@ fun CustomListsContent(
                     ListItem(
                         list = list,
                         shape = preferenceShape(index, customLists.size),
+                        onClickEdit = {
+                            selectedItem = list
+                            openDialog = true
+                        },
                         onClickDelete = { event?.onListRemoved(list, mediaType) }
                     )
                 }
@@ -110,19 +116,28 @@ fun CustomListsContent(
                 AddButton(onClick = { openDialog = true })
 
                 if (openDialog) {
-                    var newList by remember { mutableStateOf("") }
+                    var newList by remember { mutableStateOf(selectedItem.orEmpty()) }
                     DialogWithTextInput(
                         title = mediaType.localized(),
                         label = stringResource(R.string.list_name),
                         value = newList,
                         onValueChange = { newList = it },
                         onConfirm = {
-                            openDialog = false
-                            event?.onListAdded(newList, mediaType)
+                            selectedItem?.let { prev ->
+                                event?.onListEdited(prev, newList, mediaType)
+                            } ?: run {
+                                event?.onListAdded(newList, mediaType)
+                            }
                             newList = ""
+                            selectedItem = null
+                            openDialog = false
                         },
                         confirmEnabled = newList.isNotBlank(),
-                        onDismiss = { openDialog = false },
+                        onDismiss = {
+                            newList = ""
+                            selectedItem = null
+                            openDialog = false
+                        },
                     )
                 }
             }
@@ -134,6 +149,7 @@ fun CustomListsContent(
 private fun ListItem(
     list: String,
     shape: Shape,
+    onClickEdit: () -> Unit,
     onClickDelete: () -> Unit,
 ) {
     Surface(
@@ -155,6 +171,12 @@ private fun ListItem(
                     .padding(horizontal = 16.dp)
                     .weight(1f)
             )
+            IconButton(onClick = onClickEdit) {
+                Icon(
+                    painter = painterResource(R.drawable.edit_24),
+                    contentDescription = stringResource(R.string.edit)
+                )
+            }
             IconButton(onClick = onClickDelete) {
                 Icon(
                     painter = painterResource(R.drawable.delete_24),

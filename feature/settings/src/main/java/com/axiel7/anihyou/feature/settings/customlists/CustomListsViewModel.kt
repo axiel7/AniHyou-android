@@ -19,7 +19,7 @@ class CustomListsViewModel(
     override val initialState = CustomListsUiState()
 
     override fun onListAdded(list: String, mediaType: MediaType) {
-        mutableUiState.value.apply {
+        mutableUiState.value.run {
             if (mediaType == MediaType.ANIME) {
                 animeLists.add(list)
             } else if (mediaType == MediaType.MANGA) {
@@ -29,7 +29,7 @@ class CustomListsViewModel(
     }
 
     override fun onListRemoved(list: String, mediaType: MediaType) {
-        mutableUiState.value.apply {
+        mutableUiState.value.run {
             if (mediaType == MediaType.ANIME) {
                 animeLists.remove(list)
             } else if (mediaType == MediaType.MANGA) {
@@ -38,8 +38,21 @@ class CustomListsViewModel(
         }
     }
 
+    override fun onListEdited(prev: String, new: String, mediaType: MediaType) {
+        mutableUiState.value.run {
+            if (mediaType == MediaType.ANIME) {
+                val index = animeLists.indexOf(prev)
+                if (index != -1) animeLists[index] = new
+            } else if (mediaType == MediaType.MANGA) {
+                val index = mangaLists.indexOf(prev)
+                if (index != -1) mangaLists[index] = new
+            }
+        }
+    }
+
     override fun updateCustomLists() {
         viewModelScope.launch {
+            mutableUiState.update { it.copy(isLoading = true) }
             userRepository.updateCustomLists(
                 animeList = mutableUiState.value.animeLists,
                 mangaList = mutableUiState.value.mangaLists,
@@ -57,6 +70,7 @@ class CustomListsViewModel(
                     mutableUiState.update { result.toUiState() }
                 }
             }
+            mutableUiState.update { it.copy(isLoading = false) }
         }
     }
 
