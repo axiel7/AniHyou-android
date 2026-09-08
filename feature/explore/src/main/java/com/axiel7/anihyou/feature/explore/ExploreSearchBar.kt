@@ -49,8 +49,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.network.type.MediaSort
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
@@ -63,9 +65,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ExploreSearchBar(
     isLoggedIn: Boolean,
+    selectedTabIndex: Int,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     CustomSearchBar(
+        selectedTabIndex = selectedTabIndex,
         scrollBehavior = scrollBehavior,
     )
     // ExpandedSearchBar has a bug that prevents returning from a navigation destination
@@ -85,13 +89,21 @@ fun ExploreSearchBar(
 
 @Composable
 private fun CustomSearchBar(
+    selectedTabIndex: Int,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     val navActionManager = LocalNavActionManager.current
     TopAppBar(
         title = {
             Card(
-                onClick = singleClick { navActionManager.toSearch() },
+                onClick = singleClick {
+                    val mediaType = when (selectedTabIndex) {
+                        ExploreTab.ANIME.ordinal -> MediaType.ANIME
+                        ExploreTab.MANGA.ordinal -> MediaType.MANGA
+                        else -> null
+                    }
+                    navActionManager.toSearch(mediaType = mediaType)
+                },
                 modifier = Modifier
                     .widthIn(min = 360.dp, max = 720.dp)
                     .height(56.dp)
@@ -243,6 +255,7 @@ fun ExploreSearchBarPreview() {
                 scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior(),
             )
             CustomSearchBar(
+                selectedTabIndex = 0,
                 scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
             )
         }

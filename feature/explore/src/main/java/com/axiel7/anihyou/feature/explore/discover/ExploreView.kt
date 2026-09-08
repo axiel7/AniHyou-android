@@ -55,6 +55,7 @@ fun ExploreView(
         topBar = {
             ExploreSearchBar(
                 isLoggedIn = isLoggedIn,
+                selectedTabIndex = selectedTabIndex,
                 scrollBehavior = scrollBehavior,
             )
             Spacer(
