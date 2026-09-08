@@ -59,6 +59,7 @@ import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isAnime
 import com.axiel7.anihyou.core.model.media.isManga
+import com.axiel7.anihyou.core.model.media.isNovel
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
@@ -255,7 +256,7 @@ private fun EditMediaSheetContent(
                         singleEpisode -> R.drawable.movie_24
                         else -> R.drawable.play_arrow_24
                     }
-                } else R.drawable.book_24,
+                } else if (uiState.mediaDetails.isNovel()) R.drawable.book_ribbon_24 else R.drawable.book_24,
                 progress = uiState.progress,
                 modifier = Modifier.padding(
                     start = 0.dp,
@@ -271,7 +272,7 @@ private fun EditMediaSheetContent(
             if (uiState.mediaDetails.isManga()) {
                 EditMediaProgressRow(
                     label = stringResource(R.string.volumes),
-                    icon = R.drawable.bookmark_24,
+                    icon = if (uiState.mediaDetails.isNovel()) R.drawable.book_4_24 else R.drawable.bookmark_24,
                     progress = uiState.volumeProgress,
                     modifier = Modifier.padding(end = 16.dp, top = 8.dp),
                     totalProgress = uiState.mediaDetails.volumes,

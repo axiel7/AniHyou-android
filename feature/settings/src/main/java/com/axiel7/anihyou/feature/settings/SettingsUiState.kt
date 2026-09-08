@@ -37,6 +37,7 @@ data class SettingsUiState(
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val hideScores: Boolean = false,
     val useFuzzySearch: Boolean = false,
+    val separateNovelsAndManga: Boolean = false,
     val isLoggedIn: Boolean = false,
     override val error: String? = null,
     override val isLoading: Boolean = false,

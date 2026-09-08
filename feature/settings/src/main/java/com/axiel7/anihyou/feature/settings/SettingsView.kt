@@ -385,6 +385,14 @@ private fun SettingsContent(
                     icon = R.drawable.search_insights_24,
                     onValueChange = { event?.setUseFuzzySearch(it) },
                     subtitle = stringResource(R.string.fuzzy_search_description),
+                    shape = middleShape
+                )
+
+                SwitchPreference(
+                    title = stringResource(R.string.separate_novels_and_manga),
+                    preferenceValue = uiState.separateNovelsAndManga,
+                    icon = R.drawable.splitscreen_landscape_24,
+                    onValueChange = { event?.setSeparateNovelsAndManga(it) },
                     shape = bottomShape
                 )
             }

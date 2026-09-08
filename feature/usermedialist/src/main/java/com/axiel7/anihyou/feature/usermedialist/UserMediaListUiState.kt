@@ -24,6 +24,8 @@ data class UserMediaListUiState(
     val orderedListNames: List<String> = emptyList(),
     val selectedListName: String? = null,
     val entries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val mangaEntries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
+    val novelEntries: SnapshotStateList<CommonMediaListEntry> = mutableStateListOf(),
     val status: MediaListStatus? = null,
     val isMyList: Boolean = true,
     val showLowPriority: Boolean = false,
@@ -44,6 +46,7 @@ data class UserMediaListUiState(
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val query: String = "",
     val isFuzzySearchEnabled: Boolean = false,
+    val separateNovelsAndManga: Boolean = true,
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,
     val openNotesDialog: Boolean = false,
@@ -59,6 +62,6 @@ data class UserMediaListUiState(
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     val filterCount =
-        listOf(mediaFormat, mediaStatus, country).count { it != null } +
+        listOf(mediaFormat, mediaStatus, year, country).count { it != null } +
                 genresAndTagsForSearch.totalSize
 }

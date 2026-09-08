@@ -17,6 +17,7 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
@@ -279,6 +280,14 @@ class DefaultPreferencesRepository(
         dataStore.setValue(DEFAULT_HOME_TAB_KEY, value.ordinal)
     }
 
+    val defaultNovelTab =
+        dataStore.getValue(key = DEFAULT_NOVEL_TAB_KEY, default = NovelTab.MANGA.ordinal)
+            .map { NovelTab.valueOf(it) }
+
+    suspend fun setDefaultNovelTab(value: NovelTab) {
+        dataStore.setValue(DEFAULT_NOVEL_TAB_KEY, value.ordinal)
+    }
+
     val defaultExploreTab =
         dataStore.getValue(key = DEFAULT_EXPLORE_TAB_KEY, default = ExploreTab.ANIME.ordinal)
             .map { ExploreTab.valueOf(it) }
@@ -370,6 +379,12 @@ class DefaultPreferencesRepository(
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
     }
 
+    val separateNovelsAndManga = dataStore.getValue(SEPARATE_ANIME_AND_MANGA_KEY, default = true)
+
+    suspend fun setSeparateNovelsAndManga(value: Boolean) {
+        dataStore.setValue(SEPARATE_ANIME_AND_MANGA_KEY, value)
+    }
+
     val animeCustomLinks = dataStore.getValue(ANIME_CUSTOM_LINKS_KEY)
 
     suspend fun setAnimeCustomLinks(value: Set<String>) {
@@ -414,6 +429,8 @@ class DefaultPreferencesRepository(
         private val DEFAULT_TAB_KEY = intPreferencesKey("default_tab")
 
         private val DEFAULT_HOME_TAB_KEY = intPreferencesKey("default_home_tab")
+
+        private val DEFAULT_NOVEL_TAB_KEY = intPreferencesKey("default_novel_tab")
         private val DEFAULT_EXPLORE_TAB_KEY = intPreferencesKey("default_explore_tab")
         private val AIRING_ON_MY_LIST_KEY = booleanPreferencesKey("airing_on_my_list")
         private val CALENDAR_ON_MY_LIST_KEY = booleanPreferencesKey("calendar_on_my_list")
@@ -434,6 +451,8 @@ class DefaultPreferencesRepository(
         private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
 
         private val USE_FUZZY_SEARCH_KEY = booleanPreferencesKey("use_fuzzy_search")
+
+        private val SEPARATE_ANIME_AND_MANGA_KEY = booleanPreferencesKey("separate_anime_and_manga")
 
         private val ANIME_CUSTOM_LINKS_KEY = stringSetPreferencesKey("anime_custom_links")
         private val MANGA_CUSTOM_LINKS_KEY = stringSetPreferencesKey("manga_custom_links")

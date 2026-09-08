@@ -13,6 +13,7 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.ListType
@@ -89,12 +90,14 @@ class UserMediaListViewModel(
     override fun onChangeList(listName: String?) {
         viewModelScope.launch {
             mutableUiState.update {
-                it.entries.clear()
-                if (listName != null) {
-                    it.entries.addAll(it.lists[listName].orEmpty())
+                val newEntries = if (listName != null) {
+                    it.lists[listName].orEmpty()
                 } else {
-                    it.entries.addAll(it.lists.values.flatten())
+                    it.lists.values.flatten()
                 }
+
+                it.applyEntries(newEntries, clearPrevious = true)
+
                 it.copy(
                     selectedListName = listName,
                     status = listName?.asMediaListStatus()
@@ -203,14 +206,14 @@ class UserMediaListViewModel(
                                                         lists[newList] =
                                                             lists[newList].orEmpty()
                                                                 .plus(newEntry)
-                                                }
+                                                    }
                                             }
                                         }
                                     }
 
                                     val openSetScoreDialog =
                                         newListEntry.status == MediaListStatus.COMPLETED
-                                            && newListEntry.score.isNullOrZero()
+                                                && newListEntry.score.isNullOrZero()
                                     mutableUiState.update {
                                         it.copy(
                                             openSetScoreDialog = openSetScoreDialog,
@@ -389,14 +392,35 @@ class UserMediaListViewModel(
         return tagInMatch && tagNotMatch
     }
 
+    private fun UserMediaListUiState.applyEntries(
+        newEntries: List<CommonMediaListEntry>,
+        clearPrevious: Boolean = true
+    ) {
+        if (clearPrevious) {
+            entries.clear()
+            mangaEntries.clear()
+            novelEntries.clear()
+        }
+        entries.addAll(newEntries)
+
+        if (separateNovelsAndManga && mediaType == MediaType.MANGA) {
+            val (novels, manga) = newEntries.partition { it.media?.format == MediaFormat.NOVEL }
+            novelEntries.addAll(novels)
+            mangaEntries.addAll(manga)
+        }
+    }
+
+    private fun UserMediaListUiState.applyPartition(isSeparate: Boolean) {
+        mangaEntries.clear()
+        novelEntries.clear()
+        if (isSeparate && mediaType == MediaType.MANGA) {
+            val (novels, manga) = entries.partition { it.media?.format == MediaFormat.NOVEL }
+            novelEntries.addAll(novels)
+            mangaEntries.addAll(manga)
+        }
+    }
+
     init {
-        defaultPreferencesRepository.useFuzzySearch
-            .filterNotNull()
-            .distinctUntilChanged()
-            .onEach { isEnabled ->
-                mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }
-            }
-            .launchIn(viewModelScope)
 
         //search
         mutableUiState
@@ -513,11 +537,9 @@ class UserMediaListViewModel(
                     }
                 }
                 mutableUiState.update { state ->
-                    state.entries.apply {
-                        clear()
-                        addAll(filteredList)
-                    }
-                    state
+                    state.applyEntries(filteredList, clearPrevious = true)
+
+                    state.copy()
                 }
             }
             .launchIn(viewModelScope)
@@ -584,6 +606,24 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
+        defaultPreferencesRepository.separateNovelsAndManga
+            .onEach { isEnabled ->
+                mutableUiState.update { uiState ->
+                    uiState.applyPartition(isEnabled)
+                    uiState.copy(separateNovelsAndManga = isEnabled)
+                }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.useFuzzySearch
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { isEnabled ->
+                mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }
+            }
+            .launchIn(viewModelScope)
+
+
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()
@@ -646,6 +686,8 @@ class UserMediaListViewModel(
                         if (result.currentPage == 1 || result.currentPage == null) {
                             uiState.lists.clear()
                             uiState.entries.clear()
+                            uiState.mangaEntries.clear()
+                            uiState.novelEntries.clear()
                         }
                         val newEntries = mutableListOf<CommonMediaListEntry>()
                         result.list.forEach { list ->
@@ -667,7 +709,7 @@ class UserMediaListViewModel(
                                 }
                             }
                         }
-                        uiState.entries.addAll(newEntries)
+                        uiState.applyEntries(newEntries, clearPrevious = false)
                         val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
                             fetchFromNetwork = false,

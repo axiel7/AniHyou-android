@@ -32,6 +32,7 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.common.LocalMarkdownUriHandler
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -96,6 +97,7 @@ fun MainNavigation(
     isCompactScreen: Boolean,
     isLoggedIn: Boolean,
     homeTab: HomeTab,
+    novelTab: NovelTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
     blackColors: Boolean,
@@ -184,6 +186,7 @@ fun MainNavigation(
                     arguments = Route.UserMediaList(
                         mediaType = MediaType.ANIME.rawValue,
                     ),
+                    defaultNovelTab = novelTab,
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                 )
@@ -200,6 +203,7 @@ fun MainNavigation(
                     arguments = Route.UserMediaList(
                         mediaType = MediaType.MANGA.rawValue,
                     ),
+                    defaultNovelTab = novelTab,
                     isCompactScreen = isCompactScreen,
                     modifier = Modifier.padding(bottom = bottomPadding),
                 )
@@ -244,6 +248,7 @@ fun MainNavigation(
             UserMediaListHostView(
                 arguments = it,
                 isCompactScreen = isCompactScreen,
+                defaultNovelTab = novelTab,
                 modifier = Modifier.padding(bottom = bottomPadding),
             )
         }

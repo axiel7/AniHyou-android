@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.model.media.duration
 import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
 import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
@@ -45,12 +46,21 @@ fun MediaProgressIndicator(
     }.orUnknown()
 
     val (iconRes, contentDescRes) = when {
-        item.basicMediaListEntry.isUsingVolumeProgress() ->
-            R.drawable.bookmark_20 to R.string.volumes
-        item.media?.basicMediaDetails?.type == MediaType.MANGA ->
-            R.drawable.book_20 to R.string.chapters
+        item.basicMediaListEntry.isUsingVolumeProgress() -> {
+            val icon =
+                if (item.media?.format == MediaFormat.NOVEL) R.drawable.book_4_20 else R.drawable.bookmark_20
+            icon to R.string.volumes
+        }
+
+        item.media?.basicMediaDetails?.type == MediaType.MANGA -> {
+            val icon =
+                if (item.media?.format == MediaFormat.NOVEL) R.drawable.book_ribbon_20 else R.drawable.book_20
+            icon to R.string.chapters
+        }
+
         singleEpisode ->
             R.drawable.movie_20 to R.string.episodes
+
         else ->
             R.drawable.play_arrow_24 to R.string.episodes
     }
