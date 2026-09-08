@@ -692,5 +692,5 @@
     <string name="notification_media_added">%s was recently added to the site.</string>
     <string name="notification_media_changed">%s received site data changes</string>
     <string name="notification_media_deleted">%s was deleted from the site</string>
-    <string name="notification_forum_mention">%s mentioned you, in the forum thread %s</string>
+    <string name="notification_forum_mention">%1$s mentioned you, in the forum thread %2$s</string>
 </resources>
