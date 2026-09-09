@@ -36,7 +36,7 @@ import com.axiel7.anihyou.feature.studiodetails.StudioDetailsViewModel
 import com.axiel7.anihyou.feature.thread.ThreadDetailsViewModel
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentViewModel
 import com.axiel7.anihyou.feature.thread.publish.PublishCommentViewModel
-import com.axiel7.anihyou.feature.usermedialist.TabbedViewModel
+import com.axiel7.anihyou.feature.usermedialist.MangaListTabbedViewModel
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListViewModel
 import com.axiel7.anihyou.ui.screens.main.MainViewModel
 import org.koin.dsl.module
@@ -57,7 +57,7 @@ val viewModelModule = module {
     viewModel<ActivityFeedViewModel>()
     viewModel<CurrentViewModel>()
     viewModel<ExploreViewModel>()
-    viewModel<TabbedViewModel>()
+    viewModel<MangaListTabbedViewModel>()
     viewModel<AnimeExploreViewModel>()
     viewModel<MangaExploreViewModel>()
     viewModel<RecommendationsViewModel>()

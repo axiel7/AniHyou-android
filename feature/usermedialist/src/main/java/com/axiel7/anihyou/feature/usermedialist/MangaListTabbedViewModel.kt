@@ -6,9 +6,9 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.model.NovelTab
 import kotlinx.coroutines.launch
 
-class TabbedViewModel(
-    private val defaultPreferencesRepository: DefaultPreferencesRepository,
-    ): ViewModel() {
+class MangaListTabbedViewModel(
+    private val defaultPreferencesRepository: DefaultPreferencesRepository
+): ViewModel() {
 
     fun saveNovelTab(value: Int) {
         viewModelScope.launch {

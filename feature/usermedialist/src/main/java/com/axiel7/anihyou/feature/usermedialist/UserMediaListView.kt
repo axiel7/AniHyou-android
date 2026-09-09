@@ -170,7 +170,7 @@ private fun TabbedView(
 
 
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultNovelTab.ordinal) }
-    val viewModel: TabbedViewModel = koinActivityViewModel()
+    val viewModel: MangaListTabbedViewModel = koinActivityViewModel()
 
 
     LaunchedEffect(selectedTabIndex) {
