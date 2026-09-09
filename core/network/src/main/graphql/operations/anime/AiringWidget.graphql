@@ -10,6 +10,9 @@ query AiringWidget($page: Int, $perPage: Int) {
                 airingAt
                 episode
             }
+            coverImage {
+                color
+            }
             mediaListEntry {
                 status
             }
