@@ -379,7 +379,7 @@ class DefaultPreferencesRepository(
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
     }
 
-    val separateNovelsAndManga = dataStore.getValue(SEPARATE_NOVELS_AND_MANGA_KEY, default = true)
+    val separateNovelsAndManga = dataStore.getValue(SEPARATE_NOVELS_AND_MANGA_KEY, default = false)
 
     suspend fun setSeparateNovelsAndManga(value: Boolean) {
         dataStore.setValue(SEPARATE_NOVELS_AND_MANGA_KEY, value)
