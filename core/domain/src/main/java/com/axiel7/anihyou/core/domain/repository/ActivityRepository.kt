@@ -4,6 +4,9 @@ import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.api.ActivityApi
+import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
+import com.axiel7.anihyou.core.network.fragment.MessageActivityFragment
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
 
 class ActivityRepository(
@@ -47,6 +50,17 @@ class ActivityRepository(
         id: Int,
         activity: ActivityDetailsQuery.Activity,
     ) = api.updateActivityDetailsCache(id, activity)
+
+    suspend fun updateActivityCache(
+        listActivity: ListActivityFragment? = null,
+        textActivity: TextActivityFragment? = null,
+        messageActivity: MessageActivityFragment? = null
+    ) {
+        listActivity?.let { api.updateListActivityFragment(it) }
+        textActivity?.let { api.updateTextActivityFragment(it) }
+        messageActivity?.let { api.updateMessageActivityFragment(it) }
+        api.updateActivityDetailsCache(listActivity, textActivity, messageActivity)
+    }
 
     suspend fun updateTextActivity(
         id: Int? = null,

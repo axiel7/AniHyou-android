@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.network.api
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.api.CacheKey
 import com.apollographql.cache.normalized.apolloStore
 import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
@@ -10,6 +11,12 @@ import com.axiel7.anihyou.core.network.ActivityFeedQuery
 import com.axiel7.anihyou.core.network.DeleteActivityMutation
 import com.axiel7.anihyou.core.network.UpdateActivityReplyMutation
 import com.axiel7.anihyou.core.network.UpdateTextActivityMutation
+import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
+import com.axiel7.anihyou.core.network.fragment.ListActivityFragmentImpl
+import com.axiel7.anihyou.core.network.fragment.MessageActivityFragment
+import com.axiel7.anihyou.core.network.fragment.MessageActivityFragmentImpl
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragmentImpl
 import com.axiel7.anihyou.core.network.type.ActivityType
 
 class ActivityApi(
@@ -45,7 +52,7 @@ class ActivityApi(
         id: Int,
         activity: ActivityDetailsQuery.Activity,
     ) {
-        val result = client.apolloStore
+        client.apolloStore
             .writeOperation(
                 operation = ActivityDetailsQuery(
                     activityId = Optional.present(id)
@@ -55,8 +62,64 @@ class ActivityApi(
                 ),
                 publish = true
             )
-        client.apolloStore.publish(result)
     }
+
+    suspend fun updateActivityDetailsCache(
+        listActivity: ListActivityFragment? = null,
+        textActivity: TextActivityFragment? = null,
+        messageActivity: MessageActivityFragment? = null
+    ) {
+        val id = listActivity?.id ?: textActivity?.id ?: messageActivity?.id ?: return
+        val operation = client.apolloStore
+            .readOperation(
+                operation = ActivityDetailsQuery(
+                    activityId = Optional.present(id)
+                ),
+            )
+        operation.data?.Activity?.let { activity ->
+            updateActivityDetailsCache(
+                id = id,
+                activity = activity.copy(
+                    onListActivity = listActivity?.let {
+                        activity.onListActivity?.copy(listActivityFragment = listActivity)
+                    } ?: activity.onListActivity,
+                    onTextActivity = textActivity?.let {
+                        activity.onTextActivity?.copy(textActivityFragment = textActivity)
+                    } ?: activity.onTextActivity,
+                    onMessageActivity = messageActivity?.let {
+                        activity.onMessageActivity?.copy(messageActivityFragment = messageActivity)
+                    } ?: activity.onMessageActivity,
+                )
+            )
+        }
+    }
+
+    suspend fun updateListActivityFragment(data: ListActivityFragment) =
+        client.apolloStore
+            .writeFragment(
+                fragment = ListActivityFragmentImpl(),
+                cacheKey = CacheKey("${data.__typename}:${data.id}"),
+                data = data,
+                publish = true,
+            )
+
+    suspend fun updateTextActivityFragment(data: TextActivityFragment) =
+        client.apolloStore
+            .writeFragment(
+                fragment = TextActivityFragmentImpl(),
+                cacheKey = CacheKey("${data.__typename}:${data.id}"),
+                data = data,
+                publish = true,
+            )
+
+    suspend fun updateMessageActivityFragment(data: MessageActivityFragment) =
+        client.apolloStore
+            .writeFragment(
+                fragment = MessageActivityFragmentImpl(),
+                cacheKey = CacheKey("${data.__typename}:${data.id}"),
+                data = data,
+                publish = true,
+            )
 
     fun updateTextActivityMutation(
         id: Int?,

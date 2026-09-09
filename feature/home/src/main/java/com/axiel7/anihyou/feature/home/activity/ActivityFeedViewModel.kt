@@ -103,15 +103,27 @@ class ActivityFeedViewModel(
                                 onTextActivity = oldItem.onTextActivity?.copy(
                                     textActivityFragment = oldItem.onTextActivity!!.textActivityFragment
                                         .updateLikeStatus(result.data)
-                                ),
+                                ).also { item ->
+                                    item?.textActivityFragment?.let {
+                                        activityRepository.updateActivityCache(textActivity = it)
+                                    }
+                                },
                                 onListActivity = oldItem.onListActivity?.copy(
                                     listActivityFragment = oldItem.onListActivity!!.listActivityFragment
                                         .updateLikeStatus(result.data)
-                                ),
+                                ).also { item ->
+                                    item?.listActivityFragment?.let {
+                                        activityRepository.updateActivityCache(listActivity = it)
+                                    }
+                                },
                                 onMessageActivity = oldItem.onMessageActivity?.copy(
                                     messageActivityFragment = oldItem.onMessageActivity!!.messageActivityFragment
                                         .updateLikeStatus(result.data)
-                                )
+                                ).also { item ->
+                                    item?.messageActivityFragment?.let {
+                                        activityRepository.updateActivityCache(messageActivity = it)
+                                    }
+                                },
                             )
                         }
                     }
