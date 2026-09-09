@@ -2,13 +2,6 @@ package com.axiel7.anihyou.widget
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,13 +20,14 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
-import androidx.glance.material3.ColorProviders
+import androidx.glance.color.DynamicThemeColorProviders
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -41,6 +35,7 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
@@ -48,6 +43,7 @@ import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.axiel7.anihyou.core.base.APP_PACKAGE_NAME
 import com.axiel7.anihyou.core.base.DataResult
@@ -64,15 +60,13 @@ import com.axiel7.anihyou.core.resources.ColorUtils.colorFromHex
 import com.axiel7.anihyou.core.resources.R
 import com.materialkolor.ktx.darken
 import com.materialkolor.ktx.from
+import com.materialkolor.ktx.harmonize
 import com.materialkolor.ktx.toneColor
 import com.materialkolor.palettes.TonalPalette
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import androidx.glance.appwidget.appWidgetBackground
-import androidx.glance.layout.height
-
 
 class AiringWidget : GlanceAppWidget(), KoinComponent {
 
@@ -83,27 +77,13 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         networkVariables.accessToken = defaultPreferencesRepository.accessToken.first()
 
-        val widgetColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ColorProviders(
-                light = dynamicLightColorScheme(context),
-                dark = dynamicDarkColorScheme(context)
-            )
-        } else {
-            ColorProviders(
-                light = lightColorScheme(),
-                dark = darkColorScheme()
-            )
-        }
-
         val result = mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
         provideContent {
             val scope = rememberCoroutineScope()
-            GlanceTheme(colors = widgetColors) {
+            GlanceTheme(colors = DynamicThemeColorProviders) {
                 Content(
                     result = result,
-                    onRefresh = {
-                        scope.launch { update(context, id) }
-                    }
+                    onRefresh = { scope.launch { update(context, id) } },
                 )
             }
         }
@@ -116,19 +96,13 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     ) {
         val todayString = (System.currentTimeMillis() / 1000).timestampToDateString("yyyy-MM-dd")
 
-        Column(
-            modifier = GlanceModifier
-                .fillMaxSize()
-                .appWidgetBackground()
-                .background(GlanceTheme.colors.widgetBackground)
-                .cornerRadius(16.dp)
+        Scaffold(
+            horizontalPadding = 0.dp
         ) {
-
             LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                item {
+                item(itemId = 0) {
                     Header(onRefresh = onRefresh)
                 }
-
                 if (result is DataResult.Success) {
                     itemsIndexed(
                         items = result.data,
@@ -143,7 +117,6 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
 
                         val showDate = currentDay != previousDay
                         val isToday = currentDay == todayString
-                        Log.d("WidgetTest", "$currentDay - $isToday ($todayString)")
                         ItemView(item = item, showDate = showDate, isToday = isToday)
                     }
                 } else {
@@ -165,33 +138,33 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         }
                     }
                 }
-
             }
         }
     }
-
 
     @Composable
     private fun Header(onRefresh: () -> Unit) {
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = GlanceModifier.width(20.dp))
             Text(
                 text = glanceStringResource(R.string.upcoming),
                 style = TextStyle(
                     color = GlanceTheme.colors.onSurface,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
                 ),
+                maxLines = 1,
                 modifier = GlanceModifier.defaultWeight()
             )
 
             Box(
                 modifier = GlanceModifier
-                    .width(52.dp)
+                    .width(54.dp)
                     .height(32.dp)
                     .background(GlanceTheme.colors.primary)
                     .cornerRadius(20.dp)
@@ -200,19 +173,20 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
             ) {
                 Image(
                     provider = ImageProvider(R.drawable.replay_20),
-                    contentDescription = "Refresh",
-                    modifier = GlanceModifier.size(24.dp),
+                    contentDescription = glanceStringResource(R.string.refresh),
+                    modifier = GlanceModifier.size(20.dp),
                     colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary)
                 )
             }
+            Spacer(modifier = GlanceModifier.width(12.dp))
         }
     }
 
     @Composable
     private fun ItemView(item: AiringWidgetQuery.Medium, showDate: Boolean, isToday: Boolean) {
         val timestamp = item.nextAiringEpisode?.airingAt?.toLong()
-        val dayOfWeek = timestamp?.timestampToDateString("EE")?.lowercase() ?: ""
-        val dayOfMonth = timestamp?.timestampToDateString("d") ?: ""
+        val dayOfWeek = timestamp?.timestampToDateString("E").orEmpty()
+        val dayOfMonth = timestamp?.timestampToDateString("d").orEmpty()
 
         val baseMediaColor = remember(item.coverImage?.color) {
             item.coverImage?.color?.takeIf { it.isNotBlank() }?.let { hex ->
@@ -220,74 +194,85 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
             }
         }
 
+        val primaryColor = GlanceTheme.colors.primary.getColor(LocalContext.current)
+
         val backgroundModifier = if (baseMediaColor != null) {
-            GlanceModifier.background(baseMediaColor.darken(2f))
+            GlanceModifier.background(baseMediaColor.harmonize(primaryColor).darken(2f))
         } else {
             GlanceModifier.background(GlanceTheme.colors.secondaryContainer)
         }
-        val defaultTitleColor = GlanceTheme.colors.onSecondaryContainer
-        val defaultSubtitleColor = GlanceTheme.colors.onSecondaryContainer
+        val defaultTextColor = GlanceTheme.colors.onSecondaryContainer
 
-        val titleTextColor = remember(baseMediaColor, defaultTitleColor) {
+        val textColor = remember(baseMediaColor, defaultTextColor) {
             baseMediaColor?.let {
                 val tone = TonalPalette.from(it).toneColor(95)
                 ColorProvider(day = tone, night = tone)
-            } ?: defaultTitleColor
-        }
-
-        val subtitleTextColor = remember(baseMediaColor, defaultSubtitleColor) {
-            baseMediaColor?.let {
-                val tone = TonalPalette.from(it).toneColor(80)
-                ColorProvider(day = tone, night = tone)
-            } ?: defaultSubtitleColor
+            } ?: defaultTextColor
         }
 
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp)
+                .padding(vertical = 4.dp)
+                .padding(end = 12.dp, start = 2.dp)
         ) {
             Column(
                 modifier = GlanceModifier
-                    .width(48.dp)
-                    .padding(top = 4.dp),
+                    .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (showDate) {
-                    Text(
-                        text = dayOfWeek,
-                        style = TextStyle(
-                            color = if (isToday) GlanceTheme.colors.primary else GlanceTheme.colors.onSurfaceVariant,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    )
-
-                    Spacer(modifier = GlanceModifier.size(4.dp))
-                    val boxModifier = if (isToday) {
+                    val dateModifier = if (isToday) {
                         GlanceModifier
-                            .size(32.dp)
+                            .size(38.dp)
                             .background(GlanceTheme.colors.primary)
-                            .cornerRadius(16.dp)
+                            .cornerRadius(38.dp)
                     } else {
                         GlanceModifier
-                            .size(32.dp)
+                            .size(38.dp)
                             .background(Color.Transparent)
                     }
 
-                    Box(
-                        modifier = boxModifier,
-                        contentAlignment = Alignment.Center
+                    Column(
+                        modifier = dateModifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(
-                            text = dayOfMonth,
-                            style = TextStyle(
-                                color = if (isToday) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSurface,
-                                fontSize = 16.sp,
-                                fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal
+                        if (isToday) {
+                            Text(
+                                text = "$dayOfWeek\n$dayOfMonth",
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.onPrimary,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    textAlign = TextAlign.Center,
+                                ),
+                                maxLines = 2,
                             )
-                        )
+                        } else {
+                            Text(
+                                text = dayOfWeek,
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.onSurface,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    textAlign = TextAlign.Center,
+                                ),
+                                maxLines = 1,
+                            )
+                            Text(
+                                text = dayOfMonth,
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.onSurface,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Center,
+                                )
+                            )
+                        }
                     }
+                } else {
+                    Spacer(modifier = GlanceModifier.width(36.dp))
                 }
             }
 
@@ -295,7 +280,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                 modifier = backgroundModifier
                     .defaultWeight()
                     .cornerRadius(12.dp)
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
                     .clickable(
                         actionStartActivity(
                             LocalContext.current.packageManager
@@ -314,13 +299,12 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                 Text(
                     text = item.title?.userPreferred.orEmpty(),
                     style = TextStyle(
-                        color = titleTextColor,
+                        color = textColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     ),
                     maxLines = 1
                 )
-                Spacer(modifier = GlanceModifier.size(2.dp))
                 Text(
                     text = item.nextAiringEpisode?.let { nextAiringEpisode ->
                         glanceStringResource(
@@ -331,8 +315,8 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         )
                     } ?: glanceStringResource(R.string.unknown),
                     style = TextStyle(
-                        color = subtitleTextColor,
-                        fontSize = 12.sp
+                        color = textColor,
+                        fontSize = 13.sp
                     ),
                     maxLines = 1
                 )
