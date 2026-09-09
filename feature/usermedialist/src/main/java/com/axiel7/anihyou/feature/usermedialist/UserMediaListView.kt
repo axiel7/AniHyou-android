@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -167,21 +168,32 @@ private fun TabbedView(
     onClickPlus: (Int, CommonMediaListEntry) -> Unit,
     stickyHeaderContent: (@Composable () -> Unit)
 ) {
-
-
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultNovelTab.ordinal) }
     val viewModel: MangaListTabbedViewModel = koinActivityViewModel()
 
-
     LaunchedEffect(selectedTabIndex) {
         viewModel.saveNovelTab(selectedTabIndex)
+    }
+
+    LaunchedEffect(uiState.separateNovelsAndManga) {
+        // for some reason when using a stickyHeader the scroll is overlapped by it
+        if (lazyListState.firstVisibleItemIndex == 1
+            && lazyListState.firstVisibleItemScrollOffset == 0
+            ) {
+            lazyListState.scrollToItem(0)
+        } else if (lazyGridState.firstVisibleItemIndex == 1
+            && lazyGridState.firstVisibleItemScrollOffset == 0
+        ) {
+            lazyGridState.scrollToItem(0)
+        }
     }
 
     val combinedHeader: @Composable () -> Unit = {
         Column {
             stickyHeaderContent()
             PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier.padding(bottom = 8.dp)
             ) {
                 NovelTab.entries.forEach { tab ->
                     Tab(
@@ -194,47 +206,43 @@ private fun TabbedView(
         }
     }
 
-    Column(modifier = modifier) {
-        when (NovelTab.entries[selectedTabIndex]) {
-            NovelTab.MANGA -> {
-                MediaListView(
-                    uiState = uiState,
-                    customMediaList = uiState.mangaEntries,
-                    event = event,
-                    isCompactScreen = isCompactScreen,
-                    modifier = modifier,
-                    contentPadding = contentPadding,
-                    navActionManager = navActionManager,
-                    onShowEditSheet = onShowEditSheet,
-                    lazyListState = lazyListState,
-                    lazyGridState = lazyGridState,
-                    allPriorityColors = allPriorityColors,
-                    onClickPlus = onClickPlus,
-                    stickyHeaderContent = combinedHeader
-                )
-            }
+    when (NovelTab.entries[selectedTabIndex]) {
+        NovelTab.MANGA -> {
+            MediaListView(
+                uiState = uiState,
+                customMediaList = uiState.mangaEntries,
+                event = event,
+                isCompactScreen = isCompactScreen,
+                modifier = modifier,
+                contentPadding = contentPadding,
+                navActionManager = navActionManager,
+                onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
+                onClickPlus = onClickPlus,
+                stickyHeaderContent = combinedHeader
+            )
+        }
 
-            NovelTab.NOVEL -> {
-                MediaListView(
-                    uiState = uiState,
-                    customMediaList = uiState.novelEntries,
-                    event = event,
-                    isCompactScreen = isCompactScreen,
-                    modifier = modifier,
-                    contentPadding = contentPadding,
-                    navActionManager = navActionManager,
-                    onShowEditSheet = onShowEditSheet,
-                    lazyListState = lazyListState,
-                    lazyGridState = lazyGridState,
-                    allPriorityColors = allPriorityColors,
-                    onClickPlus = onClickPlus,
-                    stickyHeaderContent = combinedHeader
-                )
-            }
+        NovelTab.NOVEL -> {
+            MediaListView(
+                uiState = uiState,
+                customMediaList = uiState.novelEntries,
+                event = event,
+                isCompactScreen = isCompactScreen,
+                modifier = modifier,
+                contentPadding = contentPadding,
+                navActionManager = navActionManager,
+                onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
+                onClickPlus = onClickPlus,
+                stickyHeaderContent = combinedHeader
+            )
         }
     }
-
-
 }
 
 @Composable
