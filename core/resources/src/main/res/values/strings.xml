@@ -679,6 +679,8 @@
     <string name="space_separator">Space separator</string>
     <string name="custom_link_url_error_name">URL must contain {name}</string>
     <string name="invalid_url_error">Invalid URL</string>
+    <string name="separate_novels_and_manga">Separate novels and manga</string>
+    <string name="novels">Novels</string>
     <plurals name="notification_episode_aired">
         <item quantity="one">Episode %d of %s aired.</item>
         <item quantity="other">Episode %d of %s aired.</item>

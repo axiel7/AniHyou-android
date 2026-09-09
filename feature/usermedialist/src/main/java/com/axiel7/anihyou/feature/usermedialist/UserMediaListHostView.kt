@@ -30,8 +30,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -50,10 +48,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -73,6 +69,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.DateUtils
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.model.media.icon
@@ -105,6 +102,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UserMediaListHostView(
     arguments: Route.UserMediaList,
+    defaultNovelTab: NovelTab,
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -116,6 +114,7 @@ fun UserMediaListHostView(
 
     UserMediaListHostContent(
         uiState = uiState,
+        defaultNovelTab = defaultNovelTab,
         event = viewModel,
         isCompactScreen = isCompactScreen,
         modifier = modifier,
@@ -126,6 +125,7 @@ fun UserMediaListHostView(
 @Composable
 private fun UserMediaListHostContent(
     uiState: UserMediaListUiState,
+    defaultNovelTab: NovelTab,
     event: UserMediaListEvent?,
     isCompactScreen: Boolean,
     modifier: Modifier = Modifier,
@@ -270,6 +270,7 @@ private fun UserMediaListHostContent(
                 contentPadding = if (!uiState.isMyList)
                     PaddingValues(bottom = 58.dp + padding.calculateBottomPadding())
                 else PaddingValues(bottom = 58.dp),
+                defaultNovelTab = defaultNovelTab,
                 navActionManager = navActionManager,
                 onShowEditSheet = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -495,6 +496,7 @@ private fun UserMediaListViewPreview() {
                 ),
                 event = null,
                 isCompactScreen = true,
+                defaultNovelTab = NovelTab.MANGA,
             )
         }
     }

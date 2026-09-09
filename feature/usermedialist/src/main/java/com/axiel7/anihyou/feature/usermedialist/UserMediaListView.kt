@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.feature.usermedialist
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,23 +24,30 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.ListStyle
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.composables.media.AllPriorityColors
@@ -50,6 +59,7 @@ import com.axiel7.anihyou.feature.usermedialist.composables.CompactUserMediaList
 import com.axiel7.anihyou.feature.usermedialist.composables.GridUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.MinimalUserMediaListItem
 import com.axiel7.anihyou.feature.usermedialist.composables.StandardUserMediaListItem
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -60,6 +70,7 @@ fun UserMediaListView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     navActionManager: NavActionManager,
+    defaultNovelTab: NovelTab,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     lazyListState: LazyListState,
     lazyGridState: LazyGridState,
@@ -105,49 +116,192 @@ fun UserMediaListView(
             )
         }
     ) {
-
-        if (uiState.listStyle == ListStyle.GRID) {
-            LazyListGrid(
-                mediaList = uiState.entries,
+        if (uiState.separateNovelsAndManga && uiState.mediaType == MediaType.MANGA) {
+            TabbedView(
                 uiState = uiState,
                 event = event,
-                allPriorityColors = allPriorityColors,
-                modifier = modifier,
-                navActionManager = navActionManager,
-                onShowEditSheet = onShowEditSheet,
-                listState = lazyGridState,
-                stickyHeaderContent = stickyHeaderContent,
-            )
-        } else if (!isCompactScreen) {
-            LazyListTablet(
-                mediaList = uiState.entries,
-                uiState = uiState,
-                event = event,
-                allPriorityColors = allPriorityColors,
+                isCompactScreen = isCompactScreen,
                 modifier = modifier,
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
+                defaultNovelTab = defaultNovelTab,
                 onClickPlus = onClickPlus,
-                listState = lazyGridState,
-                stickyHeaderContent = stickyHeaderContent,
+                stickyHeaderContent = stickyHeaderContent
             )
         } else {
-            LazyListPhone(
-                mediaList = uiState.entries,
+            MediaListView(
                 uiState = uiState,
                 event = event,
-                allPriorityColors = allPriorityColors,
+                isCompactScreen = isCompactScreen,
                 modifier = modifier,
                 contentPadding = contentPadding,
                 navActionManager = navActionManager,
                 onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
                 onClickPlus = onClickPlus,
-                listState = lazyListState,
-                stickyHeaderContent = stickyHeaderContent,
+                stickyHeaderContent = stickyHeaderContent
             )
         }
     }//: Box
+}
+
+
+@Composable
+private fun TabbedView(
+    uiState: UserMediaListUiState,
+    event: UserMediaListEvent?,
+    isCompactScreen: Boolean,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
+    navActionManager: NavActionManager,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
+    allPriorityColors: AllPriorityColors,
+    defaultNovelTab: NovelTab,
+    onClickPlus: (Int, CommonMediaListEntry) -> Unit,
+    stickyHeaderContent: (@Composable () -> Unit)
+) {
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultNovelTab.ordinal) }
+    val viewModel: MangaListTabbedViewModel = koinActivityViewModel()
+
+    LaunchedEffect(selectedTabIndex) {
+        viewModel.saveNovelTab(selectedTabIndex)
+    }
+
+    LaunchedEffect(uiState.separateNovelsAndManga) {
+        // for some reason when using a stickyHeader the scroll is overlapped by it
+        if (lazyListState.firstVisibleItemIndex == 1
+            && lazyListState.firstVisibleItemScrollOffset == 0
+            ) {
+            lazyListState.scrollToItem(0)
+        } else if (lazyGridState.firstVisibleItemIndex == 1
+            && lazyGridState.firstVisibleItemScrollOffset == 0
+        ) {
+            lazyGridState.scrollToItem(0)
+        }
+    }
+
+    val combinedHeader: @Composable () -> Unit = {
+        Column {
+            stickyHeaderContent()
+            PrimaryTabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                NovelTab.entries.forEach { tab ->
+                    Tab(
+                        selected = selectedTabIndex == tab.ordinal,
+                        onClick = { selectedTabIndex = tab.ordinal },
+                        text = { Text(text = tab.localized()) }
+                    )
+                }
+            }
+        }
+    }
+
+    when (NovelTab.entries[selectedTabIndex]) {
+        NovelTab.MANGA -> {
+            MediaListView(
+                uiState = uiState,
+                customMediaList = uiState.mangaEntries,
+                event = event,
+                isCompactScreen = isCompactScreen,
+                modifier = modifier,
+                contentPadding = contentPadding,
+                navActionManager = navActionManager,
+                onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
+                onClickPlus = onClickPlus,
+                stickyHeaderContent = combinedHeader
+            )
+        }
+
+        NovelTab.NOVEL -> {
+            MediaListView(
+                uiState = uiState,
+                customMediaList = uiState.novelEntries,
+                event = event,
+                isCompactScreen = isCompactScreen,
+                modifier = modifier,
+                contentPadding = contentPadding,
+                navActionManager = navActionManager,
+                onShowEditSheet = onShowEditSheet,
+                lazyListState = lazyListState,
+                lazyGridState = lazyGridState,
+                allPriorityColors = allPriorityColors,
+                onClickPlus = onClickPlus,
+                stickyHeaderContent = combinedHeader
+            )
+        }
+    }
+}
+
+@Composable
+private fun MediaListView(
+    uiState: UserMediaListUiState,
+    customMediaList: List<CommonMediaListEntry>? = null,
+    event: UserMediaListEvent?,
+    isCompactScreen: Boolean,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(vertical = 8.dp),
+    navActionManager: NavActionManager,
+    onShowEditSheet: (CommonMediaListEntry) -> Unit,
+    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
+    allPriorityColors: AllPriorityColors,
+    onClickPlus: (Int, CommonMediaListEntry) -> Unit,
+    stickyHeaderContent: (@Composable () -> Unit)
+) {
+    if (uiState.listStyle == ListStyle.GRID) {
+        LazyListGrid(
+            mediaList = customMediaList ?: uiState.entries,
+            uiState = uiState,
+            event = event,
+            allPriorityColors = allPriorityColors,
+            modifier = modifier,
+            navActionManager = navActionManager,
+            onShowEditSheet = onShowEditSheet,
+            listState = lazyGridState,
+            stickyHeaderContent = stickyHeaderContent,
+        )
+    } else if (!isCompactScreen) {
+        LazyListTablet(
+            mediaList = customMediaList ?: uiState.entries,
+            uiState = uiState,
+            event = event,
+            allPriorityColors = allPriorityColors,
+            modifier = modifier,
+            contentPadding = contentPadding,
+            navActionManager = navActionManager,
+            onShowEditSheet = onShowEditSheet,
+            onClickPlus = onClickPlus,
+            listState = lazyGridState,
+            stickyHeaderContent = stickyHeaderContent,
+        )
+    } else {
+        LazyListPhone(
+            mediaList = customMediaList ?: uiState.entries,
+            uiState = uiState,
+            event = event,
+            allPriorityColors = allPriorityColors,
+            modifier = modifier,
+            contentPadding = contentPadding,
+            navActionManager = navActionManager,
+            onShowEditSheet = onShowEditSheet,
+            onClickPlus = onClickPlus,
+            listState = lazyListState,
+            stickyHeaderContent = stickyHeaderContent,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

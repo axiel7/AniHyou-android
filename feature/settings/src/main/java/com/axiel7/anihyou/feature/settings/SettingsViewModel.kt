@@ -127,6 +127,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setSeparateNovelsAndManga(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setSeparateNovelsAndManga(value)
+        }
+    }
+
     // Notifications
     @OptIn(ExperimentalPermissionsApi::class)
     override fun setNotificationsEnabled(
@@ -408,6 +414,13 @@ class SettingsViewModel(
             .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(useFuzzySearch = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.separateNovelsAndManga
+            .filterNotNull()
+            .onEach { value ->
+                mutableUiState.update { it.copy(separateNovelsAndManga = value) }
             }
             .launchIn(viewModelScope)
     }

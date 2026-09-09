@@ -42,6 +42,7 @@ import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.resources.dark_scrim
 import com.axiel7.anihyou.core.resources.light_scrim
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         val initialHideScores = viewModel.hideScores.firstBlocking()
         val startTab = runBlocking { viewModel.getStartTab() }
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
+        val novelTab = viewModel.novelTab.firstBlocking() ?: NovelTab.MANGA
         val exploreTab = viewModel.exploreTab.firstBlocking() ?: ExploreTab.ANIME
 
         setContent {
@@ -142,6 +144,7 @@ class MainActivity : AppCompatActivity() {
                             tabToOpen = startTab,
                             event = viewModel,
                             homeTab = homeTab,
+                            novelTab = novelTab,
                             exploreTab = exploreTab,
                             deepLink = deepLink,
                             blackColors = useBlackColors,
@@ -207,6 +210,7 @@ fun MainView(
     tabToOpen: Int,
     event: MainEvent?,
     homeTab: HomeTab,
+    novelTab: NovelTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
     blackColors: Boolean,
@@ -250,6 +254,7 @@ fun MainView(
                     isLoggedIn = isLoggedIn,
                     deepLink = deepLink,
                     homeTab = homeTab,
+                    novelTab = novelTab,
                     exploreTab = exploreTab,
                     blackColors = blackColors,
                     paletteStyle = paletteStyle,
@@ -269,6 +274,7 @@ fun MainView(
                         isLoggedIn = isLoggedIn,
                         deepLink = deepLink,
                         homeTab = homeTab,
+                        novelTab = novelTab,
                         exploreTab = exploreTab,
                         blackColors = blackColors,
                         paletteStyle = paletteStyle,
@@ -293,6 +299,7 @@ private fun MainPreview() {
             tabToOpen = 0,
             event = null,
             homeTab = HomeTab.CURRENT,
+            novelTab = NovelTab.MANGA,
             exploreTab = ExploreTab.ANIME,
             deepLink = null,
             blackColors = false,

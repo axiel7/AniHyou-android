@@ -41,6 +41,8 @@ interface SettingsEvent : UiEvent {
 
     fun setUseFuzzySearch(value: Boolean)
 
+    fun setSeparateNovelsAndManga(value: Boolean)
+
     @OptIn(ExperimentalPermissionsApi::class)
     fun setNotificationsEnabled(
         isEnabled: Boolean,

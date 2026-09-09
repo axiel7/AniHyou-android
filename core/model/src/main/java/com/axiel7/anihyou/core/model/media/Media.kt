@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.common.utils.StringUtils.slugify
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.type.ExternalLinkType
+import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 
@@ -20,6 +21,8 @@ fun BasicMediaDetails.duration() = when (type) {
 
 fun BasicMediaDetails.isAnime() = type == MediaType.ANIME
 fun BasicMediaDetails.isManga() = type == MediaType.MANGA
+
+fun BasicMediaDetails.isNovel() = format == MediaFormat.NOVEL
 
 @Composable
 fun BasicMediaDetails.durationText() = when (this.type) {

@@ -101,6 +101,7 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             chapters = null,
             volumes = null,
             type = MediaType.ANIME,
+            format = MediaFormat.TV,
             isAdult = false,
         ),
         title = CommonMediaListEntry.Title(
@@ -153,6 +154,7 @@ val exampleBasicMediaDetails = BasicMediaDetails(
     chapters = null,
     volumes = null,
     type = MediaType.ANIME,
+    format = MediaFormat.TV,
     isAdult = false,
 )
 

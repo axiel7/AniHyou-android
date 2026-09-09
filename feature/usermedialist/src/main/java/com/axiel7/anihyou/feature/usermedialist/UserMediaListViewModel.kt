@@ -13,6 +13,7 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
+import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.ListType
@@ -89,12 +90,19 @@ class UserMediaListViewModel(
     override fun onChangeList(listName: String?) {
         viewModelScope.launch {
             mutableUiState.update {
-                it.entries.clear()
-                if (listName != null) {
-                    it.entries.addAll(it.lists[listName].orEmpty())
+                val newEntries = if (listName != null) {
+                    it.lists[listName].orEmpty()
                 } else {
-                    it.entries.addAll(it.lists.values.flatten())
+                    it.lists.values.flatten()
                 }
+
+                it.entries.clear()
+                it.entries.addAll(newEntries)
+
+                it.mangaEntries.clear()
+                it.novelEntries.clear()
+                it.applyPartition()
+
                 it.copy(
                     selectedListName = listName,
                     status = listName?.asMediaListStatus()
@@ -203,14 +211,14 @@ class UserMediaListViewModel(
                                                         lists[newList] =
                                                             lists[newList].orEmpty()
                                                                 .plus(newEntry)
-                                                }
+                                                    }
                                             }
                                         }
                                     }
 
                                     val openSetScoreDialog =
                                         newListEntry.status == MediaListStatus.COMPLETED
-                                            && newListEntry.score.isNullOrZero()
+                                                && newListEntry.score.isNullOrZero()
                                     mutableUiState.update {
                                         it.copy(
                                             openSetScoreDialog = openSetScoreDialog,
@@ -389,14 +397,15 @@ class UserMediaListViewModel(
         return tagInMatch && tagNotMatch
     }
 
+    private fun UserMediaListUiState.applyPartition() {
+        if (separateNovelsAndManga && mediaType == MediaType.MANGA) {
+            val (novels, manga) = entries.partition { it.media?.format == MediaFormat.NOVEL }
+            novelEntries.addAll(novels)
+            mangaEntries.addAll(manga)
+        }
+    }
+
     init {
-        defaultPreferencesRepository.useFuzzySearch
-            .filterNotNull()
-            .distinctUntilChanged()
-            .onEach { isEnabled ->
-                mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }
-            }
-            .launchIn(viewModelScope)
 
         //search
         mutableUiState
@@ -512,12 +521,13 @@ class UserMediaListViewModel(
                         baseEntries
                     }
                 }
-                mutableUiState.update { state ->
-                    state.entries.apply {
-                        clear()
-                        addAll(filteredList)
-                    }
-                    state
+                with(uiState) {
+                    entries.clear()
+                    entries.addAll(filteredList)
+
+                    mangaEntries.clear()
+                    novelEntries.clear()
+                    applyPartition()
                 }
             }
             .launchIn(viewModelScope)
@@ -584,6 +594,29 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
+        if (mediaType == MediaType.MANGA) {
+            defaultPreferencesRepository.separateNovelsAndManga
+                .onEach { isEnabled ->
+                    mutableUiState.update { uiState ->
+                        uiState.copy(separateNovelsAndManga = isEnabled).also {
+                            it.mangaEntries.clear()
+                            it.novelEntries.clear()
+                            it.applyPartition()
+                        }
+                    }
+                }
+                .launchIn(viewModelScope)
+        }
+
+        defaultPreferencesRepository.useFuzzySearch
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { isEnabled ->
+                mutableUiState.update { it.copy(isFuzzySearchEnabled = isEnabled) }
+            }
+            .launchIn(viewModelScope)
+
+
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()
@@ -646,6 +679,8 @@ class UserMediaListViewModel(
                         if (result.currentPage == 1 || result.currentPage == null) {
                             uiState.lists.clear()
                             uiState.entries.clear()
+                            uiState.mangaEntries.clear()
+                            uiState.novelEntries.clear()
                         }
                         val newEntries = mutableListOf<CommonMediaListEntry>()
                         result.list.forEach { list ->
@@ -668,6 +703,7 @@ class UserMediaListViewModel(
                             }
                         }
                         uiState.entries.addAll(newEntries)
+                        uiState.applyPartition()
                         val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
                             fetchFromNetwork = false,
