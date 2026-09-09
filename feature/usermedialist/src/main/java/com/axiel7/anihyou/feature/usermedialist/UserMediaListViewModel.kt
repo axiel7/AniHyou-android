@@ -96,7 +96,12 @@ class UserMediaListViewModel(
                     it.lists.values.flatten()
                 }
 
-                it.applyEntries(newEntries, clearPrevious = true)
+                it.entries.clear()
+                it.entries.addAll(newEntries)
+
+                it.mangaEntries.clear()
+                it.novelEntries.clear()
+                it.applyPartition()
 
                 it.copy(
                     selectedListName = listName,
@@ -392,28 +397,8 @@ class UserMediaListViewModel(
         return tagInMatch && tagNotMatch
     }
 
-    private fun UserMediaListUiState.applyEntries(
-        newEntries: List<CommonMediaListEntry>,
-        clearPrevious: Boolean = true
-    ) {
-        if (clearPrevious) {
-            entries.clear()
-            mangaEntries.clear()
-            novelEntries.clear()
-        }
-        entries.addAll(newEntries)
-
+    private fun UserMediaListUiState.applyPartition() {
         if (separateNovelsAndManga && mediaType == MediaType.MANGA) {
-            val (novels, manga) = newEntries.partition { it.media?.format == MediaFormat.NOVEL }
-            novelEntries.addAll(novels)
-            mangaEntries.addAll(manga)
-        }
-    }
-
-    private fun UserMediaListUiState.applyPartition(isSeparate: Boolean) {
-        mangaEntries.clear()
-        novelEntries.clear()
-        if (isSeparate && mediaType == MediaType.MANGA) {
             val (novels, manga) = entries.partition { it.media?.format == MediaFormat.NOVEL }
             novelEntries.addAll(novels)
             mangaEntries.addAll(manga)
@@ -536,10 +521,13 @@ class UserMediaListViewModel(
                         baseEntries
                     }
                 }
-                mutableUiState.update { state ->
-                    state.applyEntries(filteredList, clearPrevious = true)
+                with(uiState) {
+                    entries.clear()
+                    entries.addAll(filteredList)
 
-                    state.copy()
+                    mangaEntries.clear()
+                    novelEntries.clear()
+                    applyPartition()
                 }
             }
             .launchIn(viewModelScope)
@@ -606,14 +594,19 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
-        defaultPreferencesRepository.separateNovelsAndManga
-            .onEach { isEnabled ->
-                mutableUiState.update { uiState ->
-                    uiState.applyPartition(isEnabled)
-                    uiState.copy(separateNovelsAndManga = isEnabled)
+        if (mediaType == MediaType.MANGA) {
+            defaultPreferencesRepository.separateNovelsAndManga
+                .onEach { isEnabled ->
+                    mutableUiState.update { uiState ->
+                        uiState.copy(separateNovelsAndManga = isEnabled).also {
+                            it.mangaEntries.clear()
+                            it.novelEntries.clear()
+                            it.applyPartition()
+                        }
+                    }
                 }
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
+        }
 
         defaultPreferencesRepository.useFuzzySearch
             .filterNotNull()
@@ -709,7 +702,8 @@ class UserMediaListViewModel(
                                 }
                             }
                         }
-                        uiState.applyEntries(newEntries, clearPrevious = false)
+                        uiState.entries.addAll(newEntries)
+                        uiState.applyPartition()
                         val loadMore = newEntries.isEmpty() && result.hasNextPage
                         uiState.copy(
                             fetchFromNetwork = false,
