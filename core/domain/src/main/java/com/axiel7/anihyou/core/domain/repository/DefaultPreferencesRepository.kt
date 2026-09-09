@@ -379,10 +379,10 @@ class DefaultPreferencesRepository(
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
     }
 
-    val separateNovelsAndManga = dataStore.getValue(SEPARATE_ANIME_AND_MANGA_KEY, default = true)
+    val separateNovelsAndManga = dataStore.getValue(SEPARATE_NOVELS_AND_MANGA_KEY, default = true)
 
     suspend fun setSeparateNovelsAndManga(value: Boolean) {
-        dataStore.setValue(SEPARATE_ANIME_AND_MANGA_KEY, value)
+        dataStore.setValue(SEPARATE_NOVELS_AND_MANGA_KEY, value)
     }
 
     val animeCustomLinks = dataStore.getValue(ANIME_CUSTOM_LINKS_KEY)
@@ -452,7 +452,7 @@ class DefaultPreferencesRepository(
 
         private val USE_FUZZY_SEARCH_KEY = booleanPreferencesKey("use_fuzzy_search")
 
-        private val SEPARATE_ANIME_AND_MANGA_KEY = booleanPreferencesKey("separate_anime_and_manga")
+        private val SEPARATE_NOVELS_AND_MANGA_KEY = booleanPreferencesKey("separate_novels_and_manga")
 
         private val ANIME_CUSTOM_LINKS_KEY = stringSetPreferencesKey("anime_custom_links")
         private val MANGA_CUSTOM_LINKS_KEY = stringSetPreferencesKey("manga_custom_links")
