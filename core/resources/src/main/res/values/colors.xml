@@ -2,4 +2,6 @@
 <resources>
     <color name="primary">#314DDF</color>
     <color name="accent">#314DDF</color>
+    <color name="primaryContainer">#DEE0FF</color>
+    <color name="onPrimaryContainer">#3A4379</color>
 </resources>
