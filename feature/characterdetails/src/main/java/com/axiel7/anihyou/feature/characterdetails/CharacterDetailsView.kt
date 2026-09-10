@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.characterdetails
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -131,49 +132,50 @@ private fun CharacterDetailsContent(
                 items = CharacterDetailsTab.tabRows,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                 selectedIndex = selectedTabIndex,
-                onItemSelection = {
-                    selectedTabIndex = it
-                }
+                onItemSelection = { selectedTabIndex = it }
             )
+            AnimatedContent(
+                targetState = CharacterDetailsTab.tabRows[selectedTabIndex].value
+            ) { tab ->
+                when (tab) {
+                    CharacterDetailsTab.INFO ->
+                        CharacterInfoView(
+                            uiState = uiState,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            contentPadding = PaddingValues(
+                                bottom = padding.calculateBottomPadding()
+                            ),
+                            navigateToFullscreenImage = navActionManager::toFullscreenImage,
+                        )
 
-            when (CharacterDetailsTab.tabRows[selectedTabIndex].value) {
-                CharacterDetailsTab.INFO ->
-                    CharacterInfoView(
-                        uiState = uiState,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            bottom = padding.calculateBottomPadding()
-                        ),
-                        navigateToFullscreenImage = navActionManager::toFullscreenImage,
-                    )
-
-                CharacterDetailsTab.MEDIA -> {
-                    LaunchedEffect(uiState.page) {
-                        if (uiState.page == 0) event?.onLoadMore()
-                    }
-                    CharacterMediaView(
-                        media = uiState.media.toImmutableList(),
-                        isLoading = uiState.isLoadingMedia,
-                        loadMore = { event?.onLoadMore() },
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            bottom = padding.calculateBottomPadding()
-                        ),
-                        navigateToMediaDetails = navActionManager::toMediaDetails,
-                        showVoiceActorsSheet = {
-                            event?.onShowVoiceActorsSheet(it)
-                            showVaSheet = true
-                        },
-                        showEditSheet = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            if (isLoggedIn) {
-                                event?.selectMediaItem(it)
-                                showEditSheet = true
-                            } else {
-                                snackbarManager.showNotLoggedInSnackbar()
-                            }
+                    CharacterDetailsTab.MEDIA -> {
+                        LaunchedEffect(uiState.page) {
+                            if (uiState.page == 0) event?.onLoadMore()
                         }
-                    )
+                        CharacterMediaView(
+                            media = uiState.media.toImmutableList(),
+                            isLoading = uiState.isLoadingMedia,
+                            loadMore = { event?.onLoadMore() },
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            contentPadding = PaddingValues(
+                                bottom = padding.calculateBottomPadding()
+                            ),
+                            navigateToMediaDetails = navActionManager::toMediaDetails,
+                            showVoiceActorsSheet = {
+                                event?.onShowVoiceActorsSheet(it)
+                                showVaSheet = true
+                            },
+                            showEditSheet = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                if (isLoggedIn) {
+                                    event?.selectMediaItem(it)
+                                    showEditSheet = true
+                                } else {
+                                    snackbarManager.showNotLoggedInSnackbar()
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }//: Column

@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.staffdetails
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -115,58 +116,60 @@ private fun StaffDetailsContent(
                 items = StaffInfoType.tabRows,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                 selectedIndex = selectedTabIndex,
-                onItemSelection = {
-                    selectedTabIndex = it
-                }
+                onItemSelection = { selectedTabIndex = it }
             )
-            when (StaffInfoType.tabRows[selectedTabIndex].value) {
-                StaffInfoType.INFO ->
-                    StaffInfoView(
-                        uiState = uiState,
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            bottom = padding.calculateBottomPadding()
-                        ),
-                        navigateToFullscreenImage = navActionManager::toFullscreenImage
-                    )
+            AnimatedContent(
+                targetState = StaffInfoType.tabRows[selectedTabIndex].value
+            ) { tab ->
+                when (tab) {
+                    StaffInfoType.INFO ->
+                        StaffInfoView(
+                            uiState = uiState,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            contentPadding = PaddingValues(
+                                bottom = padding.calculateBottomPadding()
+                            ),
+                            navigateToFullscreenImage = navActionManager::toFullscreenImage
+                        )
 
-                StaffInfoType.MEDIA -> {
-                    StaffMediaView(
-                        staffMedia = uiState.media,
-                        isLoading = uiState.isLoadingMedia,
-                        loadMore = { event?.loadNextPageMedia() },
-                        mediaOnMyList = uiState.mediaOnMyList,
-                        setMediaOnMyList = { event?.setMediaOnMyList(it) },
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            bottom = padding.calculateBottomPadding()
-                        ),
-                        showEditSheet = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            if (isLoggedIn) {
-                                event?.selectMediaItem(it)
-                                showEditSheet = true
-                            } else {
-                                snackbarManager.showNotLoggedInSnackbar()
-                            }
-                        },
-                        navigateToMediaDetails = navActionManager::toMediaDetails
-                    )
-                }
+                    StaffInfoType.MEDIA -> {
+                        StaffMediaView(
+                            staffMedia = uiState.media,
+                            isLoading = uiState.isLoadingMedia,
+                            loadMore = { event?.loadNextPageMedia() },
+                            mediaOnMyList = uiState.mediaOnMyList,
+                            setMediaOnMyList = { event?.setMediaOnMyList(it) },
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            contentPadding = PaddingValues(
+                                bottom = padding.calculateBottomPadding()
+                            ),
+                            showEditSheet = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                if (isLoggedIn) {
+                                    event?.selectMediaItem(it)
+                                    showEditSheet = true
+                                } else {
+                                    snackbarManager.showNotLoggedInSnackbar()
+                                }
+                            },
+                            navigateToMediaDetails = navActionManager::toMediaDetails
+                        )
+                    }
 
-                StaffInfoType.CHARACTER -> {
-                    StaffCharacterView(
-                        staffCharacters = uiState.characters,
-                        isLoading = uiState.isLoadingCharacters,
-                        loadMore = { event?.loadNextPageCharacters() },
-                        charactersOnMyList = uiState.charactersOnMyList,
-                        setCharactersOnMyList = { event?.setCharactersOnMyList(it) },
-                        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            bottom = padding.calculateBottomPadding()
-                        ),
-                        navigateToCharacterDetails = navActionManager::toCharacterDetails
-                    )
+                    StaffInfoType.CHARACTER -> {
+                        StaffCharacterView(
+                            staffCharacters = uiState.characters,
+                            isLoading = uiState.isLoadingCharacters,
+                            loadMore = { event?.loadNextPageCharacters() },
+                            charactersOnMyList = uiState.charactersOnMyList,
+                            setCharactersOnMyList = { event?.setCharactersOnMyList(it) },
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            contentPadding = PaddingValues(
+                                bottom = padding.calculateBottomPadding()
+                            ),
+                            navigateToCharacterDetails = navActionManager::toCharacterDetails
+                        )
+                    }
                 }
             }
         }//: Column

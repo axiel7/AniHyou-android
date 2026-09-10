@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.mediadetails
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -537,60 +538,62 @@ fun MediaInfoTabs(
             items = MediaDetailsType.tabRows,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
             selectedIndex = selectedTabIndex,
-            onItemSelection = {
-                selectedTabIndex = it
-            }
+            onItemSelection = { selectedTabIndex = it }
         )
-        when (MediaDetailsType.tabRows[selectedTabIndex].value) {
-            MediaDetailsType.INFO ->
-                MediaInformationView(
-                    uiState = uiState,
-                    navigateToGenreTag = navActionManager::toGenreTag,
-                    navigateToStudioDetails = navActionManager::toStudioDetails,
-                    navigateToAnimeSeason = navActionManager::toAnimeSeason
-                )
+        AnimatedContent(
+            targetState = MediaDetailsType.tabRows[selectedTabIndex].value
+        ) { tab ->
+            when (tab) {
+                MediaDetailsType.INFO ->
+                    MediaInformationView(
+                        uiState = uiState,
+                        navigateToGenreTag = navActionManager::toGenreTag,
+                        navigateToStudioDetails = navActionManager::toStudioDetails,
+                        navigateToAnimeSeason = navActionManager::toAnimeSeason
+                    )
 
-            MediaDetailsType.STAFF_CHARACTERS ->
-                MediaCharacterStaffView(
-                    uiState = uiState,
-                    fetchData = { event?.fetchCharactersAndStaff() },
-                    showVoiceActorsSheet = {
-                        event?.showVoiceActorsSheet(it)
+                MediaDetailsType.STAFF_CHARACTERS ->
+                    MediaCharacterStaffView(
+                        uiState = uiState,
+                        fetchData = { event?.fetchCharactersAndStaff() },
+                        showVoiceActorsSheet = {
+                            event?.showVoiceActorsSheet(it)
+                        }
+                    )
+
+                MediaDetailsType.RELATIONS ->
+                    MediaRelationsView(
+                        uiState = uiState,
+                        fetchData = { event?.fetchRelationsAndRecommendations() },
+                        navigateToDetails = navActionManager::toMediaDetails,
+                        onVoteClick = { mediaId, recId, rating ->
+                            event?.onVoteClick(
+                                mediaId,
+                                recId,
+                                rating
+                            )
+                        },
+                    )
+
+                MediaDetailsType.STATS ->
+                    MediaStatsView(
+                        uiState = uiState,
+                        fetchData = { event?.fetchStats() },
+                        navigateToUserDetails = navActionManager::toUserDetails
+                    )
+
+                MediaDetailsType.REVIEWS -> {
+                    LaunchedEffect(uiState.threads, uiState.reviews) {
+                        if (uiState.threads.isEmpty() && uiState.reviews.isEmpty()) {
+                            event?.fetchThreads()
+                            event?.fetchReviews()
+                            event?.fetchActivity()
+                        }
                     }
-                )
-
-            MediaDetailsType.RELATIONS ->
-                MediaRelationsView(
-                    uiState = uiState,
-                    fetchData = { event?.fetchRelationsAndRecommendations() },
-                    navigateToDetails = navActionManager::toMediaDetails,
-                    onVoteClick = { mediaId, recId, rating ->
-                        event?.onVoteClick(
-                            mediaId,
-                            recId,
-                            rating
-                        )
-                    },
-                )
-
-            MediaDetailsType.STATS ->
-                MediaStatsView(
-                    uiState = uiState,
-                    fetchData = { event?.fetchStats() },
-                    navigateToUserDetails = navActionManager::toUserDetails
-                )
-
-            MediaDetailsType.REVIEWS -> {
-                LaunchedEffect(uiState.threads, uiState.reviews) {
-                    if (uiState.threads.isEmpty() && uiState.reviews.isEmpty()) {
-                        event?.fetchThreads()
-                        event?.fetchReviews()
-                        event?.fetchActivity()
-                    }
+                    ReviewThreadListView(
+                        uiState = uiState,
+                    )
                 }
-                ReviewThreadListView(
-                    uiState = uiState,
-                )
             }
         }
     }//: Column

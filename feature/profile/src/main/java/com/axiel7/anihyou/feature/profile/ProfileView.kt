@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.profile
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -164,58 +165,60 @@ private fun ProfileContent(
                         bottom = 8.dp
                     ),
                     selectedIndex = selectedTabIndex,
-                    onItemSelection = {
-                        selectedTabIndex = it
-                    }
+                    onItemSelection = { selectedTabIndex = it }
                 )
-                when (ProfileInfoType.tabRows[selectedTabIndex].value) {
-                    ProfileInfoType.ABOUT ->
-                        UserAboutView(
-                            aboutHtml = uiState.userInfo.about,
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                            isLoading = uiState.isLoading,
-                            onRefresh = { event?.onRefresh() },
-                            navigateToUserMediaList = if (!uiState.isMyProfile) {
-                                { mediaType ->
-                                    navActionManager.toUserMediaList(
-                                        mediaType,
-                                        uiState.userInfo.id,
-                                        uiState.userInfo.mediaListOptions!!.commonMediaListOptions.scoreFormat!!
-                                    )
-                                }
-                            } else null,
-                        )
+                AnimatedContent(
+                    targetState = ProfileInfoType.tabRows[selectedTabIndex].value
+                ) { tab ->
+                    when (tab) {
+                        ProfileInfoType.ABOUT ->
+                            UserAboutView(
+                                aboutHtml = uiState.userInfo.about,
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                                isLoading = uiState.isLoading,
+                                onRefresh = { event?.onRefresh() },
+                                navigateToUserMediaList = if (!uiState.isMyProfile) {
+                                    { mediaType ->
+                                        navActionManager.toUserMediaList(
+                                            mediaType,
+                                            uiState.userInfo.id,
+                                            uiState.userInfo.mediaListOptions!!.commonMediaListOptions.scoreFormat!!
+                                        )
+                                    }
+                                } else null,
+                            )
 
-                    ProfileInfoType.ACTIVITY -> {
-                        LaunchedEffect(uiState.page) {
-                            if (uiState.page == 0) event?.onLoadMore()
+                        ProfileInfoType.ACTIVITY -> {
+                            LaunchedEffect(uiState.page) {
+                                if (uiState.page == 0) event?.onLoadMore()
+                            }
+                            UserActivityView(
+                                activities = uiState.activities,
+                                uiState = uiState,
+                                event = event,
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            )
                         }
-                        UserActivityView(
-                            activities = uiState.activities,
-                            uiState = uiState,
-                            event = event,
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        )
+
+                        ProfileInfoType.STATS ->
+                            UserStatsView(
+                                userId = uiState.userInfo.id,
+                                nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
+                            )
+
+                        ProfileInfoType.FAVORITES ->
+                            UserFavoritesView(
+                                userId = uiState.userInfo.id,
+                                isMyProfile = uiState.isMyProfile,
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            )
+
+                        ProfileInfoType.SOCIAL ->
+                            UserSocialView(
+                                userId = uiState.userInfo.id,
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            )
                     }
-
-                    ProfileInfoType.STATS ->
-                        UserStatsView(
-                            userId = uiState.userInfo.id,
-                            nestedScrollConnection = topAppBarScrollBehavior.nestedScrollConnection,
-                        )
-
-                    ProfileInfoType.FAVORITES ->
-                        UserFavoritesView(
-                            userId = uiState.userInfo.id,
-                            isMyProfile = uiState.isMyProfile,
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        )
-
-                    ProfileInfoType.SOCIAL ->
-                        UserSocialView(
-                            userId = uiState.userInfo.id,
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        )
                 }
             }
         }//: Column
