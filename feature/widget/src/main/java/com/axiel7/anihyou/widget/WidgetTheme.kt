@@ -62,5 +62,5 @@ fun appWidgetBackgroundModifier() = GlanceModifier
 
 @Composable
 fun glanceStringResource(@StringRes id: Int, vararg args: Any): String {
-    return LocalContext.current.getString(id, args)
+    return LocalContext.current.getString(id, *args)
 }

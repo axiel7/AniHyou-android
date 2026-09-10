@@ -7,84 +7,164 @@
     android:orientation="vertical"
     android:theme="@style/Theme.AppWidget.AppWidgetContainer">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="@string/upcoming"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="42dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:lines="1"
-            android:text="Bocchi the Rock!"
-            android:textSize="16sp"
+            android:lines="2"
+            android:text="Thu\n25"
             android:textColor="?android:attr/textColorPrimary"
+            android:textSize="13sp"
+            android:gravity="center"
             tools:ignore="HardcodedText" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:text="Tue, 8 May at 23:00"
-            android:textColor="?android:attr/colorAccent"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical"
+            android:background="@drawable/widget_item_background"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Bocchi the Rock!"
+                android:textColor="@color/onPrimaryContainer"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Ep 3 airing at 10:00"
+                android:textColor="@color/onPrimaryContainer"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="42dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:lines="1"
-            android:text="Chainsaw Man"
-            android:textSize="16sp"
+            android:lines="2"
+            android:text="Thu\n25"
             android:textColor="?android:attr/textColorPrimary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:visibility="invisible"
             tools:ignore="HardcodedText" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:text="Thu, 10 May at 00:00"
-            android:textColor="?android:attr/colorAccent"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical"
+            android:background="@drawable/widget_item_background"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Chainsaw Man"
+                android:textColor="@color/onPrimaryContainer"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Ep 3 airing at 10:00"
+                android:textColor="@color/onPrimaryContainer"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="42dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:lines="1"
-            android:text="Kimetsu no Yaiba: Katanakaji no Sato-hen"
-            android:textSize="16sp"
+            android:lines="2"
+            android:text="Fri\n26"
             android:textColor="?android:attr/textColorPrimary"
+            android:textSize="13sp"
+            android:gravity="center"
             tools:ignore="HardcodedText" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:text="Fri, 11 May at 20:00"
-            android:textColor="?android:attr/colorAccent"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical"
+            android:background="@drawable/widget_item_background"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Kimetsu no Yaiba: Katanakaji no Sato-hen"
+                android:textColor="@color/onPrimaryContainer"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Ep 3 airing at 10:00"
+                android:textColor="@color/onPrimaryContainer"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

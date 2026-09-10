@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.model.media
 
+import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
 import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
@@ -140,6 +141,10 @@ val exampleAiringWidgetEntry = AiringWidgetQuery.Medium(
         id = 1,
         mediaId = 1,
         status = MediaListStatus.CURRENT,
+    ),
+    coverImage = AiringWidgetQuery.CoverImage(
+        color = "",
+        __typename = ""
     ),
 )
 val exampleBasicMediaDetails = BasicMediaDetails(
