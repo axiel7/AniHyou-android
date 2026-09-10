@@ -178,6 +178,15 @@
                 android:resource="@xml/airing_widget_info" />
         </receiver>
 
+        <activity
+            android:name=".widget.AiringWidgetConfigActivity"
+            android:theme="@style/Theme.AniHyou"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

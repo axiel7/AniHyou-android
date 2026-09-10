@@ -8,6 +8,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -28,6 +30,7 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.color.DynamicThemeColorProviders
+import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -41,6 +44,7 @@ import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -74,15 +78,21 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     private val defaultPreferencesRepository: DefaultPreferencesRepository by inject()
     private val mediaRepository: MediaRepository by inject()
 
+    override val stateDefinition = PreferencesGlanceStateDefinition
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         networkVariables.accessToken = defaultPreferencesRepository.accessToken.first()
 
         val result = mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
         provideContent {
             val scope = rememberCoroutineScope()
+            val prefs = currentState<Preferences>()
+            val isColored = prefs[IS_COLORED_KEY] ?: true
+
             GlanceTheme(colors = DynamicThemeColorProviders) {
                 Content(
                     result = result,
+                    isColored = isColored,
                     onRefresh = { scope.launch { update(context, id) } },
                 )
             }
@@ -107,6 +117,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
             GlanceTheme(colors = DynamicThemeColorProviders) {
                 Content(
                     result = result,
+                    isColored = true,
                     onRefresh = {},
                 )
             }
@@ -116,6 +127,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     @Composable
     private fun Content(
         result: DataResult<List<AiringWidgetQuery.Medium>>,
+        isColored: Boolean,
         onRefresh: () -> Unit,
     ) {
         val todayString = (System.currentTimeMillis() / 1000).timestampToDateString("yyyy-MM-dd")
@@ -141,7 +153,12 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
 
                         val showDate = currentDay != previousDay
                         val isToday = currentDay == todayString
-                        ItemView(item = item, showDate = showDate, isToday = isToday)
+                        ItemView(
+                            item = item,
+                            showDate = showDate,
+                            isToday = isToday,
+                            isColored = isColored
+                        )
                     }
                 } else {
                     item {
@@ -207,15 +224,22 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     }
 
     @Composable
-    private fun ItemView(item: AiringWidgetQuery.Medium, showDate: Boolean, isToday: Boolean) {
+    private fun ItemView(
+        item: AiringWidgetQuery.Medium,
+        showDate: Boolean,
+        isToday: Boolean,
+        isColored: Boolean
+    ) {
         val timestamp = item.nextAiringEpisode?.airingAt?.toLong()
         val dayOfWeek = timestamp?.timestampToDateString("E").orEmpty()
         val dayOfMonth = timestamp?.timestampToDateString("d").orEmpty()
 
-        val baseMediaColor = remember(item.coverImage?.color) {
-            item.coverImage?.color?.takeIf { it.isNotBlank() }?.let { hex ->
-                runCatching { colorFromHex(hex) }.getOrNull()
-            }
+        val baseMediaColor = remember(item.coverImage?.color, isColored) {
+            if (isColored) {
+                item.coverImage?.color?.takeIf { it.isNotBlank() }?.let { hex ->
+                    runCatching { colorFromHex(hex) }.getOrNull()
+                }
+            } else null
         }
 
         val primaryColor = GlanceTheme.colors.primary.getColor(LocalContext.current)
@@ -363,9 +387,14 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         exampleAiringWidgetEntry,
                     )
                 ),
+                isColored = true,
                 onRefresh = {}
             )
         }
+    }
+
+    companion object {
+        val IS_COLORED_KEY = booleanPreferencesKey("is_colored")
     }
 }
 
