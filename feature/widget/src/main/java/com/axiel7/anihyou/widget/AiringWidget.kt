@@ -89,6 +89,30 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
         }
     }
 
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        networkVariables.accessToken = defaultPreferencesRepository.accessToken.first()
+
+        val result = mediaRepository.getAiringWidgetData(page = 1, perPage = 50)
+            .takeIf { it is DataResult.Success }
+            ?: DataResult.Success(
+                data = listOf(
+                    exampleAiringWidgetEntry,
+                    exampleAiringWidgetEntry,
+                    exampleAiringWidgetEntry,
+                    exampleAiringWidgetEntry,
+                )
+            )
+
+        provideContent {
+            GlanceTheme(colors = DynamicThemeColorProviders) {
+                Content(
+                    result = result,
+                    onRefresh = {},
+                )
+            }
+        }
+    }
+
     @Composable
     private fun Content(
         result: DataResult<List<AiringWidgetQuery.Medium>>,

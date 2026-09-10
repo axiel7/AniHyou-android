@@ -1,13 +1,16 @@
 package com.axiel7.anihyou.ui.screens.main
 
+import android.appwidget.AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.collection.intSetOf
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -37,7 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.GlanceAppWidgetManager.Companion.SET_WIDGET_PREVIEWS_RESULT_RATE_LIMITED
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.axiel7.anihyou.core.base.extensions.firstBlocking
 import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.ExploreTab
@@ -59,7 +65,9 @@ import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
 import com.axiel7.anihyou.ui.screens.main.composables.MainNavigationRail
+import com.axiel7.anihyou.widget.AiringWidgetReceiver
 import com.materialkolor.PaletteStyle
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -89,6 +97,10 @@ class MainActivity : AppCompatActivity() {
         val homeTab = viewModel.homeTab.firstBlocking() ?: HomeTab.CURRENT
         val novelTab = viewModel.novelTab.firstBlocking() ?: NovelTab.MANGA
         val exploreTab = viewModel.exploreTab.firstBlocking() ?: ExploreTab.ANIME
+
+        if (initialIsLoggedIn) {
+            lifecycleScope.launch { setWidgetPreviews() }
+        }
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -198,6 +210,23 @@ class MainActivity : AppCompatActivity() {
             }
 
             else -> null
+        }
+    }
+
+    private suspend fun setWidgetPreviews() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            try {
+                val manager = GlanceAppWidgetManager(this@MainActivity)
+                val result = manager.setWidgetPreviews(
+                    AiringWidgetReceiver::class,
+                    intSetOf(WIDGET_CATEGORY_HOME_SCREEN)
+                )
+                if (result == SET_WIDGET_PREVIEWS_RESULT_RATE_LIMITED) {
+                    Log.w("Widget", "Widget preview update rate limited")
+                }
+            } catch (e: Exception) {
+                Log.e("Widget", "Failed to set widget previews", e)
+            }
         }
     }
 }
