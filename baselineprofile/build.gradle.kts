@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.androidx.baselineprofile)
 }
 
-val appPackageName: String by rootProject.extra
+val appPackageName = rootProject.extra["appPackageName"] as String
 
 android {
     namespace = "$appPackageName.baselineprofile"

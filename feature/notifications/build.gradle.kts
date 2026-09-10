@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.anihyou.feature)
 }
 
-val appPackageName: String by rootProject.extra
+val appPackageName = rootProject.extra["appPackageName"] as String
 
 android {
     namespace = "$appPackageName.feature.notifications"
