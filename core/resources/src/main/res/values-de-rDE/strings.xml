@@ -663,4 +663,18 @@
     <string name="space_separator">Leerzeichen Trennzeichen</string>
     <string name="custom_link_url_error_name">Die URL muss ein {name} enthalten</string>
     <string name="invalid_url_error">Ungültige URL</string>
+    <plurals name="notification_episode_aired">
+        <item quantity="one">Folge %d von %s wurde ausgestrahlt.</item>
+        <item quantity="other">Folge %d von %s wurde ausgestrahlt.</item>
+    </plurals>
+    <string name="notification_activity_liked">%s gefällt deine Aktivität.</string>
+    <string name="notification_activity_reply_liked">%s gefällt deine Antwort auf eine Aktivität.</string>
+    <string name="notification_activity_reply">%s hat auf deine Aktivität geantwortet.</string>
+    <string name="notification_activity_message">%s hat dir eine Nachricht gesendet.</string>
+    <string name="notification_activity_mention">%s hat dich in einer Aktivität erwähnt.</string>
+    <string name="notification_following">%s folgt dir jetzt.</string>
+    <string name="notification_media_added">%s wurde kürzlich zur Website hinzugefügt.</string>
+    <string name="notification_media_changed">Die Website-Daten für %s wurden aktualisiert</string>
+    <string name="notification_media_deleted">%s würde von der Website gelöscht</string>
+    <string name="notification_forum_mention">%1$s hat dich im Forenthema %2$s erwähnt.</string>
 </resources>

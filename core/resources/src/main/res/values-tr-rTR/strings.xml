@@ -662,4 +662,20 @@
     <string name="space_separator">Boşluk ayracı</string>
     <string name="custom_link_url_error_name">URL {name} içermeli</string>
     <string name="invalid_url_error">Geçersiz URL</string>
+    <string name="separate_novels_and_manga">Roman ve mangaları ayır</string>
+    <string name="novels">Romanlar</string>
+    <plurals name="notification_episode_aired">
+        <item quantity="one">%s animesinin %d. bölümü yayınlandı.</item>
+        <item quantity="other">%s animesinin %d. bölümü yayınlandı.</item>
+    </plurals>
+    <string name="notification_activity_liked">%s aktiviteni beğendi.</string>
+    <string name="notification_activity_reply_liked">%s etkinliğine verdiğin yanıtı beğendi.</string>
+    <string name="notification_activity_reply">%s etkinliğine yanıt verdi.</string>
+    <string name="notification_activity_message">%s sana bir mesaj gönderdi.</string>
+    <string name="notification_activity_mention">%s etkinliğinde senden bahsetti.</string>
+    <string name="notification_following">%s seni takip etmeye başladı.</string>
+    <string name="notification_media_added">%s yakın zamanda siteye eklendi.</string>
+    <string name="notification_media_changed">%s animesinin site verilerinde değişiklik yapıldı</string>
+    <string name="notification_media_deleted">%s animesi siteden silindi</string>
+    <string name="notification_forum_mention">%1$s, %2$s forum konusundaki mesajında senden bahsetti</string>
 </resources>
