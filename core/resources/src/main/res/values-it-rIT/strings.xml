@@ -20,6 +20,7 @@
         <item quantity="one">%d giorno</item>
         <item quantity="other">%d giorni</item>
     </plurals>
+    <string name="just_now">Adesso</string>
     <string name="unknown">Sconosciuto</string>
     <string name="airing_soon">In arrivo</string>
     <string name="mean_score">Punteggio</string>
@@ -130,6 +131,7 @@
     <string name="search_match">Corrispondenza ricerca</string>
     <string name="top_100">Top 100</string>
     <string name="top_popular">Top Popolari</string>
+    <string name="popular_manhwa">Manhwa Popolari</string>
     <string name="apply">Applica</string>
     <string name="sort_default">Predefinito</string>
     <string name="descending">Decrescente</string>
@@ -447,7 +449,10 @@
     <string name="staff_role_2nd_key_animation">Animazione secondaria</string>
     <string name="staff_role_key_animation_assistance">Assistenza animazioni chiave</string>
     <string name="staff_role_key_animation_op">Animazioni chiave (OP)</string>
+    <string name="staff_role_layout_editor">Editor Layout</string>
+    <string name="staff_role_layout_supervisor">Supervisore Layout</string>
     <string name="staff_role_layout">Layout</string>
+    <string name="staff_role_lettering">Lettering</string>
     <string name="staff_role_main_animator">Animatore principale</string>
     <string name="staff_role_monster_design">Disegno mostri</string>
     <string name="staff_role_music_arrangement">Arrangiamento musica</string>
@@ -488,10 +493,29 @@
     <string name="staff_role_sound_producer">Produttore del suono</string>
     <string name="staff_role_sound_production_manager">Responsabile produzione audio</string>
     <string name="staff_role_sound_production">Produzione del suono</string>
+    <string name="staff_role_special_design">Design Speciale</string>
+    <string name="staff_role_special_effects_assistant">Assistente Effetti Speciali</string>
+    <string name="staff_role_special_effects">Effetti Speciali</string>
     <string name="staff_role_story">Storia</string>
     <string name="staff_role_supervisor">Supervisore</string>
     <string name="staff_role_supporting_staff">Personale di supporto</string>
     <string name="staff_role_technical_director">Direttore tecnico</string>
+    <string name="staff_role_theme_song_lyrics">Testo della sigla</string>
+    <string name="staff_role_theme_song_lyrics_op">Testo della sigla (OP)</string>
+    <string name="staff_role_theme_song_lyrics_ed">Testo della sigla (ED)</string>
+    <string name="staff_role_theme_song_lyrics_op_ed">Testo della sigla (OP, ED)</string>
+    <string name="staff_role_theme_song_composition">Composizione della sigla</string>
+    <string name="staff_role_theme_song_composition_op">Composizione della sigla (OP)</string>
+    <string name="staff_role_theme_song_composition_ed">Composizione della sigla (ED)</string>
+    <string name="staff_role_theme_song_composition_op_ed">Composizione delle sigle (OP, ED)</string>
+    <string name="staff_role_theme_song_arrangement">Arrangiamento della sigla</string>
+    <string name="staff_role_theme_song_arrangement_op">Arrangiamento della sigla (OP)</string>
+    <string name="staff_role_theme_song_arrangement_ed">Arrangiamento della sigla (ED)</string>
+    <string name="staff_role_theme_song_arrangement_op_ed">Arrangiamento della sigla (OP, ED)</string>
+    <string name="staff_role_theme_song_performance">Performance della sigla</string>
+    <string name="staff_role_theme_song_performance_op">Performance della sigla (OP)</string>
+    <string name="staff_role_theme_song_performance_ed">Performance della sigla (ED)</string>
+    <string name="staff_role_theme_song_performance_op_ed">Performance della sigla (OP, ED)</string>
     <string name="staff_role_title_logo_design_assistance">Assistenza nella progettazione del logo del titolo</string>
     <string name="staff_role_title_logo_design">Progettazione del logo del titolo</string>
     <string name="staff_role_translator">Traduttore</string>
@@ -585,4 +609,25 @@
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
     <string name="general">Generali</string>
+    <string name="colored_media_title">Dettagli media colorati</string>
+    <string name="custom_links">Link personalizzati</string>
+    <string name="space_separator">Separatore di spazio</string>
+    <string name="custom_link_url_error_name">L\'URL deve contenere {name}</string>
+    <string name="invalid_url_error">URL non valido</string>
+    <string name="separate_novels_and_manga">Romanzi e manga separati</string>
+    <string name="novels">Romanzi</string>
+    <plurals name="notification_episode_aired">
+        <item quantity="one">Episodio %d di %s uscito.</item>
+        <item quantity="other">Episodio %d di %s uscito.</item>
+    </plurals>
+    <string name="notification_activity_liked">A %s è piaciuta la tua attività.</string>
+    <string name="notification_activity_reply_liked">A %s è piaciuta la tua risposta all\'attività.</string>
+    <string name="notification_activity_reply">%s ha risposto alla tua attività.</string>
+    <string name="notification_activity_message">%s ti ha mandato un messaggio.</string>
+    <string name="notification_activity_mention">%s ti ha menzionato nella sua attività.</string>
+    <string name="notification_following">%s ha iniziato a seguirti.</string>
+    <string name="notification_media_added">%s è stato recentemente aggiunto al sito.</string>
+    <string name="notification_media_changed">%s ha ricevuto modifiche ai dati dal sito</string>
+    <string name="notification_media_deleted">%s è stato rimosso dal sito</string>
+    <string name="notification_forum_mention">%1$s ti ha menzionato, nella discussione del forum %2$s</string>
 </resources>

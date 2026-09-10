@@ -663,4 +663,20 @@
     <string name="space_separator">Separador de espacios</string>
     <string name="custom_link_url_error_name">La URL debe contener {name}</string>
     <string name="invalid_url_error">URL no válida</string>
+    <string name="separate_novels_and_manga">Separar novelas y manga</string>
+    <string name="novels">Novelas</string>
+    <plurals name="notification_episode_aired">
+        <item quantity="one">Se emitió el episodio %d de %s.</item>
+        <item quantity="other">Se emitió el episodio %d de %s.</item>
+    </plurals>
+    <string name="notification_activity_liked">A %s le gustó tu actividad.</string>
+    <string name="notification_activity_reply_liked">A %s le gustó tu respuesta a la actividad.</string>
+    <string name="notification_activity_reply">%s respondió a tu actividad.</string>
+    <string name="notification_activity_message">%s te envió un mensaje.</string>
+    <string name="notification_activity_mention">%s te mencionó en su actividad.</string>
+    <string name="notification_following">%s comenzó a seguirte.</string>
+    <string name="notification_media_added">%s fue añadido recientemente al sitio.</string>
+    <string name="notification_media_changed">%s ha recibido cambios en los datos del sitio</string>
+    <string name="notification_media_deleted">%s fue eliminado del sitio</string>
+    <string name="notification_forum_mention">%1$s te mencionó en el hilo del foro %2$s</string>
 </resources>

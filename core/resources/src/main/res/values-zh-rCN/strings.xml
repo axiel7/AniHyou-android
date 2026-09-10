@@ -16,6 +16,7 @@
     <plurals name="num_days">
         <item quantity="other">%d天</item>
     </plurals>
+    <string name="just_now">刚刚</string>
     <string name="unknown">未知</string>
     <string name="airing_soon">即将播出</string>
     <string name="mean_score">平均评分</string>
@@ -71,10 +72,10 @@
     <string name="average_score">加权平均评分</string>
     <string name="popularity">人气</string>
     <string name="favorites">收藏</string>
-    <string name="episode_in_time">第%d集在%s后播出</string>
+    <string name="episode_in_time">第 %d 集在 %s后播出</string>
     <string name="airing">正在播出</string>
     <plurals name="num_episodes_behind">
-        <item quantity="other">剩余%d集</item>
+        <item quantity="other">剩余 %d 集</item>
     </plurals>
     <string name="information">信息</string>
     <string name="duration">单集时长</string>
@@ -123,6 +124,7 @@
     <string name="search_match">搜索匹配</string>
     <string name="top_100">Top 100</string>
     <string name="top_popular">热门排行</string>
+    <string name="popular_manhwa">热门漫画</string>
     <string name="apply">确定</string>
     <string name="sort_default">默认</string>
     <string name="descending">降序</string>
@@ -246,7 +248,7 @@
     <string name="default_setting">默认</string>
     <string name="media_status">状态</string>
     <string name="year">年份</string>
-    <string name="episode_aired_ago">第%d集在%s前播出</string>
+    <string name="episode_aired_ago">第 %d 集在 %s前播出</string>
     <string name="title_language">作品标题的语言</string>
     <string name="romaji_western_order">罗马字（西方顺序）</string>
     <string name="staff_character_name_language"><![CDATA[制作人员和角色名称的语言]]></string>
@@ -601,10 +603,10 @@
     <string name="male">男</string>
     <string name="female">女</string>
     <string name="non_binary">不明</string>
-    <string name="watched_episode_of">观看了《%2$s》的第%1$s集</string>
-    <string name="rewatched_episode_of">重看了《%2$s》的第%1$s集</string>
-    <string name="read_chapter_of">阅读了《%2$s》的第%1$s章</string>
-    <string name="reread_chapter_of">重读了《%2$s》的第%1$s章</string>
+    <string name="watched_episode_of">观看了《%2$s》的第 %1$s 集</string>
+    <string name="rewatched_episode_of">重看了《%2$s》的第 %1$s 集</string>
+    <string name="read_chapter_of">阅读了《%2$s》的第 %1$s 章</string>
+    <string name="reread_chapter_of">重读了《%2$s》的第 %1$s 章</string>
     <string name="plans_to_watch_anime">计划观看《%s》</string>
     <string name="plans_to_read_manga">计划阅读《%s》</string>
     <string name="completed_media">已完成《%s》</string>
@@ -639,5 +641,31 @@
     <string name="priority_high">高</string>
     <string name="priority_color_change">更改优先级颜色</string>
     <string name="general">概况</string>
+    <string name="logout_confirm">你确定要退出吗？</string>
     <string name="score_steps">评分步长</string>
+    <string name="recent">最近</string>
+    <string name="use_fuzzy_search">使用模糊搜索</string>
+    <string name="fuzzy_search_description">可匹配拼写错误、词序错误和首字母缩写词（例如“aot”）。可能会影响旧设备的运行性能。</string>
+    <string name="move_to_top">移至顶部</string>
+    <string name="colored_media_title">详情页使用动态色彩</string>
+    <string name="colored_media_desc">根据作品封面调整应用的颜色</string>
+    <string name="custom_links">自定义链接</string>
+    <string name="space_separator">空白分隔符</string>
+    <string name="custom_link_url_error_name">URL 必须包含 {name}</string>
+    <string name="invalid_url_error">无效的 URL</string>
+    <string name="separate_novels_and_manga">分隔小说和漫画</string>
+    <string name="novels">小说</string>
+    <plurals name="notification_episode_aired">
+        <item quantity="other">《%s》的第 %d 集已播出</item>
+    </plurals>
+    <string name="notification_activity_liked">%s 赞了你的动态</string>
+    <string name="notification_activity_reply_liked">%s 赞了你的动态评论</string>
+    <string name="notification_activity_reply">%s 回复了你的动态</string>
+    <string name="notification_activity_message">%s 给你发送了一条消息</string>
+    <string name="notification_activity_mention">%s 在他们的动态中提到了你</string>
+    <string name="notification_following">%s 关注了你</string>
+    <string name="notification_media_added">《%s》最近已被添加到网站上</string>
+    <string name="notification_media_changed">《%s》收到了信息变更</string>
+    <string name="notification_media_deleted">《%s》已被从网站上删除</string>
+    <string name="notification_forum_mention">%1$s 在论坛帖子 %2$s 中提到了你</string>
 </resources>

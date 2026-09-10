@@ -36,6 +36,7 @@
         <item quantity="many">%dيوم</item>
         <item quantity="other">%dيوم</item>
     </plurals>
+    <string name="just_now">الآن</string>
     <string name="unknown">غير معروف</string>
     <string name="airing_soon">يُبث قريبًا</string>
     <string name="mean_score">الدرجة</string>
@@ -158,6 +159,7 @@
     <string name="search_match">تطابق البحث</string>
     <string name="top_100">أفضل 100</string>
     <string name="top_popular">أعلى شعبية</string>
+    <string name="popular_manhwa">مانهوا شعبية</string>
     <string name="apply">حفظ</string>
     <string name="sort_default">افتراضي</string>
     <string name="descending">تنازلي</string>
@@ -179,6 +181,7 @@
     <string name="relation_source">المصدر</string>
     <string name="relation_compilation">ملخص</string>
     <string name="relation_contains">يحتوي على</string>
+    <string name="relation_same_universe">نفس الإحساس</string>
     <string name="recommendations">الاقترحات</string>
     <string name="settings">الإعدادات</string>
     <string name="display">العرض</string>
@@ -192,6 +195,7 @@
     <string name="account">الحساب</string>
     <string name="github_repository">مستودع GitHub</string>
     <string name="version">الإصدار</string>
+    <string name="contributors">المساهمون</string>
     <string name="anilist_account_settings">إعدادات حساب AniList</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="character_media">وسائط</string>
@@ -300,6 +304,7 @@
     <string name="update_interval">فترة التحديث</string>
     <string name="airing_anime_notifications">إشعارات بث الأنمي</string>
     <string name="color">اللون</string>
+    <string name="color_palette">لوحة الألوان</string>
     <string name="discover">إكتشف</string>
     <string name="default_home_tab">القسم الإفتارضي</string>
     <string name="text_status">حالة النص</string>
@@ -420,6 +425,20 @@
     <string name="anime_behind">أنمي في الخلف</string>
     <string name="default_tab">علامة التبويب الافتراضية</string>
     <string name="last_used">المستخدم أخيراً</string>
+    <string name="male">ذكر</string>
+    <string name="female">أنثى</string>
+    <string name="non_binary">غير محدد</string>
+    <string name="watched_episode_of">شاهدت الحلقة %1$s من %2$s</string>
+    <string name="rewatched_episode_of">أعدت مشاهدة الحلقة %1$s من %2$s</string>
+    <string name="read_chapter_of">اقرأ الفصل %1$s من %2$s</string>
+    <string name="reread_chapter_of">أعد قراءة الفصل %1$s من %2$s</string>
+    <string name="plans_to_watch_anime">خطط لمشاهدة %s</string>
+    <string name="plans_to_read_manga">خطط لقراءة %s</string>
+    <string name="completed_media">أكمل %s</string>
+    <string name="dropped_media">اسقطت %s</string>
+    <string name="paused_media">موقوف مؤقتًا %s</string>
+    <string name="rewatched_media">أعدت مشاهدته %s</string>
+    <string name="reread_media">إعادة قراءة %s</string>
     <plurals name="hour_abbreviation">
         <item quantity="zero">%d لا توجد ساعات</item>
         <item quantity="one">%dساعة واحدة</item>
@@ -436,10 +455,32 @@
         <item quantity="many">%dدقيقة</item>
         <item quantity="other">%dدقيقة</item>
     </plurals>
+    <string name="search_my_list">ابحث في قائمتي…</string>
+    <string name="notifications_submission">التقديم</string>
+    <string name="translator_app">المترجمون</string>
+    <string name="blur_adult_content">طمس وسائط البالغين</string>
+    <string name="hide_scores">إخفاء النقاط</string>
+    <string name="upvote">تصويت إجابي</string>
+    <string name="downvote">تصويت سلبي</string>
+    <string name="reorder">إعادة الطلب</string>
+    <string name="reorder_hint">اضغط مطولاً لإعادة الترتيب</string>
+    <string name="activity_filter_following">من المتابعين</string>
     <string name="priority">الأولوية</string>
+    <string name="show_low_priority">إظهار الأولوية المنخفضة</string>
     <string name="priority_value">الأولوية: %s</string>
     <string name="priority_low">منخفض</string>
     <string name="priority_medium">متوسط</string>
     <string name="priority_high">عالي</string>
+    <string name="priority_color_change">تغيير ألوان الأولوية</string>
     <string name="general">عام</string>
+    <string name="logout_confirm">هل أنت متأكد أنك تريد تسجيل الخروج ؟</string>
+    <string name="score_steps">خطوات التقييم</string>
+    <string name="recent">الأخيرة</string>
+    <string name="use_fuzzy_search">استخدم البحث التقريبي</string>
+    <string name="fuzzy_search_description">يتعرف على الأخطاء المطبعية والكلمات غير المتسلسلة والمختصرات (مثل «aot»). قد يؤثر على الأداء في الأجهزة القديمة.</string>
+    <string name="move_to_top">الانتقال إلى الأعلى</string>
+    <string name="colored_media_title">تفاصيل الوسائط الملونة</string>
+    <string name="colored_media_desc">تغيير لون التطبيق على أساس لون صورة الوسائط</string>
+    <string name="custom_links">روابط مخصصة</string>
+    <string name="space_separator">فاصل الفراغ</string>
 </resources>
