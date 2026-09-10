@@ -46,7 +46,7 @@ import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityView
 import com.axiel7.anihyou.feature.calendar.CalendarView
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.feature.explore.charts.MediaChartListView
-import com.axiel7.anihyou.feature.explore.discover.ExploreView
+import com.axiel7.anihyou.feature.explore.explore.ExploreView
 import com.axiel7.anihyou.feature.explore.search.SearchView
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeView
 import com.axiel7.anihyou.feature.home.HomeView

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.discover
+package com.axiel7.anihyou.feature.explore.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore
+package com.axiel7.anihyou.feature.explore.explore
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
