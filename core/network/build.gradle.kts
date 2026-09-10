@@ -32,7 +32,7 @@ dependencies {
 }
 
 apollo {
-    val appPackageName: String by rootProject.extra
+    val appPackageName = rootProject.extra["appPackageName"] as String
     val cacheVersion = libs.versions.apolloCache.get()
     generateSourcesDuringGradleSync.set(false)
     service("service") {

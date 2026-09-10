@@ -10,7 +10,7 @@ val versionProps = Properties().also {
     it.load(project.rootProject.file("version.properties").reader())
 }
 
-val appPackageName: String by rootProject.extra
+val appPackageName = rootProject.extra["appPackageName"] as String
 
 android {
     namespace = "$appPackageName.wear"

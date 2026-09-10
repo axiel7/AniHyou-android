@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.stability.analyzer)
 }
 
-val appPackageName: String by rootProject.extra
+val appPackageName = rootProject.extra["appPackageName"] as String
 
 val versionProps = Properties().also {
     it.load(project.rootProject.file("version.properties").reader())

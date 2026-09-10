@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
-val appPackageName: String by rootProject.extra
+val appPackageName = rootProject.extra["appPackageName"] as String
 
 android {
     namespace = "$appPackageName.core.model"
