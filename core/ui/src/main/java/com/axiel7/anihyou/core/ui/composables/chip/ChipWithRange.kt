@@ -13,9 +13,7 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberRangeSliderState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,24 +41,15 @@ fun ChipWithRange(
 ) {
     val hasValue = startValue != null || endValue != null
 
-    var rangeStart by remember { mutableIntStateOf((startValue ?: minValue).roundToInt()) }
-    var rangeEnd by remember { mutableIntStateOf((endValue ?: maxValue).roundToInt()) }
-
     var sheetOpened by remember { mutableStateOf(false) }
 
     val rangeSliderState = rememberRangeSliderState(
-        activeRangeStart = startValue ?: minValue,
-        activeRangeEnd = endValue ?: maxValue,
-        valueRange = minValue..maxValue,
-        onValueChangeFinished = {
-            onValueChanged(rangeStart..rangeEnd)
-        }
+        startValue = startValue ?: minValue,
+        endValue = endValue ?: maxValue,
+        trackRange = minValue..maxValue,
     )
-
-    LaunchedEffect(rangeSliderState.activeRangeStart, rangeSliderState.activeRangeEnd) {
-        rangeStart = rangeSliderState.activeRangeStart.roundToInt()
-        rangeEnd = rangeSliderState.activeRangeEnd.roundToInt()
-    }
+    val rangeStart = rangeSliderState.startValue.roundToInt()
+    val rangeEnd = rangeSliderState.endValue.roundToInt()
 
     FilterChip(
         selected = hasValue,
@@ -81,8 +70,8 @@ fun ChipWithRange(
                         .size(FilterChipDefaults.IconSize)
                         .clickable {
                             onValueChanged(null)
-                            rangeSliderState.activeRangeStart = minValue
-                            rangeSliderState.activeRangeEnd = maxValue
+                            rangeSliderState.startValue = minValue
+                            rangeSliderState.endValue = maxValue
                         },
                 )
             }
@@ -103,6 +92,9 @@ fun ChipWithRange(
 
                 RangeSlider(
                     state = rangeSliderState,
+                    onValueChangeFinished = {
+                        onValueChanged(rangeStart..rangeEnd)
+                    },
                     modifier = Modifier.padding(8.dp),
                 )
             }
