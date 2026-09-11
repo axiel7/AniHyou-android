@@ -1,24 +1,18 @@
 package com.axiel7.anihyou.feature.calendar
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -55,6 +49,7 @@ import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.list.rememberIsScrollingUp
 import com.axiel7.anihyou.feature.calendar.composables.CalendarAiringHorizontalItem
@@ -280,51 +275,31 @@ private fun AppBarActions(
     onMyListChanged: (Boolean?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var menuOpened by remember { mutableStateOf(false) }
-    Box(
-        modifier = modifier
-            .wrapContentSize(Alignment.TopStart)
-    ) {
-        IconButton(
-            onClick = { menuOpened = !menuOpened },
-            shapes = IconButtonDefaults.shapes(),
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.more_vert_24),
-                contentDescription = stringResource(R.string.show_more),
-            )
-        }
-        DropdownMenuPopup(
-            expanded = menuOpened,
-            onDismissRequest = { menuOpened = false },
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes(),
-            ) {
-                SelectableDropdownMenuItem(
-                    selected = onMyList != null,
-                    onClick = {
-                        onMyListChanged(
-                            if (onMyList == true) null else true
-                        )
-                        menuOpened = false
-                    },
-                    text = { Text(text = stringResource(R.string.on_my_list)) },
-                    shapes = MenuDefaults.itemShape(0, 1),
-                    selectedLeadingIcon = {
-                        if (onMyList != null) {
-                            Icon(
-                                painter = painterResource(
-                                    id = if (onMyList) R.drawable.check_20 else R.drawable.close_20
-                                ),
-                                contentDescription = null,
-                                modifier = Modifier.size(MenuDefaults.LeadingIconSize)
-                            )
-                        }
-                    },
-                )
-            }
-        }
+    IconButtonWithMenu(
+        icon = R.drawable.more_vert_24,
+        contentDescription = stringResource(R.string.show_more),
+        modifier = modifier,
+    ) { onDismiss ->
+        SelectableDropdownMenuItem(
+            selected = onMyList != null,
+            onClick = {
+                onMyListChanged(if (onMyList == true) null else true)
+                onDismiss()
+            },
+            text = { Text(text = stringResource(R.string.on_my_list)) },
+            shapes = MenuDefaults.itemShape(0, 1),
+            selectedLeadingIcon = {
+                if (onMyList != null) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (onMyList) R.drawable.check_20 else R.drawable.close_20
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                    )
+                }
+            },
+        )
     }
 }
 

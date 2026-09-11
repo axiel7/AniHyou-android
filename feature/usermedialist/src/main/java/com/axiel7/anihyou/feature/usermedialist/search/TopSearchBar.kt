@@ -1,14 +1,21 @@
 package com.axiel7.anihyou.feature.usermedialist.search
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.Card
@@ -16,37 +23,34 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.resources.R
-import com.axiel7.anihyou.feature.usermedialist.UserMediaListEvent
-import com.axiel7.anihyou.feature.usermedialist.UserMediaListUiState
-import com.axiel7.anihyou.feature.usermedialist.composables.SortMenu
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
+import com.axiel7.anihyou.core.model.user.UserMediaListSort
+import com.axiel7.anihyou.core.resources.R
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
+import com.axiel7.anihyou.feature.usermedialist.UserMediaListEvent
+import com.axiel7.anihyou.feature.usermedialist.UserMediaListUiState
 import kotlinx.coroutines.flow.drop
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,6 +154,10 @@ internal fun TopSearchBar(
                             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                             lineLimits = TextFieldLineLimits.SingleLine,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            onKeyboardAction = KeyboardActionHandler {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { onFocusChange(it.isFocused) }
@@ -172,24 +180,35 @@ internal fun TopSearchBar(
             }
         },
         actions = {
-            Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-                IconButton(
-                    onClick = { event?.toggleSortMenu(true) },
-                    shapes = IconButtonDefaults.shapes()
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.sort_24),
-                        contentDescription = stringResource(R.string.sort)
+            IconButtonWithMenu(
+                icon = R.drawable.sort_24,
+                contentDescription = stringResource(R.string.sort)
+            ) { onDismiss ->
+                UserMediaListSort.entries.fastForEachIndexed { index, item ->
+                    SelectableDropdownMenuItem(
+                        selected = uiState.sort == item.asc || uiState.sort == item.desc,
+                        onClick = {
+                            event?.setSort(if (uiState.sort == item.desc) item.asc else item.desc)
+                            onDismiss()
+                        },
+                        text = { Text(text = item.localized()) },
+                        shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
+                        modifier = Modifier.padding(end = 8.dp),
+                        leadingIcon = {
+                            if (uiState.sort == item.asc) {
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_upward_24),
+                                    contentDescription = stringResource(R.string.ascending),
+                                )
+                            } else if (uiState.sort == item.desc) {
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_downward_24),
+                                    contentDescription = stringResource(R.string.descending),
+                                )
+                            }
+                        }
                     )
                 }
-                SortMenu(
-                    expanded = uiState.sortMenuExpanded,
-                    sort = uiState.sort,
-                    onDismiss = {
-                        event?.toggleSortMenu(false)
-                        event?.setSort(it)
-                    }
-                )
             }
         },
         scrollBehavior = scrollBehavior,

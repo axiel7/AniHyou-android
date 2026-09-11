@@ -8,7 +8,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,9 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -96,6 +92,7 @@ import com.axiel7.anihyou.core.ui.composables.character.CharacterVoiceActorsShee
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
@@ -604,57 +601,36 @@ private fun CustomLinksButton(
     uiState: MediaDetailsUiState,
 ) {
     val context = LocalContext.current
-    var linksExpanded by remember { mutableStateOf(false) }
     var titleSheetExpanded by remember { mutableStateOf(false) }
     var selectedLink by remember { mutableStateOf<String?>(null) }
 
-    Box(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        IconButton(
-            onClick = { linksExpanded = !linksExpanded },
-            shapes = IconButtonDefaults.shapes()
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.link_24),
-                contentDescription = stringResource(R.string.custom_links),
+    IconButtonWithMenu(
+        icon = R.drawable.link_24,
+        contentDescription = stringResource(R.string.custom_links),
+    ) { onDismiss ->
+        uiState.customLinks.forEachIndexed { index, item ->
+            DropdownMenuItem(
+                text = {
+                    val urlString = item.substring(1)
+                    val uri = urlString.toUri()
+                    val scheme = uri.scheme
+                        ?.takeIf { !it.startsWith("http") }
+                        ?.plus("://")
+                    val name = if (uri.host != null) scheme.orEmpty() + uri.host else urlString
+
+                    Text(text = name)
+                },
+                onClick = {
+                    selectedLink = item
+                    titleSheetExpanded = true
+                    onDismiss()
+                },
+                shape = when (index) {
+                    0 -> MenuDefaults.leadingItemShape
+                    uiState.customLinks.size - 1 -> MenuDefaults.trailingItemShape
+                    else -> MenuDefaults.middleItemShape
+                },
             )
-        }
-
-        DropdownMenuPopup(
-            expanded = linksExpanded,
-            onDismissRequest = { linksExpanded = false },
-            modifier = Modifier.heightIn(max = 300.dp)
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes(),
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
-                uiState.customLinks.forEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        text = {
-                            val urlString = item.substring(1)
-                            val uri = urlString.toUri()
-                            val scheme = uri.scheme
-                                ?.takeIf { !it.startsWith("http") }
-                                ?.plus("://")
-                            val name = if (uri.host != null) scheme.orEmpty() + uri.host else urlString
-
-                            Text(text = name)
-                        },
-                        onClick = {
-                            selectedLink = item
-                            titleSheetExpanded = true
-                            linksExpanded = false
-                        },
-                        shape = when (index) {
-                            0 -> MenuDefaults.leadingItemShape
-                            uiState.customLinks.size - 1 -> MenuDefaults.trailingItemShape
-                            else -> MenuDefaults.middleItemShape
-                        },
-                    )
-                }
-            }
         }
     }
 

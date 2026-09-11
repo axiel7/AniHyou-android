@@ -4,26 +4,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -43,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEachIndexed
 import com.axiel7.anihyou.core.common.utils.DateUtils
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.iconSmall
@@ -52,6 +44,8 @@ import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.SelectableIconToggleButton
+import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
+import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.CoroutineScope
@@ -140,6 +134,7 @@ fun SeasonChartFilterSheet(
                     sort = selectedSort,
                     setSort = { selectedSort = it }
                 )
+                Spacer(modifier = Modifier.width(16.dp))
                 YearMenu(
                     year = selectedYear,
                     setYear = { selectedYear = it }
@@ -154,39 +149,12 @@ fun YearMenu(
     year: Int,
     setYear: (Int) -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        FilterChip(
-            selected = true,
-            onClick = { expanded = !expanded },
-            label = { Text(text = year.toString()) },
-        )
-        DropdownMenuPopup(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(max = 300.dp)
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes(),
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
-                DateUtils.seasonYears.fastForEachIndexed { index, item ->
-                    SelectableDropdownMenuItem(
-                        selected = year == item,
-                        onClick = {
-                            setYear(item)
-                            expanded = false
-                        },
-                        text = { Text(text = item.toString()) },
-                        modifier = Modifier.padding(end = 8.dp),
-                        shapes = MenuDefaults.itemShape(index, DateUtils.seasonYears.size)
-                    )
-                }
-            }
-        }
-    }
+    FilterChipWithMenu(
+        title = year.toString(),
+        values = DateUtils.seasonYears,
+        selectedValue = year,
+        onValueSelected = { it?.let(setYear) },
+    )
 }
 
 private val seasonSortEntries = listOf(
@@ -202,45 +170,18 @@ private fun SortMenu(
     sort: MediaSort,
     setSort: (MediaSort) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        AssistChip(
-            onClick = { expanded = !expanded },
-            label = { Text(text = sort.localized()) },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.sort_20),
-                    contentDescription = stringResource(R.string.sort)
-                )
-            },
-        )
-        DropdownMenuPopup(
-            expanded = expanded,
-            onDismissRequest = {
-                setSort(sort)
-                expanded = false
-            }
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes()
-            ) {
-                seasonSortEntries.fastForEachIndexed { index, item ->
-                    SelectableDropdownMenuItem(
-                        selected = sort == item,
-                        onClick = {
-                            setSort(item)
-                            expanded = false
-                        },
-                        text = { Text(text = item.localized()) },
-                        modifier = Modifier.padding(end = 8.dp),
-                        shapes = MenuDefaults.itemShape(index, seasonSortEntries.size)
-                    )
-                }
-            }
-        }
-    }
+    AssistChipWithMenu(
+        values = seasonSortEntries,
+        selectedValue = sort,
+        onValueSelected = setSort,
+        leadingIcon = {
+            Icon(
+                painter = painterResource(R.drawable.sort_20),
+                contentDescription = stringResource(R.string.sort)
+            )
+        },
+        valueString = { it.localized() },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
