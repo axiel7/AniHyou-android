@@ -163,6 +163,8 @@ fun MainNavigation(
                 DeepLink.Type.ACTIVITY -> {
                     deepLink.id.toIntOrNull()?.let { navActionManager.toActivityDetails(it) }
                 }
+
+                DeepLink.Type.CALENDAR -> navActionManager.toCalendar()
             }
         }
     }
