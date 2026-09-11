@@ -125,7 +125,7 @@ private fun AnimeDiscoverContent(
         )
     }
 
-    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() }, isLoggedIn = isLoggedIn)
 
     Scaffold(
         modifier = modifier,
