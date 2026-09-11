@@ -1,10 +1,13 @@
 package com.axiel7.anihyou.widget
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
@@ -15,6 +18,7 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.ColumnScope
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
+import androidx.glance.unit.ColorProvider
 
 /**
  * Provide a Box composable using the system parameters for app widgets background with rounded
@@ -63,4 +67,23 @@ fun appWidgetBackgroundModifier() = GlanceModifier
 @Composable
 fun glanceStringResource(@StringRes id: Int, vararg args: Any): String {
     return LocalContext.current.getString(id, *args)
+}
+
+@Composable
+fun RoundedDrawableBox(
+    @DrawableRes shapeRes: Int,
+    color: ColorProvider,
+    modifier: GlanceModifier = GlanceModifier,
+    contentAlignment: Alignment = Alignment.Center,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier.background(
+            imageProvider = ImageProvider(shapeRes),
+            colorFilter = ColorFilter.tint(color)
+        ),
+        contentAlignment = contentAlignment
+    ) {
+        content()
+    }
 }

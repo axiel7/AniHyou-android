@@ -22,7 +22,6 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity
-import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -32,7 +31,6 @@ import androidx.glance.color.ColorProvider
 import androidx.glance.color.DynamicThemeColorProviders
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
@@ -132,8 +130,10 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     ) {
         val todayString = (System.currentTimeMillis() / 1000).timestampToDateString("yyyy-MM-dd")
 
-        Scaffold(
-            horizontalPadding = 0.dp
+        RoundedDrawableBox(
+            shapeRes = R.drawable.widget_background_24,
+            color = GlanceTheme.colors.widgetBackground,
+            modifier = GlanceModifier.fillMaxSize()
         ) {
             LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                 item(itemId = 0) {
@@ -203,11 +203,12 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                 modifier = GlanceModifier.defaultWeight()
             )
 
-            Box(
+            RoundedDrawableBox(
+                shapeRes = R.drawable.widget_refresh_bg_20,
+                color = GlanceTheme.colors.primary,
                 modifier = GlanceModifier
                     .width(54.dp)
                     .height(32.dp)
-                    .background(GlanceTheme.colors.primary)
                     .cornerRadius(20.dp)
                     .clickable(onRefresh),
                 contentAlignment = Alignment.Center
@@ -244,10 +245,13 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
 
         val primaryColor = GlanceTheme.colors.primary.getColor(LocalContext.current)
 
-        val backgroundModifier = if (baseMediaColor != null) {
-            GlanceModifier.background(baseMediaColor.harmonize(primaryColor).darken(2f))
+        val backgroundColor = if (baseMediaColor != null) {
+            ColorProvider(
+                day = baseMediaColor.harmonize(primaryColor).darken(2f),
+                night = baseMediaColor.harmonize(primaryColor).darken(2f)
+            )
         } else {
-            GlanceModifier.background(GlanceTheme.colors.secondaryContainer)
+            GlanceTheme.colors.secondaryContainer
         }
         val defaultTextColor = GlanceTheme.colors.onSecondaryContainer
 
@@ -270,23 +274,15 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (showDate) {
-                    val dateModifier = if (isToday) {
-                        GlanceModifier
-                            .size(38.dp)
-                            .background(GlanceTheme.colors.primary)
-                            .cornerRadius(38.dp)
-                    } else {
-                        GlanceModifier
-                            .size(38.dp)
-                            .background(Color.Transparent)
-                    }
-
-                    Column(
-                        modifier = dateModifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        if (isToday) {
+                    if (isToday) {
+                        RoundedDrawableBox(
+                            shapeRes = R.drawable.widget_date_circle_bg,
+                            color = GlanceTheme.colors.primary,
+                            modifier = GlanceModifier
+                                .size(38.dp)
+                                .cornerRadius(38.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
                                 text = "$dayOfWeek\n$dayOfMonth",
                                 style = TextStyle(
@@ -297,7 +293,15 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                                 ),
                                 maxLines = 2,
                             )
-                        } else {
+                        }
+                    } else {
+                        Column(
+                            modifier = GlanceModifier
+                                .size(38.dp)
+                                .background(Color.Transparent),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
                             Text(
                                 text = dayOfWeek,
                                 style = TextStyle(
@@ -324,11 +328,12 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                 }
             }
 
-            Column(
-                modifier = backgroundModifier
+            RoundedDrawableBox(
+                shapeRes = R.drawable.widget_airing_bg_12,
+                color = backgroundColor,
+                modifier = GlanceModifier
                     .defaultWeight()
                     .cornerRadius(12.dp)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
                     .clickable(
                         actionStartActivity(
                             LocalContext.current.packageManager
@@ -344,30 +349,36 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         )
                     )
             ) {
-                Text(
-                    text = item.title?.userPreferred.orEmpty(),
-                    style = TextStyle(
-                        color = textColor,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    ),
-                    maxLines = 1
-                )
-                Text(
-                    text = item.nextAiringEpisode?.let { nextAiringEpisode ->
-                        glanceStringResource(
-                            R.string.episode_airing_at,
-                            nextAiringEpisode.episode,
-                            nextAiringEpisode.airingAt.toLong().timestampToTimeString()
-                                ?: UNKNOWN_CHAR
-                        )
-                    } ?: glanceStringResource(R.string.unknown),
-                    style = TextStyle(
-                        color = textColor,
-                        fontSize = 13.sp
-                    ),
-                    maxLines = 1
-                )
+                Column(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = item.title?.userPreferred.orEmpty(),
+                        style = TextStyle(
+                            color = textColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        maxLines = 1
+                    )
+                    Text(
+                        text = item.nextAiringEpisode?.let { nextAiringEpisode ->
+                            glanceStringResource(
+                                R.string.episode_airing_at,
+                                nextAiringEpisode.episode,
+                                nextAiringEpisode.airingAt.toLong().timestampToTimeString()
+                                    ?: UNKNOWN_CHAR
+                            )
+                        } ?: glanceStringResource(R.string.unknown),
+                        style = TextStyle(
+                            color = textColor,
+                            fontSize = 13.sp
+                        ),
+                        maxLines = 1
+                    )
+                }
             }
 
         }
