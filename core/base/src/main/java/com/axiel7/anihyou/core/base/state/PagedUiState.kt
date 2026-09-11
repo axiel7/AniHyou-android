@@ -1,5 +1,8 @@
 package com.axiel7.anihyou.core.base.state
 
+/**
+ * @sample com.axiel7.anihyou.core.base.state.SamplePagedUiState
+ */
 abstract class PagedUiState : UiState() {
     // We use abstract instead of open to force them to be in the data class declaration
     // so we can use it in the copy() methods
