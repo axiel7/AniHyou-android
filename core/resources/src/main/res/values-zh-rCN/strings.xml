@@ -647,7 +647,7 @@
     <string name="use_fuzzy_search">使用模糊搜索</string>
     <string name="fuzzy_search_description">可匹配拼写错误、词序错误和首字母缩写词（例如“aot”）。可能会影响旧设备的运行性能。</string>
     <string name="move_to_top">移至顶部</string>
-    <string name="colored_media_title">详情页使用动态色彩</string>
+    <string name="colored_media_title">多彩作品详情页</string>
     <string name="colored_media_desc">根据作品封面调整应用的颜色</string>
     <string name="custom_links">自定义链接</string>
     <string name="space_separator">空白分隔符</string>
@@ -668,4 +668,7 @@
     <string name="notification_media_changed">《%s》收到了信息变更</string>
     <string name="notification_media_deleted">《%s》已被从网站上删除</string>
     <string name="notification_forum_mention">%1$s 在论坛帖子 %2$s 中提到了你</string>
+    <string name="widget_config_title">小组件配置</string>
+    <string name="style_colored">彩色</string>
+    <string name="style_monochrome">单色</string>
 </resources>
