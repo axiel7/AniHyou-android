@@ -100,7 +100,7 @@ private fun CalendarViewContent(
 
     val listState = rememberLazyListState()
     val isScrollingUp by listState.rememberIsScrollingUp()
-    listState.OnBottomReached(buffer = 0, debounceDuration = 500.milliseconds) {
+    listState.OnBottomReached(buffer = 1, debounceDuration = 500.milliseconds) {
         event?.onLoadMore()
     }
 
