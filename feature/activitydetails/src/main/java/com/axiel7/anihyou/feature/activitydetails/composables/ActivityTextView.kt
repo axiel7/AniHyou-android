@@ -2,34 +2,22 @@ package com.axiel7.anihyou.feature.activitydetails.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +27,7 @@ import com.axiel7.anihyou.core.network.fragment.ActivityUser
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
@@ -55,6 +44,7 @@ import kotlinx.collections.immutable.toImmutableList
 fun ActivityTextView(
     modifier: Modifier = Modifier,
     text: String,
+    userId: Int,
     username: String?,
     avatarUrl: String?,
     blurCover: Boolean = false,
@@ -64,7 +54,7 @@ fun ActivityTextView(
     likeCount: Int,
     likes: ImmutableList<ActivityUser>?,
     isLiked: Boolean?,
-    onClickUser: () -> Unit,
+    onClickUser: (Int) -> Unit,
     onClickMedia: () -> Unit = {},
     onClickLike: () -> Unit,
 ) {
@@ -78,7 +68,7 @@ fun ActivityTextView(
                 avatarUrl = avatarUrl,
                 username = username,
                 modifier = Modifier.weight(1f),
-                onClick = onClickUser
+                onClick = { onClickUser(userId) }
             )
             Text(
                 text = createdAt.toLong().dateToRelativeText(),
@@ -135,7 +125,7 @@ fun ActivityTextView(
                     iconSize = 20.dp,
                 )
                 if (!likes.isNullOrEmpty()) {
-                    ExpandLikesButton(likes)
+                    ExpandLikesButton(likes, onClickUser)
                 }
             }
         }
@@ -145,42 +135,27 @@ fun ActivityTextView(
 @Composable
 fun ExpandLikesButton(
     likes: ImmutableList<ActivityUser>,
+    onClickUser: (Int) -> Unit,
 ) {
-    var isLikesExpanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.wrapContentSize(Alignment.TopStart)
-    ) {
-        IconButton(
-            onClick = { isLikesExpanded = !isLikesExpanded },
-            shapes = IconButtonDefaults.shapes()
-        ) {
-            Icon(
-                painter = painterResource(
-                    id = if (isLikesExpanded) R.drawable.expand_less_24 else R.drawable.expand_more_24
-                ),
-                contentDescription = null
-            )
-        }
-        DropdownMenuPopup(
-            expanded = isLikesExpanded,
-            onDismissRequest = { isLikesExpanded = false }
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes()
-            ) {
-                likes.fastForEach { user ->
-                    DropdownMenuItem(
-                        onClick = {},
-                        text = { Text(text = user.name) },
-                        leadingIcon = {
-                            PersonImage(
-                                url = user.avatar?.medium,
-                                modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
-                            )
-                        }
+    IconButtonWithMenu(
+        icon = R.drawable.expand_more_24,
+        contentDescription = stringResource(R.string.expand),
+        openedIcon = R.drawable.expand_less_24,
+    ) { onDismiss ->
+        likes.fastForEach { user ->
+            DropdownMenuItem(
+                onClick = {
+                    onClickUser(user.id)
+                    onDismiss()
+                },
+                text = { Text(text = user.name) },
+                leadingIcon = {
+                    PersonImage(
+                        url = user.avatar?.medium,
+                        modifier = Modifier.size(PERSON_IMAGE_SIZE_VERY_SMALL.dp)
                     )
                 }
-            }
+            )
         }
     }
 }
@@ -197,6 +172,7 @@ fun ActivityTextViewPreview() {
         Surface {
             ActivityTextView(
                 text = "I just watched the latest season of __Kanojo, Okarishimasu__ and I want to kms",
+                userId = 0,
                 username = "axiel7",
                 avatarUrl = null,
                 mediaCoverUrl = "",

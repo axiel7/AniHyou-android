@@ -54,9 +54,9 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
-import com.axiel7.anihyou.feature.explore.discover.content.AiringContent
-import com.axiel7.anihyou.feature.explore.discover.content.DiscoverMediaContent
-import com.axiel7.anihyou.feature.explore.discover.content.SeasonAnimeContent
+import com.axiel7.anihyou.feature.explore.explore.content.AiringContent
+import com.axiel7.anihyou.feature.explore.explore.content.DiscoverMediaContent
+import com.axiel7.anihyou.feature.explore.explore.content.SeasonAnimeContent
 import org.koin.compose.viewmodel.koinActivityViewModel
 import java.time.LocalDateTime
 
@@ -125,7 +125,7 @@ private fun AnimeDiscoverContent(
         )
     }
 
-    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() }, isLoggedIn = isLoggedIn)
 
     Scaffold(
         modifier = modifier,

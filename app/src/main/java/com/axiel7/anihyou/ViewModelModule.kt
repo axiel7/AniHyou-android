@@ -7,7 +7,7 @@ import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsViewModel
 import com.axiel7.anihyou.feature.editmedia.EditMediaViewModel
 import com.axiel7.anihyou.feature.explore.anime.AnimeExploreViewModel
 import com.axiel7.anihyou.feature.explore.charts.MediaChartViewModel
-import com.axiel7.anihyou.feature.explore.discover.ExploreViewModel
+import com.axiel7.anihyou.feature.explore.explore.ExploreViewModel
 import com.axiel7.anihyou.feature.explore.manga.MangaExploreViewModel
 import com.axiel7.anihyou.feature.explore.recommendations.RecommendationsViewModel
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel

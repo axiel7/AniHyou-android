@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.domain.repository
 
 import com.axiel7.anihyou.core.network.StudioDetailsQuery
 import com.axiel7.anihyou.core.network.api.StudioApi
+import com.axiel7.anihyou.core.network.type.MediaSort
 
 class StudioRepository(
     private val api: StudioApi,
@@ -26,10 +27,12 @@ class StudioRepository(
 
     fun getStudioMediaPage(
         studioId: Int,
+        sort: List<MediaSort>,
+        onList: Boolean? = null,
         page: Int,
         perPage: Int = 25,
     ) = api
-        .studioMediaQuery(studioId, page, perPage)
+        .studioMediaQuery(studioId, sort, onList, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Studio?.media?.pageInfo?.commonPage }) {
             it.Studio?.media?.commonStudioMedia?.nodes?.filterNotNull().orEmpty()

@@ -6,7 +6,6 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
-import androidx.test.uiautomator.UiDevice
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,18 +57,28 @@ class BaselineProfileGenerator {
             pressHome()
             startActivityAndWait()
 
-            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            with(device) {
+                if (findObject(By.res("ANIME")) == null) {
+                    findObject(By.res("ExploreTab"))?.apply { click() }
+                }
 
-            device.findObject(By.res("HomeTab"))?.apply { click() }
+                findObject(By.res("ANIME"))?.apply { click() }
 
-            device.findObject(By.text("Discover"))?.apply { click() }
+                findObject(By.scrollable(true))?.apply {
+                    scroll(Direction.DOWN, 40f)
+                }
 
-            device.findObject(By.scrollable(true))?.apply {
-                scroll(Direction.DOWN, 40f)
-            }
+                findObject(By.res("MediaItem"))?.apply {
+                    click()
+                }
 
-            device.findObject(By.res("MediaItem"))?.apply {
-                click()
+                pressBack()
+
+                findObject(By.res("MediaItem"))?.apply {
+                    longClick()
+                }
+
+                pressBack()
             }
         }
     }

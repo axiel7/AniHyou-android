@@ -49,7 +49,7 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
-import com.axiel7.anihyou.feature.explore.discover.content.DiscoverMediaContent
+import com.axiel7.anihyou.feature.explore.explore.content.DiscoverMediaContent
 import org.koin.compose.viewmodel.koinViewModel
 
 enum class MangaDiscoverInfo {
@@ -115,7 +115,7 @@ fun MangaDiscoverContent(
         )
     }
 
-    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() }, isLoggedIn = isLoggedIn)
 
     Scaffold(
         modifier = modifier,

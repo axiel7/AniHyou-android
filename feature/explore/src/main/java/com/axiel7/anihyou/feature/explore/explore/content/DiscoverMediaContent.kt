@@ -1,4 +1,4 @@
-package com.axiel7.anihyou.feature.explore.discover.content
+package com.axiel7.anihyou.feature.explore.explore.content
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
-import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
@@ -20,36 +23,38 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SeasonAnimeContent(
-    animeSeason: AnimeSeason,
-    seasonAnime: List<ExploreMedia>,
+fun DiscoverMediaContent(
+    title: String,
+    media: List<ExploreMedia>,
     isLoading: Boolean,
-    isNextSeason: Boolean,
     onLongClickItem: (ExploreMedia) -> Unit,
-    navigateToAnimeSeason: (AnimeSeason) -> Unit,
+    onClickHeader: () -> Unit,
     navigateToMediaDetails: (mediaId: Int) -> Unit,
 ) {
     val blurAdult = LocalBlurAdult.current
     HorizontalListHeader(
-        text = if (isNextSeason) stringResource(R.string.next_season)
-        else animeSeason.localized(),
-        onClick = {
-            navigateToAnimeSeason(animeSeason)
-        }
+        text = title,
+        onClick = onClickHeader
     )
     DiscoverLazyRow(
         minHeight = MEDIA_ITEM_VERTICAL_HEIGHT.dp
     ) {
         items(
-            items = seasonAnime,
+            items = media,
             contentType = { it }
         ) { item ->
             MediaItemVertical(
                 title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                 imageUrl = item.coverImage?.large,
                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .semantics {
+                        testTagsAsResourceId = true
+                        testTag = "MediaItem"
+                    },
                 subtitle = {
                     item.averageScore?.let { score ->
                         SmallScoreIndicator(score = score)
@@ -70,7 +75,7 @@ fun SeasonAnimeContent(
                 )
             }
         }
-        if (seasonAnime.isEmpty()) {
+        if (media.isEmpty()) {
             item {
                 Text(text = stringResource(R.string.no_information))
             }
