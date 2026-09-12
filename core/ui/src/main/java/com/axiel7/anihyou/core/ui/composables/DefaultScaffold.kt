@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.ui.composables
 
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -16,11 +17,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +37,7 @@ fun DefaultScaffoldWithLargeTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -43,7 +48,8 @@ fun DefaultScaffoldWithLargeTopAppBar(
                 title = { Text(text = title) },
                 navigationIcon = navigationIcon,
                 actions = actions,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = topAppBarColors,
             )
         },
         snackbarHost = snackbarHost,
@@ -63,6 +69,7 @@ fun DefaultScaffoldWithMediumTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -73,7 +80,8 @@ fun DefaultScaffoldWithMediumTopAppBar(
                 title = { Text(text = title) },
                 navigationIcon = navigationIcon,
                 actions = actions,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = topAppBarColors,
             )
         },
         snackbarHost = snackbarHost,
@@ -93,6 +101,7 @@ fun DefaultScaffoldWithSmallTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -103,13 +112,22 @@ fun DefaultScaffoldWithSmallTopAppBar(
                 title = { Text(text = title) },
                 navigationIcon = navigationIcon,
                 actions = actions,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = topAppBarColors,
             )
         },
         snackbarHost = snackbarHost,
         floatingActionButton = floatingActionButton,
         contentWindowInsets = contentWindowInsets,
         content = content
+    )
+}
+
+fun TopAppBarScrollBehavior.appBarContainerColor(colors: TopAppBarColors) = with(colors) {
+    lerp(
+        containerColor,
+        scrolledContainerColor,
+        FastOutLinearInEasing.transform(state.collapsedFraction),
     )
 }
 

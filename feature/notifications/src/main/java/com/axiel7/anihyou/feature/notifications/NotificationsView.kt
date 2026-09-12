@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -23,7 +22,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -41,6 +42,7 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
+import com.axiel7.anihyou.core.ui.composables.appBarContainerColor
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
@@ -76,6 +78,10 @@ private fun NotificationsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val appBarContainerColor by remember {
+        derivedStateOf { topAppBarScrollBehavior.appBarContainerColor(topAppBarColors) }
+    }
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
@@ -88,6 +94,7 @@ private fun NotificationsContent(
         title = stringResource(R.string.notifications),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior,
+        topAppBarColors = topAppBarColors,
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = uiState.fetchFromNetwork,
@@ -120,7 +127,7 @@ private fun NotificationsContent(
                 ) {
                     Row(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background)
+                            .background(appBarContainerColor)
                             .horizontalScroll(rememberScrollState())
                             .padding(start = 16.dp, end = 8.dp)
                     ) {
