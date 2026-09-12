@@ -699,4 +699,7 @@
     <string name="notification_media_changed">«%s» отримало зміни в даних сайту</string>
     <string name="notification_media_deleted">«%s» було видалено з сайту</string>
     <string name="notification_forum_mention">%1$s згадує вас на форумі в обговоренні «%2$s»</string>
+    <string name="widget_config_title">Налаштування віджету</string>
+    <string name="style_colored">Кольоровий</string>
+    <string name="style_monochrome">Монотонний</string>
 </resources>

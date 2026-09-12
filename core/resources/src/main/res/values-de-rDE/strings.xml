@@ -663,6 +663,8 @@
     <string name="space_separator">Leerzeichen Trennzeichen</string>
     <string name="custom_link_url_error_name">Die URL muss ein {name} enthalten</string>
     <string name="invalid_url_error">Ungültige URL</string>
+    <string name="separate_novels_and_manga">Seperate Novels und Manga</string>
+    <string name="novels">Novels</string>
     <plurals name="notification_episode_aired">
         <item quantity="one">Folge %d von %s wurde ausgestrahlt.</item>
         <item quantity="other">Folge %d von %s wurde ausgestrahlt.</item>
@@ -677,4 +679,7 @@
     <string name="notification_media_changed">Die Website-Daten für %s wurden aktualisiert</string>
     <string name="notification_media_deleted">%s würde von der Website gelöscht</string>
     <string name="notification_forum_mention">%1$s hat dich im Forenthema %2$s erwähnt.</string>
+    <string name="widget_config_title">Widget Konfiguration</string>
+    <string name="style_colored">Farbig</string>
+    <string name="style_monochrome">Monochrom</string>
 </resources>
