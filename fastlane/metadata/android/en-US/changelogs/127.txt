@@ -1,0 +1,10 @@
+- MediaList: new search system (@axiel7, @magnariuk)
+- New Explore UI and recommendations! (@x8laye4r)
+- New Calendar UI! (@x8laye4r)
+- Optional separate tabs for manga and novels (@magnariuk)
+- Settings: blur adult content, hide scores, custom links, score steps
+- Profile: favorites reordering (@x8laye4r)
+- ActivityFeed: filter by users (@x8laye4r)
+- New priority system! (thanks to @x8laye4r)
+- Filter voice actors by language
+- Lot of other improvements and bug fixes
