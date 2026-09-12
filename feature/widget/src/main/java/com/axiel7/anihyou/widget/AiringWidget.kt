@@ -176,7 +176,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                             } else if (result is DataResult.Error) {
                                 Text(
                                     text = result.message,
-                                    modifier = GlanceModifier.padding(bottom = 8.dp),
+                                    modifier = GlanceModifier.padding(24.dp),
                                     style = TextStyle(color = GlanceTheme.colors.onSurface)
                                 )
                             }
