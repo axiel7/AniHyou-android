@@ -137,6 +137,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .appWidgetBackground()
+                .widgetCornerRadius()
         ) {
             LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                 item(itemId = 0) {
