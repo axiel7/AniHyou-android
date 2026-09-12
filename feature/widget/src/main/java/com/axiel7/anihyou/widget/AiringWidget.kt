@@ -22,6 +22,7 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -133,7 +134,9 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
         RoundedDrawableBox(
             shapeRes = R.drawable.widget_background_24,
             color = GlanceTheme.colors.widgetBackground,
-            modifier = GlanceModifier.fillMaxSize()
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .appWidgetBackground()
         ) {
             LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                 item(itemId = 0) {

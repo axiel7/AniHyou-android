@@ -82,8 +82,7 @@ fun RoundedDrawableBox(
             imageProvider = ImageProvider(shapeRes),
             colorFilter = ColorFilter.tint(color)
         ),
-        contentAlignment = contentAlignment
-    ) {
-        content()
-    }
+        contentAlignment = contentAlignment,
+        content = content,
+    )
 }
