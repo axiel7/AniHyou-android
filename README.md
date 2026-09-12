@@ -18,7 +18,7 @@ Follow the development on the official Discord server:
 [![Discord Banner 3](https://discordapp.com/api/guilds/741059285122940928/widget.png?style=banner2)](https://discord.gg/CTv3WdfxHh)
 
 # Screenshots
-![Screenshots](https://github.com/axiel7/AniHyou-android/blob/master/screenshots.webp)
+![Screenshots](screenshots.png)
 
 ## Coming features
 - [See project](https://github.com/users/axiel7/projects/2/views/1)
