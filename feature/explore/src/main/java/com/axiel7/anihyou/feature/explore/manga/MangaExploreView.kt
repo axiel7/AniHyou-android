@@ -115,7 +115,7 @@ fun MangaDiscoverContent(
         )
     }
 
-    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+    ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() }, isLoggedIn = isLoggedIn)
 
     Scaffold(
         modifier = modifier,

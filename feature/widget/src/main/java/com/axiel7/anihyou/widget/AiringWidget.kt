@@ -186,9 +186,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     @Composable
     private fun Header(onRefresh: () -> Unit) {
         Row(
-            modifier = GlanceModifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp),
+            modifier = GlanceModifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = GlanceModifier.width(20.dp))
@@ -200,7 +198,14 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     fontSize = 16.sp,
                 ),
                 maxLines = 1,
-                modifier = GlanceModifier.defaultWeight()
+                modifier = GlanceModifier
+                    .defaultWeight()
+                    .padding(vertical = 10.dp)
+                    .clickable(
+                        onClick = LocalContext.current.openDeepLink(
+                            DeepLink(type = DeepLink.Type.CALENDAR, id = "")
+                        )
+                    )
             )
 
             RoundedDrawableBox(
@@ -335,17 +340,11 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     .defaultWeight()
                     .cornerRadius(12.dp)
                     .clickable(
-                        actionStartActivity(
-                            LocalContext.current.packageManager
-                                .getLaunchIntentForPackage(APP_PACKAGE_NAME)
-                                ?.apply {
-                                    action = DeepLink.Type.ANIME.intentAction
-                                    putExtra("content_id", item.id)
-                                    putExtra("widget", true)
-                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    addCategory(item.id.toString())
-                                } ?: Intent()
+                        onClick = LocalContext.current.openDeepLink(
+                            DeepLink(
+                                type = DeepLink.Type.ANIME,
+                                id = item.id.toString()
+                            )
                         )
                     )
             ) {
@@ -383,6 +382,18 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
 
         }
     }
+
+    private fun Context.openDeepLink(deepLink: DeepLink) =
+        actionStartActivity(
+            packageManager.getLaunchIntentForPackage(APP_PACKAGE_NAME)?.apply {
+                action = deepLink.type.intentAction
+                putExtra("content_id", deepLink.id)
+                putExtra("widget", true)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addCategory(deepLink.id)
+            } ?: Intent()
+        )
 
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview(widthDp = 255, heightDp = 150)

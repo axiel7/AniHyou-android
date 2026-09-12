@@ -1,8 +1,13 @@
 package com.axiel7.anihyou.core.ui.composables.common
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -10,13 +15,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -266,5 +274,42 @@ fun NotificationIconButton(
             ),
             contentDescription = stringResource(R.string.notifications)
         )
+    }
+}
+
+@Composable
+fun IconButtonWithMenu(
+    icon: Int,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    openedIcon: Int? = null,
+    menuContent: @Composable (ColumnScope.(onDismiss: () -> Unit) -> Unit),
+) {
+    var menuOpened by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier.wrapContentSize(Alignment.TopStart)
+    ) {
+        IconButton(
+            onClick = { menuOpened = !menuOpened },
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                painter = painterResource(
+                    id = if (openedIcon != null && menuOpened) openedIcon else icon
+                ),
+                contentDescription = contentDescription,
+            )
+        }
+        DropdownMenuPopup(
+            expanded = menuOpened,
+            onDismissRequest = { menuOpened = false },
+        ) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShapes(),
+                content = {
+                    menuContent { menuOpened = false }
+                },
+            )
+        }
     }
 }

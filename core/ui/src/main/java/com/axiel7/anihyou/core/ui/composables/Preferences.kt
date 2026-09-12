@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -394,13 +395,18 @@ fun ScoreStepsPreferenceSheet(
         else -> 10.0
     }
 
-    val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
-
-    var openModal by remember { mutableStateOf(false) }
-
     var value by remember(initialValue, minValue, maxValue) {
         mutableDoubleStateOf(initialValue.coerceIn(minValue..maxValue))
     }
+
+    val sliderState = rememberSliderState(
+        value = value.toFloat(),
+        trackRange = minValue.toFloat()..maxValue.toFloat(),
+    )
+
+    val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
+
+    var openModal by remember { mutableStateOf(false) }
 
     var textFieldValue by remember(initialValue) {
         mutableStateOf(if (allowDecimal) initialValue.toString() else initialValue.roundToInt().toString()
@@ -414,9 +420,7 @@ fun ScoreStepsPreferenceSheet(
         title = title,
         subtitle = value.format(),
         icon = icon,
-        onClick = {
-            openModal = true
-        },
+        onClick = { openModal = true },
         shape = shape
     )
 
@@ -432,8 +436,6 @@ fun ScoreStepsPreferenceSheet(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
             ) {
-
-
                 OutlinedTextField(
                     value = textFieldValue,
                     onValueChange = { input ->
@@ -454,9 +456,7 @@ fun ScoreStepsPreferenceSheet(
                             }
                         }
                     },
-                    label = {
-                        Text(text = title)
-                    },
+                    label = { Text(text = title) },
                     supportingText = {
                         Text(
                             text = "$minValue - $maxValue",
@@ -473,9 +473,9 @@ fun ScoreStepsPreferenceSheet(
                 )
 
                 Slider(
-                    value = value.toFloat(),
-                    valueRange = minValue.toFloat()..maxValue.toFloat(),
-                    onValueChange = { input ->
+                    state = sliderState,
+                    onValueChangeFinished = {
+                        val input = sliderState.value
                         if (allowDecimal) {
                             val rounded = (input * 10f).roundToInt() / 10.0
                             value = rounded.coerceIn(minValue, maxValue)
