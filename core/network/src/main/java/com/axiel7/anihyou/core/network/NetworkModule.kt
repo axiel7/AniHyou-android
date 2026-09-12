@@ -5,6 +5,7 @@ import com.apollographql.apollo.network.okHttpClient
 import com.apollographql.cache.normalized.api.CacheKey
 import com.apollographql.cache.normalized.memory.MemoryCacheFactory
 import com.axiel7.anihyou.core.base.ANILIST_GRAPHQL_URL
+import com.axiel7.anihyou.core.base.ANILIST_URL
 import com.axiel7.anihyou.core.base.MAL_CLIENT_ID
 import com.axiel7.anihyou.core.base.X_MAL_CLIENT_ID
 import com.axiel7.anihyou.core.network.cache.Cache.cache
@@ -12,7 +13,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.single
 
 val networkModule = module {
     single { NetworkVariables() }
@@ -27,6 +27,7 @@ private fun provideApolloClient(
     val cacheFactory = MemoryCacheFactory(maxSizeBytes = 10 * 1024 * 1024)
 
     val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(RefererInterceptor())
         .addInterceptor(authorizationInterceptor)
         .build()
 
@@ -60,6 +61,29 @@ fun provideAuthorizationInterceptor(
     networkVariables: NetworkVariables
 ): AuthorizationInterceptor {
     return AuthorizationInterceptor(networkVariables)
+}
+
+/**
+ * Adds the Referer header to every AniList API request.
+ *
+ * AniList currently requires this header for requests from third-party
+ * clients. Without it, otherwise valid API requests may be rejected with
+ * an HTTP 403 response.
+ *
+ * This behavior is not part of the documented API contract and may change
+ * in the future. Keeping the header handling in a dedicated interceptor
+ * makes it easy to update or remove if AniList changes its requirements.
+ * @author https://github.com/lemmesleep247
+ */
+class RefererInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request().newBuilder()
+            .apply {
+                addHeader("Referer", "$ANILIST_URL/")
+            }
+            .build()
+        return chain.proceed(request)
+    }
 }
 
 fun provideOkHttpClient(): OkHttpClient {
