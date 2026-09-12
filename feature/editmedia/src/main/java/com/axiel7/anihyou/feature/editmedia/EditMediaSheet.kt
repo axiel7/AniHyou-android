@@ -184,6 +184,7 @@ private fun EditMediaSheetContent(
 
     ModalBottomSheet(
         onDismissed = onDismissed,
+        modifier = Modifier.imePadding(),
         scope = scope,
         sheetState = sheetState,
         sheetGesturesEnabled = !scrollState.canScrollBackward,
@@ -219,7 +220,6 @@ private fun EditMediaSheetContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
-                .imePadding()
                 .padding(bottom = 32.dp + bottomPadding),
             horizontalAlignment = Alignment.Start
         ) {
