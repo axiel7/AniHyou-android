@@ -87,7 +87,7 @@ class NotificationWorker(
                                 .getLaunchIntentForPackage(APP_PACKAGE_NAME)
                                 ?.apply {
                                     action = deepLinkType.intentAction
-                                    putExtra("content_id", it.contentId)
+                                    putExtra("content_id", it.contentId.toString())
                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                                             Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 }?.let { intent ->

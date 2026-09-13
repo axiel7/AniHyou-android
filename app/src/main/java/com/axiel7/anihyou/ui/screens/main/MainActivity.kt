@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 DeepLink(
                     type = type,
-                    id = intent.getIntExtra("content_id", 0).toString()
+                    id = intent.getStringExtra("content_id").orEmpty()
                 )
             }
             // Login intent or anilist link
