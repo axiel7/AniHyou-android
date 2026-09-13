@@ -666,8 +666,8 @@
     <string name="separate_novels_and_manga">Separar novelas y manga</string>
     <string name="novels">Novelas</string>
     <plurals name="notification_episode_aired">
-        <item quantity="one">Se emitió el episodio %d de %s.</item>
-        <item quantity="other">Se emitió el episodio %d de %s.</item>
+        <item quantity="one">Se emitió el episodio %1$d de %2$s.</item>
+        <item quantity="other">Se emitió el episodio %1$d de %2$s.</item>
     </plurals>
     <string name="notification_activity_liked">A %s le gustó tu actividad.</string>
     <string name="notification_activity_reply_liked">A %s le gustó tu respuesta a la actividad.</string>

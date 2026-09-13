@@ -656,7 +656,7 @@
     <string name="separate_novels_and_manga">分隔小说和漫画</string>
     <string name="novels">小说</string>
     <plurals name="notification_episode_aired">
-        <item quantity="other">《%s》的第 %d 集已播出</item>
+        <item quantity="other">《%2$s》的第 %1$d 集已播出</item>
     </plurals>
     <string name="notification_activity_liked">%s 赞了你的动态</string>
     <string name="notification_activity_reply_liked">%s 赞了你的动态评论</string>

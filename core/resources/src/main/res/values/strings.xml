@@ -682,8 +682,8 @@
     <string name="separate_novels_and_manga">Separate novels and manga</string>
     <string name="novels">Novels</string>
     <plurals name="notification_episode_aired">
-        <item quantity="one">Episode %d of %s aired.</item>
-        <item quantity="other">Episode %d of %s aired.</item>
+        <item quantity="one">Episode %1$d of %2$s aired.</item>
+        <item quantity="other">Episode %1$d of %2$s aired.</item>
     </plurals>
     <string name="notification_activity_liked">%s liked your activity.</string>
     <string name="notification_activity_reply_liked">%s liked your activity reply.</string>

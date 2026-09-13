@@ -665,8 +665,8 @@
     <string name="separate_novels_and_manga">Roman ve mangaları ayır</string>
     <string name="novels">Romanlar</string>
     <plurals name="notification_episode_aired">
-        <item quantity="one">%s animesinin %d. bölümü yayınlandı.</item>
-        <item quantity="other">%s animesinin %d. bölümü yayınlandı.</item>
+        <item quantity="one">%2$s animesinin %1$d. bölümü yayınlandı.</item>
+        <item quantity="other">%2$s animesinin %1$d. bölümü yayınlandı.</item>
     </plurals>
     <string name="notification_activity_liked">%s aktiviteni beğendi.</string>
     <string name="notification_activity_reply_liked">%s etkinliğine verdiğin yanıtı beğendi.</string>
