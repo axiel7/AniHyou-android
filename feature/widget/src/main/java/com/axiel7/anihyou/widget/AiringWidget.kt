@@ -282,13 +282,14 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val dateSize = 38.dp
                 if (showDate) {
                     if (isToday) {
                         RoundedDrawableBox(
                             shapeRes = R.drawable.widget_date_circle_bg,
                             color = GlanceTheme.colors.primary,
                             modifier = GlanceModifier
-                                .size(38.dp)
+                                .size(dateSize)
                                 .cornerRadius(38.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -306,7 +307,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     } else {
                         Column(
                             modifier = GlanceModifier
-                                .size(38.dp)
+                                .size(dateSize)
                                 .background(Color.Transparent),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -333,7 +334,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         }
                     }
                 } else {
-                    Spacer(modifier = GlanceModifier.width(36.dp))
+                    Spacer(modifier = GlanceModifier.width(dateSize))
                 }
             }
 
