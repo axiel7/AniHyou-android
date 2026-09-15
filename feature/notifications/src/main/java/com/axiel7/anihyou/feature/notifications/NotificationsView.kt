@@ -162,6 +162,7 @@ private fun NotificationsContent(
                         subtitle = item.createdAt?.toLong()?.dateToRelativeText(),
                         isUnread = item.isUnread,
                         onClick = {
+                            if (item.isUnread) event?.onRead(item)
                             when (item.type) {
                                 NotificationType.AIRING,
                                 NotificationType.RELATED_MEDIA_ADDITION,
