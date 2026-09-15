@@ -263,6 +263,45 @@ query Notifications($page: Int, $perPage: Int, $typeIn: [NotificationType], $res
                 type
                 createdAt
             }
+            ... on MediaSubmissionUpdateNotification {
+                id
+                contexts
+                media {
+                    id
+                    coverImage {
+                        medium
+                        large
+                    }
+                }
+                type
+                createdAt
+            }
+            ... on StaffSubmissionUpdateNotification {
+                id
+                contexts
+                staff {
+                    id
+                    image {
+                        medium
+                        large
+                    }
+                }
+                type
+                createdAt
+            }
+            ... on CharacterSubmissionUpdateNotification {
+                id
+                contexts
+                character {
+                    id
+                    image {
+                        medium
+                        large
+                    }
+                }
+                type
+                createdAt
+            }
         }
         pageInfo {
             ...CommonPage

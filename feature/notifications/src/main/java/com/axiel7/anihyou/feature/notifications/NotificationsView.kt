@@ -168,7 +168,8 @@ private fun NotificationsContent(
                                 NotificationType.RELATED_MEDIA_ADDITION,
                                 NotificationType.MEDIA_DATA_CHANGE,
                                 NotificationType.MEDIA_MERGE,
-                                NotificationType.MEDIA_DELETION ->
+                                NotificationType.MEDIA_DELETION,
+                                NotificationType.MEDIA_SUBMISSION_UPDATE ->
                                     navActionManager.toMediaDetails(item.contentId)
 
                                 NotificationType.THREAD_SUBSCRIBED,
@@ -189,7 +190,13 @@ private fun NotificationsContent(
                                 NotificationType.FOLLOWING ->
                                     navActionManager.toUserDetails(item.contentId)
 
-                                else -> {}
+                                NotificationType.STAFF_SUBMISSION_UPDATE ->
+                                    navActionManager.toStaffDetails(item.contentId)
+
+                                NotificationType.CHARACTER_SUBMISSION_UPDATE ->
+                                    navActionManager.toCharacterDetails(item.contentId)
+
+                                NotificationType.UNKNOWN__, null -> {}
                             }
                         },
                         onClickImage = {
