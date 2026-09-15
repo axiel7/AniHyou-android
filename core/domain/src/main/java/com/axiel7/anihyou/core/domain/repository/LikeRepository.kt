@@ -1,16 +1,22 @@
 package com.axiel7.anihyou.core.domain.repository
 
+import com.axiel7.anihyou.core.model.activity.ActivityFragmentUnion
 import com.axiel7.anihyou.core.network.api.LikeApi
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MessageActivityFragment
 import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.network.type.LikeableType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class LikeRepository(
     private val api: LikeApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : BaseNetworkRepository(defaultPreferencesRepository) {
+
+    private val _lastActivityLiked = MutableStateFlow<ActivityFragmentUnion?>(null)
+    val lastActivityLiked = _lastActivityLiked.asStateFlow()
 
     suspend fun toggleActivityLike(id: Int, type: ActivityType) = when (type) {
         ActivityType.TEXT -> toggleTextActivityLike(id) { it?.isLiked == true }
@@ -27,7 +33,9 @@ class LikeRepository(
         .toggleLikeMutation(id, LikeableType.ACTIVITY)
         .execute()
         .asDataResult { data ->
-            val details = data.ToggleLikeV2?.onListActivity?.listActivityFragment
+            val details = data.ToggleLikeV2?.onListActivity?.listActivityFragment?.also {
+                _lastActivityLiked.emit(ActivityFragmentUnion(listActivityFragment = it))
+            }
             transform(details)
         }
 
@@ -40,11 +48,11 @@ class LikeRepository(
         .toggleLikeMutation(id, LikeableType.ACTIVITY)
         .execute()
         .asDataResult { data ->
-            val details = data.ToggleLikeV2?.onTextActivity?.textActivityFragment
+            val details = data.ToggleLikeV2?.onTextActivity?.textActivityFragment?.also {
+                _lastActivityLiked.emit(ActivityFragmentUnion(textActivityFragment = it))
+            }
             transform(details)
         }
-
-    suspend fun toggleTextActivityLike(id: Int) = toggleTextActivityLike(id) { it }
 
     private suspend fun <T> toggleMessageActivityLike(
         id: Int,
@@ -53,11 +61,11 @@ class LikeRepository(
         .toggleLikeMutation(id, LikeableType.ACTIVITY)
         .execute()
         .asDataResult { data ->
-            val details = data.ToggleLikeV2?.onMessageActivity?.messageActivityFragment
+            val details = data.ToggleLikeV2?.onMessageActivity?.messageActivityFragment?.also {
+                _lastActivityLiked.emit(ActivityFragmentUnion(messageActivityFragment = it))
+            }
             transform(details)
         }
-
-    suspend fun toggleMessageActivityLike(id: Int) = toggleMessageActivityLike(id) { it }
 
     suspend fun toggleActivityReplyLike(id: Int) = api
         .toggleLikeMutation(id, LikeableType.ACTIVITY_REPLY)

@@ -5,6 +5,8 @@ import com.axiel7.anihyou.core.network.ActivityDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.core.network.fragment.ActivityUser
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
+import com.axiel7.anihyou.core.network.fragment.MessageActivityFragment
+import com.axiel7.anihyou.core.network.fragment.TextActivityFragment
 import com.axiel7.anihyou.core.network.type.ActivityType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -28,6 +30,17 @@ data class GenericActivity(
     val replies: List<ActivityReplyFragment>?,
     val listActivityFragment: ListActivityFragment? = null,
 )
+
+@Immutable
+data class ActivityFragmentUnion(
+    val textActivityFragment: TextActivityFragment? = null,
+    val listActivityFragment: ListActivityFragment? = null,
+    val messageActivityFragment: MessageActivityFragment? = null,
+) {
+    val isLiked = textActivityFragment?.isLiked
+        ?: listActivityFragment?.isLiked
+        ?: messageActivityFragment?.isLiked
+}
 
 fun ActivityDetailsQuery.OnTextActivity.toGenericActivity() = GenericActivity(
     id = textActivityFragment.id,

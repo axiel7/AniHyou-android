@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.run
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityFeedViewModel(
@@ -202,6 +203,39 @@ class ActivityFeedViewModel(
         userRepository.lastFollowed
             .filterNotNull()
             .onEach { getUserFollowing() }
+            .launchIn(viewModelScope)
+
+        likeRepository.lastActivityLiked
+            .filterNotNull()
+            .onEach { lastActivityLiked ->
+                mutableUiState.value.run {
+                    val foundIndex = activities.indexOfFirst {
+                        it.onTextActivity?.textActivityFragment?.id
+                            ?.equals(lastActivityLiked.textActivityFragment?.id) == true
+                                || it.onListActivity?.listActivityFragment?.id
+                            ?.equals(lastActivityLiked.listActivityFragment?.id) == true
+                                || it.onMessageActivity?.messageActivityFragment
+                            ?.equals(lastActivityLiked.listActivityFragment?.id) == true
+                    }
+                    if (foundIndex != -1) {
+                        val foundItem = activities[foundIndex]
+                        activities[foundIndex] = foundItem.copy(
+                            onTextActivity = foundItem.onTextActivity?.copy(
+                                textActivityFragment = foundItem.onTextActivity!!.textActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            ),
+                            onListActivity = foundItem.onListActivity?.copy(
+                                listActivityFragment = foundItem.onListActivity!!.listActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            ),
+                            onMessageActivity = foundItem.onMessageActivity?.copy(
+                                messageActivityFragment = foundItem.onMessageActivity!!.messageActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            )
+                        )
+                    }
+                }
+            }
             .launchIn(viewModelScope)
     }
 }

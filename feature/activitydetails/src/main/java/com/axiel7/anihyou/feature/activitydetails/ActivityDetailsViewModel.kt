@@ -6,8 +6,8 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.model.activity.toGenericActivity
+import com.axiel7.anihyou.core.model.activity.updateLikeStatus
 import com.axiel7.anihyou.core.network.ActivityDetailsQuery
-import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -34,66 +34,37 @@ class ActivityDetailsViewModel(
         val details = mutableUiState.value.details ?: return
         val queryData = detailsQueryData ?: return
         viewModelScope.launch {
-            when (details.type) {
-                ActivityType.TEXT -> {
-                    likeRepository.toggleTextActivityLike(details.id).let { result ->
-                        if (result is DataResult.Success && result.data != null) {
-                            activityRepository.updateActivityDetailsCache(
-                                id = details.id,
-                                activity = queryData.copy(
-                                    onTextActivity = queryData.onTextActivity?.copy(
-                                        textActivityFragment = result.data!!
-                                    )
-                                )
-                            )
-                        } else if (result !is DataResult.Loading) {
-                            mutableUiState.update {
-                                it.copy(error = "Like failed")
-                            }
-                        }
-                    }
+            val result = likeRepository.toggleActivityLike(details.id, details.type)
+            if (result is DataResult.Success) {
+                val newData = queryData.copy(
+                    onTextActivity = queryData.onTextActivity?.copy(
+                        textActivityFragment = queryData.onTextActivity!!.textActivityFragment
+                            .updateLikeStatus(result.data)
+                    ),
+                    onListActivity = queryData.onListActivity?.copy(
+                        listActivityFragment = queryData.onListActivity!!.listActivityFragment
+                            .updateLikeStatus(result.data)
+                    ),
+                    onMessageActivity = queryData.onMessageActivity?.copy(
+                        messageActivityFragment = queryData.onMessageActivity!!.messageActivityFragment
+                            .updateLikeStatus(result.data)
+                    )
+                )
+                activityRepository.updateActivityCache(
+                    listActivity = newData.onListActivity?.listActivityFragment,
+                    textActivity = newData.onTextActivity?.textActivityFragment,
+                    messageActivity = newData.onMessageActivity?.messageActivityFragment,
+                )
+                detailsQueryData = newData
+                mutableUiState.update {
+                    it.copy(
+                        details = newData.onTextActivity?.toGenericActivity()
+                            ?: newData.onListActivity?.toGenericActivity()
+                            ?: newData.onMessageActivity?.toGenericActivity()
+                    )
                 }
-
-                ActivityType.MESSAGE -> {
-                    likeRepository.toggleMessageActivityLike(details.id).let { result ->
-                        if (result is DataResult.Success && result.data != null) {
-                            activityRepository.updateActivityDetailsCache(
-                                id = details.id,
-                                activity = queryData.copy(
-                                    onMessageActivity = queryData.onMessageActivity?.copy(
-                                        messageActivityFragment = result.data!!
-                                    )
-                                )
-                            )
-                        } else if (result !is DataResult.Loading) {
-                            mutableUiState.update {
-                                it.copy(error = "Like failed")
-                            }
-                        }
-                    }
-                }
-
-                else -> {
-                    likeRepository.toggleListActivityLike(details.id).let { result ->
-                        if (result is DataResult.Success && result.data != null) {
-                            activityRepository.updateActivityDetailsCache(
-                                id = details.id,
-                                activity = queryData.copy(
-                                    onListActivity = queryData.onListActivity?.copy(
-                                        listActivityFragment = result.data!!.copy(
-                                            // for some reason the API returns null media
-                                            media = queryData.onListActivity!!.listActivityFragment.media
-                                        )
-                                    )
-                                )
-                            )
-                        } else if (result !is DataResult.Loading) {
-                            mutableUiState.update {
-                                it.copy(error = "Like failed")
-                            }
-                        }
-                    }
-                }
+            } else {
+                mutableUiState.update { it.copy(error = "Like failed") }
             }
         }
     }
