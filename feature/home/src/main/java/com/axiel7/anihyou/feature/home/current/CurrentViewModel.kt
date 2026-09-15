@@ -26,6 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -294,6 +295,7 @@ class CurrentViewModel(
 
         // next season on list
         mutableUiState
+            .filter { !it.isLoading }
             .distinctUntilChanged { _, new ->
                 !new.fetchFromNetwork
             }
