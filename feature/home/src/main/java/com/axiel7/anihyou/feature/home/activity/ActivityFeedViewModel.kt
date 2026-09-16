@@ -96,38 +96,14 @@ class ActivityFeedViewModel(
                 type = type
             ).let { result ->
                 if (result is DataResult.Success) {
-                    mutableUiState.value.run {
-                        val foundIndex = activities.indexOf(foundItem)
-                        if (foundIndex != -1) {
-                            val oldItem = activities[foundIndex]
-                            activities[foundIndex] = oldItem.copy(
-                                onTextActivity = oldItem.onTextActivity?.copy(
-                                    textActivityFragment = oldItem.onTextActivity!!.textActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.textActivityFragment?.let {
-                                        activityRepository.updateActivityCache(textActivity = it)
-                                    }
-                                },
-                                onListActivity = oldItem.onListActivity?.copy(
-                                    listActivityFragment = oldItem.onListActivity!!.listActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.listActivityFragment?.let {
-                                        activityRepository.updateActivityCache(listActivity = it)
-                                    }
-                                },
-                                onMessageActivity = oldItem.onMessageActivity?.copy(
-                                    messageActivityFragment = oldItem.onMessageActivity!!.messageActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.messageActivityFragment?.let {
-                                        activityRepository.updateActivityCache(messageActivity = it)
-                                    }
-                                },
-                            )
-                        }
-                    }
+                    activityRepository.updateActivityCache(
+                        listActivity = foundItem.onListActivity?.listActivityFragment
+                                ?.updateLikeStatus(result.data),
+                        textActivity = foundItem.onTextActivity?.textActivityFragment
+                                ?.updateLikeStatus(result.data),
+                        messageActivity = foundItem.onMessageActivity?.messageActivityFragment
+                                ?.updateLikeStatus(result.data)
+                    )
                 }
             }
         }
