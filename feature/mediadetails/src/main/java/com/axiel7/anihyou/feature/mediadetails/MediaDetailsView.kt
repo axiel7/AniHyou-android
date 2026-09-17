@@ -1,7 +1,12 @@
 package com.axiel7.anihyou.feature.mediadetails
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -71,6 +76,7 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.common.utils.StringUtils.orUnknown
+import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.core.model.media.durationText
 import com.axiel7.anihyou.core.model.media.isAnime
@@ -122,12 +128,14 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun MediaDetailsView(
     arguments: Route.MediaDetails,
+    theme: Theme,
     blackColors: Boolean,
     paletteStyle: PaletteStyle,
 ) {
     val viewModel: MediaDetailsViewModel = koinViewModel(parameters = { parametersOf(arguments) })
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isDark = isSystemInDarkTheme()
+    val isDark = if (theme == Theme.FOLLOW_SYSTEM) isSystemInDarkTheme()
+    else theme == Theme.DARK
 
     val colorScheme = remember(uiState.coloredMedia, uiState.details) {
         if (uiState.coloredMedia) {
@@ -227,7 +235,11 @@ private fun MediaDetailsContent(
         topBar = {
             TopAppBar(
                 title = {
-                    if (isTopAppBarScrolled) {
+                    AnimatedVisibility(
+                        visible = isTopAppBarScrolled,
+                        enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+                        exit = slideOutVertically(targetOffsetY = { it / 2 }) + fadeOut(),
+                    ) {
                         Text(
                             text = uiState.details?.title?.userPreferred.orEmpty(),
                             overflow = TextOverflow.Ellipsis,
