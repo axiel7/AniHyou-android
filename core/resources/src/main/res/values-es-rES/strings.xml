@@ -679,4 +679,7 @@
     <string name="notification_media_changed">%s ha recibido cambios en los datos del sitio</string>
     <string name="notification_media_deleted">%s fue eliminado del sitio</string>
     <string name="notification_forum_mention">%1$s te mencionó en el hilo del foro %2$s</string>
+    <string name="widget_config_title">Configuración del widget</string>
+    <string name="style_colored">Colorido</string>
+    <string name="style_monochrome">Monocromático</string>
 </resources>
