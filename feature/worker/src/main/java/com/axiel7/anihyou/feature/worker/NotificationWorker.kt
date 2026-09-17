@@ -63,14 +63,14 @@ class NotificationWorker(
 
             val result = notificationsRepository.getNewNotifications(unreadCount)
 
-            return if (result is DataResult.Success && result.data != null) {
+            return (result as? DataResult.Success)?.data?.let { data ->
                 // since AniList API does not have a filter for createdAt we need to filter
                 // locally the new notifications by saving the latest createdAt to preferences
                 // so we don't notify the same notification more than once
                 val lastCreatedAt = defaultPreferencesRepository.lastNotificationCreatedAt
                     .firstOrNull() ?: 0
-                val newNotifications = result.data!!.filter {
-                    it.createdAt != null && it.createdAt!! > lastCreatedAt
+                val newNotifications = data.filter {
+                    it.createdAt?.let { createdAt -> createdAt > lastCreatedAt } ?: false
                 }
                 if (newNotifications.isNotEmpty()) {
                     newNotifications.firstOrNull()?.createdAt?.let { createdAt ->
@@ -82,7 +82,7 @@ class NotificationWorker(
                     notifications.forEach {
                         var pendingIntent: PendingIntent? = null
                         val deepLinkType = group.asDeepLinkType()
-                        if (deepLinkType != null) {
+                        if (deepLinkType != null) runCatching {
                             applicationContext.packageManager
                                 .getLaunchIntentForPackage(APP_PACKAGE_NAME)
                                 ?.apply {
@@ -102,7 +102,9 @@ class NotificationWorker(
                             applicationContext.getBitmapFromUrl(url)
                         }
 
-                        val localizedText = it.localizedText(applicationContext.resources)
+                        val localizedText = runCatching {
+                            it.localizedText(applicationContext.resources)
+                        }.getOrDefault(it.text)
 
                         applicationContext.showNotification(
                             notificationId = it.id,
@@ -127,7 +129,7 @@ class NotificationWorker(
                     }
                 }
                 Result.success()
-            } else Result.retry()
+            } ?: Result.retry()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: ", e)
             return Result.retry()
