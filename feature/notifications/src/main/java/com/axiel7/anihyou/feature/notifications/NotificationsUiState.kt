@@ -11,7 +11,7 @@ import com.axiel7.anihyou.core.base.state.PagedUiState
 data class NotificationsUiState(
     val notifications: SnapshotStateList<GenericNotification> = mutableStateListOf(),
     val type: NotificationTypeGroup = NotificationTypeGroup.ALL,
-    val fetchFromNetwork: Boolean = false,
+    val fetchFromNetwork: Boolean = true,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
     override val error: String? = null,
