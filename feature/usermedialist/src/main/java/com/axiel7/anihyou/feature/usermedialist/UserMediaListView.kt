@@ -199,7 +199,8 @@ private fun TabbedView(
                     Tab(
                         selected = selectedTabIndex == tab.ordinal,
                         onClick = { selectedTabIndex = tab.ordinal },
-                        text = { Text(text = tab.localized()) }
+                        text = { Text(text = tab.localized()) },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
