@@ -37,7 +37,7 @@ object ContextUtils {
             }
         } catch (_: ActivityNotFoundException) {
             showToast(getString(R.string.no_app_found_for_this_action))
-        }
+        } catch (_: Throwable) {}
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
