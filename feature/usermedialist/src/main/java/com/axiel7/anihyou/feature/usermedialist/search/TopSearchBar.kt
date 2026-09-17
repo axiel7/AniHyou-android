@@ -2,6 +2,7 @@ package com.axiel7.anihyou.feature.usermedialist.search
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -89,7 +90,8 @@ internal fun TopSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .widthIn(min = 360.dp, max = 720.dp)
-                    .height(56.dp),
+                    .height(56.dp)
+                    .focusable(), // fix for TextField acquiring focus without any user interaction
                 shape = RoundedCornerShape(50),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh

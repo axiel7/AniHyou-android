@@ -314,7 +314,9 @@ fun MainView(
                     )
                 }
             }
-            ReportDrawn()
+            // TODO: uncomment when generating baseline profiles
+            // this causes some crashes on older android versions
+            //ReportDrawn()
         }
     }
 }
