@@ -89,8 +89,7 @@ internal fun TopSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .widthIn(min = 360.dp, max = 720.dp)
-                    .height(48.dp)
-                    .padding(end = 8.dp),
+                    .height(56.dp),
                 shape = RoundedCornerShape(50),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -98,7 +97,7 @@ internal fun TopSearchBar(
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(start = 4.dp, end = 16.dp)
+                        .padding(horizontal = 4.dp)
                         .fillMaxHeight(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
