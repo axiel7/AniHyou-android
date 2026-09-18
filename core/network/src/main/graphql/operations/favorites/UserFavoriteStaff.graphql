@@ -2,6 +2,10 @@ query UserFavoritesStaff($userId: Int, $page: Int, $perPage: Int) {
     User(id: $userId) {
         favourites {
             staff(page: $page, perPage: $perPage) {
+                edges {
+                    id
+                    favouriteOrder
+                }
                 nodes {
                     id
                     name {

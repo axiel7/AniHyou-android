@@ -2,6 +2,10 @@ query UserFavoritesManga($userId: Int, $page: Int, $perPage: Int) {
     User(id: $userId) {
         favourites {
             manga(page: $page, perPage: $perPage) {
+                edges {
+                    id
+                    favouriteOrder
+                }
                 nodes {
                     id
                     title {
