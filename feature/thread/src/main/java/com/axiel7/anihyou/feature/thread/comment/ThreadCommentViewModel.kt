@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.model.thread.ChildComment.Companion.toChildComment
 import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
 import com.axiel7.anihyou.core.ui.common.navigation.Route
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -39,7 +40,7 @@ class ThreadCommentViewModel(
         mutableUiState.update {
             val childComments = it.childComment.childComments?.plus(comment.toChildComment())
             it.copy(
-                childComment = it.childComment.copy(childComments = childComments)
+                childComment = it.childComment.copy(childComments = childComments?.toImmutableList())
             )
         }
     }

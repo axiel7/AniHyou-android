@@ -59,6 +59,8 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.editmedia.composables.SetScoreDialog
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItem
 import com.axiel7.anihyou.feature.home.current.composables.CurrentListItemPlaceholder
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
@@ -158,7 +160,7 @@ private fun CurrentContent(
                     .padding(bottom = 16.dp)
             ) {
                 CurrentListType.entries.forEach { type ->
-                    val list = uiState.getListFromType(type)
+                    val list = uiState.getListFromType(type).toImmutableList()
                     if (list.isNotEmpty()) {
                         HorizontalListHeader(
                             text = type.localized(),
@@ -204,7 +206,7 @@ private fun CurrentContent(
 
 @Composable
 private fun CurrentLazyGrid(
-    items: List<CommonMediaListEntry>,
+    items: ImmutableList<CommonMediaListEntry>,
     isLoading: Boolean,
     isPlusEnabled: Boolean,
     showLowPriority: Boolean,
