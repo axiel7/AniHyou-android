@@ -103,12 +103,12 @@ class CurrentViewModel(
                                     }
                                 } else {
                                     list[index] = oldValue.copy(basicMediaListEntry = newListEntry)
-                                }
-                                if (type == CurrentListType.BEHIND
-                                    && !newListEntry.isBehind(oldValue.media?.nextAiringEpisode?.episode ?: 0)
-                                ) {
-                                    airingList.add(list[index])
-                                    list.removeAt(index)
+                                    if (type == CurrentListType.BEHIND
+                                        && !newListEntry.isBehind(oldValue.media?.nextAiringEpisode?.episode ?: 0)
+                                    ) {
+                                        airingList.add(list[index])
+                                        list.removeAt(index)
+                                    }
                                 }
                             }
                     } else {
