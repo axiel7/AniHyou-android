@@ -25,10 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.model.genre.Genre
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
-import com.axiel7.anihyou.core.model.genre.Tag
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.InputChipError
 import com.axiel7.anihyou.feature.genrestags.GenresTagsSheet
@@ -40,9 +38,7 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SearchGenresTagsChips(
-    externalGenre: Genre? = null,
-    externalTag: Tag? = null,
-    viewModel: GenresTagsViewModel = koinViewModel { parametersOf(externalGenre, externalTag) },
+    viewModel: GenresTagsViewModel = koinViewModel { parametersOf(GenresAndTagsForSearch()) },
     clearedFilters: Boolean,
     onGenreTagStateChanged: (GenresAndTagsForSearch) -> Unit
 ) {

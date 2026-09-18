@@ -42,16 +42,10 @@ class SearchViewModel(
         SearchUiState(
             searchType = if (mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
             mediaSort = mediaSort ?: MediaSort.SEARCH_MATCH,
-            genresAndTagsForSearch = GenresAndTagsForSearch(
-                genreIn = setOfNotNull(arguments.genre),
-                tagIn = setOfNotNull(arguments.tag),
-            ),
             onMyList = arguments.onList,
             isLoggedIn = isLoggedIn,
             isAdult = if (isLoggedIn) null else false,
-            hasNextPage = arguments.genre != null
-                    || arguments.tag != null
-                    || arguments.mediaSort != null
+            hasNextPage = arguments.mediaSort != null
         )
 
     override fun setQuery(value: String) {
@@ -208,6 +202,15 @@ class SearchViewModel(
                 mutableUiState.update { it.copy(titleLanguage = value) }
             }
             .launchIn(viewModelScope)
+
+        if (arguments.genre != null || arguments.tag != null) {
+            onGenreTagStateChanged(
+                genresAndTagsForSearch = GenresAndTagsForSearch(
+                    genreIn = setOfNotNull(arguments.genre),
+                    tagIn = setOfNotNull(arguments.tag),
+                )
+            )
+        }
 
         // media search
         mutableUiState

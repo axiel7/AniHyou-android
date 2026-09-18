@@ -58,8 +58,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.SearchType
-import com.axiel7.anihyou.core.model.genre.Genre
-import com.axiel7.anihyou.core.model.genre.Tag
+import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -516,8 +515,14 @@ private fun MoreFilters(
         setDuration = { event?.setDuration(it) },
     )
     SearchGenresTagsChips(
-        externalGenre = initialGenre?.let { Genre(it) },
-        externalTag = initialTag?.let { Tag(it) },
+        viewModel = koinViewModel {
+            parametersOf(
+                GenresAndTagsForSearch(
+                    genreIn = setOfNotNull(initialGenre),
+                    tagIn = setOfNotNull(initialTag)
+                )
+            )
+        },
         clearedFilters = uiState.clearedFilters,
         onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
     )
