@@ -30,6 +30,7 @@ import com.axiel7.anihyou.feature.profile.stats.UserStatsEvent
 import com.axiel7.anihyou.feature.profile.stats.UserStatsUiState
 import com.axiel7.anihyou.feature.profile.stats.composables.DistributionTypeChips
 import com.axiel7.anihyou.feature.profile.stats.composables.MediaTypeChips
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun OverviewStatsView(
@@ -122,10 +123,10 @@ fun OverviewStatsView(
         }
         VerticalStatsBar(
             stats = when (uiState.scoreType) {
-                StatDistributionType.TITLES -> stats?.scoreCount.orEmpty()
-                StatDistributionType.TIME -> stats?.scoreTime.orEmpty()
-                else -> emptyList()
-            },
+                StatDistributionType.TITLES -> stats?.scoreCount
+                StatDistributionType.TIME -> stats?.scoreTime
+                else -> persistentListOf()
+            } ?: persistentListOf(),
             modifier = Modifier.padding(8.dp),
             mapColorTo = {
                 when (stats?.scoreFormat) {
@@ -148,10 +149,10 @@ fun OverviewStatsView(
         )
         VerticalStatsBar(
             stats = when (uiState.lengthType) {
-                StatDistributionType.TITLES -> stats?.lengthCount.orEmpty()
-                StatDistributionType.TIME -> stats?.lengthTime.orEmpty()
-                StatDistributionType.SCORE -> stats?.lengthScore.orEmpty()
-            },
+                StatDistributionType.TITLES -> stats?.lengthCount
+                StatDistributionType.TIME -> stats?.lengthTime
+                StatDistributionType.SCORE -> stats?.lengthScore
+            } ?: persistentListOf(),
             modifier = Modifier.padding(8.dp),
             isLoading = uiState.isLoading
         )
@@ -159,7 +160,7 @@ fun OverviewStatsView(
         // Status distribution
         InfoTitle(text = stringResource(R.string.status_distribution))
         HorizontalStatsBar(
-            stats = stats?.statusDistribution.orEmpty(),
+            stats = stats?.statusDistribution ?: persistentListOf(),
             verticalPadding = 8.dp,
             showTotal = false,
             isLoading = uiState.isLoading
@@ -168,7 +169,7 @@ fun OverviewStatsView(
         // Format distribution
         InfoTitle(text = stringResource(R.string.format_distribution))
         HorizontalStatsBar(
-            stats = stats?.formatDistribution.orEmpty(),
+            stats = stats?.formatDistribution ?: persistentListOf(),
             verticalPadding = 8.dp,
             showTotal = false,
             isLoading = uiState.isLoading
@@ -177,7 +178,7 @@ fun OverviewStatsView(
         // Country distribution
         InfoTitle(text = stringResource(R.string.country_distribution))
         HorizontalStatsBar(
-            stats = stats?.countryDistribution.orEmpty(),
+            stats = stats?.countryDistribution ?: persistentListOf(),
             verticalPadding = 8.dp,
             showTotal = false,
             isLoading = uiState.isLoading
@@ -191,10 +192,10 @@ fun OverviewStatsView(
         )
         VerticalStatsBar(
             stats = when (uiState.releaseYearType) {
-                StatDistributionType.TITLES -> stats?.releaseYearCount.orEmpty()
-                StatDistributionType.TIME -> stats?.releaseYearTime.orEmpty()
-                StatDistributionType.SCORE -> stats?.releaseYearScore.orEmpty()
-            },
+                StatDistributionType.TITLES -> stats?.releaseYearCount
+                StatDistributionType.TIME -> stats?.releaseYearTime
+                StatDistributionType.SCORE -> stats?.releaseYearScore
+            } ?: persistentListOf(),
             modifier = Modifier.padding(8.dp),
             isLoading = uiState.isLoading
         )
@@ -209,10 +210,10 @@ fun OverviewStatsView(
         )
         VerticalStatsBar(
             stats = when (uiState.startYearType) {
-                StatDistributionType.TITLES -> stats?.startYearCount.orEmpty()
-                StatDistributionType.TIME -> stats?.startYearTime.orEmpty()
-                StatDistributionType.SCORE -> stats?.startYearScore.orEmpty()
-            },
+                StatDistributionType.TITLES -> stats?.startYearCount
+                StatDistributionType.TIME -> stats?.startYearTime
+                StatDistributionType.SCORE -> stats?.startYearScore
+            } ?: persistentListOf(),
             modifier = Modifier.padding(8.dp),
             isLoading = uiState.isLoading
         )

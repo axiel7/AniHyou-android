@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFilterNotNull
 import com.axiel7.anihyou.core.model.media.recommendationsSampleItem
 import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
@@ -31,6 +32,7 @@ import com.axiel7.anihyou.core.ui.composables.common.singleClick
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RecommendationItem(
@@ -60,7 +62,7 @@ fun RecommendationItem(
                     episodes = media.basicMediaDetails.episodes,
                     chapters = media.basicMediaDetails.chapters,
                     duration = media.basicMediaDetails.duration,
-                    genres = media.genres?.filterNotNull(),
+                    genres = media.genres?.fastFilterNotNull()?.toImmutableList(),
                     status = media.mediaListEntry?.basicMediaListEntry?.status,
                     onClick = { onClickMedia(media.basicMediaDetails.id) },
                     onLongClick = {
@@ -83,7 +85,7 @@ fun RecommendationItem(
                     episodes = mediaRecommended.basicMediaDetails.episodes,
                     chapters = mediaRecommended.basicMediaDetails.chapters,
                     duration = mediaRecommended.basicMediaDetails.duration,
-                    genres = mediaRecommended.genres?.filterNotNull(),
+                    genres = mediaRecommended.genres?.fastFilterNotNull()?.toImmutableList(),
                     status = mediaRecommended.mediaListEntry?.basicMediaListEntry?.status,
                     onClick = { onClickMediaRecommended(mediaRecommended.basicMediaDetails.id) },
                     onLongClick = {

@@ -92,6 +92,7 @@ import com.axiel7.anihyou.feature.genrestags.composables.SearchGenresTagsChips
 import com.axiel7.anihyou.feature.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.search.TopSearchBar
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -355,7 +356,7 @@ private fun FilterBlock(
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.media_status),
-                        values = MediaStatus.knownEntries,
+                        values = MediaStatus.knownEntries.toImmutableList(),
                         selectedValue = uiState.mediaStatus,
                         onValueSelected = { event?.setMediaStatus(it) },
                         valueString = { it.localized() },
@@ -369,7 +370,7 @@ private fun FilterBlock(
                 ) {
                     FilterChipWithMenu(
                         title = stringResource(R.string.country),
-                        values = CountryOfOrigin.entries,
+                        values = CountryOfOrigin.entries.toImmutableList(),
                         selectedValue = uiState.country,
                         onValueSelected = { event?.setCountry(it) },
                         valueString = { it.localized() },

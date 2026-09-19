@@ -32,12 +32,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.fastForEachIndexed
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T> FilterChipWithMenu(
     title: String,
-    values: List<T>,
+    values: ImmutableList<T>,
     selectedValue: T?,
     onValueSelected: (T?) -> Unit,
     modifier: Modifier = Modifier,
@@ -108,8 +110,8 @@ fun <T> FilterChipWithMenu(
 @Composable
 fun <T> FilterChipWithMenu(
     title: String,
-    values: List<T>,
-    selectedValues: List<T>,
+    values: ImmutableList<T>,
+    selectedValues: ImmutableList<T>,
     onValuesChanged: (List<T>) -> Unit,
     modifier: Modifier = Modifier,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -177,7 +179,7 @@ fun <T> FilterChipWithMenu(
 
 @Composable
 fun <T> AssistChipWithMenu(
-    values: List<T>,
+    values: ImmutableList<T>,
     selectedValue: T,
     onValueSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -248,12 +250,12 @@ private fun ChipWithMenuPreview() {
         Column {
             FilterChipWithMenu(
                 title = stringResource(R.string.from_year),
-                values = listOf("2000", "2001"),
+                values = persistentListOf("2000", "2001"),
                 selectedValue = null,
                 onValueSelected = {},
             )
             AssistChipWithMenu(
-                values = listOf("One", "Two"),
+                values = persistentListOf("One", "Two"),
                 selectedValue = "One",
                 onValueSelected = {},
             )

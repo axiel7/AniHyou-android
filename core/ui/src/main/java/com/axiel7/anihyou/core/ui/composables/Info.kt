@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.MoreLessButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun InfoItemView(
@@ -79,7 +81,7 @@ fun InfoItemView(
 @Composable
 fun <T> InfoClickableItemView(
     title: String,
-    items: List<T>,
+    items: ImmutableList<T>,
     itemName: (T) -> String,
     onItemClicked: (T) -> Unit,
     modifier: Modifier = Modifier
@@ -151,7 +153,7 @@ private fun InfoPreviews() {
             InfoItemView(title = "Start Date", info = "1999")
             InfoClickableItemView(
                 title = "Studios",
-                items = listOf("MAPPA", "Kyoto Animation", "Shaft"),
+                items = persistentListOf("MAPPA", "Kyoto Animation", "Shaft"),
                 itemName = { it },
                 onItemClicked = {},
             )

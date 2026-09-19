@@ -28,11 +28,13 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.TabRowItem
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T> ConnectedButtonGroup(
-    items: Array<TabRowItem<T>>,
+    items: ImmutableList<TabRowItem<T>>,
     modifier: Modifier = Modifier,
     selectedIndex: Int = 0,
     onItemSelection: (Int) -> Unit,
@@ -78,7 +80,7 @@ private fun ConnectedButtonGroupPreview() {
     AniHyouTheme {
         Surface {
             ConnectedButtonGroup(
-                items = arrayOf(
+                items = persistentListOf(
                     TabRowItem("about", icon = R.drawable.info_24),
                     TabRowItem("activity", icon = R.drawable.timeline_24),
                     TabRowItem("stats", icon = R.drawable.bar_chart_24),

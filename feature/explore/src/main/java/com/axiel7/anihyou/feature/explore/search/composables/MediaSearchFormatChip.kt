@@ -6,11 +6,12 @@ import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MediaSearchFormatChip(
     mediaType: MediaType,
-    selectedMediaFormats: List<MediaFormatLocalizable>,
+    selectedMediaFormats: ImmutableList<MediaFormatLocalizable>,
     onMediaFormatsChanged: (List<MediaFormatLocalizable>) -> Unit,
 ) {
     FilterChipWithMenu(

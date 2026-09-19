@@ -38,6 +38,8 @@ import com.axiel7.anihyou.core.ui.composables.RoundedRectangle
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.materialkolor.ktx.harmonize
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 const val MAX_VERTICAL_STAT_HEIGHT = 124
@@ -45,7 +47,7 @@ const val MAX_VERTICAL_STAT_HEIGHT = 124
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> VerticalStatsBar(
-    stats: List<Stat<T>>,
+    stats: ImmutableList<Stat<T>>,
     modifier: Modifier = Modifier,
     mapColorTo: @Composable (T) -> Color = { it.primaryColor() },
     isLoading: Boolean = false,
@@ -124,7 +126,7 @@ fun <T> VerticalStatsBar(
 private fun VerticalStatsBarPreview() {
     val stats by remember {
         mutableStateOf(
-            listOf(
+            persistentListOf(
                 StatColorable(type = ScoreDistribution(10), value = 12f),
                 StatColorable(type = ScoreDistribution(20), value = 10f),
                 StatColorable(type = ScoreDistribution(30), value = 5f),

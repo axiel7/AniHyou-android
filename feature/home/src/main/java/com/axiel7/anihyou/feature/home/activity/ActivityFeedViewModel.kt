@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
 import com.axiel7.anihyou.core.network.type.ActivityType
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -51,7 +52,7 @@ class ActivityFeedViewModel(
 
     override fun setFollowingFilters(value: List<Int>) {
         mutableUiState.update {
-            it.copy(followingFilters = value, page = 1, hasNextPage = true)
+            it.copy(followingFilters = value.toImmutableList(), page = 1, hasNextPage = true)
         }
     }
 
@@ -66,7 +67,7 @@ class ActivityFeedViewModel(
                 ).collectLatest { result ->
                     if (result is PagedResult.Success) {
                         mutableUiState.update {
-                            it.copy(followingUsers = result.list)
+                            it.copy(followingUsers = result.list.toImmutableList())
                         }
                     }
                 }

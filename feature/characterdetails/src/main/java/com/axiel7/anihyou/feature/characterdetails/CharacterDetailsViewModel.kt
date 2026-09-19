@@ -10,6 +10,7 @@ import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.ui.common.navigation.Route
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -60,7 +61,9 @@ class CharacterDetailsViewModel(
     override fun onShowVoiceActorsSheet(item: CharacterMediaQuery.Edge) {
         mutableUiState.update { uiState ->
             uiState.copy(
-                selectedMediaVoiceActors = item.voiceActors?.mapNotNull { it?.commonVoiceActor },
+                selectedMediaVoiceActors = item.voiceActors
+                    ?.mapNotNull { it?.commonVoiceActor }
+                    ?.toImmutableList(),
             )
         }
     }

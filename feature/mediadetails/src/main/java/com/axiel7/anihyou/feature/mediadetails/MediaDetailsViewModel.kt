@@ -16,6 +16,8 @@ import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Route
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -51,8 +53,7 @@ class MediaDetailsViewModel(
                                     mediaId = uiState.details.id,
                                     basicMediaListEntry = newListEntry,
                                 )
-                        }
-                        else null
+                        } else null
                     )
                 )
             }
@@ -127,9 +128,11 @@ class MediaDetailsViewModel(
                             uiState.copy(
                                 isSuccessStats = true,
                                 mediaStatusDistribution = result.data?.stats?.statusDistribution
-                                    ?.mapNotNull { it?.asStat() }.orEmpty(),
+                                    ?.mapNotNull { it?.asStat() }?.toImmutableList()
+                                    ?: persistentListOf(),
                                 mediaScoreDistribution = result.data?.stats?.scoreDistribution
-                                    ?.mapNotNull { it?.asStat() }.orEmpty(),
+                                    ?.mapNotNull { it?.asStat() }?.toImmutableList()
+                                    ?: persistentListOf(),
                                 mediaRankings = result.data?.rankings?.filterNotNull().orEmpty()
                             )
                         }
@@ -207,7 +210,9 @@ class MediaDetailsViewModel(
     override fun showVoiceActorsSheet(character: MediaCharacter) {
         mutableUiState.update { uiState ->
             uiState.copy(
-                selectedCharacterVoiceActors = character.voiceActors?.mapNotNull { it?.commonVoiceActor },
+                selectedCharacterVoiceActors = character.voiceActors
+                    ?.mapNotNull { it?.commonVoiceActor }
+                    ?.toImmutableList(),
                 showVoiceActorsSheet = true
             )
         }
@@ -217,17 +222,23 @@ class MediaDetailsViewModel(
         mutableUiState.update { it.copy(showVoiceActorsSheet = false) }
     }
 
-    override fun onVoteClick(recommendedMediaId: Int, recommendationId: Int, rating: RecommendationRating) {
+    override fun onVoteClick(
+        recommendedMediaId: Int,
+        recommendationId: Int,
+        rating: RecommendationRating
+    ) {
         if (!arguments.isLoggedIn) {
             mutableUiState.update { it.copy(errorId = R.string.not_logged_text) }
             return
         }
 
         val recommendations = mutableUiState.value.relationsAndRecommendations?.recommendations
-        val targetNode = recommendations?.find { it.mediaRecommended.id == recommendationId } ?: return
+        val targetNode =
+            recommendations?.find { it.mediaRecommended.id == recommendationId } ?: return
 
         val previousUserRating = targetNode.mediaRecommended.userRating
-        val newRating = if (previousUserRating == rating) RecommendationRating.NO_RATING else rating // if the new rating is the same as the old one remove the rating
+        val newRating =
+            if (previousUserRating == rating) RecommendationRating.NO_RATING else rating // if the new rating is the same as the old one remove the rating
 
         mediaRepository.saveRecommendation(
             mediaId = arguments.id, // base media id

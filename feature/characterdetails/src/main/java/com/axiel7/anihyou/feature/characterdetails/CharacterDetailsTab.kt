@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.characterdetails
 import androidx.annotation.DrawableRes
 import com.axiel7.anihyou.core.ui.common.TabRowItem
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.toImmutableList
 
 enum class CharacterDetailsTab {
     INFO,
@@ -16,6 +17,6 @@ enum class CharacterDetailsTab {
         }
 
     companion object {
-        val tabRows = entries.map { TabRowItem(value = it, icon = it.icon) }.toTypedArray()
+        val tabRows = entries.map { TabRowItem(value = it, icon = it.icon) }.toImmutableList()
     }
 }

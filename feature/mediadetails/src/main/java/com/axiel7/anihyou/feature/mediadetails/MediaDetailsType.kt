@@ -2,12 +2,13 @@ package com.axiel7.anihyou.feature.mediadetails
 
 import com.axiel7.anihyou.core.ui.common.TabRowItem
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.persistentListOf
 
 enum class MediaDetailsType {
     INFO, STAFF_CHARACTERS, RELATIONS, STATS, REVIEWS;
 
     companion object {
-        val tabRows = arrayOf(
+        val tabRows = persistentListOf(
             TabRowItem(INFO, icon = R.drawable.info_24),
             TabRowItem(STAFF_CHARACTERS, icon = R.drawable.group_24),
             TabRowItem(RELATIONS, icon = R.drawable.shuffle_24),

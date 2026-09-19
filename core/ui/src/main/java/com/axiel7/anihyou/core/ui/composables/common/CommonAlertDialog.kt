@@ -30,10 +30,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun <T : Localizable> DialogWithRadioSelection(
-    values: Array<T>,
+    values: ImmutableList<T>,
     defaultValue: T?,
     title: String? = null,
     isDeselectable: Boolean = false,
@@ -110,8 +111,8 @@ fun <T : Localizable> DialogWithRadioSelection(
 
 @Composable
 fun <T : Localizable> DialogWithCheckboxSelection(
-    values: List<T>,
-    defaultValues: List<T>,
+    values: ImmutableList<T>,
+    defaultValues: ImmutableList<T>,
     title: String? = null,
     onConfirm: (List<T>) -> Unit,
     onDismiss: () -> Unit

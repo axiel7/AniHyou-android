@@ -2,6 +2,7 @@ package com.axiel7.anihyou.core.model.user
 
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.toImmutableMap
 
 fun UserTitleLanguage.Companion.preferenceValues() = arrayOf(
     UserTitleLanguage.ROMAJI,
@@ -17,4 +18,4 @@ fun UserTitleLanguage.stringRes() = when (this) {
 }
 
 val UserTitleLanguage.Companion.entriesLocalized
-    get() = preferenceValues().associateWith { it.stringRes() }
+    get() = preferenceValues().associateWith { it.stringRes() }.toImmutableMap()

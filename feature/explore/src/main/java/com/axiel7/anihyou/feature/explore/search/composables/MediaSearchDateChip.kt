@@ -18,6 +18,7 @@ import com.axiel7.anihyou.core.network.type.MediaSeason
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun MediaSearchDateChip(
@@ -31,7 +32,7 @@ fun MediaSearchDateChip(
     val startYears = remember { DateUtils.seasonYears }
     val endYears = remember(startYear) {
         if (startYear != null) {
-            startYears.filter { it >= startYear }
+            startYears.filter { it >= startYear }.toImmutableList()
         } else startYears
     }
 
@@ -57,7 +58,7 @@ fun MediaSearchDateChip(
 
         FilterChipWithMenu(
             title = stringResource(R.string.season),
-            values = MediaSeason.knownEntries,
+            values = MediaSeason.knownEntries.toImmutableList(),
             selectedValue = season,
             onValueSelected = onSeasonChanged,
             modifier = Modifier.padding(horizontal = 8.dp),

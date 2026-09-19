@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +27,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlacehold
 
 @Composable
 fun StaffMediaView(
-    staffMedia: List<Pair<Int, StaffMediaGrouped>>,
+    staffMedia: SnapshotStateList<Pair<Int, StaffMediaGrouped>>,
     isLoading: Boolean,
     loadMore: () -> Unit,
     mediaOnMyList: Boolean?,

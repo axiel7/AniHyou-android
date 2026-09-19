@@ -9,6 +9,8 @@ import com.axiel7.anihyou.core.model.media.CountryOfOrigin.Companion.toBo
 import com.axiel7.anihyou.core.model.stats.Stat
 import com.axiel7.anihyou.core.model.stats.StatLocalizableAndColorable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 fun UserStatsAnimeOverviewQuery.Anime.toOverviewStats(scoreFormat: ScoreFormat) =
     OverviewStats(
@@ -19,20 +21,20 @@ fun UserStatsAnimeOverviewQuery.Anime.toOverviewStats(scoreFormat: ScoreFormat) 
         meanScore = meanScore,
         scoreFormat = scoreFormat,
         standardDeviation = standardDeviation,
-        scoreCount = scoreStatsCount().orEmpty(),
-        scoreTime = scoreStatsTime().orEmpty(),
-        lengthCount = lengthStatsCount().orEmpty(),
-        lengthTime = lengthStatsTime().orEmpty(),
-        lengthScore = lengthStatsScore().orEmpty(),
-        statusDistribution = statusDistribution().orEmpty(),
-        formatDistribution = formatDistribution().orEmpty(),
-        countryDistribution = countryDistribution().orEmpty(),
-        releaseYearCount = releaseYearCount().orEmpty(),
-        releaseYearTime = releaseYearTime().orEmpty(),
-        releaseYearScore = releaseYearScore().orEmpty(),
-        startYearCount = startYearCount().orEmpty(),
-        startYearTime = startYearTime().orEmpty(),
-        startYearScore = startYearScore().orEmpty(),
+        scoreCount = scoreStatsCount()?.toImmutableList() ?: persistentListOf(),
+        scoreTime = scoreStatsTime()?.toImmutableList() ?: persistentListOf(),
+        lengthCount = lengthStatsCount()?.toImmutableList() ?: persistentListOf(),
+        lengthTime = lengthStatsTime()?.toImmutableList() ?: persistentListOf(),
+        lengthScore = lengthStatsScore()?.toImmutableList() ?: persistentListOf(),
+        statusDistribution = statusDistribution()?.toImmutableList() ?: persistentListOf(),
+        formatDistribution = formatDistribution()?.toImmutableList() ?: persistentListOf(),
+        countryDistribution = countryDistribution()?.toImmutableList() ?: persistentListOf(),
+        releaseYearCount = releaseYearCount()?.toImmutableList() ?: persistentListOf(),
+        releaseYearTime = releaseYearTime()?.toImmutableList() ?: persistentListOf(),
+        releaseYearScore = releaseYearScore()?.toImmutableList() ?: persistentListOf(),
+        startYearCount = startYearCount()?.toImmutableList() ?: persistentListOf(),
+        startYearTime = startYearTime()?.toImmutableList() ?: persistentListOf(),
+        startYearScore = startYearScore()?.toImmutableList() ?: persistentListOf(),
     )
 
 private fun UserStatsAnimeOverviewQuery.Anime.planned() =

@@ -122,6 +122,7 @@ import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.materialkolor.dynamiccolor.ColorSpec
+import kotlinx.collections.immutable.persistentListOf
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -218,7 +219,7 @@ private fun MediaDetailsContent(
 
     if (uiState.showVoiceActorsSheet) {
         CharacterVoiceActorsSheet(
-            voiceActors = uiState.selectedCharacterVoiceActors.orEmpty(),
+            voiceActors = uiState.selectedCharacterVoiceActors ?: persistentListOf(),
             scope = scope,
             navigateToStaffDetails = {
                 event?.hideVoiceActorSheet()

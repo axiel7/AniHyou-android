@@ -8,6 +8,7 @@ import com.axiel7.anihyou.core.network.CharacterMediaQuery
 import com.axiel7.anihyou.core.network.fragment.CommonVoiceActor
 import com.axiel7.anihyou.core.base.state.PagedUiState
 import com.axiel7.anihyou.core.model.TranslatorApp
+import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 data class CharacterDetailsUiState(
@@ -16,7 +17,7 @@ data class CharacterDetailsUiState(
     val media: SnapshotStateList<CharacterMediaQuery.Edge> = mutableStateListOf(),
     val isLoadingMedia: Boolean = true,
     val selectedMediaItem: CharacterMediaQuery.Edge? = null,
-    val selectedMediaVoiceActors: List<CommonVoiceActor>? = null,
+    val selectedMediaVoiceActors: ImmutableList<CommonVoiceActor>? = null,
     override val page: Int = 0,
     override val hasNextPage: Boolean = true,
     override val isLoading: Boolean = true,

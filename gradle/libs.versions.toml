@@ -56,7 +56,7 @@ zoomable = "2.13.0"
 colorpicker = "1.3.0"
 corePerfromance = "1.0.0"
 immutable = "0.5.2"
-stabilityAnalyzer = "0.13.0"
+stabilityAnalyzer = "0.14.0"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }

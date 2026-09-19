@@ -40,6 +40,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -83,7 +84,7 @@ private fun CharacterDetailsContent(
 
     if (showVaSheet) {
         CharacterVoiceActorsSheet(
-            voiceActors = uiState.selectedMediaVoiceActors.orEmpty(),
+            voiceActors = uiState.selectedMediaVoiceActors ?: persistentListOf(),
             scope = scope,
             navigateToStaffDetails = navActionManager::toStaffDetails,
             onDismiss = {

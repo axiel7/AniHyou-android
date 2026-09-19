@@ -82,6 +82,7 @@ import com.axiel7.anihyou.feature.editmedia.composables.EditMediaDatePicker
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaPriorityRow
 import com.axiel7.anihyou.feature.editmedia.composables.EditMediaProgressRow
 import com.axiel7.anihyou.feature.editmedia.composables.ScoreView
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -163,7 +164,7 @@ private fun EditMediaSheetContent(
 
     if (uiState.openCustomListsDialog) {
         CustomListsDialog(
-            lists = uiState.customLists.orEmpty(),
+            lists = uiState.customLists ?: persistentMapOf(),
             isLoading = uiState.isLoading,
             onConfirm = {
                 event?.updateCustomLists(it)

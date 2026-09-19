@@ -8,6 +8,8 @@ import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.network.ActivityFeedQuery
 import com.axiel7.anihyou.core.network.FollowingsQuery
 import com.axiel7.anihyou.core.base.state.PagedUiState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Stable
 data class ActivityFeedUiState(
@@ -15,8 +17,8 @@ data class ActivityFeedUiState(
     val activities: SnapshotStateList<ActivityFeedQuery.Activity> = mutableStateListOf(),
     val isFollowing: Boolean = true,
     val type: ActivityTypeGrouped = ActivityTypeGrouped.ALL,
-    val followingFilters: List<Int> = emptyList(),
-    val followingUsers: List<FollowingsQuery.Following>? = null,
+    val followingFilters: ImmutableList<Int> = persistentListOf(),
+    val followingUsers: ImmutableList<FollowingsQuery.Following>? = null,
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = false,

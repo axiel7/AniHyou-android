@@ -29,6 +29,8 @@ dependencies {
     implementation(project(":core:base"))
     implementation(project(":core:resources"))
 
+    implementation(libs.collections.immutable)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel)

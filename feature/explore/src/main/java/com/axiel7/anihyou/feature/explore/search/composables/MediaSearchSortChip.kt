@@ -22,6 +22,7 @@ import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun MediaSearchSortChip(
@@ -36,7 +37,7 @@ fun MediaSearchSortChip(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AssistChipWithMenu(
-            values = MediaSortSearch.entries,
+            values = MediaSortSearch.entries.toImmutableList(),
             selectedValue = mediaSortSearch,
             onValueSelected = {
                 onSortChanged((if (isDescending) it.desc else it.asc))

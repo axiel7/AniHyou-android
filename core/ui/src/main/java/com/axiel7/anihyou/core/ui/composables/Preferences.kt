@@ -52,6 +52,10 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.roundToInt
 
 val topShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -247,7 +251,7 @@ fun SwitchPreference(
 @Composable
 fun <T> ListPreference(
     title: String,
-    values: List<T>,
+    values: ImmutableList<T>,
     modifier: Modifier = Modifier,
     labelForValue: @Composable (T) -> String = { it.toString() },
     preferenceValue: T?,
@@ -347,7 +351,7 @@ fun <T> ListPreference(
 @Composable
 fun <T> ListPreference(
     title: String,
-    entriesValues: Map<T, Int>,
+    entriesValues: ImmutableMap<T, Int>,
     modifier: Modifier = Modifier,
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
@@ -357,7 +361,7 @@ fun <T> ListPreference(
 ) {
     ListPreference(
         title = title,
-        values = entriesValues.entries.map { it.key },
+        values = entriesValues.entries.map { it.key }.toImmutableList(),
         labelForValue = { value ->
             entriesValues[value]?.let { stringResource(it) }.orEmpty()
         },
@@ -518,7 +522,7 @@ private fun PreferencesPreviews() {
 
             ListPreference(
                 title = "List Preference",
-                entriesValues = mapOf("Profile" to R.string.profile),
+                entriesValues = persistentMapOf("Profile" to R.string.profile),
                 preferenceValue = null,
                 icon = R.drawable.settings_24,
                 onValueChange = {},

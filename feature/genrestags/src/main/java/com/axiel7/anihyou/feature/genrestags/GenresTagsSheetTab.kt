@@ -2,12 +2,13 @@ package com.axiel7.anihyou.feature.genrestags
 
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.TabRowItem
+import kotlinx.collections.immutable.persistentListOf
 
 enum class GenresTagsSheetTab {
     GENRES, TAGS;
 
     companion object {
-        val tabRows = arrayOf(
+        val tabRows = persistentListOf(
             TabRowItem(value = GENRES, title = R.string.genres),
             TabRowItem(value = TAGS, title = R.string.tags),
         )

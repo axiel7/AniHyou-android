@@ -48,6 +48,7 @@ import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,7 +158,7 @@ fun YearMenu(
     )
 }
 
-private val seasonSortEntries = listOf(
+private val seasonSortEntries = persistentListOf(
     MediaSort.POPULARITY_DESC,
     MediaSort.SCORE_DESC,
     MediaSort.START_DATE_DESC,

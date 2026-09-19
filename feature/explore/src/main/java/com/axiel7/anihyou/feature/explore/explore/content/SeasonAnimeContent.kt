@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,7 +24,7 @@ import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 @Composable
 fun SeasonAnimeContent(
     animeSeason: AnimeSeason,
-    seasonAnime: List<ExploreMedia>,
+    seasonAnime: SnapshotStateList<ExploreMedia>,
     isLoading: Boolean,
     isNextSeason: Boolean,
     onLongClickItem: (ExploreMedia) -> Unit,

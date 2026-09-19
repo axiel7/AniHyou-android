@@ -21,10 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
+import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun CustomListsDialog(
-    lists: Map<String, Boolean>,
+    lists: ImmutableMap<String, Boolean>,
     isLoading: Boolean,
     onConfirm: (List<String>) -> Unit,
     onDismiss: () -> Unit,
