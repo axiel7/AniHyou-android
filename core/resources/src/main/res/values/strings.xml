@@ -698,6 +698,4 @@
     <string name="widget_config_title">Widget configuration</string>
     <string name="style_colored">Colored</string>
     <string name="style_monochrome">Monochrome</string>
-    <string name="prioritize_search_matches">Sort searches by relevance</string>
-    <string name="prioritize_search_matches_description">Ignore list sorting (like Score or Progress) and show the best matches at the top when searching. Manually changing the sort will temporarily override this.</string>
 </resources>
