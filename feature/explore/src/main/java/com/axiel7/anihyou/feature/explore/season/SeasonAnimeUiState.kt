@@ -15,7 +15,7 @@ data class SeasonAnimeUiState(
     val sort: MediaSort = MediaSort.POPULARITY_DESC,
     val animeSeasonal: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val selectedItem: ExploreMedia? = null,
-    val listStyle: ListStyle = ListStyle.GRID,
+    val listStyle: ListStyle? = null,
     val displayAdult: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,

@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -64,7 +63,6 @@ private fun UserStatsContent(
     modifier: Modifier = Modifier,
     nestedScrollConnection: NestedScrollConnection,
 ) {
-    val navActionManager = LocalNavActionManager.current
     val pullRefreshState = rememberPullToRefreshState()
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })

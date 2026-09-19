@@ -52,7 +52,7 @@ data class ChildComment(
                     (it as? LinkedHashMap<String, Any?>)?.toChildComment()
                 }?.toImmutableList()
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
@@ -62,14 +62,14 @@ data class ChildComment(
                 name = this["name"] as String,
                 avatar = (this["avatar"] as LinkedHashMap<String, Any?>).toAvatar()
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
         private fun LinkedHashMap<String, Any?>.toAvatar(): User.Avatar? = try {
             val medium = this["medium"] as? String
             User.Avatar(medium)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
