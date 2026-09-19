@@ -56,3 +56,42 @@ fun titleComparator(desc: Boolean): Comparator<CommonMediaListEntry> =
     } else {
         compareByDescending { it.media?.basicMediaDetails?.title?.userPreferred }
     }
+
+fun MediaListSort.comparator() = when {
+    isTitle() -> titleComparator(desc = isDescending())
+    this == MediaListSort.SCORE -> compareBy { it.basicMediaListEntry.score }
+    this == MediaListSort.SCORE_DESC -> compareByDescending { it.basicMediaListEntry.score }
+    this == MediaListSort.PROGRESS -> compareBy { it.basicMediaListEntry.progress }
+    this == MediaListSort.PROGRESS_DESC -> compareByDescending { it.basicMediaListEntry.progress }
+    this == MediaListSort.UPDATED_TIME -> compareBy { it.basicMediaListEntry.updatedAt }
+    this == MediaListSort.UPDATED_TIME_DESC -> compareByDescending { it.basicMediaListEntry.updatedAt }
+    this == MediaListSort.ADDED_TIME -> compareBy { it.basicMediaListEntry.createdAt }
+    this == MediaListSort.ADDED_TIME_DESC -> compareByDescending { it.basicMediaListEntry.createdAt }
+    this == MediaListSort.STARTED_ON -> compareBy {
+        val date = it.basicMediaListEntry.startedAt?.fuzzyDate
+        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+    }
+
+    this == MediaListSort.STARTED_ON_DESC -> compareByDescending {
+        val date = it.basicMediaListEntry.startedAt?.fuzzyDate
+        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+    }
+
+    this == MediaListSort.FINISHED_ON -> compareBy {
+        val date = it.basicMediaListEntry.completedAt?.fuzzyDate
+        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+    }
+
+    this == MediaListSort.FINISHED_ON_DESC -> compareByDescending {
+        val date = it.basicMediaListEntry.completedAt?.fuzzyDate
+        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+    }
+
+    this == MediaListSort.REPEAT -> compareBy { it.basicMediaListEntry.repeat }
+    this == MediaListSort.REPEAT_DESC -> compareByDescending { it.basicMediaListEntry.repeat }
+    this == MediaListSort.PRIORITY -> compareBy { it.basicMediaListEntry.priority }
+    this == MediaListSort.PRIORITY_DESC -> compareByDescending { it.basicMediaListEntry.priority }
+    this == MediaListSort.MEDIA_ID -> compareBy { it.mediaId }
+    this == MediaListSort.MEDIA_ID_DESC -> compareByDescending { it.mediaId }
+    else -> compareBy { it.mediaId }
+}
