@@ -2,6 +2,7 @@ package com.axiel7.anihyou.feature.usermedialist.search
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,7 +56,7 @@ import com.axiel7.anihyou.feature.usermedialist.UserMediaListEvent
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListUiState
 import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun TopSearchBar(
     uiState: UserMediaListUiState,
@@ -181,30 +183,61 @@ internal fun TopSearchBar(
             }
         },
         actions = {
+            val isFuzzyActive = uiState.query.isNotBlank() &&
+                    uiState.isFuzzySearchEnabled &&
+                    !uiState.isSearchSortModified
+
             IconButtonWithMenu(
                 icon = R.drawable.sort_24,
                 contentDescription = stringResource(R.string.sort)
             ) { onDismiss ->
-                UserMediaListSort.entries.fastForEachIndexed { index, item ->
+                if (uiState.query.isNotBlank() && uiState.isFuzzySearchEnabled) {
                     SelectableDropdownMenuItem(
-                        selected = uiState.sort == item.asc || uiState.sort == item.desc,
+                        selected = isFuzzyActive,
                         onClick = {
-                            event?.setSort(if (uiState.sort == item.desc) item.asc else item.desc)
+                            event?.resetPrioritizeSearchMatches()
+                            onDismiss()
+                        },
+                        leadingIcon = {},
+                        text = { Text(text = "Relevance") },
+                        modifier = Modifier.padding(end = 8.dp),
+                        shapes = MenuDefaults.itemShape(0, 1),
+                    )
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    )
+                }
+
+                UserMediaListSort.entries.fastForEachIndexed { index, item ->
+                    val isMatchAsc = uiState.sort == item.asc
+                    val isMatchDesc = uiState.sort == item.desc
+                    val isBackgroundMatch = isMatchAsc || isMatchDesc
+                    val isActivelyUsed = isBackgroundMatch && !isFuzzyActive
+
+                    SelectableDropdownMenuItem(
+                        selected = isActivelyUsed,
+                        onClick = {
+                            val newSort = if (isBackgroundMatch && !isActivelyUsed) {
+                                uiState.sort
+                            } else {
+                                if (uiState.sort == item.desc) item.asc else item.desc
+                            }
+
+                            event?.setSort(newSort)
                             onDismiss()
                         },
                         text = { Text(text = item.localized()) },
                         shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
                         modifier = Modifier.padding(end = 8.dp),
                         leadingIcon = {
-                            if (uiState.sort == item.asc) {
+                            if (isBackgroundMatch) {
+                                val iconRes = if (isMatchAsc) R.drawable.arrow_upward_24 else R.drawable.arrow_downward_24
+                                val iconDesc = if (isMatchAsc) R.string.ascending else R.string.descending
+
                                 Icon(
-                                    painter = painterResource(R.drawable.arrow_upward_24),
-                                    contentDescription = stringResource(R.string.ascending),
-                                )
-                            } else if (uiState.sort == item.desc) {
-                                Icon(
-                                    painter = painterResource(R.drawable.arrow_downward_24),
-                                    contentDescription = stringResource(R.string.descending),
+                                    painter = painterResource(iconRes),
+                                    contentDescription = stringResource(iconDesc),
                                 )
                             }
                         }

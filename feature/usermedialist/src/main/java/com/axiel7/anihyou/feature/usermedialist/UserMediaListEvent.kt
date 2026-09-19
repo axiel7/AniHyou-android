@@ -42,6 +42,8 @@ interface UserMediaListEvent : UiEvent {
 
     fun toggleScoreDialog(open: Boolean)
 
+    fun resetPrioritizeSearchMatches()
+
     fun getRandomEntry()
 
     fun onRandomEntryOpened()

@@ -13,17 +13,15 @@ import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
-import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.ListType
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
 import com.axiel7.anihyou.core.model.media.asMediaListStatus
+import com.axiel7.anihyou.core.model.media.comparator
 import com.axiel7.anihyou.core.model.media.duration
-import com.axiel7.anihyou.core.model.media.isDescending
 import com.axiel7.anihyou.core.model.media.isTitle
 import com.axiel7.anihyou.core.model.media.plainName
-import com.axiel7.anihyou.core.model.media.titleComparator
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaFormat
@@ -44,12 +42,14 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.InjectedParam
@@ -90,24 +90,12 @@ class UserMediaListViewModel(
     override fun onChangeList(listName: String?) {
         viewModelScope.launch {
             mutableUiState.update {
-                val newEntries = if (listName != null) {
-                    it.lists[listName].orEmpty()
-                } else {
-                    it.lists.values.flatten()
-                }
-
-                it.entries.clear()
-                it.entries.addAll(newEntries)
-
-                it.mangaEntries.clear()
-                it.novelEntries.clear()
-                it.applyPartition()
-
                 it.copy(
                     selectedListName = listName,
                     status = listName?.asMediaListStatus()
                 )
             }
+            updateSearchAndFilters(uiState.value)
 
             if (mediaType == MediaType.ANIME) {
                 listPreferencesRepository.setAnimeListSelected(listName)
@@ -139,6 +127,15 @@ class UserMediaListViewModel(
                     else -> value
                 }
             }
+
+            mutableUiState.update {
+                it.copy(
+                    sort = sort,
+                    isSearchSortModified = true
+                )
+            }
+            applySorting(uiState.value)
+
             if (mediaType == MediaType.ANIME) {
                 listPreferencesRepository.setAnimeListSort(sort)
             } else if (mediaType == MediaType.MANGA) {
@@ -294,7 +291,13 @@ class UserMediaListViewModel(
     }
 
     override fun setQuery(query: String) {
-        mutableUiState.update { it.copy(query = query) }
+        mutableUiState.update {
+            it.copy(
+                query = query,
+                isSearchSortModified = if (query.isBlank()) false else it.isSearchSortModified,
+                clearedFilters = it.query.isNotBlank() && query.isBlank()
+            )
+        }
     }
 
     override fun setMediaFormat(value: MediaFormatLocalizable?) {
@@ -405,10 +408,138 @@ class UserMediaListViewModel(
         }
     }
 
+    override fun resetPrioritizeSearchMatches() {
+        viewModelScope.launch {
+            mutableUiState.update {
+                it.copy(isSearchSortModified = false)
+            }
+            applySorting(uiState.value)
+        }
+    }
+
+    private suspend fun updateSearchAndFilters(uiState: UserMediaListUiState) {
+        val newCache = withContext(Dispatchers.Default) {
+            val queryText = uiState.query.trim().lowercase()
+            val isQueryNotBlank = queryText.isNotBlank()
+
+            val baseEntries = if (uiState.selectedListName != null) {
+                uiState.lists[uiState.selectedListName].orEmpty()
+            } else {
+                uiState.lists.values.flatten().distinctBy { it.mediaId }
+            }
+
+            if (uiState.filterCount > 0 || isQueryNotBlank) {
+                if (uiState.isFuzzySearchEnabled) {
+                    val queryTokens = if (isQueryNotBlank) {
+                        queryText.split(whiteSpaceRegex).filter { it.isNotEmpty() }
+                    } else emptyList()
+
+                    val scoredEntries = baseEntries.mapNotNull { entry ->
+                        val matchesFilters = uiState.formatMatch(entry)
+                                && uiState.statusMatch(entry)
+                                && uiState.countryMatch(entry)
+                                && uiState.yearMatch(entry)
+                                && uiState.genreMatch(entry)
+                                && uiState.tagMatch(entry)
+
+                        if (!matchesFilters) return@mapNotNull null
+
+                        if (isQueryNotBlank) {
+                            val title = entry.media?.title
+                            val romajiScore = title?.romaji.fuzzyScore(queryText, queryTokens)
+                            val englishScore = title?.english.fuzzyScore(queryText, queryTokens)
+                            val nativeScore = title?.native.fuzzyScore(queryText, queryTokens)
+
+                            val synonymScore = entry.media?.synonyms?.maxOfOrNull { syn ->
+                                syn.fuzzyScore(queryText, queryTokens)
+                            } ?: 0
+
+                            val maxScore = maxOf(romajiScore, englishScore, nativeScore, synonymScore)
+
+                            (entry to maxScore).takeIf { maxScore > 0 }
+                        } else {
+                            entry to 0
+                        }
+                    }
+
+                    if (isQueryNotBlank) {
+                        scoredEntries.sortedByDescending { it.second }
+                    } else {
+                        scoredEntries
+                    }
+                } else {
+                    baseEntries.filter { entry ->
+                        val matchesFilters = uiState.formatMatch(entry)
+                                && uiState.statusMatch(entry)
+                                && uiState.countryMatch(entry)
+                                && uiState.yearMatch(entry)
+                                && uiState.genreMatch(entry)
+                                && uiState.tagMatch(entry)
+
+                        if (!matchesFilters) return@filter false
+
+                        if (isQueryNotBlank) {
+                            val title = entry.media?.title
+                            val romajiMatch = title?.romaji?.contains(queryText, ignoreCase = true) == true
+                            val englishMatch = title?.english?.contains(queryText, ignoreCase = true) == true
+                            val nativeMatch = title?.native?.contains(queryText, ignoreCase = true) == true
+                            val synonymMatch = entry.media?.synonyms?.any { syn ->
+                                syn?.contains(queryText, ignoreCase = true) == true
+                            } == true
+
+                            romajiMatch || englishMatch || nativeMatch || synonymMatch
+                        } else {
+                            true
+                        }
+                    }.map { it to 0 }
+                }
+            } else {
+                baseEntries.map { it to 0 }
+            }
+        }
+
+        mutableUiState.updateAndGet {
+            it.copy(filteredEntriesCache = newCache)
+        }.also {
+            applySorting(it)
+        }
+    }
+
+    private suspend fun applySorting(uiState: UserMediaListUiState) {
+        val finalSortedList = withContext(Dispatchers.Default) {
+            val matchedEntries = uiState.filteredEntriesCache
+            val isQueryNotBlank = uiState.query.trim().isNotBlank()
+            val sortComparator = uiState.sort.comparator()
+
+            if (isQueryNotBlank && uiState.isFuzzySearchEnabled && !uiState.isSearchSortModified) {
+                matchedEntries.sortedWith(
+                    compareByDescending<Pair<CommonMediaListEntry, Int>> { it.second }
+                        .then(Comparator { p1, p2 -> sortComparator.compare(p1.first, p2.first) })
+                ).map { it.first }
+            } else {
+                matchedEntries.map { it.first }.sortedWith(sortComparator)
+            }
+        }
+
+        with(uiState) {
+            entries.clear()
+            entries.addAll(finalSortedList)
+
+            mangaEntries.clear()
+            novelEntries.clear()
+            applyPartition()
+        }
+    }
+
     init {
 
         //search
         mutableUiState
+            .filter {
+                it.query.isNotEmpty()
+                        || it.filterCount > 0
+                        || it.clearedFilters
+            }
             .distinctUntilChanged { old, new ->
                 old.query == new.query
                         && old.mediaFormat == new.mediaFormat
@@ -428,107 +559,7 @@ class UserMediaListViewModel(
                 }
             }
             .onEach { uiState ->
-                val filteredList = withContext(Dispatchers.Default) {
-
-                    val queryText = uiState.query.trim().lowercase()
-                    val isQueryNotBlank = queryText.isNotBlank()
-
-                    val baseEntries = if (uiState.selectedListName != null) {
-                        uiState.lists[uiState.selectedListName].orEmpty()
-                    } else {
-                        uiState.lists.values.flatten().distinctBy { it.mediaId }
-                    }
-
-                    if (uiState.filterCount > 0 || isQueryNotBlank) {
-                        if (uiState.isFuzzySearchEnabled) {
-                            val queryTokens = if (isQueryNotBlank) {
-                                queryText.split(whiteSpaceRegex).filter { it.isNotEmpty() }
-                            } else emptyList()
-
-                            val scoredEntries = baseEntries.mapNotNull { entry ->
-
-                                val matchesFilters = uiState.formatMatch(entry)
-                                        && uiState.statusMatch(entry)
-                                        && uiState.countryMatch(entry)
-                                        && uiState.yearMatch(entry)
-                                        && uiState.genreMatch(entry)
-                                        && uiState.tagMatch(entry)
-
-                                if (!matchesFilters) return@mapNotNull null
-
-                                if (isQueryNotBlank) {
-                                    val title = entry.media?.title
-                                    val romajiScore =
-                                        title?.romaji.fuzzyScore(queryText, queryTokens)
-                                    val englishScore =
-                                        title?.english.fuzzyScore(queryText, queryTokens)
-                                    val nativeScore =
-                                        title?.native.fuzzyScore(queryText, queryTokens)
-
-                                    val synonymScore = entry.media?.synonyms?.maxOfOrNull { syn ->
-                                        syn.fuzzyScore(queryText, queryTokens)
-                                    } ?: 0
-
-                                    val maxScore =
-                                        maxOf(romajiScore, englishScore, nativeScore, synonymScore)
-
-                                    (entry to maxScore).takeIf { maxScore > 0 }
-                                } else {
-                                    entry to 0
-                                }
-                            }
-                            if (isQueryNotBlank) {
-                                scoredEntries.sortedByDescending { it.second }.map { it.first }
-                            } else {
-                                scoredEntries.map { it.first }
-                            }
-                        } else {
-                            baseEntries.filter { entry ->
-                                val matchesFilters = uiState.formatMatch(entry)
-                                        && uiState.statusMatch(entry)
-                                        && uiState.countryMatch(entry)
-                                        && uiState.yearMatch(entry)
-                                        && uiState.genreMatch(entry)
-                                        && uiState.tagMatch(entry)
-
-                                if (!matchesFilters) return@filter false
-
-                                if (isQueryNotBlank) {
-                                    val title = entry.media?.title
-                                    val romajiMatch = title?.romaji?.contains(
-                                        queryText,
-                                        ignoreCase = true
-                                    ) == true
-                                    val englishMatch = title?.english?.contains(
-                                        queryText,
-                                        ignoreCase = true
-                                    ) == true
-                                    val nativeMatch = title?.native?.contains(
-                                        queryText,
-                                        ignoreCase = true
-                                    ) == true
-                                    val synonymMatch = entry.media?.synonyms?.any { syn ->
-                                        syn?.contains(queryText, ignoreCase = true) == true
-                                    } == true
-
-                                    romajiMatch || englishMatch || nativeMatch || synonymMatch
-                                } else {
-                                    true
-                                }
-                            }
-                        }
-                    } else {
-                        baseEntries
-                    }
-                }
-                with(uiState) {
-                    entries.clear()
-                    entries.addAll(filteredList)
-
-                    mangaEntries.clear()
-                    novelEntries.clear()
-                    applyPartition()
-                }
+                updateSearchAndFilters(uiState)
             }
             .launchIn(viewModelScope)
 
@@ -616,7 +647,6 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
-
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()
@@ -634,8 +664,9 @@ class UserMediaListViewModel(
         }
             .distinctUntilChanged()
             .onEach { sort ->
-                mutableUiState.update {
-                    it.copy(sort = sort, isLoading = true)
+                if (uiState.value.sort != sort) {
+                    mutableUiState.update { it.copy(sort = sort) }
+                    applySorting(uiState.value)
                 }
             }
             .launchIn(viewModelScope)
@@ -653,9 +684,8 @@ class UserMediaListViewModel(
             .launchIn(viewModelScope)
 
         mutableUiState
-            .distinctUntilChanged { old, new ->
-                old.sort == new.sort
-                        && !new.fetchFromNetwork
+            .distinctUntilChanged { _, new ->
+                !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
                 val listUserId = uiState.userId ?: myUserId.first()
@@ -674,42 +704,40 @@ class UserMediaListViewModel(
                 )
             }
             .onEach { result ->
-                mutableUiState.update { uiState ->
-                    if (result is PagedResult.Success) {
-                        if (result.currentPage == 1 || result.currentPage == null) {
-                            uiState.lists.clear()
-                            uiState.entries.clear()
-                            uiState.mangaEntries.clear()
-                            uiState.novelEntries.clear()
-                        }
-                        val newEntries = mutableListOf<CommonMediaListEntry>()
-                        result.list.forEach { list ->
+                if (result is PagedResult.Success) {
+                    val processedLists = withContext(Dispatchers.IO) {
+                        result.list.mapNotNull { list ->
                             list?.name?.let { name ->
-                                var entries = list.entries?.mapNotNull { it?.commonMediaListEntry }
-                                    .orEmpty()
-                                if (uiState.sort.isTitle()) {
-                                    withContext(Dispatchers.IO) {
-                                        entries = entries.sortedWith(
-                                            titleComparator(desc = uiState.sort.isDescending())
-                                        )
-                                    }
-                                }
-                                uiState.lists[name] = uiState.lists[name].orEmpty() + entries
-                                if (uiState.selectedListName == null && list.isCustomList == false) {
-                                    newEntries.addAll(entries)
-                                } else if (name == uiState.selectedListName) {
-                                    newEntries.addAll(entries)
-                                }
+                                var entries =
+                                    list.entries?.mapNotNull { it?.commonMediaListEntry }.orEmpty()
+                                Triple(name, entries, list.isCustomList == false)
                             }
                         }
-                        uiState.entries.addAll(newEntries)
-                        uiState.applyPartition()
-                        val loadMore = newEntries.isEmpty() && result.hasNextPage
+                    }
+
+                    mutableUiState.update { uiState ->
+                        if (result.currentPage == 1 || result.currentPage == null) {
+                            uiState.lists.clear()
+                        }
+
+                        var hasNewEntries = false
+                        processedLists.forEach { (name, entries, isStandardList) ->
+                            uiState.lists[name] = uiState.lists[name].orEmpty() + entries
+                            if ((uiState.selectedListName == null && isStandardList) || name == uiState.selectedListName) {
+                                if (entries.isNotEmpty()) hasNewEntries = true
+                            }
+                        }
+
+                        updateSearchAndFilters(uiState)
+
+                        val loadMore = !hasNewEntries && result.hasNextPage
                         uiState.copy(
                             fetchFromNetwork = false,
                             isLoading = loadMore,
                         )
-                    } else {
+                    }
+                } else {
+                    mutableUiState.update { uiState ->
                         if (result is PagedResult.Error) {
                             uiState.setError(result.message)
                         }
