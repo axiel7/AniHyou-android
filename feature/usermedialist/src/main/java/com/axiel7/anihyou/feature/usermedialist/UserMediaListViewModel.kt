@@ -526,12 +526,6 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
-        defaultPreferencesRepository.prioritizeSearchMatches
-            .onEach { value ->
-                mutableUiState.update { it.copy(prioritizeSearchMatches = value) }
-            }
-            .launchIn(viewModelScope)
-
         // grid items per row
         listPreferencesRepository.gridItemsPerRow
             .filterNotNull()
@@ -681,9 +675,9 @@ class UserMediaListViewModel(
                     }
 
                     if (isQueryNotBlank) {
-                        scoredEntries.sortedByDescending { it.second }.map { it.first }
+                        scoredEntries.sortedByDescending { it.second }
                     } else {
-                        scoredEntries.map { it.first }
+                        scoredEntries
                     }
                 } else {
                     baseEntries.filter { entry ->
@@ -709,10 +703,10 @@ class UserMediaListViewModel(
                         } else {
                             true
                         }
-                    }
+                    }.map { it to 0 }
                 }
             } else {
-                baseEntries
+                baseEntries.map { it to 0 }
             }
         }
 
@@ -723,88 +717,59 @@ class UserMediaListViewModel(
         applySorting(mutableUiState.value)
     }
 
-    private suspend fun applySorting(uiState: UserMediaListUiState ) {
+    private fun getSortComparator(sort: MediaListSort): Comparator<CommonMediaListEntry> {
+        return when {
+            sort.isTitle() -> titleComparator(desc = sort.isDescending())
+            sort == MediaListSort.SCORE -> compareBy { it.basicMediaListEntry.score }
+            sort == MediaListSort.SCORE_DESC -> compareByDescending { it.basicMediaListEntry.score }
+            sort == MediaListSort.PROGRESS -> compareBy { it.basicMediaListEntry.progress }
+            sort == MediaListSort.PROGRESS_DESC -> compareByDescending { it.basicMediaListEntry.progress }
+            sort == MediaListSort.UPDATED_TIME -> compareBy { it.basicMediaListEntry.updatedAt }
+            sort == MediaListSort.UPDATED_TIME_DESC -> compareByDescending { it.basicMediaListEntry.updatedAt }
+            sort == MediaListSort.ADDED_TIME -> compareBy { it.basicMediaListEntry.createdAt }
+            sort == MediaListSort.ADDED_TIME_DESC -> compareByDescending { it.basicMediaListEntry.createdAt }
+            sort == MediaListSort.STARTED_ON -> compareBy {
+                val date = it.basicMediaListEntry.startedAt?.fuzzyDate
+                (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+            }
+            sort == MediaListSort.STARTED_ON_DESC -> compareByDescending {
+                val date = it.basicMediaListEntry.startedAt?.fuzzyDate
+                (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+            }
+            sort == MediaListSort.FINISHED_ON -> compareBy {
+                val date = it.basicMediaListEntry.completedAt?.fuzzyDate
+                (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+            }
+            sort == MediaListSort.FINISHED_ON_DESC -> compareByDescending {
+                val date = it.basicMediaListEntry.completedAt?.fuzzyDate
+                (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
+            }
+            sort == MediaListSort.REPEAT -> compareBy { it.basicMediaListEntry.repeat }
+            sort == MediaListSort.REPEAT_DESC -> compareByDescending { it.basicMediaListEntry.repeat }
+            sort == MediaListSort.PRIORITY -> compareBy { it.basicMediaListEntry.priority }
+            sort == MediaListSort.PRIORITY_DESC -> compareByDescending { it.basicMediaListEntry.priority }
+            sort == MediaListSort.MEDIA_ID -> compareBy { it.mediaId }
+            sort == MediaListSort.MEDIA_ID_DESC -> compareByDescending { it.mediaId }
+            else -> compareBy { it.mediaId }
+        }
+    }
+
+    private suspend fun applySorting(uiState: UserMediaListUiState) {
         val finalSortedList = withContext(Dispatchers.Default) {
             val matchedEntries = uiState.filteredEntriesCache
             val isQueryNotBlank = uiState.query.trim().isNotBlank()
+            val sortComparator = getSortComparator(uiState.sort)
 
-            when {
-                isQueryNotBlank && uiState.isFuzzySearchEnabled && uiState.prioritizeSearchMatches && !uiState.isSearchSortModified -> {
-                    matchedEntries
-                }
-
-                uiState.sort.isTitle() -> {
-                    matchedEntries.sortedWith(titleComparator(desc = uiState.sort.isDescending()))
-                }
-                uiState.sort == MediaListSort.SCORE -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.score }
-                }
-                uiState.sort == MediaListSort.SCORE_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.score }
-                }
-                uiState.sort == MediaListSort.PROGRESS -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.progress }
-                }
-                uiState.sort == MediaListSort.PROGRESS_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.progress }
-                }
-                uiState.sort == MediaListSort.UPDATED_TIME -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.updatedAt }
-                }
-                uiState.sort == MediaListSort.UPDATED_TIME_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.updatedAt }
-                }
-                uiState.sort == MediaListSort.ADDED_TIME -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.createdAt }
-                }
-                uiState.sort == MediaListSort.ADDED_TIME_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.createdAt }
-                }
-                uiState.sort == MediaListSort.STARTED_ON -> {
-                    matchedEntries.sortedBy {
-                        val date = it.basicMediaListEntry.startedAt?.fuzzyDate
-                        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
-                    }
-                }
-                uiState.sort == MediaListSort.STARTED_ON_DESC -> {
-                    matchedEntries.sortedByDescending {
-                        val date = it.basicMediaListEntry.startedAt?.fuzzyDate
-                        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
-                    }
-                }
-                uiState.sort == MediaListSort.FINISHED_ON -> {
-                    matchedEntries.sortedBy {
-                        val date = it.basicMediaListEntry.completedAt?.fuzzyDate
-                        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
-                    }
-                }
-                uiState.sort == MediaListSort.FINISHED_ON_DESC -> {
-                    matchedEntries.sortedByDescending {
-                        val date = it.basicMediaListEntry.completedAt?.fuzzyDate
-                        (date?.year ?: 0) * 10000 + (date?.month ?: 0) * 100 + (date?.day ?: 0)
-                    }
-                }
-                uiState.sort == MediaListSort.REPEAT -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.repeat }
-                }
-                uiState.sort == MediaListSort.REPEAT_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.repeat }
-                }
-                uiState.sort == MediaListSort.PRIORITY -> {
-                    matchedEntries.sortedBy { it.basicMediaListEntry.priority }
-                }
-                uiState.sort == MediaListSort.PRIORITY_DESC -> {
-                    matchedEntries.sortedByDescending { it.basicMediaListEntry.priority }
-                }
-                uiState.sort == MediaListSort.MEDIA_ID -> {
-                    matchedEntries.sortedBy { it.mediaId }
-                }
-                uiState.sort == MediaListSort.MEDIA_ID_DESC -> {
-                    matchedEntries.sortedByDescending { it.mediaId }
-                }
-                else -> matchedEntries
+            if (isQueryNotBlank && uiState.isFuzzySearchEnabled && !uiState.isSearchSortModified) {
+                matchedEntries.sortedWith(
+                    compareByDescending<Pair<CommonMediaListEntry, Int>> { it.second }
+                        .then(Comparator { p1, p2 -> sortComparator.compare(p1.first, p2.first) })
+                ).map { it.first }
+            } else {
+                matchedEntries.map { it.first }.sortedWith(sortComparator)
             }
         }
+
 
         with(uiState) {
             entries.clear()

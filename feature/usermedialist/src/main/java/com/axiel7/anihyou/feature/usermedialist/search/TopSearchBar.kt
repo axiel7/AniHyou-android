@@ -185,7 +185,6 @@ internal fun TopSearchBar(
         actions = {
             val isFuzzyActive = uiState.query.isNotBlank() &&
                     uiState.isFuzzySearchEnabled &&
-                    uiState.prioritizeSearchMatches &&
                     !uiState.isSearchSortModified
 
 
@@ -197,7 +196,7 @@ internal fun TopSearchBar(
             ) { onDismiss ->
 
 
-                if (uiState.query.isNotBlank() && uiState.isFuzzySearchEnabled && uiState.prioritizeSearchMatches) {
+                if (uiState.query.isNotBlank() && uiState.isFuzzySearchEnabled) {
                     SelectableDropdownMenuItem(
                         selected = isFuzzyActive,
                         onClick = {
