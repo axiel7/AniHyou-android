@@ -127,6 +127,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun setPrioritizeSearchMatches(value: Boolean) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setPrioritizeSearchMatches(value)
+        }
+    }
+
     override fun setSeparateNovelsAndManga(value: Boolean) {
         viewModelScope.launch {
             defaultPreferencesRepository.setSeparateNovelsAndManga(value)
@@ -414,6 +420,12 @@ class SettingsViewModel(
             .filterNotNull()
             .onEach { value ->
                 mutableUiState.update { it.copy(useFuzzySearch = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.prioritizeSearchMatches
+            .onEach { value ->
+                mutableUiState.update { it.copy(prioritizeSearchMatches = value) }
             }
             .launchIn(viewModelScope)
 

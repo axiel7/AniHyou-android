@@ -1,7 +1,9 @@
 package com.axiel7.anihyou.feature.usermedialist.search
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -54,7 +56,7 @@ import com.axiel7.anihyou.feature.usermedialist.UserMediaListEvent
 import com.axiel7.anihyou.feature.usermedialist.UserMediaListUiState
 import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun TopSearchBar(
     uiState: UserMediaListUiState,
@@ -181,30 +183,87 @@ internal fun TopSearchBar(
             }
         },
         actions = {
+            val isFuzzyActive = uiState.query.isNotBlank() &&
+                    uiState.isFuzzySearchEnabled &&
+                    uiState.prioritizeSearchMatches &&
+                    !uiState.isSearchSortModified
+
+
+
+
             IconButtonWithMenu(
                 icon = R.drawable.sort_24,
                 contentDescription = stringResource(R.string.sort)
             ) { onDismiss ->
-                UserMediaListSort.entries.fastForEachIndexed { index, item ->
+
+
+                if (uiState.query.isNotBlank() && uiState.isFuzzySearchEnabled && uiState.prioritizeSearchMatches) {
                     SelectableDropdownMenuItem(
-                        selected = uiState.sort == item.asc || uiState.sort == item.desc,
+                        selected = isFuzzyActive,
                         onClick = {
-                            event?.setSort(if (uiState.sort == item.desc) item.asc else item.desc)
+                            event?.resetPrioritizeSearchMatches()
+                            onDismiss()
+                        },
+                        text = { Text(text = "Relevance") },
+                        modifier = Modifier.padding(end = 8.dp),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.search_insights_24),
+                                contentDescription = null,
+                                tint = if (isFuzzyActive) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                }
+                            )
+                        },
+                        shapes = MenuDefaults.itemShape(0, UserMediaListSort.entries.size),
+                        )
+
+                    androidx.compose.material3.HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+                    )
+                }
+
+                UserMediaListSort.entries.fastForEachIndexed { index, item ->
+
+                    val isMatchAsc = uiState.sort == item.asc
+                    val isMatchDesc = uiState.sort == item.desc
+                    val isBackgroundMatch = isMatchAsc || isMatchDesc
+                    val isActivelyUsed = isBackgroundMatch && !isFuzzyActive
+                    Log.d("Sort", "Item desc: ${item.desc} | Item acs: ${item.asc} | isBackgroundMatch: $isBackgroundMatch | isActivelyUsed: $isActivelyUsed")
+                    Log.d("Sort", "uiState.sort: ${uiState.sort}")
+
+                    SelectableDropdownMenuItem(
+                        selected = isActivelyUsed,
+                        onClick = {
+
+                            val newSort = if (isBackgroundMatch && !isActivelyUsed) {
+                                uiState.sort
+                            } else {
+                                if (uiState.sort == item.desc) item.asc else item.desc
+                            }
+
+                            event?.setSort(newSort)
                             onDismiss()
                         },
                         text = { Text(text = item.localized()) },
                         shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
                         modifier = Modifier.padding(end = 8.dp),
                         leadingIcon = {
-                            if (uiState.sort == item.asc) {
+                            if (isBackgroundMatch) {
+                                val iconRes = if (isMatchAsc) R.drawable.arrow_upward_24 else R.drawable.arrow_downward_24
+                                val iconDesc = if (isMatchAsc) R.string.ascending else R.string.descending
+
                                 Icon(
-                                    painter = painterResource(R.drawable.arrow_upward_24),
-                                    contentDescription = stringResource(R.string.ascending),
-                                )
-                            } else if (uiState.sort == item.desc) {
-                                Icon(
-                                    painter = painterResource(R.drawable.arrow_downward_24),
-                                    contentDescription = stringResource(R.string.descending),
+                                    painter = painterResource(iconRes),
+                                    contentDescription = stringResource(iconDesc),
+                                    tint = if (isActivelyUsed) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                                    }
                                 )
                             }
                         }

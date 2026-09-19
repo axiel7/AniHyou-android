@@ -378,6 +378,11 @@ class DefaultPreferencesRepository(
     suspend fun setUseFuzzySearch(value: Boolean) {
         dataStore.setValue(USE_FUZZY_SEARCH_KEY, value)
     }
+    val prioritizeSearchMatches = dataStore.getValue(PRIORITIZE_BEST_MATCHES_KEY, default = true)
+
+    suspend fun setPrioritizeSearchMatches(value: Boolean) {
+        dataStore.setValue(PRIORITIZE_BEST_MATCHES_KEY, value)
+    }
 
     val separateNovelsAndManga = dataStore.getValue(SEPARATE_NOVELS_AND_MANGA_KEY, default = false)
 
@@ -451,6 +456,8 @@ class DefaultPreferencesRepository(
         private val HIDE_SCORES_KEY = booleanPreferencesKey("hide_scores")
 
         private val USE_FUZZY_SEARCH_KEY = booleanPreferencesKey("use_fuzzy_search")
+
+        private val PRIORITIZE_BEST_MATCHES_KEY = booleanPreferencesKey("prioritize_best_matches")
 
         private val SEPARATE_NOVELS_AND_MANGA_KEY = booleanPreferencesKey("separate_novels_and_manga")
 

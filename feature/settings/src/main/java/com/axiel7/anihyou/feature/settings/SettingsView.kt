@@ -388,6 +388,17 @@ private fun SettingsContent(
                     shape = middleShape
                 )
 
+                if (uiState.useFuzzySearch) {
+                    SwitchPreference(
+                        title = stringResource(R.string.prioritize_search_matches),
+                        preferenceValue = uiState.prioritizeSearchMatches,
+                        icon = R.drawable.list_arrow_24,
+                        onValueChange = { event?.setPrioritizeSearchMatches(it) },
+                        subtitle = stringResource(R.string.prioritize_search_matches_description),
+                        shape = middleShape
+                    )
+                }
+
                 SwitchPreference(
                     title = stringResource(R.string.separate_novels_and_manga),
                     preferenceValue = uiState.separateNovelsAndManga,
