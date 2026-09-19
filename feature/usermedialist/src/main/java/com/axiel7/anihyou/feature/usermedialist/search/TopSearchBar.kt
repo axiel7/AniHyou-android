@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.usermedialist.search
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,6 +23,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -187,15 +187,10 @@ internal fun TopSearchBar(
                     uiState.isFuzzySearchEnabled &&
                     !uiState.isSearchSortModified
 
-
-
-
             IconButtonWithMenu(
                 icon = R.drawable.sort_24,
                 contentDescription = stringResource(R.string.sort)
             ) { onDismiss ->
-
-
                 if (uiState.query.isNotBlank() && uiState.isFuzzySearchEnabled) {
                     SelectableDropdownMenuItem(
                         selected = isFuzzyActive,
@@ -203,41 +198,26 @@ internal fun TopSearchBar(
                             event?.resetPrioritizeSearchMatches()
                             onDismiss()
                         },
+                        leadingIcon = {},
                         text = { Text(text = "Relevance") },
                         modifier = Modifier.padding(end = 8.dp),
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.search_insights_24),
-                                contentDescription = null,
-                                tint = if (isFuzzyActive) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                }
-                            )
-                        },
-                        shapes = MenuDefaults.itemShape(0, UserMediaListSort.entries.size),
-                        )
+                        shapes = MenuDefaults.itemShape(0, 1),
+                    )
 
-                    androidx.compose.material3.HorizontalDivider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
                     )
                 }
 
                 UserMediaListSort.entries.fastForEachIndexed { index, item ->
-
                     val isMatchAsc = uiState.sort == item.asc
                     val isMatchDesc = uiState.sort == item.desc
                     val isBackgroundMatch = isMatchAsc || isMatchDesc
                     val isActivelyUsed = isBackgroundMatch && !isFuzzyActive
-                    Log.d("Sort", "Item desc: ${item.desc} | Item acs: ${item.asc} | isBackgroundMatch: $isBackgroundMatch | isActivelyUsed: $isActivelyUsed")
-                    Log.d("Sort", "uiState.sort: ${uiState.sort}")
 
                     SelectableDropdownMenuItem(
                         selected = isActivelyUsed,
                         onClick = {
-
                             val newSort = if (isBackgroundMatch && !isActivelyUsed) {
                                 uiState.sort
                             } else {
@@ -258,11 +238,6 @@ internal fun TopSearchBar(
                                 Icon(
                                     painter = painterResource(iconRes),
                                     contentDescription = stringResource(iconDesc),
-                                    tint = if (isActivelyUsed) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
-                                    }
                                 )
                             }
                         }
