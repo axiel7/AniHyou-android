@@ -69,7 +69,7 @@ android {
         release {
             isDebuggable = false
             isMinifyEnabled = true
-            isShrinkResources = false
+            isShrinkResources = true
             isCrunchPngs = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -125,6 +125,24 @@ android {
     }
     dependenciesInfo {
         includeInApk = false
+    }
+}
+
+androidComponents {
+    beforeVariants {
+        if (it.buildType == "release" && it.flavorName == "foss") {
+            it.shrinkResources = false
+        }
+    }
+    onVariants {
+        if (it.buildType == "release" && it.flavorName == "gms") {
+            // Disable ABI splits for GMS (fix for building bundle)
+            it.outputs.forEach { output ->
+                if (output.filters.isNotEmpty()) {
+                    output.enabled.set(false)
+                }
+            }
+        }
     }
 }
 
