@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.explore.explore
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -97,26 +98,30 @@ fun ExploreView(
                 }
             }
 
-            when (ExploreTab.entries[selectedTabIndex]) {
-                ExploreTab.ANIME -> {
-                    AnimeDiscoverView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
-                }
+            AnimatedContent(
+                targetState = ExploreTab.entries[selectedTabIndex]
+            ) { tab ->
+                when (tab) {
+                    ExploreTab.ANIME -> {
+                        AnimeDiscoverView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
 
-                ExploreTab.MANGA -> {
-                    MangaDiscoverView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
-                }
+                    ExploreTab.MANGA -> {
+                        MangaDiscoverView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
 
-                ExploreTab.RECOMMENDATIONS -> {
-                    RecommendationsView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
+                    ExploreTab.RECOMMENDATIONS -> {
+                        RecommendationsView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
                 }
             }
         }

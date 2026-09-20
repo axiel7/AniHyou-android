@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.home
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -118,25 +119,29 @@ fun HomeView(
                     )
                 }
             }
-            when (HomeTab.entries[selectedTabIndex]) {
-                HomeTab.ACTIVITY_FEED -> {
-                    if (isLoggedIn) {
-                        ActivityFeedView(
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        )
-                    } else {
-                        LoginView()
+            AnimatedContent(
+                targetState = HomeTab.entries[selectedTabIndex]
+            ) { tab ->
+                when (tab) {
+                    HomeTab.ACTIVITY_FEED -> {
+                        if (isLoggedIn) {
+                            ActivityFeedView(
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            )
+                        } else {
+                            LoginView()
+                        }
                     }
-                }
 
-                HomeTab.CURRENT -> {
-                    if (isLoggedIn) {
-                        CurrentView(
-                            isLoggedIn = true,
-                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                        )
-                    } else {
-                        LoginView()
+                    HomeTab.CURRENT -> {
+                        if (isLoggedIn) {
+                            CurrentView(
+                                isLoggedIn = true,
+                                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            )
+                        } else {
+                            LoginView()
+                        }
                     }
                 }
             }
