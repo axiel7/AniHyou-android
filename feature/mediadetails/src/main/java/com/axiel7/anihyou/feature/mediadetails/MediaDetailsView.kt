@@ -566,6 +566,9 @@ fun MediaInfoTabs(
                         uiState = uiState,
                         fetchData = { event?.fetchRelationsAndRecommendations() },
                         navigateToDetails = navActionManager::toMediaDetails,
+                        addRecommendation = { media ->
+                            event?.addRecommendation(media)
+                        },
                         onVoteClick = { mediaId, recId, rating ->
                             event?.onVoteClick(
                                 mediaId,
