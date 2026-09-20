@@ -60,7 +60,7 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchView(
+fun SimpleMediaSearchSheetView(
     mediaType: MediaType,
     onSelected: (SearchMediaQuery.Medium) -> Unit,
     onDismiss: () -> Unit,

@@ -51,7 +51,7 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.feature.addrecommendation.search.SearchView
+import com.axiel7.anihyou.feature.addrecommendation.search.SimpleMediaSearchSheetView
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -98,7 +98,7 @@ private fun AddRecommendationContent(
     }
 
     if (showSearchSheet) {
-        SearchView(
+        SimpleMediaSearchSheetView(
             mediaType = uiState.media?.basicMediaDetails?.type ?: MediaType.ANIME,
             onSelected = { event?.insertRecommendation(it) },
             onDismiss = { showSearchSheet = false },
