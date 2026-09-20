@@ -21,6 +21,8 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -123,12 +125,19 @@ fun DefaultScaffoldWithSmallTopAppBar(
     )
 }
 
-fun TopAppBarScrollBehavior.appBarContainerColor(colors: TopAppBarColors) = with(colors) {
-    lerp(
-        containerColor,
-        scrolledContainerColor,
-        FastOutLinearInEasing.transform(state.collapsedFraction),
-    )
+@Composable
+fun rememberTopBarContainerColor(
+    colors: TopAppBarColors,
+    scrollBehavior: TopAppBarScrollBehavior
+) = remember(colors, scrollBehavior) {
+    derivedStateOf {
+        val overlappingFraction = scrollBehavior.state.overlappedFraction
+        lerp(
+            colors.containerColor,
+            colors.scrolledContainerColor,
+            FastOutLinearInEasing.transform(if (overlappingFraction > 0.01f) 1f else 0f),
+        )
+    }
 }
 
 @Composable
