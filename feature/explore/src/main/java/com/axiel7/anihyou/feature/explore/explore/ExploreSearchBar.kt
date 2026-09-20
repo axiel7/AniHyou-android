@@ -32,6 +32,7 @@ import androidx.compose.material3.SearchBarScrollBehavior
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberSearchBarState
@@ -67,10 +68,12 @@ fun ExploreSearchBar(
     isLoggedIn: Boolean,
     selectedTabIndex: Int,
     scrollBehavior: TopAppBarScrollBehavior,
+    colors: TopAppBarColors,
 ) {
     CustomSearchBar(
         selectedTabIndex = selectedTabIndex,
         scrollBehavior = scrollBehavior,
+        colors = colors,
     )
     // ExpandedSearchBar has a bug that prevents returning from a navigation destination
     // TODO: revert back when the bug is fixed
@@ -90,7 +93,8 @@ fun ExploreSearchBar(
 @Composable
 private fun CustomSearchBar(
     selectedTabIndex: Int,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: TopAppBarColors,
 ) {
     val navActionManager = LocalNavActionManager.current
     TopAppBar(
@@ -135,6 +139,7 @@ private fun CustomSearchBar(
             }
         },
         scrollBehavior = scrollBehavior,
+        colors = colors,
     )
 }
 
@@ -256,7 +261,8 @@ fun ExploreSearchBarPreview() {
             )
             CustomSearchBar(
                 selectedTabIndex = 0,
-                scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+                scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+                colors = TopAppBarDefaults.topAppBarColors(),
             )
         }
     }

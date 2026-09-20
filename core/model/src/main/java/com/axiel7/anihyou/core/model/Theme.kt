@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.toImmutableMap
 
 enum class Theme : Localizable {
     FOLLOW_SYSTEM,
@@ -21,7 +22,7 @@ enum class Theme : Localizable {
         }
 
     companion object {
-        val entriesLocalized = entries.associateWith { it.stringRes }
+        val entriesLocalized = entries.associateWith { it.stringRes }.toImmutableMap()
 
         fun valueOfOrNull(value: String) = try {
             valueOf(value)

@@ -6,11 +6,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.network.StudioDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.CommonStudioMedia
 import com.axiel7.anihyou.core.base.state.PagedUiState
+import com.axiel7.anihyou.core.network.type.MediaSort
 
 @Stable
 data class StudioDetailsUiState(
     val details: StudioDetailsQuery.Studio? = null,
     val media: SnapshotStateList<CommonStudioMedia.Node> = mutableStateListOf(),
+    val onMyList: Boolean? = null,
+    val sort: MediaSort = MediaSort.START_DATE_DESC,
     override val page: Int = 1,
     override val hasNextPage: Boolean = false,
     override val error: String? = null,

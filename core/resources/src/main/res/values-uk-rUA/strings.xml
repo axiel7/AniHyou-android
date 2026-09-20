@@ -684,10 +684,10 @@
     <string name="separate_novels_and_manga">Виокремити романи та манґу</string>
     <string name="novels">Романи</string>
     <plurals name="notification_episode_aired">
-        <item quantity="one">Вийшов %d-ий епізод «%s».</item>
-        <item quantity="few">Вийшов %d-ий епізод «%s».</item>
-        <item quantity="many">Вийшов %d-ий епізод «%s».</item>
-        <item quantity="other">Вийшов %d-ий епізод «%s».</item>
+        <item quantity="one">Вийшов %1$d-ий епізод «%2$s».</item>
+        <item quantity="few">Вийшов %1$d-ий епізод «%2$s».</item>
+        <item quantity="many">Вийшов %1$d-ий епізод «%2$s».</item>
+        <item quantity="other">Вийшов %1$d-ий епізод «%2$s».</item>
     </plurals>
     <string name="notification_activity_liked">%s вподобує вашу активність.</string>
     <string name="notification_activity_reply_liked">%s вподобує вашу відповідь на активність.</string>
@@ -699,4 +699,7 @@
     <string name="notification_media_changed">«%s» отримало зміни в даних сайту</string>
     <string name="notification_media_deleted">«%s» було видалено з сайту</string>
     <string name="notification_forum_mention">%1$s згадує вас на форумі в обговоренні «%2$s»</string>
+    <string name="widget_config_title">Налаштування віджета</string>
+    <string name="style_colored">Кольоровий</string>
+    <string name="style_monochrome">Монотонний</string>
 </resources>

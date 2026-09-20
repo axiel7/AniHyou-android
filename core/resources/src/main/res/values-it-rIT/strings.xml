@@ -617,8 +617,8 @@
     <string name="separate_novels_and_manga">Romanzi e manga separati</string>
     <string name="novels">Romanzi</string>
     <plurals name="notification_episode_aired">
-        <item quantity="one">Episodio %d di %s uscito.</item>
-        <item quantity="other">Episodio %d di %s uscito.</item>
+        <item quantity="one">Episodio %1$d di %2$s uscito.</item>
+        <item quantity="other">Episodio %1$d di %2$s uscito.</item>
     </plurals>
     <string name="notification_activity_liked">A %s è piaciuta la tua attività.</string>
     <string name="notification_activity_reply_liked">A %s è piaciuta la tua risposta all\'attività.</string>

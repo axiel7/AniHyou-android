@@ -12,11 +12,13 @@ import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.network.FollowingsQuery
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.DialogWithCheckboxSelection
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ActivityFollowingFilterChip(
-    followingUsers: List<FollowingsQuery.Following>?,
-    selectedIds: List<Int>,
+    followingUsers: ImmutableList<FollowingsQuery.Following>?,
+    selectedIds: ImmutableList<Int>,
     onValueChanged: (List<Int>) -> Unit,
     enabled: Boolean = true,
 ) {
@@ -24,10 +26,13 @@ fun ActivityFollowingFilterChip(
 
     if (openDialog && !followingUsers.isNullOrEmpty()) {
         val selectableUsers = remember(followingUsers) {
-            followingUsers.map { FollowingLocalizable(it) }
+            followingUsers.map { FollowingLocalizable(it) }.toImmutableList()
         }
         val currentSelection = remember(selectedIds, followingUsers) {
-            followingUsers.filter { it.userFollow.id in selectedIds }.map { FollowingLocalizable(it) }
+            followingUsers
+                .filter { it.userFollow.id in selectedIds }
+                .map { FollowingLocalizable(it) }
+                .toImmutableList()
         }
 
         DialogWithCheckboxSelection(

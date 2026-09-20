@@ -1,6 +1,6 @@
-query StudioMedia($studioId: Int, $page: Int, $perPage: Int) {
+query StudioMedia($studioId: Int, $sort: [MediaSort], $onList: Boolean, $page: Int, $perPage: Int) {
     Studio(id: $studioId) {
-        media(isMain: true, page: $page, perPage: $perPage, sort: [START_DATE_DESC]) {
+        media(isMain: true, page: $page, perPage: $perPage, sort: $sort, onList: $onList) {
             ...CommonStudioMedia
             pageInfo {
                 ...CommonPage

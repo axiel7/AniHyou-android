@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.staffdetails
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -33,6 +34,7 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
+import com.axiel7.anihyou.core.ui.composables.rememberTopBarContainerColor
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.staffdetails.content.StaffCharacterView
@@ -68,6 +70,9 @@ private fun StaffDetailsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val appBarContainerColor by rememberTopBarContainerColor(topAppBarColors, topAppBarScrollBehavior)
+
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val haptic = LocalHapticFeedback.current
@@ -102,7 +107,8 @@ private fun StaffDetailsContent(
             ShareIconButton(url = uiState.details?.siteUrl.orEmpty())
         },
         snackbarHost = snackbarManager::SnackbarHost,
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior,
+        topAppBarColors = topAppBarColors,
     ) { padding ->
         Column(
             modifier = Modifier
@@ -114,7 +120,9 @@ private fun StaffDetailsContent(
         ) {
             ConnectedButtonGroup(
                 items = StaffInfoType.tabRows,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                modifier = Modifier
+                    .background(appBarContainerColor)
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
                 selectedIndex = selectedTabIndex,
                 onItemSelection = { selectedTabIndex = it }
             )

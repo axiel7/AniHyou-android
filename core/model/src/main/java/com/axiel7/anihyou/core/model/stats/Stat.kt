@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.res.stringResource
 
+@Stable
 abstract class Stat<T> {
     abstract val type: T
     abstract val value: Float

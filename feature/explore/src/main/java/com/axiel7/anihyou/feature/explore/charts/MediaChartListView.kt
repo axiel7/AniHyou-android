@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastFilterNotNull
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.network.type.MediaFormat
@@ -40,6 +41,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -127,7 +129,7 @@ private fun MediaChartListContent(
                     episodes = item.episodes,
                     chapters = item.chapters,
                     duration = item.duration,
-                    genres = item.genres?.filterNotNull(),
+                    genres = item.genres?.fastFilterNotNull()?.toImmutableList(),
                     onClick = {
                         navActionManager.toMediaDetails(item.id)
                     },

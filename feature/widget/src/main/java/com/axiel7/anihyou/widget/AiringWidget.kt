@@ -22,7 +22,7 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity
-import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -32,7 +32,6 @@ import androidx.glance.color.ColorProvider
 import androidx.glance.color.DynamicThemeColorProviders
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
@@ -132,8 +131,13 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     ) {
         val todayString = (System.currentTimeMillis() / 1000).timestampToDateString("yyyy-MM-dd")
 
-        Scaffold(
-            horizontalPadding = 0.dp
+        RoundedDrawableBox(
+            shapeRes = R.drawable.widget_background_24,
+            color = GlanceTheme.colors.widgetBackground,
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .appWidgetBackground()
+                .widgetCornerRadius()
         ) {
             LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                 item(itemId = 0) {
@@ -172,7 +176,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                             } else if (result is DataResult.Error) {
                                 Text(
                                     text = result.message,
-                                    modifier = GlanceModifier.padding(bottom = 8.dp),
+                                    modifier = GlanceModifier.padding(24.dp),
                                     style = TextStyle(color = GlanceTheme.colors.onSurface)
                                 )
                             }
@@ -186,9 +190,7 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
     @Composable
     private fun Header(onRefresh: () -> Unit) {
         Row(
-            modifier = GlanceModifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp),
+            modifier = GlanceModifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = GlanceModifier.width(20.dp))
@@ -200,14 +202,22 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     fontSize = 16.sp,
                 ),
                 maxLines = 1,
-                modifier = GlanceModifier.defaultWeight()
+                modifier = GlanceModifier
+                    .defaultWeight()
+                    .padding(vertical = 10.dp)
+                    .clickable(
+                        onClick = LocalContext.current.openDeepLink(
+                            DeepLink(type = DeepLink.Type.CALENDAR, id = "")
+                        )
+                    )
             )
 
-            Box(
+            RoundedDrawableBox(
+                shapeRes = R.drawable.widget_refresh_bg_20,
+                color = GlanceTheme.colors.primary,
                 modifier = GlanceModifier
                     .width(54.dp)
                     .height(32.dp)
-                    .background(GlanceTheme.colors.primary)
                     .cornerRadius(20.dp)
                     .clickable(onRefresh),
                 contentAlignment = Alignment.Center
@@ -244,10 +254,13 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
 
         val primaryColor = GlanceTheme.colors.primary.getColor(LocalContext.current)
 
-        val backgroundModifier = if (baseMediaColor != null) {
-            GlanceModifier.background(baseMediaColor.harmonize(primaryColor).darken(2f))
+        val backgroundColor = if (baseMediaColor != null) {
+            ColorProvider(
+                day = baseMediaColor.harmonize(primaryColor).darken(2f),
+                night = baseMediaColor.harmonize(primaryColor).darken(2f)
+            )
         } else {
-            GlanceModifier.background(GlanceTheme.colors.secondaryContainer)
+            GlanceTheme.colors.secondaryContainer
         }
         val defaultTextColor = GlanceTheme.colors.onSecondaryContainer
 
@@ -269,24 +282,17 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                     .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val dateSize = 38.dp
                 if (showDate) {
-                    val dateModifier = if (isToday) {
-                        GlanceModifier
-                            .size(38.dp)
-                            .background(GlanceTheme.colors.primary)
-                            .cornerRadius(38.dp)
-                    } else {
-                        GlanceModifier
-                            .size(38.dp)
-                            .background(Color.Transparent)
-                    }
-
-                    Column(
-                        modifier = dateModifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        if (isToday) {
+                    if (isToday) {
+                        RoundedDrawableBox(
+                            shapeRes = R.drawable.widget_date_circle_bg,
+                            color = GlanceTheme.colors.primary,
+                            modifier = GlanceModifier
+                                .size(dateSize)
+                                .cornerRadius(38.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
                                 text = "$dayOfWeek\n$dayOfMonth",
                                 style = TextStyle(
@@ -297,7 +303,15 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                                 ),
                                 maxLines = 2,
                             )
-                        } else {
+                        }
+                    } else {
+                        Column(
+                            modifier = GlanceModifier
+                                .size(dateSize)
+                                .background(Color.Transparent),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
                             Text(
                                 text = dayOfWeek,
                                 style = TextStyle(
@@ -320,58 +334,71 @@ class AiringWidget : GlanceAppWidget(), KoinComponent {
                         }
                     }
                 } else {
-                    Spacer(modifier = GlanceModifier.width(36.dp))
+                    Spacer(modifier = GlanceModifier.width(dateSize))
                 }
             }
 
-            Column(
-                modifier = backgroundModifier
+            RoundedDrawableBox(
+                shapeRes = R.drawable.widget_airing_bg_12,
+                color = backgroundColor,
+                modifier = GlanceModifier
                     .defaultWeight()
                     .cornerRadius(12.dp)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
                     .clickable(
-                        actionStartActivity(
-                            LocalContext.current.packageManager
-                                .getLaunchIntentForPackage(APP_PACKAGE_NAME)
-                                ?.apply {
-                                    action = DeepLink.Type.ANIME.intentAction
-                                    putExtra("content_id", item.id)
-                                    putExtra("widget", true)
-                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    addCategory(item.id.toString())
-                                } ?: Intent()
+                        onClick = LocalContext.current.openDeepLink(
+                            DeepLink(
+                                type = DeepLink.Type.ANIME,
+                                id = item.id.toString()
+                            )
                         )
                     )
             ) {
-                Text(
-                    text = item.title?.userPreferred.orEmpty(),
-                    style = TextStyle(
-                        color = textColor,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    ),
-                    maxLines = 1
-                )
-                Text(
-                    text = item.nextAiringEpisode?.let { nextAiringEpisode ->
-                        glanceStringResource(
-                            R.string.episode_airing_at,
-                            nextAiringEpisode.episode,
-                            nextAiringEpisode.airingAt.toLong().timestampToTimeString()
-                                ?: UNKNOWN_CHAR
-                        )
-                    } ?: glanceStringResource(R.string.unknown),
-                    style = TextStyle(
-                        color = textColor,
-                        fontSize = 13.sp
-                    ),
-                    maxLines = 1
-                )
+                Column(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = item.title?.userPreferred.orEmpty(),
+                        style = TextStyle(
+                            color = textColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        maxLines = 1
+                    )
+                    Text(
+                        text = item.nextAiringEpisode?.let { nextAiringEpisode ->
+                            glanceStringResource(
+                                R.string.episode_airing_at,
+                                nextAiringEpisode.episode,
+                                nextAiringEpisode.airingAt.toLong().timestampToTimeString()
+                                    ?: UNKNOWN_CHAR
+                            )
+                        } ?: glanceStringResource(R.string.unknown),
+                        style = TextStyle(
+                            color = textColor,
+                            fontSize = 13.sp
+                        ),
+                        maxLines = 1
+                    )
+                }
             }
 
         }
     }
+
+    private fun Context.openDeepLink(deepLink: DeepLink) =
+        actionStartActivity(
+            packageManager.getLaunchIntentForPackage(APP_PACKAGE_NAME)?.apply {
+                action = deepLink.type.intentAction
+                putExtra("content_id", deepLink.id)
+                putExtra("widget", true)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addCategory(deepLink.id)
+            } ?: Intent()
+        )
 
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview(widthDp = 255, heightDp = 150)

@@ -11,6 +11,7 @@ import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.activity.ActivityTypeGrouped
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
 import com.axiel7.anihyou.core.network.type.ActivityType
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.run
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityFeedViewModel(
@@ -50,7 +52,7 @@ class ActivityFeedViewModel(
 
     override fun setFollowingFilters(value: List<Int>) {
         mutableUiState.update {
-            it.copy(followingFilters = value, page = 1, hasNextPage = true)
+            it.copy(followingFilters = value.toImmutableList(), page = 1, hasNextPage = true)
         }
     }
 
@@ -65,7 +67,7 @@ class ActivityFeedViewModel(
                 ).collectLatest { result ->
                     if (result is PagedResult.Success) {
                         mutableUiState.update {
-                            it.copy(followingUsers = result.list)
+                            it.copy(followingUsers = result.list.toImmutableList())
                         }
                     }
                 }
@@ -95,38 +97,14 @@ class ActivityFeedViewModel(
                 type = type
             ).let { result ->
                 if (result is DataResult.Success) {
-                    mutableUiState.value.run {
-                        val foundIndex = activities.indexOf(foundItem)
-                        if (foundIndex != -1) {
-                            val oldItem = activities[foundIndex]
-                            activities[foundIndex] = oldItem.copy(
-                                onTextActivity = oldItem.onTextActivity?.copy(
-                                    textActivityFragment = oldItem.onTextActivity!!.textActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.textActivityFragment?.let {
-                                        activityRepository.updateActivityCache(textActivity = it)
-                                    }
-                                },
-                                onListActivity = oldItem.onListActivity?.copy(
-                                    listActivityFragment = oldItem.onListActivity!!.listActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.listActivityFragment?.let {
-                                        activityRepository.updateActivityCache(listActivity = it)
-                                    }
-                                },
-                                onMessageActivity = oldItem.onMessageActivity?.copy(
-                                    messageActivityFragment = oldItem.onMessageActivity!!.messageActivityFragment
-                                        .updateLikeStatus(result.data)
-                                ).also { item ->
-                                    item?.messageActivityFragment?.let {
-                                        activityRepository.updateActivityCache(messageActivity = it)
-                                    }
-                                },
-                            )
-                        }
-                    }
+                    activityRepository.updateActivityCache(
+                        listActivity = foundItem.onListActivity?.listActivityFragment
+                                ?.updateLikeStatus(result.data),
+                        textActivity = foundItem.onTextActivity?.textActivityFragment
+                                ?.updateLikeStatus(result.data),
+                        messageActivity = foundItem.onMessageActivity?.messageActivityFragment
+                                ?.updateLikeStatus(result.data)
+                    )
                 }
             }
         }
@@ -202,6 +180,39 @@ class ActivityFeedViewModel(
         userRepository.lastFollowed
             .filterNotNull()
             .onEach { getUserFollowing() }
+            .launchIn(viewModelScope)
+
+        likeRepository.lastActivityLiked
+            .filterNotNull()
+            .onEach { lastActivityLiked ->
+                mutableUiState.value.run {
+                    val foundIndex = activities.indexOfFirst {
+                        it.onTextActivity?.textActivityFragment?.id
+                            ?.equals(lastActivityLiked.textActivityFragment?.id) == true
+                                || it.onListActivity?.listActivityFragment?.id
+                            ?.equals(lastActivityLiked.listActivityFragment?.id) == true
+                                || it.onMessageActivity?.messageActivityFragment
+                            ?.equals(lastActivityLiked.listActivityFragment?.id) == true
+                    }
+                    if (foundIndex != -1) {
+                        val foundItem = activities[foundIndex]
+                        activities[foundIndex] = foundItem.copy(
+                            onTextActivity = foundItem.onTextActivity?.copy(
+                                textActivityFragment = foundItem.onTextActivity!!.textActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            ),
+                            onListActivity = foundItem.onListActivity?.copy(
+                                listActivityFragment = foundItem.onListActivity!!.listActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            ),
+                            onMessageActivity = foundItem.onMessageActivity?.copy(
+                                messageActivityFragment = foundItem.onMessageActivity!!.messageActivityFragment
+                                    .updateLikeStatus(lastActivityLiked.isLiked == true)
+                            )
+                        )
+                    }
+                }
+            }
             .launchIn(viewModelScope)
     }
 }

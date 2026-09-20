@@ -3,6 +3,9 @@ package com.axiel7.anihyou.core.model.thread
 import androidx.compose.runtime.Stable
 import com.axiel7.anihyou.core.network.ChildCommentsQuery
 import com.axiel7.anihyou.core.network.fragment.CommonThreadComment
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 
 // This model is necessary because AniList API returns a JSON string for the `childComments` query
@@ -17,7 +20,7 @@ data class ChildComment(
     val isLocked: Boolean?,
     val createdAt: Int,
     val user: User?,
-    val childComments: List<ChildComment?>?,
+    val childComments: ImmutableList<ChildComment?>?,
 ) {
     @Stable
     @Serializable
@@ -47,9 +50,9 @@ data class ChildComment(
                 user = (this["user"] as LinkedHashMap<String, Any?>).toUser(),
                 childComments = (this["childComments"] as? ArrayList<*>?)?.mapNotNull {
                     (it as? LinkedHashMap<String, Any?>)?.toChildComment()
-                }
+                }?.toImmutableList()
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
@@ -59,14 +62,14 @@ data class ChildComment(
                 name = this["name"] as String,
                 avatar = (this["avatar"] as LinkedHashMap<String, Any?>).toAvatar()
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
         private fun LinkedHashMap<String, Any?>.toAvatar(): User.Avatar? = try {
             val medium = this["medium"] as? String
             User.Avatar(medium)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
@@ -89,7 +92,7 @@ data class ChildComment(
                 },
                 childComments = (childComments as? ArrayList<*>?)?.mapNotNull {
                     (it as? LinkedHashMap<String, Any?>)?.toChildComment()
-                }
+                }?.toImmutableList()
             )
 
         fun CommonThreadComment.toChildComment() =
@@ -120,7 +123,7 @@ data class ChildComment(
             isLocked = true,
             createdAt = 1212370032,
             user = null,
-            childComments = listOf(
+            childComments = persistentListOf(
                 ChildComment(
                     id = 2,
                     comment = "This is a comment to your comment comment",

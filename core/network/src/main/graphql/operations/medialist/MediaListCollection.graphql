@@ -33,6 +33,8 @@ fragment BasicMediaListEntry on MediaList {
     repeat
     private
     hiddenFromStatusLists
+    updatedAt
+    createdAt
     priority
     startedAt {
         ...FuzzyDate

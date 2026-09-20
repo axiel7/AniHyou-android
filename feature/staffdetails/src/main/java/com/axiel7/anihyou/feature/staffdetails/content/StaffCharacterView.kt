@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,7 +24,7 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontal
 
 @Composable
 fun StaffCharacterView(
-    staffCharacters: List<StaffCharacterQuery.Edge>,
+    staffCharacters: SnapshotStateList<StaffCharacterQuery.Edge>,
     isLoading: Boolean,
     loadMore: () -> Unit,
     charactersOnMyList: Boolean?,

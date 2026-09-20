@@ -149,7 +149,6 @@ private fun RecommendationsContent(
 
                 items(
                     items = uiState.recommendations,
-                    key = { it.id },
                     contentType = { it }
                 ) { item ->
                     RecommendationItem(

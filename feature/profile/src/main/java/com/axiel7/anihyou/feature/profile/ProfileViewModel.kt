@@ -189,7 +189,8 @@ class ProfileViewModel(
                     } else {
                         it.copy(
                             isLoadingActivity = result is PagedResult.Loading && it.page == 1,
-                            error = (result as? PagedResult.Error)?.message
+                            error = (result as? PagedResult.Error)?.message,
+                            hasNextPage = result !is PagedResult.Error,
                         )
                     }
                 }

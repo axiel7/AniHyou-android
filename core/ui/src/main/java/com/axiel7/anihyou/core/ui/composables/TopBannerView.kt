@@ -57,7 +57,10 @@ fun TopBannerView(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        listOf(banner_shadow_color, MaterialTheme.colorScheme.surface)
+                        colors = listOf(
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.surface
+                        )
                     )
                 )
         )

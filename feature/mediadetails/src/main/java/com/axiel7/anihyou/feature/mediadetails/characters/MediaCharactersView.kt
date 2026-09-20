@@ -7,15 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
@@ -25,9 +20,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,6 +37,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontalMirrored
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontalPlaceholder
@@ -157,46 +150,28 @@ private fun LanguageButtonMenu(
     uiState: MediaCharactersUiState,
     event: MediaCharactersEvent? = null,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.wrapContentSize(Alignment.TopStart)
-    ) {
-        IconButton(
-            onClick = { expanded = !expanded },
-            shapes = IconButtonDefaults.shapes()
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.language_24),
-                contentDescription = stringResource(R.string.language)
-            )
-        }
-        DropdownMenuPopup(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes()
-            ) {
-                uiState.availableLanguages.orEmpty().fastForEachIndexed { index, item ->
-                    val checked = uiState.selectedLanguage == item
-                    SelectableDropdownMenuItem(
-                        selected = checked,
-                        onClick = {
-                            event?.onLanguageSelect(item)
-                            expanded = false
-                        },
-                        text = { Text(text = item) },
-                        shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
-                        modifier = Modifier.padding(end = 8.dp),
-                        selectedLeadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.check_20),
-                                contentDescription = null,
-                            )
-                        }
+    IconButtonWithMenu(
+        icon = R.drawable.language_24,
+        contentDescription = stringResource(R.string.language),
+    ) { onDismiss ->
+        uiState.availableLanguages.orEmpty().fastForEachIndexed { index, item ->
+            val checked = uiState.selectedLanguage == item
+            SelectableDropdownMenuItem(
+                selected = checked,
+                onClick = {
+                    event?.onLanguageSelect(item)
+                    onDismiss()
+                },
+                text = { Text(text = item) },
+                shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
+                modifier = Modifier.padding(end = 8.dp),
+                selectedLeadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.check_20),
+                        contentDescription = null,
                     )
                 }
-            }
+            )
         }
     }
 }

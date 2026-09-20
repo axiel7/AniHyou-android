@@ -188,7 +188,7 @@ private fun SeasonAnimeContent(
             )
         }
         AnimatedVisibility(
-            visible = uiState.listStyle != ListStyle.STANDARD,
+            visible = uiState.listStyle == ListStyle.GRID,
             enter = fadeIn(animationSpec = tween()),
             exit = fadeOut(animationSpec = tween()),
         ) {

@@ -74,6 +74,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.materialkolor.PaletteStyle
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val versionString = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
@@ -208,7 +209,7 @@ private fun SettingsContent(
 
             ListPreference(
                 title = stringResource(R.string.color_palette),
-                values = PaletteStyle.entries.map { it.name },
+                values = PaletteStyle.entries.map { it.name }.toImmutableList(),
                 preferenceValue = uiState.colorPaletteStyle,
                 icon = R.drawable.format_paint_24,
                 onValueChange = { event?.setColorPalette(it) },

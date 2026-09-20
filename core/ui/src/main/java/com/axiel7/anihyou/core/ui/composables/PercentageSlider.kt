@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,10 @@ fun PercentageSlider(
     modifier: Modifier = Modifier,
     label: String
 ) {
+    val sliderState = rememberSliderState(
+        value = value.toFloat(),
+        trackRange = 0f..100f
+    )
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -36,10 +41,11 @@ fun PercentageSlider(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Slider(
+                state = sliderState,
                 modifier = Modifier.weight(1f),
-                value = value.toFloat(),
-                onValueChange = { onValueChange(it.toInt().coerceIn(0, 100)) },
-                valueRange = 0f..100f,
+                onValueChangeFinished = {
+                    onValueChange(sliderState.value.toInt().coerceIn(0, 100))
+                },
             )
             Text(
                 text = "${value}%",

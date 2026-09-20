@@ -35,10 +35,12 @@ import com.axiel7.anihyou.core.ui.composables.common.AssistChipWithTooltip
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.materialkolor.ktx.harmonize
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun <T> HorizontalStatsBar(
-    stats: List<Stat<T>>,
+    stats: ImmutableList<Stat<T>>,
     horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 0.dp,
     showTotal: Boolean = true,
@@ -124,7 +126,7 @@ fun <T> HorizontalStatsBar(
 private fun HorizontalStatsBarPreview() {
     val stats by remember {
         mutableStateOf(
-            listOf(
+            persistentListOf(
                 StatLocalizableAndColorable(type = StatusDistribution.CURRENT, value = 12f),
                 StatLocalizableAndColorable(type = StatusDistribution.COMPLETED, value = 420f),
                 StatLocalizableAndColorable(type = StatusDistribution.PAUSED, value = 5f),

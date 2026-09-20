@@ -46,6 +46,8 @@ data class UserMediaListUiState(
     val genresAndTagsForSearch: GenresAndTagsForSearch = GenresAndTagsForSearch(),
     val query: String = "",
     val isFuzzySearchEnabled: Boolean = false,
+    val isSearchSortModified: Boolean = false,
+    val filteredEntriesCache: List<Pair<CommonMediaListEntry, Int>> = emptyList(),
     val separateNovelsAndManga: Boolean = false,
     val fetchFromNetwork: Boolean = false,
     val sortMenuExpanded: Boolean = false,

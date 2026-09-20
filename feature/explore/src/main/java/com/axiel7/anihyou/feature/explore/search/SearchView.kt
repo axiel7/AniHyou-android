@@ -56,10 +56,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFilterNotNull
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.SearchType
-import com.axiel7.anihyou.core.model.genre.Genre
-import com.axiel7.anihyou.core.model.genre.Tag
+import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.MediaSortSearch
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.network.type.MediaSort
@@ -90,6 +90,7 @@ import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSourcesChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchStatusChip
 import com.axiel7.anihyou.feature.genrestags.composables.SearchGenresTagsChips
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -324,7 +325,6 @@ fun SearchContentView(
                     }
                     items(
                         items = uiState.media,
-                        key = { it.id },
                         contentType = { "media" }
                     ) { item ->
                         MediaItemHorizontal(
@@ -338,7 +338,7 @@ fun SearchContentView(
                             episodes = item.episodes,
                             chapters = item.chapters,
                             duration = item.duration,
-                            genres = item.genres?.filterNotNull(),
+                            genres = item.genres?.fastFilterNotNull()?.toImmutableList(),
                             onClick = {
                                 navActionManager.toMediaDetails(item.id)
                             },
@@ -364,7 +364,6 @@ fun SearchContentView(
                     }
                     items(
                         items = uiState.characters,
-                        key = { it.id },
                         contentType = { "character" }
                     ) { item ->
                         PersonItemHorizontal(
@@ -388,7 +387,6 @@ fun SearchContentView(
                     }
                     items(
                         items = uiState.staff,
-                        key = { it.id },
                         contentType = { "staff" }
                     ) { item ->
                         PersonItemHorizontal(
@@ -417,7 +415,6 @@ fun SearchContentView(
                     }
                     items(
                         items = uiState.studios,
-                        key = { it.id },
                         contentType = { "studio" }
                     ) { item ->
                         Surface(
@@ -443,7 +440,6 @@ fun SearchContentView(
                     }
                     items(
                         items = uiState.users,
-                        key = { it.id },
                         contentType = { "user" }
                     ) { item ->
                         PersonItemHorizontal(
@@ -521,8 +517,14 @@ private fun MoreFilters(
         setDuration = { event?.setDuration(it) },
     )
     SearchGenresTagsChips(
-        externalGenre = initialGenre?.let { Genre(it) },
-        externalTag = initialTag?.let { Tag(it) },
+        viewModel = koinViewModel {
+            parametersOf(
+                GenresAndTagsForSearch(
+                    genreIn = setOfNotNull(initialGenre),
+                    tagIn = setOfNotNull(initialTag)
+                )
+            )
+        },
         clearedFilters = uiState.clearedFilters,
         onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
     )

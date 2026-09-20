@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.toImmutableMap
 
 enum class TranslatorApp : Localizable {
     DEFAULT,
@@ -25,6 +26,6 @@ enum class TranslatorApp : Localizable {
     override fun localized() = stringResource(stringRes)
 
     companion object {
-        val entriesLocalized = entries.associateWith { it.stringRes }
+        val entriesLocalized = entries.associateWith { it.stringRes }.toImmutableMap()
     }
 }

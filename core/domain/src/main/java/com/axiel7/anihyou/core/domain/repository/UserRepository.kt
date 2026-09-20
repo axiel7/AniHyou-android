@@ -4,6 +4,7 @@ import com.apollographql.apollo.api.Optional
 import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.fetchPolicy
 import com.apollographql.cache.normalized.refetchPolicy
+import com.apollographql.cache.normalized.watch
 import com.axiel7.anihyou.core.model.stats.overview.toOverviewStats
 import com.axiel7.anihyou.core.network.api.UserApi
 import com.axiel7.anihyou.core.network.fragment.UserFollow
@@ -31,7 +32,7 @@ class UserRepository(
         .unreadNotificationCountQuery()
         .fetchPolicy(FetchPolicy.NetworkOnly)
         .refetchPolicy(FetchPolicy.NetworkFirst)
-        .toFlow()
+        .watch()
         .map {
             it.data?.Viewer?.unreadNotificationCount
         }

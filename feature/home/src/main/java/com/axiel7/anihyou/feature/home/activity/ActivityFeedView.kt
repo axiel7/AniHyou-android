@@ -38,6 +38,7 @@ import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingChip
 import com.axiel7.anihyou.feature.home.activity.composables.ActivityFollowingFilterChip
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
@@ -99,7 +100,7 @@ private fun ActivityFeedContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     AssistChipWithMenu(
-                        values = ActivityTypeGrouped.entries,
+                        values = ActivityTypeGrouped.entries.toImmutableList(),
                         selectedValue = uiState.type,
                         onValueSelected = { event?.setType(it) },
                         valueString = { it.localized() },

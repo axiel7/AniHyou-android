@@ -14,12 +14,13 @@ import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.network.fragment.CommonVoiceActor
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterVoiceActorsSheet(
-    voiceActors: List<CommonVoiceActor>,
+    voiceActors: ImmutableList<CommonVoiceActor>,
     scope: CoroutineScope,
     navigateToStaffDetails: (Int) -> Unit,
     onDismiss: () -> Unit

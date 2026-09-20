@@ -13,7 +13,8 @@ import com.axiel7.anihyou.core.resources.R
 fun ErrorDialogHandler(
     uiState: UiState,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoggedIn: Boolean = true,
 ) {
     uiState.error?.let { error ->
         AlertDialog(
@@ -25,7 +26,15 @@ fun ErrorDialogHandler(
             },
             modifier = modifier,
             title = {
-                Text(text = "Error")
+                // Currently the API only works with an authenticated user
+                val title = if (!isLoggedIn
+                    && error.startsWith("The AniList API has been temporarily disabled")
+                ) {
+                    stringResource(R.string.not_logged_text)
+                } else {
+                    "Error"
+                }
+                Text(text = title)
             },
             text = {
                 Text(text = error)

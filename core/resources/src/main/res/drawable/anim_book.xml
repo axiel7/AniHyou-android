@@ -1,0 +1,77 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="book_enter"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960">
+            <group
+                android:name="main_parent"
+                android:pivotX="480"
+                android:pivotY="480">
+                <group
+                    android:name="book_group"
+                    android:pivotX="480"
+                    android:pivotY="480">
+                    <path
+                        android:name="book_path"
+                        android:fillColor="#000000"
+                        android:pathData="M240,880Q207,880 183.5,856.5Q160,833 160,800L160,160Q160,127 183.5,103.5Q207,80 240,80L720,80Q753,80 776.5,103.5Q800,127 800,160L800,800Q800,833 776.5,856.5Q753,880 720,880L240,880ZM240,800L720,800Q720,800 720,800Q720,800 720,800L720,160Q720,160 720,160Q720,160 720,160L640,160L640,405Q640,417 630,422.5Q620,428 610,422L561,392Q551,386 540.5,386Q530,386 520,392L471,422Q461,428 450.5,422.5Q440,417 440,405L440,160L240,160Q240,160 240,160Q240,160 240,160L240,800Q240,800 240,800Q240,800 240,800ZM240,800Q240,800 240,800Q240,800 240,800L240,160Q240,160 240,160Q240,160 240,160L240,160Q240,160 240,160Q240,160 240,160L240,800Q240,800 240,800Q240,800 240,800L240,800ZM440,405L440,405Q440,417 450.5,422.5Q461,428 471,422L520,392Q530,386 540.5,386Q551,386 561,392L610,422Q620,428 630,422.5Q640,417 640,405L640,405Q640,417 630,422.5Q620,428 610,422L561,392Q551,386 540.5,386Q530,386 520,392L471,422Q461,428 450.5,422.5Q440,417 440,405Z" />
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <!-- Path morphing from outlined book to filled book with bookmark cutout -->
+    <target android:name="book_path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M240,880Q207,880 183.5,856.5Q160,833 160,800L160,160Q160,127 183.5,103.5Q207,80 240,80L720,80Q753,80 776.5,103.5Q800,127 800,160L800,800Q800,833 776.5,856.5Q753,880 720,880L240,880ZM240,800L720,800Q720,800 720,800Q720,800 720,800L720,160Q720,160 720,160Q720,160 720,160L640,160L640,405Q640,417 630,422.5Q620,428 610,422L561,392Q551,386 540.5,386Q530,386 520,392L471,422Q461,428 450.5,422.5Q440,417 440,405L440,160L240,160Q240,160 240,160Q240,160 240,160L240,800Q240,800 240,800Q240,800 240,800ZM240,800Q240,800 240,800Q240,800 240,800L240,160Q240,160 240,160Q240,160 240,160L240,160Q240,160 240,160Q240,160 240,160L240,800Q240,800 240,800Q240,800 240,800L240,800ZM440,405L440,405Q440,417 450.5,422.5Q461,428 471,422L520,392Q530,386 540.5,386Q551,386 561,392L610,422Q620,428 630,422.5Q640,417 640,405L640,405Q640,417 630,422.5Q620,428 610,422L561,392Q551,386 540.5,386Q530,386 520,392L471,422Q461,428 450.5,422.5Q440,417 440,405Z"
+                android:valueTo="M240,880Q207,880 183.5,856.5Q160,833 160,800L160,160Q160,127 183.5,103.5Q207,80 240,80L720,80Q753,80 776.5,103.5Q800,127 800,160L800,800Q800,833 776.5,856.5Q753,880 720,880L240,880ZM440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160L440,405Q440,417 449.5,422.5Q459,428 470,422L519,393Q529,387 539.5,387Q550,387 560,393L609,422Q620,428 630,422.5Q640,417 640,405L640,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160ZM440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160ZM440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160L440,160Q440,160 440,160Q440,160 440,160Z"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+
+    <!-- Selection bounce animation -->
+    <target android:name="book_group">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="150"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.0"
+                    android:valueTo="0.85"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="150"
+                    android:interpolator="@android:anim/decelerate_interpolator"
+                    android:propertyName="scaleX"
+                    android:startOffset="150"
+                    android:valueFrom="0.85"
+                    android:valueTo="1.0"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="150"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.0"
+                    android:valueTo="0.85"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="150"
+                    android:interpolator="@android:anim/decelerate_interpolator"
+                    android:propertyName="scaleY"
+                    android:startOffset="150"
+                    android:valueFrom="0.85"
+                    android:valueTo="1.0"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

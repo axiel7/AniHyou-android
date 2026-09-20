@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -51,6 +52,10 @@ import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.SmallCircularProgressIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.roundToInt
 
 val topShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -246,7 +251,7 @@ fun SwitchPreference(
 @Composable
 fun <T> ListPreference(
     title: String,
-    values: List<T>,
+    values: ImmutableList<T>,
     modifier: Modifier = Modifier,
     labelForValue: @Composable (T) -> String = { it.toString() },
     preferenceValue: T?,
@@ -346,7 +351,7 @@ fun <T> ListPreference(
 @Composable
 fun <T> ListPreference(
     title: String,
-    entriesValues: Map<T, Int>,
+    entriesValues: ImmutableMap<T, Int>,
     modifier: Modifier = Modifier,
     preferenceValue: T?,
     @DrawableRes icon: Int? = null,
@@ -356,7 +361,7 @@ fun <T> ListPreference(
 ) {
     ListPreference(
         title = title,
-        values = entriesValues.entries.map { it.key },
+        values = entriesValues.entries.map { it.key }.toImmutableList(),
         labelForValue = { value ->
             entriesValues[value]?.let { stringResource(it) }.orEmpty()
         },
@@ -394,13 +399,18 @@ fun ScoreStepsPreferenceSheet(
         else -> 10.0
     }
 
-    val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
-
-    var openModal by remember { mutableStateOf(false) }
-
     var value by remember(initialValue, minValue, maxValue) {
         mutableDoubleStateOf(initialValue.coerceIn(minValue..maxValue))
     }
+
+    val sliderState = rememberSliderState(
+        value = value.toFloat(),
+        trackRange = minValue.toFloat()..maxValue.toFloat(),
+    )
+
+    val allowDecimal = scoreFormat == ScoreFormat.POINT_10_DECIMAL
+
+    var openModal by remember { mutableStateOf(false) }
 
     var textFieldValue by remember(initialValue) {
         mutableStateOf(if (allowDecimal) initialValue.toString() else initialValue.roundToInt().toString()
@@ -414,9 +424,7 @@ fun ScoreStepsPreferenceSheet(
         title = title,
         subtitle = value.format(),
         icon = icon,
-        onClick = {
-            openModal = true
-        },
+        onClick = { openModal = true },
         shape = shape
     )
 
@@ -432,8 +440,6 @@ fun ScoreStepsPreferenceSheet(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
             ) {
-
-
                 OutlinedTextField(
                     value = textFieldValue,
                     onValueChange = { input ->
@@ -454,9 +460,7 @@ fun ScoreStepsPreferenceSheet(
                             }
                         }
                     },
-                    label = {
-                        Text(text = title)
-                    },
+                    label = { Text(text = title) },
                     supportingText = {
                         Text(
                             text = "$minValue - $maxValue",
@@ -473,9 +477,9 @@ fun ScoreStepsPreferenceSheet(
                 )
 
                 Slider(
-                    value = value.toFloat(),
-                    valueRange = minValue.toFloat()..maxValue.toFloat(),
-                    onValueChange = { input ->
+                    state = sliderState,
+                    onValueChangeFinished = {
+                        val input = sliderState.value
                         if (allowDecimal) {
                             val rounded = (input * 10f).roundToInt() / 10.0
                             value = rounded.coerceIn(minValue, maxValue)
@@ -518,7 +522,7 @@ private fun PreferencesPreviews() {
 
             ListPreference(
                 title = "List Preference",
-                entriesValues = mapOf("Profile" to R.string.profile),
+                entriesValues = persistentMapOf("Profile" to R.string.profile),
                 preferenceValue = null,
                 icon = R.drawable.settings_24,
                 onValueChange = {},

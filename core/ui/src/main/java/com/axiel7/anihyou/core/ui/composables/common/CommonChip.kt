@@ -2,7 +2,9 @@ package com.axiel7.anihyou.core.ui.composables.common
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
@@ -48,12 +50,14 @@ fun FilterSelectionChip(
         label = { Text(text = text) },
         modifier = modifier,
         leadingIcon = {
-            if (selected) {
-                Icon(
-                    painter = painterResource(R.drawable.check_20),
-                    contentDescription = "check",
-                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                )
+            Box(modifier = Modifier.animateContentSize()) {
+                if (selected) {
+                    Icon(
+                        painter = painterResource(R.drawable.check_20),
+                        contentDescription = "check",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize),
+                    )
+                }
             }
         }
     )

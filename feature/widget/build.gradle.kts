@@ -16,3 +16,11 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 }
+
+composeCompiler {
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
+}
+
+composeStabilityAnalyzer {
+    stabilityConfigurationFiles.add(isolated.rootProject.projectDirectory.file("stability_config.conf"))
+}

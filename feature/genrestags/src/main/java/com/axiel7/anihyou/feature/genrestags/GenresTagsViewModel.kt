@@ -7,11 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
-import com.axiel7.anihyou.core.model.genre.Genre
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.genre.SelectableGenre
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagStringRes
-import com.axiel7.anihyou.core.model.genre.Tag
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -27,17 +25,16 @@ import kotlin.time.Duration.Companion.milliseconds
 @Stable
 @OptIn(FlowPreview::class)
 class GenresTagsViewModel(
-    @InjectedParam private val externalGenre: Genre? = null,
-    @InjectedParam private val externalTag: Tag? = null,
+    @InjectedParam private val genresAndTagsForSearch: GenresAndTagsForSearch,
     private val searchRepository: SearchRepository,
     context: Context,
 ) : UiStateViewModel<GenresTagsUiState>(), GenresTagsEvent {
 
+    private var externalGenre = genresAndTagsForSearch.genreIn.firstOrNull()
+    private var externalTag = genresAndTagsForSearch.tagIn.firstOrNull()
+
     override val initialState = GenresTagsUiState(
-        genresAndTagsForSearch = GenresAndTagsForSearch(
-            genreIn = setOfNotNull(externalGenre?.genre),
-            tagIn = setOfNotNull(externalTag?.tag)
-        )
+        genresAndTagsForSearch = genresAndTagsForSearch
     )
 
     override fun onFilterChanged(value: String) {
@@ -53,8 +50,12 @@ class GenresTagsViewModel(
     }
 
     override suspend fun onGenreRemoved(name: String): GenresAndTagsForSearch {
+        val selectableExternalGenre = externalGenre?.let {
+            SelectableGenre(it).also { externalGenre = null }
+        }
         val uiState = mutableUiState.first()
-        uiState.genres.find { it.name == name }?.let { genre ->
+        val genre = uiState.genres.find { it.name == name } ?: selectableExternalGenre
+        if (genre != null) {
             uiState.updateGenre(genre.copy(state = SelectableGenre.State.NONE))
             val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
             mutableUiState.emit(
@@ -72,8 +73,12 @@ class GenresTagsViewModel(
     }
 
     override suspend fun onTagRemoved(name: String): GenresAndTagsForSearch {
+        val selectableExternalTag = externalTag?.let {
+            SelectableGenre(it).also { externalTag = null }
+        }
         val uiState = mutableUiState.first()
-        uiState.tags.find { it.name == name }?.let { tag ->
+        val tag = uiState.tags.find { it.name == name } ?: selectableExternalTag
+        if (tag != null) {
             uiState.updateTag(tag.copy(state = SelectableGenre.State.NONE))
             val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
             mutableUiState.emit(
@@ -140,7 +145,7 @@ class GenresTagsViewModel(
                         uiState.genres.clear()
                         uiState.genres.addAll(
                             result.data.genres.map {
-                                if (it.name == externalGenre?.genre)
+                                if (it.name == externalGenre)
                                     it.copy(state = SelectableGenre.State.SELECTED)
                                 else it
                             }
@@ -149,7 +154,7 @@ class GenresTagsViewModel(
                         uiState.tags.clear()
                         uiState.tags.addAll(
                             result.data.tags.map {
-                                if (it.name == externalTag?.tag)
+                                if (it.name == externalTag)
                                     it.copy(state = SelectableGenre.State.SELECTED)
                                 else it
                             }

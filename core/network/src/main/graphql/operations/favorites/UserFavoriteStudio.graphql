@@ -2,6 +2,10 @@ query UserFavoritesStudio($userId: Int, $page: Int, $perPage: Int) {
     User(id: $userId) {
         favourites {
             studios(page: $page, perPage: $perPage) {
+                edges {
+                    id
+                    favouriteOrder
+                }
                 nodes {
                     id
                     name

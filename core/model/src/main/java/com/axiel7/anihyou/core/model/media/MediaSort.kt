@@ -95,5 +95,7 @@ enum class MediaSortSearch(
         fun valueOf(value: MediaSort) = entries.find {
             it.desc == value || it.asc == value
         }
+
+        val studioSortEntries = listOf(TITLE, POPULARITY, SCORE, FAVOURITES, START_DATE, END_DATE)
     }
 }

@@ -272,6 +272,45 @@ data class GenericNotification(
                         )
                     )
                 }
+                aniListNotification.onMediaSubmissionUpdateNotification?.let { noti ->
+                    tempList.add(
+                        GenericNotification(
+                            id = noti.id,
+                            text = noti.contexts?.joinToString(" ").orEmpty(),
+                            imageUrl = noti.media?.coverImage?.medium,
+                            largeImageUrl = noti.media?.coverImage?.large,
+                            contentId = noti.media?.id ?: 0,
+                            type = noti.type,
+                            createdAt = noti.createdAt,
+                        )
+                    )
+                }
+                aniListNotification.onStaffSubmissionUpdateNotification?.let { noti ->
+                    tempList.add(
+                        GenericNotification(
+                            id = noti.id,
+                            text = noti.contexts?.joinToString(" ").orEmpty(),
+                            imageUrl = noti.staff?.image?.medium,
+                            largeImageUrl = noti.staff?.image?.large,
+                            contentId = noti.staff?.id ?: 0,
+                            type = noti.type,
+                            createdAt = noti.createdAt,
+                        )
+                    )
+                }
+                aniListNotification.onCharacterSubmissionUpdateNotification?.let { noti ->
+                    tempList.add(
+                        GenericNotification(
+                            id = noti.id,
+                            text = noti.contexts?.joinToString(" ").orEmpty(),
+                            imageUrl = noti.character?.image?.medium,
+                            largeImageUrl = noti.character?.image?.large,
+                            contentId = noti.character?.id ?: 0,
+                            type = noti.type,
+                            createdAt = noti.createdAt,
+                        )
+                    )
+                }
             }
             return tempList
         }

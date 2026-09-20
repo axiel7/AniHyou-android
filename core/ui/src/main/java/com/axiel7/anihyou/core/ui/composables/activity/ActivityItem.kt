@@ -9,24 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +30,7 @@ import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
@@ -176,40 +167,25 @@ fun ActivityMenu(
     modifier: Modifier = Modifier,
     onClickDelete: () -> Unit,
 ) {
-    Box(modifier = modifier.wrapContentSize(Alignment.TopEnd)) {
-        var moreExpanded by remember { mutableStateOf(false) }
-        IconButton(
-            onClick = { moreExpanded = !moreExpanded },
-            shapes = IconButtonDefaults.shapes()
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.more_vert_24),
-                contentDescription = stringResource(R.string.show_more),
-            )
-        }
-        DropdownMenuPopup(
-            expanded = moreExpanded,
-            onDismissRequest = { moreExpanded = false }
-        ) {
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShapes(),
-            ) {
-                DropdownMenuItem(
-                    onClick = {
-                        moreExpanded = false
-                        onClickDelete()
-                    },
-                    text = { Text(text = stringResource(R.string.delete)) },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(R.drawable.delete_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
+    IconButtonWithMenu(
+        icon = R.drawable.more_vert_24,
+        contentDescription = stringResource(R.string.show_more),
+        modifier = modifier,
+    ) { onDismiss ->
+        DropdownMenuItem(
+            onClick = {
+                onClickDelete()
+                onDismiss()
+            },
+            text = { Text(text = stringResource(R.string.delete)) },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.delete_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
                 )
             }
-        }
+        )
     }
 }
 

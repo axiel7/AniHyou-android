@@ -4,6 +4,9 @@ package com.axiel7.anihyou.core.base
 
 private const val CLIENT_ID = "8527"
 
+/**
+ * Note: append `.debug` for testing in debug builds
+ */
 const val APP_PACKAGE_NAME = "com.axiel7.anihyou"
 
 const val ANILIST_GRAPHQL_URL = "https://graphql.anilist.co"

@@ -2,10 +2,12 @@ package com.axiel7.anihyou.feature.notifications
 
 import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
+import com.axiel7.anihyou.core.model.notification.GenericNotification
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.ui.common.navigation.Route
-import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -28,6 +30,14 @@ class NotificationsViewModel(
     override fun setType(value: NotificationTypeGroup) {
         mutableUiState.update {
             it.copy(type = value, page = 1, hasNextPage = true)
+        }
+    }
+
+    override fun onRead(notification: GenericNotification) {
+        mutableUiState.value.run {
+            notifications.indexOfFirstOrNull { it.id == notification.id }?.let { index ->
+                notifications[index] = notifications[index].copy(isUnread = false)
+            }
         }
     }
 

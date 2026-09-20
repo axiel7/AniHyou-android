@@ -5,6 +5,7 @@ import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MediaFormat.localized() = when (this) {
@@ -37,7 +38,7 @@ enum class MediaFormatLocalizable(val value: MediaFormat) : Localizable {
     override fun localized() = value.localized()
 
     companion object {
-        val animeEntries = listOf(TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC)
-        val mangaEntries = listOf(MANGA, NOVEL, ONE_SHOT)
+        val animeEntries = persistentListOf(TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC)
+        val mangaEntries = persistentListOf(MANGA, NOVEL, ONE_SHOT)
     }
 }

@@ -145,6 +145,7 @@ private fun ActivityDetailsContent(
                             modifier = Modifier.padding(16.dp),
                             text = uiState.details.text
                                 ?: uiState.details.listActivityFragment?.text().orEmpty(),
+                            userId = uiState.details.userId ?: 0,
                             username = uiState.details.username,
                             avatarUrl = uiState.details.avatarUrl,
                             blurCover = blurAdult && uiState.details.isAdultMedia,
@@ -154,15 +155,11 @@ private fun ActivityDetailsContent(
                             likeCount = uiState.details.likeCount,
                             likes = uiState.details.likes,
                             isLiked = uiState.details.isLiked,
-                            onClickUser = {
-                                uiState.details.userId?.let(navActionManager::toUserDetails)
-                            },
+                            onClickUser = navActionManager::toUserDetails,
                             onClickMedia = {
                                 uiState.details.mediaId?.let(navActionManager::toMediaDetails)
                             },
-                            onClickLike = {
-                                event?.toggleLikeActivity()
-                            },
+                            onClickLike = { event?.toggleLikeActivity() },
                         )
                     } else {
                         ActivityTextViewPlaceholder()
@@ -177,6 +174,7 @@ private fun ActivityDetailsContent(
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 4.dp),
                         text = item.text.orEmpty(),
+                        userId = item.userId ?: 0,
                         username = item.username,
                         avatarUrl = item.avatarUrl,
                         createdAt = item.createdAt,
@@ -184,12 +182,8 @@ private fun ActivityDetailsContent(
                         likeCount = item.likeCount,
                         likes = item.likes,
                         isLiked = item.isLiked,
-                        onClickUser = {
-                            item.userId?.let(navActionManager::toUserDetails)
-                        },
-                        onClickLike = {
-                            event?.toggleLikeReply(item.id)
-                        },
+                        onClickUser = navActionManager::toUserDetails,
+                        onClickLike = { event?.toggleLikeReply(item.id) },
                     )
                 }
             }

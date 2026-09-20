@@ -45,6 +45,8 @@ import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.thread.composables.ChildCommentView
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -103,7 +105,7 @@ fun ThreadCommentView(
     isLiked: Boolean,
     isLocked: Boolean?,
     createdAt: Int,
-    childComments: List<ChildComment?>?,
+    childComments: ImmutableList<ChildComment?>?,
     translatorApp: TranslatorApp,
     toggleLike: suspend (Int) -> Boolean,
     navigateToUserDetails: () -> Unit,
@@ -237,7 +239,7 @@ private fun ThreadCommentViewPreview() {
                     isLiked = false,
                     isLocked = false,
                     createdAt = 1212370032,
-                    childComments = listOf(ChildComment.preview, ChildComment.preview),
+                    childComments = persistentListOf(ChildComment.preview, ChildComment.preview),
                     translatorApp = TranslatorApp.DEFAULT,
                     toggleLike = { true },
                     navigateToUserDetails = {},

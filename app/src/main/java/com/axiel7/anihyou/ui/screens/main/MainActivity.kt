@@ -159,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                             novelTab = novelTab,
                             exploreTab = exploreTab,
                             deepLink = deepLink,
+                            theme = theme,
                             blackColors = useBlackColors,
                             paletteStyle = paletteStyle,
                             setNavigationBarContrastEnforced = {
@@ -189,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 DeepLink(
                     type = type,
-                    id = intent.getIntExtra("content_id", 0).toString()
+                    id = intent.getStringExtra("content_id").orEmpty()
                 )
             }
             // Login intent or anilist link
@@ -242,6 +243,7 @@ fun MainView(
     novelTab: NovelTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
+    theme: Theme,
     blackColors: Boolean,
     paletteStyle: PaletteStyle,
     setNavigationBarContrastEnforced: (Boolean) -> Unit,
@@ -285,6 +287,7 @@ fun MainView(
                     homeTab = homeTab,
                     novelTab = novelTab,
                     exploreTab = exploreTab,
+                    theme = theme,
                     blackColors = blackColors,
                     paletteStyle = paletteStyle,
                     padding = padding,
@@ -305,12 +308,15 @@ fun MainView(
                         homeTab = homeTab,
                         novelTab = novelTab,
                         exploreTab = exploreTab,
+                        theme = theme,
                         blackColors = blackColors,
                         paletteStyle = paletteStyle,
                     )
                 }
             }
-            ReportDrawn()
+            // TODO: uncomment when generating baseline profiles
+            // this causes some crashes on older android versions
+            //ReportDrawn()
         }
     }
 }
@@ -331,6 +337,7 @@ private fun MainPreview() {
             novelTab = NovelTab.MANGA,
             exploreTab = ExploreTab.ANIME,
             deepLink = null,
+            theme = Theme.FOLLOW_SYSTEM,
             blackColors = false,
             paletteStyle = PaletteStyle.TonalSpot,
             setNavigationBarContrastEnforced = {},

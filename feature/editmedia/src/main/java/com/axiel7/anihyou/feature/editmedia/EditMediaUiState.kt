@@ -10,6 +10,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.ImmutableMap
 import java.time.LocalDate
 
 @Immutable
@@ -31,7 +32,7 @@ data class EditMediaUiState(
     val isPrivate: Boolean? = null,
     val isHiddenFromStatusLists: Boolean? = null,
     val notes: String? = null,
-    val customLists: LinkedHashMap<String, Boolean>? = null,
+    val customLists: ImmutableMap<String, Boolean>? = null,
     val openDatePicker: Boolean = false,
     val selectedDateType: Int = -1,
     val updateSuccess: Boolean = false,

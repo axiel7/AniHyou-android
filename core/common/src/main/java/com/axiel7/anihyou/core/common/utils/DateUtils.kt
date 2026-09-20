@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.common.utils
 
 import android.text.format.DateFormat
+import kotlinx.collections.immutable.toImmutableList
 import java.time.DateTimeException
 import java.time.DayOfWeek
 import java.time.Instant
@@ -61,7 +62,7 @@ object DateUtils {
 
     val currentYear = Calendar.getInstance()[Calendar.YEAR]
     const val BASE_YEAR = 1917
-    val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toList()
+    val seasonYears = ((currentYear + 1) downTo BASE_YEAR).toImmutableList()
 
     fun currentTimeSeconds() = System.currentTimeMillis() / 1000
 

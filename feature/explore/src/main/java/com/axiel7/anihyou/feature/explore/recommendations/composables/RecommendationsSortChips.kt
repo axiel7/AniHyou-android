@@ -21,6 +21,7 @@ import com.axiel7.anihyou.core.model.media.RecommendationSortSearch
 import com.axiel7.anihyou.core.network.type.RecommendationSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.chip.AssistChipWithMenu
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RecommendationsSearchChips(
@@ -34,7 +35,7 @@ fun RecommendationsSearchChips(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AssistChipWithMenu(
-            values = RecommendationSortSearch.entries,
+            values = RecommendationSortSearch.entries.toImmutableList(),
             selectedValue = recommendationSortSearch,
             onValueSelected = {
                 onSortChanged((if (isDescending) it.desc else it.asc))

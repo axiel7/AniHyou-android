@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.explore.explore
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -29,6 +31,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.axiel7.anihyou.core.model.ExploreTab
+import com.axiel7.anihyou.core.ui.composables.rememberTopBarContainerColor
 import com.axiel7.anihyou.feature.explore.anime.AnimeDiscoverView
 import com.axiel7.anihyou.feature.explore.manga.MangaDiscoverView
 import com.axiel7.anihyou.feature.explore.recommendations.RecommendationsView
@@ -45,6 +48,8 @@ fun ExploreView(
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultExploreTab.ordinal) }
     val viewModel: ExploreViewModel = koinActivityViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val appBarContainerColor by rememberTopBarContainerColor(topAppBarColors, scrollBehavior)
 
     LaunchedEffect(selectedTabIndex) {
         viewModel.saveExploreTab(selectedTabIndex)
@@ -56,6 +61,7 @@ fun ExploreView(
                 isLoggedIn = isLoggedIn,
                 selectedTabIndex = selectedTabIndex,
                 scrollBehavior = scrollBehavior,
+                colors = topAppBarColors,
             )
             Spacer(
                 modifier = Modifier
@@ -75,7 +81,8 @@ fun ExploreView(
                 .fillMaxSize()
         ) {
             PrimaryScrollableTabRow(
-                selectedTabIndex = selectedTabIndex
+                selectedTabIndex = selectedTabIndex,
+                containerColor = appBarContainerColor,
             ) {
                 ExploreTab.entries.forEach { tab ->
                     Tab(
@@ -85,31 +92,36 @@ fun ExploreView(
                             testTagsAsResourceId = true
                             testTag = tab.name
                         },
-                        text = { Text(text = tab.localized()) }
+                        text = { Text(text = tab.localized()) },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
 
-            when (ExploreTab.entries[selectedTabIndex]) {
-                ExploreTab.ANIME -> {
-                    AnimeDiscoverView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
-                }
+            AnimatedContent(
+                targetState = ExploreTab.entries[selectedTabIndex]
+            ) { tab ->
+                when (tab) {
+                    ExploreTab.ANIME -> {
+                        AnimeDiscoverView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
 
-                ExploreTab.MANGA -> {
-                    MangaDiscoverView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
-                }
+                    ExploreTab.MANGA -> {
+                        MangaDiscoverView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
 
-                ExploreTab.RECOMMENDATIONS -> {
-                    RecommendationsView(
-                        isLoggedIn = isLoggedIn,
-                        contentPadding = contentPadding
-                    )
+                    ExploreTab.RECOMMENDATIONS -> {
+                        RecommendationsView(
+                            isLoggedIn = isLoggedIn,
+                            contentPadding = contentPadding
+                        )
+                    }
                 }
             }
         }

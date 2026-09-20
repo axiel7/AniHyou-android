@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -45,6 +44,7 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
+import com.axiel7.anihyou.core.ui.composables.rememberTopBarContainerColor
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItem
@@ -76,6 +76,9 @@ private fun NotificationsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val appBarContainerColor by rememberTopBarContainerColor(topAppBarColors, topAppBarScrollBehavior)
+
     val listState = rememberLazyListState()
     if (!uiState.isLoading) {
         listState.OnBottomReached(buffer = 3, onLoadMore = { event?.onLoadMore() })
@@ -88,11 +91,18 @@ private fun NotificationsContent(
         title = stringResource(R.string.notifications),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         scrollBehavior = topAppBarScrollBehavior,
+        topAppBarColors = topAppBarColors,
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = uiState.fetchFromNetwork,
             onRefresh = { event?.refresh() },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
+                ),
             state = pullRefreshState,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
@@ -103,13 +113,7 @@ private fun NotificationsContent(
             }
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .padding(
-                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                        top = padding.calculateTopPadding(),
-                        end = padding.calculateEndPadding(LocalLayoutDirection.current)
-                    )
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 state = listState,
                 contentPadding = PaddingValues(
                     bottom = padding.calculateBottomPadding()
@@ -120,7 +124,7 @@ private fun NotificationsContent(
                 ) {
                     Row(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background)
+                            .background(appBarContainerColor)
                             .horizontalScroll(rememberScrollState())
                             .padding(start = 16.dp, end = 8.dp)
                     ) {
@@ -155,12 +159,14 @@ private fun NotificationsContent(
                         subtitle = item.createdAt?.toLong()?.dateToRelativeText(),
                         isUnread = item.isUnread,
                         onClick = {
+                            if (item.isUnread) event?.onRead(item)
                             when (item.type) {
                                 NotificationType.AIRING,
                                 NotificationType.RELATED_MEDIA_ADDITION,
                                 NotificationType.MEDIA_DATA_CHANGE,
                                 NotificationType.MEDIA_MERGE,
-                                NotificationType.MEDIA_DELETION ->
+                                NotificationType.MEDIA_DELETION,
+                                NotificationType.MEDIA_SUBMISSION_UPDATE ->
                                     navActionManager.toMediaDetails(item.contentId)
 
                                 NotificationType.THREAD_SUBSCRIBED,
@@ -181,7 +187,13 @@ private fun NotificationsContent(
                                 NotificationType.FOLLOWING ->
                                     navActionManager.toUserDetails(item.contentId)
 
-                                else -> {}
+                                NotificationType.STAFF_SUBMISSION_UPDATE ->
+                                    navActionManager.toStaffDetails(item.contentId)
+
+                                NotificationType.CHARACTER_SUBMISSION_UPDATE ->
+                                    navActionManager.toCharacterDetails(item.contentId)
+
+                                NotificationType.UNKNOWN__, null -> {}
                             }
                         },
                         onClickImage = {

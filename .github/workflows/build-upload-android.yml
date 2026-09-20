@@ -69,7 +69,7 @@ jobs:
           elif [[ $MSG == release:* ]]; then
             echo "is_release=true" >> $GITHUB_OUTPUT
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
-            echo "tag_name=v${{ steps.get_version.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "tag_name=${{ steps.get_version.outputs.version }}" >> $GITHUB_OUTPUT
           else
             echo "is_release=false" >> $GITHUB_OUTPUT
           fi

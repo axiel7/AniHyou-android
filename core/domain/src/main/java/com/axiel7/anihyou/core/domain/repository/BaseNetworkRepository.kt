@@ -24,7 +24,7 @@ abstract class BaseNetworkRepository(
     }
 
     protected suspend fun <D : Operation.Data, R> ApolloResponse<D>.asDataResult(
-        transform: (D) -> R
+        transform: suspend (D) -> R
     ) = when {
         data != null -> DataResult.Success(transform(data!!))
 

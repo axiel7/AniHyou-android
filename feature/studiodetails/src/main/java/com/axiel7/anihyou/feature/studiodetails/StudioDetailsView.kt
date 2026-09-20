@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -12,7 +13,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,20 +27,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.model.media.MediaSortSearch
+import com.axiel7.anihyou.core.model.user.UserMediaListSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
-import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
+import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithMediumTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
+import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
@@ -76,18 +85,10 @@ private fun StudioDetailsContent(
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
-    DefaultScaffoldWithSmallTopAppBar(
+    DefaultScaffoldWithMediumTopAppBar(
         title = uiState.details?.name ?: stringResource(R.string.loading),
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
-        actions = {
-            FavoriteIconButton(
-                isFavorite = uiState.details?.isFavourite == true,
-                favoritesCount = uiState.details?.favourites ?: 0,
-                onClick = {
-                    event?.toggleFavorite()
-                }
-            )
-        },
+        actions = { AppBarActions(uiState, event) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         LazyVerticalGrid(
@@ -144,6 +145,89 @@ private fun StudioDetailsContent(
             }
         }
     }//: Scaffold
+}
+
+@Composable
+private fun AppBarActions(
+    uiState: StudioDetailsUiState,
+    event: StudioDetailsEvent?,
+) {
+    FavoriteIconButton(
+        isFavorite = uiState.details?.isFavourite == true,
+        favoritesCount = uiState.details?.favourites ?: 0,
+        onClick = { event?.toggleFavorite() }
+    )
+    SortMenu(uiState, event)
+    MoreMenu(uiState, event)
+}
+
+@Composable
+private fun SortMenu(
+    uiState: StudioDetailsUiState,
+    event: StudioDetailsEvent?,
+) {
+    IconButtonWithMenu(
+        icon = R.drawable.sort_24,
+        contentDescription = stringResource(R.string.sort)
+    ) { onDismiss ->
+        MediaSortSearch.studioSortEntries.fastForEachIndexed { index, item ->
+            SelectableDropdownMenuItem(
+                selected = uiState.sort == item.asc || uiState.sort == item.desc,
+                onClick = {
+                    event?.setSort(if (uiState.sort == item.desc) item.asc else item.desc)
+                    onDismiss()
+                },
+                text = { Text(text = item.localized()) },
+                shapes = MenuDefaults.itemShape(index, UserMediaListSort.entries.size),
+                modifier = Modifier.padding(end = 8.dp),
+                leadingIcon = {
+                    if (uiState.sort == item.asc) {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_upward_24),
+                            contentDescription = stringResource(R.string.ascending),
+                        )
+                    } else if (uiState.sort == item.desc) {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_downward_24),
+                            contentDescription = stringResource(R.string.descending),
+                        )
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun MoreMenu(
+    uiState: StudioDetailsUiState,
+    event: StudioDetailsEvent?,
+) {
+    IconButtonWithMenu(
+        icon = R.drawable.more_vert_24,
+        contentDescription = stringResource(R.string.show_more),
+    ) { onDismiss ->
+        SelectableDropdownMenuItem(
+            selected = uiState.onMyList != null,
+            onClick = {
+                event?.toggleOnMyList()
+                onDismiss()
+            },
+            text = { Text(text = stringResource(R.string.on_my_list)) },
+            shapes = MenuDefaults.itemShape(0, 1),
+            selectedLeadingIcon = {
+                if (uiState.onMyList != null) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (uiState.onMyList) R.drawable.check_20 else R.drawable.close_20
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.size(MenuDefaults.LeadingIconSize)
+                    )
+                }
+            },
+        )
+    }
 }
 
 @Preview

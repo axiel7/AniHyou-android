@@ -1,12 +1,21 @@
 package com.axiel7.anihyou.ui.screens.main.composables
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,9 +44,20 @@ fun MainBottomNavBar(
         NavigationBar {
             BottomDestination.values.forEachIndexed { index, dest ->
                 val isSelected = dest.route == currentTopRoute
+
+                val image = AnimatedImageVector.animatedVectorResource(dest.icon)
+                var atEnd by rememberSaveable { mutableStateOf(isSelected) }
+
+                LaunchedEffect(isSelected) {
+                    atEnd = isSelected
+                }
+
                 NavigationBarItem(
                     icon = {
-                        dest.Icon(selected = isSelected)
+                        Icon(
+                            painter = rememberAnimatedVectorPainter(image, atEnd),
+                            contentDescription = stringResource(dest.title),
+                        )
                     },
                     modifier = Modifier.semantics {
                         testTagsAsResourceId = true
@@ -60,6 +80,7 @@ fun MainBottomNavBar(
                                 else -> {}
                             }
                         } else {
+                            atEnd = !atEnd
                             onItemSelected(index)
                             navActionManager.navigate(dest.route)
                         }

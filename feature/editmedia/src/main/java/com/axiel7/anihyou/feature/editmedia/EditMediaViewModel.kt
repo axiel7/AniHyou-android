@@ -15,6 +15,7 @@ import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -65,7 +66,7 @@ class EditMediaViewModel(
                 defaultPreferencesRepository.mangaCustomLists.first()
             }
             savedCustomsLists?.forEach { customLists[it] = false }
-            mutableUiState.update { it.copy(customLists = customLists) }
+            mutableUiState.update { it.copy(customLists = customLists.toImmutableMap()) }
         }
     }
 
@@ -243,7 +244,8 @@ class EditMediaViewModel(
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            customLists = result.data?.customLists as? LinkedHashMap<String, Boolean>,
+                            customLists = (result.data?.customLists as? LinkedHashMap<String, Boolean>)
+                                ?.toImmutableMap(),
                             openCustomListsDialog = false
                         )
                     } else {
@@ -267,7 +269,7 @@ class EditMediaViewModel(
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,
-                            customLists = result.data,
+                            customLists = result.data?.toImmutableMap(),
                             openCustomListsDialog = true
                         )
                     } else {

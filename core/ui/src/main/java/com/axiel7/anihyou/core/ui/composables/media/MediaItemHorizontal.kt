@@ -48,6 +48,8 @@ import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.materialkolor.ktx.harmonize
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MediaItemHorizontal(
@@ -199,7 +201,7 @@ fun MediaItemHorizontal(
     episodes: Int?,
     chapters: Int?,
     duration: Int?,
-    genres: List<String>?,
+    genres: ImmutableList<String>?,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
     status: MediaListStatus? = null,
@@ -353,7 +355,7 @@ private fun MediaItemHorizontalPreview() {
                     format = MediaFormat.TV,
                     year = 2014,
                     mediaStatus = MediaStatus.NOT_YET_RELEASED,
-                    genres = listOf("Adventure", "Drama", "Action", "Supernatural", "Romance"),
+                    genres = persistentListOf("Adventure", "Drama", "Action", "Supernatural", "Romance"),
                     onClick = {}
                 )
                 MediaItemHorizontalPlaceholder()

@@ -6,6 +6,7 @@ import com.apollographql.cache.normalized.apolloStore
 import com.axiel7.anihyou.core.network.SearchStudioQuery
 import com.axiel7.anihyou.core.network.StudioDetailsQuery
 import com.axiel7.anihyou.core.network.StudioMediaQuery
+import com.axiel7.anihyou.core.network.type.MediaSort
 
 class StudioApi (
     private val client: ApolloClient
@@ -47,12 +48,16 @@ class StudioApi (
 
     fun studioMediaQuery(
         studioId: Int,
+        sort: List<MediaSort>,
+        onList: Boolean?,
         page: Int,
         perPage: Int,
     ) = client
         .query(
             StudioMediaQuery(
                 studioId = Optional.present(studioId),
+                sort = Optional.present(sort),
+                onList = Optional.presentIfNotNull(onList),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage),
             )

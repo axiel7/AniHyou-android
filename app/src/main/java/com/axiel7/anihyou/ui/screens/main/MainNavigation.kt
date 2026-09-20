@@ -33,6 +33,7 @@ import com.axiel7.anihyou.core.model.DeepLink
 import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
 import com.axiel7.anihyou.core.model.NovelTab
+import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.common.LocalMarkdownUriHandler
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
@@ -101,6 +102,7 @@ fun MainNavigation(
     novelTab: NovelTab,
     exploreTab: ExploreTab,
     deepLink: DeepLink?,
+    theme: Theme,
     blackColors: Boolean,
     paletteStyle: PaletteStyle,
     padding: PaddingValues = PaddingValues(),
@@ -164,6 +166,8 @@ fun MainNavigation(
                 DeepLink.Type.ACTIVITY -> {
                     deepLink.id.toIntOrNull()?.let { navActionManager.toActivityDetails(it) }
                 }
+
+                DeepLink.Type.CALENDAR -> navActionManager.toCalendar()
             }
         }
     }
@@ -283,6 +287,7 @@ fun MainNavigation(
         entry<Route.MediaDetails> {
             MediaDetailsView(
                 arguments = it.copy(isLoggedIn = isLoggedIn),
+                theme = theme,
                 blackColors = blackColors,
                 paletteStyle = paletteStyle,
             )

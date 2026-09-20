@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.feature.characterdetails
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -36,10 +37,12 @@ import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
+import com.axiel7.anihyou.core.ui.composables.rememberTopBarContainerColor
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterInfoView
 import com.axiel7.anihyou.feature.characterdetails.content.CharacterMediaView
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -73,6 +76,8 @@ private fun CharacterDetailsContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     )
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val appBarContainerColor by rememberTopBarContainerColor(topAppBarColors, topAppBarScrollBehavior)
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val haptic = LocalHapticFeedback.current
@@ -83,7 +88,7 @@ private fun CharacterDetailsContent(
 
     if (showVaSheet) {
         CharacterVoiceActorsSheet(
-            voiceActors = uiState.selectedMediaVoiceActors.orEmpty(),
+            voiceActors = uiState.selectedMediaVoiceActors ?: persistentListOf(),
             scope = scope,
             navigateToStaffDetails = navActionManager::toStaffDetails,
             onDismiss = {
@@ -118,7 +123,8 @@ private fun CharacterDetailsContent(
             ShareIconButton(url = uiState.character?.siteUrl.orEmpty())
         },
         snackbarHost = snackbarManager::SnackbarHost,
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior,
+        topAppBarColors = topAppBarColors,
     ) { padding ->
         Column(
             modifier = Modifier
@@ -130,7 +136,9 @@ private fun CharacterDetailsContent(
         ) {
             ConnectedButtonGroup(
                 items = CharacterDetailsTab.tabRows,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                modifier = Modifier
+                    .background(appBarContainerColor)
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
                 selectedIndex = selectedTabIndex,
                 onItemSelection = { selectedTabIndex = it }
             )

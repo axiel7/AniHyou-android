@@ -54,6 +54,7 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.formatted
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
+import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
 private const val TagLimit = 10
@@ -142,19 +143,15 @@ fun MediaInformationView(
         if (isAnime) {
             InfoClickableItemView(
                 title = stringResource(R.string.studios),
-                items = uiState.studios.orEmpty(),
+                items = uiState.studios ?: persistentListOf(),
                 itemName = { it.name },
-                onItemClicked = {
-                    navigateToStudioDetails(it.id)
-                }
+                onItemClicked = { navigateToStudioDetails(it.id) }
             )
             InfoClickableItemView(
                 title = stringResource(R.string.producers),
-                items = uiState.producers.orEmpty(),
+                items = uiState.producers ?: persistentListOf(),
                 itemName = { it.name },
-                onItemClicked = {
-                    navigateToStudioDetails(it.id)
-                }
+                onItemClicked = { navigateToStudioDetails(it.id) }
             )
         }
 

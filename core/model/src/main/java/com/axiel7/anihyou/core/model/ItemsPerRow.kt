@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.model.base.Localizable
 import com.axiel7.anihyou.core.resources.R
+import kotlinx.collections.immutable.toImmutableMap
 
 enum class ItemsPerRow(val value: Int) : Localizable {
     DEFAULT(0),
@@ -37,7 +38,7 @@ enum class ItemsPerRow(val value: Int) : Localizable {
     override fun localized() = stringResource(stringRes)
 
     companion object {
-        val entriesLocalized = entries.associateWith { it.stringRes }
+        val entriesLocalized = entries.associateWith { it.stringRes }.toImmutableMap()
 
         fun valueOf(value: Int) = entries.find { it.value == value }
     }

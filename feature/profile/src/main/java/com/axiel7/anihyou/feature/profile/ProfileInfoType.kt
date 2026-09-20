@@ -2,12 +2,13 @@ package com.axiel7.anihyou.feature.profile
 
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.TabRowItem
+import kotlinx.collections.immutable.persistentListOf
 
 enum class ProfileInfoType {
     ABOUT, ACTIVITY, STATS, FAVORITES, SOCIAL;
 
     companion object {
-        val tabRows = arrayOf(
+        val tabRows = persistentListOf(
             TabRowItem(ABOUT, icon = R.drawable.info_24),
             TabRowItem(ACTIVITY, icon = R.drawable.forum_24),
             TabRowItem(STATS, icon = R.drawable.bar_chart_24),

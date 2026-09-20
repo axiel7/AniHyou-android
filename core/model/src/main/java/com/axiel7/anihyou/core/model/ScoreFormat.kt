@@ -46,6 +46,7 @@ import com.axiel7.anihyou.core.resources.stat_light_on60
 import com.axiel7.anihyou.core.resources.stat_light_on70
 import com.axiel7.anihyou.core.resources.stat_light_on80
 import com.axiel7.anihyou.core.resources.stat_light_on90
+import kotlinx.collections.immutable.toImmutableMap
 import kotlin.math.roundToInt
 
 fun ScoreFormat.maxValue() = when (this) {
@@ -72,7 +73,7 @@ fun ScoreFormat.stringRes() = when (this) {
 }
 
 val ScoreFormat.Companion.entriesLocalized
-    get() = knownEntries.associateWith { it.stringRes() }
+    get() = knownEntries.associateWith { it.stringRes() }.toImmutableMap()
 
 @Composable
 fun Double?.scorePrimaryColor(format: ScoreFormat): Color {
