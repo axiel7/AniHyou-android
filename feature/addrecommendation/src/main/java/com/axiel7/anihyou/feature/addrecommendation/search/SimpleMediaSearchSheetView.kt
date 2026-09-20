@@ -63,8 +63,7 @@ import org.koin.core.parameter.parametersOf
 fun SimpleMediaSearchSheetView(
     mediaType: MediaType,
     onSelected: (SearchMediaQuery.Medium) -> Unit,
-    onDismiss: () -> Unit,
-    sheetState: SheetState
+    sheetState: SheetState,
 ) {
     val viewModel: SimpleMediaSearchViewModel = koinViewModel { parametersOf(mediaType) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -72,9 +71,8 @@ fun SimpleMediaSearchSheetView(
     SearchContent(
         uiState = uiState,
         event = viewModel,
-        onDismiss = onDismiss,
         onSelected = onSelected,
-        sheetState = sheetState
+        sheetState = sheetState,
     )
 }
 
@@ -83,7 +81,6 @@ fun SimpleMediaSearchSheetView(
 private fun SearchContent(
     uiState: SimpleMediaSearchUiState,
     event: SimpleMediaSearchEvent?,
-    onDismiss: () -> Unit,
     onSelected: (SearchMediaQuery.Medium) -> Unit,
     sheetState: SheetState,
 ) {
@@ -98,10 +95,10 @@ private fun SearchContent(
     }
 
     ModalBottomSheet(
-        onDismissed = onDismiss,
+        onDismissed = {},
         sheetState = sheetState,
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-    ) {
+    ) { dismiss ->
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
             TextField(
                 state = textFieldState,
@@ -113,7 +110,7 @@ private fun SearchContent(
                 },
                 leadingIcon = {
                     IconButton(
-                        onClick = singleClick(onDismiss),
+                        onClick = singleClick(dismiss),
                         shapes = IconButtonDefaults.shapes(),
                     ) {
                         Icon(
@@ -184,7 +181,7 @@ private fun SearchContent(
                                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                                 onClick = {
                                     onSelected(item)
-                                    onDismiss()
+                                    dismiss()
                                 },
                                 status = item.mediaListEntry?.basicMediaListEntry?.status,
                             )

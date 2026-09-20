@@ -25,9 +25,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +51,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlacehold
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.addrecommendation.search.SimpleMediaSearchSheetView
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -78,6 +77,7 @@ private fun AddRecommendationContent(
     val blurAdult = LocalBlurAdult.current
     val resultBus = LocalResultEventBus.current
     val navActionManager = LocalNavActionManager.current
+    val scope = rememberCoroutineScope()
     val snackbarManager = rememberSnackbarManager()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -86,7 +86,6 @@ private fun AddRecommendationContent(
         initialValue = SheetValue.Hidden,
         enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
     )
-    var showSearchSheet by rememberSaveable { mutableStateOf(false) }
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
 
@@ -97,12 +96,11 @@ private fun AddRecommendationContent(
         }
     }
 
-    if (showSearchSheet) {
+    if (sheetState.isVisible) {
         SimpleMediaSearchSheetView(
             mediaType = uiState.media?.basicMediaDetails?.type ?: MediaType.ANIME,
             onSelected = { event?.insertRecommendation(it) },
-            onDismiss = { showSearchSheet = false },
-            sheetState = sheetState
+            sheetState = sheetState,
         )
     }
 
@@ -182,7 +180,7 @@ private fun AddRecommendationContent(
             // recommended media
             if (rec == null) {
                 OutlinedCard(
-                    onClick = { showSearchSheet = true },
+                    onClick = { scope.launch { sheetState.show() } },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
@@ -226,7 +224,7 @@ private fun AddRecommendationContent(
                     chapters = rec.chapters,
                     duration = rec.duration,
                     genres = rec.genres?.filterNotNull()?.toImmutableList(),
-                    onClick = { showSearchSheet = true },
+                    onClick = { scope.launch { sheetState.show() } },
                 )
             }
         }
