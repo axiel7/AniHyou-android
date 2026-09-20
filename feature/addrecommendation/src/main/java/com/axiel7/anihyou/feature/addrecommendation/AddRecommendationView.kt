@@ -52,6 +52,7 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontal
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemHorizontalPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.addrecommendation.search.SearchView
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -98,7 +99,7 @@ private fun AddRecommendationContent(
 
     if (showSearchSheet) {
         SearchView(
-            searchType = uiState.media?.basicMediaDetails?.type ?: MediaType.ANIME,
+            mediaType = uiState.media?.basicMediaDetails?.type ?: MediaType.ANIME,
             onSelected = { event?.insertRecommendation(it) },
             onDismiss = { showSearchSheet = false },
             sheetState = sheetState
@@ -157,7 +158,7 @@ private fun AddRecommendationContent(
                     episodes = media.basicMediaDetails.episodes,
                     chapters = media.basicMediaDetails.chapters,
                     duration = media.duration,
-                    genres = media.genres?.filterNotNull(),
+                    genres = media.genres?.filterNotNull()?.toImmutableList(),
                     onClick = {},
                 )
             } else {
@@ -224,7 +225,7 @@ private fun AddRecommendationContent(
                     episodes = rec.episodes,
                     chapters = rec.chapters,
                     duration = rec.duration,
-                    genres = rec.genres?.filterNotNull(),
+                    genres = rec.genres?.filterNotNull()?.toImmutableList(),
                     onClick = { showSearchSheet = true },
                 )
             }

@@ -1,9 +1,10 @@
 package com.axiel7.anihyou.feature.addrecommendation.search
 
+import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.UiEvent
-import com.axiel7.anihyou.core.network.type.MediaType
 
-interface SimpleModalBottomSearchEvent : UiEvent {
+@Immutable
+interface SimpleMediaSearchEvent : UiEvent {
     fun setQuery(query: String)
-    fun search(type: MediaType)
+    fun search()
 }

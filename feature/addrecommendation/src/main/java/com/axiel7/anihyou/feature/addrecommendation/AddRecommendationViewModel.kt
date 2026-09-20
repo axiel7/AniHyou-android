@@ -10,7 +10,6 @@ import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import org.koin.core.annotation.InjectedParam
 
 class AddRecommendationViewModel(
@@ -32,7 +31,13 @@ class AddRecommendationViewModel(
             rating = RecommendationRating.RATE_UP
         ).onEach { result ->
             if (result is DataResult.Success) {
-                mutableUiState.update { it.copy(isLoading = false, isSaved = true, returnedRecommendation = result.data.SaveRecommendation?.mediaRecommended) }
+                mutableUiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isSaved = true,
+                        returnedRecommendation = result.data
+                    )
+                }
             } else if (result is DataResult.Error) {
                 result.toUiState()
             }
@@ -44,7 +49,7 @@ class AddRecommendationViewModel(
         // should fetch it from Cache
         mediaRepository.getMediaDetails(mediaId = arguments.mediaId)
             .onEach { result ->
-                mutableUiState.updateAndGet {
+                mutableUiState.update {
                     if (result is DataResult.Success) {
                         it.copy(
                             isLoading = false,

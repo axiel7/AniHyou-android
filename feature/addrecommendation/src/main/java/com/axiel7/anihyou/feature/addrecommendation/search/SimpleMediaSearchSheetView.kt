@@ -32,7 +32,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,22 +56,22 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.sheet.ModalBottomSheet
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(
-    searchType: MediaType,
+    mediaType: MediaType,
     onSelected: (SearchMediaQuery.Medium) -> Unit,
     onDismiss: () -> Unit,
     sheetState: SheetState
 ) {
-    val viewModel: SimpleModalBottomSearchViewModel = koinViewModel()
+    val viewModel: SimpleMediaSearchViewModel = koinViewModel { parametersOf(mediaType) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SearchContent(
         uiState = uiState,
         event = viewModel,
-        searchType = searchType,
         onDismiss = onDismiss,
         onSelected = onSelected,
         sheetState = sheetState
@@ -82,9 +81,8 @@ fun SearchView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchContent(
-    uiState: SimpleModalBottomSearchUiState,
-    event: SimpleModalBottomSearchEvent?,
-    searchType: MediaType,
+    uiState: SimpleMediaSearchUiState,
+    event: SimpleMediaSearchEvent?,
     onDismiss: () -> Unit,
     onSelected: (SearchMediaQuery.Medium) -> Unit,
     sheetState: SheetState,
@@ -130,7 +128,7 @@ private fun SearchContent(
                             onClick = {
                                 textFieldState.clearText()
                                 event?.setQuery("")
-                                event?.search(searchType)
+                                event?.search()
                             },
                             shapes = IconButtonDefaults.shapes()
                         ) {
@@ -145,7 +143,7 @@ private fun SearchContent(
                 onKeyboardAction = KeyboardActionHandler { defaultAction ->
                     keyboardController?.hide()
                     event?.setQuery(textFieldState.text.toString())
-                    event?.search(searchType)
+                    event?.search()
                     defaultAction()
                 },
                 lineLimits = TextFieldLineLimits.SingleLine,

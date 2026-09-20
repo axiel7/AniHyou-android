@@ -239,8 +239,9 @@ class MediaDetailsViewModel(
             recommendations?.find { it.mediaRecommended.id == recommendationId } ?: return
 
         val previousUserRating = targetNode.mediaRecommended.userRating
+        // if the new rating is the same as the old one remove the rating
         val newRating =
-            if (previousUserRating == rating) RecommendationRating.NO_RATING else rating // if the new rating is the same as the old one remove the rating
+            if (previousUserRating == rating) RecommendationRating.NO_RATING else rating
 
         mediaRepository.saveRecommendation(
             mediaId = arguments.id, // base media id
@@ -254,10 +255,8 @@ class MediaDetailsViewModel(
                         if (node.mediaRecommended.id == recommendationId) {
                             node.copy(
                                 mediaRecommended = node.mediaRecommended.copy(
-                                    rating = result.data.SaveRecommendation?.mediaRecommended?.rating
-                                        ?: node.mediaRecommended.rating,
-                                    userRating = result.data.SaveRecommendation?.mediaRecommended?.userRating
-                                        ?: newRating
+                                    rating = result.data?.rating ?: node.mediaRecommended.rating,
+                                    userRating = result.data?.userRating ?: newRating
                                 )
                             )
                         } else node
@@ -274,7 +273,7 @@ class MediaDetailsViewModel(
 
     override fun addRecommendation(media: MediaRecommended) {
         val newRecommendation = MediaRelationsAndRecommendationsQuery.Node(
-            __typename = "Recommendation",
+            __typename = "MediaRelationsAndRecommendationsQuery.Node",
             id = media.id,
             mediaRecommended = media
         )
@@ -282,7 +281,8 @@ class MediaDetailsViewModel(
         mutableUiState.update { state ->
             val currentRelAndRecs = state.relationsAndRecommendations
             if (currentRelAndRecs != null) {
-                val updatedRecs = listOf(newRecommendation) + currentRelAndRecs.recommendations.filterNot { media.mediaRecommendation?.id == it.mediaRecommended.mediaRecommendation?.id }
+                val updatedRecs = listOf(newRecommendation) + currentRelAndRecs.recommendations
+                    .filterNot { media.mediaRecommendation?.id == it.mediaRecommended.mediaRecommendation?.id }
                 state.copy(relationsAndRecommendations = currentRelAndRecs.copy(recommendations = updatedRecs))
             } else {
                 state

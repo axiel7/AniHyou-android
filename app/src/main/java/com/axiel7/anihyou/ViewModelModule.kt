@@ -11,7 +11,7 @@ import com.axiel7.anihyou.feature.explore.charts.MediaChartViewModel
 import com.axiel7.anihyou.feature.explore.explore.ExploreViewModel
 import com.axiel7.anihyou.feature.explore.manga.MangaExploreViewModel
 import com.axiel7.anihyou.feature.explore.recommendations.RecommendationsViewModel
-import com.axiel7.anihyou.feature.addrecommendation.search.SimpleModalBottomSearchViewModel
+import com.axiel7.anihyou.feature.addrecommendation.search.SimpleMediaSearchViewModel
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeViewModel
 import com.axiel7.anihyou.feature.genrestags.GenresTagsViewModel
@@ -85,5 +85,5 @@ val viewModelModule = module {
     viewModel<PriorityColorViewModel>()
     viewModel<MediaCharactersViewModel>()
     viewModel<AddRecommendationViewModel>()
-    viewModel<SimpleModalBottomSearchViewModel>()
+    viewModel<SimpleMediaSearchViewModel>()
 }
