@@ -2,14 +2,12 @@ package com.axiel7.anihyou.feature.addrecommendation.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -98,7 +94,7 @@ private fun SearchContent(
         sheetState = sheetState,
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
     ) { dismiss ->
-        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+        Column {
             TextField(
                 state = textFieldState,
                 modifier = Modifier
@@ -150,46 +146,39 @@ private fun SearchContent(
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.outlineVariant
                 )
             )
-            Scaffold(
-                Modifier.fillMaxSize()
-            ) { padding ->
-                LazyColumn (
-                    modifier = Modifier.padding(
-                        top = padding.calculateTopPadding() + 8.dp,
-                        bottom = padding.calculateBottomPadding(),
-                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                        end = padding.calculateEndPadding(LocalLayoutDirection.current)
-                    ),
-                    state = listState,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    if (uiState.isSearching) {
-                        items(10) {
-                            MediaItemHorizontalPlaceholder()
-                        }
-                    } else {
-                        items(
-                            items = uiState.searchResult,
-                            key = { it.id }
-                        ) { media ->
-                            MediaItemHorizontal(
-                                title = media.basicMediaDetails.title?.userPreferred.orEmpty(),
-                                imageUrl = media.coverImage?.large,
-                                blurImage = blurAdult && media.basicMediaDetails.isAdult == true,
-                                score = media.averageScore ?: 0,
-                                format = media.format ?: MediaFormat.UNKNOWN__,
-                                year = media.startDate?.year,
-                                mediaStatus = media.status,
-                                episodes = media.basicMediaDetails.episodes,
-                                chapters = media.basicMediaDetails.chapters,
-                                duration = media.duration,
-                                genres = media.genres?.filterNotNull()?.toImmutableList(),
-                                onClick = {
-                                    onSelected(media)
-                                    dismiss()
-                                },
-                            )
-                        }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(top = 8.dp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                if (uiState.isSearching) {
+                    items(10) {
+                        MediaItemHorizontalPlaceholder()
+                    }
+                } else {
+                    items(
+                        items = uiState.searchResult,
+                        key = { it.id }
+                    ) { media ->
+                        MediaItemHorizontal(
+                            title = media.basicMediaDetails.title?.userPreferred.orEmpty(),
+                            imageUrl = media.coverImage?.large,
+                            blurImage = blurAdult && media.basicMediaDetails.isAdult == true,
+                            score = media.averageScore ?: 0,
+                            format = media.format ?: MediaFormat.UNKNOWN__,
+                            year = media.startDate?.year,
+                            mediaStatus = media.status,
+                            episodes = media.basicMediaDetails.episodes,
+                            chapters = media.basicMediaDetails.chapters,
+                            duration = media.duration,
+                            genres = media.genres?.filterNotNull()?.toImmutableList(),
+                            onClick = {
+                                onSelected(media)
+                                dismiss()
+                            },
+                        )
                     }
                 }
             }
