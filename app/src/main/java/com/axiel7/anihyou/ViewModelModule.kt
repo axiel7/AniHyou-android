@@ -2,6 +2,7 @@ package com.axiel7.anihyou
 
 import com.axiel7.anihyou.feature.activitydetails.ActivityDetailsViewModel
 import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityViewModel
+import com.axiel7.anihyou.feature.addrecommendation.AddRecommendationViewModel
 import com.axiel7.anihyou.feature.calendar.CalendarViewModel
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsViewModel
 import com.axiel7.anihyou.feature.editmedia.EditMediaViewModel
@@ -10,6 +11,7 @@ import com.axiel7.anihyou.feature.explore.charts.MediaChartViewModel
 import com.axiel7.anihyou.feature.explore.explore.ExploreViewModel
 import com.axiel7.anihyou.feature.explore.manga.MangaExploreViewModel
 import com.axiel7.anihyou.feature.explore.recommendations.RecommendationsViewModel
+import com.axiel7.anihyou.feature.addrecommendation.search.SimpleMediaSearchViewModel
 import com.axiel7.anihyou.feature.explore.search.SearchViewModel
 import com.axiel7.anihyou.feature.explore.season.SeasonAnimeViewModel
 import com.axiel7.anihyou.feature.genrestags.GenresTagsViewModel
@@ -82,4 +84,6 @@ val viewModelModule = module {
     viewModel<ReorderFavoritesViewModel>()
     viewModel<PriorityColorViewModel>()
     viewModel<MediaCharactersViewModel>()
+    viewModel<AddRecommendationViewModel>()
+    viewModel<SimpleMediaSearchViewModel>()
 }

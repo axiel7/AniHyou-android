@@ -191,6 +191,7 @@ dependencies {
     implementation(project(":feature:usermedialist"))
     implementation(project(":feature:widget"))
     implementation(project(":feature:worker"))
+    implementation(project(":feature:addrecommendation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

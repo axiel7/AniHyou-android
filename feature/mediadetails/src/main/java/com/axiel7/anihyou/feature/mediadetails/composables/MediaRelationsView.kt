@@ -4,20 +4,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.result.ResultEffect
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.network.fragment.MediaRecommended
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
+import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.InfoTitle
 import com.axiel7.anihyou.core.ui.composables.UpvoteDownvoteHorizontalText
 import com.axiel7.anihyou.core.ui.composables.list.DiscoverLazyRow
@@ -30,14 +39,20 @@ import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
 fun MediaRelationsView(
     uiState: MediaDetailsUiState,
     fetchData: () -> Unit,
+    addRecommendation: (MediaRecommended) -> Unit,
     navigateToDetails: (Int) -> Unit,
     onVoteClick: (Int, Int, RecommendationRating) -> Unit = { _, _, _ -> },
 ) {
     val blurAdult = LocalBlurAdult.current
     val isLoading = uiState.relationsAndRecommendations == null
+    val navActionManager = LocalNavActionManager.current
 
     LaunchedEffect(uiState.relationsAndRecommendations) {
         if (uiState.relationsAndRecommendations == null) fetchData()
+    }
+
+    ResultEffect<MediaRecommended> { media ->
+        addRecommendation(media)
     }
 
     Column(
@@ -81,7 +96,23 @@ fun MediaRelationsView(
         // Recommendations
         val mediaRecommendations = uiState.relationsAndRecommendations?.recommendations.orEmpty()
         if (isLoading || mediaRecommendations.isNotEmpty()) {
-            InfoTitle(text = stringResource(R.string.recommendations))
+            InfoTitle(text = stringResource(R.string.recommendations)) {
+                TextButton(
+                    onClick = {
+                        uiState.details?.id?.let { navActionManager.toAddRecommendation(it) }
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.add_20),
+                        contentDescription = null,
+                    )
+                    Text(text = stringResource(R.string.add))
+                }
+            }
             DiscoverLazyRow {
                 if (isLoading) {
                     items(10) {
@@ -144,7 +175,8 @@ private fun MediaRelationsViewPreview() {
             MediaRelationsView(
                 uiState = MediaDetailsUiState(),
                 fetchData = {},
-                navigateToDetails = {}
+                navigateToDetails = {},
+                addRecommendation = {},
             )
         }
     }

@@ -178,5 +178,11 @@ sealed interface Route : NavKey {
     ) : Route
 
     @Serializable
+    @Immutable
+    data class AddRecommendation(
+        val mediaId: Int = 0
+    ) : Route
+
+    @Serializable
     object PriorityColors : Route
 }

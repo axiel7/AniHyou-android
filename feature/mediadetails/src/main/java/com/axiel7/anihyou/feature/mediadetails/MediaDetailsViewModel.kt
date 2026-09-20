@@ -10,8 +10,10 @@ import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.model.stats.overview.ScoreDistribution.Companion.asStat
 import com.axiel7.anihyou.core.model.stats.overview.StatusDistribution.Companion.asStat
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
+import com.axiel7.anihyou.core.network.MediaRelationsAndRecommendationsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
+import com.axiel7.anihyou.core.network.fragment.MediaRecommended
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.RecommendationRating
 import com.axiel7.anihyou.core.resources.R
@@ -237,8 +239,9 @@ class MediaDetailsViewModel(
             recommendations?.find { it.mediaRecommended.id == recommendationId } ?: return
 
         val previousUserRating = targetNode.mediaRecommended.userRating
+        // if the new rating is the same as the old one remove the rating
         val newRating =
-            if (previousUserRating == rating) RecommendationRating.NO_RATING else rating // if the new rating is the same as the old one remove the rating
+            if (previousUserRating == rating) RecommendationRating.NO_RATING else rating
 
         mediaRepository.saveRecommendation(
             mediaId = arguments.id, // base media id
@@ -252,10 +255,8 @@ class MediaDetailsViewModel(
                         if (node.mediaRecommended.id == recommendationId) {
                             node.copy(
                                 mediaRecommended = node.mediaRecommended.copy(
-                                    rating = result.data.SaveRecommendation?.rating
-                                        ?: node.mediaRecommended.rating,
-                                    userRating = result.data.SaveRecommendation?.userRating
-                                        ?: newRating
+                                    rating = result.data?.rating ?: node.mediaRecommended.rating,
+                                    userRating = result.data?.userRating ?: newRating
                                 )
                             )
                         } else node
@@ -268,6 +269,25 @@ class MediaDetailsViewModel(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    override fun addRecommendation(media: MediaRecommended) {
+        val newRecommendation = MediaRelationsAndRecommendationsQuery.Node(
+            __typename = "MediaRelationsAndRecommendationsQuery.Node",
+            id = media.id,
+            mediaRecommended = media
+        )
+
+        mutableUiState.update { state ->
+            val currentRelAndRecs = state.relationsAndRecommendations
+            if (currentRelAndRecs != null) {
+                val updatedRecs = listOf(newRecommendation) + currentRelAndRecs.recommendations
+                    .filterNot { media.mediaRecommendation?.id == it.mediaRecommended.mediaRecommendation?.id }
+                state.copy(relationsAndRecommendations = currentRelAndRecs.copy(recommendations = updatedRecs))
+            } else {
+                state
+            }
+        }
     }
 
     private suspend fun fetchAnimeThemes(idMal: Int) {

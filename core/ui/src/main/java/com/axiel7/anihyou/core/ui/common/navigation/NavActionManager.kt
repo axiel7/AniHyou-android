@@ -227,4 +227,8 @@ class NavActionManager(
     fun toCustomLinks() {
         navigator.navigate(Route.CustomLinks)
     }
+
+    fun toAddRecommendation(mediaId: Int) {
+        navigator.navigate(Route.AddRecommendation(mediaId))
+    }
 }

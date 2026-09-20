@@ -61,8 +61,8 @@ class RecommendationsViewModel(
                     if (currentIndex != -1) {
                         val currentNode = state.recommendations[currentIndex]
                         state.recommendations[currentIndex] = currentNode.copy(
-                            rating = result.data.SaveRecommendation?.rating ?: currentNode.rating,
-                            userRating = result.data.SaveRecommendation?.userRating ?: newRating
+                            rating = result.data?.rating ?: currentNode.rating,
+                            userRating = result.data?.userRating ?: newRating
                         )
                     }
                     state

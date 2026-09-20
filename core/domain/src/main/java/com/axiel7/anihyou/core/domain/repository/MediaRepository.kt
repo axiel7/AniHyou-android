@@ -246,7 +246,9 @@ class MediaRepository (
         mediaId = mediaId,
         mediaRecommendationId = mediaRecommendationId,
         rating = rating
-    ).toFlow().asDataResult()
+    ).toFlow().asDataResult {
+        it.SaveRecommendation?.mediaRecommended
+    }
 
 
     fun mediaRecommendations(
