@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -96,21 +97,20 @@ fun MediaRelationsView(
         val mediaRecommendations = uiState.relationsAndRecommendations?.recommendations.orEmpty()
         if (isLoading || mediaRecommendations.isNotEmpty()) {
             InfoTitle(text = stringResource(R.string.recommendations)) {
-                Button(
+                TextButton(
                     onClick = {
                         uiState.details?.id?.let { navActionManager.toAddRecommendation(it) }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    shapes = ButtonDefaults.shapes(),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add_20),
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Text(
-                        text = stringResource(R.string.add),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    Text(text = stringResource(R.string.add))
                 }
             }
             DiscoverLazyRow {
