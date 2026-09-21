@@ -1,19 +1,17 @@
 package com.axiel7.anihyou.feature.usermedialist.composables
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.height
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.foundation.Canvas
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.network.type.MediaFormat
-import com.materialkolor.ktx.darken
 import kotlin.math.exp
 
 @Composable
@@ -25,7 +23,7 @@ fun MediaProgressIndicatorBar(
     modifier: Modifier = Modifier,
     isVolumeTracking: Boolean = false,
     indicatorColor: Color = MaterialTheme.colorScheme.primary,
-    trackColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp)
+    trackColor: Color = MaterialTheme.colorScheme.secondaryContainer,
 ) {
     val fraction = remember(progress, total, released, format, isVolumeTracking) {
         if (progress == 0) return@remember 0f
@@ -66,16 +64,13 @@ fun MediaProgressIndicatorBar(
         val safeReleased = released ?: total ?: progress
         val gap = 3.dp.toPx()
 
-        val airedTrackColor = trackColor.darken(0.3f)
-        val ghostTrackColor = trackColor.copy(alpha = 0.4f)
-
         if (total != null && total > 0) {
             val completedRatio = (progress.toFloat() / total).coerceIn(0f, 1f)
             val airedRatio = (safeReleased.toFloat() / total).coerceIn(0f, 1f)
 
             if (completedRatio == 0f) {
                 drawLine(
-                    color = ghostTrackColor,
+                    color = trackColor,
                     start = Offset(radius, y),
                     end = Offset(w - radius, y),
                     strokeWidth = stroke,
@@ -84,7 +79,7 @@ fun MediaProgressIndicatorBar(
                 if (airedRatio > 0f) {
                     val airedDrawEnd = maxOf(radius, (w * airedRatio) - radius)
                     drawLine(
-                        color = airedTrackColor,
+                        color = trackColor,
                         start = Offset(radius, y),
                         end = Offset(airedDrawEnd, y),
                         strokeWidth = stroke,
@@ -124,7 +119,7 @@ fun MediaProgressIndicatorBar(
                 val trackDrawStart = trackVisualStart + radius
                 val trackDrawEnd = w - radius
                 drawLine(
-                    color = ghostTrackColor,
+                    color = trackColor,
                     start = Offset(trackDrawStart, y),
                     end = Offset(trackDrawEnd, y),
                     strokeWidth = stroke,
@@ -138,7 +133,7 @@ fun MediaProgressIndicatorBar(
                         maxOf(trackDrawStart, trackVisualStart + airedVisualWidth - radius)
 
                     drawLine(
-                        color = airedTrackColor,
+                        color = trackColor,
                         start = Offset(trackDrawStart, y),
                         end = Offset(airedDrawEnd, y),
                         strokeWidth = stroke,
@@ -148,7 +143,7 @@ fun MediaProgressIndicatorBar(
             }
         } else {
             drawLine(
-                color = ghostTrackColor,
+                color = trackColor,
                 start = Offset(radius, y),
                 end = Offset(w - radius, y),
                 strokeWidth = stroke,
@@ -172,12 +167,11 @@ fun MediaProgressIndicatorBar(
                     val trackVisualStart = completedVisualWidth + gap
                     val trackDrawStart = trackVisualStart + radius
 
-
                     val horizonWidth = w * (fraction / completedRatio)
                     val airedDrawEnd = maxOf(trackDrawStart, horizonWidth - radius)
 
                     drawLine(
-                        color = airedTrackColor,
+                        color = trackColor,
                         start = Offset(trackDrawStart, y),
                         end = Offset(airedDrawEnd, y),
                         strokeWidth = stroke,
