@@ -10,25 +10,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
-import com.axiel7.anihyou.core.model.media.calculateProgressBarValue
 import com.axiel7.anihyou.core.model.media.exampleBasicMediaListEntry
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.isActive
+import com.axiel7.anihyou.core.model.media.isUsingVolumeProgress
+import com.axiel7.anihyou.core.model.media.progressOrVolumes
 import com.axiel7.anihyou.core.network.fragment.CommonMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -177,15 +175,19 @@ fun StandardUserMediaListItem(
                             }
                         }
                     }//:Row
-                    LinearProgressIndicator(
-                        progress = { item.calculateProgressBarValue() },
+                    MediaProgressIndicatorBar(
+                        progress = item.basicMediaListEntry.progressOrVolumes() ?: 0,
+                        total = when {
+                            item.media?.basicMediaDetails?.type == MediaType.ANIME -> item.media?.basicMediaDetails?.episodes
+                            item.basicMediaListEntry.isUsingVolumeProgress() -> item.media?.basicMediaDetails?.volumes
+                            item.media?.basicMediaDetails?.type == MediaType.MANGA -> item.media?.basicMediaDetails?.chapters
+                            else -> null
+                        },
+                        released = item.media?.nextAiringEpisode?.let { it.episode - 1 },
+                        format = item.media?.basicMediaDetails?.format,
                         modifier = Modifier
                             .padding(vertical = 1.dp)
                             .fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.primary,
-                        trackColor = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp),
-                        strokeCap = StrokeCap.Round,
-                        drawStopIndicator = { },
                     )
                 }
             }
