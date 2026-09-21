@@ -16,15 +16,14 @@ import com.axiel7.anihyou.core.network.type.MediaFormat
 import com.materialkolor.ktx.darken
 import kotlin.math.exp
 
-
 @Composable
 fun MediaProgressIndicatorBar(
     progress: Int,
     total: Int?,
     released: Int?,
     format: MediaFormat?,
-    isVolumeTracking: Boolean = false,
     modifier: Modifier = Modifier,
+    isVolumeTracking: Boolean = false,
     indicatorColor: Color = MaterialTheme.colorScheme.primary,
     trackColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(94.dp)
 ) {
@@ -75,7 +74,6 @@ fun MediaProgressIndicatorBar(
             val airedRatio = (safeReleased.toFloat() / total).coerceIn(0f, 1f)
 
             if (completedRatio == 0f) {
-
                 drawLine(
                     color = ghostTrackColor,
                     start = Offset(radius, y),
@@ -94,7 +92,6 @@ fun MediaProgressIndicatorBar(
                     )
                 }
             } else if (completedRatio == 1f) {
-
                 drawLine(
                     color = indicatorColor,
                     start = Offset(radius, y),
@@ -103,10 +100,8 @@ fun MediaProgressIndicatorBar(
                     cap = StrokeCap.Round
                 )
             } else {
-
                 var completedPillWidth = (w - gap) * completedRatio
                 var trackPillWidth = (w - gap) * (1 - completedRatio)
-
 
                 if (completedPillWidth < stroke) {
                     completedPillWidth = stroke
@@ -116,7 +111,6 @@ fun MediaProgressIndicatorBar(
                     completedPillWidth = w - gap - stroke
                 }
 
-
                 val completedDrawEnd = completedPillWidth - radius
                 drawLine(
                     color = indicatorColor,
@@ -125,7 +119,6 @@ fun MediaProgressIndicatorBar(
                     strokeWidth = stroke,
                     cap = StrokeCap.Round
                 )
-
 
                 val trackVisualStart = completedPillWidth + gap
                 val trackDrawStart = trackVisualStart + radius
@@ -137,7 +130,6 @@ fun MediaProgressIndicatorBar(
                     strokeWidth = stroke,
                     cap = StrokeCap.Round
                 )
-
 
                 if (airedRatio > completedRatio) {
                     val airedTrackFraction = (airedRatio - completedRatio) / (1f - completedRatio)
@@ -155,7 +147,6 @@ fun MediaProgressIndicatorBar(
                 }
             }
         } else {
-
             drawLine(
                 color = ghostTrackColor,
                 start = Offset(radius, y),
@@ -170,7 +161,6 @@ fun MediaProgressIndicatorBar(
                 val completedDrawEnd = maxOf(radius, completedVisualWidth - radius)
 
                 if (progress < safeReleased) {
-
                     drawLine(
                         color = indicatorColor,
                         start = Offset(radius, y),
@@ -194,7 +184,6 @@ fun MediaProgressIndicatorBar(
                         cap = StrokeCap.Round
                     )
                 } else {
-
                     val brush = Brush.horizontalGradient(
                         colorStops = arrayOf(
                             0.0f to indicatorColor,
