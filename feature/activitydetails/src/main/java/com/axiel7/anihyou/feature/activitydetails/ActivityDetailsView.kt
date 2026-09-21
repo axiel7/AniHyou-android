@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.result.ResultEffect
+import com.axiel7.anihyou.core.base.ANILIST_ACTIVITY_URL
 import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.network.fragment.ActivityReplyFragment
 import com.axiel7.anihyou.core.resources.R
@@ -44,6 +45,7 @@ import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
+import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextView
 import com.axiel7.anihyou.feature.activitydetails.composables.ActivityTextViewPlaceholder
@@ -113,6 +115,11 @@ private fun ActivityDetailsContent(
             )
         },
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        actions = {
+            ShareIconButton(
+                url = ANILIST_ACTIVITY_URL + uiState.details?.id
+            )
+        },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
         PullToRefreshBox(

@@ -26,6 +26,7 @@ const val ANILIST_ANIME_URL = "$ANILIST_URL/anime/"
 const val ANILIST_MANGA_URL = "$ANILIST_URL/manga/"
 const val ANILIST_THREAD_URL = "$ANILIST_URL/forum/thread/"
 const val ANILIST_REVIEW_URL = "$ANILIST_URL/review/"
+const val ANILIST_ACTIVITY_URL = "$ANILIST_URL/activity/"
 
 const val MAL_API_URL = "https://api.myanimelist.net/v2/"
 const val X_MAL_CLIENT_ID = "X-MAL-CLIENT-ID"

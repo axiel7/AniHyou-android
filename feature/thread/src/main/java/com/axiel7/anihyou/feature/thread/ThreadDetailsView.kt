@@ -33,7 +33,7 @@ import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithSmallTopAppBar
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.NotificationIconButton
-import com.axiel7.anihyou.core.ui.composables.common.OpenInBrowserIconButton
+import com.axiel7.anihyou.core.ui.composables.common.ShareIconButton
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.thread.comment.ThreadCommentView
@@ -82,7 +82,7 @@ private fun ThreadDetailsContent(
                 isActive = uiState.isSubscribed,
                 onClick = { event?.subscribeToThread(!uiState.isSubscribed) }
             )
-            OpenInBrowserIconButton(
+            ShareIconButton(
                 url = ANILIST_THREAD_URL + uiState.details?.basicThreadDetails?.id
             )
         },
