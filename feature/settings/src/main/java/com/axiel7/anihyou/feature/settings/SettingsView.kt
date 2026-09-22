@@ -288,7 +288,7 @@ private fun SettingsContent(
                 preferenceValue = uiState.blurAdultContent,
                 icon = R.drawable.blur_on_24,
                 onValueChange = { event?.setBlurAdultContent(it) },
-                shape = middleShape
+                shape = if (uiState.isLoggedIn) middleShape else topShape,
             )
 
             SwitchPreference(
