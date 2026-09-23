@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.core.ui.composables.media
 
+import android.os.Build
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.hazeBlur
@@ -32,6 +34,8 @@ const val MEDIA_POSTER_MEDIUM_WIDTH = 110
 
 const val MEDIA_POSTER_BIG_HEIGHT = 168
 const val MEDIA_POSTER_BIG_WIDTH = 120
+
+val isBlurCompatible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 @Composable
 fun MediaPoster(
@@ -57,7 +61,9 @@ fun MediaPoster(
             )
             .clip(RoundedCornerShape(8.dp))
             .then(
-                if (enableBlur) Modifier.hazeBlur(HazeInput.Content)
+                if (enableBlur && isBlurCompatible)
+                    Modifier.hazeBlur(input = HazeInput.Content, expandLayerBounds = false)
+                else if (enableBlur) Modifier.spoilerPlaceholder(true)
                 else Modifier
             )
     )
