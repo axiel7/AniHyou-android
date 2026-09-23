@@ -10,6 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -17,9 +22,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +38,7 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.materialkolor.ktx.toHex
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CommonColorPickerDialog(
@@ -41,15 +48,31 @@ fun CommonColorPickerDialog(
     onColorSelected: (Color) -> Unit,
 ) {
     val controller = rememberColorPickerController()
-    var textFieldValue by remember { mutableStateOf("") }
+    val textFieldState = rememberTextFieldState(
+        initialText = initialColor.toHex(includePrefix = false)
+    )
+    var maxLength by remember { mutableIntStateOf(6) }
 
-    // set the color correctly
     LaunchedEffect(initialColor) {
         controller.selectByColor(initialColor, fromUser = false)
     }
 
     LaunchedEffect(controller.selectedColor.value) {
-        textFieldValue = controller.selectedColor.value.toHex(includePrefix = false)
+        textFieldState.setTextAndPlaceCursorAtEnd(
+            controller.selectedColor.value.toHex(includePrefix = false)
+        )
+    }
+
+    LaunchedEffect(textFieldState) {
+        snapshotFlow { textFieldState.text.toString() }.collectLatest {
+            maxLength = if (it.startsWith("#")) 7 else 6
+            if (it.length == maxLength) {
+                val prefix = if (it.startsWith("#")) "" else "#"
+                colorFromHex("$prefix$it")?.let { color ->
+                    controller.selectByColor(color, true)
+                }
+            }
+        }
     }
 
     AlertDialog(
@@ -95,23 +118,11 @@ fun CommonColorPickerDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = textFieldValue,
-                    onValueChange = { value ->
-                        // support for the user to paste a color with the # prefix
-                        val maxLength = if (value.startsWith("#")) 7 else 6
-                        if (value.length <= maxLength) {
-                            textFieldValue = value
-                            if (value.length == maxLength) {
-                                val prefix = if (value.startsWith("#")) "" else "#"
-                                colorFromHex("$prefix$value")?.let { color ->
-                                    controller.selectByColor(color, true)
-                                }
-                            }
-                        }
-                    },
+                    state = textFieldState,
                     label = { Text(text = "HEX") },
                     prefix = { Text(text = "#") },
-                    singleLine = true,
+                    inputTransformation = InputTransformation.maxLength(maxLength),
+                    lineLimits = TextFieldLineLimits.SingleLine,
                 )
             }
         },
