@@ -159,6 +159,7 @@ private fun UserMediaListHostContent(
     if (uiState.openNotesDialog) {
         NotesDialog(
             note = uiState.selectedItem?.basicMediaListEntry?.notes.orEmpty(),
+            translatorApp = uiState.translatorApp,
             onDismiss = { event?.toggleNotesDialog(false) }
         )
     }

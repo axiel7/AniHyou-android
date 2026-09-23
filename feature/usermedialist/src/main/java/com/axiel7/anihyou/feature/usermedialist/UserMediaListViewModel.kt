@@ -656,6 +656,13 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
+        defaultPreferencesRepository.translatorApp
+            .distinctUntilChanged()
+            .onEach { value ->
+                mutableUiState.update { it.copy(translatorApp = value) }
+            }
+            .launchIn(viewModelScope)
+
         // sort preference
         when (mediaType) {
             MediaType.ANIME -> listPreferencesRepository.animeListSort

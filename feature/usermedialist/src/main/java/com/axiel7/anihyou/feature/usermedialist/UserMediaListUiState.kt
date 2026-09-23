@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
+import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
@@ -54,6 +55,7 @@ data class UserMediaListUiState(
     val openNotesDialog: Boolean = false,
     val openSetScoreDialog: Boolean = false,
     val clearedFilters: Boolean = false,
+    val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val randomEntryId: Int? = null,
     val isLoadingRandom: Boolean = false,
     val isLoadingPlusOne: Boolean = false,
