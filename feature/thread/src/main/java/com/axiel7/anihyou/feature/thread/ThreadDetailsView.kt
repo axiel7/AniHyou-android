@@ -91,7 +91,13 @@ private fun ThreadDetailsContent(
         PullToRefreshBox(
             isRefreshing = uiState.fetchFromNetwork,
             onRefresh = { event?.refresh() },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(LocalLayoutDirection.current)
+                ),
             state = pullRefreshState,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
@@ -102,13 +108,7 @@ private fun ThreadDetailsContent(
             }
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .padding(
-                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                        top = padding.calculateTopPadding(),
-                        end = padding.calculateEndPadding(LocalLayoutDirection.current)
-                    )
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 state = listState,
                 contentPadding = PaddingValues(
                     bottom = padding.calculateBottomPadding()
