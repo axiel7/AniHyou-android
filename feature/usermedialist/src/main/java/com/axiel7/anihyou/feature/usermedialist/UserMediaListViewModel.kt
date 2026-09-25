@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.InjectedParam
+import kotlin.collections.orEmpty
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class UserMediaListViewModel(
@@ -191,8 +192,9 @@ class UserMediaListViewModel(
         mutableUiState.value.run {
             selectedItem?.let { selectedItem ->
                 if (selectedItem.basicMediaListEntry != newListEntry) {
-                    val selectedListName = selectedListName ?: return
-                    val list = lists[selectedListName]?.toMutableList() ?: return
+                    val list = if (selectedListName != null) {
+                        lists[selectedListName]?.toMutableList() ?: return
+                    } else entries
                     if (newListEntry != null) {
                         list.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }
                             ?.let { index ->
@@ -229,8 +231,10 @@ class UserMediaListViewModel(
                     } else {
                         list.remove(selectedItem)
                     }
-                    lists[selectedListName] = list
-                    onChangeList(selectedListName)
+                    if (selectedListName != null) {
+                        lists[selectedListName] = list
+                        onChangeList(selectedListName)
+                    }
                 }
             }
         }
