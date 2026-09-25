@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -31,6 +32,9 @@ class CalendarViewModel(
 
     val onMyList = defaultPreferencesRepository.calendarOnMyList
     private val displayAdult = defaultPreferencesRepository.displayAdult
+
+    private val today = LocalDate.now()
+    private var itemCount = 0
 
     fun onMyListChanged(value: Boolean?) = viewModelScope.launch {
         defaultPreferencesRepository.setCalendarOnMyList(value)
@@ -80,7 +84,7 @@ class CalendarViewModel(
     override fun nextDay() {
         mutableUiState.update {
             it.copy(
-                day = uiState.value.day.plusDays(1),
+                day = it.day.plusDays(1),
                 page = 1,
                 hasNextPage = true,
                 isLoading = true,
@@ -92,7 +96,7 @@ class CalendarViewModel(
         mutableUiState.update {
             it.copy(
                 fetchFromNetwork = true,
-                day = LocalDateTime.now(),
+                day = LocalDateTime.now().minusDays(1),
                 weeklyAnime = mutableMapOf(),
                 page = 1,
                 hasNextPage = true,
@@ -161,7 +165,7 @@ class CalendarViewModel(
                     it.copy(
                         onMyList = onMyListVal,
                         weeklyAnime = mutableMapOf(),
-                        day = LocalDateTime.now(),
+                        day = LocalDateTime.now().minusDays(1),
                         page = 1,
                         hasNextPage = true,
                         isLoading = true,
@@ -194,20 +198,30 @@ class CalendarViewModel(
             }
             .onEach { result ->
                 if (result is PagedResult.Success) {
-                    mutableUiState.update { state ->
-                        val localeDate = state.day.toLocalDate()
-                        val currentList = state.weeklyAnime[localeDate]
+                    mutableUiState.updateAndGet { state ->
+                        val localDate = state.day.toLocalDate()
+                        val currentList = state.weeklyAnime[localDate]
                             .takeIf { state.page > 1 }
                             .orEmpty()
                         val updatedList = currentList + result.list
                         val updatedMap = state.weeklyAnime.toMutableMap()
-                        updatedMap[localeDate] = updatedList
+                        updatedMap[localDate] = updatedList
+
+                        var todayFirstItemIndex = state.todayFirstItemIndex
+                        if (localDate < today) {
+                            itemCount += updatedList.size
+                        } else if (localDate == today) {
+                            todayFirstItemIndex = itemCount - 1
+                        }
 
                         state.copy(
                             weeklyAnime = updatedMap,
+                            todayFirstItemIndex = todayFirstItemIndex,
                             hasNextPage = result.hasNextPage,
                             isLoading = false,
                         )
+                    }.also {
+                        if (it.day.toLocalDate() < today) onLoadMore()
                     }
                 } else if (result is PagedResult.Loading) {
                     if (mutableUiState.value.page == 1) {

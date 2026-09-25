@@ -10,7 +10,8 @@ import java.time.LocalDateTime
 data class CalendarUiState(
     val onMyList: Boolean? = null,
     val selectedItem: ExploreMedia? = null,
-    val day: LocalDateTime = LocalDateTime.now(),
+    val todayFirstItemIndex: Int = 0,
+    val day: LocalDateTime = LocalDateTime.now().minusDays(1),
     val weeklyAnime: MutableMap<LocalDate, List<ExploreMedia>> = mutableMapOf(),
     val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,

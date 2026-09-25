@@ -23,6 +23,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +61,7 @@ import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.DayOfWeek
+import java.time.LocalDate
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -141,7 +143,11 @@ private fun CalendarViewContent(
         scrollBehavior = topAppBarScrollBehavior,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                onClick = {
+                    scope.launch {
+                        listState.animateScrollToItem(uiState.todayFirstItemIndex, 500)
+                    }
+                },
                 modifier = Modifier.animateFloatingActionButton(
                     visible = isScrollingUp,
                     alignment = Alignment.BottomEnd
@@ -169,6 +175,12 @@ private fun CalendarViewContent(
                 )
             }
         ) {
+            LaunchedEffect(uiState.todayFirstItemIndex) {
+                if (uiState.todayFirstItemIndex > 0) {
+                    listState.animateScrollToItem(uiState.todayFirstItemIndex, 500)
+                }
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -195,9 +207,12 @@ private fun CalendarViewContent(
                         val title = stringResource(id = titleId)
                         val media = mediaList.maxWithOrNull(
                             compareBy<ExploreMedia> { it.popularity ?: Int.MIN_VALUE }
-                                .thenBy { it.averageScore ?: Int.MIN_VALUE } // if popularity is the same, fallback to score
+                                .thenBy {
+                                    it.averageScore ?: Int.MIN_VALUE
+                                } // if popularity is the same, fallback to score
                         )
-                        val banner = media?.bannerImage ?: mediaList.firstNotNullOfOrNull { it.bannerImage }
+                        val banner =
+                            media?.bannerImage ?: mediaList.firstNotNullOfOrNull { it.bannerImage }
                         val imageColor = colorFromHex(media?.coverImage?.color)
 
                         CalendarBanner(
@@ -226,7 +241,8 @@ private fun CalendarViewContent(
                                 stringResource(
                                     R.string.episode_airing_at,
                                     nextAiringEpisode.episode,
-                                    nextAiringEpisode.airingAt.toLong().timestampToTimeString() ?: UNKNOWN_CHAR
+                                    nextAiringEpisode.airingAt.toLong().timestampToTimeString()
+                                        ?: UNKNOWN_CHAR
                                 )
                             } ?: stringResource(R.string.unknown),
                             blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
