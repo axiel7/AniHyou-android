@@ -101,10 +101,16 @@ class StudioDetailsViewModel(
             }
             .onEach { result ->
                 if (result is PagedResult.Success) {
-                    mutableUiState.value.run {
-                        if (result.currentPage == 1) media.clear()
-                        media.addAll(result.list)
+                    mutableUiState.update {
+                        if (result.currentPage == 1) it.media.clear()
+                        it.media.addAll(result.list)
+                        it.copy(
+                            isLoading = false,
+                            hasNextPage = result.hasNextPage,
+                        )
                     }
+                } else {
+                    mutableUiState.update { result.toUiState() }
                 }
             }
             .launchIn(viewModelScope)
