@@ -315,7 +315,7 @@ private fun MediaDetailsContent(
                     url = uiState.details?.coverImage?.large,
                     enableBlur = false,
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                         .size(
                             width = MEDIA_POSTER_BIG_WIDTH.dp,
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
@@ -477,7 +477,7 @@ private fun MediaDetailsContent(
                         else -> uiState.details.description!!.htmlDecoded().toAnnotatedString()
                     },
                     modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                        .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 4.dp)
                         .clip(MaterialTheme.shapes.extraSmall)
                         .clickable { isSynopsisExpanded = !isSynopsisExpanded }
                         .animateContentSize()
@@ -492,7 +492,7 @@ private fun MediaDetailsContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+                    .padding(start = 16.dp, end = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {

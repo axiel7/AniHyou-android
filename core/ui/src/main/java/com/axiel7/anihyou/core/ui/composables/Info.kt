@@ -51,7 +51,7 @@ fun InfoItemView(
             text = title,
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
         )
         Column(
             modifier = Modifier
@@ -65,7 +65,7 @@ fun InfoItemView(
                     onTextLayout = {
                         showExpand = it.hasVisualOverflow
                     },
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
             if (showExpand || isExpanded) {
@@ -88,14 +88,9 @@ fun <T> InfoClickableItemView(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = 8.dp)
+            .padding(bottom = 8.dp)
     ) {
-        Text(
-            text = title,
-            modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        InfoTitle(text = title)
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
