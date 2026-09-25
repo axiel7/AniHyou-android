@@ -8,12 +8,13 @@ import com.axiel7.anihyou.core.model.media.AnimeThemes.Companion.toBo
 import com.axiel7.anihyou.core.model.media.ChartType
 import com.axiel7.anihyou.core.model.media.MediaCharactersAndStaff
 import com.axiel7.anihyou.core.model.media.MediaRelationsAndRecommendations
+import com.axiel7.anihyou.core.model.media.adultFilter
 import com.axiel7.anihyou.core.model.media.isActive
+import com.axiel7.anihyou.core.model.media.onMyListCalendarFilter
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.api.MalApi
 import com.axiel7.anihyou.core.network.api.MediaApi
 import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto
-import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.AiringSort
 import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.network.type.MediaType
@@ -22,7 +23,7 @@ import com.axiel7.anihyou.core.network.type.RecommendationSort
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MediaRepository (
+class MediaRepository(
     private val api: MediaApi,
     private val malApi: MalApi,
     defaultPreferencesRepository: DefaultPreferencesRepository,
@@ -49,12 +50,10 @@ class MediaRepository (
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             val list = data.Page?.airingSchedules?.mapNotNull { it?.media?.exploreMedia }.orEmpty()
-            fun ExploreMedia.adultFilter() =
-                if (!isAdult) basicMediaDetails.isAdult == false else true
             when (onMyList) {
-                true -> list.filter { it.mediaListEntry != null && it.adultFilter() }
-                false -> list.filter { it.mediaListEntry == null && it.adultFilter() }
-                null -> list.filter { it.adultFilter() }
+                true -> list.filter { it.onMyListCalendarFilter() && it.adultFilter(isAdult) }
+                false -> list.filter { it.mediaListEntry == null && it.adultFilter(isAdult) }
+                null -> list.filter { it.adultFilter(isAdult) }
             }
         }
 
@@ -66,10 +65,7 @@ class MediaRepository (
         .toFlow()
         .asPagedResult(page = { it.Page?.pageInfo?.commonPage }) { data ->
             data.Page?.media?.mapNotNull { it?.exploreMedia }
-                ?.filter {
-                    it.nextAiringEpisode != null
-                            && it.mediaListEntry?.basicMediaListEntry?.status?.isActive() == true
-                }
+                ?.filter { it.nextAiringEpisode != null && it.onMyListCalendarFilter() }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
                 .orEmpty()
         }
@@ -231,9 +227,9 @@ class MediaRepository (
         .asDataResult { data ->
             data.Page?.media?.filterNotNull()
                 ?.filter {
-                        it.nextAiringEpisode != null
-                                && it.mediaListEntry?.status?.isActive() == true
-                    }
+                    it.nextAiringEpisode != null
+                            && it.mediaListEntry?.status?.isActive() == true
+                }
                 ?.sortedBy { it.nextAiringEpisode?.timeUntilAiring }
                 .orEmpty()
         }

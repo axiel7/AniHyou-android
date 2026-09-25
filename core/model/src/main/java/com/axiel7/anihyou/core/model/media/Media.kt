@@ -7,8 +7,10 @@ import com.axiel7.anihyou.core.base.YOUTUBE_VIDEO_URL
 import com.axiel7.anihyou.core.common.utils.StringUtils.slugify
 import com.axiel7.anihyou.core.network.MediaDetailsQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import com.axiel7.anihyou.core.network.type.ExternalLinkType
 import com.axiel7.anihyou.core.network.type.MediaFormat
+import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 
@@ -74,3 +76,15 @@ fun MediaDetailsQuery.ExternalLink.languageShort() = when (language) {
     "English" -> "EN"
     else -> language
 }
+
+fun ExploreMedia.adultFilter(isAdult: Boolean) =
+    if (!isAdult) basicMediaDetails.isAdult == false else true
+
+fun ExploreMedia.onMyListCalendarFilter() =
+    mediaListEntry?.basicMediaListEntry?.let { entry ->
+        if (entry.status == MediaListStatus.PLANNING) {
+            nextAiringEpisode?.episode == 1
+        } else {
+            entry.status != MediaListStatus.DROPPED
+        }
+    } ?: false
