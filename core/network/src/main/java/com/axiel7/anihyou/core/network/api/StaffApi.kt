@@ -7,6 +7,7 @@ import com.axiel7.anihyou.core.network.SearchStaffQuery
 import com.axiel7.anihyou.core.network.StaffCharacterQuery
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
 import com.axiel7.anihyou.core.network.StaffMediaQuery
+import com.axiel7.anihyou.core.network.type.MediaType
 
 class StaffApi (
     private val client: ApolloClient
@@ -45,6 +46,7 @@ class StaffApi (
     fun staffMediaQuery(
         staffId: Int,
         onList: Boolean?,
+        type: MediaType?,
         page: Int,
         perPage: Int,
     ) = client
@@ -52,6 +54,7 @@ class StaffApi (
             StaffMediaQuery(
                 staffId = Optional.present(staffId),
                 onList = Optional.presentIfNotNull(onList),
+                type = Optional.presentIfNotNull(type),
                 page = Optional.present(page),
                 perPage = Optional.present(perPage)
             )

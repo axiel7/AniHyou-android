@@ -3,6 +3,7 @@ package com.axiel7.anihyou.core.domain.repository
 import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
 import com.axiel7.anihyou.core.network.api.StaffApi
+import com.axiel7.anihyou.core.network.type.MediaType
 
 class StaffRepository(
     private val api: StaffApi,
@@ -25,10 +26,11 @@ class StaffRepository(
     fun getStaffMediaPage(
         staffId: Int,
         onList: Boolean? = null,
+        type: MediaType? = null,
         page: Int,
         perPage: Int = 25,
     ) = api
-        .staffMediaQuery(staffId, onList, page, perPage)
+        .staffMediaQuery(staffId, onList, type, page, perPage)
         .toFlow()
         .asPagedResult(page = { it.Staff?.staffMedia?.pageInfo?.commonPage }) { data ->
             val media = data.Staff?.staffMedia?.edges?.filterNotNull().orEmpty()

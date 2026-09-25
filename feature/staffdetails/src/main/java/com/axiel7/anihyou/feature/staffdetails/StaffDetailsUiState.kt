@@ -8,12 +8,14 @@ import com.axiel7.anihyou.core.network.StaffCharacterQuery
 import com.axiel7.anihyou.core.network.StaffDetailsQuery
 import com.axiel7.anihyou.core.base.state.UiState
 import com.axiel7.anihyou.core.model.TranslatorApp
+import com.axiel7.anihyou.core.network.type.MediaType
 
 @Stable
 data class StaffDetailsUiState(
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
     val details: StaffDetailsQuery.Staff? = null,
     val media: SnapshotStateList<Pair<Int, StaffMediaGrouped>> = mutableStateListOf(),
+    val mediaType: MediaType? = null,
     val mediaOnMyList: Boolean? = null,
     val pageMedia: Int = 0,
     val hasNextPageMedia: Boolean = true,

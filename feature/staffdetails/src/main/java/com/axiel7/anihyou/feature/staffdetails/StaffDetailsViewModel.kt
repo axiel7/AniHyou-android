@@ -10,6 +10,7 @@ import com.axiel7.anihyou.core.domain.repository.StaffRepository
 import com.axiel7.anihyou.core.model.staff.StaffMediaGrouped
 import com.axiel7.anihyou.core.network.StaffMediaQuery
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -34,6 +35,12 @@ class StaffDetailsViewModel(
     override fun setMediaOnMyList(value: Boolean?) {
         mutableUiState.update {
             it.copy(mediaOnMyList = value, pageMedia = 1, hasNextPageMedia = true)
+        }
+    }
+
+    override fun setMediaType(value: MediaType?) {
+        mutableUiState.update {
+            it.copy(mediaType = value, pageMedia = 1, hasNextPageMedia = true)
         }
     }
 
@@ -130,11 +137,13 @@ class StaffDetailsViewModel(
             .distinctUntilChanged { old, new ->
                 old.pageMedia == new.pageMedia
                         && old.mediaOnMyList == new.mediaOnMyList
+                        && old.mediaType == new.mediaType
             }
             .flatMapLatest { uiState ->
                 staffRepository.getStaffMediaPage(
                     staffId = arguments.id,
                     onList = uiState.mediaOnMyList,
+                    type = uiState.mediaType,
                     page = uiState.pageMedia
                 )
             }

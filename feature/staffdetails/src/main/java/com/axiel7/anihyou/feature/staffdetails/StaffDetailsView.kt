@@ -147,6 +147,8 @@ private fun StaffDetailsContent(
                             loadMore = { event?.loadNextPageMedia() },
                             mediaOnMyList = uiState.mediaOnMyList,
                             setMediaOnMyList = { event?.setMediaOnMyList(it) },
+                            mediaType = uiState.mediaType,
+                            setMediaType = { event?.setMediaType(it) },
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                             contentPadding = PaddingValues(
                                 bottom = padding.calculateBottomPadding()
