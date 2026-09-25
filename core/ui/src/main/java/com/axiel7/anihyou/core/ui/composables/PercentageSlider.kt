@@ -43,8 +43,12 @@ fun PercentageSlider(
             Slider(
                 state = sliderState,
                 modifier = Modifier.weight(1f),
+                onValueChange = {
+                    sliderState.value = it
+                    onValueChange(it.toInt())
+                },
                 onValueChangeFinished = {
-                    onValueChange(sliderState.value.toInt().coerceIn(0, 100))
+                    onValueChange(sliderState.value.toInt())
                 },
             )
             Text(

@@ -413,7 +413,8 @@ fun ScoreStepsPreferenceSheet(
     var openModal by remember { mutableStateOf(false) }
 
     var textFieldValue by remember(initialValue) {
-        mutableStateOf(if (allowDecimal) initialValue.toString() else initialValue.roundToInt().toString()
+        mutableStateOf(
+            if (allowDecimal) initialValue.toString() else initialValue.roundToInt().toString()
         )
     }
 
@@ -453,7 +454,8 @@ fun ScoreStepsPreferenceSheet(
                         if (isValid) {
                             val asNumber = input.toDoubleOrNull()
 
-                            textFieldValue = if (asNumber == null || asNumber <= maxValue) input else textFieldValue
+                            textFieldValue =
+                                if (asNumber == null || asNumber <= maxValue) input else textFieldValue
                             if (asNumber != null) {
                                 val clamped = asNumber.coerceIn(minValue, maxValue)
                                 value = clamped
@@ -478,6 +480,11 @@ fun ScoreStepsPreferenceSheet(
 
                 Slider(
                     state = sliderState,
+                    onValueChange = {
+                        sliderState.value = it
+                        textFieldValue = if (allowDecimal) ((it * 10f).roundToInt() / 10.0).toString()
+                        else it.roundToInt().toString()
+                    },
                     onValueChangeFinished = {
                         val input = sliderState.value
                         if (allowDecimal) {

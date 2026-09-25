@@ -92,6 +92,10 @@ fun ChipWithRange(
 
                 RangeSlider(
                     state = rangeSliderState,
+                    onValueChange = {
+                        rangeSliderState.startValue = it.start
+                        rangeSliderState.endValue = it.endInclusive
+                    },
                     onValueChangeFinished = {
                         onValueChanged(rangeStart..rangeEnd)
                     },
