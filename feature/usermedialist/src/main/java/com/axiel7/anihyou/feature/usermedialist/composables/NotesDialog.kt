@@ -23,8 +23,14 @@ fun NotesDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.ok))
+                Text(text = stringResource(R.string.close))
             }
+        },
+        dismissButton = {
+            TranslateIconButton(
+                text = note,
+                app = translatorApp,
+            )
         },
         title = {
             Text(text = stringResource(R.string.notes))
@@ -34,11 +40,6 @@ fun NotesDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 Text(text = note)
-
-                TranslateIconButton(
-                    text = note,
-                    app = translatorApp,
-                )
             }
         }
     )
