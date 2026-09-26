@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.domain
 
 import com.axiel7.anihyou.core.domain.repository.ActivityRepository
+import com.axiel7.anihyou.core.domain.repository.AnimeNotificationsRepository
 import com.axiel7.anihyou.core.domain.repository.CharacterRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
@@ -36,4 +37,5 @@ val repositoryModule = module {
     single<StudioRepository>()
     single<ThreadRepository>()
     single<UserRepository>()
+    single<AnimeNotificationsRepository>()
 }

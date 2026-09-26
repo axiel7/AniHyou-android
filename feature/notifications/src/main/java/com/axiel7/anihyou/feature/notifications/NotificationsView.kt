@@ -152,7 +152,7 @@ private fun NotificationsContent(
                     contentType = { it }
                 ) { item ->
                     NotificationItem(
-                        title = item.localizedText(LocalResources.current),
+                        title = item.localizedText(LocalResources.current) ?: item.text,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                         blurImage = blurAdult && item.isAdultMedia,
                         imageUrl = item.imageUrl,

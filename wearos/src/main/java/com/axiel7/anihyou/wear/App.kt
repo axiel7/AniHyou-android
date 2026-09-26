@@ -2,6 +2,7 @@ package com.axiel7.anihyou.wear
 
 import android.app.Application
 import com.axiel7.anihyou.core.domain.dataStoreModule
+import com.axiel7.anihyou.core.domain.databaseModule
 import com.axiel7.anihyou.core.domain.repositoryModule
 import com.axiel7.anihyou.core.network.apiModule
 import com.axiel7.anihyou.core.network.networkModule
@@ -21,6 +22,7 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 dataStoreModule,
+                databaseModule,
                 networkModule,
                 apiModule,
                 repositoryModule,

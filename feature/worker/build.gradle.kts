@@ -12,4 +12,6 @@ dependencies {
     implementation(libs.androidx.work.runtime)
 
     implementation(libs.koin.workmanager)
+
+    implementation(project(":core:database"))
 }

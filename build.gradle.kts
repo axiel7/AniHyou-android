@@ -11,4 +11,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.koin.compiler) apply false
     alias(libs.plugins.stability.analyzer) apply false
+    alias(libs.plugins.androidx.room) apply false
+    alias(libs.plugins.ksp) apply false
 }

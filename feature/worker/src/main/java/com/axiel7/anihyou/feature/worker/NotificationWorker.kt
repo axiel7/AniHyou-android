@@ -19,6 +19,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.axiel7.anihyou.core.base.APP_PACKAGE_NAME
 import com.axiel7.anihyou.core.base.DataResult
+import com.axiel7.anihyou.core.domain.repository.AnimeNotificationsRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
@@ -43,6 +44,7 @@ class NotificationWorker(
     private val userRepository: UserRepository,
     private val notificationsRepository: NotificationRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val animeNotificationsRepository: AnimeNotificationsRepository,
     private val networkVariables: NetworkVariables,
 ) : CoroutineWorker(context, params) {
 
@@ -79,7 +81,43 @@ class NotificationWorker(
                 }
                 newNotifications.groupBy { it.type }.forEach { (type, notifications) ->
                     val group = type?.asGroup() ?: NotificationTypeGroup.ALL
-                    notifications.forEach {
+                    val allowedNotifications = notifications.mapNotNull { notification ->
+                        val notificationAllowances = animeNotificationsRepository.getAnimeNotificationById(notification.contentId)
+
+                        // get the notification depending on if it's an AIRING notification or not
+                        val localizedText = if (type?.asGroup() == NotificationTypeGroup.AIRING) {
+                            val allowStartAiring = notificationAllowances?.allowStartAiring ?: true
+                            val allowNewAiring = notificationAllowances?.allowNewEpisode ?: true
+                            val allowFinishAiring = notificationAllowances?.allowFinishAiring ?: false
+
+                            if (!allowStartAiring && !allowNewAiring && !allowFinishAiring) {
+                                return@mapNotNull null // no notification allowed for the media
+                            }
+
+                            runCatching {
+                                notification.localizedText(
+                                    applicationContext.resources,
+                                    startNotification = allowStartAiring,
+                                    airingNotification = allowNewAiring,
+                                    endNotification = allowFinishAiring,
+                                    episodeCount = 3,
+                                )
+                            }.getOrDefault(notification.text)
+                        } else {
+                            runCatching {
+                                notification.localizedText(applicationContext.resources)
+                            }.getOrDefault(notification.text)
+                        } ?: return@mapNotNull null
+
+                        // delete if the media is finished airing
+                        if (notification.numEpisode() == notificationAllowances?.episodeCount) {
+                            animeNotificationsRepository.deleteNotificationById(notification.contentId)
+                        }
+
+                        notification to localizedText
+                    }
+
+                    allowedNotifications.forEach { (notification, localizedText) ->
                         var pendingIntent: PendingIntent? = null
                         val deepLinkType = group.asDeepLinkType()
                         if (deepLinkType != null) runCatching {
@@ -87,41 +125,37 @@ class NotificationWorker(
                                 .getLaunchIntentForPackage(APP_PACKAGE_NAME)
                                 ?.apply {
                                     action = deepLinkType.intentAction
-                                    putExtra("content_id", it.contentId.toString())
+                                    putExtra("content_id", notification.contentId.toString())
                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                                             Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 }?.let { intent ->
                                     pendingIntent = PendingIntent.getActivity(
-                                        applicationContext, it.id, intent,
+                                        applicationContext, notification.id, intent,
                                         PendingIntent.FLAG_IMMUTABLE
                                     )
                                 }
                         }
 
-                        val image = (it.largeImageUrl ?: it.imageUrl)?.let { url ->
+                        val image = (notification.largeImageUrl ?: notification.imageUrl)?.let { url ->
                             applicationContext.getBitmapFromUrl(url)
                         }
 
-                        val localizedText = runCatching {
-                            it.localizedText(applicationContext.resources)
-                        }.getOrDefault(it.text)
-
                         applicationContext.showNotification(
-                            notificationId = it.id,
+                            notificationId = notification.id,
                             channelId = group.channelId,
                             title = localizedText,
                             text = "",
                             largeIcon = image,
-                            bigPicture = image.takeIf { _ -> it.isMedia },
+                            bigPicture = image.takeIf { _ -> notification.isMedia },
                             pendingIntent = pendingIntent,
                             group = group.name
                         )
                     }
-                    if (notifications.size > 1) {
+                    if (allowedNotifications.size > 1) {
                         applicationContext.showNotification(
                             notificationId = 1,
                             channelId = group.channelId,
-                            title = "${applicationContext.getString(group.stringRes)} (${newNotifications.size})",
+                            title = "${applicationContext.getString(group.stringRes)} (${allowedNotifications.size})",
                             text = "",
                             group = group.name,
                             isGroupSummary = true

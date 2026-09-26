@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.AnimeNotificationsRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
@@ -36,6 +37,7 @@ class MediaDetailsViewModel(
     defaultPreferencesRepository: DefaultPreferencesRepository,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
+    private val animeNotificationsRepository: AnimeNotificationsRepository,
 ) : UiStateViewModel<MediaDetailsUiState>(), MediaDetailsEvent {
 
     override val initialState = MediaDetailsUiState(isLoggedIn = arguments.isLoggedIn)
@@ -57,6 +59,30 @@ class MediaDetailsViewModel(
                                 )
                         } else null
                     )
+                )
+            }
+        }
+    }
+
+    override fun changeNotificationAllowance(type: AiringNotificationType, value: Boolean) {
+        mutableUiState.update {
+            when (type) {
+                AiringNotificationType.START -> it.copy(allowStartNotifications = value)
+                AiringNotificationType.AIRING -> it.copy(allowAiringNotifications = value)
+                AiringNotificationType.END -> it.copy(allowEndNotifications = value)
+            }
+        }
+    }
+
+    override fun writeNotificationAllowanceToDatabase() {
+        with(mutableUiState.value) {
+            viewModelScope.launch {
+                animeNotificationsRepository.upsertNotification(
+                    animeId = arguments.id,
+                    allowStartAiring = allowStartNotifications,
+                    allowAiringEpisode = allowAiringNotifications,
+                    allowFinishAiring = allowEndNotifications,
+                    episodeCount = details?.basicMediaDetails?.episodes
                 )
             }
         }
@@ -331,6 +357,12 @@ class MediaDetailsViewModel(
         defaultPreferencesRepository.translatorApp
             .onEach { value ->
                 mutableUiState.update { it.copy(translatorApp = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.isNotificationsEnabled
+            .onEach { value ->
+                mutableUiState.update { it.copy(notificationsEnabled = value) }
             }
             .launchIn(viewModelScope)
 

@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:model"))
     implementation(project(":core:resources"))
+    implementation(project(":core:database"))
 
     implementation(libs.apollo.normalized.cache)
     implementation(libs.kotlinx.serialization.json)

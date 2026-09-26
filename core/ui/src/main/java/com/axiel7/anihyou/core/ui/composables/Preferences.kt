@@ -171,6 +171,7 @@ fun SwitchPreference(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     preferenceValue: Boolean?,
+    enabled: Boolean = true,
     @DrawableRes icon: Int? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     iconPadding: PaddingValues = PaddingValues(16.dp),
@@ -189,7 +190,7 @@ fun SwitchPreference(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
+                .clickable(enabled = enabled) {
                     onValueChange(preferenceValue?.not() ?: false)
                 }
                 .padding(vertical = verticalPadding),
@@ -242,6 +243,7 @@ fun SwitchPreference(
                 onCheckedChange = {
                     onValueChange(it)
                 },
+                enabled = enabled,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }//: Row

@@ -685,6 +685,8 @@
         <item quantity="one">Episode %1$d of %2$s aired.</item>
         <item quantity="other">Episode %1$d of %2$s aired.</item>
     </plurals>
+    <string name="notification_start_episode_aired">%1$s started airing</string>
+    <string name="notification_end_episode_aired">%1$s finished airing.</string>
     <string name="notification_activity_liked">%s liked your activity.</string>
     <string name="notification_activity_reply_liked">%s liked your activity reply.</string>
     <string name="notification_activity_reply">%s replied to your activity.</string>
@@ -698,4 +700,7 @@
     <string name="widget_config_title">Widget configuration</string>
     <string name="style_colored">Colored</string>
     <string name="style_monochrome">Monochrome</string>
+    <string name="allow_start_notification">Allow start notification</string>
+    <string name="allow_airing_notification">Allow airing notification</string>
+    <string name="allow_end_notification">Allow finished notification</string>
 </resources>
