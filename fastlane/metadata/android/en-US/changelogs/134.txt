@@ -1,0 +1,9 @@
+- New option to add recommendations! (@x8laye4r)
+- MediaList: filter by episodes/chapter and duration/volumes
+- StaffDetails: media type filter
+- Calendar: load previous day and filter dropped and planning anime
+- Animated icons in navigation bar
+- MediaList: translator button in notes
+- ActivityDetails: add share button
+- Fixed sorting bug while searching in list (@MagnarIUK)
+- Other crash fixes and ui improvements
