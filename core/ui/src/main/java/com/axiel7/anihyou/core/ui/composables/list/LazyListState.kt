@@ -56,9 +56,11 @@ fun LazyListState.OnBottomReached(
  * @param onLoadMore The code to execute when it reaches the bottom of the list
  * @author Manav Tamboli
  */
+@OptIn(FlowPreview::class)
 @Composable
 fun LazyGridState.OnBottomReached(
     buffer: Int,
+    debounceDuration: Duration = 0.seconds,
     onLoadMore: suspend () -> Unit
 ) {
     // Buffer must be positive.
@@ -77,6 +79,7 @@ fun LazyGridState.OnBottomReached(
 
     LaunchedEffect(shouldLoadMore) {
         snapshotFlow { shouldLoadMore.value }
+            .debounce(debounceDuration)
             .collect { if (it) onLoadMore() }
     }
 }

@@ -217,6 +217,15 @@ class ListPreferencesRepository (
         dataStore.setValue(SEASONAL_LIST_STYLE, value.name)
     }
 
+    val calendarListStyle = dataStore.getValue(
+        key = CALENDAR_LIST_STYLE,
+        default = ListStyle.STANDARD.name
+    ).map { ListStyle.valueOf(it) }
+
+    suspend fun setCalendarListStyle(value: ListStyle) {
+        dataStore.setValue(CALENDAR_LIST_STYLE, value.name)
+    }
+
     companion object {
         private val ANIME_LIST_SELECTED_KEY = stringPreferencesKey("anime_list_selected")
         private val MANGA_LIST_SELECTED_KEY = stringPreferencesKey("manga_list_selected")
@@ -250,5 +259,7 @@ class ListPreferencesRepository (
             stringPreferencesKey("anime_repeating_list_style")
 
         private val SEASONAL_LIST_STYLE = stringPreferencesKey("seasonal_list_style")
+        private val CALENDAR_LIST_STYLE = stringPreferencesKey("calendar_list_style")
+
     }
 }

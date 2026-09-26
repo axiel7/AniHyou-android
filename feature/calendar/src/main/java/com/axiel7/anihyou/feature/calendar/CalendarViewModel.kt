@@ -5,7 +5,9 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.utils.DateUtils.toTimestamp
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,19 +27,28 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalCoroutinesApi::class)
 class CalendarViewModel(
     private val mediaRepository: MediaRepository,
-    private val defaultPreferencesRepository: DefaultPreferencesRepository
+    private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val listPreferencesRepository: ListPreferencesRepository,
 ) : PagedUiStateViewModel<CalendarUiState>(), CalendarEvent {
 
     override val initialState = CalendarUiState()
 
-    val onMyList = defaultPreferencesRepository.calendarOnMyList
+    private val onMyList = defaultPreferencesRepository.calendarOnMyList
     private val displayAdult = defaultPreferencesRepository.displayAdult
 
     private val today = LocalDate.now()
     private var itemCount = 0
 
-    fun onMyListChanged(value: Boolean?) = viewModelScope.launch {
-        defaultPreferencesRepository.setCalendarOnMyList(value)
+    override fun onMyListChanged(value: Boolean?) {
+        viewModelScope.launch {
+            defaultPreferencesRepository.setCalendarOnMyList(value)
+        }
+    }
+
+    override fun onChangeListStyle(value: ListStyle) {
+        viewModelScope.launch {
+            listPreferencesRepository.setCalendarListStyle(value)
+        }
     }
 
     override fun onUpdateListEntry(viewListEntry: BasicMediaListEntry?) {
@@ -164,6 +175,12 @@ class CalendarViewModel(
     }
 
     init {
+        listPreferencesRepository.calendarListStyle
+            .onEach { value ->
+                mutableUiState.update { it.copy(listStyle = value) }
+            }
+            .launchIn(viewModelScope)
+
         onMyList.onEach { onMyListVal ->
             if (mutableUiState.value.onMyList != onMyListVal) {
                 mutableUiState.update {
