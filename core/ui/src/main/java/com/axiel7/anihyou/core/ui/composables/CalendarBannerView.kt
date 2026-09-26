@@ -41,7 +41,7 @@ fun CalendarBannerView(
                 contentDescription = "banner",
                 placeholder = ColorPainter(MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.None
+                contentScale = ContentScale.Crop
             )
         } else {
             Box(
