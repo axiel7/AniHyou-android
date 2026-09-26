@@ -5,14 +5,14 @@ query UserFavoritesStaff($userId: Int, $page: Int, $perPage: Int) {
                 edges {
                     id
                     favouriteOrder
-                }
-                nodes {
-                    id
-                    name {
-                        userPreferred
-                    }
-                    image {
-                        large
+                    node {
+                        id
+                        name {
+                            userPreferred
+                        }
+                        image {
+                            large
+                        }
                     }
                 }
                 pageInfo {

@@ -160,7 +160,6 @@ private fun SearchContent(
                 } else {
                     items(
                         items = uiState.searchResult,
-                        key = { it.id }
                     ) { media ->
                         MediaItemHorizontal(
                             title = media.basicMediaDetails.title?.userPreferred.orEmpty(),

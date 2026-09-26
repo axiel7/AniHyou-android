@@ -50,15 +50,15 @@ class ReorderFavoritesViewModel(
 
     override fun saveNewOrder() {
         with(uiState.value) {
-            val animeIds = anime.map { it.id }.takeIf { type == FavoritesType.ANIME }
+            val animeIds = anime.mapNotNull { it.node?.id }.takeIf { type == FavoritesType.ANIME }
             val animeOrder = anime.indices.toList().takeIf { type == FavoritesType.ANIME }
-            val mangaIds = manga.map { it.id }.takeIf { type == FavoritesType.MANGA }
+            val mangaIds = manga.mapNotNull { it.node?.id }.takeIf { type == FavoritesType.MANGA }
             val mangaOrder = manga.indices.toList().takeIf { type == FavoritesType.MANGA }
-            val characterIds = characters.map { it.id }.takeIf { type == FavoritesType.CHARACTERS }
+            val characterIds = characters.mapNotNull { it.node?.id }.takeIf { type == FavoritesType.CHARACTERS }
             val characterOrder = characters.indices.toList().takeIf { type == FavoritesType.CHARACTERS }
-            val staffIds = staff.map { it.id }.takeIf { type == FavoritesType.STAFF }
+            val staffIds = staff.mapNotNull { it.node?.id }.takeIf { type == FavoritesType.STAFF }
             val staffOrder = staff.indices.toList().takeIf { type == FavoritesType.STAFF }
-            val studioIds = studios.map { it.id }.takeIf { type == FavoritesType.STUDIOS }
+            val studioIds = studios.mapNotNull { it.node?.id }.takeIf { type == FavoritesType.STUDIOS }
             val studioOrder = studios.indices.toList().takeIf { type == FavoritesType.STUDIOS }
 
             favoritesRepository.updateFavouriteOrder(

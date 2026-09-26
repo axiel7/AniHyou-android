@@ -5,16 +5,16 @@ query UserFavoritesAnime($userId: Int, $page: Int, $perPage: Int) {
                 edges {
                     id
                     favouriteOrder
-                }
-                nodes {
-                    id
-                    title {
-                        userPreferred
+                    node {
+                        id
+                        title {
+                            userPreferred
+                        }
+                        coverImage {
+                            large
+                        }
+                        isAdult
                     }
-                    coverImage {
-                        large
-                    }
-                    isAdult
                 }
                 pageInfo {
                     ...CommonPage

@@ -27,11 +27,11 @@ import sh.calvin.reorderable.ReorderableLazyGridState
 
 internal fun LazyGridScope.favoritesItems(
     type: FavoritesType,
-    anime: List<UserFavoritesAnimeQuery.Node>,
-    manga: List<UserFavoritesMangaQuery.Node>,
-    characters: List<UserFavoritesCharacterQuery.Node>,
-    staff: List<UserFavoritesStaffQuery.Node>,
-    studios: List<UserFavoritesStudioQuery.Node>,
+    anime: List<UserFavoritesAnimeQuery.Edge>,
+    manga: List<UserFavoritesMangaQuery.Edge>,
+    characters: List<UserFavoritesCharacterQuery.Edge>,
+    staff: List<UserFavoritesStaffQuery.Edge>,
+    studios: List<UserFavoritesStudioQuery.Edge>,
     isLoading: Boolean,
     blurAdult: Boolean,
     reorderableState: ReorderableLazyGridState? = null,
@@ -44,28 +44,28 @@ internal fun LazyGridScope.favoritesItems(
         FavoritesType.ANIME -> {
             items(
                 items = anime,
-                key = { it.id },
-                contentType = { it }
+                key = { "${it.id}${it.node?.id}" },
+                contentType = { type.name }
             ) { item ->
                 if (reorderableState != null) {
-                    ReorderableItem(reorderableState, key = item.id) {
+                    ReorderableItem(reorderableState, key = "${item.id}${item.node?.id}") {
                         MediaItemVertical(
-                            title = item.title?.userPreferred.orEmpty(),
-                            imageUrl = item.coverImage?.large,
-                            blurImage = blurAdult && item.isAdult == true,
+                            title = item.node?.title?.userPreferred.orEmpty(),
+                            imageUrl = item.node?.coverImage?.large,
+                            blurImage = blurAdult && item.node?.isAdult == true,
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .longPressDraggableHandle(),
-                            onClick = { onMediaClick(item.id) }
+                            onClick = { onMediaClick(item.node?.id ?: 0) }
                         )
                     }
                 } else {
                     MediaItemVertical(
-                        title = item.title?.userPreferred.orEmpty(),
-                        imageUrl = item.coverImage?.large,
-                        blurImage = blurAdult && item.isAdult == true,
+                        title = item.node?.title?.userPreferred.orEmpty(),
+                        imageUrl = item.node?.coverImage?.large,
+                        blurImage = blurAdult && item.node?.isAdult == true,
                         modifier = Modifier.wrapContentWidth(),
-                        onClick = { onMediaClick(item.id) }
+                        onClick = { onMediaClick(item.node?.id ?: 0) }
                     )
                 }
             }
@@ -79,28 +79,28 @@ internal fun LazyGridScope.favoritesItems(
         FavoritesType.MANGA -> {
             items(
                 items = manga,
-                key = { it.id },
-                contentType = { it }
+                key = { "${it.id}${it.node?.id}" },
+                contentType = { type.name }
             ) { item ->
                 if (reorderableState != null) {
-                    ReorderableItem(reorderableState, key = item.id) {
+                    ReorderableItem(reorderableState, key = "${item.id}${item.node?.id}") {
                         MediaItemVertical(
-                            title = item.title?.userPreferred.orEmpty(),
-                            imageUrl = item.coverImage?.large,
-                            blurImage = blurAdult && item.isAdult == true,
+                            title = item.node?.title?.userPreferred.orEmpty(),
+                            imageUrl = item.node?.coverImage?.large,
+                            blurImage = blurAdult && item.node?.isAdult == true,
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .longPressDraggableHandle(),
-                            onClick = { onMediaClick(item.id) }
+                            onClick = { onMediaClick(item.node?.id ?: 0) }
                         )
                     }
                 } else {
                     MediaItemVertical(
-                        title = item.title?.userPreferred.orEmpty(),
-                        imageUrl = item.coverImage?.large,
-                        blurImage = blurAdult && item.isAdult == true,
+                        title = item.node?.title?.userPreferred.orEmpty(),
+                        imageUrl = item.node?.coverImage?.large,
+                        blurImage = blurAdult && item.node?.isAdult == true,
                         modifier = Modifier.wrapContentWidth(),
-                        onClick = { onMediaClick(item.id) }
+                        onClick = { onMediaClick(item.node?.id ?: 0) }
                     )
                 }
             }
@@ -114,23 +114,23 @@ internal fun LazyGridScope.favoritesItems(
         FavoritesType.CHARACTERS -> {
             items(
                 items = characters,
-                key = { it.id },
-                contentType = { it }
+                key = { "${it.id}${it.node?.id}" },
+                contentType = { type.name }
             ) { item ->
                 if (reorderableState != null) {
-                    ReorderableItem(reorderableState, key = item.id) {
+                    ReorderableItem(reorderableState, key = "${item.id}${item.node?.id}") {
                         PersonItemVertical(
-                            title = item.name?.userPreferred.orEmpty(),
-                            imageUrl = item.image?.large,
+                            title = item.node?.name?.userPreferred.orEmpty(),
+                            imageUrl = item.node?.image?.large,
                             modifier = Modifier.longPressDraggableHandle(),
-                            onClick = { onCharacterClick(item.id) }
+                            onClick = { onCharacterClick(item.node?.id ?: 0) }
                         )
                     }
                 } else {
                     PersonItemVertical(
-                        title = item.name?.userPreferred.orEmpty(),
-                        imageUrl = item.image?.large,
-                        onClick = { onCharacterClick(item.id) }
+                        title = item.node?.name?.userPreferred.orEmpty(),
+                        imageUrl = item.node?.image?.large,
+                        onClick = { onCharacterClick(item.node?.id ?: 0) }
                     )
                 }
             }
@@ -144,23 +144,23 @@ internal fun LazyGridScope.favoritesItems(
         FavoritesType.STAFF -> {
             items(
                 items = staff,
-                key = { it.id },
-                contentType = { it }
+                key = { "${it.id}${it.node?.id}" },
+                contentType = { type.name }
             ) { item ->
                 if (reorderableState != null) {
-                    ReorderableItem(reorderableState, key = item.id) {
+                    ReorderableItem(reorderableState, key = "${item.id}${item.node?.id}") {
                         PersonItemVertical(
-                            title = item.name?.userPreferred.orEmpty(),
-                            imageUrl = item.image?.large,
+                            title = item.node?.name?.userPreferred.orEmpty(),
+                            imageUrl = item.node?.image?.large,
                             modifier = Modifier.longPressDraggableHandle(),
-                            onClick = { onStaffClick(item.id) }
+                            onClick = { onStaffClick(item.node?.id ?: 0) }
                         )
                     }
                 } else {
                     PersonItemVertical(
-                        title = item.name?.userPreferred.orEmpty(),
-                        imageUrl = item.image?.large,
-                        onClick = { onStaffClick(item.id) }
+                        title = item.node?.name?.userPreferred.orEmpty(),
+                        imageUrl = item.node?.image?.large,
+                        onClick = { onStaffClick(item.node?.id ?: 0) }
                     )
                 }
             }
@@ -174,19 +174,19 @@ internal fun LazyGridScope.favoritesItems(
         FavoritesType.STUDIOS -> {
             items(
                 items = studios,
-                key = { it.id },
-                contentType = { it }
+                key = { "${it.id}${it.node?.id}" },
+                contentType = { type.name }
             ) { item ->
                 if (reorderableState != null) {
-                    ReorderableItem(reorderableState, key = item.id) {
+                    ReorderableItem(reorderableState, key = "${item.id}${item.node?.id}") {
                         Card(
                             modifier = Modifier
                                 .padding(horizontal = 4.dp)
                                 .longPressDraggableHandle(),
-                            onClick = { onStudioClick(item.id) }
+                            onClick = { onStudioClick(item.node?.id ?: 0) }
                         ) {
                             Text(
-                                text = item.name,
+                                text = item.node?.name.orEmpty(),
                                 modifier = Modifier.padding(
                                     horizontal = 16.dp,
                                     vertical = 8.dp
@@ -199,10 +199,10 @@ internal fun LazyGridScope.favoritesItems(
                 } else {
                     Card(
                         modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = { onStudioClick(item.id) }
+                        onClick = { onStudioClick(item.node?.id ?: 0) }
                     ) {
                         Text(
-                            text = item.name,
+                            text = item.node?.name.orEmpty(),
                             modifier = Modifier.padding(
                                 horizontal = 16.dp,
                                 vertical = 8.dp

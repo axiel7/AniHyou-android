@@ -5,10 +5,10 @@ query UserFavoritesStudio($userId: Int, $page: Int, $perPage: Int) {
                 edges {
                     id
                     favouriteOrder
-                }
-                nodes {
-                    id
-                    name
+                    node {
+                        id
+                        name
+                    }
                 }
                 pageInfo {
                     ...CommonPage

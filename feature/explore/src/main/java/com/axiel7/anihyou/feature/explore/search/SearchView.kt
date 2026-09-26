@@ -320,7 +320,7 @@ fun SearchContentView(
             when (uiState.searchType) {
                 SearchType.ANIME, SearchType.MANGA -> {
                     if (uiState.isLoading) {
-                        items(10, key = { "placeholder_$it" }, contentType = { "media_placeholder" }) {
+                        items(10, contentType = { "media_placeholder" }) {
                             MediaItemHorizontalPlaceholder()
                         }
                     }
@@ -359,7 +359,7 @@ fun SearchContentView(
 
                 SearchType.CHARACTER -> {
                     if (uiState.isLoading) {
-                        items(10, key = { "char_placeholder_$it" }, contentType = { "char_placeholder" }) {
+                        items(10, contentType = { "char_placeholder" }) {
                             PersonItemHorizontalPlaceholder()
                         }
                     }
@@ -382,7 +382,7 @@ fun SearchContentView(
 
                 SearchType.STAFF -> {
                     if (uiState.isLoading) {
-                        items(10, key = { "staff_placeholder_$it" }, contentType = { "staff_placeholder" }) {
+                        items(10, contentType = { "staff_placeholder" }) {
                             PersonItemHorizontalPlaceholder()
                         }
                     }
@@ -405,7 +405,7 @@ fun SearchContentView(
 
                 SearchType.STUDIO -> {
                     if (uiState.isLoading) {
-                        items(10, key = { "studio_placeholder_$it" }, contentType = { "studio_placeholder" }) {
+                        items(10, contentType = { "studio_placeholder" }) {
                             Text(
                                 text = "Loading placeholder",
                                 modifier = Modifier
@@ -435,7 +435,7 @@ fun SearchContentView(
 
                 SearchType.USER -> {
                     if (uiState.isLoading) {
-                        items(10, key = { "user_placeholder_$it" }, contentType = { "user_placeholder" }) {
+                        items(10, contentType = { "user_placeholder" }) {
                             PersonItemHorizontalPlaceholder()
                         }
                     }

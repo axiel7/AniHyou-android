@@ -41,23 +41,23 @@ class UserFavoritesViewModel(
             when (type) {
                 FavoritesType.ANIME -> {
                     anime.clear()
-                    anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Node>())
+                    anime.addAll(result.filterIsInstance<UserFavoritesAnimeQuery.Edge>())
                 }
                 FavoritesType.MANGA -> {
                     manga.clear()
-                    manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Node>())
+                    manga.addAll(result.filterIsInstance<UserFavoritesMangaQuery.Edge>())
                 }
                 FavoritesType.CHARACTERS -> {
                     characters.clear()
-                    characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Node>())
+                    characters.addAll(result.filterIsInstance<UserFavoritesCharacterQuery.Edge>())
                 }
                 FavoritesType.STAFF -> {
                     staff.clear()
-                    staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Node>())
+                    staff.addAll(result.filterIsInstance<UserFavoritesStaffQuery.Edge>())
                 }
                 FavoritesType.STUDIOS -> {
                     studios.clear()
-                    studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Node>())
+                    studios.addAll(result.filterIsInstance<UserFavoritesStudioQuery.Edge>())
                 }
             }
         }

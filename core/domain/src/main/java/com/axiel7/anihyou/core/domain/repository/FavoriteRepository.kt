@@ -40,7 +40,7 @@ class FavoriteRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.User?.favourites?.anime?.pageInfo?.commonPage }) {
-            it.User?.favourites?.anime?.nodes?.filterNotNull().orEmpty()
+            it.User?.favourites?.anime?.edges?.filterNotNull().orEmpty()
         }
 
     fun getFavoriteManga(
@@ -53,7 +53,7 @@ class FavoriteRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.User?.favourites?.manga?.pageInfo?.commonPage }) {
-            it.User?.favourites?.manga?.nodes?.filterNotNull().orEmpty()
+            it.User?.favourites?.manga?.edges?.filterNotNull().orEmpty()
         }
 
     fun getFavoriteCharacters(
@@ -66,7 +66,7 @@ class FavoriteRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.User?.favourites?.characters?.pageInfo?.commonPage }) {
-            it.User?.favourites?.characters?.nodes?.filterNotNull().orEmpty()
+            it.User?.favourites?.characters?.edges?.filterNotNull().orEmpty()
         }
 
     fun getFavoriteStaff(
@@ -79,7 +79,7 @@ class FavoriteRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.User?.favourites?.staff?.pageInfo?.commonPage }) {
-            it.User?.favourites?.staff?.nodes?.filterNotNull().orEmpty()
+            it.User?.favourites?.staff?.edges?.filterNotNull().orEmpty()
         }
 
     fun getFavoriteStudio(
@@ -92,7 +92,7 @@ class FavoriteRepository(
         .fetchPolicy(if (fetchFromNetwork) FetchPolicy.NetworkFirst else FetchPolicy.CacheFirst)
         .toFlow()
         .asPagedResult(page = { it.User?.favourites?.studios?.pageInfo?.commonPage }) {
-            it.User?.favourites?.studios?.nodes?.filterNotNull().orEmpty()
+            it.User?.favourites?.studios?.edges?.filterNotNull().orEmpty()
         }
 
     fun updateFavouriteOrder(
