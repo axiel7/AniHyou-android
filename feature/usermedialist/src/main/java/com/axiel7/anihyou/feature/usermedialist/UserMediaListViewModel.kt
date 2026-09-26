@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.InjectedParam
-import kotlin.collections.orEmpty
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class UserMediaListViewModel(
@@ -274,6 +273,8 @@ class UserMediaListViewModel(
                         && yearMatch(entry)
                         && genreMatch(entry)
                         && tagMatch(entry)
+                        && episodesChaptersMatch(entry)
+                        && volumesMatch(entry)
             }
             if (filteredList.isNotEmpty()) {
                 mutableUiState.update {
@@ -326,6 +327,14 @@ class UserMediaListViewModel(
         }
     }
 
+    override fun setEpisodesChapters(value: IntRange?) {
+        mutableUiState.update { it.copy(episodesChaptersRange = value) }
+    }
+
+    override fun setDurationVolumes(value: IntRange?) {
+        mutableUiState.update { it.copy(durationVolumesRange = value) }
+    }
+
     override fun clearFilters() {
         mutableUiState.update {
             it.copy(
@@ -334,6 +343,8 @@ class UserMediaListViewModel(
                 country = null,
                 year = null,
                 genresAndTagsForSearch = GenresAndTagsForSearch(),
+                episodesChaptersRange = null,
+                durationVolumesRange = null,
                 clearedFilters = true,
             )
         }
@@ -404,6 +415,20 @@ class UserMediaListViewModel(
         return tagInMatch && tagNotMatch
     }
 
+    private fun UserMediaListUiState.episodesChaptersMatch(entry: CommonMediaListEntry) =
+        episodesChaptersRange?.let { range ->
+            if (mediaType == MediaType.ANIME) {
+                entry.media?.basicMediaDetails?.episodes?.let { it in range } ?: false
+            } else {
+                entry.media?.basicMediaDetails?.chapters?.let { it in range } ?: false
+            }
+        } ?: true
+
+    private fun UserMediaListUiState.volumesMatch(entry: CommonMediaListEntry) =
+        durationVolumesRange?.let { range ->
+            entry.media?.basicMediaDetails?.volumes?.let { it in range } ?: false
+        } ?: true
+
     private fun UserMediaListUiState.applyPartition() {
         if (separateNovelsAndManga && mediaType == MediaType.MANGA) {
             val (novels, manga) = entries.partition { it.media?.format == MediaFormat.NOVEL }
@@ -445,6 +470,8 @@ class UserMediaListViewModel(
                                 && uiState.yearMatch(entry)
                                 && uiState.genreMatch(entry)
                                 && uiState.tagMatch(entry)
+                                && uiState.episodesChaptersMatch(entry)
+                                && uiState.volumesMatch(entry)
 
                         if (!matchesFilters) return@mapNotNull null
 
@@ -479,6 +506,8 @@ class UserMediaListViewModel(
                                 && uiState.yearMatch(entry)
                                 && uiState.genreMatch(entry)
                                 && uiState.tagMatch(entry)
+                                && uiState.episodesChaptersMatch(entry)
+                                && uiState.volumesMatch(entry)
 
                         if (!matchesFilters) return@filter false
 
@@ -551,6 +580,8 @@ class UserMediaListViewModel(
                         && old.country == new.country
                         && old.year == new.year
                         && old.genresAndTagsForSearch == new.genresAndTagsForSearch
+                        && old.episodesChaptersRange == new.episodesChaptersRange
+                        && old.durationVolumesRange == new.durationVolumesRange
                         && old.clearedFilters == new.clearedFilters
             }
             .debounce { uiState ->

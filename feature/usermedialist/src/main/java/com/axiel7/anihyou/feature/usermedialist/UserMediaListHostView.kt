@@ -38,6 +38,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -81,6 +82,8 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
 import com.axiel7.anihyou.core.ui.composables.chip.FilterChipWithMenu
+import com.axiel7.anihyou.core.ui.composables.chip.MediaSearchDurationVolumesChip
+import com.axiel7.anihyou.core.ui.composables.chip.MediaSearchEpisodesChaptersChip
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.singleClick
@@ -393,41 +396,68 @@ private fun FilterBlock(
                 }
 
                 AnimatedVisibility(
-                    visible = isSearchFocused,
+                    visible = isSearchFocused || uiState.episodesChaptersRange != null,
                     enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
                     exit = if (uiState.filterCount > 0) chipExit else chipExitV
                 ) {
-                    FilterChip(
-                        selected = false,
-                        onClick = singleClick { event?.getRandomEntry() },
-                        label = { Text(text = stringResource(R.string.random)) },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.shuffle_24),
-                                contentDescription = stringResource(R.string.random),
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSurface,
-                            )
-                        },
-                        enabled = !uiState.isLoadingRandom,
+                    MediaSearchEpisodesChaptersChip(
+                        mediaType = uiState.mediaType,
+                        episodesChaptersRange = uiState.episodesChaptersRange,
+                        setEpisodesChapters = { event?.setEpisodesChapters(it) },
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = isSearchFocused || uiState.durationVolumesRange != null,
+                    enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                    exit = if (uiState.filterCount > 0) chipExit else chipExitV
+                ) {
+                    MediaSearchDurationVolumesChip(
+                        mediaType = uiState.mediaType,
+                        durationVolumesRange = uiState.durationVolumesRange,
+                        setDurationVolumes = { event?.setDurationVolumes(it) },
                     )
                 }
             }
         }
 
-
-        val hasGenreTags = remember(uiState.genresAndTagsForSearch) {
-            uiState.genresAndTagsForSearch.totalSize > 0
-        }
-        AnimatedVisibility(
-            visible = !isPreview && (isSearchFocused || hasGenreTags),
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            SearchGenresTagsChips(
-                clearedFilters = uiState.clearedFilters,
-                onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
-            )
+            AnimatedVisibility(
+                visible = isSearchFocused,
+                enter = if (uiState.filterCount > 0) chipEnter else chipEnterV,
+                exit = if (uiState.filterCount > 0) chipExit else chipExitV
+            ) {
+                FilterChip(
+                    selected = false,
+                    onClick = singleClick { event?.getRandomEntry() },
+                    label = { Text(text = stringResource(R.string.random)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.shuffle_20),
+                            contentDescription = stringResource(R.string.random),
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                        )
+                    },
+                    enabled = !uiState.isLoadingRandom,
+                )
+            }
+
+            val hasGenreTags = remember(uiState.genresAndTagsForSearch) {
+                uiState.genresAndTagsForSearch.totalSize > 0
+            }
+            AnimatedVisibility(
+                visible = !isPreview && (isSearchFocused || hasGenreTags),
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                SearchGenresTagsChips(
+                    clearedFilters = uiState.clearedFilters,
+                    onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
+                )
+            }
         }
 
         AnimatedVisibility(

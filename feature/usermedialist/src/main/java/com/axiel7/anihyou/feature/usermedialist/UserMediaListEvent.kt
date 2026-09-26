@@ -60,5 +60,9 @@ interface UserMediaListEvent : UiEvent {
 
     fun onGenreTagStateChanged(value: GenresAndTagsForSearch)
 
+    fun setEpisodesChapters(value: IntRange?)
+
+    fun setDurationVolumes(value: IntRange?)
+
     fun clearFilters()
 }

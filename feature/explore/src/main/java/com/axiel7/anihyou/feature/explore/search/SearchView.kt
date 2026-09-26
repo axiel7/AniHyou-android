@@ -69,6 +69,8 @@ import com.axiel7.anihyou.core.ui.common.LocalBlurAdult
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.rememberSnackbarManager
+import com.axiel7.anihyou.core.ui.composables.chip.MediaSearchDurationVolumesChip
+import com.axiel7.anihyou.core.ui.composables.chip.MediaSearchEpisodesChaptersChip
 import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.ErrorTextButton
 import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
@@ -84,7 +86,6 @@ import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchCountryChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDateChip
-import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchDurationChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchFormatChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSortChip
 import com.axiel7.anihyou.feature.explore.search.composables.MediaSearchSourcesChip
@@ -507,16 +508,24 @@ private fun MoreFilters(
         onEndYearChanged = { event?.setEndYear(it) },
         onSeasonChanged = { event?.setSeason(it) },
     )
-    MediaSearchDurationChip(
-        mediaType = uiState.mediaType ?: MediaType.UNKNOWN__,
-        minEpCh = uiState.minEpCh,
-        maxEpCh = uiState.maxEpCh,
-        minDuration = uiState.minDuration,
-        maxDuration = uiState.maxDuration,
-        setEpCh = { event?.setEpCh(it) },
-        setDuration = { event?.setDuration(it) },
-    )
+    Row(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MediaSearchEpisodesChaptersChip(
+            mediaType = uiState.mediaType ?: MediaType.ANIME,
+            episodesChaptersRange = uiState.episodesChaptersRange,
+            setEpisodesChapters = { event?.setEpisodesChapters(it) },
+        )
+        MediaSearchDurationVolumesChip(
+            mediaType = uiState.mediaType ?: MediaType.ANIME,
+            durationVolumesRange = uiState.durationVolumesRange,
+            setDurationVolumes = { event?.setDurationVolumes(it) },
+        )
+    }
     SearchGenresTagsChips(
+        modifier = Modifier.padding(horizontal = 16.dp),
         viewModel = koinViewModel {
             parametersOf(
                 GenresAndTagsForSearch(
