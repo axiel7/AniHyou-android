@@ -158,6 +158,11 @@ class CalendarViewModel(
         }
     }
 
+    override fun onAutoScrolled() {
+        //fix so the list doesn't get scrolled on recompositions
+        mutableUiState.update { it.copy(todayFirstItemIndex = -1) }
+    }
+
     init {
         onMyList.onEach { onMyListVal ->
             if (mutableUiState.value.onMyList != onMyListVal) {
@@ -208,10 +213,12 @@ class CalendarViewModel(
                         updatedMap[localDate] = updatedList
 
                         var todayFirstItemIndex = state.todayFirstItemIndex
-                        if (localDate < today) {
-                            itemCount += updatedList.size
-                        } else if (localDate == today) {
-                            todayFirstItemIndex = itemCount - 1
+                        if (state.todayFirstItemIndex != -1) {
+                            if (localDate < today) {
+                                itemCount += updatedList.size
+                            } else if (localDate == today) {
+                                todayFirstItemIndex = itemCount - 1
+                            }
                         }
 
                         state.copy(

@@ -15,4 +15,5 @@ interface CalendarEvent : UiEvent, PagedEvent {
     fun nextDay()
     fun refresh()
     fun refreshDay(date: LocalDate)
+    fun onAutoScrolled()
 }

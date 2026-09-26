@@ -178,6 +178,7 @@ private fun CalendarViewContent(
             LaunchedEffect(uiState.todayFirstItemIndex) {
                 if (uiState.todayFirstItemIndex > 0) {
                     listState.animateScrollToItem(uiState.todayFirstItemIndex, 500)
+                    event?.onAutoScrolled()
                 }
             }
 
