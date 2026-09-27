@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.DefaultScaffoldWithLargeTopAppBar
@@ -193,14 +194,16 @@ private fun CustomLinksViewPreview() {
         name = "nyaa",
         uri = "https://neko.si/?q={name}",
         spaceSeparator = '%',
-        mediaType = MediaType.ANIME
+        mediaType = MediaType.ANIME,
+        titleLanguage = null,
     )
     val largeSampleLink = CustomLink(
         id = 0,
         name = "mangadexwithaverylargeurldomain.org",
         uri = "https://mangadexwithaverylargeurldomain.org/search?q={name}",
         spaceSeparator = ' ',
-        mediaType = MediaType.MANGA
+        mediaType = MediaType.MANGA,
+        titleLanguage = UserTitleLanguage.NATIVE,
     )
     AniHyouTheme {
         CustomLinksContent(

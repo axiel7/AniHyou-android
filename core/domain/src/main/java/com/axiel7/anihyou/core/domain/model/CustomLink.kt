@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.database.customlinks.CustomLinkEntity
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 
 @Stable
 data class CustomLink(
@@ -14,6 +15,7 @@ data class CustomLink(
     val uri: String,
     val spaceSeparator: Char,
     val mediaType: MediaType,
+    val titleLanguage: UserTitleLanguage?,
 ) {
     val isIntent = uri.startsWith("intent:")
 
@@ -28,6 +30,7 @@ data class CustomLink(
         uri = uri,
         spaceSeparator = spaceSeparator,
         mediaType = mediaType.name,
+        titleLanguage = titleLanguage?.name,
     )
 
     companion object {
@@ -37,6 +40,7 @@ data class CustomLink(
             uri = entity.uri,
             spaceSeparator = entity.spaceSeparator,
             mediaType = MediaType.valueOf(entity.mediaType),
+            titleLanguage = entity.titleLanguage?.let(UserTitleLanguage::valueOf),
         )
 
         fun extractNameFromUrl(url: String): String {
@@ -64,6 +68,7 @@ data class CustomLink(
                 uri = urlString,
                 spaceSeparator = string.first(),
                 mediaType = mediaType,
+                titleLanguage = null,
             )
         }
     }

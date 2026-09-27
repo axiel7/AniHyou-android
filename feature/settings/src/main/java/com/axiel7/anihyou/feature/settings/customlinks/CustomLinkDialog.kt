@@ -37,7 +37,10 @@ import androidx.core.net.toUri
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.model.user.preferenceValues
+import com.axiel7.anihyou.core.model.user.stringRes
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -66,6 +69,9 @@ fun CustomLinkDialog(
         mutableStateOf(
             value?.spaceSeparator?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
         )
+    }
+    var selectedTitleLanguage by remember(value) {
+        mutableStateOf(value?.titleLanguage)
     }
     val linkNameState = rememberTextFieldState(initialText = value?.name.orEmpty())
     val urlFieldState = rememberTextFieldState(initialText = value?.uri.orEmpty())
@@ -138,6 +144,24 @@ fun CustomLinkDialog(
                         )
                     }
                 }
+
+                Text(text = stringResource(R.string.title_language))
+
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    UserTitleLanguage.preferenceValues().forEach { lang ->
+                        val selected = selectedTitleLanguage == lang
+                        FilterChip(
+                            selected = selected,
+                            onClick = {
+                                selectedTitleLanguage = if (selected) null else lang
+                            },
+                            label = { Text(text = stringResource(lang.stringRes())) },
+                        )
+                    }
+                }
             }
         },
         confirmButton = {
@@ -156,6 +180,7 @@ fun CustomLinkDialog(
                             uri = urlValue,
                             spaceSeparator = selectedSeparator.value,
                             mediaType = mediaType,
+                            titleLanguage = selectedTitleLanguage,
                         )
                         onConfirm(link)
                     }

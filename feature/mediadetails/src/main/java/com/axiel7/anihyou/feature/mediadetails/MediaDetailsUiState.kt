@@ -20,6 +20,7 @@ import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.network.type.MediaStatus
 import com.axiel7.anihyou.core.network.type.MediaType
+import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -85,6 +86,13 @@ data class MediaDetailsUiState(
         AiringNotificationType.START -> allowStartNotifications
         AiringNotificationType.AIRING -> allowAiringNotifications
         AiringNotificationType.END -> allowEndNotifications
+    }
+
+    fun findTitle(language: UserTitleLanguage) = when (language) {
+        UserTitleLanguage.ENGLISH -> details?.title?.english ?: details?.title?.userPreferred
+        UserTitleLanguage.ROMAJI -> details?.title?.romaji ?: details?.title?.userPreferred
+        UserTitleLanguage.NATIVE -> details?.title?.native ?: details?.title?.userPreferred
+        else -> details?.title?.userPreferred
     }
 
     override fun setError(value: String?) = copy(error = value)

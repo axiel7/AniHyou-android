@@ -11,4 +11,5 @@ data class CustomLinkEntity(
     val uri: String,
     val spaceSeparator: Char,
     val mediaType: String,
+    val titleLanguage: String?,
 )

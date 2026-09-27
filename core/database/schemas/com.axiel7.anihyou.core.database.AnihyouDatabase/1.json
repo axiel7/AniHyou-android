@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "420de9044b406943eab852ac1992b4fa",
+    "identityHash": "ceffbd9643c8726b97e6e3085a6c4ccf",
     "entities": [
       {
         "tableName": "anime_notifications",
@@ -51,7 +51,7 @@
       },
       {
         "tableName": "custom_links",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `uri` TEXT NOT NULL, `spaceSeparator` INTEGER NOT NULL, `mediaType` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `uri` TEXT NOT NULL, `spaceSeparator` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `titleLanguage` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -82,6 +82,11 @@
             "columnName": "mediaType",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "titleLanguage",
+            "columnName": "titleLanguage",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -94,7 +99,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '420de9044b406943eab852ac1992b4fa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ceffbd9643c8726b97e6e3085a6c4ccf')"
     ]
   }
 }

@@ -687,6 +687,17 @@ private fun CustomLinksButton(
     var titleSheetExpanded by remember { mutableStateOf(false) }
     var selectedLink by remember { mutableStateOf<CustomLink?>(null) }
 
+    fun openSite(link: CustomLink, title: String) {
+        val finalLink = link.mediaLink(title)
+        if (link.isIntent) {
+            runCatching {
+                context.startActivity(Intent.parseUri(finalLink, 0))
+            }
+        } else {
+            context.openActionView(finalLink)
+        }
+    }
+
     IconButtonWithMenu(
         icon = R.drawable.link_24,
         contentDescription = stringResource(R.string.custom_links),
@@ -695,8 +706,14 @@ private fun CustomLinksButton(
             DropdownMenuItem(
                 text = { Text(text = item.name) },
                 onClick = {
-                    selectedLink = item
-                    titleSheetExpanded = true
+                    item.titleLanguage?.let { lang ->
+                        uiState.findTitle(lang)?.let { title ->
+                            openSite(item, title)
+                        }
+                    } ?: run {
+                        selectedLink = item
+                        titleSheetExpanded = true
+                    }
                     onDismiss()
                 },
                 shape = when (index) {
@@ -710,17 +727,6 @@ private fun CustomLinksButton(
 
     selectedLink?.let { selectedLink ->
         if (titleSheetExpanded) {
-            fun openSite(title: String) {
-                val finalLink = selectedLink.mediaLink(title)
-                if (selectedLink.isIntent) {
-                    runCatching {
-                        context.startActivity(Intent.parseUri(finalLink, 0))
-                    }
-                } else {
-                    context.openActionView(finalLink)
-                }
-            }
-
             SelectionSheet(
                 onDismiss = { titleSheetExpanded = false },
                 bottomPadding = WindowInsets.navigationBars.asPaddingValues()
@@ -729,19 +735,19 @@ private fun CustomLinksButton(
                 uiState.details?.title?.romaji?.let { title ->
                     SelectionSheetItem(
                         name = title,
-                        onClick = { openSite(title) }
+                        onClick = { openSite(selectedLink, title) }
                     )
                 }
                 uiState.details?.title?.english?.let { title ->
                     SelectionSheetItem(
                         name = title,
-                        onClick = { openSite(title) }
+                        onClick = { openSite(selectedLink, title) }
                     )
                 }
                 uiState.details?.title?.native?.let { title ->
                     SelectionSheetItem(
                         name = title,
-                        onClick = { openSite(title) }
+                        onClick = { openSite(selectedLink, title) }
                     )
                 }
             }
