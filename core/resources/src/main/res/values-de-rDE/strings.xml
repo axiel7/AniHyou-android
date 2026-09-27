@@ -605,6 +605,7 @@
     <string name="openings">Vorspann</string>
     <string name="endings">Abspann</string>
     <string name="list_name">Listenname</string>
+    <string name="link_name">Linkname</string>
     <string name="anime_behind">Ausstehende Folgen</string>
     <string name="default_tab">Standardseite</string>
     <string name="last_used">Zuletzt verwendet</string>
@@ -669,6 +670,8 @@
         <item quantity="one">Folge %1$d von %2$s wurde ausgestrahlt.</item>
         <item quantity="other">Folge %1$d von %2$s wurde ausgestrahlt.</item>
     </plurals>
+    <string name="notification_start_episode_aired">Die Ausstrahlung von %1$s hat begonnen.</string>
+    <string name="notification_end_episode_aired">Die Ausstrahlung von %1$s wurde beendet.</string>
     <string name="notification_activity_liked">%s gefällt deine Aktivität.</string>
     <string name="notification_activity_reply_liked">%s gefällt deine Antwort auf eine Aktivität.</string>
     <string name="notification_activity_reply">%s hat auf deine Aktivität geantwortet.</string>
@@ -682,4 +685,7 @@
     <string name="widget_config_title">Widget Konfiguration</string>
     <string name="style_colored">Farbig</string>
     <string name="style_monochrome">Monochrom</string>
+    <string name="allow_start_notification">Benachrichtigungen bei Beginn erlauben</string>
+    <string name="allow_airing_notification">Benachrichtigungen bei Ausstrahlung erlauben</string>
+    <string name="allow_end_notification">Benachrichtigungen bei Abschluss erlauben</string>
 </resources>

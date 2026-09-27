@@ -689,6 +689,8 @@
         <item quantity="many">Вийшов %1$d-ий епізод «%2$s».</item>
         <item quantity="other">Вийшов %1$d-ий епізод «%2$s».</item>
     </plurals>
+    <string name="notification_start_episode_aired">\"%1$s\" розпочало трансляцію</string>
+    <string name="notification_end_episode_aired">\"%1$s\" закінчило трансляцію</string>
     <string name="notification_activity_liked">%s вподобує вашу активність.</string>
     <string name="notification_activity_reply_liked">%s вподобує вашу відповідь на активність.</string>
     <string name="notification_activity_reply">%s відповідає на вашу активність.</string>
@@ -702,4 +704,7 @@
     <string name="widget_config_title">Налаштування віджета</string>
     <string name="style_colored">Кольоровий</string>
     <string name="style_monochrome">Монотонний</string>
+    <string name="allow_start_notification">Дозволити сповіщення про початок</string>
+    <string name="allow_airing_notification">Дозволити сповіщення про вихід епізодів</string>
+    <string name="allow_end_notification">Дозволити сповіщення про закінчення</string>
 </resources>
