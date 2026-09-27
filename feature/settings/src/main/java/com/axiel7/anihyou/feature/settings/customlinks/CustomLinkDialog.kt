@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.settings.customlinks
 
+import android.content.Intent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -131,7 +132,10 @@ fun CustomLinkDialog(
             TextButton(
                 onClick = {
                     val uri = urlValue.text.toUri()
-                    isUrlValid = uri.scheme != null && uri.host != null
+                    val intent = runCatching {
+                        Intent.parseUri(urlValue.text, 0)
+                    }.getOrNull()
+                    isUrlValid = (uri.scheme != null && uri.host != null) || intent != null
                     if (isUrlValid) {
                         onConfirm(selectedSeparator.value + urlValue.text)
                     }

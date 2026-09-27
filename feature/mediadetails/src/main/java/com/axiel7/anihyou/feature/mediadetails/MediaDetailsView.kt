@@ -1,5 +1,6 @@
 package com.axiel7.anihyou.feature.mediadetails
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -699,7 +700,13 @@ private fun CustomLinksButton(
                     val scheme = uri.scheme
                         ?.takeIf { !it.startsWith("http") }
                         ?.plus("://")
-                    val name = if (uri.host != null) scheme.orEmpty() + uri.host else urlString
+                    val intent = runCatching { Intent.parseUri(urlString, 0) }
+                        .takeIf { uri.host == null }
+                        ?.getOrNull()
+
+                    val name = if (uri.host != null) scheme.orEmpty() + uri.host
+                    else if (intent != null) intent.action ?: urlString
+                    else urlString
 
                     Text(text = name)
                 },
@@ -726,7 +733,14 @@ private fun CustomLinksButton(
                     CUSTOM_URL_NAME_PLACEHOLDER,
                     title.replace(' ', separator)
                 )
-                context.openActionView(finalLink)
+
+                if (finalLink.startsWith("intent")) {
+                    runCatching {
+                        context.startActivity(Intent.parseUri(finalLink, 0))
+                    }
+                } else {
+                    context.openActionView(finalLink)
+                }
             }
 
             SelectionSheet(
