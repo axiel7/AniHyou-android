@@ -274,7 +274,7 @@ class UserMediaListViewModel(
                         && genreMatch(entry)
                         && tagMatch(entry)
                         && episodesChaptersMatch(entry)
-                        && volumesMatch(entry)
+                        && volumesDurationMatch(entry)
             }
             if (filteredList.isNotEmpty()) {
                 mutableUiState.update {
@@ -424,9 +424,13 @@ class UserMediaListViewModel(
             }
         } ?: true
 
-    private fun UserMediaListUiState.volumesMatch(entry: CommonMediaListEntry) =
+    private fun UserMediaListUiState.volumesDurationMatch(entry: CommonMediaListEntry) =
         durationVolumesRange?.let { range ->
-            entry.media?.basicMediaDetails?.volumes?.let { it in range } ?: false
+            if (mediaType == MediaType.ANIME) {
+                entry.media?.basicMediaDetails?.duration?.let { it in range } ?: false
+            } else {
+                entry.media?.basicMediaDetails?.volumes?.let { it in range } ?: false
+            }
         } ?: true
 
     private fun UserMediaListUiState.applyPartition() {
@@ -471,7 +475,7 @@ class UserMediaListViewModel(
                                 && uiState.genreMatch(entry)
                                 && uiState.tagMatch(entry)
                                 && uiState.episodesChaptersMatch(entry)
-                                && uiState.volumesMatch(entry)
+                                && uiState.volumesDurationMatch(entry)
 
                         if (!matchesFilters) return@mapNotNull null
 
@@ -507,7 +511,7 @@ class UserMediaListViewModel(
                                 && uiState.genreMatch(entry)
                                 && uiState.tagMatch(entry)
                                 && uiState.episodesChaptersMatch(entry)
-                                && uiState.volumesMatch(entry)
+                                && uiState.volumesDurationMatch(entry)
 
                         if (!matchesFilters) return@filter false
 
