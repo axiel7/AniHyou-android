@@ -5,7 +5,7 @@ import androidx.room3.Entity
 import androidx.room3.PrimaryKey
 
 @Entity(tableName = "anime_notifications")
-data class AnimeNotifications(
+data class AnimeNotificationsEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "animeId")
     val animeId: Int,

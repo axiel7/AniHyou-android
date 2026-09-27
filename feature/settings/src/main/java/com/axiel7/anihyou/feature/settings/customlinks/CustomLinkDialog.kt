@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.core.net.toUri
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
@@ -46,25 +47,25 @@ private enum class SpaceSeparator(val value: Char) {
     Space(' ');
 
     companion object {
-        fun findValue(string: String) = entries.find { string.contains(it.value) }
+        fun findValue(char: Char) = entries.find { char == it.value }
     }
 }
 
 @Composable
 fun CustomLinkDialog(
     mediaType: MediaType,
-    value: String?,
-    onConfirm: (String) -> Unit,
+    value: CustomLink?,
+    onConfirm: (CustomLink) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedSeparator by remember(value) {
         mutableStateOf(
-            value?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
+            value?.spaceSeparator?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
         )
     }
-    var urlValue by remember {
-        val text = value?.substring(1).orEmpty()
+    var urlValue by remember(value) {
+        val text = value?.uri.orEmpty()
         mutableStateOf(
             TextFieldValue(
                 text = text,
@@ -137,7 +138,14 @@ fun CustomLinkDialog(
                     }.getOrNull()
                     isUrlValid = (uri.scheme != null && uri.host != null) || intent != null
                     if (isUrlValid) {
-                        onConfirm(selectedSeparator.value + urlValue.text)
+                        val link = CustomLink(
+                            id = 0,
+                            name = "",
+                            uri = urlValue.text,
+                            spaceSeparator = selectedSeparator.value,
+                            mediaType = mediaType,
+                        )
+                        onConfirm(link)
                     }
                 },
                 enabled = urlHasPlaceholder && urlValue.text.isNotBlank()

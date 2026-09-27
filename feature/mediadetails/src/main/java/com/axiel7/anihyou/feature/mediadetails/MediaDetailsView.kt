@@ -71,9 +71,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
@@ -81,6 +79,7 @@ import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.common.utils.StringUtils.htmlStripped
 import com.axiel7.anihyou.core.common.utils.StringUtils.orUnknown
+import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
 import com.axiel7.anihyou.core.model.media.durationText
@@ -686,7 +685,7 @@ private fun CustomLinksButton(
 ) {
     val context = LocalContext.current
     var titleSheetExpanded by remember { mutableStateOf(false) }
-    var selectedLink by remember { mutableStateOf<String?>(null) }
+    var selectedLink by remember { mutableStateOf<CustomLink?>(null) }
 
     IconButtonWithMenu(
         icon = R.drawable.link_24,
@@ -694,22 +693,7 @@ private fun CustomLinksButton(
     ) { onDismiss ->
         uiState.customLinks.forEachIndexed { index, item ->
             DropdownMenuItem(
-                text = {
-                    val urlString = item.substring(1)
-                    val uri = urlString.toUri()
-                    val scheme = uri.scheme
-                        ?.takeIf { !it.startsWith("http") }
-                        ?.plus("://")
-                    val intent = runCatching { Intent.parseUri(urlString, 0) }
-                        .takeIf { uri.host == null }
-                        ?.getOrNull()
-
-                    val name = if (uri.host != null) scheme.orEmpty() + uri.host
-                    else if (intent != null) intent.action ?: urlString
-                    else urlString
-
-                    Text(text = name)
-                },
+                text = { Text(text = item.name) },
                 onClick = {
                     selectedLink = item
                     titleSheetExpanded = true
@@ -727,14 +711,8 @@ private fun CustomLinksButton(
     selectedLink?.let { selectedLink ->
         if (titleSheetExpanded) {
             fun openSite(title: String) {
-                val separator = selectedLink.first()
-                val link = selectedLink.substring(1)
-                val finalLink = link.replace(
-                    CUSTOM_URL_NAME_PLACEHOLDER,
-                    title.replace(' ', separator)
-                )
-
-                if (finalLink.startsWith("intent")) {
+                val finalLink = selectedLink.mediaLink(title)
+                if (selectedLink.isIntent) {
                     runCatching {
                         context.startActivity(Intent.parseUri(finalLink, 0))
                     }

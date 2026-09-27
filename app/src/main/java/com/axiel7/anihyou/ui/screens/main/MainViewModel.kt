@@ -12,16 +12,20 @@ import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_AUTH
 import com.axiel7.anihyou.core.base.ANIHYOU_WEAR_CALLBACK_URL
 import com.axiel7.anihyou.core.common.utils.ContextUtils.showToast
 import com.axiel7.anihyou.core.common.utils.DeviceUtils
+import com.axiel7.anihyou.core.domain.model.CustomLink
+import com.axiel7.anihyou.core.domain.repository.CustomLinksRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LoginRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.network.NetworkVariables
+import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.ScoreFormat
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.startRemoteActivity
 import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -32,6 +36,7 @@ class MainViewModel(
     private val loginRepository: LoginRepository,
     private val notificationRepository: NotificationRepository,
     private val defaultPreferencesRepository: DefaultPreferencesRepository,
+    private val customLinksRepository: CustomLinksRepository,
     private val devicePerformance: DevicePerformance,
 ) : ViewModel(), MainEvent {
 
@@ -120,6 +125,27 @@ class MainViewModel(
                 defaultPreferencesRepository.setUseFuzzySearch(
                     value = DeviceUtils.isDevicePowerfulEnough(devicePerformance.mediaPerformanceClass)
                 )
+            }
+        }
+
+        // migrate legacy custom links to room db
+        viewModelScope.launch {
+            val animeLinks = defaultPreferencesRepository.animeCustomLinks.firstOrNull()
+                ?.map { CustomLink.fromString(it, MediaType.ANIME) }
+            if (!animeLinks.isNullOrEmpty()) {
+                val rows = customLinksRepository.insertLinks(animeLinks)
+                if (rows.size == animeLinks.size) {
+                    defaultPreferencesRepository.setAnimeCustomLinks(emptySet())
+                }
+            }
+
+            val mangaLinks = defaultPreferencesRepository.mangaCustomLinks.firstOrNull()
+                ?.map { CustomLink.fromString(it, MediaType.MANGA) }
+            if (!mangaLinks.isNullOrEmpty()) {
+                val rows = customLinksRepository.insertLinks(mangaLinks)
+                if (rows.size == mangaLinks.size) {
+                    defaultPreferencesRepository.setMangaCustomLinks(emptySet())
+                }
             }
         }
     }

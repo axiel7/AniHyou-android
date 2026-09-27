@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
@@ -81,20 +82,20 @@ fun CustomLinksContent(
         ) {
             MediaType.knownEntries.forEach { mediaType ->
                 var openDialog by remember { mutableStateOf(false) }
-                var selectedItem by remember { mutableStateOf<String?>(null) }
+                var selectedItem by remember { mutableStateOf<CustomLink?>(null) }
 
                 PreferencesTitle(text = mediaType.localized())
 
                 val customLinks = uiState.customLinks(mediaType)
-                customLinks?.forEachIndexed { index, list ->
+                customLinks?.forEachIndexed { index, link ->
                     ListItem(
-                        link = list,
+                        link = link,
                         shape = preferenceShape(index, customLinks.size),
                         onClickEdit = {
-                            selectedItem = list
+                            selectedItem = link
                             openDialog = true
                         },
-                        onClickDelete = { event?.onLinkRemoved(list, mediaType) }
+                        onClickDelete = { event?.onLinkRemoved(link) }
                     )
                 }
 
@@ -105,11 +106,7 @@ fun CustomLinksContent(
                         mediaType = mediaType,
                         value = selectedItem,
                         onConfirm = { newLink ->
-                            selectedItem?.let {
-                                event?.onLinkEdited(it, newLink, mediaType)
-                            } ?: run {
-                                event?.onLinkAdded(newLink, mediaType)
-                            }
+                            event?.onLinkAdded(newLink)
                             selectedItem = null
                             openDialog = false
                         },
@@ -123,7 +120,7 @@ fun CustomLinksContent(
 
 @Composable
 private fun ListItem(
-    link: String,
+    link: CustomLink,
     shape: Shape,
     onClickEdit: () -> Unit,
     onClickDelete: () -> Unit,
@@ -143,13 +140,13 @@ private fun ListItem(
         ) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = link.firstOrNull()?.toString().orEmpty(),
+                text = link.spaceSeparator.toString(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelLargeEmphasized,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = link.substring(1),
+                text = link.name,
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = onClickEdit) {
@@ -191,20 +188,25 @@ private fun AddButton(
 @Preview
 @Composable
 private fun CustomLinksViewPreview() {
-    val animeLists = remember {
-        setOf("%https://neko.si/?q={name}")
-    }
-    val mangaLists = remember {
-        setOf(
-            "-https://neko.si",
-            " https://mangadexwithaverylargeurldomain.org/search?q={name}"
-        )
-    }
+    val sampleLink = CustomLink(
+        id = 0,
+        name = "nyaa",
+        uri = "https://neko.si/?q={name}",
+        spaceSeparator = '%',
+        mediaType = MediaType.ANIME
+    )
+    val largeSampleLink = CustomLink(
+        id = 0,
+        name = "mangadexwithaverylargeurldomain.org",
+        uri = "https://mangadexwithaverylargeurldomain.org/search?q={name}",
+        spaceSeparator = ' ',
+        mediaType = MediaType.MANGA
+    )
     AniHyouTheme {
         CustomLinksContent(
             uiState = CustomLinksUiState(
-                animeLinks = animeLists,
-                mangaLinks = mangaLists,
+                animeLinks = setOf(sampleLink),
+                mangaLinks = setOf(sampleLink, largeSampleLink),
             ),
             event = null,
         )

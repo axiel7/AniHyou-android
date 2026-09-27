@@ -5,6 +5,7 @@ import com.axiel7.anihyou.core.base.DataResult
 import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.common.viewmodel.UiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.AnimeNotificationsRepository
+import com.axiel7.anihyou.core.domain.repository.CustomLinksRepository
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.FavoriteRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
@@ -23,7 +24,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -35,6 +35,7 @@ import org.koin.core.annotation.InjectedParam
 class MediaDetailsViewModel(
     @InjectedParam private val arguments: Route.MediaDetails,
     defaultPreferencesRepository: DefaultPreferencesRepository,
+    customLinksRepository: CustomLinksRepository,
     private val mediaRepository: MediaRepository,
     private val favoriteRepository: FavoriteRepository,
     private val animeNotificationsRepository: AnimeNotificationsRepository,
@@ -370,8 +371,7 @@ class MediaDetailsViewModel(
             .mapNotNull { it.details?.basicMediaDetails?.type }
             .distinctUntilChanged()
             .onEach { mediaType ->
-                defaultPreferencesRepository.customLinks(mediaType)
-                    .filterNotNull()
+                customLinksRepository.getAllCustomLinks(mediaType)
                     .collectLatest { value ->
                         mutableUiState.update { it.copy(customLinks = value) }
                     }

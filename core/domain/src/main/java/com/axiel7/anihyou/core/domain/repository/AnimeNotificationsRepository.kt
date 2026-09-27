@@ -1,6 +1,6 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.axiel7.anihyou.core.database.animenotifcations.AnimeNotifications
+import com.axiel7.anihyou.core.database.animenotifcations.AnimeNotificationsEntity
 import com.axiel7.anihyou.core.database.animenotifcations.AnimeNotificationsDao
 
 class AnimeNotificationsRepository(
@@ -23,7 +23,7 @@ class AnimeNotificationsRepository(
         allowFinishAiring: Boolean
     ) = dao
         .upsertNotification(
-            notification = AnimeNotifications(
+            notification = AnimeNotificationsEntity(
                 animeId = animeId,
                 allowStartAiring = allowStartAiring,
                 episodeCount = episodeCount,
@@ -40,7 +40,7 @@ class AnimeNotificationsRepository(
         allowFinishAiring: Boolean
     ) = dao
         .insertNotification(
-            notification = AnimeNotifications(
+            notification = AnimeNotificationsEntity(
                 animeId = animeId,
                 allowStartAiring = allowStartAiring,
                 episodeCount = episodeCount,
