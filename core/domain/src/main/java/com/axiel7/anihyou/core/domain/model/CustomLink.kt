@@ -39,20 +39,24 @@ data class CustomLink(
             mediaType = MediaType.valueOf(entity.mediaType),
         )
 
-        // to migrate from preferences
-        fun fromString(string: String, mediaType: MediaType): CustomLink {
-            val urlString = string.substring(1)
-            val uri = urlString.toUri()
+        fun extractNameFromUrl(url: String): String {
+            val uri = url.toUri()
             val scheme = uri.scheme
                 ?.takeIf { !it.startsWith("http") }
                 ?.plus("://")
-            val intent = runCatching { Intent.parseUri(urlString, 0) }
+            val intent = runCatching { Intent.parseUri(url, 0) }
                 .takeIf { uri.host == null }
                 ?.getOrNull()
 
-            val name = if (uri.host != null) scheme.orEmpty() + uri.host
-            else if (intent != null) intent.action ?: urlString
-            else urlString
+            return if (uri.host != null) scheme.orEmpty() + uri.host
+            else if (intent != null) intent.action ?: url
+            else url
+        }
+
+        // to migrate from preferences
+        fun fromString(string: String, mediaType: MediaType): CustomLink {
+            val urlString = string.substring(1)
+            val name = extractNameFromUrl(urlString)
 
             return CustomLink(
                 id = 0,

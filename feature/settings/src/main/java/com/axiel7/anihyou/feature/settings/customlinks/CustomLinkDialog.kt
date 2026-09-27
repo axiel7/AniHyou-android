@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
@@ -20,14 +22,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -38,6 +40,7 @@ import com.axiel7.anihyou.core.model.media.localized
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import kotlinx.coroutines.flow.collectLatest
 
 private enum class SpaceSeparator(val value: Char) {
     Percent('%'),
@@ -64,17 +67,19 @@ fun CustomLinkDialog(
             value?.spaceSeparator?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
         )
     }
-    var urlValue by remember(value) {
-        val text = value?.uri.orEmpty()
-        mutableStateOf(
-            TextFieldValue(
-                text = text,
-                selection = TextRange(text.length)
-            )
-        )
-    }
+    val linkNameState = rememberTextFieldState(initialText = value?.name.orEmpty())
+    val urlFieldState = rememberTextFieldState(initialText = value?.uri.orEmpty())
     var urlHasPlaceholder by remember { mutableStateOf(true) }
     var isUrlValid by remember { mutableStateOf(true) }
+
+    LaunchedEffect(urlFieldState) {
+        snapshotFlow { urlFieldState.text.toString() }.collectLatest { url ->
+            urlHasPlaceholder = url.contains(CUSTOM_URL_NAME_PLACEHOLDER)
+            if (urlHasPlaceholder && linkNameState.text.isBlank()) {
+                linkNameState.setTextAndSelectAll(CustomLink.extractNameFromUrl(url))
+            }
+        }
+    }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(focusRequester) { focusRequester.requestFocus() }
@@ -88,11 +93,16 @@ fun CustomLinkDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedTextField(
-                    value = urlValue,
-                    onValueChange = {
-                        urlValue = it
-                        urlHasPlaceholder = it.text.contains(CUSTOM_URL_NAME_PLACEHOLDER)
-                    },
+                    state = linkNameState,
+                    label = { Text(text = stringResource(R.string.link_name)) },
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        imeAction = ImeAction.Next,
+                    )
+                )
+
+                OutlinedTextField(
+                    state = urlFieldState,
                     modifier = Modifier.focusRequester(focusRequester),
                     label = { Text(text = "URL") },
                     placeholder = {
@@ -110,6 +120,7 @@ fun CustomLinkDialog(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Uri,
+                        imeAction = ImeAction.Done,
                     )
                 )
 
@@ -132,23 +143,24 @@ fun CustomLinkDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val uri = urlValue.text.toUri()
+                    val urlValue = urlFieldState.text.toString()
+                    val uri = urlValue.toUri()
                     val intent = runCatching {
-                        Intent.parseUri(urlValue.text, 0)
+                        Intent.parseUri(urlValue, 0)
                     }.getOrNull()
                     isUrlValid = (uri.scheme != null && uri.host != null) || intent != null
                     if (isUrlValid) {
                         val link = CustomLink(
-                            id = 0,
-                            name = "",
-                            uri = urlValue.text,
+                            id = value?.id ?: 0,
+                            name = linkNameState.text.toString(),
+                            uri = urlValue,
                             spaceSeparator = selectedSeparator.value,
                             mediaType = mediaType,
                         )
                         onConfirm(link)
                     }
                 },
-                enabled = urlHasPlaceholder && urlValue.text.isNotBlank()
+                enabled = urlHasPlaceholder && urlFieldState.text.isNotBlank()
             ) {
                 Text(text = stringResource(R.string.ok))
             }
