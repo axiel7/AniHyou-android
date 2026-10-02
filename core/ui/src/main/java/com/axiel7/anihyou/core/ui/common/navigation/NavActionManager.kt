@@ -23,6 +23,10 @@ class NavActionManager(
         navigator.goBack()
     }
 
+    fun popToTopRoute() {
+        navigator.popToTopRoute()
+    }
+
     fun toMediaDetails(id: Int) {
         navigator.navigate(Route.MediaDetails(id))
     }

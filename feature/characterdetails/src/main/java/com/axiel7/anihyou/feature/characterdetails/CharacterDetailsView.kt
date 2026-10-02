@@ -111,7 +111,12 @@ private fun CharacterDetailsContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         actions = {
             FavoriteIconButton(
                 isFavorite = uiState.character?.isFavourite ?: false,

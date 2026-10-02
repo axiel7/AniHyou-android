@@ -74,7 +74,8 @@ private fun MediaActivityContent(
         title = stringResource(R.string.activity),
         navigationIcon = {
             BackIconButton(
-                onClick = navActionManager::goBack
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
             )
         },
         actions = {

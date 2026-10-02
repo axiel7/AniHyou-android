@@ -68,7 +68,12 @@ fun ThreadCommentDetailsView(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(scrollableState = scrollState)
     ) { padding ->
         ThreadCommentView(

@@ -43,4 +43,10 @@ class Navigator(val state: NavigationState) : INavigator {
             currentStack.removeLastOrNull()
         }
     }
+
+    override fun popToTopRoute() {
+        state.backStacks[state.topLevelRoute]?.firstOrNull()?.let { firstRoute ->
+            state.backStacks[state.topLevelRoute]?.removeAll { it != firstRoute }
+        }
+    }
 }

@@ -76,7 +76,12 @@ private fun ThreadDetailsContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         actions = {
             NotificationIconButton(
                 isActive = uiState.isSubscribed,

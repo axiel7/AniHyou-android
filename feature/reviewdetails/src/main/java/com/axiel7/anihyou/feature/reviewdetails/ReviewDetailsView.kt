@@ -76,7 +76,12 @@ private fun ReviewDetailsContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = uiState.details?.user?.name ?: stringResource(R.string.loading),
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         actions = {
             if (!isEnglishLocale) {
                 TranslateIconButton(

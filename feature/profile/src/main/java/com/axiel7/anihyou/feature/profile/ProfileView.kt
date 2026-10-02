@@ -121,7 +121,10 @@ private fun ProfileContent(
                     title = {},
                     navigationIcon = {
                         if (!uiState.isMyProfile) {
-                            BackIconButton(onClick = navActionManager::goBack)
+                            BackIconButton(
+                                onClick = navActionManager::goBack,
+                                onLongClick = navActionManager::popToTopRoute,
+                            )
                         }
                     },
                     actions = {

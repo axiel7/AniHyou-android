@@ -95,7 +95,12 @@ private fun StaffDetailsContent(
 
     DefaultScaffoldWithSmallTopAppBar(
         title = "",
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         actions = {
             FavoriteIconButton(
                 isFavorite = uiState.details?.isFavourite == true,

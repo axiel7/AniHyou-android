@@ -74,7 +74,10 @@ fun MediaCharactersViewContent(
     DefaultScaffoldWithSmallTopAppBar(
         title = stringResource(R.string.characters),
         navigationIcon = {
-            BackIconButton(onClick = navActionManager::goBack)
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
         },
         actions = {
             LanguageButtonMenu(uiState, event)

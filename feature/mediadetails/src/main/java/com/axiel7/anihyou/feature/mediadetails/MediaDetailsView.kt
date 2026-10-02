@@ -284,7 +284,10 @@ private fun MediaDetailsContent(
                     }
                 },
                 navigationIcon = {
-                    BackIconButton(onClick = navActionManager::goBack)
+                    BackIconButton(
+                        onClick = navActionManager::goBack,
+                        onLongClick = navActionManager::popToTopRoute,
+                    )
                 },
                 actions = {
                     if (uiState.isLoggedIn) {

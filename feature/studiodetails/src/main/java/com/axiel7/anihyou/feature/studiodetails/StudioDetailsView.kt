@@ -87,7 +87,12 @@ private fun StudioDetailsContent(
 
     DefaultScaffoldWithMediumTopAppBar(
         title = uiState.details?.name ?: stringResource(R.string.loading),
-        navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
+        navigationIcon = {
+            BackIconButton(
+                onClick = navActionManager::goBack,
+                onLongClick = navActionManager::popToTopRoute,
+            )
+        },
         actions = { AppBarActions(uiState, event) },
         scrollBehavior = topAppBarScrollBehavior
     ) { padding ->
