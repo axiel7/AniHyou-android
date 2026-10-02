@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuPopup
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,7 +62,6 @@ fun singleClick(onClick: () -> Unit): () -> Unit {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BackIconButton(
     onClick: () -> Unit,
@@ -103,7 +101,6 @@ fun ShareIconButton(url: String) {
     ShareIconButton(url = { url })
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShareIconButton(url: () -> String) {
     val context = LocalContext.current
@@ -118,7 +115,6 @@ fun ShareIconButton(url: () -> String) {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun OpenInBrowserIconButton(url: String) {
     val context = LocalContext.current
@@ -133,7 +129,6 @@ fun OpenInBrowserIconButton(url: String) {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FavoriteIconButton(
     modifier: Modifier = Modifier,
@@ -171,7 +166,6 @@ fun FavoriteIconButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CommentIconButton(
     modifier: Modifier = Modifier,
@@ -204,7 +198,6 @@ fun CommentIconButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ReplyButton(
     modifier: Modifier = Modifier,
@@ -228,7 +221,6 @@ fun ReplyButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TranslateIconButton(
     text: String?,
@@ -250,7 +242,6 @@ fun TranslateIconButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LikeButton(
     isLiked: Boolean,
@@ -280,7 +271,6 @@ fun LikeButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NotificationIconButton(
     isActive: Boolean,

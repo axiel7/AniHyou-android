@@ -1,7 +1,6 @@
 package com.axiel7.anihyou.core.ui.composables.scores
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -17,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FiveStarRatingView(
     modifier: Modifier = Modifier,
