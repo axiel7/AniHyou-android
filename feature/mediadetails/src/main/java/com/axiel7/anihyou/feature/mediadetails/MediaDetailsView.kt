@@ -127,8 +127,8 @@ import com.axiel7.anihyou.feature.mediadetails.composables.MediaRelationsView
 import com.axiel7.anihyou.feature.mediadetails.composables.MediaStatsView
 import com.axiel7.anihyou.feature.mediadetails.composables.ReviewThreadListView
 import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamicColorScheme
 import com.materialkolor.dynamiccolor.ColorSpec
+import com.materialkolor.material3.dynamicColorScheme
 import kotlinx.collections.immutable.persistentListOf
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -153,7 +153,7 @@ fun MediaDetailsView(
                     isDark = isDark,
                     isAmoled = blackColors,
                     style = paletteStyle,
-                    specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                    specVersion = ColorSpec.SpecVersion.SPEC_2026,
                 )
             }
         } else null

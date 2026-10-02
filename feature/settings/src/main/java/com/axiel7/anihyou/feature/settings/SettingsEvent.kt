@@ -15,6 +15,7 @@ import com.axiel7.anihyou.core.network.type.UserStaffNameLanguage
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
+import com.materialkolor.PaletteStyle
 
 @Immutable
 interface SettingsEvent : UiEvent {
@@ -25,7 +26,7 @@ interface SettingsEvent : UiEvent {
 
     fun setAppColorMode(value: AppColorMode)
 
-    fun setColorPalette(value: String)
+    fun setColorPalette(value: PaletteStyle)
 
     fun setColoredMedia(value: Boolean)
 

@@ -2,7 +2,6 @@ package com.axiel7.anihyou.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -14,10 +13,9 @@ import com.axiel7.anihyou.core.resources.ColorUtils.isBlack
 import com.axiel7.anihyou.core.resources.ColorUtils.isWhite
 import com.axiel7.anihyou.core.resources.seed
 import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamicColorScheme
 import com.materialkolor.dynamiccolor.ColorSpec
+import com.materialkolor.material3.dynamicColorScheme
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AniHyouTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -36,7 +34,7 @@ fun AniHyouTheme(
                 isDark = darkTheme,
                 isAmoled = blackColors,
                 style = if (isMonochrome) PaletteStyle.Monochrome else paletteStyle,
-                specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                specVersion = ColorSpec.SpecVersion.SPEC_2026,
             )
         }
 
@@ -45,11 +43,11 @@ fun AniHyouTheme(
             val colors = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 
             dynamicColorScheme(
-                primary = colors.primary,
+                seedColor = colors.primary,
                 isDark = darkTheme,
                 isAmoled = blackColors,
                 style = paletteStyle,
-                specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                specVersion = ColorSpec.SpecVersion.SPEC_2026,
             )
         }
 
@@ -58,7 +56,7 @@ fun AniHyouTheme(
             isDark = darkTheme,
             isAmoled = blackColors,
             style = paletteStyle,
-            specVersion = ColorSpec.SpecVersion.SPEC_2025
+            specVersion = ColorSpec.SpecVersion.SPEC_2026
         )
     }
 

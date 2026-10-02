@@ -34,7 +34,7 @@ lifecycleNavigation3 = "2.11.0"
 activityCompose = "1.13.0"
 composeBom = "2026.09.00"
 material3 = "1.5.0-alpha29"
-materialKolor = "5.0.1"
+materialKolor = "6.0.0-beta01"
 navigation3 = "1.2.0"
 kotlinxSerialization = "1.11.0"
 placeholderMaterial3 = "2.0.0"
@@ -112,7 +112,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
-material-kolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
+material-kolor-material3 = { group = "com.materialkolor", name = "material-kolor-material3", version.ref = "materialKolor" }
 placeholder-material3 = { group = "io.github.fornewid", name = "placeholder-material3", version.ref = "placeholderMaterial3" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }

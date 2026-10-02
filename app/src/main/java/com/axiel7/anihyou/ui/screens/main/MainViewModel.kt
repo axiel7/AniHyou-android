@@ -59,7 +59,7 @@ class MainViewModel(
     val appColorMode = defaultPreferencesRepository.appColorMode
 
     val paletteStyle = defaultPreferencesRepository.colorPalette.map { value ->
-        value?.let { PaletteStyle.valueOf(it) } ?: PaletteStyle.TonalSpot
+        value?.let { PaletteStyle.parseOrNull(it) } ?: PaletteStyle.TonalSpot
     }
 
     val blurAdultContent = defaultPreferencesRepository.blurAdult

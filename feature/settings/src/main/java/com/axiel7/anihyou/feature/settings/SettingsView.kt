@@ -209,8 +209,9 @@ private fun SettingsContent(
 
             ListPreference(
                 title = stringResource(R.string.color_palette),
-                values = PaletteStyle.entries.map { it.name }.toImmutableList(),
+                values = PaletteStyle.KnownStyles.toImmutableList(),
                 preferenceValue = uiState.colorPaletteStyle,
+                labelForValue = { it.name },
                 icon = R.drawable.format_paint_24,
                 onValueChange = { event?.setColorPalette(it) },
                 shape = bottomShape

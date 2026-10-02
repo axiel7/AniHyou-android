@@ -32,7 +32,7 @@ import com.axiel7.anihyou.core.resources.stat_light_on10
 import com.axiel7.anihyou.core.resources.stat_light_on30
 import com.axiel7.anihyou.core.resources.stat_light_on50
 import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamicColorScheme
+import com.materialkolor.material3.dynamicColorScheme
 
 @Stable
 data class PriorityColors(
