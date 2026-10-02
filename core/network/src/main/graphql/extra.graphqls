@@ -19,13 +19,14 @@ extend type ThreadComment @typePolicy(keyFields: "id")
 extend type Recommendation @typePolicy(keyFields: "id")
 extend type Review @typePolicy(keyFields: "id")
 
-extend type MediaConnection @connection
-extend type AiringScheduleConnection @connection
-#extend type CharacterConnection @connection # bug: voiceActors cache is null
-extend type StaffConnection @connection
-extend type StudioConnection @connection
-extend type ReviewConnection @connection
-extend type RecommendationConnection @connection
+# bug: some data in the cache returns null
+#extend type MediaConnection @connection
+#extend type AiringScheduleConnection @connection
+#extend type CharacterConnection @connection
+#extend type StaffConnection @connection
+#extend type StudioConnection @connection
+#extend type ReviewConnection @connection
+#extend type RecommendationConnection @connection
 
 extend type Query @fieldPolicy(forField: "User", keyArgs: "id")
 extend type Query @fieldPolicy(forField: "Media", keyArgs: "id")
