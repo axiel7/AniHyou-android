@@ -15,12 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
-import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.ScrollIndicator
+import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TextButton
 import androidx.wear.compose.material3.TextButtonDefaults
 import androidx.wear.compose.material3.contentColorFor
@@ -51,7 +50,6 @@ fun EditMediaView(modifier: Modifier = Modifier) {
     )
 }
 
-@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun EditMediaContent(
     uiState: EditMediaUiState,

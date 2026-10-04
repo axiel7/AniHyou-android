@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.calendar.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,14 +37,13 @@ import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.materialkolor.ktx.harmonize
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarAiringHorizontalItem(
     title: String,
     subtitle: String,
+    modifier: Modifier = Modifier,
     blurImage: Boolean = false,
     imageUrl: String?,
-    modifier: Modifier = Modifier,
     score: Int? = null,
     status: MediaListStatus? = null,
     onClick: () -> Unit = {},

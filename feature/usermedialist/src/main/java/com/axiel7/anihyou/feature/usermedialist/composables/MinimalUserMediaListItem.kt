@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.usermedialist.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,6 @@ import com.axiel7.anihyou.core.ui.composables.media.priorityIcon
 import com.axiel7.anihyou.core.ui.composables.scores.MinimalScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MinimalUserMediaListItem(
     item: CommonMediaListEntry,

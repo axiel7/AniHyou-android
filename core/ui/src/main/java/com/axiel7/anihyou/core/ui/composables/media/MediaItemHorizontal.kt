@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.ui.composables.media
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
@@ -50,7 +49,6 @@ import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.materialkolor.ktx.harmonize
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.io.File.separator
 
 @Composable
 fun MediaItemHorizontal(
@@ -91,7 +89,6 @@ fun MediaItemHorizontal(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaItemHorizontal(
     title: String,

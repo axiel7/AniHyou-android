@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -24,7 +23,6 @@ import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
 import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DiscoverMediaContent(
     title: String,

@@ -3,7 +3,6 @@ package com.axiel7.anihyou.feature.mediadetails.composables
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -59,7 +58,6 @@ import java.time.LocalDateTime
 
 private const val TagLimit = 10
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MediaInformationView(
     uiState: MediaDetailsUiState,

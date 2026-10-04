@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.usermedialist.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import com.axiel7.anihyou.core.ui.composables.media.PriorityIndicator
 import com.axiel7.anihyou.core.ui.composables.scores.BadgeScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GridUserMediaListItem(
     item: CommonMediaListEntry,

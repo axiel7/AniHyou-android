@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.model.media
 
-import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.network.AiringWidgetQuery
 import com.axiel7.anihyou.core.network.MediaRecommendationsQuery
 import com.axiel7.anihyou.core.network.api.model.CountryOfOriginDto

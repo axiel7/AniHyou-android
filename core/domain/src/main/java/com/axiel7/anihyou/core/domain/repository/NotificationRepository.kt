@@ -1,7 +1,5 @@
 package com.axiel7.anihyou.core.domain.repository
 
-import com.apollographql.cache.normalized.FetchPolicy
-import com.apollographql.cache.normalized.fetchPolicy
 import com.axiel7.anihyou.core.model.notification.GenericNotification.Companion.toGenericNotifications
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.network.api.NotificationsApi

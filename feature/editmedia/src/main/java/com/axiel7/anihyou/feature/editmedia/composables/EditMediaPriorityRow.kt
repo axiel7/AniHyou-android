@@ -21,8 +21,8 @@ import com.axiel7.anihyou.core.resources.R
 @Composable
 fun EditMediaPriorityRow(
     label: String,
-    @DrawableRes icon: Int? = null,
     modifier: Modifier = Modifier,
+    @DrawableRes icon: Int? = null,
     minusEnabled: Boolean = true,
     onMinusClick: () -> Unit,
     plusEnabled: Boolean = true,

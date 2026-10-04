@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.core.ui.composables.media
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -35,7 +34,6 @@ import com.axiel7.anihyou.core.ui.composables.scores.SmallScoreIndicator
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.materialkolor.ktx.harmonize
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AiringAnimeHorizontalItem(
     title: String,

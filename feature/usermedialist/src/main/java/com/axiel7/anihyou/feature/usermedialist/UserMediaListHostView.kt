@@ -94,7 +94,6 @@ import com.axiel7.anihyou.feature.usermedialist.composables.ListSelectSheet
 import com.axiel7.anihyou.feature.usermedialist.composables.NotesDialog
 import com.axiel7.anihyou.feature.usermedialist.search.TopSearchBar
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinActivityViewModel
@@ -148,7 +147,6 @@ private fun UserMediaListHostContent(
 
     val textFieldState = rememberTextFieldState()
 
-    @OptIn(FlowPreview::class)
     LaunchedEffect(textFieldState) {
         snapshotFlow { textFieldState.text.toString() }
             .collectLatest { query ->

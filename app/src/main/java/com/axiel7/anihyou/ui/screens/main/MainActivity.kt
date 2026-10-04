@@ -6,13 +6,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.SystemBarStyle
-import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.collection.intSetOf
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -232,7 +230,6 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MainView(
     windowSizeClass: WindowSizeClass,

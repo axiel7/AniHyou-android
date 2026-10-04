@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.axiel7.anihyou.core.resources.banner_shadow_color
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 
 @Composable

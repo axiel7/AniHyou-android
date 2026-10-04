@@ -11,12 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.requestFocusOnHierarchyActive
 import androidx.wear.compose.foundation.rotary.RotaryScrollableDefaults
 import androidx.wear.compose.foundation.rotary.rotaryScrollable
 
-@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun ScrollableColumn(
     scrollState: ScrollState,

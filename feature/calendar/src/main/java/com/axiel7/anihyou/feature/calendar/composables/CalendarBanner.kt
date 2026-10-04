@@ -1,6 +1,5 @@
 package com.axiel7.anihyou.feature.calendar.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,14 +25,11 @@ import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.ui.composables.CalendarBannerView
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.materialkolor.ktx.blend
-import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.from
 import com.materialkolor.ktx.toneColor
 import com.materialkolor.palettes.TonalPalette
 import java.time.LocalDateTime
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarBanner(
     title: String,
@@ -46,7 +42,7 @@ fun CalendarBanner(
 ) {
     val haptic = LocalHapticFeedback.current
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {},
