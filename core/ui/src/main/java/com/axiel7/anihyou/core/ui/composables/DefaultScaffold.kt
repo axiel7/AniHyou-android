@@ -127,11 +127,11 @@ fun rememberTopBarContainerColor(
     scrollBehavior: TopAppBarScrollBehavior
 ) = remember(colors, scrollBehavior) {
     derivedStateOf {
-        val overlappingFraction = scrollBehavior.state.overlappedFraction
+        val fraction = scrollBehavior.state.collapsedFraction
         lerp(
             colors.containerColor,
             colors.scrolledContainerColor,
-            FastOutLinearInEasing.transform(if (overlappingFraction > 0.01f) 1f else 0f),
+            FastOutLinearInEasing.transform(fraction),
         )
     }
 }
