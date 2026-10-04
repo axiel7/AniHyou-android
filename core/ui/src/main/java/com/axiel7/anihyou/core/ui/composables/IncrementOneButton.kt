@@ -47,7 +47,7 @@ fun IncrementOneButton(
     val scope = rememberCoroutineScope()
     val tooltipState = rememberTooltipState(isPersistent = true)
 
-    val delaySeconds = 2f
+    val delaySeconds = if (singleEpisode) 0f else 1.5f
     var clickCount by remember { mutableIntStateOf(0) }
 
     var remainingTime by remember { mutableFloatStateOf(delaySeconds) }
