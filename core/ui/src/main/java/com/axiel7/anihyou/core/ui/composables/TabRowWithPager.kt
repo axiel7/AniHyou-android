@@ -3,7 +3,6 @@ package com.axiel7.anihyou.core.ui.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
@@ -22,7 +21,6 @@ import com.axiel7.anihyou.core.ui.common.TabRowItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T : Any> TabRowWithPager(
     tabs: ImmutableList<TabRowItem<T>>,

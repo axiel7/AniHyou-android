@@ -99,7 +99,7 @@ fun CalendarView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun CalendarViewContent(
     isLoggedIn: Boolean,

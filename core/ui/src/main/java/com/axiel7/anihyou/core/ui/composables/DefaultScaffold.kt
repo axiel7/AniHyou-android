@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
@@ -29,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultScaffoldWithLargeTopAppBar(
     title: String,
@@ -61,7 +59,6 @@ fun DefaultScaffoldWithLargeTopAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultScaffoldWithMediumTopAppBar(
     title: String,
@@ -93,7 +90,6 @@ fun DefaultScaffoldWithMediumTopAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultScaffoldWithSmallTopAppBar(
     title: String,

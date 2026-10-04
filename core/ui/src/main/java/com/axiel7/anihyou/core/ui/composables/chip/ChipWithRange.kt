@@ -106,7 +106,6 @@ fun ChipWithRange(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 private fun ChipWithRangePreview() {
