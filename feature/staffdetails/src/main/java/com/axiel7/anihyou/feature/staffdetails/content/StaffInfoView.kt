@@ -113,6 +113,12 @@ fun StaffInfoView(
             info = uiState.details?.dateOfBirth?.fuzzyDate?.formatted(),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
+        uiState.details?.dateOfDeath?.fuzzyDate?.let { date ->
+            InfoItemView(
+                title = stringResource(R.string.death),
+                info = date.formatted(),
+            )
+        }
         InfoItemView(
             title = stringResource(R.string.age),
             info = uiState.details?.age?.format(),
