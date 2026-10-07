@@ -165,6 +165,7 @@
     <string name="logout">注销</string>
     <string name="character_media">媒体</string>
     <string name="birthday">生日</string>
+    <string name="death">死亡</string>
     <string name="age">年龄</string>
     <string name="gender">性別</string>
     <string name="blood_type">血型</string>
@@ -248,7 +249,7 @@
     <string name="default_setting">默认</string>
     <string name="media_status">状态</string>
     <string name="year">年份</string>
-    <string name="episode_aired_ago">第 %d 集在 %s前播出</string>
+    <string name="episode_aired_ago">第 %d 集在 %s 前播出</string>
     <string name="title_language">作品标题的语言</string>
     <string name="romaji_western_order">罗马字（西方顺序）</string>
     <string name="staff_character_name_language"><![CDATA[制作人员和角色名称的语言]]></string>
@@ -597,6 +598,7 @@
     <string name="openings">片头曲</string>
     <string name="endings">片尾曲</string>
     <string name="list_name">列表名称</string>
+    <string name="link_name">链接名称</string>
     <string name="anime_behind">未观看剧集</string>
     <string name="default_tab">默认标签页</string>
     <string name="last_used">最后一次使用</string>
@@ -653,11 +655,13 @@
     <string name="space_separator">空白分隔符</string>
     <string name="custom_link_url_error_name">URL 必须包含 {name}</string>
     <string name="invalid_url_error">无效的 URL</string>
-    <string name="separate_novels_and_manga">分隔小说和漫画</string>
+    <string name="separate_novels_and_manga">拆分小说和漫画</string>
     <string name="novels">小说</string>
     <plurals name="notification_episode_aired">
         <item quantity="other">《%2$s》的第 %1$d 集已播出</item>
     </plurals>
+    <string name="notification_start_episode_aired">%1$s 开始播出</string>
+    <string name="notification_end_episode_aired">%1$s 已播完</string>
     <string name="notification_activity_liked">%s 赞了你的动态</string>
     <string name="notification_activity_reply_liked">%s 赞了你的动态评论</string>
     <string name="notification_activity_reply">%s 回复了你的动态</string>
@@ -671,4 +675,7 @@
     <string name="widget_config_title">小组件配置</string>
     <string name="style_colored">彩色</string>
     <string name="style_monochrome">单色</string>
+    <string name="allow_start_notification">允许开播通知</string>
+    <string name="allow_airing_notification">允许正在播出通知</string>
+    <string name="allow_end_notification">允许播出结束通知</string>
 </resources>

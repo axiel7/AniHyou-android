@@ -186,6 +186,7 @@
     <string name="logout">Вийти з акаунта</string>
     <string name="character_media">Медіа</string>
     <string name="birthday">День народження</string>
+    <string name="death">Смерть</string>
     <string name="age">Вік</string>
     <string name="gender">Ґендер</string>
     <string name="blood_type">Група крові</string>
@@ -619,7 +620,8 @@
     <string name="openings">Опенінґи</string>
     <string name="endings">Ендінґи</string>
     <string name="list_name">Назва каталогу</string>
-    <string name="anime_behind">Аніме позаду</string>
+    <string name="link_name">Назва посилання</string>
+    <string name="anime_behind">Непереглянуті аніме</string>
     <string name="default_tab">Типове початкове меню</string>
     <string name="last_used">Останнє використане</string>
     <string name="male">Чоловіча</string>
@@ -689,8 +691,8 @@
         <item quantity="many">Вийшов %1$d-ий епізод «%2$s».</item>
         <item quantity="other">Вийшов %1$d-ий епізод «%2$s».</item>
     </plurals>
-    <string name="notification_start_episode_aired">\"%1$s\" розпочало трансляцію</string>
-    <string name="notification_end_episode_aired">\"%1$s\" закінчило трансляцію</string>
+    <string name="notification_start_episode_aired">Почало виходити аніме «%1$s».</string>
+    <string name="notification_end_episode_aired">Завершився вихід аніме «%1$s».</string>
     <string name="notification_activity_liked">%s вподобує вашу активність.</string>
     <string name="notification_activity_reply_liked">%s вподобує вашу відповідь на активність.</string>
     <string name="notification_activity_reply">%s відповідає на вашу активність.</string>
@@ -706,5 +708,5 @@
     <string name="style_monochrome">Монотонний</string>
     <string name="allow_start_notification">Дозволити сповіщення про початок</string>
     <string name="allow_airing_notification">Дозволити сповіщення про вихід епізодів</string>
-    <string name="allow_end_notification">Дозволити сповіщення про закінчення</string>
+    <string name="allow_end_notification">Дозволити сповіщення про завершення</string>
 </resources>

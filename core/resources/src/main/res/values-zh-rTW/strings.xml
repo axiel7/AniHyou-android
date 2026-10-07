@@ -162,6 +162,7 @@
     <string name="logout">登出</string>
     <string name="character_media">媒體</string>
     <string name="birthday">生日</string>
+    <string name="death">死亡</string>
     <string name="age">年齡</string>
     <string name="gender">性別</string>
     <string name="blood_type">血型</string>

@@ -172,6 +172,7 @@
     <string name="logout">Oturumu kapat</string>
     <string name="character_media">Medya</string>
     <string name="birthday">Doğum günü</string>
+    <string name="death">Ölüm zamanı</string>
     <string name="age">Yaş</string>
     <string name="gender">Cinsiyet</string>
     <string name="blood_type">Kan grubu</string>

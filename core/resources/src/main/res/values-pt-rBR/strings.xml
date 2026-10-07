@@ -169,6 +169,7 @@
     <string name="logout">Deslogar</string>
     <string name="character_media">Mídia</string>
     <string name="birthday">Aniversário</string>
+    <string name="death">Morte</string>
     <string name="age">Idade</string>
     <string name="gender">Gênero</string>
     <string name="blood_type">Tipo sanguíneo</string>

@@ -172,6 +172,7 @@
     <string name="logout">Esci</string>
     <string name="character_media">Media</string>
     <string name="birthday">Compleanno</string>
+    <string name="death">Decesso</string>
     <string name="age">Età</string>
     <string name="gender">Sesso</string>
     <string name="blood_type">Gruppo sanguigno</string>
