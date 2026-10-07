@@ -172,6 +172,7 @@
     <string name="logout">Cerrar sesión</string>
     <string name="character_media">Medios</string>
     <string name="birthday">Cumpleaños</string>
+    <string name="death">Fallecimiento</string>
     <string name="age">Edad</string>
     <string name="gender">Género</string>
     <string name="blood_type">Grupo sanguíneo</string>

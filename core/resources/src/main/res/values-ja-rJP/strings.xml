@@ -161,6 +161,7 @@
     <string name="logout">ログアウト</string>
     <string name="character_media">メディア</string>
     <string name="birthday">誕生日</string>
+    <string name="death">死亡</string>
     <string name="age">年齢</string>
     <string name="gender">性別</string>
     <string name="blood_type">血液型</string>

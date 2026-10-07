@@ -161,6 +161,7 @@
     <string name="logout">ออกจากระบบ</string>
     <string name="character_media">สื่อมีเดีย</string>
     <string name="birthday">วันเกิด</string>
+    <string name="death">เสียชีวิต</string>
     <string name="age">อายุ</string>
     <string name="gender">เพศ</string>
     <string name="blood_type">กรุ๊ปเลือด</string>

@@ -172,6 +172,7 @@
     <string name="logout">Abmelden</string>
     <string name="character_media">Medien</string>
     <string name="birthday">Geburtstag</string>
+    <string name="death">Tod</string>
     <string name="age">Alter</string>
     <string name="gender">Geschlecht</string>
     <string name="blood_type">Blutgruppe</string>

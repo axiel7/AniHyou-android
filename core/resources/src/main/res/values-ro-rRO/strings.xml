@@ -175,6 +175,7 @@
     <string name="logout">Deconectare</string>
     <string name="character_media">Media</string>
     <string name="birthday">Ziua de naștere</string>
+    <string name="death">Moarte</string>
     <string name="age">Vârsta</string>
     <string name="gender">Gen</string>
     <string name="blood_type">Grupa sanguină</string>

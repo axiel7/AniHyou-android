@@ -183,6 +183,7 @@
     <string name="logout">Выйти</string>
     <string name="character_media">Медиа</string>
     <string name="birthday">День рождения</string>
+    <string name="death">Смерть</string>
     <string name="age">Возраст</string>
     <string name="gender">Гендер</string>
     <string name="blood_type">Группа крови</string>
