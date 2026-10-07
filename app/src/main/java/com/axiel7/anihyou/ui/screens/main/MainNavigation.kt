@@ -45,7 +45,7 @@ import com.axiel7.anihyou.core.ui.composables.markdown.SpoilerSheet
 import com.axiel7.anihyou.feature.activitydetails.ActivityDetailsView
 import com.axiel7.anihyou.feature.activitydetails.publish.PublishActivityView
 import com.axiel7.anihyou.feature.addrecommendation.AddRecommendationView
-import com.axiel7.anihyou.feature.calendar.CalendarView
+import com.axiel7.anihyou.feature.calendar.CalendarHostView
 import com.axiel7.anihyou.feature.characterdetails.CharacterDetailsView
 import com.axiel7.anihyou.feature.explore.charts.MediaChartListView
 import com.axiel7.anihyou.feature.explore.explore.ExploreView
@@ -308,7 +308,7 @@ fun MainNavigation(
         }
 
         entry<Route.Calendar> {
-            CalendarView(
+            CalendarHostView(
                 isLoggedIn = isLoggedIn,
             )
         }

@@ -1,31 +1,20 @@
 package com.axiel7.anihyou.feature.calendar
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -69,13 +58,11 @@ import com.axiel7.anihyou.core.ui.composables.common.ErrorDialogHandler
 import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.list.rememberIsScrollingUp
-import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_SMALL_WIDTH
-import com.axiel7.anihyou.core.ui.composables.media.MediaItemVertical
-import com.axiel7.anihyou.core.ui.composables.media.MediaItemVerticalPlaceholder
 import com.axiel7.anihyou.feature.calendar.composables.CalendarAiringHorizontalItem
 import com.axiel7.anihyou.feature.calendar.composables.CalendarAiringHorizontalItemPlaceholder
 import com.axiel7.anihyou.feature.calendar.composables.CalendarBanner
 import com.axiel7.anihyou.feature.calendar.composables.CalendarBannerPlaceholder
+import com.axiel7.anihyou.feature.calendar.grid.CalendarGridView
 import com.axiel7.anihyou.feature.editmedia.EditMediaSheet
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -86,7 +73,25 @@ import java.time.LocalDate
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun CalendarView(
+fun CalendarHostView(
+    isLoggedIn: Boolean,
+) {
+    val viewModel: CalendarHostViewModel = koinViewModel()
+    val listStyle by viewModel.listStyle.collectAsStateWithLifecycle(null)
+
+    AnimatedContent(
+        targetState = listStyle
+    ) { listStyle ->
+        when (listStyle) {
+            ListStyle.STANDARD -> CalendarView(isLoggedIn = isLoggedIn)
+            ListStyle.GRID -> CalendarGridView(isLoggedIn, viewModel)
+            else -> {}
+        }
+    }
+}
+
+@Composable
+private fun CalendarView(
     isLoggedIn: Boolean,
 ) {
     val viewModel: CalendarViewModel = koinViewModel()
@@ -116,8 +121,7 @@ private fun CalendarViewContent(
     var showEditSheet by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
-    val gridState = rememberLazyGridState()
-    val isScrollingUp by rememberIsScrollingUp(listState, gridState)
+    val isScrollingUp by listState.rememberIsScrollingUp()
     var firstItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     fun showEditSheetAction() {
@@ -153,8 +157,10 @@ private fun CalendarViewContent(
         navigationIcon = { BackIconButton(onClick = navActionManager::goBack) },
         actions = {
             AppBarActions(
-                uiState = uiState,
-                event = event,
+                listStyle = ListStyle.STANDARD,
+                onMyList = uiState.onMyList,
+                onChangeListStyle = { event?.onChangeListStyle(it) },
+                onChangeOnMyList = { event?.onMyListChanged(it) },
             )
         },
         snackbarHost = snackbarManager::SnackbarHost,
@@ -163,11 +169,7 @@ private fun CalendarViewContent(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        if (uiState.listStyle == ListStyle.GRID) {
-                            gridState.animateScrollToItem(firstItemIndex, 500)
-                        } else {
-                            listState.animateScrollToItem(firstItemIndex, 500)
-                        }
+                        listState.animateScrollToItem(firstItemIndex, 500)
                     }
                 },
                 modifier = Modifier.animateFloatingActionButton(
@@ -202,58 +204,38 @@ private fun CalendarViewContent(
                 end = padding.calculateStartPadding(LocalLayoutDirection.current),
                 bottom = padding.calculateBottomPadding(),
             )
-            AnimatedVisibility(
-                visible = uiState.listStyle == ListStyle.STANDARD,
-                enter = fadeIn(animationSpec = tween()),
-                exit = fadeOut(animationSpec = tween()),
-            ) {
-                ListView(
-                    uiState = uiState,
-                    event = event,
-                    listState = listState,
-                    contentPadding = contentPadding,
-                    showEditSheetAction = ::showEditSheetAction,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                )
-            }
-            AnimatedVisibility(
-                visible = uiState.listStyle == ListStyle.GRID,
-                enter = fadeIn(animationSpec = tween()),
-                exit = fadeOut(animationSpec = tween()),
-            ) {
-                GridView(
-                    uiState = uiState,
-                    event = event,
-                    gridState = gridState,
-                    contentPadding = contentPadding,
-                    showEditSheetAction = ::showEditSheetAction,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                )
-            }
+            ListView(
+                uiState = uiState,
+                event = event,
+                listState = listState,
+                contentPadding = contentPadding,
+                showEditSheetAction = ::showEditSheetAction,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            )
         }
     }
 }
 
 @Composable
-private fun AppBarActions(
-    uiState: CalendarUiState,
-    event: CalendarEvent?,
+internal fun AppBarActions(
+    listStyle: ListStyle?,
+    onMyList: Boolean?,
+    onChangeListStyle: (ListStyle) -> Unit,
+    onChangeOnMyList: (Boolean?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     IconButton(
         onClick = {
-            val value = if (uiState.listStyle == ListStyle.STANDARD) ListStyle.GRID
+            val value = if (listStyle == ListStyle.STANDARD) ListStyle.GRID
             else ListStyle.STANDARD
-            event?.onChangeListStyle(value)
+            onChangeListStyle(value)
         }
     ) {
         Icon(
             painter = painterResource(
-                id = if (uiState.listStyle == ListStyle.STANDARD) R.drawable.grid_view_24
+                id = if (listStyle == ListStyle.STANDARD) R.drawable.grid_view_24
                 else R.drawable.format_list_bulleted_24
             ),
             contentDescription = stringResource(R.string.list_style)
@@ -266,18 +248,18 @@ private fun AppBarActions(
         modifier = modifier,
     ) { onDismiss ->
         SelectableDropdownMenuItem(
-            selected = uiState.onMyList != null,
+            selected = onMyList != null,
             onClick = {
-                event?.onMyListChanged(if (uiState.onMyList == true) null else true)
+                onChangeOnMyList(if (onMyList == true) null else true)
                 onDismiss()
             },
             text = { Text(text = stringResource(R.string.on_my_list)) },
             shapes = MenuDefaults.itemShape(0, 1),
             selectedLeadingIcon = {
-                if (uiState.onMyList != null) {
+                if (onMyList != null) {
                     Icon(
                         painter = painterResource(
-                            id = if (uiState.onMyList) R.drawable.check_20 else R.drawable.close_20
+                            id = if (onMyList) R.drawable.check_20 else R.drawable.close_20
                         ),
                         contentDescription = null,
                         modifier = Modifier.size(MenuDefaults.LeadingIconSize)
@@ -410,100 +392,6 @@ private fun ListView(
                 contentType = { "placeholder" }
             ) {
                 CalendarAiringHorizontalItemPlaceholder(
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun GridView(
-    uiState: CalendarUiState,
-    event: CalendarEvent?,
-    gridState: LazyGridState,
-    contentPadding: PaddingValues,
-    showEditSheetAction: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val navActionManager = LocalNavActionManager.current
-    val blurAdult = LocalBlurAdult.current
-
-    gridState.OnBottomReached(buffer = 1, debounceDuration = 500.milliseconds) {
-        event?.onLoadMore()
-    }
-    LaunchedEffect(uiState.todayFirstItemIndex) {
-        if (uiState.todayFirstItemIndex > 0) {
-            gridState.animateScrollToItem(uiState.todayFirstItemIndex, 500)
-            event?.onAutoScrolled()
-        }
-    }
-
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = (MEDIA_POSTER_SMALL_WIDTH + 8).dp),
-        modifier = modifier,
-        contentPadding = contentPadding,
-        state = gridState,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-    ) {
-        uiState.weeklyAnime.entries.forEach { (date, mediaList) ->
-            if (mediaList.isEmpty()) return@forEach
-            stickyHeader {
-                StickyHeader(
-                    mediaList = mediaList.toImmutableList(),
-                    date = date,
-                    onLongClick = { event?.refreshDay(date) },
-                )
-            }
-
-            items(
-                items = mediaList,
-                contentType = { it }
-            ) { item ->
-                MediaItemVertical(
-                    title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                    imageUrl = item.coverImage?.large,
-                    blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
-                    modifier = Modifier
-                        .wrapContentWidth(),
-                    subtitle = {
-                        item.nextAiringEpisode?.let { nextAiringEpisode ->
-                            val text = stringResource(
-                                R.string.episode_airing_at,
-                                nextAiringEpisode.episode,
-                                nextAiringEpisode.airingAt.toLong().timestampToTimeString()
-                                    ?: UNKNOWN_CHAR
-                            )
-                            Text(
-                                text = text,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                    },
-                    status = item.mediaListEntry?.basicMediaListEntry?.status,
-                    minLines = 2,
-                    onClick = { navActionManager.toMediaDetails(item.id) },
-                    onLongClick = {
-                        event?.selectItem(item)
-                        showEditSheetAction()
-                    }
-                )
-            }
-        }
-
-        if (uiState.isLoading) {
-            item {
-                CalendarBannerPlaceholder(
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-            items(
-                count = 20,
-                contentType = { "placeholder" }
-            ) {
-                MediaItemVerticalPlaceholder(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }

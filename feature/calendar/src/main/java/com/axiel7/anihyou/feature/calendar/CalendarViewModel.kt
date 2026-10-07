@@ -175,12 +175,6 @@ class CalendarViewModel(
     }
 
     init {
-        listPreferencesRepository.calendarListStyle
-            .onEach { value ->
-                mutableUiState.update { it.copy(listStyle = value) }
-            }
-            .launchIn(viewModelScope)
-
         onMyList.onEach { onMyListVal ->
             if (mutableUiState.value.onMyList != onMyListVal) {
                 mutableUiState.update {

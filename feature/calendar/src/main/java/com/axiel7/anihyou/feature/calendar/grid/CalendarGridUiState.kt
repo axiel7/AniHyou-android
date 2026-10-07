@@ -1,23 +1,21 @@
-package com.axiel7.anihyou.feature.calendar
+package com.axiel7.anihyou.feature.calendar.grid
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.base.state.PagedUiState
 import com.axiel7.anihyou.core.network.fragment.ExploreMedia
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Stable
-data class CalendarUiState(
+data class CalendarGridUiState(
+    val weekday: Int = 0,
+    val weeklyAnime: SnapshotStateList<ExploreMedia> = mutableStateListOf(),
     val onMyList: Boolean? = null,
     val selectedItem: ExploreMedia? = null,
-    val todayFirstItemIndex: Int = 0,
-    val day: LocalDateTime = LocalDateTime.now().minusDays(1),
-    val weeklyAnime: MutableMap<LocalDate, List<ExploreMedia>> = mutableMapOf(),
-    val fetchFromNetwork: Boolean = false,
     override val page: Int = 1,
     override val hasNextPage: Boolean = true,
-    override val isLoading: Boolean = true,
     override val error: String? = null,
+    override val isLoading: Boolean = true,
 ) : PagedUiState() {
     override fun setError(value: String?) = copy(error = value)
     override fun setLoading(value: Boolean) = copy(isLoading = value)

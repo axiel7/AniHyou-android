@@ -1,0 +1,110 @@
+package com.axiel7.anihyou.feature.calendar.grid
+
+import androidx.lifecycle.viewModelScope
+import com.axiel7.anihyou.core.base.PagedResult
+import com.axiel7.anihyou.core.common.utils.DateUtils.thisWeekdayTimestamp
+import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
+import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
+import com.axiel7.anihyou.core.domain.repository.MediaRepository
+import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
+import com.axiel7.anihyou.core.network.fragment.ExploreMedia
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import java.time.DayOfWeek
+import java.time.LocalDateTime
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class CalendarGridViewModel(
+    private val mediaRepository: MediaRepository,
+    defaultPreferencesRepository: DefaultPreferencesRepository,
+) : PagedUiStateViewModel<CalendarGridUiState>(), CalendarGridEvent {
+
+    override val initialState = CalendarGridUiState()
+
+    private val displayAdult = defaultPreferencesRepository.displayAdult
+
+    private val now: LocalDateTime = LocalDateTime.now()
+
+    fun setOnMyList(value: Boolean?) = mutableUiState.update {
+        it.copy(onMyList = value, page = 1, hasNextPage = true, isLoading = true)
+    }
+
+    fun setWeekday(value: Int) = mutableUiState.update {
+        it.copy(weekday = value)
+    }
+
+    override fun onUpdateListEntry(newListEntry: BasicMediaListEntry?) {
+        mutableUiState.value.run {
+            selectedItem?.let { selectedItem ->
+                val index = weeklyAnime.indexOf(selectedItem)
+                if (index != -1) {
+                    weeklyAnime[index] = selectedItem.copy(
+                        mediaListEntry = newListEntry?.let {
+                            ExploreMedia.MediaListEntry(
+                                __typename = "ExploreMedia.MediaListEntry",
+                                id = newListEntry.id,
+                                mediaId = newListEntry.mediaId,
+                                basicMediaListEntry = newListEntry
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    override fun selectItem(value: ExploreMedia?) {
+        mutableUiState.update { it.copy(selectedItem = value) }
+    }
+
+    init {
+        mutableUiState
+            .filter { it.hasNextPage && it.weekday != 0 }
+            .distinctUntilChanged { old, new ->
+                old.page == new.page
+                        && old.weekday == new.weekday
+                        && old.onMyList == new.onMyList
+            }
+            .combine(displayAdult, ::Pair)
+            .flatMapLatest { (uiState, displayAdult) ->
+                val start = now.thisWeekdayTimestamp(
+                    dayOfWeek = DayOfWeek.of(uiState.weekday),
+                    isEndOfDay = false
+                )
+                val end = now.thisWeekdayTimestamp(
+                    dayOfWeek = DayOfWeek.of(uiState.weekday),
+                    isEndOfDay = true
+                )
+                mediaRepository.getAiringAnimesPage(
+                    airingAtGreater = start,
+                    airingAtLesser = end,
+                    onMyList = uiState.onMyList,
+                    isAdult = displayAdult == true,
+                    page = uiState.page
+                )
+            }
+            .onEach { result ->
+                if (result is PagedResult.Success) {
+                    mutableUiState.update {
+                        if (it.page == 1) it.weeklyAnime.clear()
+                        it.weeklyAnime.addAll(result.list)
+                        it.copy(
+                            hasNextPage = result.hasNextPage,
+                            isLoading = false,
+                        )
+                    }
+                } else {
+                    mutableUiState.update {
+                        result.toUiState(loadingWhen = it.page == 1)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+}
