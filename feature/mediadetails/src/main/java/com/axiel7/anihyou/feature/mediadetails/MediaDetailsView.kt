@@ -80,6 +80,7 @@ import com.axiel7.anihyou.core.common.utils.StringUtils.orUnknown
 import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.genre.SelectableGenre.Companion.genreTagLocalized
+import com.axiel7.anihyou.core.model.media.asMediaSort
 import com.axiel7.anihyou.core.model.media.durationText
 import com.axiel7.anihyou.core.model.media.isAnime
 import com.axiel7.anihyou.core.model.media.localized
@@ -657,7 +658,16 @@ fun MediaInfoTabs(
                     MediaStatsView(
                         uiState = uiState,
                         fetchData = { event?.fetchStats() },
-                        navigateToUserDetails = navActionManager::toUserDetails
+                        navigateToUserDetails = navActionManager::toUserDetails,
+                        onClickRanking = { ranking ->
+                            navActionManager.toSearch(
+                                mediaType = uiState.details?.basicMediaDetails?.type,
+                                season = ranking.season,
+                                year = ranking.year,
+                                mediaSort = ranking.type.asMediaSort(),
+                                focus = false,
+                            )
+                        }
                     )
 
                 MediaDetailsType.REVIEWS -> {

@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.axiel7.anihyou.core.network.type.MediaRankType
+import com.axiel7.anihyou.core.network.type.MediaSort
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.resources.stat_dark_red
 import com.axiel7.anihyou.core.resources.stat_dark_yellow
@@ -25,4 +26,10 @@ fun MediaRankType.color(): Color {
         MediaRankType.POPULAR -> if (isDark) stat_dark_red else stat_light_red
         MediaRankType.UNKNOWN__ -> MaterialTheme.colorScheme.onSurface
     }
+}
+
+fun MediaRankType.asMediaSort() = when (this) {
+    MediaRankType.RATED -> MediaSort.SCORE_DESC
+    MediaRankType.POPULAR -> MediaSort.POPULARITY_DESC
+    MediaRankType.UNKNOWN__ -> MediaSort.UNKNOWN__
 }

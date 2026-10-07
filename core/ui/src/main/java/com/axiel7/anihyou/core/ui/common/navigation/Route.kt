@@ -5,6 +5,9 @@ import androidx.navigation3.runtime.NavKey
 import com.axiel7.anihyou.core.model.CurrentListType
 import com.axiel7.anihyou.core.model.FavoritesType
 import com.axiel7.anihyou.core.model.thread.ChildComment
+import com.axiel7.anihyou.core.network.type.MediaSeason
+import com.axiel7.anihyou.core.network.type.MediaSort
+import com.axiel7.anihyou.core.network.type.MediaType
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -47,8 +50,10 @@ sealed interface Route : NavKey {
     @Serializable
     @Immutable
     data class Search(
-        val mediaType: String? = null,
-        val mediaSort: String? = null,
+        val mediaType: MediaType? = null,
+        val mediaSort: MediaSort? = null,
+        val season: MediaSeason? = null,
+        val year: Int? = null,
         val genre: String? = null,
         val tag: String? = null,
         val onList: Boolean? = null,

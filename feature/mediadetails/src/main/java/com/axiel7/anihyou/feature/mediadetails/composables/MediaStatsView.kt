@@ -25,6 +25,7 @@ import com.axiel7.anihyou.core.common.utils.NumberUtils.format
 import com.axiel7.anihyou.core.model.media.color
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.localized
+import com.axiel7.anihyou.core.network.MediaStatsQuery
 import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
@@ -41,6 +42,7 @@ fun MediaStatsView(
     uiState: MediaDetailsUiState,
     fetchData: () -> Unit,
     navigateToUserDetails: (Int) -> Unit,
+    onClickRanking: (MediaStatsQuery.Ranking) -> Unit,
 ) {
     val isLoading = !uiState.isSuccessStats
     LaunchedEffect(uiState.isSuccessStats) {
@@ -56,19 +58,16 @@ fun MediaStatsView(
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                uiState.mediaRankings.forEach {
+                uiState.mediaRankings.forEach { ranking ->
                     AssistChip(
-                        onClick = { },
+                        onClick = { onClickRanking(ranking) },
                         label = {
                             Text(
                                 text = buildString {
-                                    append("#${it.rank.format()} ${it.context.capitalize(Locale.current)}")
-                                    it.season?.let { season ->
-                                        append(" ${season.localized()}")
-                                    }
-                                    it.year?.let { year ->
-                                        append(" $year")
-                                    }
+                                    append("#${ranking.rank.format()}")
+                                    append(" ${ranking.context.capitalize(Locale.current)}")
+                                    ranking.season?.let { append(" ${it.localized()}") }
+                                    ranking.year?.let { append(" $it") }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center
@@ -77,9 +76,9 @@ fun MediaStatsView(
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(it.type.icon()),
-                                contentDescription = it.type.name,
-                                tint = it.type.color().harmonize(MaterialTheme.colorScheme.primary)
+                                painter = painterResource(ranking.type.icon()),
+                                contentDescription = ranking.type.name,
+                                tint = ranking.type.color().harmonize(MaterialTheme.colorScheme.primary)
                             )
                         },
                         trailingIcon = {
@@ -145,7 +144,8 @@ private fun MediaStatsViewPreview() {
             MediaStatsView(
                 uiState = MediaDetailsUiState(),
                 fetchData = {},
-                navigateToUserDetails = {}
+                navigateToUserDetails = {},
+                onClickRanking = {},
             )
         }
     }

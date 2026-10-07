@@ -79,13 +79,27 @@ class NavActionManager(
         navigator.navigate(Route.FullScreenImage(url))
     }
 
-    fun toSearch(mediaType: MediaType? = null) {
-        navigator.navigate(Route.Search(mediaType = mediaType?.rawValue, focus = true))
+    fun toSearch(
+        mediaType: MediaType? = null,
+        season: MediaSeason? = null,
+        year: Int? = null,
+        mediaSort: MediaSort? = null,
+        focus: Boolean = true,
+    ) {
+        navigator.navigate(
+            Route.Search(
+                mediaType = mediaType,
+                mediaSort = mediaSort,
+                season = season,
+                year = year,
+                focus = focus,
+            )
+        )
     }
 
     fun toSearchOnMyList(mediaType: MediaType) {
         navigator.navigate(
-            Route.Search(mediaType = mediaType.rawValue, onList = true, focus = true)
+            Route.Search(mediaType = mediaType, onList = true, focus = true)
         )
     }
 
@@ -95,7 +109,7 @@ class NavActionManager(
         tag: String?
     ) {
         navigator.navigate(
-            Route.Search(mediaType = mediaType.rawValue, genre = genre, tag = tag)
+            Route.Search(mediaType = mediaType, genre = genre, tag = tag)
         )
     }
 
@@ -124,7 +138,7 @@ class NavActionManager(
 
     fun toExplore(mediaType: MediaType, mediaSort: MediaSort) {
         navigator.navigate(
-            Route.Search(mediaType = mediaType.rawValue, mediaSort = mediaSort.rawValue)
+            Route.Search(mediaType = mediaType, mediaSort = mediaSort)
         )
     }
 

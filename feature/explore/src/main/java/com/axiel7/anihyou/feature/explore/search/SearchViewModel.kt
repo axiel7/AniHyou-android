@@ -37,13 +37,13 @@ class SearchViewModel(
     defaultPreferencesRepository: DefaultPreferencesRepository,
 ) : PagedUiStateViewModel<SearchUiState>(), SearchEvent {
 
-    private val mediaType = arguments.mediaType?.let { MediaType.safeValueOf(it) }
-    private val mediaSort = arguments.mediaSort?.let { MediaSort.safeValueOf(it) }
-
     override val initialState =
         SearchUiState(
-            searchType = if (mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
-            mediaSort = mediaSort ?: MediaSort.SEARCH_MATCH,
+            searchType = if (arguments.mediaType == MediaType.MANGA) SearchType.MANGA else SearchType.ANIME,
+            mediaSort = arguments.mediaSort ?: MediaSort.SEARCH_MATCH,
+            season = arguments.season,
+            startYear = arguments.year,
+            endYear = arguments.year,
             onMyList = arguments.onList,
             isLoggedIn = isLoggedIn,
             isAdult = if (isLoggedIn) null else false,
