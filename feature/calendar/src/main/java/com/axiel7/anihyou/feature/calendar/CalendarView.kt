@@ -77,7 +77,7 @@ fun CalendarHostView(
     isLoggedIn: Boolean,
 ) {
     val viewModel: CalendarHostViewModel = koinViewModel()
-    val listStyle by viewModel.listStyle.collectAsStateWithLifecycle(null)
+    val listStyle by viewModel.listStyle.collectAsStateWithLifecycle()
 
     AnimatedContent(
         targetState = listStyle

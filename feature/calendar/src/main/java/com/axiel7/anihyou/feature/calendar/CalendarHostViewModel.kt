@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.ListPreferencesRepository
 import com.axiel7.anihyou.core.model.ListStyle
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @Stable
@@ -17,6 +19,7 @@ class CalendarHostViewModel(
     val onMyList = defaultPreferencesRepository.calendarOnMyList
 
     val listStyle = listPreferencesRepository.calendarListStyle
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun onMyListChanged(value: Boolean?) = viewModelScope.launch {
         defaultPreferencesRepository.setCalendarOnMyList(value)
