@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.axiel7.anihyou.core.base.state.UiState
-import com.axiel7.anihyou.core.model.media.duration
+import com.axiel7.anihyou.core.model.media.episodesOrChapters
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
 import com.axiel7.anihyou.core.network.fragment.BasicMediaListEntry
 import com.axiel7.anihyou.core.network.type.MediaListStatus
@@ -45,7 +45,7 @@ data class EditMediaUiState(
     val isNewEntry = listEntry == null
 
     fun mediaHasDuration(): Int? {
-        val duration = mediaDetails.duration()
+        val duration = mediaDetails.episodesOrChapters()
         return if (duration != null && duration > 0) duration else null
     }
 

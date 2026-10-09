@@ -54,7 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.DateUtils.toEpochMillis
 import com.axiel7.anihyou.core.model.canUseAdvancedScoring
 import com.axiel7.anihyou.core.model.maxValue
-import com.axiel7.anihyou.core.model.media.duration
+import com.axiel7.anihyou.core.model.media.episodesOrChapters
 import com.axiel7.anihyou.core.model.media.exampleCommonMediaListEntry
 import com.axiel7.anihyou.core.model.media.icon
 import com.axiel7.anihyou.core.model.media.isAnime
@@ -263,7 +263,7 @@ private fun EditMediaSheetContent(
                     start = 0.dp,
                     end = 16.dp
                 ),
-                totalProgress = uiState.mediaDetails.duration(),
+                totalProgress = uiState.mediaDetails.episodesOrChapters(),
                 singleEpisode = singleEpisode,
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress(uiState.progress?.minus(1)) },

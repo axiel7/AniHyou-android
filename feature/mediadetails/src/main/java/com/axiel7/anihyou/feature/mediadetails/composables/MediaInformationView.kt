@@ -32,6 +32,7 @@ import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.model.media.AnimeSeason
 import com.axiel7.anihyou.core.model.media.episodeNumber
+import com.axiel7.anihyou.core.model.media.episodesOrChapters
 import com.axiel7.anihyou.core.model.media.externalLinks
 import com.axiel7.anihyou.core.model.media.isAnime
 import com.axiel7.anihyou.core.model.media.languageShort
@@ -83,11 +84,21 @@ fun MediaInformationView(
                 modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
             )
         }
-        InfoItemView(
-            title = stringResource(R.string.duration),
-            info = uiState.details?.duration?.toLong()?.minutesToLegibleText(),
-            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
-        )
+
+        if (uiState.showDurationAsMainInfo) {
+            InfoItemView(
+                title = stringResource(if (isAnime) R.string.episodes else R.string.chapters),
+                info = uiState.details?.basicMediaDetails?.episodesOrChapters()?.toString(),
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        } else if (isAnime) {
+            InfoItemView(
+                title = stringResource(R.string.duration),
+                info = uiState.details.duration?.toLong()?.minutesToLegibleText(),
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        }
+
         InfoItemView(
             title = stringResource(R.string.start_date),
             info = uiState.details?.startDate?.fuzzyDate?.formatted(),

@@ -16,6 +16,7 @@ import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MediaCharacter
 import com.axiel7.anihyou.core.network.fragment.MediaStaff
 import com.axiel7.anihyou.core.base.state.UiState
+import com.axiel7.anihyou.core.common.utils.NumberUtils.isGreaterThanZero
 import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.network.type.MediaStatus
@@ -76,6 +77,9 @@ data class MediaDetailsUiState(
     val isNewEntry = details?.mediaListEntry == null
 
     val hasSpoilerTags = details?.tags?.any { it?.isMediaSpoiler == true } ?: false
+
+    val showDurationAsMainInfo = details?.basicMediaDetails?.duration.isGreaterThanZero()
+            && details?.basicMediaDetails?.episodes.let { it == null || it <= 1 }
 
     val showNotificationSettings = isLoggedIn
             && notificationsEnabled

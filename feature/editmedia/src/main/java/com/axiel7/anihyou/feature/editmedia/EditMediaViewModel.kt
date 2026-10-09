@@ -8,7 +8,7 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.MediaListRepository
 import com.axiel7.anihyou.core.model.media.advancedScoreNames
 import com.axiel7.anihyou.core.model.media.advancedScoresMap
-import com.axiel7.anihyou.core.model.media.duration
+import com.axiel7.anihyou.core.model.media.episodesOrChapters
 import com.axiel7.anihyou.core.network.api.model.toFuzzyDate
 import com.axiel7.anihyou.core.network.api.model.toLocalDate
 import com.axiel7.anihyou.core.network.fragment.BasicMediaDetails
@@ -98,7 +98,7 @@ class EditMediaViewModel(
     }
 
     override fun onChangeProgress(value: Int?) {
-        val totalDuration = uiState.value.mediaDetails.duration()
+        val totalDuration = uiState.value.mediaDetails.episodesOrChapters()
         if (canChangeProgressTo(value, totalDuration)) {
             mutableUiState.update {
                 if (it.status == null || it.status == MediaListStatus.PLANNING

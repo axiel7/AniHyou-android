@@ -116,6 +116,7 @@ import com.axiel7.anihyou.core.ui.composables.sheet.SelectionSheetItem
 import com.axiel7.anihyou.core.ui.composables.spoilerPlaceholder
 import com.axiel7.anihyou.core.ui.composables.topShape
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.minutesToLegibleText
 import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.secondsToLegibleText
 import com.axiel7.anihyou.core.ui.utils.StringUtils.htmlDecoded
 import com.axiel7.anihyou.core.ui.utils.StringUtils.toAnnotatedString
@@ -420,9 +421,14 @@ private fun MediaDetailsContent(
                             .defaultPlaceholder(visible = uiState.isLoading),
                         style = MaterialTheme.typography.labelLarge,
                     )
+
+                    val durationText = if (uiState.showDurationAsMainInfo) {
+                        uiState.details?.basicMediaDetails?.duration?.toLong()?.minutesToLegibleText()
+                    } else {
+                        uiState.details?.basicMediaDetails?.durationText()
+                    }
                     TextIconHorizontal(
-                        text = uiState.details?.basicMediaDetails?.durationText()
-                            ?: stringResource(R.string.unknown),
+                        text = durationText ?: stringResource(R.string.unknown),
                         icon = R.drawable.timer_20,
                         modifier = Modifier
                             .padding(bottom = 8.dp)

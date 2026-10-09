@@ -14,8 +14,7 @@ import com.axiel7.anihyou.core.network.type.MediaListStatus
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.resources.R
 
-// TODO: consider volumes
-fun BasicMediaDetails.duration() = when (type) {
+fun BasicMediaDetails.episodesOrChapters() = when (type) {
     MediaType.ANIME -> episodes
     MediaType.MANGA -> chapters
     else -> null
