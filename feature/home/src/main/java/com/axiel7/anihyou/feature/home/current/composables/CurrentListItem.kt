@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,6 +63,7 @@ fun CurrentListItem(
         shape = MaterialTheme.shapes.large,
         color = Color.Transparent,
         modifier = modifier
+            .height(IntrinsicSize.Min)
             .clip(MaterialTheme.shapes.large)
             .combinedClickable(
                 onClick = onClick,
@@ -107,9 +109,7 @@ fun CurrentListItem(
             }
 
             Column(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 0.dp)
-                    .height(IntrinsicSize.Min),
+                modifier = Modifier.padding(start = 16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -125,10 +125,10 @@ fun CurrentListItem(
                     item = item,
                 )
 
+                Spacer(modifier = Modifier.weight(1f))
+
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
@@ -142,8 +142,8 @@ fun CurrentListItem(
                         enabled = isPlusEnabled,
                         singleEpisode = singleEpisode
                     )
-                }//:Row
-            }//:Column
+                }
+            }
         }
     }
 }
@@ -205,6 +205,20 @@ private fun CurrentListItemPreview() {
                     item = exampleCommonMediaListEntry,
                     isPlusEnabled = true,
                     showLowPriority = true,
+                    allPriorityColors = AllPriorityColors.Default,
+                    onClick = {},
+                    onLongClick = {},
+                    onClickPlus = {},
+                    blockPlus = {},
+                )
+                CurrentListItem(
+                    item = exampleCommonMediaListEntry.copy(
+                        media = exampleCommonMediaListEntry.media?.copy(
+                            nextAiringEpisode = null
+                        )
+                    ),
+                    isPlusEnabled = true,
+                    showLowPriority = false,
                     allPriorityColors = AllPriorityColors.Default,
                     onClick = {},
                     onLongClick = {},
