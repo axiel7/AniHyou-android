@@ -55,7 +55,7 @@ class App : Application(), SingletonImageLoader.Factory {
     }
 
     override fun newImageLoader(context: PlatformContext) =
-        ImageLoader.Builder(this)
+        ImageLoader.Builder(context)
             .components {
                 if (SDK_INT >= 28) {
                     add(AnimatedImageDecoder.Factory())
@@ -71,7 +71,7 @@ class App : Application(), SingletonImageLoader.Factory {
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.15)
+                    .maxSizePercent(0.05)
                     .build()
             }
             .crossfade(true)
