@@ -98,6 +98,12 @@ fun MediaInformationView(
                 modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
             )
         }
+        uiState.details?.basicMediaDetails?.volumes?.let { volumes ->
+            InfoItemView(
+                title = stringResource(R.string.volumes),
+                info = volumes.toString(),
+            )
+        }
 
         InfoItemView(
             title = stringResource(R.string.start_date),
