@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.axiel7.anihyou.core.base.state.PagedUiState
+import com.axiel7.anihyou.core.domain.model.SavedFilter
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
@@ -49,6 +50,7 @@ data class SearchUiState(
     val country: CountryOfOrigin? = null,
     val selectedSources: ImmutableList<MediaSourceLocalizable> = persistentListOf(),
     val sourcesChanged: Boolean = false,
+    val savedFilters: ImmutableList<SavedFilter> = persistentListOf(),
     val selectedMediaItem: SearchMediaQuery.Medium? = null,
     val clearedFilters: Boolean = false,
     val titleLanguage: UserTitleLanguage = UserTitleLanguage.ROMAJI,

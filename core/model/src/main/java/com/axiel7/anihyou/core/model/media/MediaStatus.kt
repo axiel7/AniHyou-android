@@ -25,4 +25,8 @@ enum class MediaStatusLocalizable(val value: MediaStatus) : Localizable {
 
     @Composable
     override fun localized() = value.localized()
+
+    companion object {
+        fun findValue(value: MediaStatus) = entries.find { it.value == value }
+    }
 }

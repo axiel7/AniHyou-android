@@ -236,8 +236,6 @@ private fun ExploreSearchBarContent(
         SearchContentView(
             textFieldState = textFieldState,
             performSearch = performSearch,
-            initialGenre = null,
-            initialTag = null,
             uiState = uiState,
             event = event,
         )

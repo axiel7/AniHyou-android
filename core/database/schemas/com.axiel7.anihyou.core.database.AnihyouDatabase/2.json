@@ -1,0 +1,226 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "e16f50218c55dd988b8633256d77070d",
+    "entities": [
+      {
+        "tableName": "anime_notifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`animeId` INTEGER NOT NULL, `allowStartAiring` INTEGER NOT NULL DEFAULT 1, `episodeCount` INTEGER DEFAULT null, `allowNewEpisode` INTEGER NOT NULL DEFAULT 1, `allowFinishAiring` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`animeId`))",
+        "fields": [
+          {
+            "fieldPath": "animeId",
+            "columnName": "animeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "allowStartAiring",
+            "columnName": "allowStartAiring",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "episodeCount",
+            "columnName": "episodeCount",
+            "affinity": "INTEGER",
+            "defaultValue": "null"
+          },
+          {
+            "fieldPath": "allowNewEpisode",
+            "columnName": "allowNewEpisode",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "allowFinishAiring",
+            "columnName": "allowFinishAiring",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "animeId"
+          ]
+        }
+      },
+      {
+        "tableName": "custom_links",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `uri` TEXT NOT NULL, `spaceSeparator` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `titleLanguage` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uri",
+            "columnName": "uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spaceSeparator",
+            "columnName": "spaceSeparator",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaType",
+            "columnName": "mediaType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleLanguage",
+            "columnName": "titleLanguage",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "saved_filters",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `searchType` TEXT NOT NULL, `mediaSort` TEXT, `genreIn` TEXT, `genreNot` TEXT, `tagIn` TEXT, `tagNot` TEXT, `minimumTagPercentage` INTEGER NOT NULL, `mediaFormats` TEXT, `mediaStatuses` TEXT, `startYear` INTEGER, `endYear` INTEGER, `season` TEXT, `episodesChaptersRange` TEXT, `durationVolumesRange` TEXT, `onMyList` INTEGER, `isDoujin` INTEGER, `isAdult` INTEGER, `country` TEXT, `sources` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "searchType",
+            "columnName": "searchType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaSort",
+            "columnName": "mediaSort",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "genreIn",
+            "columnName": "genreIn",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "genreNot",
+            "columnName": "genreNot",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tagIn",
+            "columnName": "tagIn",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tagNot",
+            "columnName": "tagNot",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "minimumTagPercentage",
+            "columnName": "minimumTagPercentage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaFormats",
+            "columnName": "mediaFormats",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "mediaStatuses",
+            "columnName": "mediaStatuses",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "startYear",
+            "columnName": "startYear",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "endYear",
+            "columnName": "endYear",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "season",
+            "columnName": "season",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "episodesChaptersRange",
+            "columnName": "episodesChaptersRange",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "durationVolumesRange",
+            "columnName": "durationVolumesRange",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "onMyList",
+            "columnName": "onMyList",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "isDoujin",
+            "columnName": "isDoujin",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "isAdult",
+            "columnName": "isAdult",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sources",
+            "columnName": "sources",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e16f50218c55dd988b8633256d77070d')"
+    ]
+  }
+}

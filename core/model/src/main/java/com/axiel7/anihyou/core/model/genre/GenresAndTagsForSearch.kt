@@ -1,5 +1,8 @@
 package com.axiel7.anihyou.core.model.genre
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class GenresAndTagsForSearch(
     val genreIn: Set<String> = emptySet(),
     val genreNot: Set<String> = emptySet(),

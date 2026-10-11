@@ -47,4 +47,8 @@ enum class MediaSourceLocalizable(val value: MediaSource): Localizable {
 
     @Composable
     override fun localized() = value.localized()
+
+    companion object {
+        fun findValue(value: MediaSource) = entries.find { it.value == value }
+    }
 }

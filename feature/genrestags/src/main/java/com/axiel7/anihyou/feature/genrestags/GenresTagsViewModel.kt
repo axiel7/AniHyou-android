@@ -19,23 +19,47 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.annotation.InjectedParam
 import kotlin.time.Duration.Companion.milliseconds
 
 @Stable
 @OptIn(FlowPreview::class)
 class GenresTagsViewModel(
-    @InjectedParam private val genresAndTagsForSearch: GenresAndTagsForSearch,
     private val searchRepository: SearchRepository,
     context: Context,
 ) : UiStateViewModel<GenresTagsUiState>(), GenresTagsEvent {
 
-    private var externalGenre = genresAndTagsForSearch.genreIn.firstOrNull()
-    private var externalTag = genresAndTagsForSearch.tagIn.firstOrNull()
+    override val initialState = GenresTagsUiState()
 
-    override val initialState = GenresTagsUiState(
-        genresAndTagsForSearch = genresAndTagsForSearch
-    )
+    override fun setGenresAndTagsForSearch(value: GenresAndTagsForSearch) {
+        mutableUiState.update { uiState ->
+            if (uiState.genresAndTagsForSearch == value) return@update uiState
+
+            val selectedGenres = value.genreIn
+                .map { SelectableGenre(it, SelectableGenre.State.SELECTED) }
+            val excludedGenres = value.genreNot
+                .map { SelectableGenre(it, SelectableGenre.State.EXCLUDED) }
+            if (uiState.genres.isEmpty()) {
+                uiState.genres.addAll(selectedGenres + excludedGenres)
+            } else {
+                (selectedGenres + excludedGenres).forEach { uiState.updateGenre(it) }
+            }
+
+            val selectedTags = value.tagIn
+                .map { SelectableGenre(it, SelectableGenre.State.SELECTED) }
+            val excludedTags = value.tagNot
+                .map { SelectableGenre(it, SelectableGenre.State.EXCLUDED) }
+            if (uiState.tags.isEmpty()) {
+                uiState.tags.addAll(selectedTags + excludedTags)
+            } else {
+                (selectedTags + excludedTags).forEach { uiState.updateTag(it) }
+            }
+
+            uiState.copy(
+                genresAndTagsForSearch = value,
+                minimumTagPercentage = value.minimumTagPercentage,
+            )
+        }
+    }
 
     override fun onFilterChanged(value: String) {
         viewModelScope.launch {
@@ -50,11 +74,8 @@ class GenresTagsViewModel(
     }
 
     override suspend fun onGenreRemoved(name: String): GenresAndTagsForSearch {
-        val selectableExternalGenre = externalGenre?.let {
-            SelectableGenre(it).also { externalGenre = null }
-        }
         val uiState = mutableUiState.first()
-        val genre = uiState.genres.find { it.name == name } ?: selectableExternalGenre
+        val genre = uiState.genres.find { it.name == name }
         if (genre != null) {
             uiState.updateGenre(genre.copy(state = SelectableGenre.State.NONE))
             val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
@@ -73,11 +94,8 @@ class GenresTagsViewModel(
     }
 
     override suspend fun onTagRemoved(name: String): GenresAndTagsForSearch {
-        val selectableExternalTag = externalTag?.let {
-            SelectableGenre(it).also { externalTag = null }
-        }
         val uiState = mutableUiState.first()
-        val tag = uiState.tags.find { it.name == name } ?: selectableExternalTag
+        val tag = uiState.tags.find { it.name == name }
         if (tag != null) {
             uiState.updateTag(tag.copy(state = SelectableGenre.State.NONE))
             val genresAndTagsForSearch = uiState.genresAndTagsForSearch()
@@ -145,8 +163,10 @@ class GenresTagsViewModel(
                         uiState.genres.clear()
                         uiState.genres.addAll(
                             result.data.genres.map {
-                                if (it.name == externalGenre)
+                                if (uiState.genresAndTagsForSearch.genreIn.contains(it.name))
                                     it.copy(state = SelectableGenre.State.SELECTED)
+                                else if (uiState.genresAndTagsForSearch.genreNot.contains(it.name))
+                                    it.copy(state = SelectableGenre.State.EXCLUDED)
                                 else it
                             }
                         )
@@ -154,8 +174,10 @@ class GenresTagsViewModel(
                         uiState.tags.clear()
                         uiState.tags.addAll(
                             result.data.tags.map {
-                                if (it.name == externalTag)
+                                if (uiState.genresAndTagsForSearch.tagIn.contains(it.name))
                                     it.copy(state = SelectableGenre.State.SELECTED)
+                                else if (uiState.genresAndTagsForSearch.tagNot.contains(it.name))
+                                    it.copy(state = SelectableGenre.State.EXCLUDED)
                                 else it
                             }
                         )

@@ -705,4 +705,7 @@
     <string name="allow_start_notification">Allow start notification</string>
     <string name="allow_airing_notification">Allow airing notification</string>
     <string name="allow_end_notification">Allow finished notification</string>
+    <string name="saved_filters">Saved filters</string>
+    <string name="filter_name">Filter name</string>
+    <string name="save_current_filters">Save current filters</string>
 </resources>

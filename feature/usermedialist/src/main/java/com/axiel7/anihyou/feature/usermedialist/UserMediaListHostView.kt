@@ -449,6 +449,7 @@ private fun FilterBlock(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 SearchGenresTagsChips(
+                    externalGenresAndTagsForSearch = uiState.genresAndTagsForSearch,
                     clearedFilters = uiState.clearedFilters,
                     onGenreTagStateChanged = { event?.onGenreTagStateChanged(it) },
                 )

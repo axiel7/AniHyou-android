@@ -40,5 +40,7 @@ enum class MediaFormatLocalizable(val value: MediaFormat) : Localizable {
     companion object {
         val animeEntries = persistentListOf(TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC)
         val mangaEntries = persistentListOf(MANGA, NOVEL, ONE_SHOT)
+
+        fun findValue(value: MediaFormat) = entries.find { it.value == value }
     }
 }

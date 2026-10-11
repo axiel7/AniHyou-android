@@ -13,6 +13,7 @@ import com.axiel7.anihyou.core.domain.repository.MediaListRepository
 import com.axiel7.anihyou.core.domain.repository.MediaRepository
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
 import com.axiel7.anihyou.core.domain.repository.ReviewRepository
+import com.axiel7.anihyou.core.domain.repository.SavedFiltersRepository
 import com.axiel7.anihyou.core.domain.repository.SearchRepository
 import com.axiel7.anihyou.core.domain.repository.StaffRepository
 import com.axiel7.anihyou.core.domain.repository.StudioRepository
@@ -40,4 +41,5 @@ val repositoryModule = module {
     single<UserRepository>()
     single<AnimeNotificationsRepository>()
     single<CustomLinksRepository>()
+    single<SavedFiltersRepository>()
 }

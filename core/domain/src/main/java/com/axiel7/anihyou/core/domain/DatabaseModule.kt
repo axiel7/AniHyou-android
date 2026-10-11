@@ -16,4 +16,5 @@ val databaseModule = module {
     
     single { get<AnihyouDatabase>().animeNotificationsDao() }
     single { get<AnihyouDatabase>().customLinksDao() }
+    single { get<AnihyouDatabase>().savedFiltersDao() }
 }

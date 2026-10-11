@@ -323,7 +323,8 @@ class UserMediaListViewModel(
 
     override fun onGenreTagStateChanged(value: GenresAndTagsForSearch) {
         mutableUiState.update {
-            it.copy(genresAndTagsForSearch = value, clearedFilters = false)
+            if (it.genresAndTagsForSearch == value) return@update it
+            it.copy(genresAndTagsForSearch = value, clearedFilters = value.totalSize == 0)
         }
     }
 
@@ -389,13 +390,8 @@ class UserMediaListViewModel(
 
     private fun GenresAndTagsForSearch.genreMatch(entry: CommonMediaListEntry): Boolean {
         val genres = entry.media?.genres ?: return true
-        val genreInMatch = if (genreIn.isNotEmpty()) {
-            genres.any { genreIn.contains(it) }
-        } else true
-
-        val genreNotMatch = if (genreNot.isNotEmpty()) {
-            !genres.any { genreNot.contains(it) }
-        } else true
+        val genreInMatch = genreIn.isEmpty() || genres.any { genreIn.contains(it) }
+        val genreNotMatch = genreNot.isEmpty() || !genres.any { genreNot.contains(it) }
 
         return genreInMatch && genreNotMatch
     }
@@ -403,14 +399,8 @@ class UserMediaListViewModel(
     private fun GenresAndTagsForSearch.tagMatch(entry: CommonMediaListEntry): Boolean {
         val tags = entry.media?.tags
             ?.filter { (it?.rank ?: 0) >= minimumTagPercentage } ?: return true
-
-        val tagInMatch = if (tagIn.isNotEmpty()) {
-            tags.any { tagIn.contains(it?.name) }
-        } else true
-
-        val tagNotMatch = if (tagNot.isNotEmpty()) {
-            !tags.any { tagNot.contains(it?.name) }
-        } else true
+        val tagInMatch = tagIn.isEmpty() || tags.any { tagIn.contains(it?.name) }
+        val tagNotMatch = tagNot.isEmpty() || !tags.any { tagNot.contains(it?.name) }
 
         return tagInMatch && tagNotMatch
     }

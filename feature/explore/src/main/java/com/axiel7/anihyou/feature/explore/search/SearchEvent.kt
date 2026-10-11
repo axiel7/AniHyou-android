@@ -3,6 +3,7 @@ package com.axiel7.anihyou.feature.explore.search
 import androidx.compose.runtime.Immutable
 import com.axiel7.anihyou.core.base.event.PagedEvent
 import com.axiel7.anihyou.core.base.event.UiEvent
+import com.axiel7.anihyou.core.domain.model.SavedFilter
 import com.axiel7.anihyou.core.model.SearchType
 import com.axiel7.anihyou.core.model.genre.GenresAndTagsForSearch
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
@@ -35,4 +36,8 @@ interface SearchEvent : UiEvent, PagedEvent {
     fun clearFilters()
     fun selectMediaItem(value: SearchMediaQuery.Medium?)
     fun onUpdateListEntry(newListEntry: BasicMediaListEntry?)
+    fun onShowSavedFilters()
+    fun saveCurrentFilter(name: String)
+    fun deleteFilter(id: Int)
+    fun applySavedFilter(filter: SavedFilter)
 }
