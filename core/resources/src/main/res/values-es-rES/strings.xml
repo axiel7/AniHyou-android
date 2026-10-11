@@ -689,4 +689,7 @@
     <string name="allow_start_notification">Permitir notificación de inicio de emisión</string>
     <string name="allow_airing_notification">Permitir notificaciones de emisión de episodios</string>
     <string name="allow_end_notification">Permitir notificación de finalización de emisión</string>
+    <string name="saved_filters">Filtros guardados</string>
+    <string name="filter_name">Nombre del filtro</string>
+    <string name="save_current_filters">Guardar filtros actuales</string>
 </resources>

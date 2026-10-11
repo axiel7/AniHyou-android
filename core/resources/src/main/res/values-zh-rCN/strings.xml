@@ -5,22 +5,22 @@
     <string name="manga">漫画</string>
     <string name="explore">探索</string>
     <plurals name="num_years">
-        <item quantity="other">%d年</item>
+        <item quantity="other">%d 年</item>
     </plurals>
     <plurals name="num_months">
-        <item quantity="other">%d个月</item>
+        <item quantity="other">%d 个月</item>
     </plurals>
     <plurals name="num_weeks">
-        <item quantity="other">%d周</item>
+        <item quantity="other">%d 周</item>
     </plurals>
     <plurals name="num_days">
-        <item quantity="other">%d天</item>
+        <item quantity="other">%d 天</item>
     </plurals>
     <string name="just_now">刚刚</string>
     <string name="unknown">未知</string>
     <string name="airing_soon">即将播出</string>
     <string name="mean_score">平均评分</string>
-    <string name="airing_in">%s后播出</string>
+    <string name="airing_in">%s 后播出</string>
     <string name="winter">冬季</string>
     <string name="spring">春季</string>
     <string name="summer">夏季</string>
@@ -59,10 +59,10 @@
     <string name="novel">小说</string>
     <string name="one_shot">独立篇</string>
     <plurals name="num_episodes">
-        <item quantity="other">%d集</item>
+        <item quantity="other">%d 集</item>
     </plurals>
     <plurals name="num_chapters">
-        <item quantity="other">%d章</item>
+        <item quantity="other">%d 章</item>
     </plurals>
     <string name="finished">已完结</string>
     <string name="releasing">连载中</string>
@@ -223,7 +223,7 @@
     <string name="friday">周五</string>
     <string name="saturday">周六</string>
     <string name="sunday">周日</string>
-    <string name="episode_airing_at">第%d集将在%s播出</string>
+    <string name="episode_airing_at">第 %d 集将在 %s 播出</string>
     <string name="filter">筛选</string>
     <string name="notifications">通知</string>
     <string name="threads">帖子</string>
@@ -617,10 +617,10 @@
     <string name="rewatched_media">重看了《%s》</string>
     <string name="reread_media">重读了《%s》</string>
     <plurals name="hour_abbreviation">
-        <item quantity="other">%d小时</item>
+        <item quantity="other">%d 小时</item>
     </plurals>
     <plurals name="minutes_abbreviation">
-        <item quantity="other">%d分钟</item>
+        <item quantity="other">%d 分钟</item>
     </plurals>
     <string name="login_required_in_phone">要使用这个应用，您首先需要登录并打开安装在您手机上的 AniHyou</string>
     <string name="app_installed_required">未检测到附近的设备，请在安卓手机上安装最新版本的 AniHyou</string>
@@ -660,8 +660,8 @@
     <plurals name="notification_episode_aired">
         <item quantity="other">《%2$s》的第 %1$d 集已播出</item>
     </plurals>
-    <string name="notification_start_episode_aired">%1$s 开始播出</string>
-    <string name="notification_end_episode_aired">%1$s 已播完</string>
+    <string name="notification_start_episode_aired">《%1$s》开始播出</string>
+    <string name="notification_end_episode_aired">《%1$s》已播完</string>
     <string name="notification_activity_liked">%s 赞了你的动态</string>
     <string name="notification_activity_reply_liked">%s 赞了你的动态评论</string>
     <string name="notification_activity_reply">%s 回复了你的动态</string>
