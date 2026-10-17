@@ -688,4 +688,7 @@
     <string name="allow_start_notification">Anime başlama bildirimi al</string>
     <string name="allow_airing_notification">Bölüm yayınlanma bildirimi al</string>
     <string name="allow_end_notification">Anime yayınlanmayı bitirdi bildirimi al</string>
+    <string name="saved_filters">Kayıtlı filtreler</string>
+    <string name="filter_name">Filtre adı</string>
+    <string name="save_current_filters">Mevcut filtreyi kaydet</string>
 </resources>
