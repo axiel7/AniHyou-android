@@ -45,11 +45,13 @@ fun AiringContent(
                 ) { item ->
                     AiringAnimeHorizontalItem(
                         title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                        subtitle = stringResource(
-                            R.string.airing_in,
-                            item.nextAiringEpisode?.timeUntilAiring?.toLong()
-                                ?.secondsToLegibleText() ?: UNKNOWN_CHAR
-                        ),
+                        subtitle = item.nextAiringEpisode?.let { nextAiringEpisode ->
+                            stringResource(
+                                R.string.episode_in_time,
+                                nextAiringEpisode.episode,
+                                nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                            )
+                        }.orEmpty(),
                         blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                         imageUrl = item.coverImage?.large,
                         score = item.averageScore,
@@ -83,11 +85,13 @@ fun AiringContent(
                 ) { item ->
                     AiringAnimeHorizontalItem(
                         title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
-                        subtitle = stringResource(
-                            R.string.airing_in,
-                            item.nextAiringEpisode?.timeUntilAiring?.toLong()
-                                ?.secondsToLegibleText() ?: UNKNOWN_CHAR
-                        ),
+                        subtitle = item.nextAiringEpisode?.let { nextAiringEpisode ->
+                            stringResource(
+                                R.string.episode_in_time,
+                                nextAiringEpisode.episode,
+                                nextAiringEpisode.timeUntilAiring.toLong().secondsToLegibleText()
+                            )
+                        }.orEmpty(),
                         imageUrl = item.coverImage?.large,
                         score = item.averageScore,
                         status = item.mediaListEntry?.basicMediaListEntry?.status,
