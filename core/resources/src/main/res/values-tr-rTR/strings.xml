@@ -26,7 +26,7 @@
     <string name="mean_score">Ortalama Puan</string>
     <string name="airing_in">%s sonra yayınlanacak</string>
     <string name="winter">Kış</string>
-    <string name="spring">Bahar</string>
+    <string name="spring">İlkbahar</string>
     <string name="summer">Yaz</string>
     <string name="fall">Sonbahar</string>
     <string name="profile">Profil</string>
@@ -658,6 +658,7 @@
     <string name="recent">En son</string>
     <string name="use_fuzzy_search">Fuzzy arama kullan</string>
     <string name="fuzzy_search_description">Yazım hatalarını, kelime sıralamasının bozuk olmasını ve kısaltmaları (örneğin, \"aot\") eşleştirir. Eski cihazlarda performansı etkileyebilir.</string>
+    <string name="move_to_top">En yukarı taşı</string>
     <string name="colored_media_title">Renklendirilmiş medya detayları</string>
     <string name="colored_media_desc">Uygulama rengini, medya görselinin rengine göre değiştirir</string>
     <string name="custom_links">Özel bağlantılar</string>
@@ -688,4 +689,7 @@
     <string name="allow_start_notification">Anime başlama bildirimi al</string>
     <string name="allow_airing_notification">Bölüm yayınlanma bildirimi al</string>
     <string name="allow_end_notification">Anime yayınlanmayı bitirdi bildirimi al</string>
+    <string name="saved_filters">Kayıtlı filtreler</string>
+    <string name="filter_name">Filtre adı</string>
+    <string name="save_current_filters">Mevcut filtreyi kaydet</string>
 </resources>
