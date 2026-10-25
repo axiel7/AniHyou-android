@@ -166,6 +166,7 @@ private fun UserMediaListHostContent(
         SetScoreDialog(
             onDismiss = { event?.toggleScoreDialog(false) },
             onConfirm = { event?.setScore(it) },
+            increments = uiState.scoreStep,
         )
     }
 

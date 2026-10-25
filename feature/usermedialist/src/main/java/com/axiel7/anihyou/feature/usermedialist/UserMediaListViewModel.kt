@@ -692,6 +692,12 @@ class UserMediaListViewModel(
             }
             .launchIn(viewModelScope)
 
+        defaultPreferencesRepository.scoreSteps
+            .onEach { value ->
+                mutableUiState.update { it.copy(scoreStep = value) }
+            }
+            .launchIn(viewModelScope)
+
         // sort preference
         when (mediaType) {
             MediaType.ANIME -> listPreferencesRepository.animeListSort

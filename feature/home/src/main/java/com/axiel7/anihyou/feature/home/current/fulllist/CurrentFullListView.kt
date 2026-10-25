@@ -131,6 +131,7 @@ private fun CurrentFullListContent(
         SetScoreDialog(
             onDismiss = { event?.toggleSetScoreDialog(false) },
             onConfirm = { event?.setScore(it) },
+            increments = uiState.scoreStep,
         )
     }
 

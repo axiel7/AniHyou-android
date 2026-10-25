@@ -58,6 +58,7 @@ data class UserMediaListUiState(
     val openSetScoreDialog: Boolean = false,
     val clearedFilters: Boolean = false,
     val translatorApp: TranslatorApp = TranslatorApp.DEFAULT,
+    val scoreStep: Double = 1.0,
     val randomEntryId: Int? = null,
     val isLoadingRandom: Boolean = false,
     val isLoadingPlusOne: Boolean = false,
