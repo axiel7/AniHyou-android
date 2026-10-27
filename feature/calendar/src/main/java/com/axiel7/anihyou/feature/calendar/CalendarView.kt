@@ -290,7 +290,7 @@ private fun StickyHeader(
     val media = mediaList.maxWithOrNull(
         compareBy<ExploreMedia> { it.popularity ?: Int.MIN_VALUE }
             .thenBy {
-                it.averageScore ?: Int.MIN_VALUE
+                it.weightedScore ?: Int.MIN_VALUE
             } // if popularity is the same, fallback to score
     )
     val banner =
@@ -364,7 +364,7 @@ private fun ListView(
                     } ?: stringResource(R.string.unknown),
                     blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                     imageUrl = item.coverImage?.large,
-                    score = item.averageScore,
+                    score = item.weightedScore,
                     status = item.mediaListEntry?.basicMediaListEntry?.status,
                     onClick = {
                         navActionManager.toMediaDetails(item.id)

@@ -27,7 +27,7 @@ query MediaDetails($mediaId: Int) {
             color
         }
         bannerImage
-        averageScore
+        weightedScore
         meanScore
         popularity
         genres

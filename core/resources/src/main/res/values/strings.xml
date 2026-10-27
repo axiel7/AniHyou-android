@@ -74,7 +74,7 @@
     <string name="not_yet_released">Not yet released</string>
     <string name="cancelled">Cancelled</string>
     <string name="hiatus">Hiatus</string>
-    <string name="average_score">Average score</string>
+    <string name="average_score">Weighted Score</string>
     <string name="popularity">Popularity</string>
     <string name="favorites">Favorites</string>
     <string name="episode_in_time">Ep %d in %s</string>

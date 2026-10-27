@@ -165,7 +165,7 @@ private fun SearchContent(
                             title = media.basicMediaDetails.title?.userPreferred.orEmpty(),
                             imageUrl = media.coverImage?.large,
                             blurImage = blurAdult && media.basicMediaDetails.isAdult == true,
-                            score = media.averageScore ?: 0,
+                            score = media.weightedScore ?: 0,
                             format = media.format ?: MediaFormat.UNKNOWN__,
                             year = media.startDate?.year,
                             mediaStatus = media.status,

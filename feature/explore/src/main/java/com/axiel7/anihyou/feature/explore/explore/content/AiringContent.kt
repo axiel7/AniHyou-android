@@ -54,7 +54,7 @@ fun AiringContent(
                         }.orEmpty(),
                         blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                         imageUrl = item.coverImage?.large,
-                        score = item.averageScore,
+                        score = item.weightedScore,
                         status = item.mediaListEntry?.basicMediaListEntry?.status,
                         onClick = {
                             navigateToMediaDetails(item.id)
@@ -93,7 +93,7 @@ fun AiringContent(
                             )
                         }.orEmpty(),
                         imageUrl = item.coverImage?.large,
-                        score = item.averageScore,
+                        score = item.weightedScore,
                         status = item.mediaListEntry?.basicMediaListEntry?.status,
                         onClick = { item.id.let(navigateToMediaDetails) },
                         onLongClick = {

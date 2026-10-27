@@ -333,7 +333,7 @@ fun SearchContentView(
                             title = item.basicMediaDetails.title?.userPreferred.orEmpty(),
                             imageUrl = item.coverImage?.large,
                             blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
-                            score = item.averageScore ?: 0,
+                            score = item.weightedScore ?: 0,
                             format = item.format ?: MediaFormat.UNKNOWN__,
                             year = item.startDate?.year,
                             mediaStatus = item.status,

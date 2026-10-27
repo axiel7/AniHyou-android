@@ -470,7 +470,7 @@ private fun MediaDetailsContent(
                     )
                 }
                 TextSubtitleVertical(
-                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
+                    text = "${uiState.details?.weightedScore?.format().orUnknown()}%",
                     subtitle = stringResource(R.string.average_score),
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)

@@ -3,7 +3,7 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
     $minimumTagRank: Int, $format_in: [MediaFormat], $status_in: [MediaStatus],
     $episodes_lesser: Int, $episodes_greater: Int, $duration_lesser: Int, $duration_greater: Int,
     $chapters_lesser: Int, $chapters_greater: Int, $volumes_lesser: Int, $volumes_greater: Int,
-    $averageScore_lesser: Int, $averageScore_greater: Int,
+    $weightedScore_lesser: Int, $weightedScore_greater: Int,
     $startDateGreater: FuzzyDateInt, $startDateLesser: FuzzyDateInt, $season: MediaSeason,
     $onList: Boolean, $isLicensed: Boolean, $isAdult: Boolean, $country: CountryCode, $source_in: [MediaSource]
 ) {
@@ -15,12 +15,12 @@ query SearchMedia($page: Int, $perPage: Int, $search: String, $type: MediaType, 
             duration_lesser: $duration_lesser, duration_greater: $duration_greater,
             chapters_lesser: $chapters_lesser, chapters_greater: $chapters_greater,
             volumes_lesser: $volumes_lesser, volumes_greater: $volumes_greater,
-            averageScore_lesser: $averageScore_lesser, averageScore_greater: $averageScore_greater,
+            weightedScore_lesser: $weightedScore_lesser, weightedScore_greater: $weightedScore_greater,
             startDate_greater: $startDateGreater, startDate_lesser: $startDateLesser, onList: $onList,
             isLicensed: $isLicensed, isAdult: $isAdult, countryOfOrigin: $country, source_in: $source_in
         ) {
             ...BasicMediaDetails
-            averageScore
+            weightedScore
             format
             coverImage {
                 large

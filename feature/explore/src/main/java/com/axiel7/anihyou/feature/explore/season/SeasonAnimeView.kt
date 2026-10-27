@@ -241,7 +241,7 @@ private fun SeasonalGrid(
                 blurImage = blurAdult && item.basicMediaDetails.isAdult == true,
                 modifier = Modifier.wrapContentWidth(),
                 subtitle = {
-                    item.averageScore?.let { score ->
+                    item.weightedScore?.let { score ->
                         SmallScoreIndicator(score = score)
                     }
                 },
@@ -286,7 +286,7 @@ private fun SeasonalList(
                 episodes = item.basicMediaDetails.episodes,
                 chapters = item.basicMediaDetails.chapters,
                 duration = item.basicMediaDetails.duration,
-                score = item.averageScore,
+                score = item.weightedScore,
                 format = item.basicMediaDetails.format,
                 year = null,
                 genres = item.genres?.filterNotNull()?.toImmutableList(),

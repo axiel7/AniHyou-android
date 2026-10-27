@@ -60,8 +60,8 @@ class MediaApi(
         chaptersGreater: Int?,
         volumesLesser: Int?,
         volumesGreater: Int?,
-        averageScoreLesser: Int?,
-        averageScoreGreater: Int?,
+        weightedScoreLesser: Int?,
+        weightedScoreGreater: Int?,
         startYear: Int?,
         endYear: Int?,
         season: MediaSeason?,
@@ -101,8 +101,8 @@ class MediaApi(
                 chapters_greater = Optional.presentIfNotNull(chaptersGreater),
                 volumes_lesser = Optional.presentIfNotNull(volumesLesser),
                 volumes_greater = Optional.presentIfNotNull(volumesGreater),
-                averageScore_lesser = Optional.presentIfNotNull(averageScoreLesser),
-                averageScore_greater = Optional.presentIfNotNull(averageScoreGreater),
+                weightedScore_lesser = Optional.presentIfNotNull(weightedScoreLesser),
+                weightedScore_greater = Optional.presentIfNotNull(weightedScoreGreater),
                 startDateGreater = if (startYear != null)
                 // Unknown dates represented by 0. E.g. 2016: 20160000
                     Optional.present(startYear * 10000)
