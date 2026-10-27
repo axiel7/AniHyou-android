@@ -87,7 +87,6 @@
     <string name="not_yet_released">Ще не випущено</string>
     <string name="cancelled">Скасовано</string>
     <string name="hiatus">Перерва</string>
-    <string name="average_score">Середня оцінка</string>
     <string name="popularity">Популярне</string>
     <string name="favorites">Обране</string>
     <string name="episode_in_time">Еп %d за %s</string>
