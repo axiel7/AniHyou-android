@@ -86,7 +86,6 @@
     <string name="not_yet_released">Еще не выпущено</string>
     <string name="cancelled">Отменено</string>
     <string name="hiatus">Пауза на неопределенный срок</string>
-    <string name="average_score">Средний счет</string>
     <string name="popularity">Популярность</string>
     <string name="favorites">Избранное</string>
     <string name="episode_in_time">Эп %d через %s</string>

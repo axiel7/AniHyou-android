@@ -74,7 +74,6 @@
     <string name="not_yet_released">Pas encore diffusé</string>
     <string name="cancelled">Annulé</string>
     <string name="hiatus">En pause</string>
-    <string name="average_score">Note moyenne</string>
     <string name="popularity">Popularité</string>
     <string name="favorites">Favoris</string>
     <string name="episode_in_time">Épisode %d dans %s</string>

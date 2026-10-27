@@ -75,7 +75,6 @@
     <string name="not_yet_released">Sin publicarse</string>
     <string name="cancelled">Cancelado</string>
     <string name="hiatus">Hiatus</string>
-    <string name="average_score">Nota ponderada</string>
     <string name="popularity">Popularidad</string>
     <string name="favorites">Favoritos</string>
     <string name="episode_in_time">Ep %d en %s</string>

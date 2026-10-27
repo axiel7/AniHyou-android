@@ -68,7 +68,6 @@
     <string name="not_yet_released">未発表</string>
     <string name="cancelled">中止</string>
     <string name="hiatus">中断</string>
-    <string name="average_score">平均スコア</string>
     <string name="popularity">人気</string>
     <string name="favorites">お気に入り</string>
     <string name="episode_in_time">第%d話は%s後</string>

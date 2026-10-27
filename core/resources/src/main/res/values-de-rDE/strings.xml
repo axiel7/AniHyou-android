@@ -75,7 +75,6 @@
     <string name="not_yet_released">Noch nicht veröffentlicht</string>
     <string name="cancelled">Abgesagt</string>
     <string name="hiatus">Hiatus</string>
-    <string name="average_score">Durchschnittliche Bewertung</string>
     <string name="popularity">Beliebtheit</string>
     <string name="favorites">Favoriten</string>
     <string name="episode_in_time">Ep %d in %s</string>
