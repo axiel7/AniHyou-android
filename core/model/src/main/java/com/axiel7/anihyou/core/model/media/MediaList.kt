@@ -88,6 +88,7 @@ val exampleCommonMediaListEntry = CommonMediaListEntry(
             __typename = "",
             episode = 3,
             timeUntilAiring = 1203239,
+            airingAt = 1793345517,
             id = 0,
         ),
         status = MediaStatus.RELEASING,

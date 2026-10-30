@@ -57,6 +57,7 @@ fragment CommonMediaListEntry on MediaList {
         nextAiringEpisode {
             episode
             timeUntilAiring
+            airingAt
         }
         status
         title {
