@@ -68,6 +68,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.common.utils.DateUtils
+import com.axiel7.anihyou.core.model.ListStyle
 import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.media.CountryOfOrigin
 import com.axiel7.anihyou.core.model.media.MediaFormatLocalizable
@@ -134,10 +135,13 @@ private fun UserMediaListHostContent(
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
     val snackbarManager = rememberSnackbarManager(scope)
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    val isGrid = uiState.listStyle == ListStyle.GRID || !isCompactScreen
     val listState = rememberLazyListState()
     val gridState = rememberLazyGridState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val isScrollingUp by rememberIsScrollingUp(listState = listState, gridState = gridState)
+    val isScrollingUp by if (isGrid) gridState.rememberIsScrollingUp()
+    else listState.rememberIsScrollingUp()
 
     val bottomBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -225,8 +229,8 @@ private fun UserMediaListHostContent(
                 showListsSheet = { showListsSheet = true },
                 scrollToTop = {
                     scope.launch {
-                        listState.animateScrollToItem(0)
-                        gridState.animateScrollToItem(0)
+                        if (isGrid) gridState.animateScrollToItem(0)
+                        else listState.animateScrollToItem(0)
                     }
                 }
             )
@@ -245,9 +249,13 @@ private fun UserMediaListHostContent(
                     else padding.calculateBottomPadding()
                 )
         ) {
-            val isScrolled by remember {
+            val isScrolled by remember(isGrid) {
                 derivedStateOf {
-                    listState.firstVisibleItemIndex > 1 || listState.firstVisibleItemScrollOffset > 1
+                    if (isGrid) {
+                        gridState.firstVisibleItemIndex > 1 || gridState.firstVisibleItemScrollOffset > 1
+                    } else {
+                        listState.firstVisibleItemIndex > 1 || listState.firstVisibleItemScrollOffset > 1
+                    }
                 }
             }
 
