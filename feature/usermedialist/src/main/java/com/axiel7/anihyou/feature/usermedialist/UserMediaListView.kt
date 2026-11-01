@@ -274,6 +274,7 @@ private fun MediaListView(
             event = event,
             allPriorityColors = allPriorityColors,
             modifier = modifier,
+            contentPadding = contentPadding,
             navActionManager = navActionManager,
             onShowEditSheet = onShowEditSheet,
             listState = lazyGridState,
@@ -317,6 +318,7 @@ private fun LazyListGrid(
     event: UserMediaListEvent?,
     allPriorityColors: AllPriorityColors,
     modifier: Modifier,
+    contentPadding: PaddingValues,
     navActionManager: NavActionManager,
     onShowEditSheet: (CommonMediaListEntry) -> Unit,
     listState: LazyGridState,
@@ -329,7 +331,7 @@ private fun LazyListGrid(
         else GridCells.Adaptive(minSize = (MEDIA_POSTER_MEDIUM_WIDTH + 8).dp),
         modifier = modifier,
         state = listState,
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp) + navPadding,
+        contentPadding = contentPadding + navPadding,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
