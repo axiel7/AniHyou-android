@@ -471,7 +471,7 @@ private fun MediaDetailsContent(
                 }
                 TextSubtitleVertical(
                     text = "${uiState.details?.weightedScore?.format().orUnknown()}%",
-                    subtitle = stringResource(R.string.average_score),
+                    subtitle = stringResource(R.string.weighted_score),
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
                         .clickable(enabled = hideScores) { showScores = !showScores }
