@@ -58,7 +58,7 @@ corePerfromance = "1.0.0"
 immutable = "0.5.2"
 stabilityAnalyzer = "0.15.0"
 room = "3.0.3"
-ksp = "2.3.12"
+ksp = "2.3.13"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
