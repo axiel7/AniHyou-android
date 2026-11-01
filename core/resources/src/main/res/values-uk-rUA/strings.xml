@@ -87,7 +87,7 @@
     <string name="not_yet_released">Ще не випущено</string>
     <string name="cancelled">Скасовано</string>
     <string name="hiatus">Перерва</string>
-    <string name="average_score">Середня оцінка</string>
+    <string name="weighted_score">Зважена оцінка</string>
     <string name="popularity">Популярне</string>
     <string name="favorites">Обране</string>
     <string name="episode_in_time">Еп %d за %s</string>
@@ -709,4 +709,7 @@
     <string name="allow_start_notification">Дозволити сповіщення про початок</string>
     <string name="allow_airing_notification">Дозволити сповіщення про вихід епізодів</string>
     <string name="allow_end_notification">Дозволити сповіщення про завершення</string>
+    <string name="saved_filters">Збережені фільтри</string>
+    <string name="filter_name">Назва фільтру</string>
+    <string name="save_current_filters">Зберегти поточні фільтри</string>
 </resources>

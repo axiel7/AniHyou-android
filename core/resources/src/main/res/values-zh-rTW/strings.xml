@@ -68,7 +68,6 @@
     <string name="not_yet_released">尚未放鬆</string>
     <string name="cancelled">已取消</string>
     <string name="hiatus">停止更新</string>
-    <string name="average_score">加權平均評分</string>
     <string name="popularity">人氣</string>
     <string name="favorites">收藏</string>
     <string name="episode_in_time">第%d集在%s后播出</string>

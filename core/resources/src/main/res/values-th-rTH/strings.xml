@@ -68,7 +68,6 @@
     <string name="not_yet_released">ยังไม่ออกอากาศ</string>
     <string name="cancelled">ยกเลิก</string>
     <string name="hiatus">หยุดชั่วคราว</string>
-    <string name="average_score">คะแนนเฉลี่ย</string>
     <string name="popularity">ความนิยม</string>
     <string name="favorites">รายการโปรด</string>
     <string name="episode_in_time">ตอนที่ %d ในอีก %s</string>

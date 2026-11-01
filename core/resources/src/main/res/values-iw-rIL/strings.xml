@@ -47,7 +47,6 @@
     <string name="not_yet_released">עדיין לא יצא לאור</string>
     <string name="cancelled">בוטל</string>
     <string name="hiatus">הפסקה</string>
-    <string name="average_score">דירוג ממוצע</string>
     <string name="popularity">פופולריות</string>
     <string name="favorites">מועדפים</string>
     <string name="episode_in_time">פרק %d בעוד- %s</string>
