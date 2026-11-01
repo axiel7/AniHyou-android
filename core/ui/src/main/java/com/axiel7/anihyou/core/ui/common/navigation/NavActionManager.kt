@@ -142,7 +142,7 @@ class NavActionManager(
         )
     }
 
-    fun toNotifications(unread: Int = 0) {
+    fun toNotifications(unread: Int? = null) {
         navigator.navigate(Route.Notifications(unread))
     }
 

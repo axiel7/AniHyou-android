@@ -5,12 +5,14 @@ import com.axiel7.anihyou.core.base.PagedResult
 import com.axiel7.anihyou.core.base.extensions.indexOfFirstOrNull
 import com.axiel7.anihyou.core.common.viewmodel.PagedUiStateViewModel
 import com.axiel7.anihyou.core.domain.repository.NotificationRepository
+import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.notification.GenericNotification
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,7 +22,8 @@ import org.koin.core.annotation.InjectedParam
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationsViewModel(
     @InjectedParam arguments: Route.Notifications,
-    private val notificationRepository: NotificationRepository,
+    notificationRepository: NotificationRepository,
+    userRepository: UserRepository,
 ) : PagedUiStateViewModel<NotificationsUiState>(), NotificationsEvent {
 
     override val initialState = NotificationsUiState()
@@ -54,10 +57,14 @@ class NotificationsViewModel(
                         && !new.fetchFromNetwork
             }
             .flatMapLatest { uiState ->
+                val initialUnreadCount = if (arguments.unreadCount == null) {
+                    userRepository.getUnreadNotificationCount().first() ?: 0
+                } else arguments.unreadCount ?: 0
+
                 notificationRepository.getNotificationsPage(
                     type = uiState.type,
                     resetCount = resetCount,
-                    initialUnreadCount = arguments.unreadCount,
+                    initialUnreadCount = initialUnreadCount,
                     fetchFromNetwork = uiState.fetchFromNetwork,
                     page = uiState.page
                 ).also {

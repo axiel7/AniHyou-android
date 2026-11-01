@@ -62,7 +62,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     @Immutable
-    data class Notifications(val unreadCount: Int = 0): Route
+    data class Notifications(val unreadCount: Int?): Route
 
     @Serializable
     @Immutable

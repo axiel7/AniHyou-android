@@ -71,9 +71,11 @@ fun MainBottomNavBar(
                     onClick = {
                         if (isSelected) {
                             when (dest) {
-                                BottomDestination.Explore -> {
-                                    navActionManager.toSearch()
-                                }
+                                BottomDestination.Home -> navActionManager.toNotifications()
+
+                                BottomDestination.Profile -> navActionManager.toSettings()
+
+                                BottomDestination.Explore -> navActionManager.toSearch()
 
                                 else -> {}
                             }
