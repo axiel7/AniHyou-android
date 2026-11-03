@@ -70,6 +70,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openActionView
 import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
@@ -701,8 +702,16 @@ private fun CustomLinksButton(
     var titleSheetExpanded by remember { mutableStateOf(false) }
     var selectedLink by remember { mutableStateOf<CustomLink?>(null) }
 
-    fun openSite(link: CustomLink, title: String) {
-        val finalLink = link.mediaLink(title)
+    fun openSite(link: CustomLink, chosenTitle: String? = null) {
+        val details = uiState.details
+        val finalLink = link.mediaLink(
+            title = chosenTitle,
+            romaji = details?.title?.romaji,
+            english = details?.title?.english,
+            native = details?.title?.native,
+            mediaId = details?.id,
+        )
+
         if (link.isIntent) {
             runCatching {
                 context.startActivity(Intent.parseUri(finalLink, 0))
@@ -720,13 +729,21 @@ private fun CustomLinksButton(
             DropdownMenuItem(
                 text = { Text(text = item.name) },
                 onClick = {
-                    item.titleLanguage?.let { lang ->
-                        uiState.findTitle(lang)?.let { title ->
-                            openSite(item, title)
+                    val needsSelection = item.uri.contains(CUSTOM_URL_NAME_PLACEHOLDER)
+
+                    if (needsSelection) {
+                        val autoTitle = item.titleLanguage?.let { lang ->
+                            uiState.findTitle(lang)
                         }
-                    } ?: run {
-                        selectedLink = item
-                        titleSheetExpanded = true
+
+                        if (autoTitle != null) {
+                            openSite(item, autoTitle)
+                        } else {
+                            selectedLink = item
+                            titleSheetExpanded = true
+                        }
+                    } else {
+                        openSite(item, null)
                     }
                     onDismiss()
                 },
@@ -746,6 +763,8 @@ private fun CustomLinksButton(
                 bottomPadding = WindowInsets.navigationBars.asPaddingValues()
                     .calculateBottomPadding(),
             ) {
+                var synonymsExpanded by remember { mutableStateOf(false) }
+
                 uiState.details?.title?.romaji?.let { title ->
                     SelectionSheetItem(
                         name = title,
@@ -763,6 +782,29 @@ private fun CustomLinksButton(
                         name = title,
                         onClick = { openSite(selectedLink, title) }
                     )
+                }
+                val synonyms = uiState.details?.synonyms?.filterNotNull() ?: emptyList()
+                if (synonyms.isNotEmpty()) {
+                    SelectionSheetItem(
+                        name = stringResource(R.string.synonyms) + " (${synonyms.size})",
+                        icon = if(synonymsExpanded) R.drawable.expand_more_24 else R.drawable.expand_less_24,
+                        onClick = { synonymsExpanded = !synonymsExpanded },
+                    )
+
+                    AnimatedVisibility(visible = synonymsExpanded) {
+                        Column {
+                            synonyms.forEach { title ->
+                                SelectionSheetItem(
+                                    name = title,
+                                    onClick = {
+                                        openSite(selectedLink, title)
+                                        titleSheetExpanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                 }
             }
         }

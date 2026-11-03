@@ -43,5 +43,9 @@ const val CROWDIN_URL = "https://crowdin.com/project/anihyou"
 
 const val UNKNOWN_CHAR = "─"
 const val CUSTOM_URL_NAME_PLACEHOLDER = "{name}"
+const val CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER = "{romaji}"
+const val CUSTOM_URL_NATIVE_NAME_PLACEHOLDER = "{native}"
+const val CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER = "{english}"
+const val CUSTOM_URL_ID_PLACEHOLDER = "{id}"
 
 const val UTF_8 = "UTF-8"
