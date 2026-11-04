@@ -70,7 +70,6 @@ fun CustomLinkDialog(
 ) {
     val linkVariables = listOf(
         CUSTOM_URL_NAME_PLACEHOLDER,
-        CUSTOM_URL_NAME_PLACEHOLDER,
         CUSTOM_URL_NATIVE_NAME_PLACEHOLDER,
         CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER,
         CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER,
@@ -168,7 +167,6 @@ fun CustomLinkDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     linkVariables.fastForEach { variable ->
-
                         FilterChip(
                             selected = false,
                             onClick = {

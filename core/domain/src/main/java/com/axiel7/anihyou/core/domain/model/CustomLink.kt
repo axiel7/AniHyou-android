@@ -30,10 +30,10 @@ data class CustomLink(
         native: String? = null,
         mediaId: Int? = null,
     ): String {
-        val formattedTitle = title?.replace(' ', spaceSeparator) ?: ""
-        val formattedRomaji = romaji?.replace(' ', spaceSeparator) ?: ""
-        val formattedEnglish = english?.replace(' ', spaceSeparator) ?: ""
-        val formattedNative = native?.replace(' ', spaceSeparator) ?: ""
+        val formattedTitle = title?.replace(' ', spaceSeparator).orEmpty()
+        val formattedRomaji = romaji?.replace(' ', spaceSeparator).orEmpty()
+        val formattedEnglish = english?.replace(' ', spaceSeparator).orEmpty()
+        val formattedNative = native?.replace(' ', spaceSeparator).orEmpty()
         val idString = mediaId?.toString() ?: "0"
 
         return uri
