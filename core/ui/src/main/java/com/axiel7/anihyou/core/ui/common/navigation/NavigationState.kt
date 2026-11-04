@@ -42,7 +42,8 @@ import androidx.savedstate.compose.serialization.serializers.MutableStateSeriali
 @Composable
 fun rememberNavigationState(
     startRoute: Route,
-    topLevelRoutes: Set<Route>
+    topLevelRoutes: Set<Route>,
+    deepLinkRoute: Route? = null
 ): NavigationState {
 
     val topLevelRoute = rememberSerializable(
@@ -53,7 +54,14 @@ fun rememberNavigationState(
     }
 
     // Create a back stack for each top level route.
-    val backStacks = topLevelRoutes.associateWith { key -> rememberNavBackStack(key) }
+    val backStacks = topLevelRoutes.associateWith { key ->
+        val stack = rememberNavBackStack(key)
+        if (deepLinkRoute != null && key == startRoute) {
+            stack.clear()
+            stack.add(deepLinkRoute)
+        }
+        stack
+    }
 
     return remember(startRoute, topLevelRoutes) {
         NavigationState(
