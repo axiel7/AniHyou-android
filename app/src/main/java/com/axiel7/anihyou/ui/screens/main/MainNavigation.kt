@@ -114,7 +114,6 @@ fun MainNavigation(
         targetValue = padding.calculateBottomPadding(),
         label = "bottom_bar_padding"
     )
-
     var spoilerText by remember { mutableStateOf<String?>(null) }
     val markdownUriHandler = remember {
         MarkdownUriHandler(
@@ -132,46 +131,7 @@ fun MainNavigation(
     }
 
 
-    LaunchedEffect(deepLink) {
-        if (deepLink != null) {
-            when (deepLink.type) {
-                DeepLink.Type.ANIME, DeepLink.Type.MANGA -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toMediaDetails(it) }
-                }
 
-                DeepLink.Type.USER -> {
-                    navActionManager.toUserDetails(
-                        userId = deepLink.id.toIntOrNull(),
-                        username = deepLink.id
-                    )
-                }
-
-                DeepLink.Type.SEARCH -> navActionManager.toSearch()
-
-                DeepLink.Type.CHARACTER -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toCharacterDetails(it) }
-                }
-
-                DeepLink.Type.STAFF -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toStaffDetails(it) }
-                }
-
-                DeepLink.Type.STUDIO -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toStudioDetails(it) }
-                }
-
-                DeepLink.Type.THREAD -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toThreadDetails(it) }
-                }
-
-                DeepLink.Type.ACTIVITY -> {
-                    deepLink.id.toIntOrNull()?.let { navActionManager.toActivityDetails(it) }
-                }
-
-                DeepLink.Type.CALENDAR -> navActionManager.toCalendar()
-            }
-        }
-    }
 
     val entryProvider = entryProvider<NavKey> {
         entry<Route.Home>(

@@ -25,10 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.navigation.Route.FullScreenImage
-import com.axiel7.anihyou.core.common.utils.ContextUtils.openShareSheet
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
+import com.axiel7.anihyou.core.ui.utils.downloadImage
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 
@@ -77,6 +78,15 @@ fun FullScreenImageView(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            FilledTonalIconButton(
+                onClick = { context.downloadImage(arguments.imageUrl.orEmpty()) },
+                shapes = IconButtonDefaults.shapes()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.save_24),
+                    contentDescription = stringResource(R.string.save)
+                )
+            }
             FilledTonalIconButton(
                 onClick = { context.openShareSheet(arguments.imageUrl.orEmpty()) },
                 shapes = IconButtonDefaults.shapes()

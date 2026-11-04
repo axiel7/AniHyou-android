@@ -59,6 +59,7 @@ import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.common.LocalScoreFormat
 import com.axiel7.anihyou.core.ui.common.navigation.NavActionManager
 import com.axiel7.anihyou.core.ui.common.navigation.Navigator
+import com.axiel7.anihyou.core.ui.common.navigation.Route
 import com.axiel7.anihyou.core.ui.common.navigation.rememberNavigationState
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import com.axiel7.anihyou.ui.screens.main.composables.MainBottomNavBar
@@ -245,10 +246,27 @@ fun MainView(
     paletteStyle: PaletteStyle,
     setNavigationBarContrastEnforced: (Boolean) -> Unit,
 ) {
+    val deepLinkRoute = remember(deepLink) {
+        deepLink?.let {
+            val intId = it.id.toIntOrNull()
+            when (it.type) {
+                DeepLink.Type.ANIME, DeepLink.Type.MANGA -> intId?.let { id -> Route.MediaDetails(id) }
+                DeepLink.Type.CHARACTER -> intId?.let { id -> Route.CharacterDetails(id) }
+                DeepLink.Type.STAFF -> intId?.let { id -> Route.StaffDetails(id) }
+                DeepLink.Type.STUDIO -> intId?.let { id -> Route.StudioDetails(id) }
+                DeepLink.Type.USER -> Route.UserDetails(intId, it.id)
+                DeepLink.Type.SEARCH -> Route.Search()
+                DeepLink.Type.THREAD -> intId?.let { id -> Route.ThreadDetails(id) }
+                DeepLink.Type.ACTIVITY -> intId?.let { id -> Route.ActivityDetails(id) }
+                DeepLink.Type.CALENDAR -> Route.Calendar
+            }
+        }
+    }
     val startKey = remember(tabToOpen) {
         tabToOpen.toBottomDestinationRoute() ?: BottomDestination.Home.route
     }
-    val navigationState = rememberNavigationState(startKey, BottomDestination.routes)
+
+    val navigationState = rememberNavigationState(startKey, BottomDestination.routes, deepLinkRoute)
     val navigator = remember { Navigator(navigationState) }
     val isBottomDestination by remember {
         derivedStateOf { navigationState.getCurrentRoute()?.isBottomDestination() == true }
