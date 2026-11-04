@@ -620,4 +620,5 @@
     <string name="app_installed_required">ไม่พบอุปกรณ์ใกล้เคียง โปรดติดตั้งแอป AniHyou เวอร์ชันล่าสุด</string>
     <string name="translator_app">ผู้แปลภาษา</string>
     <string name="general">ทั่วไป</string>
+    <string name="image_download_title">รูปภาพ</string>
 </resources>

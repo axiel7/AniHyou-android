@@ -376,4 +376,5 @@
     </plurals>
     <string name="priority">優先</string>
     <string name="general">一般</string>
+    <string name="image_download_title">画像</string>
 </resources>

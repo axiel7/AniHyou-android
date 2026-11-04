@@ -641,4 +641,5 @@
     <string name="translator_app">Traducător</string>
     <string name="priority">Prioritate</string>
     <string name="general">General</string>
+    <string name="image_download_title">Imagine</string>
 </resources>

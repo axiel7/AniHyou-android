@@ -692,4 +692,5 @@
     <string name="saved_filters">Kayıtlı filtreler</string>
     <string name="filter_name">Filtre adı</string>
     <string name="save_current_filters">Mevcut filtreyi kaydet</string>
+    <string name="image_download_title">Görsel</string>
 </resources>
