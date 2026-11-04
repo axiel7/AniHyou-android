@@ -708,4 +708,6 @@
     <string name="saved_filters">Saved filters</string>
     <string name="filter_name">Filter name</string>
     <string name="save_current_filters">Save current filters</string>
+    <string name="image_downloading">Downloading image…</string>
+    <string name="image_download_title">Image</string>
 </resources>
