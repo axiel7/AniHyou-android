@@ -627,4 +627,5 @@
     <string name="priority_medium">Sedang</string>
     <string name="priority_high">Tinggi</string>
     <string name="general">Umum</string>
+    <string name="image_download_title">Gambar</string>
 </resources>

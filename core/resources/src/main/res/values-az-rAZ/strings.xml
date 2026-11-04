@@ -353,4 +353,5 @@
     </plurals>
     <string name="priority">Prioritet</string>
     <string name="general">Ümumi</string>
+    <string name="image_download_title">Təsvir</string>
 </resources>

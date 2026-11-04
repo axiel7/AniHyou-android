@@ -482,4 +482,5 @@
     <string name="colored_media_desc">تغيير لون التطبيق على أساس لون صورة الوسائط</string>
     <string name="custom_links">روابط مخصصة</string>
     <string name="space_separator">فاصل الفراغ</string>
+    <string name="image_download_title">الصورة</string>
 </resources>

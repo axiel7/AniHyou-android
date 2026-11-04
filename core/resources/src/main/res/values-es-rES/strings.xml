@@ -692,4 +692,5 @@
     <string name="saved_filters">Filtros guardados</string>
     <string name="filter_name">Nombre del filtro</string>
     <string name="save_current_filters">Guardar filtros actuales</string>
+    <string name="image_download_title">Imagen</string>
 </resources>

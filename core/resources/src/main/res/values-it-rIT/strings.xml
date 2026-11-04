@@ -630,4 +630,5 @@
     <string name="notification_media_changed">%s ha ricevuto modifiche ai dati dal sito</string>
     <string name="notification_media_deleted">%s è stato rimosso dal sito</string>
     <string name="notification_forum_mention">%1$s ti ha menzionato, nella discussione del forum %2$s</string>
+    <string name="image_download_title">Immagine</string>
 </resources>

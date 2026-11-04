@@ -677,4 +677,5 @@
     <string name="allow_start_notification">允许开播通知</string>
     <string name="allow_airing_notification">允许正在播出通知</string>
     <string name="allow_end_notification">允许播出结束通知</string>
+    <string name="image_download_title">图片</string>
 </resources>
