@@ -83,7 +83,7 @@ fun FullScreenImageView(
                 shapes = IconButtonDefaults.shapes()
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.arrow_downward_24),
+                    painter = painterResource(R.drawable.save_24),
                     contentDescription = stringResource(R.string.save)
                 )
             }
