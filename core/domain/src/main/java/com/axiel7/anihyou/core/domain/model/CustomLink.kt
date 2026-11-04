@@ -3,7 +3,11 @@ package com.axiel7.anihyou.core.domain.model
 import android.content.Intent
 import androidx.compose.runtime.Stable
 import androidx.core.net.toUri
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ID_PLACEHOLDER
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_NATIVE_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.database.customlinks.CustomLinkEntity
 import com.axiel7.anihyou.core.network.type.MediaType
 import com.axiel7.anihyou.core.network.type.UserTitleLanguage
@@ -19,10 +23,28 @@ data class CustomLink(
 ) {
     val isIntent = uri.startsWith("intent:")
 
-    fun mediaLink(title: String) = uri.replace(
-        CUSTOM_URL_NAME_PLACEHOLDER,
-        title.replace(' ', spaceSeparator)
-    )
+    fun mediaLink(
+        title: String? = null,
+        romaji: String? = null,
+        english: String? = null,
+        native: String? = null,
+        mediaId: Int? = null,
+    ): String {
+        val formattedTitle = title?.replace(' ', spaceSeparator).orEmpty()
+        val formattedRomaji = romaji?.replace(' ', spaceSeparator).orEmpty()
+        val formattedEnglish = english?.replace(' ', spaceSeparator).orEmpty()
+        val formattedNative = native?.replace(' ', spaceSeparator).orEmpty()
+        val idString = mediaId?.toString() ?: "0"
+
+        return uri
+            .replace(CUSTOM_URL_NAME_PLACEHOLDER, formattedTitle)
+            .replace(CUSTOM_URL_NATIVE_NAME_PLACEHOLDER, formattedNative)
+            .replace(CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER, formattedRomaji)
+            .replace(CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER, formattedEnglish)
+            .replace(CUSTOM_URL_ID_PLACEHOLDER, idString)
+    }
+
+    fun mediaLink(title: String) = mediaLink(title, mediaId = 0)
 
     fun toEntity() = CustomLinkEntity(
         id = id,

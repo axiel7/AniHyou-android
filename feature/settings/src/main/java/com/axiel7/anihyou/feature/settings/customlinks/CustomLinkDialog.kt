@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.insert
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.material3.AlertDialog
@@ -34,13 +36,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.core.net.toUri
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ID_PLACEHOLDER
 import com.axiel7.anihyou.core.base.CUSTOM_URL_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_NATIVE_NAME_PLACEHOLDER
+import com.axiel7.anihyou.core.base.CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER
 import com.axiel7.anihyou.core.domain.model.CustomLink
 import com.axiel7.anihyou.core.model.media.localized
-import com.axiel7.anihyou.core.model.user.preferenceValues
-import com.axiel7.anihyou.core.model.user.stringRes
 import com.axiel7.anihyou.core.network.type.MediaType
-import com.axiel7.anihyou.core.network.type.UserTitleLanguage
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -65,6 +68,14 @@ fun CustomLinkDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val linkVariables = listOf(
+        CUSTOM_URL_NAME_PLACEHOLDER,
+        CUSTOM_URL_NATIVE_NAME_PLACEHOLDER,
+        CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER,
+        CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER,
+        CUSTOM_URL_ID_PLACEHOLDER,
+    )
+
     var selectedSeparator by remember(value) {
         mutableStateOf(
             value?.spaceSeparator?.let(SpaceSeparator::findValue) ?: SpaceSeparator.Percent
@@ -80,7 +91,12 @@ fun CustomLinkDialog(
 
     LaunchedEffect(urlFieldState) {
         snapshotFlow { urlFieldState.text.toString() }.collectLatest { url ->
-            urlHasPlaceholder = url.contains(CUSTOM_URL_NAME_PLACEHOLDER)
+            urlHasPlaceholder = url.contains(CUSTOM_URL_NAME_PLACEHOLDER) ||
+                    url.contains(CUSTOM_URL_ROMAJI_NAME_PLACEHOLDER) ||
+                    url.contains(CUSTOM_URL_ENGLISH_NAME_PLACEHOLDER) ||
+                    url.contains(CUSTOM_URL_NATIVE_NAME_PLACEHOLDER) ||
+                    url.contains(CUSTOM_URL_ID_PLACEHOLDER)
+
             if (urlHasPlaceholder && linkNameState.text.isBlank()) {
                 linkNameState.setTextAndSelectAll(CustomLink.extractNameFromUrl(url))
             }
@@ -145,20 +161,22 @@ fun CustomLinkDialog(
                     }
                 }
 
-                Text(text = stringResource(R.string.title_language))
+                Text(text = stringResource(R.string.variables))
 
-                Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    UserTitleLanguage.preferenceValues().forEach { lang ->
-                        val selected = selectedTitleLanguage == lang
+                    linkVariables.fastForEach { variable ->
                         FilterChip(
-                            selected = selected,
+                            selected = false,
                             onClick = {
-                                selectedTitleLanguage = if (selected) null else lang
+                                val selection = urlFieldState.selection
+                                val insertionIndex = selection.start.coerceAtLeast(0)
+                                urlFieldState.edit {
+                                    insert(insertionIndex, variable)
+                                }
                             },
-                            label = { Text(text = stringResource(lang.stringRes())) },
+                            label = { Text(text = variable) }
                         )
                     }
                 }
