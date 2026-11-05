@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.text.TextAutoSizeDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -261,8 +264,10 @@ private fun MainProfileInfo(
                 Text(
                     text = uiState.userInfo?.name ?: "Loading",
                     modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading),
+                    autoSize = TextAutoSize.StepBased(maxFontSize = 22.sp),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
                 )
                 uiState.userInfo?.donatorTier?.let { donatorTier ->
                     if (donatorTier > 1) {
