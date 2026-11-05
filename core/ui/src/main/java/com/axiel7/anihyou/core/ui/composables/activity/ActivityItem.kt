@@ -48,6 +48,7 @@ fun ActivityItem(
     replyCount: Int,
     likeCount: Int,
     isLiked: Boolean?,
+    isMine: Boolean,
     modifier: Modifier = Modifier,
     blurImage: Boolean = false,
     imageUrl: String? = null,
@@ -136,10 +137,12 @@ fun ActivityItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ActivityMenu(
-                    modifier = Modifier.align(Alignment.Top),
-                    onClickDelete = onClickDelete
-                )
+                if (isMine) {
+                    ActivityMenu(
+                        modifier = Modifier.align(Alignment.Top),
+                        onClickDelete = onClickDelete
+                    )
+                }
                 CommentIconButton(
                     modifier = Modifier.width(78.dp),
                     commentCount = replyCount,
@@ -238,6 +241,7 @@ private fun ActivityItemPreview() {
                     replyCount = 999,
                     likeCount = 999,
                     isLiked = false,
+                    isMine = true,
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
                     onClick = {},
@@ -251,6 +255,7 @@ private fun ActivityItemPreview() {
                     replyCount = 999,
                     likeCount = 999,
                     isLiked = false,
+                    isMine = false,
                     username = "thisisaverylongusername",
                     modifier = Modifier.padding(8.dp),
                     onClick = {},

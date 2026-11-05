@@ -84,6 +84,7 @@ fun UserActivityView(
                         replyCount = activity.replyCount,
                         likeCount = activity.likeCount,
                         isLiked = activity.isLiked,
+                        isMine = uiState.isMyProfile,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
@@ -113,6 +114,7 @@ fun UserActivityView(
                         replyCount = activity.replyCount,
                         likeCount = activity.likeCount,
                         isLiked = activity.isLiked,
+                        isMine = uiState.isMyProfile,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
@@ -142,6 +144,7 @@ fun UserActivityView(
                         replyCount = activity.replyCount,
                         likeCount = activity.likeCount,
                         isLiked = activity.isLiked,
+                        isMine = uiState.isMyProfile,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
