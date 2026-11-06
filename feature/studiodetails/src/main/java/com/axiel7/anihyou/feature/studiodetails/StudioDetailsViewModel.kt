@@ -60,6 +60,17 @@ class StudioDetailsViewModel(
         }
     }
 
+    override fun onLoadMore() {
+        // first page is loaded by the details query, load next manually
+        if (uiState.value.details?.media?.pageInfo?.commonPage?.hasNextPage == true
+            && uiState.value.page == 1
+        ) {
+            mutableUiState.update { it.copy(hasNextPage = true, page = 2) }
+        } else {
+            super.onLoadMore()
+        }
+    }
+
     init {
         // studio details
         // it also gets the first media page in this query to avoid two consecutive api calls
@@ -73,8 +84,8 @@ class StudioDetailsViewModel(
                         uiState.copy(
                             isLoading = false,
                             details = result.data,
-                            hasNextPage = result.data?.media?.pageInfo?.commonPage?.hasNextPage == true,
-                            //page = data?.media?.pageInfo?.commonPage?.currentPage ?: it.page
+                            hasNextPage = false,
+                            page = 1,
                         )
                     } else {
                         result.toUiState()
