@@ -9,6 +9,7 @@ import com.axiel7.anihyou.core.domain.repository.DefaultPreferencesRepository
 import com.axiel7.anihyou.core.domain.repository.LikeRepository
 import com.axiel7.anihyou.core.domain.repository.UserRepository
 import com.axiel7.anihyou.core.model.activity.updateLikeStatus
+import com.axiel7.anihyou.core.network.type.ActivityType
 import com.axiel7.anihyou.core.ui.common.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -101,21 +102,25 @@ class ProfileViewModel(
         }
     }
 
-    override fun toggleLikeActivity(id: Int) {
+    override fun toggleLikeActivity(id: Int, type: ActivityType) {
         viewModelScope.launch {
-            likeRepository.toggleListActivityLike(id).let { result ->
-                if (result is DataResult.Success && result.data != null) {
+            likeRepository.toggleActivityLike(id, type).let { result ->
+                if (result is DataResult.Success) {
                     mutableUiState.value.run {
                         findActivityIndex(id)?.let { foundIndex ->
                             val oldItem = activities[foundIndex]
                             activities[foundIndex] = oldItem.copy(
                                 onTextActivity = oldItem.onTextActivity?.copy(
                                     textActivityFragment = oldItem.onTextActivity!!.textActivityFragment
-                                        .updateLikeStatus(result.data?.isLiked == true)
+                                        .updateLikeStatus(result.data)
                                 ),
                                 onListActivity = oldItem.onListActivity?.copy(
                                     listActivityFragment = oldItem.onListActivity!!.listActivityFragment
-                                        .updateLikeStatus(result.data?.isLiked == true)
+                                        .updateLikeStatus(result.data)
+                                ),
+                                onMessageActivity = oldItem.onMessageActivity?.copy(
+                                    messageActivityFragment = oldItem.onMessageActivity!!.messageActivityFragment
+                                        .updateLikeStatus(result.data)
                                 )
                             )
                         }

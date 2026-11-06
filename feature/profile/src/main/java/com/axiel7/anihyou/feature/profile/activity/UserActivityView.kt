@@ -98,7 +98,7 @@ fun UserActivityView(
                             activity.media?.id?.let(navActionManager::toMediaDetails)
                         },
                         onClickLike = {
-                            event?.toggleLikeActivity(activity.id)
+                            event?.toggleLikeActivity(activity.id, ActivityType.MEDIA_LIST)
                         },
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
@@ -128,7 +128,7 @@ fun UserActivityView(
                             activity.userId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            event?.toggleLikeActivity(activity.id)
+                            event?.toggleLikeActivity(activity.id, ActivityType.TEXT)
                         },
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
@@ -159,7 +159,7 @@ fun UserActivityView(
                             activity.messengerId?.let(navActionManager::toUserDetails)
                         },
                         onClickLike = {
-                            event?.toggleLikeActivity(activity.id)
+                            event?.toggleLikeActivity(activity.id, ActivityType.MESSAGE)
                         },
                         onClickDelete = {
                             event?.deleteActivity(activity.id)
