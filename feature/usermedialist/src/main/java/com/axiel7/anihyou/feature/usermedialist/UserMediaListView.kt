@@ -189,63 +189,59 @@ private fun TabbedView(
         }
     }
 
-    val combinedHeader: @Composable () -> Unit = {
-        Column {
-            stickyHeaderContent()
-            PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex,
-                modifier = Modifier.padding(bottom = 8.dp)
-            ) {
-                NovelTab.entries.forEach { tab ->
-                    Tab(
-                        selected = selectedTabIndex == tab.ordinal,
-                        onClick = { selectedTabIndex = tab.ordinal },
-                        text = { Text(text = tab.localized()) },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+    Column {
+        PrimaryTabRow(
+            selectedTabIndex = selectedTabIndex,
+        ) {
+            NovelTab.entries.forEach { tab ->
+                Tab(
+                    selected = selectedTabIndex == tab.ordinal,
+                    onClick = { selectedTabIndex = tab.ordinal },
+                    text = { Text(text = tab.localized()) },
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
-    }
 
-    AnimatedContent(
-        targetState = NovelTab.entries[selectedTabIndex]
-    ) { tab ->
-        when (tab) {
-            NovelTab.MANGA -> {
-                MediaListView(
-                    uiState = uiState,
-                    customMediaList = uiState.mangaEntries,
-                    event = event,
-                    isCompactScreen = isCompactScreen,
-                    modifier = modifier,
-                    contentPadding = contentPadding,
-                    navActionManager = navActionManager,
-                    onShowEditSheet = onShowEditSheet,
-                    lazyListState = lazyListState,
-                    lazyGridState = lazyGridState,
-                    allPriorityColors = allPriorityColors,
-                    onClickPlus = onClickPlus,
-                    stickyHeaderContent = combinedHeader
-                )
-            }
+        AnimatedContent(
+            targetState = NovelTab.entries[selectedTabIndex]
+        ) { tab ->
+            when (tab) {
+                NovelTab.MANGA -> {
+                    MediaListView(
+                        uiState = uiState,
+                        customMediaList = uiState.mangaEntries,
+                        event = event,
+                        isCompactScreen = isCompactScreen,
+                        modifier = modifier,
+                        contentPadding = contentPadding,
+                        navActionManager = navActionManager,
+                        onShowEditSheet = onShowEditSheet,
+                        lazyListState = lazyListState,
+                        lazyGridState = lazyGridState,
+                        allPriorityColors = allPriorityColors,
+                        onClickPlus = onClickPlus,
+                        stickyHeaderContent = stickyHeaderContent
+                    )
+                }
 
-            NovelTab.NOVEL -> {
-                MediaListView(
-                    uiState = uiState,
-                    customMediaList = uiState.novelEntries,
-                    event = event,
-                    isCompactScreen = isCompactScreen,
-                    modifier = modifier,
-                    contentPadding = contentPadding,
-                    navActionManager = navActionManager,
-                    onShowEditSheet = onShowEditSheet,
-                    lazyListState = lazyListState,
-                    lazyGridState = lazyGridState,
-                    allPriorityColors = allPriorityColors,
-                    onClickPlus = onClickPlus,
-                    stickyHeaderContent = combinedHeader
-                )
+                NovelTab.NOVEL -> {
+                    MediaListView(
+                        uiState = uiState,
+                        customMediaList = uiState.novelEntries,
+                        event = event,
+                        isCompactScreen = isCompactScreen,
+                        modifier = modifier,
+                        contentPadding = contentPadding,
+                        navActionManager = navActionManager,
+                        onShowEditSheet = onShowEditSheet,
+                        lazyListState = lazyListState,
+                        lazyGridState = lazyGridState,
+                        allPriorityColors = allPriorityColors,
+                        onClickPlus = onClickPlus,
+                        stickyHeaderContent = stickyHeaderContent
+                    )
+                }
             }
         }
     }
