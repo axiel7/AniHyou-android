@@ -227,13 +227,27 @@ class UserMediaListViewModel(
                                     list[index] = newEntry
                                 }
                             }
+                        lists.forEach { (listName, entries) ->
+                            entries.indexOfFirstOrNull { it.mediaId == selectedItem.mediaId }
+                                ?.let { index ->
+                                    val newList = entries.toMutableList()
+                                    newList[index] = entries[index].copy(basicMediaListEntry = newListEntry)
+                                    lists[listName] = newList
+                                }
+                        }
                     } else {
                         list.remove(selectedItem)
+                        lists.forEach { (listName, entries) ->
+                            val newList = entries.toMutableList()
+                            if (newList.remove(selectedItem)) {
+                                lists[listName] = newList
+                            }
+                        }
                     }
                     if (selectedListName != null) {
                         lists[selectedListName] = list
-                        onChangeList(selectedListName)
                     }
+                    onChangeList(selectedListName)
                 }
             }
         }
