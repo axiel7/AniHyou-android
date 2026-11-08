@@ -5,6 +5,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
@@ -26,7 +28,7 @@ fun <T> SelectableIconToggleButton(
     tooltipText: String,
     value: T,
     selectedValue: T,
-    onClick: (Boolean) -> Unit
+    onClick: (Boolean) -> Unit,
 ) {
     val tooltipState = rememberTooltipState()
     val scope = rememberCoroutineScope()
@@ -50,6 +52,12 @@ fun <T> SelectableIconToggleButton(
                 onClick(it)
             },
             shapes = IconButtonDefaults.toggleableShapes(),
+            colors = IconButtonDefaults.iconToggleButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                checkedContainerColor = MaterialTheme.colorScheme.primary,
+                checkedContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
         ) {
             Icon(painter = painterResource(icon), contentDescription = tooltipText)
         }
