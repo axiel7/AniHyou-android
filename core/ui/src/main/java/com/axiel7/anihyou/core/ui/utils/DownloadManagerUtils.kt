@@ -11,12 +11,11 @@ fun Context.downloadImage(url: String) {
     if (url.isBlank()) return
 
     val request = DownloadManager.Request(url.toUri()).apply {
-        setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         setTitle(getString(R.string.image_download_title))
         setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
         val fileName = url.substringAfterLast('/').ifBlank { "image_${System.currentTimeMillis()}.jpg" }
-        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+        setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, "AniHyou/$fileName")
     }
 
     val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
