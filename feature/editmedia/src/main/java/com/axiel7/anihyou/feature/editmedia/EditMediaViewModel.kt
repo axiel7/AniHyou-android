@@ -79,7 +79,7 @@ class EditMediaViewModel(
             mutableUiState.update {
                 it.copy(
                     status = value,
-                    startedAt = LocalDate.now()
+                    startedAt = it.startedAt ?: LocalDate.now()
                 )
             }
         } else if (hasCompleted) {
