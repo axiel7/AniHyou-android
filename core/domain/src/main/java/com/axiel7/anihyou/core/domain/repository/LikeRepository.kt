@@ -1,6 +1,7 @@
 package com.axiel7.anihyou.core.domain.repository
 
 import com.axiel7.anihyou.core.model.activity.ActivityFragmentUnion
+import com.axiel7.anihyou.core.model.activity.toGenericActivity
 import com.axiel7.anihyou.core.network.api.LikeApi
 import com.axiel7.anihyou.core.network.fragment.ListActivityFragment
 import com.axiel7.anihyou.core.network.fragment.MessageActivityFragment
@@ -71,7 +72,7 @@ class LikeRepository(
         .toggleLikeMutation(id, LikeableType.ACTIVITY_REPLY)
         .execute()
         .asDataResult {
-            it.ToggleLikeV2?.onActivityReply?.activityReplyFragment
+            it.ToggleLikeV2?.onActivityReply?.activityReplyFragment?.toGenericActivity()
         }
 
     suspend fun toggleThreadLike(id: Int) = api

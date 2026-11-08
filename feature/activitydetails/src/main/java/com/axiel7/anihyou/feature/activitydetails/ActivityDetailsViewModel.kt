@@ -76,7 +76,11 @@ class ActivityDetailsViewModel(
                     mutableUiState.value.run {
                         val foundIndex = replies.indexOfFirst { it.id == id }
                         if (foundIndex != -1) {
-                            replies[foundIndex] = result.data!!.toGenericActivity()
+                            replies[foundIndex] = replies[foundIndex].copy(
+                                isLiked = result.data?.isLiked,
+                                likeCount = result.data?.likeCount ?: 0,
+                                //likes = result.data?.likes, //for some reason the api always returns null
+                            )
                         }
                     }
                 } else if (result !is DataResult.Loading) {
