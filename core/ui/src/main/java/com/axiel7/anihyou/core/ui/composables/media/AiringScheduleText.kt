@@ -46,7 +46,7 @@ fun AiringScheduleText(
 
         Text(
             text =
-                if (isBehind) {
+                if (isBehind || timeUntilAiring <= 0) {
                     val episodes = item.episodesBehind()
                     if (item.media?.basicMediaDetails?.episodes != 1) {
                         pluralStringResource(
