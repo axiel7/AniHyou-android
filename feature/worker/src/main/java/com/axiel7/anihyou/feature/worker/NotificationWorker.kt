@@ -100,7 +100,7 @@ class NotificationWorker(
                                     startNotification = allowStartAiring,
                                     airingNotification = allowNewAiring,
                                     endNotification = allowFinishAiring,
-                                    episodeCount = 3,
+                                    episodeCount = notificationAllowances?.episodeCount,
                                 )
                             }.getOrDefault(notification.text)
                         } else {
