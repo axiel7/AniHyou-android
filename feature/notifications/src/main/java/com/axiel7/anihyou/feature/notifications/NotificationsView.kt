@@ -45,7 +45,6 @@ import com.axiel7.anihyou.core.ui.composables.common.FilterSelectionChip
 import com.axiel7.anihyou.core.ui.composables.list.OnBottomReached
 import com.axiel7.anihyou.core.ui.composables.rememberTopBarContainerColor
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItem
 import com.axiel7.anihyou.feature.notifications.composables.NotificationItemPlaceholder
 import org.koin.compose.viewmodel.koinViewModel
@@ -155,7 +154,7 @@ private fun NotificationsContent(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                         blurImage = blurAdult && item.isAdultMedia,
                         imageUrl = item.imageUrl,
-                        subtitle = item.createdAt?.toLong()?.dateToRelativeText(),
+                        subtitle = item.createdAt?.toLong(),
                         isUnread = item.isUnread,
                         onClick = {
                             if (item.isUnread) event?.onRead(item)

@@ -26,6 +26,7 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MEDIA_POSTER_TINY_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
@@ -33,7 +34,6 @@ import com.axiel7.anihyou.core.ui.composables.person.PERSON_IMAGE_SIZE_VERY_SMAL
 import com.axiel7.anihyou.core.ui.composables.person.PersonImage
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -67,8 +67,8 @@ fun ActivityTextView(
                 modifier = Modifier.weight(1f),
                 onClick = { onClickUser(userId) }
             )
-            Text(
-                text = createdAt.toLong().dateToRelativeText(),
+            TimestampText(
+                timestamp = createdAt.toLong(),
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = 15.sp
             )

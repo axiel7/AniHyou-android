@@ -30,12 +30,12 @@ import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.IconButtonWithMenu
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 
 const val ACTIVITY_IMAGE_WIDTH = 48
 const val ACTIVITY_IMAGE_HEIGHT = 64
@@ -100,8 +100,8 @@ fun ActivityItem(
                         textStyle = MaterialTheme.typography.labelLarge,
                         onClick = onClickImage
                     )
-                    Text(
-                        text = createdAt.toLong().dateToRelativeText(),
+                    TimestampText(
+                        timestamp = createdAt.toLong(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelMedium
                     )
@@ -124,8 +124,8 @@ fun ActivityItem(
                         maxLines = 3,
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                    Text(
-                        text = createdAt.toLong().dateToRelativeText(),
+                    TimestampText(
+                        timestamp = createdAt.toLong(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelMedium
                     )

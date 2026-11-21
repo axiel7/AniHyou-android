@@ -38,12 +38,12 @@ import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
 import com.axiel7.anihyou.core.ui.composables.common.BackIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ReplyButton
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.thread.composables.ChildCommentView
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -141,8 +141,8 @@ fun ThreadCommentView(
                 textStyle = MaterialTheme.typography.labelMedium,
                 onClick = navigateToUserDetails
             )
-            Text(
-                text = createdAt.toLong().dateToRelativeText(),
+            TimestampText(
+                timestamp = createdAt.toLong(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelMedium
             )

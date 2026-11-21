@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.axiel7.anihyou.core.common.utils.DateUtils
+import com.axiel7.anihyou.core.common.utils.DateUtils.toLocalized
 import com.axiel7.anihyou.core.network.fragment.FuzzyDate
 import com.axiel7.anihyou.core.resources.R
 import java.time.DateTimeException
@@ -12,6 +13,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
@@ -77,6 +79,11 @@ object ComposeDateUtils {
 
         return stringResource(R.string.just_now)
     }
+
+    fun Long.dateToAbsoluteText(): String =
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(this), DateUtils.defaultZoneOffset)
+            .toLocalized(FormatStyle.MEDIUM, FormatStyle.MEDIUM)
+            .orEmpty()
 
     @Composable
     fun Long.minutesToLegibleText(): String {
