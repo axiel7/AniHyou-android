@@ -17,6 +17,7 @@ val versionProps = Properties().also {
 android {
     namespace = appPackageName
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdkMinor = libs.versions.android.compileSdkMinor.get().toInt()
 
     defaultConfig {
         applicationId = appPackageName

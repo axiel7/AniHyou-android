@@ -1,5 +1,6 @@
 [versions]
 android-compileSdk = "37"
+android-compileSdkMinor = "1"
 android-minSdk = "24"
 android-targetSdk = "37"
 wear-compileSdk = "37"
