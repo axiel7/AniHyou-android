@@ -154,7 +154,7 @@ private fun NotificationsContent(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                         blurImage = blurAdult && item.isAdultMedia,
                         imageUrl = item.imageUrl,
-                        subtitle = item.createdAt?.toLong(),
+                        timestamp = item.createdAt?.toLong(),
                         isUnread = item.isUnread,
                         onClick = {
                             if (item.isUnread) event?.onRead(item)

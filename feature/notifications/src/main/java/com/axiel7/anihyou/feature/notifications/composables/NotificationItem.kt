@@ -33,7 +33,7 @@ fun NotificationItem(
     modifier: Modifier = Modifier,
     blurImage: Boolean = false,
     imageUrl: String?,
-    subtitle: Long? = null,
+    timestamp: Long? = null,
     isUnread: Boolean,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
@@ -67,7 +67,7 @@ fun NotificationItem(
                     modifier = Modifier.padding(bottom = 4.dp),
                     lineHeight = 20.sp,
                 )
-                subtitle?.let { time ->
+                timestamp?.let { time ->
                     TimestampText(
                         timestamp = time,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -124,7 +124,7 @@ fun ActivityItemPreview() {
                     title = "Plans to watch Alice to Therese no Maboroshi Koujou",
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
-                    subtitle = 0,
+                    timestamp = 0,
                     isUnread = true,
                     onClick = {}
                 )

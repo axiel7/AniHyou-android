@@ -43,10 +43,7 @@ fun TimestampText(
             TooltipAnchorPosition.Above
         ),
         tooltip = {
-            PlainTooltip(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            ) {
+            PlainTooltip {
                 Text(text = absoluteText)
             }
         },
