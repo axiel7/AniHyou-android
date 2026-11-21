@@ -38,8 +38,7 @@ class DateTest {
         Text(
             text = createdAt.toLong().timestampIntervalSinceNow()
                 .secondsToLegibleText(
-                    maxUnit = ChronoUnit.WEEKS,
-                    isFutureDate = false
+                    maxUnit = ChronoUnit.WEEKS
                 ),
             modifier = Modifier.testTag("date")
         )

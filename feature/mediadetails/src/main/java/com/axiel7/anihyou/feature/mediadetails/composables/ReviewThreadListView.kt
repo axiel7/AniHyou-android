@@ -31,12 +31,12 @@ import com.axiel7.anihyou.core.model.activity.text
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalNavActionManager
 import com.axiel7.anihyou.core.ui.composables.TextIconHorizontal
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.list.HorizontalListHeader
 import com.axiel7.anihyou.core.ui.composables.post.POST_ITEM_HEIGHT
 import com.axiel7.anihyou.core.ui.composables.post.PostItem
 import com.axiel7.anihyou.core.ui.composables.post.PostItemPlaceholder
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import com.axiel7.anihyou.feature.mediadetails.MediaDetailsUiState
 
 @Composable
@@ -175,8 +175,8 @@ fun ReviewThreadListView(
                         author = item.user?.activityUser?.name.orEmpty(),
                         avatarUrl = item.user?.activityUser?.avatar?.medium.orEmpty(),
                         subtitle = {
-                            Text(
-                                text = item.createdAt.toLong().dateToRelativeText(),
+                            TimestampText(
+                                timestamp = item.createdAt.toLong(),
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = MaterialTheme.typography.labelMedium,

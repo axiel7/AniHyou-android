@@ -30,11 +30,11 @@ import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
 import com.axiel7.anihyou.core.ui.composables.common.CommentIconButton
 import com.axiel7.anihyou.core.ui.composables.common.FavoriteIconButton
 import com.axiel7.anihyou.core.ui.composables.common.ReplyButton
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.common.TranslateIconButton
 import com.axiel7.anihyou.core.ui.composables.markdown.DefaultMarkdownText
 import com.axiel7.anihyou.core.ui.composables.person.PersonItemSmall
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
-import com.axiel7.anihyou.core.ui.utils.ComposeDateUtils.dateToRelativeText
 import kotlinx.coroutines.launch
 
 @Composable
@@ -76,8 +76,8 @@ fun ChildCommentView(
                     textStyle = MaterialTheme.typography.labelMedium,
                     onClick = navigateToUserDetails
                 )
-                Text(
-                    text = comment.createdAt.toLong().dateToRelativeText(),
+                TimestampText(
+                    timestamp = comment.createdAt.toLong(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                 )

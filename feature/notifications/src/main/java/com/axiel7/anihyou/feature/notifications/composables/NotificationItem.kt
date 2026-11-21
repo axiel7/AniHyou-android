@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.ui.composables.activity.ACTIVITY_IMAGE_WIDTH
+import com.axiel7.anihyou.core.ui.composables.common.TimestampText
 import com.axiel7.anihyou.core.ui.composables.defaultPlaceholder
 import com.axiel7.anihyou.core.ui.composables.media.MediaPoster
 import com.axiel7.anihyou.core.ui.theme.AniHyouTheme
@@ -32,7 +33,7 @@ fun NotificationItem(
     modifier: Modifier = Modifier,
     blurImage: Boolean = false,
     imageUrl: String?,
-    subtitle: String?,
+    subtitle: Long? = null,
     isUnread: Boolean,
     onClick: () -> Unit,
     onClickImage: () -> Unit = {},
@@ -66,9 +67,9 @@ fun NotificationItem(
                     modifier = Modifier.padding(bottom = 4.dp),
                     lineHeight = 20.sp,
                 )
-                subtitle?.let {
-                    Text(
-                        text = it,
+                subtitle?.let { time ->
+                    TimestampText(
+                        timestamp = time,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelMedium,
                     )
@@ -123,7 +124,7 @@ fun ActivityItemPreview() {
                     title = "Plans to watch Alice to Therese no Maboroshi Koujou",
                     imageUrl = "",
                     modifier = Modifier.padding(8.dp),
-                    subtitle = "14 h ago",
+                    subtitle = 0,
                     isUnread = true,
                     onClick = {}
                 )
