@@ -40,6 +40,7 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
+import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.entriesLocalized
@@ -283,12 +284,21 @@ private fun SettingsContent(
                 )
             }
 
+            ListPreference(
+                title = stringResource(R.string.measurement_system),
+                entriesValues = MeasurementSystem.entriesLocalized,
+                preferenceValue = uiState.measurementSystem,
+                icon = R.drawable.baseline_straighten_24,
+                onValueChange = { event?.setMeasurementSystem(it) },
+                shape = if (uiState.isLoggedIn) middleShape else topShape
+            )
+
             SwitchPreference(
                 title = stringResource(R.string.blur_adult_content),
                 preferenceValue = uiState.blurAdultContent,
                 icon = R.drawable.blur_on_24,
                 onValueChange = { event?.setBlurAdultContent(it) },
-                shape = if (uiState.isLoggedIn) middleShape else topShape,
+                shape = middleShape,
             )
 
             SwitchPreference(

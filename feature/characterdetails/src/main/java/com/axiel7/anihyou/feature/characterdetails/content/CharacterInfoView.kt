@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.character.genderLocalized
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
@@ -135,6 +136,33 @@ fun CharacterInfoView(
             info = uiState.character?.age,
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
+        // TODO make better
+        // Initial height is a height when the character's height changes during the story
+        val heightInfo = uiState.character?.height?.height
+        val measurementSystem = uiState.measurementSystem
+
+        val initial = if (measurementSystem == MeasurementSystem.METRIC) heightInfo?.initial?.metric else heightInfo?.initial?.imperial
+        val min = if (measurementSystem == MeasurementSystem.METRIC) heightInfo?.min?.metric else heightInfo?.min?.imperial
+        val max = if (measurementSystem == MeasurementSystem.METRIC) heightInfo?.max?.metric else heightInfo?.max?.imperial
+        val height = if (measurementSystem == MeasurementSystem.METRIC) {
+            "$min cm - ${max ?: stringResource(R.string.unknown)} cm"
+        } else {
+            "$min - ${max ?: stringResource(R.string.unknown)}"
+        }
+        if (heightInfo != null && initial != null) {
+            InfoItemView(
+                title = stringResource(R.string.curr_height),
+                info = "$initial",
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        }
+        else if(min != null || max != null) {
+            InfoItemView(
+                title = stringResource(R.string.height),
+                info = height,
+                modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+            )
+        }
         InfoItemView(
             title = stringResource(R.string.gender),
             info = uiState.character?.genderLocalized(),

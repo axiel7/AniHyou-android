@@ -135,5 +135,11 @@ class CharacterDetailsViewModel(
                 mutableUiState.update { it.copy(translatorApp = value) }
             }
             .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.measurementSystem
+            .onEach { value ->
+                mutableUiState.update { it.copy(measurementSystem = value) }
+            }
+            .launchIn(viewModelScope)
     }
 }

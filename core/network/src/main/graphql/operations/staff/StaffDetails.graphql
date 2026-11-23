@@ -18,6 +18,9 @@ query StaffDetails($staffId: Int) {
         dateOfDeath {
             ...FuzzyDate
         }
+        height {
+            ...Height
+        }
         age
         yearsActive
         homeTown

@@ -17,6 +17,7 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ExploreTab
 import com.axiel7.anihyou.core.model.HomeTab
+import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.NovelTab
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
@@ -403,6 +404,14 @@ class DefaultPreferencesRepository(
         else -> emptyFlow()
     }
 
+    val measurementSystem = dataStore
+        .getValue(MEASUREMENT_SYSTEM_KEY, default = MeasurementSystem.METRIC.rawValue)
+        .map { MeasurementSystem.safeValueOf(it) }
+
+    suspend fun setMeasurementSystem(value: MeasurementSystem) {
+        dataStore.setValue(MEASUREMENT_SYSTEM_KEY, value.rawValue)
+    }
+
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
@@ -424,6 +433,8 @@ class DefaultPreferencesRepository(
         private val MANGA_CUSTOM_LISTS_KEY = stringPreferencesKey("manga_custom_lists")
 
         private val THEME_KEY = stringPreferencesKey("theme")
+
+        private val MEASUREMENT_SYSTEM_KEY = stringPreferencesKey("measurement_system")
         private val USE_BLACK_COLORS_KEY = booleanPreferencesKey("use_black_colors")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
         private val DEFAULT_TAB_KEY = intPreferencesKey("default_tab")
