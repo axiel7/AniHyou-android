@@ -13,7 +13,6 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
-import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
@@ -274,12 +273,6 @@ class SettingsViewModel(
             }
         }
 
-    override fun setMeasurementSystem(value: MeasurementSystem) {
-        viewModelScope.launch {
-            defaultPreferencesRepository.setMeasurementSystem(value)
-        }
-    }
-
     init {
         isLoggedIn
             .onEach { value ->
@@ -300,12 +293,6 @@ class SettingsViewModel(
                         result.toUiState()
                     }
                 }
-            }
-            .launchIn(viewModelScope)
-
-        defaultPreferencesRepository.measurementSystem
-            .onEach { value ->
-                mutableUiState.update { it.copy(measurementSystem = value) }
             }
             .launchIn(viewModelScope)
 

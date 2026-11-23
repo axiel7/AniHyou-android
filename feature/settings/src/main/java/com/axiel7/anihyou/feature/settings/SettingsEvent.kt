@@ -7,7 +7,6 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
-import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
@@ -77,6 +76,4 @@ interface SettingsEvent : UiEvent {
     fun setAiringNotification(value: Boolean)
 
     fun logOut(recreate: () -> Unit)
-
-    fun setMeasurementSystem(value: MeasurementSystem)
 }

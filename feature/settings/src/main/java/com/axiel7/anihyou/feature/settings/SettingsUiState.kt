@@ -7,7 +7,6 @@ import com.axiel7.anihyou.core.model.AppColorMode
 import com.axiel7.anihyou.core.model.DefaultTab
 import com.axiel7.anihyou.core.model.ItemsPerRow
 import com.axiel7.anihyou.core.model.ListStyle
-import com.axiel7.anihyou.core.model.MeasurementSystem
 import com.axiel7.anihyou.core.model.Theme
 import com.axiel7.anihyou.core.model.TranslatorApp
 import com.axiel7.anihyou.core.model.notification.NotificationInterval
@@ -29,7 +28,6 @@ data class SettingsUiState(
     val generalListStyle: ListStyle? = null,
     val gridItemsPerRow: ItemsPerRow? = null,
     val airingOnMyList: Boolean? = null,
-    val measurementSystem: MeasurementSystem? = null,
     val scoreFormat: ScoreFormat? = null,
     val scoreStep: Double = 1.0,
     val defaultTab: DefaultTab = DefaultTab.LAST_USED,
