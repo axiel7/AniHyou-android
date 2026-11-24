@@ -125,7 +125,8 @@ fun StaffInfoView(
             info = uiState.details?.age?.format(),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
-        // Initial height is a height when the character's height changes during the story
+        // Initial height is a height when the staffs height changes 
+        // probably will be always null for staff
         val height = HeightFormatter.format(uiState.details?.height?.height)
         InfoItemView(
             title = stringResource(R.string.height),
