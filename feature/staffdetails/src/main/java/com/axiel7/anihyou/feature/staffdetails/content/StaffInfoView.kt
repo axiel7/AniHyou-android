@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
 import com.axiel7.anihyou.core.common.utils.NumberUtils.format
+import com.axiel7.anihyou.core.model.HeightFormatter
 import com.axiel7.anihyou.core.model.staff.yearsActiveFormatted
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
@@ -122,6 +123,14 @@ fun StaffInfoView(
         InfoItemView(
             title = stringResource(R.string.age),
             info = uiState.details?.age?.format(),
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+        )
+        // Initial height is a height when the staffs height changes 
+        // probably will be always null for staff
+        val height = HeightFormatter.format(uiState.details?.height?.height)
+        InfoItemView(
+            title = stringResource(R.string.height),
+            info = height ?: stringResource(R.string.unknown),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(

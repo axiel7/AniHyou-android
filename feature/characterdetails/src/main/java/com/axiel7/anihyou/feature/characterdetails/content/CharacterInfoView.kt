@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.anihyou.core.common.utils.ContextUtils.copyToClipBoard
+import com.axiel7.anihyou.core.model.HeightFormatter
 import com.axiel7.anihyou.core.model.character.genderLocalized
 import com.axiel7.anihyou.core.resources.R
 import com.axiel7.anihyou.core.ui.common.LocalIsLanguageEn
@@ -133,6 +134,13 @@ fun CharacterInfoView(
         InfoItemView(
             title = stringResource(R.string.age),
             info = uiState.character?.age,
+            modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
+        )
+        // Initial height is a height when the character's height changes during the story
+        val height = HeightFormatter.format(uiState.character?.height?.height)
+        InfoItemView(
+            title = stringResource(R.string.height),
+            info = height ?: stringResource(R.string.unknown),
             modifier = Modifier.defaultPlaceholder(visible = uiState.isLoading)
         )
         InfoItemView(

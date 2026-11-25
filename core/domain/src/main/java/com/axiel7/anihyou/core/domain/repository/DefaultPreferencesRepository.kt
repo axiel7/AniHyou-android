@@ -424,6 +424,7 @@ class DefaultPreferencesRepository(
         private val MANGA_CUSTOM_LISTS_KEY = stringPreferencesKey("manga_custom_lists")
 
         private val THEME_KEY = stringPreferencesKey("theme")
+
         private val USE_BLACK_COLORS_KEY = booleanPreferencesKey("use_black_colors")
         private val LAST_TAB_KEY = intPreferencesKey("last_tab")
         private val DEFAULT_TAB_KEY = intPreferencesKey("default_tab")
