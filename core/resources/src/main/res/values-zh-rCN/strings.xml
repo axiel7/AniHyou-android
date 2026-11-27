@@ -69,6 +69,7 @@
     <string name="not_yet_released">尚未放送</string>
     <string name="cancelled">已取消</string>
     <string name="hiatus">停止更新</string>
+    <string name="weighted_score">加权评分</string>
     <string name="popularity">人气</string>
     <string name="favorites">收藏</string>
     <string name="episode_in_time">第 %d 集在 %s后播出</string>
@@ -677,5 +678,8 @@
     <string name="allow_start_notification">允许开播通知</string>
     <string name="allow_airing_notification">允许正在播出通知</string>
     <string name="allow_end_notification">允许播出结束通知</string>
+    <string name="saved_filters">已保存的过滤器</string>
+    <string name="filter_name">过滤器名称</string>
+    <string name="save_current_filters">保存当前过滤器</string>
     <string name="image_download_title">图片</string>
 </resources>

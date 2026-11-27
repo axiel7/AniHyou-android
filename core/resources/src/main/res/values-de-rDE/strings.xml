@@ -75,6 +75,7 @@
     <string name="not_yet_released">Noch nicht veröffentlicht</string>
     <string name="cancelled">Abgesagt</string>
     <string name="hiatus">Hiatus</string>
+    <string name="weighted_score">Gewichteter Bewertung</string>
     <string name="popularity">Beliebtheit</string>
     <string name="favorites">Favoriten</string>
     <string name="episode_in_time">Ep %d in %s</string>
@@ -173,6 +174,7 @@
     <string name="birthday">Geburtstag</string>
     <string name="death">Tod</string>
     <string name="age">Alter</string>
+    <string name="height">Größe</string>
     <string name="gender">Geschlecht</string>
     <string name="blood_type">Blutgruppe</string>
     <string name="years_active">Jahre aktiv</string>
@@ -691,5 +693,7 @@
     <string name="saved_filters">Gespeicherte Filter</string>
     <string name="filter_name">Filtername</string>
     <string name="save_current_filters">Aktuelle Filter speichern</string>
+    <string name="variables">Variablen</string>
+    <string name="image_downloading">Bild wird heruntergeladen…</string>
     <string name="image_download_title">Bild</string>
 </resources>

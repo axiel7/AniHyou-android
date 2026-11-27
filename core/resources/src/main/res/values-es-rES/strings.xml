@@ -174,6 +174,7 @@
     <string name="birthday">Cumpleaños</string>
     <string name="death">Fallecimiento</string>
     <string name="age">Edad</string>
+    <string name="height">Altura</string>
     <string name="gender">Género</string>
     <string name="blood_type">Grupo sanguíneo</string>
     <string name="years_active">Años activos</string>
@@ -692,5 +693,7 @@
     <string name="saved_filters">Filtros guardados</string>
     <string name="filter_name">Nombre del filtro</string>
     <string name="save_current_filters">Guardar filtros actuales</string>
+    <string name="variables">Variables</string>
+    <string name="image_downloading">Descargando imagen…</string>
     <string name="image_download_title">Imagen</string>
 </resources>

@@ -712,5 +712,7 @@
     <string name="saved_filters">Збережені фільтри</string>
     <string name="filter_name">Назва фільтру</string>
     <string name="save_current_filters">Зберегти поточні фільтри</string>
+    <string name="variables">Змінні</string>
+    <string name="image_downloading">Завантажується зображення…</string>
     <string name="image_download_title">Зображення</string>
 </resources>
