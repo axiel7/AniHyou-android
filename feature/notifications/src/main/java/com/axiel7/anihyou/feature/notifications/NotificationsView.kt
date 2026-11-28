@@ -21,15 +21,18 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axiel7.anihyou.core.model.notification.GenericNotification.Companion.localizedText
 import com.axiel7.anihyou.core.model.notification.NotificationTypeGroup
@@ -69,6 +72,7 @@ private fun NotificationsContent(
     uiState: NotificationsUiState,
     event: NotificationsEvent?,
 ) {
+    val context = LocalContext.current
     val navActionManager = LocalNavActionManager.current
     val blurAdult = LocalBlurAdult.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -84,6 +88,10 @@ private fun NotificationsContent(
     val pullRefreshState = rememberPullToRefreshState()
 
     ErrorDialogHandler(uiState, onDismiss = { event?.onErrorDisplayed() })
+
+    LaunchedEffect(context) {
+        NotificationManagerCompat.from(context).cancelAll()
+    }
 
     DefaultScaffoldWithMediumTopAppBar(
         title = stringResource(R.string.notifications),
